@@ -11,15 +11,5 @@
  108:   // a has default
  109:   f();
 
--- No Output --
--- Errors --
-  ⚠ warning: 107:6: Unused local a.
-     ╭─[../books/language/src/flow/argument_match/priorities.md:107:6]
- 107 │ fn f(a = 1mm) {} // warning: unused a
-     ·      ┬
-     ·      ╰── Unused local a.
- 108 │ // a has default
-     ╰────
--- No Model --
 -- Test Result --
 OK

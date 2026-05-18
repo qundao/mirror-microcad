@@ -15,4 +15,3 @@ pub part Dome(size: Length, strut_width = 1mm) {
 
 Dome(10mm, strut_width = 0.25mm);
 
-

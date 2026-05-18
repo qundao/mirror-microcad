@@ -14,7 +14,7 @@ use microcad_lang_base::{Identifier, PushDiag, SrcRef};
 use miette::Diagnostic;
 use std::str::FromStr;
 
-use microcad_core::{Color, Length, RenderResolution, Size2};
+use microcad_core::{Color, Size2};
 use thiserror::Error;
 
 /// Error type for attributes.
@@ -41,7 +41,6 @@ impl Eval<Option<ExportCommand>> for ir::AttributeCommand {
                     &call.argument_list.eval(context)?,
                     &[
                         parameter!(filename: String),
-                        parameter!(resolution: Length = Length::mm(0.1)),
                         (
                             Identifier::no_ref("size"),
                             eval::ParameterValue {
@@ -62,16 +61,8 @@ impl Eval<Option<ExportCommand>> for ir::AttributeCommand {
                         } else {
                             None
                         };
-                        let resolution = RenderResolution::new(
-                            arguments.get::<&Value>("resolution").try_scalar()?,
-                        );
-
                         match context.find_exporter(&filename, &id) {
-                            Ok(exporter) => Ok(Some(ExportCommand {
-                                filename,
-                                exporter,
-                                resolution,
-                            })),
+                            Ok(exporter) => Ok(Some(ExportCommand { filename, exporter })),
                             Err(err) => {
                                 context.warning(self, err)?;
                                 Ok(None)
@@ -90,11 +81,7 @@ impl Eval<Option<ExportCommand>> for ir::AttributeCommand {
                     Value::String(filename) => {
                         let filename = std::path::PathBuf::from(filename);
                         match context.find_exporter(&filename, &None) {
-                            Ok(exporter) => Ok(Some(ExportCommand {
-                                filename,
-                                resolution: RenderResolution::default(),
-                                exporter,
-                            })),
+                            Ok(exporter) => Ok(Some(ExportCommand { filename, exporter })),
                             Err(err) => {
                                 context.warning(self, err)?;
                                 Ok(None)

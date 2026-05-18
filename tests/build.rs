@@ -3,8 +3,7 @@
 
 //! µcad markdown test
 
-use anyhow::anyhow;
-use microcad_lang_base::Identifier;
+use miette::{IntoDiagnostic, miette};
 
 /// markdown test main
 fn main() {
@@ -28,43 +27,6 @@ fn main() {
         }
     }
 
-    use microcad_docgen::{DocGen, MdBook};
-
-    // Generate builtin mdbook
-    {
-        MdBook {
-            path: "../books/builtin".into(),
-        }
-        .doc_gen(&microcad_builtin::builtin_module())
-        .expect("No error");
-    }
-
-    // Generate std mdbook
-    {
-        MdBook {
-            path: "../books/std".into(),
-        }
-        .doc_gen(&{
-            let root = microcad_lang::lower::ir::SourceFile::load("../crates/std/lib/std/mod.µcad")
-                .expect("No error");
-            let search_paths: Vec<std::path::PathBuf> = vec![];
-
-            // Resolve std
-            let context = microcad_lang::resolve::ResolveContext::create(
-                root,
-                &search_paths,
-                Some(microcad_builtin::builtin_module()),
-                microcad_lang_base::DiagHandler::default(),
-            )
-            .expect("No error");
-            context
-                .root
-                .get_child(&Identifier::no_ref("mod")) // FIXME: This should be named "std"
-                .expect("std file")
-        })
-        .expect("No error");
-    }
-
     // update test banners in markdown books
     use update_md_banner::*;
     println!("cargo:warning=updating test banners...");
@@ -80,8 +42,8 @@ fn main() {
     update_book("examples").expect("test generation failed");
 }
 
-fn check_copyright(check_only: bool) -> anyhow::Result<bool> {
-    Ok(update_copyright::update_copyrights(
+fn check_copyright(check_only: bool) -> miette::Result<bool> {
+    update_copyright::update_copyrights(
         "../",
         &[
             ("#", &["toml"]),
@@ -91,20 +53,20 @@ fn check_copyright(check_only: bool) -> anyhow::Result<bool> {
             "../target/*",
             "../tests/*.µcad",
             "../crates/cli/examples/*.µcad",
-            "../thirdparty/*",
         ],
         check_only,
-    )?)
+    )
+    .into_diagnostic()
 }
 
-fn update_book(name: &str) -> anyhow::Result<()> {
+fn update_book(name: &str) -> miette::Result<()> {
     match microcad_markdown_test::generate(
-        format!("../books/{name}/src"),
+        format!("../books/{name}"),
         format!("md_test_book_{name}.rs"),
         format!("../books/{name}/src/test_list.md"),
     ) {
         Ok(_) => Ok(()),
-        Err(err) => Err(anyhow!(
+        Err(err) => Err(miette!(
             "error generating rust test code from markdown book '{name}': {err}"
         )),
     }

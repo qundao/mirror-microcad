@@ -5,7 +5,6 @@
 
 mod iterators;
 mod symbol_definition;
-mod symbol_info;
 mod symbol_inner;
 mod symbol_map;
 mod symbols;
@@ -15,7 +14,6 @@ use microcad_lang_base::{RcMut, SrcRef, SrcReferrer, TreeDisplay, TreeState};
 
 pub use iterators::*;
 pub use symbol_definition::*;
-pub use symbol_info::*;
 pub(crate) use symbol_map::*;
 pub(crate) use symbols::*;
 
@@ -634,12 +632,6 @@ impl std::fmt::Debug for Symbol {
     }
 }
 
-impl Info for Symbol {
-    fn info(&self) -> SymbolInfo {
-        self.with_def(|def| def.info())
-    }
-}
-
 impl TreeDisplay for Symbol {
     fn tree_print(&self, f: &mut std::fmt::Formatter, state: TreeState) -> std::fmt::Result {
         if self.is_root() {
@@ -661,7 +653,6 @@ impl Lookup for Symbol {
             "{lookup} for global symbol '{name:?}'",
             lookup = microcad_lang_base::mark!(LOOKUP)
         );
-        self.deny_super(name)?;
 
         let symbol = match self.search(name, true) {
             Ok(symbol) => {

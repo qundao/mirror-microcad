@@ -3,8 +3,8 @@
 
 use microcad_core::hash::HashSet;
 use microcad_lang_base::{
-    Diag, DiagHandler, DiagResult, Diagnostic, FormatTree, GetSourceStrByHash, Output, PushDiag,
-    SrcReferrer, TreeDisplay, TreeState,
+    Diag, DiagHandler, DiagResult, Diagnostic, FormatTree, GetSourceLocInfoByHash, HashId, Output,
+    PushDiag, SourceLocInfo, SrcReferrer, TreeDisplay, TreeState,
 };
 
 use crate::{
@@ -63,16 +63,15 @@ impl EvalContext {
 
     /// Create a new context from a source file.
     pub fn from_source(
-        root: std::rc::Rc<ir::SourceFile>,
+        root: std::rc::Rc<ir::Source>,
         builtin: Option<Symbol>,
-        search_paths: &[impl AsRef<std::path::Path>],
+        search_paths: Vec<std::path::PathBuf>,
         output: Box<dyn Output>,
         exporters: ExporterRegistry,
         importers: ImporterRegistry,
-        line_offset: u32,
     ) -> EvalResult<Self> {
         Ok(Self::new(
-            ResolveContext::create(root, search_paths, builtin, DiagHandler::new(line_offset))?,
+            ResolveContext::create(root, search_paths, builtin, DiagHandler::default())?,
             output,
             exporters,
             importers,
@@ -90,10 +89,10 @@ impl EvalContext {
     }
 
     /// Evaluate context into a value.
-    pub fn eval(&mut self) -> EvalResult<Option<Model>> {
+    pub fn eval(&mut self) -> EvalResult<Model> {
         if self.diag.error_count() > 0 {
             log::error!("Aborting evaluation because of prior resolve errors!");
-            return Err(EvalError::ResolveFailed);
+            return Err(EvalError::ResolveFailed.into());
         }
         let model: Model = self.sources.root().eval(self)?;
         log::trace!("Post-evaluation context:\n{self:?}");
@@ -119,12 +118,8 @@ impl EvalContext {
             self.warning(&src_ref, EvalError::UnusedGlobalSymbol(id))
         })?;
 
-        if model.has_no_output() {
-            // TODO Check if we can simply return Some(model) even if there is no output.
-            Ok(None)
-        } else {
-            Ok(Some(model))
-        }
+       
+       Ok(model)
     }
 
     /// Run the closure `f` within the given `stack_frame`.
@@ -178,7 +173,7 @@ impl EvalContext {
                 if let Some(value) = model.get_property(id) {
                     Ok(value.clone())
                 } else {
-                    Err(EvalError::PropertyNotFound(id.clone()))
+                    Err(EvalError::PropertyNotFound(id.clone()).into())
                 }
             }
             Err(err) => Err(err),
@@ -198,7 +193,8 @@ impl EvalContext {
                             name: id.clone(),
                             value: previous_value.to_string(),
                             previous_location: id.src_ref(),
-                        });
+                        }
+                        .into());
                     }
                 }
                 Ok(())
@@ -218,7 +214,6 @@ impl EvalContext {
             "{lookup} for property {name:?}",
             lookup = microcad_lang_base::mark!(LOOKUP)
         );
-        self.root.deny_super(name)?;
 
         if self.stack.current_call_name().is_some() {
             if let Some(id) = name.single_identifier() {
@@ -238,7 +233,7 @@ impl EvalContext {
             "{not_found} Property '{name:?}'",
             not_found = microcad_lang_base::mark!(NOT_FOUND)
         );
-        Err(EvalError::NoPropertyId(name.clone()))
+        Err(EvalError::NoPropertyId(name.clone()).into())
     }
 
     fn lookup_workbench(
@@ -251,7 +246,6 @@ impl EvalContext {
                 "{lookup} for symbol '{name:?}' in current workbench '{workbench:?}'",
                 lookup = microcad_lang_base::mark!(LOOKUP)
             );
-            self.deny_super(name)?;
             match self.root.lookup_within_name(name, workbench, target) {
                 Ok(symbol) => {
                     log::trace!(
@@ -320,7 +314,7 @@ impl Locals for EvalContext {
     }
 }
 
-impl Lookup<EvalError> for EvalContext {
+impl Lookup<Box<EvalError>> for EvalContext {
     fn lookup(&self, name: &ir::QualifiedName, target: LookupTarget) -> EvalResult<Symbol> {
         log::debug!("Lookup {target} '{name:?}' (at line {:?}):", name.src_ref());
 
@@ -348,10 +342,10 @@ impl Lookup<EvalError> for EvalContext {
             |(mut oks, mut ambiguities, mut errors), (origin, result)| {
                 match result {
                     Ok(symbol) => oks.push((origin, symbol)),
-                    Err(EvalError::AmbiguousSymbol( ambiguous, others)) => {
-                        ambiguities.push((origin, EvalError::AmbiguousSymbol ( ambiguous, others )))
-                    }
-                    Err(
+                    Err(err) => match *err {
+                        EvalError::AmbiguousSymbol(ambiguous, others) => {
+                            ambiguities.push((origin, EvalError::AmbiguousSymbol ( ambiguous, others )));
+                        }                
                         // ignore all kinds of "not found" errors
                         EvalError::SymbolNotFound(_)
                         // for locals
@@ -362,12 +356,11 @@ impl Lookup<EvalError> for EvalContext {
                         | EvalError::NoPropertyId(_)
                         // for symbol table
                         | EvalError::ResolveError(ResolveError::SymbolNotFound(_))
-                        | EvalError::ResolveError(ResolveError::ExternalPathNotFound(_))
                         | EvalError::ResolveError(ResolveError::SymbolIsPrivate(_))
                         | EvalError::ResolveError(ResolveError::NulHash)
-                        | EvalError::ResolveError(ResolveError::WrongTarget),
-                    ) => (),
-                    Err(err) => errors.push((origin, err)),
+                        | EvalError::ResolveError(ResolveError::WrongTarget) => {},
+                        err => errors.push((origin, err)),
+                    }
                 }
                 (oks, ambiguities, errors)
             },
@@ -380,7 +373,7 @@ impl Lookup<EvalError> for EvalContext {
                 .iter()
                 .for_each(|(origin, err)| log::error!("Lookup ({origin}) error: {err}"));
 
-            return Err(errors.remove(0).1);
+            return Err(errors.remove(0).1.into());
         }
 
         // early emit any ambiguity error
@@ -394,7 +387,7 @@ impl Lookup<EvalError> for EvalContext {
                     .join("\n"),
                 ambiguous = microcad_lang_base::mark!(AMBIGUOUS)
             );
-            return Err(ambiguities.remove(0).1);
+            return Err(ambiguities.remove(0).1.into());
         }
 
         // filter by lookup target
@@ -421,7 +414,7 @@ impl Lookup<EvalError> for EvalContext {
                         "{ambiguous} symbol '{name:?}' in {others:?}:\n{self:?}",
                         ambiguous = microcad_lang_base::mark!(AMBIGUOUS),
                     );
-                    Err(EvalError::AmbiguousSymbol(name.clone(), others))
+                    Err(EvalError::AmbiguousSymbol(name.clone(), others).into())
                 }
             }
             None => {
@@ -429,13 +422,13 @@ impl Lookup<EvalError> for EvalContext {
                     "{not_found} Symbol '{name:?}'",
                     not_found = microcad_lang_base::mark!(NOT_FOUND!)
                 );
-                Err(EvalError::SymbolNotFound(name.clone()))
+                Err(EvalError::SymbolNotFound(name.clone()).into())
             }
         }
     }
 
-    fn ambiguity_error(ambiguous: ir::QualifiedName, others: ir::QualifiedNames) -> EvalError {
-        EvalError::AmbiguousSymbol(ambiguous, others)
+    fn ambiguity_error(ambiguous: ir::QualifiedName, others: ir::QualifiedNames) -> Box<EvalError> {
+        EvalError::AmbiguousSymbol(ambiguous, others).into()
     }
 }
 
@@ -463,30 +456,19 @@ impl microcad_lang_base::Diag for EvalContext {
 
 impl PushDiag for EvalContext {
     fn push_diag(&mut self, diag: Diagnostic) -> DiagResult<()> {
-        let result = self.diag.push_diag(diag);
-        log::trace!("Error Context:\n{self:?}");
-        #[cfg(debug_assertions)]
-        if std::env::var("MICROCAD_ERROR_PANIC").is_ok() {
-            eprintln!("{}", self.diagnosis());
-            panic!("MICROCAD_ERROR_PANIC")
-        }
-        result
+        self.diag.push_diag(diag)
     }
 }
 
 impl GetSourceByHash for EvalContext {
-    fn get_by_hash(&self, hash: u64) -> ResolveResult<std::rc::Rc<ir::SourceFile>> {
+    fn get_by_hash(&self, hash: u64) -> ResolveResult<std::rc::Rc<ir::Source>> {
         self.sources.get_by_hash(hash)
     }
 }
 
-impl GetSourceStrByHash for EvalContext {
-    fn get_str_by_hash(&self, hash: u64) -> Option<&str> {
-        self.sources.get_str_by_hash(hash)
-    }
-
-    fn get_filename_by_hash(&self, hash: u64) -> Option<std::path::PathBuf> {
-        self.sources.get_filename_by_hash(hash)
+impl GetSourceLocInfoByHash for EvalContext {
+    fn get_source_loc_info_by_hash(&'_ self, hash: HashId) -> Option<SourceLocInfo<'_>> {
+        self.sources.get_source_loc_info_by_hash(hash)
     }
 }
 
@@ -528,7 +510,7 @@ impl std::fmt::Debug for EvalContext {
 }
 
 impl ImporterRegistryAccess for EvalContext {
-    type Error = EvalError;
+    type Error = Box<EvalError>;
 
     fn import(
         &mut self,

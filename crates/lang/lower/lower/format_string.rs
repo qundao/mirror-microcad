@@ -76,9 +76,9 @@ impl Lower for ir::FormatStringInner {
                 s.content.clone(),
                 context.src_ref(&s.span),
             )),
-            ast::StringPart::Expression(e) => {
-                ir::FormatStringInner::FormatExpression(ir::FormatExpression::lower(e, context)?)
-            }
+            ast::StringPart::Expression(e) => ir::FormatStringInner::FormatExpression(Box::new(
+                ir::FormatExpression::lower(e, context)?,
+            )),
         })
     }
 }

@@ -10,8 +10,5 @@
    6:   mod external;
    7:   std::debug::assert(std::debug::is_valid("external::a"));
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

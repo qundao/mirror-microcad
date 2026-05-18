@@ -5,19 +5,65 @@
 
 use std::path::PathBuf;
 
-use crate::output::Output;
-use rustc_hash::FxHashSet as HashSet;
+use microcad_driver::prelude as mu;
+
+use crate::output::TestOutput;
 
 /// Markdown test environment
 pub struct TestEnv {
     orig_name: String,
     name: String,
-    path: PathBuf,
-    mode: String,
+    mode: TestMode,
     params: Option<String>,
-    code: String,
-    start_no: u32,
-    log_file: Option<std::fs::File>,
+    /// Source to be tested
+    pub source: mu::base::Source,
+}
+
+/// The test mode
+#[derive(Default)]
+pub enum TestMode {
+    /// ok: Expected no errors
+    #[default]
+    Ok,
+    /// fail: This test is expected to fail with errors
+    Fail,
+    /// todo: This test is to be implemented
+    Todo,
+    /// ignore: Ignore this test
+    Ignore,
+    /// warn: Expected warnings
+    Warn,
+}
+
+impl std::str::FromStr for TestMode {
+    type Err = mu::Report;
+
+    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
+        match s {
+            "fail" => Ok(Self::Fail),
+            "todo" => Ok(Self::Todo),
+            "ignore" => Ok(Self::Ignore),
+            "ok" => Ok(Self::Ok),
+            "warn" => Ok(Self::Warn),
+            _ => Err(mu::report("Invalid test mode")),
+        }
+    }
+}
+
+impl std::fmt::Display for TestMode {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                TestMode::Ok => "ok",
+                TestMode::Fail => "fail",
+                TestMode::Todo => "todo",
+                TestMode::Ignore => "ignore",
+                TestMode::Warn => "warn",
+            }
+        )
+    }
 }
 
 /// Markdown test result
@@ -30,33 +76,26 @@ pub enum TestResult {
     OkWrong,
     /// Ok to fail
     FailOk,
-    /// Marked as todo but is ok
-    NotTodo,
-    /// Todo but fail intentionally
-    NotTodoFail,
     /// Fails
     Fail,
     /// Fails with wrong errors
     FailWrong,
-    /// s ok but was meant to fail
+    /// Is ok but was meant to fail
     OkFail,
     /// Work in progress
     Todo,
-    /// Work in progress (should fail)
-    TodoFail,
-    /// Work in progress (incorrect warnings)
-    TodoWarn,
 }
 
 impl std::fmt::Display for TestEnv {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        use mu::base::ResourceLocation;
         write!(
             f,
-            r#"microcad_test_tools::test_env::TestEnv::new({path:?}, {orig_name:?}, {code:?}, {start_no:?})"#,
-            path = self.path,
+            r#"microcad_test_tools::test_env::TestEnv::new({path:?}, {orig_name:?}, {code:?}, {line_offset:?})"#,
+            path = self.source.to_file_path().unwrap(),
             orig_name = self.orig_name,
-            code = self.code,
-            start_no = self.start_no
+            code = self.source.code.value(),
+            line_offset = self.source.line_offset
         )
     }
 }
@@ -68,10 +107,10 @@ impl std::fmt::Debug for TestEnv {
         if !self.params().is_empty() {
             writeln!(f, "           Params: {}", self.params())?;
         }
-        let start = self.start_no;
+        let line_offset = self.source.line_offset + 1;
         writeln!(
             f,
-            "      Source file: {}:{start}",
+            "      Source file: {}:{line_offset}",
             self.source_path().display()
         )?;
         writeln!(f, "        Test path: {}", self.test_path().display())
@@ -90,7 +129,8 @@ impl TestEnv {
         name: &str,
         code: &str,
         line_offset: u32,
-    ) -> Option<Self> {
+    ) -> Self {
+        use std::str::FromStr;
         let orig_name = name.to_string();
         // split name into `name` and optional `mode`
         let (name, mode) = if let Some((name, mode)) = name.split_once('#') {
@@ -99,64 +139,72 @@ impl TestEnv {
             (name, None)
         };
 
-        if mode == Some("no_test") {
-            None
-        } else {
-            let (name, params) = if let Some((name, params)) = name.split_once('(') {
-                if params.ends_with(")") {
-                    (name, Some(&params[0..params.len() - 1]))
-                } else {
-                    (name, None)
-                }
+        let (name, params) = if let Some((name, params)) = name.split_once('(') {
+            if params.ends_with(")") {
+                (name, Some(&params[0..params.len() - 1]))
             } else {
                 (name, None)
-            };
+            }
+        } else {
+            (name, None)
+        };
 
-            Some(Self {
-                orig_name,
-                name: name.to_string(),
-                path: path.as_ref().to_path_buf(),
-                mode: mode.unwrap_or("ok").to_string(),
-                params: params.map(|p| p.to_string()),
-                code: code.into(),
-                start_no: line_offset,
-                log_file: None,
-            })
+        let url = mu::Url::from_file_path(path.as_ref().canonicalize().expect("Existing file"))
+            .expect("A valid file URL");
+
+        Self {
+            orig_name,
+            name: name.to_string(),
+            mode: TestMode::from_str(mode.unwrap_or("ok")).unwrap_or_default(),
+            params: params.map(|p| p.to_string()),
+            source: mu::base::Source {
+                url,
+                line_offset,
+                code: mu::Hashed::new(code.to_string()),
+            },
         }
     }
 
     /// Generate the test call.
-    /// - `output`: A string to append the test output to.
-    pub fn generate(&mut self, output: &mut String) -> Output {
-        output.push_str(&format!(
+    pub fn test_code(&self) -> String {
+        format!(
             r##"
         #[test]
         #[allow(non_snake_case)]
         fn r#{name}() {{
-            crate::markdown_test::run_test({self});
+            crate::markdown_test::run_test({self}).expect("No error");
         }}"##,
             name = self.name
-        ));
+        )
+    }
 
-        std::fs::create_dir_all(self.test_path()).expect("cant create dir");
-
-        Output::new(
+    /// Return test output.
+    pub fn output(&self) -> TestOutput {
+        let mut output = TestOutput::new(
             self.name().into(),
-            self.path.clone(),
+            self.source_path(),
             self.banner_file(),
             self.out_file_path_stem(),
             self.log_file(),
             &["svg", "stl"],
-        )
-    }
-
-    /// Create log file for he test.
-    pub fn start_log(&mut self) {
-        // create log file
-        self.log_file = Some(
-            std::fs::File::create(self.log_file())
-                .unwrap_or_else(|_| panic!("{:?}", self.log_file())),
         );
+
+        let head = "// file: ";
+        if let Some(first_line) = self.source.code.lines().find(|line| line.starts_with(head)) {
+            if first_line.starts_with(head) {
+                use std::io::Write;
+                let (_, filename) = first_line.split_at(head.len());
+                let filename = self.test_path().join(filename);
+                let mut file = std::fs::File::create(filename.clone()).expect("cannot create file");
+                file.write_all(self.source.code.as_bytes())
+                    .expect("cannot write file");
+                output.add_output(filename);
+            }
+        }
+
+        std::fs::create_dir_all(self.test_path()).expect("cant create dir");
+
+        output
     }
 
     /// Return test name.
@@ -166,7 +214,7 @@ impl TestEnv {
 
     /// Return test source code.
     pub fn code(&self) -> &str {
-        &self.code
+        self.source.code.value()
     }
 
     /// Return test parameters.
@@ -175,26 +223,23 @@ impl TestEnv {
     }
 
     /// Return test mode (ok, fail, todo, etc.).
-    pub fn mode(&self) -> &str {
+    pub fn mode(&self) -> &TestMode {
         &self.mode
     }
 
     /// Return path where to store any test output.
     pub fn source_path(&self) -> PathBuf {
-        self.path.clone()
+        use mu::traits::ResourceLocation;
+        pathdiff::diff_paths(
+            self.source.to_file_path().expect("A valid file path"),
+            std::env::current_dir().expect("Current dir"),
+        )
+        .unwrap()
     }
 
     /// Return path where to store any test output.
     pub fn test_path(&self) -> PathBuf {
-        self.path.parent().unwrap().join(".test")
-    }
-
-    /// Return test banner filename as string.
-    pub fn banner(&self) -> String {
-        self.banner_file()
-            .to_string_lossy()
-            .escape_default()
-            .to_string()
+        self.source_path().parent().unwrap().join(".test")
     }
 
     /// Return test banner filename as path.
@@ -217,99 +262,50 @@ impl TestEnv {
         self.out_file_path_stem().with_extension(ext)
     }
 
-    /// Return if test mode is todo.
-    pub fn todo(&self) -> bool {
-        matches!(self.mode(), "todo" | "todo_fail")
-    }
-
     /// Return if parameter `hires` is set.
     pub fn hires(&self) -> bool {
         self.params() == "hires"
     }
 
-    /// Return markdown file reference of the test.
-    pub fn reference(&self) -> String {
-        format!(
-            "{}:{}",
-            self.source_path().to_str().expect("valid path"),
-            self.start_no
-        )
-    }
-
-    /// Map line number into MD-line number.
-    pub fn offset_line(&self, line_no: u32) -> u32 {
-        line_no + self.start_no
-    }
-
-    /// Map line number into MD-line number.
-    pub fn offset(&self) -> u32 {
-        self.start_no
-    }
-
-    /// Write into test log (end line with LF).
-    pub fn log_ln(&mut self, text: &str) {
-        if let Some(mut log_file) = self.log_file.as_mut() {
-            let log_out = &mut std::io::BufWriter::new(&mut log_file);
-            use std::io::Write;
-            writeln!(log_out, "{}", text).expect("output error")
-        }
-    }
-
-    /// Write into test log (no LF at end).
-    pub fn log(&mut self, text: &str) {
-        if let Some(mut log_file) = self.log_file.as_mut() {
-            let log_out = &mut std::io::BufWriter::new(&mut log_file);
-            use std::io::Write;
-            write!(log_out, "{}", text).expect("output error")
-        }
-    }
-
     /// Report output into log file.
-    pub fn report_output(&mut self, output: Option<String>) {
+    pub fn report_output(&self, output: Option<String>) -> String {
         let output = output.unwrap_or("output error".into());
         if output.is_empty() {
-            self.log_ln("-- No Output --");
+            "-- No Output --".to_string()
         } else {
-            self.log_ln(&format!("-- Output --\n{}", output));
+            format!("-- Output --\n{output}")
         }
     }
 
     /// Report errors into log file.
-    pub fn report_errors(&mut self, diagnosis: String) {
+    pub fn report_errors(&self, diagnosis: String) -> String {
         if diagnosis.is_empty() {
-            self.log("-- No Errors --\n");
+            "-- No Errors --".to_string()
         } else {
-            self.log(&format!("-- Errors --\n{diagnosis}"));
-        }
-    }
-
-    fn diff(&mut self, left: &HashSet<u32>, right: &HashSet<u32>, message: &str) -> bool {
-        let mut diff = left.difference(right).collect::<Vec<_>>();
-        if diff.is_empty() {
-            true
-        } else {
-            diff.sort();
-            let diff = diff.iter().map(|line| line.to_string()).collect::<Vec<_>>();
-            let message = format!("{message}: {}", diff.join(", "));
-            log::trace!("{message}");
-            self.log_ln(&message);
-            false
+            format!("-- Errors --\n{diagnosis}")
         }
     }
 
     /// Return if code includes error or warning marker comments
     pub fn has_error_markers(&self) -> bool {
-        self.code.lines().any(|line| line.contains("// error"))
-            || self.code.lines().any(|line| line.contains("// warning"))
+        self.source
+            .code
+            .lines()
+            .any(|line| line.contains("// error"))
+            || self
+                .source
+                .code
+                .lines()
+                .any(|line| line.contains("// warning"))
     }
 
     /// Report wrong errors into log file.
     pub fn report_wrong_errors(
-        &mut self,
-        error_lines: &HashSet<u32>,
-        warning_lines: &HashSet<u32>,
-    ) -> bool {
-        fn lines_with(code: &str, marker: &str, offset: u32) -> HashSet<u32> {
+        &self,
+        error_lines: &mu::HashSet<u32>,
+        warning_lines: &mu::HashSet<u32>,
+    ) -> Option<String> {
+        fn lines_with(code: &str, marker: &str, offset: u32) -> mu::HashSet<u32> {
             code.lines()
                 .enumerate()
                 .filter_map(|line| {
@@ -322,50 +318,82 @@ impl TestEnv {
                 .collect()
         }
 
-        let lines_with_error = lines_with(self.code(), "// error", self.offset());
-        let lines_with_warning = lines_with(self.code(), "// warning", self.offset());
+        fn diff(
+            left: &mu::HashSet<u32>,
+            right: &mu::HashSet<u32>,
+            message: &str,
+        ) -> Option<String> {
+            let mut diff = left.difference(right).collect::<Vec<_>>();
+            if diff.is_empty() {
+                None
+            } else {
+                diff.sort();
+                let diff = diff
+                    .iter()
+                    .map(|line| (**line + 1).to_string())
+                    .collect::<Vec<_>>();
+                let message = format!("{message}: {}\n", diff.join(", "));
+                Some(message)
+            }
+        }
 
-        let errors_ok = self.diff(
+        let lines_with_error = lines_with(self.code(), "// error", self.source.line_offset);
+        let lines_with_warning = lines_with(self.code(), "// warning", self.source.line_offset);
+        let mut s = String::new();
+
+        let expected_errors = diff(
             &lines_with_error,
             error_lines,
             "Expected error(s) which did not occur in line(s)",
-        ) && self.diff(
+        );
+
+        let unexpected_errors = diff(
             error_lines,
             &lines_with_error,
             "Unexpected error(s) which did occur in line(s)",
         );
+        let errors_ok = expected_errors.is_none() && unexpected_errors.is_none();
 
-        let warnings_ok = self.diff(
+        s += &expected_errors.unwrap_or_default();
+        s += &unexpected_errors.unwrap_or_default();
+
+        let expected_warnings = diff(
             &lines_with_warning,
             warning_lines,
-            "Expected warnings(s) which did not occur in line(s)",
-        ) && self.diff(
-            warning_lines,
-            &lines_with_warning,
-            "Unexpected warnings(s) which did occur in line(s)",
+            "Expected warning(s) which did not occur in line(s)",
         );
 
-        !errors_ok || !warnings_ok
+        let unexpected_warnings = diff(
+            warning_lines,
+            &lines_with_warning,
+            "Unexpected warning(s) which did occur in line(s)",
+        );
+        let warnings_ok = expected_warnings.is_none() && unexpected_warnings.is_none();
+
+        s += &expected_warnings.unwrap_or_default();
+        s += &unexpected_warnings.unwrap_or_default();
+
+        if !errors_ok || !warnings_ok {
+            Some(s)
+        } else {
+            None
+        }
     }
 
     /// Report result into log file.
-    pub fn result(&mut self, result: TestResult) {
+    pub fn result(&self, result: &TestResult) -> String {
         let (res, res_long) = match result {
             TestResult::Ok => ("ok", "OK"),
             TestResult::OkWarn => ("ok_warn", "OK (BUT WARNINGS)"),
             TestResult::OkWrong => ("ok_warn", "OK (BUT WRONG WARNINGS)"),
             TestResult::Todo => ("todo", "TODO"),
-            TestResult::NotTodo => ("not_todo", "OK (BUT IS TODO)"),
             TestResult::Fail => ("fail", "FAILS"),
             TestResult::FailWrong => ("fail_wrong", "FAILS WITH WRONG ERRORS"),
             TestResult::FailOk => ("fail_ok", "FAILS AS EXPECTED"),
-            TestResult::NotTodoFail => ("not_todo_fail", "FAILS AS EXPECTED (BUT IS TODO)"),
-            TestResult::TodoFail => ("todo_fail", "TODO (SHALL FAIL)"),
             TestResult::OkFail => ("ok_fail", "OK BUT SHOULD FAIL"),
-            TestResult::TodoWarn => ("todo_warn", "TODO (WRONG WARNINGS)"),
         };
         let _ = std::fs::remove_file(self.banner_file());
         let _ = std::fs::hard_link(format!("images/{res}.svg"), self.banner_file());
-        self.log_ln(&format!("-- Test Result --\n{res_long}"));
+        format!("-- Test Result --\n{res_long}")
     }
 }

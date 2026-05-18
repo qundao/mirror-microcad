@@ -1,7 +1,10 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::lower::{Lower, LowerContext, LowerError, ir};
+use crate::{
+    lower::{Lower, LowerContext, LowerError, ir},
+    value::Quantity,
+};
 
 use microcad_lang_base::{Refer, SrcRef};
 use microcad_lang_parse::ast;
@@ -12,22 +15,30 @@ impl Lower for ir::Literal {
     fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
         Ok(match &node.literal {
             ast::LiteralKind::Bool(lit) => {
-                ir::Literal::Bool(Refer::new(lit.value, context.src_ref(&lit.span)))
+                ir::Literal(Refer::new(lit.value.into(), context.src_ref(&lit.span)))
             }
             ast::LiteralKind::Integer(lit) => {
-                ir::Literal::Integer(Refer::new(lit.value, context.src_ref(&lit.span)))
+                ir::Literal(Refer::new(lit.value.into(), context.src_ref(&lit.span)))
+            }
+            ast::LiteralKind::Float(lit) => {
+                ir::Literal(Refer::new(lit.value.into(), context.src_ref(&lit.span)))
             }
             ast::LiteralKind::Quantity(lit) => {
-                ir::Literal::Number(ir::NumberLiteral::lower(lit, context)?)
+                let unit = ir::Unit::lower(&lit.unit, context)?;
+                ir::Literal(Refer::new(
+                    Quantity {
+                        value: unit.normalize(lit.value),
+                        quantity_type: unit.quantity_type(),
+                        unit,
+                    }
+                    .into(),
+                    context.src_ref(&lit.span),
+                ))
             }
-            ast::LiteralKind::Float(lit) => ir::Literal::Number(ir::NumberLiteral(
-                lit.value,
-                ir::Unit::None,
+            ast::LiteralKind::String(lit) => ir::Literal(Refer::new(
+                lit.content.clone().into(),
                 context.src_ref(&lit.span),
             )),
-            ast::LiteralKind::String(_) => {
-                unreachable!("string literal are handled else were");
-            }
             ast::LiteralKind::Error(e) => {
                 return Err(LowerError::InvalidLiteral {
                     error: e.kind.clone(),
@@ -35,41 +46,6 @@ impl Lower for ir::Literal {
                 });
             }
         })
-    }
-}
-
-impl Lower for ir::NumberLiteral {
-    type AstNode = ast::QuantityLiteral;
-
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
-        Ok(ir::NumberLiteral(
-            node.value,
-            ir::Unit::lower(&node.unit, context)?,
-            context.src_ref(&node.span),
-        ))
-    }
-}
-
-impl std::str::FromStr for ir::NumberLiteral {
-    type Err = LowerError;
-
-    fn from_str(s: &str) -> std::result::Result<Self, Self::Err> {
-        let num_bytes = s
-            .bytes()
-            .take_while(|&c| c == b'-' || c.is_ascii_digit() || c == b'.')
-            .count();
-        let value = s[0..num_bytes]
-            .parse()
-            .map_err(|e| LowerError::InvalidLiteral {
-                error: ast::LiteralErrorKind::Float(e),
-                src_ref: SrcRef::default(),
-            })?;
-        let unit = s.get(num_bytes..).map(ir::Unit::from_str).transpose()?;
-        Ok(ir::NumberLiteral(
-            value,
-            unit.unwrap_or_default(),
-            SrcRef::default(),
-        ))
     }
 }
 

@@ -37,13 +37,5 @@
   35:   assert_invalid("b");
   36:   assert_invalid("c");
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Group ->
-
-Could not determine output type.
-Nothing will be exported.
 -- Test Result --
 OK

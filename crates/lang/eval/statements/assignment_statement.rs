@@ -17,7 +17,8 @@ impl ir::Assignment {
                     id: self.id(),
                     expected: ty.ty(),
                     found,
-                });
+                }
+                .into());
             }
         }
 

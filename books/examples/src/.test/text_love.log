@@ -27,86 +27,83 @@
   25:   
   26:   #[color = std::color::BLUE]
   27:   Text("PTF", height = 80mm).center().translate(x = 90mm).extrude(4mm);
-  28:   
 
--- No Output --
--- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(Operation) std::ops::extrude(height=4mm, scale=(x=1, y=1), twist=0rad) ->
+  Group (root) -> 3D (38E83EBA228E6F16): Collection @0.25mm
+    Workpiece(Operation) std::ops::extrude(height=4mm, scale=(x=100%, y=100%), twist=0°) -> 3D (D16791521A669F3B): Mesh @0.25mm
       - height = 4mm
-      - scale = (x=1, y=1)
-      - twist = 0rad
+      - scale = (x=100%, y=100%)
+      - twist = 0°
       #[color = rgba(0, 1, 0, 1)]
-      Operation __builtin::ops::extrude(height=4mm, scale_x=1, scale_y=1, twist=0rad) ->
-        Workpiece(Operation) std::ops::translate(x=-110mm, y=0mm, z=0mm) ->
+      Operation __builtin::ops::extrude(height=4mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (455BDADD1AEF5205): Mesh @0.25mm
+        Workpiece(Operation) std::ops::translate(x=-110mm, y=0mm, z=0mm) -> 2D (B6FCD2B0C90FDBC2): Collection @0.25mm
           - x = -110mm
           - y = 0mm
           - z = 0mm
-          Transform __builtin::ops::translate(x=-110mm, y=0mm, z=0mm) ->
-            Operation __builtin::ops::center() ->
-              Workpiece(Sketch) std::geo2d::Text(font_file=, height=80mm, text=µcad) ->
+          Transform __builtin::ops::translate(x=-110mm, y=0mm, z=0mm) -> 2D (CB3DFDB5B9B79C9B): Collection @0.25mm
+            Operation __builtin::ops::center() -> 2D (3904A283DD01593C): Collection @0.25mm
+              Workpiece(Sketch) std::geo2d::Text(font_file=, height=80mm, text=µcad) -> 2D (653212D9D326E025): MultiPolygon @0.25mm
                 - font_file = 
                 - height = 80mm
                 - text = µcad
-                Primitive2D __builtin::geo2d::Text(font_file=, height=80mm, text=µcad) ->
-    Workpiece(Operation) std::ops::extrude(height=12mm, scale=(x=1, y=1), twist=0rad) ->
+                Primitive2D __builtin::geo2d::Text(font_file=, height=80mm, text=µcad) -> 2D (2214B102CAEB94D7): MultiPolygon @0.25mm
+    Workpiece(Operation) std::ops::extrude(height=12mm, scale=(x=100%, y=100%), twist=0°) -> 3D (B5A56307F0E88C50): Mesh @0.25mm
       - height = 12mm
-      - scale = (x=1, y=1)
-      - twist = 0rad
+      - scale = (x=100%, y=100%)
+      - twist = 0°
       #[color = rgba(1, 0, 0, 1)]
-      Operation __builtin::ops::extrude(height=12mm, scale_x=1, scale_y=1, twist=0rad) ->
-        Workpiece(Sketch) text_love::Heart(size=40mm) ->
+      Operation __builtin::ops::extrude(height=12mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (58EB4FBB050246FE): Mesh @0.25mm
+        Workpiece(Sketch) <NO ID>::Heart(size=40mm) -> 2D (1566E7983520C14F): MultiPolygon @0.25mm
           - size = 40mm
-          Operation union() ->
-            Group ->
-              Multiplicity ->
-                Workpiece(Operation) std::ops::translate(x=13.33333333333334mm, y=13.33333333333334mm, z=0mm) ->
+          Operation union() -> 2D (163652B0B94ECCB7): MultiPolygon @0.25mm
+            Group -> 2D (37E2F4E9B266077C):  @0.25mm
+              Multiplicity -> 2D (136855141DDCBDD9): Collection @0.25mm
+                Workpiece(Operation) std::ops::translate(x=13.33333333333334mm, y=13.33333333333334mm, z=0mm) -> 2D (3748D098EF495F75): MultiPolygon @0.25mm
                   - x = 13.33333333333334mm
                   - y = 13.33333333333334mm
                   - z = 0mm
-                  Transform __builtin::ops::translate(x=13.33333333333334mm, y=13.33333333333334mm, z=0mm) ->
-                    Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=40mm) ->
+                  Transform __builtin::ops::translate(x=13.33333333333334mm, y=13.33333333333334mm, z=0mm) -> 2D (8E9CB96EF9BE089B): MultiPolygon @0.25mm
+                    Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=40mm) -> 2D (A52A30C78A41690D): MultiPolygon @0.25mm
                       - center = (x=0mm, y=0mm)
                       - radius = 20mm
-                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                        Primitive2D __builtin::geo2d::Circle(radius=20mm) ->
-                Workpiece(Operation) std::ops::translate(x=-13.33333333333334mm, y=13.33333333333334mm, z=0mm) ->
+                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (D2C18B33D4B1A84F): MultiPolygon @0.25mm
+                        Primitive2D __builtin::geo2d::Circle(radius=20mm) -> 2D (6658F492DB25DCA6): Polygon @0.25mm
+                Workpiece(Operation) std::ops::translate(x=-13.33333333333334mm, y=13.33333333333334mm, z=0mm) -> 2D (12E209B8E7D5095A): MultiPolygon @0.25mm
                   - x = -13.33333333333334mm
                   - y = 13.33333333333334mm
                   - z = 0mm
-                  Transform __builtin::ops::translate(x=-13.33333333333334mm, y=13.33333333333334mm, z=0mm) ->
-                    Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=40mm) ->
+                  Transform __builtin::ops::translate(x=-13.33333333333334mm, y=13.33333333333334mm, z=0mm) -> 2D (DB92055BCD86E5C8): MultiPolygon @0.25mm
+                    Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=40mm) -> 2D (A52A30C78A41690D): MultiPolygon @0.25mm
                       - center = (x=0mm, y=0mm)
                       - radius = 20mm
-                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-                        Primitive2D __builtin::geo2d::Circle(radius=20mm) ->
-              Workpiece(Operation) std::ops::rotate(angle=0.78539816339745rad, axis=(x=0, y=0, z=1)) ->
+                      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (D2C18B33D4B1A84F): MultiPolygon @0.25mm
+                        Primitive2D __builtin::geo2d::Circle(radius=20mm) -> 2D (6658F492DB25DCA6): Polygon @0.25mm
+              Workpiece(Operation) std::ops::rotate(angle=45°, axis=(x=0, y=0, z=1)) -> 2D (CA65E11D561F2C73): MultiPolygon @0.25mm
                 - matrix = Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]
-                Transform __builtin::ops::rotate(matrix=Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]) ->
-                  Workpiece(Sketch) std::geo2d::Rect(size=40mm) ->
+                Transform __builtin::ops::rotate(matrix=Matrix3 [[0.7071067811865476, 0.7071067811865475, 0.0], [-0.7071067811865475, 0.7071067811865476, 0.0], [0.0, 0.0, 1.0]]) -> 2D (A87B0220CBEFB9EC): MultiPolygon @0.25mm
+                  Workpiece(Sketch) std::geo2d::Rect(size=40mm) -> 2D (43D3F0BC3B4F9B64): Rect @0.25mm
                     - height = 40mm
                     - width = 40mm
                     - x = -20mm
                     - y = -20mm
-                    Primitive2D __builtin::geo2d::Rect(height=40mm, width=40mm, x=-20mm, y=-20mm) ->
-    Workpiece(Operation) std::ops::extrude(height=4mm, scale=(x=1, y=1), twist=0rad) ->
+                    Primitive2D __builtin::geo2d::Rect(height=40mm, width=40mm, x=-20mm, y=-20mm) -> 2D (879F521812DABE45): Rect @0.25mm
+    Workpiece(Operation) std::ops::extrude(height=4mm, scale=(x=100%, y=100%), twist=0°) -> 3D (9439310A39B9464F): Mesh @0.25mm
       - height = 4mm
-      - scale = (x=1, y=1)
-      - twist = 0rad
+      - scale = (x=100%, y=100%)
+      - twist = 0°
       #[color = rgba(0, 0, 1, 1)]
-      Operation __builtin::ops::extrude(height=4mm, scale_x=1, scale_y=1, twist=0rad) ->
-        Workpiece(Operation) std::ops::translate(x=90mm, y=0mm, z=0mm) ->
+      Operation __builtin::ops::extrude(height=4mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (82D7A953A41F919): Mesh @0.25mm
+        Workpiece(Operation) std::ops::translate(x=90mm, y=0mm, z=0mm) -> 2D (79CE7268E86282D6): Collection @0.25mm
           - x = 90mm
           - y = 0mm
           - z = 0mm
-          Transform __builtin::ops::translate(x=90mm, y=0mm, z=0mm) ->
-            Operation __builtin::ops::center() ->
-              Workpiece(Sketch) std::geo2d::Text(font_file=, height=80mm, text=PTF) ->
+          Transform __builtin::ops::translate(x=90mm, y=0mm, z=0mm) -> 2D (5F4883267D089E77): Collection @0.25mm
+            Operation __builtin::ops::center() -> 2D (44DFAA28F790B96C): Collection @0.25mm
+              Workpiece(Sketch) std::geo2d::Text(font_file=, height=80mm, text=PTF) -> 2D (710D1A7EE9B64055): MultiPolygon @0.25mm
                 - font_file = 
                 - height = 80mm
                 - text = PTF
-                Primitive2D __builtin::geo2d::Text(font_file=, height=80mm, text=PTF) ->
+                Primitive2D __builtin::geo2d::Text(font_file=, height=80mm, text=PTF) -> 2D (3B0D2FB7CC1EB21C): MultiPolygon @0.25mm
 
 Export of "../books/examples/src/.test/text_love-out.stl" successful.
 -- Test Result --

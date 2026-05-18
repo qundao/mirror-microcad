@@ -16,8 +16,5 @@
   23:   assert_eq([a, 5]);
   24:   assert_eq([b, 10]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

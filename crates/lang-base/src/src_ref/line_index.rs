@@ -4,7 +4,7 @@
 use crate::{HashId, Span, SrcRef, src_ref::LineCol};
 
 /// An index to retrieve the offsets in a line in O(log(n)).
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct LineIndex {
     /// Offset (bytes) the beginning of each line, zero-based
     line_offsets: Vec<u32>,
@@ -32,12 +32,12 @@ impl LineIndex {
         let col = line_str.chars().count();
 
         LineCol {
-            line: (line + 1) as u32,
+            line: line as u32,
             col: (col + 1) as u32,
         }
     }
 
-    pub fn span_to_src_ref(&self, text: &str, span: Span, hash: HashId) -> SrcRef {
+    pub fn src_ref(&self, text: &str, span: &Span, hash: HashId) -> SrcRef {
         SrcRef::new(span.clone(), self.line_col(text, span.start), hash)
     }
 }

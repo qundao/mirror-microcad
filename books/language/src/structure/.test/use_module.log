@@ -11,13 +11,11 @@
   40:   
   41:   geo3d::Sphere(radius = 40mm); // Drops the `std::` prefix.
 
--- No Output --
--- No Errors --
 -- Model --
-  Group (root) ->
-    Workpiece(Part) std::geo3d::Sphere(radius=40mm) ->
+  Group (root) -> 3D (6BBF5EC14B899EAF): Manifold @0.25mm
+    Workpiece(Part) std::geo3d::Sphere(radius=40mm) -> 3D (6BBF5EC14B899EAF): Manifold @0.25mm
       - radius = 40mm
-      Primitive3D __builtin::geo3d::Sphere(radius=40mm) ->
+      Primitive3D __builtin::geo3d::Sphere(radius=40mm) -> 3D (52301E2FAF2D548E): Manifold @0.25mm
 
 Export of "../books/language/src/structure/.test/use_module-out.stl" successful.
 -- Test Result --

@@ -14,8 +14,5 @@
   58:   // can be mixed
   59:   std::debug::assert_eq([f(w = 1cm, height = 2cm), 2cm²]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

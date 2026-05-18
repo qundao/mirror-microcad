@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: init_expression_model
-  Expected result: todo_fail
+  Expected result: todo
       Source file: ../books/tests/src/statement_usage/init.md:110
         Test path: ../books/tests/src/statement_usage/.test
 
@@ -11,7 +11,5 @@
  111:     __builtin::geo2d::Circle(radius=l);
  112:   } } K(1cm);
 
--- No Output --
--- No Errors --
 -- Test Result --
-TODO (SHALL FAIL)
+TODO

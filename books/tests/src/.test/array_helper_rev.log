@@ -9,8 +9,5 @@
 
   64:   std::debug::assert_eq([ std::array::rev([1,2,3]), [3,2,1] ]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

@@ -75,7 +75,7 @@ impl CallMethod<Option<Model>> for Model {
                                 context,
                             )?;
 
-                            Ok::<_, EvalError>(Some(model.replace_input_placeholders(self)))
+                            Ok::<_, Box<EvalError>>(Some(model.replace_input_placeholders(self)))
                         }
                         SymbolDef::Builtin(builtin) => match builtin.call(args, context)? {
                             Value::Model(model) => Ok(Some(model.replace_input_placeholders(self))),

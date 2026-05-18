@@ -22,7 +22,6 @@
   66:   
   67:   PunchedDisk(1cm);
 
--- No Output --
 -- Errors --
   × error: 58:9: Property assignment is not allowed within function
     ╭─[../books/language/src/structure/functions/workbench_functions.md:58:9]
@@ -36,6 +35,6 @@
  59 │         hole
     ╰────
   help: property assignment is only allowed within workbench
-Evaluation aborted because of prior resolve errors!
+
 -- Test Result --
 FAILS AS EXPECTED

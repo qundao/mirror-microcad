@@ -11,11 +11,13 @@ version.workspace = true
 path = "lib.rs"
 
 [dependencies]
-regex = "1.11.1"
 log = "0.4"
 env_logger = "0.11"
 pathdiff = "0.2"
-rustc-hash = "2.1.1"
+
+microcad-lang-markdown = { workspace = true }
+microcad-driver = { workspace = true }
+
 
 [lints.rust]
 missing_docs = "warn"

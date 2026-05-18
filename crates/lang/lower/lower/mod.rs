@@ -9,7 +9,7 @@
 //! ```no_run
 //! use microcad_lang::lower::ir;
 //!
-//! let source_file = ir::SourceFile::load("my.µcad").expect("parsing success");
+//! let source_file = ir::Source::load("my.µcad").expect("parsing success");
 //! ```
 //!
 //! To read a source file from an already loaded string use:
@@ -17,7 +17,7 @@
 //! ```no_run
 //! use microcad_lang::lower::ir;
 //!
-//! let source_file = ir::SourceFile::load_from_str(Some("test"), "test.µcad", r#"std::print("hello world!");"#).expect("parsing success");
+//! let source_file = ir::Source::load_from_str(Some("test"), "test.µcad", r#"std::print("hello world!");"#).expect("parsing success");
 //! ```
 //!
 //! To "run" the source file (and get the expected output) it must now be resolved and evaluated (see [`crate::resolve`] and [`crate::eval`])  .
@@ -35,7 +35,7 @@ mod lang_type;
 mod literal;
 mod module;
 mod parameter;
-mod source_file;
+mod source;
 mod statement;
 mod r#type;
 mod r#use;
@@ -191,6 +191,7 @@ pub(crate) fn build_ast(
 ) -> Result<microcad_lang_parse::ast::Program, LowerErrorsWithSource> {
     parse(source).map_err(|errors| {
         let errors = errors
+            .0
             .into_iter()
             .map(|error| {
                 let src_ref = lower_context.src_ref(&error.span);

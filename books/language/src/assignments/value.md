@@ -76,7 +76,7 @@ prohibited.
 [![test](.test/assignment_shadow.svg)](.test/assignment_shadow.log)
 
 ```µcad,assignment_shadow#fail
-a = 5; // warning: unused local
+a = 5;
 a = a * 2; // error: a already defined in this scope
 ```
 

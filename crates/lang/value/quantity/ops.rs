@@ -11,10 +11,7 @@ impl std::ops::Neg for Quantity {
     type Output = Quantity;
 
     fn neg(self) -> Self::Output {
-        Self {
-            value: -self.value,
-            quantity_type: self.quantity_type,
-        }
+        self.map(|v| -v)
     }
 }
 

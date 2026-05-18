@@ -1,9 +1,9 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! µcad syntax elements.
+//! µcad intermediate representation (IR) elements.
 //!
-//! Every element in the µcad language are parsed into definitions in this module.
+//! Every AST element in the µcad language is parsed into an intermediate representation in this module.
 
 pub mod assignment;
 pub mod attribute;
@@ -19,7 +19,7 @@ pub mod literal;
 pub mod module;
 pub mod parameter;
 pub mod qualifier;
-pub mod source_file;
+pub mod source;
 pub mod statement;
 pub mod type_annotation;
 pub mod r#use;
@@ -40,11 +40,11 @@ pub use literal::*;
 pub use module::*;
 pub use parameter::*;
 pub use qualifier::*;
-pub use source_file::*;
+pub use source::*;
 pub use statement::*;
 pub use type_annotation::*;
 pub use r#use::*;
 pub use visibility::*;
 pub use workbench::*;
 
-pub use crate::ty::{MatrixType, QuantityType, TupleType, Type}; // TODO Move TupleType to ir
+pub use crate::ty::{MatrixType, QuantityType, TupleType, Type, Unit};

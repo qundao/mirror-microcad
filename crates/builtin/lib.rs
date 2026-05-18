@@ -37,7 +37,7 @@ pub mod __builtin {
     pub use crate::ops::ops;
     pub use crate::string::string;
 
-    use microcad_lang::{symbol::Symbol, ty::Ty, value::Value};
+    use microcad_lang::{eval::EvalResult, symbol::Symbol, ty::Ty, value::Value};
 
     /// Return type of argument.
     pub fn type_of() -> Symbol {
@@ -77,12 +77,10 @@ pub mod __builtin {
             "print",
             [microcad_lang::parameter!(x)].into_iter(),
             &|_params, args, context| {
-                args.iter().try_for_each(
-                    |(_, arg)| -> Result<(), microcad_lang::eval::EvalError> {
-                        context.print(format!("{value}", value = arg.value));
-                        Ok(())
-                    },
-                )?;
+                args.iter().try_for_each(|(_, arg)| -> EvalResult<()> {
+                    context.print(format!("{value}", value = arg.value));
+                    Ok(())
+                })?;
                 Ok(Value::None)
             },
             None,

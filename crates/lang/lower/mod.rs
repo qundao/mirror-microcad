@@ -4,6 +4,8 @@
 //! Lowering compile step
 
 pub mod ir;
+
+#[allow(clippy::module_inception)]
 mod lower;
 
 use microcad_lang_base::{ComputedHash, Hashed, Identifier, LineIndex, Span, SrcRef};
@@ -54,6 +56,7 @@ pub trait Initialized<'a> {
 pub struct LowerContext<'source> {
     pub source: Hashed<&'source str>,
     line_index: LineIndex,
+    line_offset: u32,
 }
 
 impl<'source> LowerContext<'source> {
@@ -61,15 +64,22 @@ impl<'source> LowerContext<'source> {
         LowerContext {
             source: Hashed::new(source),
             line_index: LineIndex::new(source),
+            line_offset: 0,
+        }
+    }
+
+    pub fn with_line_offset(self, line_offset: u32) -> Self {
+        Self {
+            source: self.source,
+            line_index: self.line_index,
+            line_offset,
         }
     }
 
     pub fn src_ref(&self, span: &Span) -> SrcRef {
-        SrcRef::new(
-            span.clone(),
-            self.line_index.line_col(&self.source, span.start),
-            self.source.computed_hash(),
-        )
+        self.line_index
+            .src_ref(self.source.value(), span, self.source.computed_hash())
+            .with_line_offset(self.line_offset)
     }
 }
 

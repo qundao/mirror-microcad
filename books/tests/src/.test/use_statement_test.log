@@ -29,40 +29,5 @@
   77:   y = MyPart3d();
   78:   z = baz(-1.0);
 
--- No Output --
--- Errors --
-  ⚠ warning: 76:1: Unused local x.
-    ╭─[../books/tests/src/use.md:76:1]
- 75 │ 
- 76 │ x = MySketch2d();
-    · ┬
-    · ╰── Unused local x.
- 77 │ y = MyPart3d();
-    ╰────
-  ⚠ warning: 77:1: Unused local y.
-    ╭─[../books/tests/src/use.md:77:1]
- 76 │ x = MySketch2d();
- 77 │ y = MyPart3d();
-    · ┬
-    · ╰── Unused local y.
- 78 │ z = baz(-1.0);
-    ╰────
-  ⚠ warning: 78:1: Unused local z.
-    ╭─[../books/tests/src/use.md:78:1]
- 77 │ y = MyPart3d();
- 78 │ z = baz(-1.0);
-    · ┬
-    · ╰── Unused local z.
-    ╰────
-  ⚠ warning: 65:5: Unused global symbol std::print.
-    ╭─[../books/tests/src/use.md:65:5]
- 64 │ // use print from `std/module.µcad`
- 65 │ use std::print;
-    ·     ─────┬────
-    ·          ╰── Unused global symbol std::print.
- 66 │ // public use operation from `std/module.µcad`
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 65, 76, 77, 78
--- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

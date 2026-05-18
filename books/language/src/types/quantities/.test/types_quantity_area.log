@@ -12,8 +12,5 @@
   75:   area = a * b;
   76:   std::debug::assert(area == 6cm²);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

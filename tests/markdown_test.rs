@@ -1,298 +1,171 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_core::hash::HashSet;
-use microcad_lang::resolve::Sources;
-use microcad_lang::{eval::EvalContext, lower::ir::SourceFile, model::Model};
-use microcad_lang_base::{
-    Capture, Diag, DiagRenderOptions, Diagnostic, FormatTree, Refer, SrcReferrer,
-};
+use microcad_driver::prelude as mu;
+
 use microcad_test_tools::test_env::*;
-use miette::Report;
 use std::rc::Rc;
 
 #[allow(dead_code)]
-pub fn init() {
-    let _ = env_logger::builder().try_init();
-}
+pub fn run_test(env: TestEnv) -> std::io::Result<()> {
+    use mu::traits::*;
 
-#[allow(dead_code)]
-pub fn run_test(env: Option<TestEnv>) {
-    if let Some(mut env) = env {
-        use std::fs;
+    use std::fs;
+    env_logger::try_init().ok();
 
-        crate::markdown_test::init();
+    log::info!("Running test:\n{env:?}");
 
-        log::info!("Running test:\n{env:?}");
+    // remove generated files before updating
+    let _ = fs::remove_file(env.banner_file());
+    let _ = fs::remove_file(env.log_file());
 
-        // remove generated files before updating
-        let _ = fs::remove_file(env.banner_file());
-        let _ = fs::remove_file(env.log_file());
+    let mut log_file =
+        std::fs::File::create(env.log_file()).unwrap_or_else(|_| panic!("{:?}", env.log_file()));
+    let log = &mut std::io::BufWriter::new(&mut log_file);
+    use std::io::Write;
 
-        let _ = fs::hard_link("images/parse_fail.svg", env.banner_file());
+    // insert UTF-8 Byte Order Mark (BOM)
+    writeln!(
+        log,
+        "{}",
+        std::str::from_utf8(&[0xEF_u8, 0xBB_u8, 0xBF_u8]).expect("test error")
+    )?;
 
-        env.start_log();
-        // insert UTF-8 Byte Order Mark (BOM)
-        env.log_ln(std::str::from_utf8(&[0xEF_u8, 0xBB_u8, 0xBF_u8]).expect("test error"));
+    writeln!(log, "-- Test --\n{env:?}")?;
 
-        env.log_ln(&format!("-- Test --\n{env:?}"));
-        env.log_ln(&format!(
-            "-- Code --\n\n{}\n",
-            env.code()
-                .lines()
-                .enumerate()
-                .map(|(n, line)| format!("{n:4}:   {line}", n = env.offset_line(n as u32)))
-                .collect::<Vec<_>>()
-                .join("\n")
-        ));
+    writeln!(
+        log,
+        "-- Code --\n\n{}\n",
+        env.code()
+            .lines()
+            .enumerate()
+            .map(|(n, line)| format!("{n:4}:   {line}", n = n as u32 + env.source.line_offset + 1))
+            .collect::<Vec<_>>()
+            .join("\n")
+    )?;
 
-        // load and handle µcad source file
-        let (source, errors) = SourceFile::load_from_str_with_recovery(
-            Some(env.name()),
-            env.source_path(),
-            env.code(),
-        );
-        let sources =
-            Sources::load(source.clone(), &<Vec<&str>>::new()).expect("no externals to fail");
-        let render_options = DiagRenderOptions {
-            color: false,
-            ..Default::default()
-        };
+    let diag_render_options = mu::base::DiagRenderOptions {
+        color: false,
+        ..Default::default()
+    };
 
-        match env.mode() {
-            // test is expected to fail?
-            "fail" | "todo_fail" => match errors {
-                // test expected to fail failed at parsing?
-                Some(errors) => {
-                    let mut error_lines = HashSet::default();
-                    for err in errors {
-                        if let Some(line) = err.src_ref().line() {
-                            error_lines.insert(line + env.offset() - 1);
-                        }
-                        env.log_ln("-- Parse Error --");
-                        let src_ref = err.src_ref();
-                        let diag = Diagnostic::Error(Refer::new(Report::from(err), src_ref));
-                        env.log_ln(&diag.to_pretty_string(&sources, env.offset(), &render_options));
-                    }
-                    if env.has_error_markers() {
-                        if env.report_wrong_errors(&error_lines, &HashSet::default()) {
-                            env.result(TestResult::FailWrong);
-                            panic!("ERROR: test is marked to fail but with wrong errors/warnings");
-                        }
-                        env.result(TestResult::FailOk);
-                    } else if env.todo() {
-                        env.result(TestResult::NotTodoFail);
-                    } else {
-                        env.result(TestResult::FailOk);
-                    }
+    let mut source = mu::document::Source::from_source(env.source.clone());
+
+    use microcad_driver::commands::Compile;
+
+    let resolution = if env.hires() {
+        mu::RenderResolution::high()
+    } else {
+        mu::RenderResolution::medium()
+    };
+
+    let model = source.compile(mu::CompileParameters {
+        resolve: mu::ResolveParameters {
+            search_paths: vec!["../crates/std/lib".into(), "../assets".into()],
+        },
+        render: mu::RenderParameters::from(resolution).with_empty_cache(),
+    });
+    let diag = source.diags();
+    let error_lines = diag.error_lines();
+    let warning_lines = diag.warning_lines();
+
+    let result = match env.mode() {
+        // test is expected to fail?
+        TestMode::Fail => {
+            if diag.has_errors() {
+                writeln!(log, "-- Errors --")?;
+                writeln!(log, "{}", source.diagnostics_string(&diag_render_options))?;
+
+                if env.has_error_markers()
+                    && let Some(msg) =
+                        env.report_wrong_errors(&error_lines, &mu::HashSet::default())
+                {
+                    writeln!(log, "{msg}")?;
+                    TestResult::FailWrong
+                } else {
+                    TestResult::FailOk
                 }
-                // test expected to fail succeeded at parsing?
-                None => {
-                    // evaluate the code including µcad std library
-                    let mut context = create_context(&source, env.offset());
-                    let eval = context.eval();
-
-                    env.report_output(context.output());
-                    env.report_errors(context.diagnosis());
-
-                    let err_warn =
-                        env.report_wrong_errors(&context.error_lines(), &context.warning_lines());
-                    let _ = fs::remove_file(env.banner_file());
-
-                    // check if test expected to fail failed at evaluation
-                    match (
-                        eval,
-                        context.has_errors() || context.has_warnings(),
-                        env.todo(),
-                    ) {
-                        // evaluation had been aborted?
-                        (Err(err), _, false) => {
-                            env.log_ln(&err.to_string());
-                            if err_warn {
-                                env.result(TestResult::FailWrong);
-                                panic!(
-                                    "ERROR: test is marked to fail but with wrong errors/warnings"
-                                );
-                            }
-                            env.result(TestResult::FailOk);
-                        }
-                        // evaluation produced errors?
-                        (_, true, false) => {
-                            if err_warn {
-                                env.result(TestResult::FailWrong);
-                                panic!(
-                                    "ERROR: test is marked to fail but with wrong errors/warnings"
-                                );
-                            }
-                            env.result(TestResult::FailOk);
-                            log::debug!(
-                                "there were {error_count} errors (see {log:?})",
-                                log = env.log_file(),
-                                error_count = context.error_count()
-                            );
-                        }
-                        // test fails as expected but is todo
-                        (Err(_), _, true) | (_, true, true) => {
-                            if err_warn {
-                                env.result(TestResult::TodoFail)
-                            } else {
-                                env.result(TestResult::NotTodoFail)
-                            }
-                        }
-                        // test expected to fail but succeeds and is todo to fail?
-                        (_, _, true) => env.result(TestResult::TodoFail),
-                        // test expected to fail but succeeds?
-                        (_, _, false) => {
-                            env.result(TestResult::OkFail);
-                            panic!("ERROR: test is marked to fail but succeeded");
-                        }
-                    }
-                }
-            },
-            // test is expected to succeed?
-            "ok" | "todo" | "warn" | "todo_warn" => match errors {
-                // test awaited to succeed and parsing failed?
-                Some(errors) => {
-                    let first_err = errors[0].to_string();
-                    for err in errors {
-                        env.log_ln("-- Parse Error --");
-                        let src_ref = err.src_ref();
-                        let diag = Diagnostic::Error(Refer::new(Report::from(err), src_ref));
-                        env.log_ln(&diag.to_pretty_string(&sources, env.offset(), &render_options));
-                    }
-
-                    if env.todo() {
-                        env.result(TestResult::Todo);
-                    } else if env.has_error_markers() {
-                        env.result(TestResult::FailWrong);
-                        panic!("ERROR: test is marked to fail but with wrong errors/warnings");
-                    } else {
-                        env.result(TestResult::Fail);
-                        panic!("ERROR: {first_err}")
-                    }
-                }
-                // test awaited to succeed and parsing succeeds?
-                None => {
-                    // evaluate the code including µcad std library
-                    let mut context = create_context(&source, env.offset());
-                    let eval = context.eval();
-
-                    env.report_output(context.output());
-                    env.report_errors(context.diagnosis());
-                    let err_warn =
-                        env.report_wrong_errors(&context.error_lines(), &context.warning_lines());
-
-                    let _ = fs::remove_file(env.banner_file());
-
-                    // check if test awaited to succeed but failed at evaluation
-                    match (eval, context.has_errors(), env.todo()) {
-                        // test expected to succeed and succeeds with no errors
-                        (Ok(model), false, false) => {
-                            report_model(&mut env, model);
-                            if err_warn {
-                                match env.mode() {
-                                    "warn" => {
-                                        env.result(TestResult::OkWrong);
-                                        panic!(
-                                            "ERROR: test is marked to fail but with wrong errors/warnings"
-                                        );
-                                    }
-                                    "todo_warn" => {
-                                        env.result(TestResult::TodoWarn);
-                                    }
-                                    _ => env.result(TestResult::OkWarn),
-                                }
-                            } else {
-                                env.result(TestResult::Ok)
-                            }
-                        }
-                        // test is todo but succeeds with no errors
-                        (Ok(_), false, true) => {
-                            env.result(TestResult::NotTodo);
-                        }
-                        // Any error but todo
-                        (_, _, true) => {
-                            env.result(TestResult::Todo);
-                        }
-                        // evaluation had been aborted?
-                        (Err(err), _, _) => {
-                            env.log_ln(&err.to_string());
-                            env.result(TestResult::Fail);
-                            panic!("ERROR: {err}")
-                        }
-                        // evaluation produced errors?
-                        (_, true, _) => {
-                            env.result(TestResult::Fail);
-                            panic!(
-                                "ERROR: There were {error_count} errors (see {log:?}).",
-                                log = env.log_file(),
-                                error_count = context.error_count()
-                            );
-                        }
-                    }
-                }
-            },
-            "no-test" => (),
-            "fail(no_format)" => (), // HOTFIX
-            _ => unreachable!(),
+            } else {
+                TestResult::OkFail
+            }
         }
+
+        TestMode::Todo => TestResult::Todo,
+        TestMode::Warn => {
+            if diag.has_warnings() {
+                writeln!(log, "-- Warnings --")?;
+                writeln!(log, "{}", source.diagnostics_string(&diag_render_options))?;
+
+                if env.has_error_markers()
+                    && let Some(msg) = env.report_wrong_errors(&error_lines, &warning_lines)
+                {
+                    writeln!(log, "{msg}")?;
+                    TestResult::OkWarn
+                } else {
+                    TestResult::OkWarn
+                }
+            } else {
+                TestResult::OkFail
+            }
+        }
+        // test is expected to succeed?
+        TestMode::Ok => TestResult::Ok,
+        TestMode::Ignore => {
+            return Ok(());
+        }
+    };
+
+    if let Ok(model) = model {
+        report_model(&env, log, model)?;
+    }
+
+    writeln!(log, "{}", env.result(&result))?;
+
+    match result {
+        TestResult::Fail => panic!("ERROR"),
+        TestResult::OkWrong | TestResult::FailWrong => {
+            panic!("ERROR: test is marked to fail but with wrong errors/warnings")
+        }
+        TestResult::OkFail => panic!("ERROR: test is marked to fail but succeeded"),
+        _ => Ok(()),
     }
 }
 
-// evaluate the code including µcad std library
-fn create_context(source: &Rc<SourceFile>, line_offset: u32) -> EvalContext {
-    let mut context = EvalContext::from_source(
-        source.clone(),
-        Some(microcad_builtin::builtin_module()),
-        &["../crates/std/lib", "../assets"],
-        Capture::new(),
-        microcad_builtin::builtin_exporters(),
-        microcad_builtin::builtin_importers(),
-        line_offset - 1,
-    )
-    .expect("resolve error");
-    context.diag.render_options.color = false;
-    context
-}
+fn report_model(
+    env: &TestEnv,
+    log: &mut dyn std::io::Write,
+    model: mu::Model,
+) -> std::io::Result<()> {
+    if model.has_no_output() {
+        return writeln!(log, "-- No Model --");
+    }
 
-fn report_model(env: &mut TestEnv, model: Option<Model>) {
-    use microcad_core::RenderResolution;
-    use microcad_export::{stl::StlExporter, svg::SvgExporter};
-    use microcad_lang::model::{ExportCommand as Export, OutputType};
+    use mu::export::{stl::StlExporter, svg::SvgExporter};
 
-    // print model
-    if let Some(model) = model {
-        env.log_ln(&format!("-- Model --\n{}", FormatTree(&model)));
+    writeln!(log, "-- Model --\n{}", mu::base::FormatTree(&model))?;
 
-        let export = match model.deduce_output_type() {
-            OutputType::Geometry2D => Some(Export {
-                filename: env.out_file("svg"),
-                resolution: RenderResolution::default(),
-                exporter: Rc::new(SvgExporter),
-            }),
-            OutputType::Geometry3D => Some(Export {
-                filename: env.out_file("stl"),
-                resolution: if env.hires() {
-                    RenderResolution::default()
-                } else {
-                    RenderResolution::coarse()
-                },
-                exporter: Rc::new(StlExporter),
-            }),
-            OutputType::NotDetermined => {
-                env.log_ln("Could not determine output type.");
-                None
-            }
-            _ => panic!("Invalid geometry output"),
-        };
-        match export {
-            Some(export) => match export.render_and_export(&model) {
-                Ok(_) => env.log_ln(&format!("Export of {:?} successful.", export.filename)),
-                Err(error) => env.log_ln(&format!("Export error: {error}")),
-            },
-            None => env.log_ln("Nothing will be exported."),
+    use mu::OutputType::*;
+    let export = match model.deduce_output_type() {
+        Geometry2D => Some(mu::ExportCommand {
+            filename: env.out_file("svg"),
+            exporter: Rc::new(SvgExporter),
+        }),
+        Geometry3D => Some(mu::ExportCommand {
+            filename: env.out_file("stl"),
+            exporter: Rc::new(StlExporter),
+        }),
+        NotDetermined => {
+            writeln!(log, "Could not determine output type.")?;
+            None
         }
-    } else {
-        env.log_ln("-- No Model --");
+        _ => panic!("Invalid geometry output"),
+    };
+
+    match export {
+        Some(export) => match export.export(&model) {
+            Ok(_) => writeln!(log, "Export of {:?} successful.", export.filename),
+            Err(err) => writeln!(log, "Export error: {err}"),
+        },
+        None => writeln!(log, "Nothing will be exported."),
     }
 }

@@ -1,7 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{GetSourceStrByHash, diag::*};
+use crate::{GetSourceLocInfoByHash, diag::*};
 use microcad_core::hash::HashSet;
 use std::io::IsTerminal;
 
@@ -17,8 +17,6 @@ pub struct DiagHandler {
     error_limit_reached: bool,
     /// Treat warnings as errors if `true`.
     warnings_as_errors: bool,
-    /// Line offset for error and warning messages.
-    line_offset: u32,
     /// Diagnostic rendering options
     pub render_options: DiagRenderOptions,
 }
@@ -55,60 +53,34 @@ impl DiagRenderOptions {
 
 /// Handler for diagnostics.
 impl DiagHandler {
-    /// Create new diag handler.
-    pub fn new(line_offset: u32) -> Self {
-        Self {
-            line_offset,
-            ..Default::default()
-        }
-    }
-
     /// Pretty print all errors of all files.
     pub fn pretty_print(
         &self,
         f: &mut dyn std::fmt::Write,
-        source_by_hash: &impl GetSourceStrByHash,
+        source_by_hash: &impl GetSourceLocInfoByHash,
     ) -> std::fmt::Result {
         self.diagnostics
-            .pretty_print(f, source_by_hash, self.line_offset, &self.render_options)
+            .pretty_print(f, source_by_hash, &self.render_options)
     }
 
     /// Return overall number of occurred errors.
     pub fn warning_count(&self) -> u32 {
-        self.diagnostics.warning_count
+        self.diagnostics.warning_count()
     }
 
     /// Return overall number of occurred errors.
     pub fn error_count(&self) -> u32 {
-        self.diagnostics.error_count
+        self.diagnostics.error_count()
     }
 
     /// return lines with errors
     pub fn error_lines(&self) -> HashSet<u32> {
-        self.diagnostics
-            .iter()
-            .filter_map(|d| {
-                if d.level() == Level::Error {
-                    d.line().map(|line| line + self.line_offset)
-                } else {
-                    None
-                }
-            })
-            .collect()
+        self.diagnostics.error_lines()
     }
 
     /// return lines with warnings
     pub fn warning_lines(&self) -> HashSet<u32> {
-        self.diagnostics
-            .iter()
-            .filter_map(|d| {
-                if d.level() == Level::Warning {
-                    d.line().map(|line| line + self.line_offset)
-                } else {
-                    None
-                }
-            })
-            .collect()
+        self.diagnostics.warning_lines()
     }
 
     /// Clear all errors and warnings

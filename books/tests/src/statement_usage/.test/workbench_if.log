@@ -11,12 +11,5 @@
   63:     if std::math::PI == 3 { }
   64:   } K();
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(Sketch) workbench_if::K() ->
-
-Export error: Render error: Nothing to render
 -- Test Result --
 OK

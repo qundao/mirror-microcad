@@ -19,7 +19,7 @@ pub(super) trait Grant {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()>;
 }
 
-impl Grant for ir::SourceFile {
+impl Grant for ir::Source {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
         context.scope(Scope(Source, SrcRef::none()), |context| {

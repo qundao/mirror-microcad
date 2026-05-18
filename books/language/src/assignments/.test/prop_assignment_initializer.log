@@ -16,7 +16,6 @@
   67:   }
   68:   MySketch(5cm)
 
--- No Output --
 -- Errors --
   × error: 64:9: Property assignment is not allowed within initializer
     ╭─[../books/language/src/assignments/property.md:64:9]
@@ -31,6 +30,6 @@
  65 │     }
     ╰────
   help: property assignment is only allowed within workbench
-Evaluation aborted because of prior resolve errors!
+
 -- Test Result --
 FAILS AS EXPECTED

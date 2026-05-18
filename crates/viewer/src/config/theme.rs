@@ -4,7 +4,8 @@
 //! Color theme
 
 use bevy::ecs::resource::Resource;
-use microcad_core::Color;
+use microcad_driver::prelude as mu;
+
 use serde::Deserialize;
 
 /// Represents a color theme.
@@ -15,45 +16,45 @@ pub struct Theme {
 
     /// Primary color.
     #[serde(deserialize_with = "deserialize_color_from_hex")]
-    pub primary: Color,
+    pub primary: mu::Color,
 
     /// Brighter color.
     #[serde(deserialize_with = "deserialize_color_from_hex")]
-    pub bright: Color,
+    pub bright: mu::Color,
 
     /// Brighter color.
     #[serde(deserialize_with = "deserialize_color_from_hex")]
-    pub brighter: Color,
+    pub brighter: mu::Color,
 
     /// Darker color.
     #[serde(deserialize_with = "deserialize_color_from_hex")]
-    pub darker: Color,
+    pub darker: mu::Color,
 
     /// Complementary color (e.g. operators, intersections).
     #[serde(deserialize_with = "deserialize_color_from_hex")]
-    pub complementary: Color,
+    pub complementary: mu::Color,
 
     /// Signal color, e.g. for selections.
     #[serde(deserialize_with = "deserialize_color_from_hex")]
-    pub signal: Color,
+    pub signal: mu::Color,
 
     /// Color for guidelines (e.g. inference lines).
     #[serde(deserialize_with = "deserialize_color_from_hex")]
-    pub guide: Color,
+    pub guide: mu::Color,
 }
 
-fn deserialize_color_from_hex<'de, D>(deserializer: D) -> Result<Color, D::Error>
+fn deserialize_color_from_hex<'de, D>(deserializer: D) -> Result<mu::Color, D::Error>
 where
     D: serde::Deserializer<'de>,
 {
     let s = String::deserialize(deserializer)?;
-    Color::from_hex_str(&s)
+    mu::Color::from_hex_str(&s)
         .map_err(|err| serde::de::Error::custom(format!("invalid color '{}': {}", s, err)))
 }
 
 impl Default for Theme {
     fn default() -> Self {
-        let hex = |s| Color::from_hex_str(s).expect("Valid hex string");
+        let hex = |s| mu::Color::from_hex_str(s).expect("Valid hex string");
 
         Self {
             name: Some("default".into()),

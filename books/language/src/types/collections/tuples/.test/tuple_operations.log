@@ -13,8 +13,5 @@
   20:   std::debug::assert_eq([(x = 1.0, y = 2.0) / 2, (x = 0.5, y = 1.0)]);
   21:   std::debug::assert_eq([-(x = 1.0, y = 2.0), (x = -1.0, y = -2.0)]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

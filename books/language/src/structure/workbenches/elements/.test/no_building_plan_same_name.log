@@ -20,9 +20,8 @@
  123:   // Use initializer
  124:   Wheel(radius = 1cm);
 
--- No Output --
 -- Errors --
-  × error: 118:9: Value radius already in defined: 10mm
+  × error: 118:9: Value radius already in defined: 1cm
      ╭─[../books/language/src/structure/workbenches/elements/initializers.md:118:9]
  117 │         // radius property has already been set by building plan
  118 │         radius = radius * 2; // error: it cannot be set a second time
@@ -32,7 +31,7 @@
  119 │         thickness = 5mm;
      ╰────
   help: Values in microcad are immutable
-  × error: 118:9: Value radius already in defined: 10mm
+  × error: 118:9: Value radius already in defined: 1cm
      ╭─[../books/language/src/structure/workbenches/elements/initializers.md:118:9]
  117 │         // radius property has already been set by building plan
  118 │         radius = radius * 2; // error: it cannot be set a second time
@@ -42,5 +41,6 @@
  119 │         thickness = 5mm;
      ╰────
   help: Values in microcad are immutable
+
 -- Test Result --
 FAILS AS EXPECTED

@@ -4,20 +4,20 @@
 //! microcad Model Registry.
 
 use bevy::asset::uuid::Uuid;
-use microcad_core::hash::{ComputedHash, HashSet};
-use microcad_lang::model::Model;
+use microcad_driver::prelude as mu;
 
 const MODEL_UUID_SEED: u64 = 0xDEAD_BEEF_DEED_BEAF;
 
 const MODEL_GEOMETRY_OUTPUT_UUID_SEED: u64 = 0x4321_4321_4321_4321;
 
 /// Generate a Uuid for a model info.
-pub fn generate_model_uuid(model: &Model) -> Uuid {
+pub fn generate_model_uuid(model: &mu::Model) -> Uuid {
     Uuid::from_u64_pair(MODEL_UUID_SEED, model.as_ptr() as u64)
 }
 
 /// Generate a Uuid for a model geometry output.
-pub fn generate_model_geometry_output_uuid(model: &Model) -> Uuid {
+pub fn generate_model_geometry_output_uuid(model: &mu::Model) -> Uuid {
+    use mu::traits::ComputedHash;
     Uuid::from_u64_pair(MODEL_GEOMETRY_OUTPUT_UUID_SEED, model.computed_hash())
 }
 
@@ -25,9 +25,9 @@ pub fn generate_model_geometry_output_uuid(model: &Model) -> Uuid {
 #[derive(Default)]
 pub struct InstanceRegistry {
     /// UUIDs of all geometry outputs (meshes and polygons)
-    geometry_output_uuids: HashSet<Uuid>,
+    geometry_output_uuids: mu::HashSet<Uuid>,
     /// UUIDs of all model infos.
-    model_uuids: HashSet<Uuid>,
+    model_uuids: mu::HashSet<Uuid>,
 }
 
 impl InstanceRegistry {

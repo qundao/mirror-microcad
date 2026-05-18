@@ -181,16 +181,4 @@ pub trait Lookup<E: std::error::Error = ResolveError> {
             self.lookup(name, target)
         }
     }
-
-    /// Returns an error if name starts with `super::`.
-    fn deny_super(&self, name: &ir::QualifiedName) -> ResolveResult<()> {
-        if name.count_super() > 0 {
-            log::trace!(
-                "{not_found} '{name:?}' is not canonical",
-                not_found = microcad_lang_base::mark!(NOT_FOUND),
-            );
-            return Err(ResolveError::SymbolNotFound(name.clone()));
-        }
-        Ok(())
-    }
 }

@@ -191,7 +191,7 @@ impl<'a> ArgumentMatch<'a> {
                 .map(|(id, ty1, ty2)| format!("{id}: {ty1} != {ty2}"))
                 .collect::<Vec<_>>()
                 .join(", ");
-            Err(EvalError::IdMatchButNotType(type_mismatch))
+            Err(EvalError::IdMatchButNotType(type_mismatch).into())
         }
     }
 
@@ -287,12 +287,12 @@ impl<'a> ArgumentMatch<'a> {
             let mut missing: ir::IdentifierList =
                 self.params.iter().map(|(id, _)| (*id).clone()).collect();
             missing.sort();
-            Err(EvalError::MissingArguments(missing))
+            Err(EvalError::MissingArguments(missing).into())
         } else if !self.arguments.is_empty() {
             let mut too_many: ir::IdentifierList =
                 self.arguments.iter().map(|(id, _)| (*id).clone()).collect();
             too_many.sort();
-            Err(EvalError::TooManyArguments(too_many))
+            Err(EvalError::TooManyArguments(too_many).into())
         } else {
             Ok(())
         }
@@ -303,7 +303,7 @@ impl<'a> ArgumentMatch<'a> {
         if multipliers.is_empty() {
             return Ok(());
         }
-        Err(EvalError::MultiplicityNotAllowed(multipliers))
+        Err(EvalError::MultiplicityNotAllowed(multipliers).into())
     }
 
     /// Process parameter multiplicity

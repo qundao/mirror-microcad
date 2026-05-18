@@ -107,7 +107,7 @@ impl Doc for ir::WorkbenchDefinition {
     }
 }
 
-impl Doc for ir::SourceFile {
+impl Doc for ir::Source {
     fn inner_doc(&self) -> ir::DocBlock {
         self.statements.inner_doc()
     }

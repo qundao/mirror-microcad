@@ -10,7 +10,6 @@
   18:   m = std::geo2d::Circle(radius = 10mm); // assign the model of a circle into m
   19:   std::geo2d::Circle(radius = m); // error: cannot use m as value
 
--- No Output --
 -- Errors --
   × error: 19:20: Workbench Circle cannot find initialization for those arguments
     ╭─[../books/language/src/assignments/model.md:19:1]
@@ -22,5 +21,6 @@
   help: Possible initializations:
         	Circle( radius: Length, center = (x = 0mm, y = 0mm))
         	Circle( diameter: Length, center = (x = 0mm, y = 0mm))
+
 -- Test Result --
 FAILS AS EXPECTED

@@ -5211,23 +5211,12 @@ dependencies = [
  "env_logger",
  "lazy_static",
  "log",
- "microcad-builtin",
- "microcad-core",
- "microcad-docgen",
- "microcad-export",
- "microcad-lang",
- "microcad-lang-base",
- "microcad-lang-format",
- "microcad-lang-markdown",
- "microcad-lang-parse",
- "microcad-std",
+ "microcad-driver",
  "miette",
- "notify",
  "num-format",
  "rust-embed",
  "serde",
  "serde_derive",
- "thiserror 2.0.18",
  "toml 1.1.2+spec-1.1.0",
  "walkdir",
 ]
@@ -5295,6 +5284,31 @@ dependencies = [
 ]
 
 [[package]]
+name = "microcad-driver"
+version = "0.4.0"
+dependencies = [
+ "derive_more 2.1.1",
+ "log",
+ "microcad-builtin",
+ "microcad-core",
+ "microcad-docgen",
+ "microcad-export",
+ "microcad-lang",
+ "microcad-lang-base",
+ "microcad-lang-format",
+ "microcad-lang-markdown",
+ "microcad-lang-parse",
+ "microcad-std",
+ "miette",
+ "notify",
+ "serde",
+ "tempfile",
+ "thiserror 2.0.18",
+ "toml 1.1.2+spec-1.1.0",
+ "url",
+]
+
+[[package]]
 name = "microcad-export"
 version = "0.4.0"
 dependencies = [
@@ -5332,19 +5346,14 @@ dependencies = [
  "crossbeam",
  "env_logger",
  "log",
- "microcad-builtin",
- "microcad-core",
- "microcad-export",
- "microcad-lang",
- "microcad-lang-base",
+ "microcad-driver",
  "microcad-viewer-ipc",
  "miette",
- "notify",
  "serde",
  "serde_derive",
  "slint",
  "slint-build",
- "toml 0.9.12+spec-1.1.0",
+ "toml 1.1.2+spec-1.1.0",
 ]
 
 [[package]]
@@ -5415,6 +5424,7 @@ name = "microcad-lang-parse"
 version = "0.4.0"
 dependencies = [
  "chumsky",
+ "derive_more 2.1.1",
  "either",
  "insta",
  "logos",
@@ -5443,13 +5453,7 @@ dependencies = [
  "dirs",
  "env_logger",
  "log",
- "microcad-builtin",
- "microcad-core",
- "microcad-export",
- "microcad-lang",
- "microcad-lang-base",
- "microcad-lang-format",
- "microcad-lang-parse",
+ "microcad-driver",
  "microcad-viewer-ipc",
  "miette",
  "serde",
@@ -5476,15 +5480,9 @@ dependencies = [
 name = "microcad-tests"
 version = "0.4.0"
 dependencies = [
- "anyhow",
  "env_logger",
  "log",
- "microcad-builtin",
- "microcad-core",
- "microcad-docgen",
- "microcad-export",
- "microcad-lang",
- "microcad-lang-base",
+ "microcad-driver",
  "microcad_markdown_test",
  "microcad_test_tools",
  "miette",
@@ -5506,14 +5504,10 @@ dependencies = [
  "env_logger",
  "geo",
  "log",
- "microcad-builtin",
- "microcad-core",
- "microcad-lang",
- "microcad-lang-base",
+ "microcad-driver",
  "microcad-viewer-ipc",
  "miette",
  "notify",
- "once_cell",
  "percent-encoding",
  "rustc-hash 2.1.1",
  "serde",
@@ -5553,6 +5547,7 @@ version = "0.4.0"
 dependencies = [
  "env_logger",
  "log",
+ "microcad-lang-markdown",
  "microcad_test_tools",
  "miette",
  "regex",
@@ -5564,9 +5559,9 @@ version = "0.4.0"
 dependencies = [
  "env_logger",
  "log",
+ "microcad-driver",
+ "microcad-lang-markdown",
  "pathdiff",
- "regex",
- "rustc-hash 2.1.1",
 ]
 
 [[package]]

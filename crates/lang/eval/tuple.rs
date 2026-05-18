@@ -19,10 +19,10 @@ impl Eval for ir::TupleExpression {
                 if h.insert(ty.clone()) {
                     Ok(())
                 } else {
-                    Err(EvalError::AmbiguousType {
+                    Err(Box::new(EvalError::AmbiguousType {
                         ty,
                         src_ref: self.src_ref.clone(),
-                    })
+                    }))
                 }
             })?;
 

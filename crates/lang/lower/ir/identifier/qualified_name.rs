@@ -47,13 +47,6 @@ impl QualifiedName {
         Self(Refer::new(ids, src_ref))
     }
 
-    /// Create *qualified name* from [`identifier`]s without source code reference.
-    ///
-    /// - `ids`: *Identifiers* that concatenate to the *qualified name*.
-    pub fn no_ref(ids: Vec<Identifier>) -> Self {
-        Self(Refer::none(ids))
-    }
-
     /// Returns true if self is a qualified name with multiple ids in it
     pub fn is_qualified(&self) -> bool {
         self.0.len() > 1
@@ -97,10 +90,6 @@ impl QualifiedName {
         full_name.append(&mut self.clone());
         full_name
     }
-
-    pub(crate) fn count_super(&self) -> usize {
-        self.iter().take_while(|id| id.is_super()).count()
-    }
 }
 
 impl crate::lower::SingleIdentifier for QualifiedName {
@@ -128,12 +117,6 @@ impl From<Identifier> for QualifiedName {
         let src_ref = id.src_ref();
         Self(Refer::new(vec![id], src_ref))
     }
-}
-
-#[test]
-fn dissolve_super() {
-    let what: QualifiedName = "super::super::c::x".into();
-    assert_eq!(what.count_super(), 2);
 }
 
 impl std::fmt::Display for QualifiedName {
@@ -168,28 +151,6 @@ impl FromIterator<Identifier> for QualifiedName {
 impl From<&Identifier> for QualifiedName {
     fn from(id: &Identifier) -> Self {
         Self(Refer::none(vec![id.clone()]))
-    }
-}
-
-impl From<&std::path::Path> for QualifiedName {
-    fn from(path: &std::path::Path) -> Self {
-        // check if this is a module file and remove doublet module generation
-        let path = if path.file_stem() == Some(std::ffi::OsStr::new("mod")) {
-            path.parent().expect("mod file in root path is not allowed")
-        } else {
-            path
-        };
-
-        QualifiedName::no_ref(
-            path.iter()
-                .map(|id| {
-                    Identifier(Refer {
-                        value: id.to_string_lossy().into_owned().into(),
-                        src_ref: SrcRef::none(),
-                    })
-                })
-                .collect(),
-        )
     }
 }
 

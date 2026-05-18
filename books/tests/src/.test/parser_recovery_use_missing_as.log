@@ -11,20 +11,18 @@
   73:   
   74:   a =; // error after a broken use statement
 
--- Parse Error --
-  × error: 73:13: Expected identifier
-    ╭─[../books/tests/src/parser_recovery.md:73:13]
- 73 │ use a::b as ; // error, missing as name
+-- Errors --
+  × error: 72:13: Expected identifier
+    ╭─[../books/tests/src/parser_recovery.md:72:13]
+ 72 │ use a::b as ; // error, missing as name
     ·             ┬
     ·             ╰── unexpected ;
- 74 │ 
+ 73 │ 
     ╰────
-
--- Parse Error --
-  × error: 75:4: Expected expression
-    ╭─[../books/tests/src/parser_recovery.md:75:4]
- 74 │ 
- 75 │ a =; // error after a broken use statement
+  × error: 74:4: Expected expression
+    ╭─[../books/tests/src/parser_recovery.md:74:4]
+ 73 │ 
+ 74 │ a =; // error after a broken use statement
     ·    ┬
     ·    ╰── unexpected ;
     ╰────

@@ -11,21 +11,19 @@
   57:   
   58:   a =; // error after a broken return statement
 
--- Parse Error --
-  × error: 57:10: Expected something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
+-- Errors --
+  × error: 56:10: Expected something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
   │ 'and' or semicolon
-    ╭─[../books/tests/src/parser_recovery.md:57:10]
- 57 │ return 1 2;// error, unexpected tokens after return statement
+    ╭─[../books/tests/src/parser_recovery.md:56:10]
+ 56 │ return 1 2;// error, unexpected tokens after return statement
     ·          ┬
     ·          ╰── unexpected integer literal
- 58 │ 
+ 57 │ 
     ╰────
-
--- Parse Error --
-  × error: 59:4: Expected expression
-    ╭─[../books/tests/src/parser_recovery.md:59:4]
- 58 │ 
- 59 │ a =; // error after a broken return statement
+  × error: 58:4: Expected expression
+    ╭─[../books/tests/src/parser_recovery.md:58:4]
+ 57 │ 
+ 58 │ a =; // error after a broken return statement
     ·    ┬
     ·    ╰── unexpected ;
     ╰────

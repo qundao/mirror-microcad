@@ -13,8 +13,5 @@
   41:   
   42:   std::debug::assert_eq([x, 2cm²]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

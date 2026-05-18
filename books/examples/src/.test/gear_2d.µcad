@@ -6,4 +6,3 @@ use std::ops::*;
 use std::geo2d::*;
 
 InvoluteGearProfile(1.0mm, 100);
-

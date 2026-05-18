@@ -28,13 +28,5 @@
   33:   std::debug::assert_eq([my_module::f(), "Hello my_module"]);
   34:   std::debug::assert_eq([TEXT, "Hello"]);
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(Sketch) const_assignment_mod::my_module::MySketch(text=Hello my_module) ->
-      - text = Hello my_module
-
-Export error: Render error: Nothing to render
 -- Test Result --
 OK

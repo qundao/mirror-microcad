@@ -20,7 +20,6 @@
   81:   
   82:   std::debug::assert_eq([center, 1.75cm]);
 
--- No Output --
 -- Errors --
   × error: 75:9: Property assignment is not allowed within initializer
     ╭─[../books/language/src/structure/workbenches/elements/properties.md:75:9]
@@ -36,6 +35,6 @@
  76 │     }
     ╰────
   help: property assignment is only allowed within workbench
-Evaluation aborted because of prior resolve errors!
+
 -- Test Result --
 FAILS AS EXPECTED

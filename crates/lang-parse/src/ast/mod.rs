@@ -3,6 +3,7 @@
 
 mod expression;
 mod literal;
+mod source;
 mod statement;
 mod ty;
 
@@ -10,6 +11,7 @@ use microcad_lang_base::{Id, Span};
 
 pub use expression::*;
 pub use literal::*;
+pub use source::*;
 pub use statement::*;
 pub use ty::*;
 

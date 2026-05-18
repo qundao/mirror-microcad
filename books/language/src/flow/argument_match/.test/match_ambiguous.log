@@ -10,7 +10,6 @@
   33:   fn f(x: Length, y: Length, z: Length) {}
   34:   f(x = 1cm, 5cm, 3cm); // error: Missing arguments y and z
 
--- No Output --
 -- Errors --
   × error: 34:3: Missing arguments: y,z
     ╭─[../books/language/src/flow/argument_match/errors.md:34:3]
@@ -19,5 +18,6 @@
     ·   ────────┬────────
     ·           ╰── Missing arguments: y,z
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

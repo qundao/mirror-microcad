@@ -5,9 +5,7 @@
 
 use bevy::{asset::uuid::Uuid, color::Color, reflect::TypePath, transform::components::Transform};
 
-use microcad_core::{Bounds2D, Bounds3D, CalcBounds2D, CalcBounds3D, Length, hash::ComputedHash};
-use microcad_lang::model::{Model, OutputType};
-use microcad_lang_base::{SrcRef, SrcReferrer};
+use microcad_driver::prelude as mu;
 
 use crate::{ToBevy, processor::registry};
 
@@ -21,26 +19,27 @@ pub struct ModelInfo {
     /// The original model hash.
     pub model_hash: u64,
     /// The output type for this model.
-    pub output_type: OutputType,
+    pub output_type: mu::OutputType,
     /// The transform for this model.
     pub transform: Transform,
     /// An optional color retrieved from a color attribute for this model.
     pub color: Option<Color>,
     /// The 2D bounds of this model.
-    pub bounds_2d: Bounds2D,
+    pub bounds_2d: mu::core::Bounds2D,
     /// The 3D bounds of this model.
-    pub bounds_3d: Bounds3D,
+    pub bounds_3d: mu::core::Bounds3D,
     /// The bounding sphere radius of this model.
-    pub bounding_sphere_radius: Length,
+    pub bounding_sphere_radius: mu::core::Length,
     /// The radius of the ground circle.
-    pub ground_radius: Length,
+    pub ground_radius: mu::core::Length,
     /// A src code reference for this model.
-    pub src_ref: SrcRef,
+    pub src_ref: mu::SrcRef,
 }
 
 impl ModelInfo {
     /// Create model info from a model.
-    pub fn from_model(model: &Model) -> Self {
+    pub fn from_model(model: &mu::Model) -> Self {
+        use mu::traits::*;
         let model_ = model.borrow();
         let output = model_.output();
 

@@ -11,7 +11,6 @@
  106:       a = 1; // error
  107:   }
 
--- No Output --
 -- Errors --
   × error: 106:5: Value assignment is not allowed within module
      ╭─[../books/language/src/assignments/value.md:106:5]
@@ -24,6 +23,6 @@
  107 │ }
      ╰────
   help: value assignment is only allowed within source file, module, workbench or function
-Evaluation aborted because of prior resolve errors!
+
 -- Test Result --
 FAILS AS EXPECTED

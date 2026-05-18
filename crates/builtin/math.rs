@@ -64,9 +64,7 @@ pub mod math {
             let (_, arg) = args.get_single()?;
             Ok(match &arg.value {
                 Value::Integer(i) => Value::Integer(i.abs()),
-                Value::Quantity(q) => {
-                    Value::Quantity(Quantity::new(q.value.abs(), q.quantity_type.clone()))
-                }
+                Value::Quantity(q) => Value::Quantity(q.clone().map(|v| v.abs())),
                 value => {
                     ctx.error(
                         arg,
@@ -85,9 +83,7 @@ pub mod math {
             let (_, arg) = args.get_single()?;
             Ok(match &arg.value {
                 Value::Integer(i) => (*i as Scalar).sqrt().into(),
-                Value::Quantity(q) => {
-                    Value::Quantity(Quantity::new(q.value.sqrt(), q.quantity_type.clone()))
-                }
+                Value::Quantity(q) => Value::Quantity(q.clone().map(|v| v.sqrt())),
                 value => {
                     ctx.error(
                         arg,
@@ -130,10 +126,12 @@ pub mod math {
             Value::Quantity(Quantity {
                 value,
                 quantity_type: QuantityType::Angle,
+                ..
             })
             | Value::Quantity(Quantity {
                 value,
                 quantity_type: QuantityType::Scalar,
+                ..
             }) => Value::Quantity(Quantity::new(f(*value), QuantityType::Scalar)),
             value => {
                 ctx.error(
@@ -191,6 +189,7 @@ pub mod math {
             Value::Quantity(Quantity {
                 value,
                 quantity_type: QuantityType::Angle,
+                ..
             }) => Some(cgmath::Rad::<f64>(*value)),
             _ => None,
         }

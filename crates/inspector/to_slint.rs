@@ -5,14 +5,11 @@
 
 use crate::*;
 
-use microcad_builtin::Symbol;
-use microcad_lang::{
-    lower::ir,
-    model::{Creator, Element, Model},
-    symbol::SymbolInfo,
-};
-use microcad_lang_base::SrcReferrer;
 use slint::ToSharedString;
+
+use crate::symbol_info::{Info, SymbolInfo};
+
+use mu::traits::*;
 
 pub trait ItemsFromTree<T, D = usize>: Sized
 where
@@ -33,8 +30,8 @@ pub fn model_rc_from_items<T: Sized + Clone + 'static>(items: Vec<T>) -> slint::
     slint::ModelRc::new(VecModel::from(items))
 }
 
-impl From<&SrcRef> for VM_SrcRef {
-    fn from(src_ref: &SrcRef) -> Self {
+impl From<&mu::SrcRef> for VM_SrcRef {
+    fn from(src_ref: &mu::SrcRef) -> Self {
         Self {
             line: src_ref.at.line as i32,
             col: src_ref.at.col as i32,
@@ -43,8 +40,8 @@ impl From<&SrcRef> for VM_SrcRef {
     }
 }
 
-impl From<&Refer<Element>> for VM_Element {
-    fn from(value: &Refer<Element>) -> Self {
+impl From<&mu::Refer<mu::Element>> for VM_Element {
+    fn from(value: &mu::Refer<mu::Element>) -> Self {
         Self {
             name: value.value.to_string().into(),
             src_ref: (&value.src_ref).into(),
@@ -52,8 +49,8 @@ impl From<&Refer<Element>> for VM_Element {
     }
 }
 
-impl From<&ir::DocBlock> for VM_DocBlock {
-    fn from(doc: &ir::DocBlock) -> Self {
+impl From<&mu::ir::DocBlock> for VM_DocBlock {
+    fn from(doc: &mu::ir::DocBlock) -> Self {
         Self {
             lines: doc.0.join("\n").to_shared_string(),
             src_ref: (&doc.src_ref()).into(),
@@ -72,9 +69,8 @@ impl From<SymbolInfo> for VM_SymbolInfo {
     }
 }
 
-impl From<Option<&Creator>> for VM_Creator {
-    fn from(creator: Option<&Creator>) -> Self {
-        use microcad_lang::symbol::Info;
+impl From<Option<&mu::Creator>> for VM_Creator {
+    fn from(creator: Option<&mu::Creator>) -> Self {
         match creator {
             Some(creator) => Self {
                 symbol: creator.symbol.info().into(),
@@ -85,8 +81,8 @@ impl From<Option<&Creator>> for VM_Creator {
     }
 }
 
-impl ItemsFromTree<Model> for ModelTreeModelItem {
-    fn _from_tree(model: &Model, items: &mut Vec<Self>, depth: usize) {
+impl ItemsFromTree<mu::Model> for ModelTreeModelItem {
+    fn _from_tree(model: &mu::Model, items: &mut Vec<Self>, depth: usize) {
         let model_ = model.borrow();
 
         items.push(Self {
@@ -100,10 +96,8 @@ impl ItemsFromTree<Model> for ModelTreeModelItem {
     }
 }
 
-impl ItemsFromTree<Symbol> for SymbolTreeModelItem {
-    fn _from_tree(symbol: &Symbol, items: &mut Vec<Self>, depth: usize) {
-        use microcad_lang_base::SrcReferrer;
-
+impl ItemsFromTree<mu::Symbol> for SymbolTreeModelItem {
+    fn _from_tree(symbol: &mu::Symbol, items: &mut Vec<Self>, depth: usize) {
         items.push(Self {
             depth: depth as i32,
             name: symbol.full_name().to_string().into(),

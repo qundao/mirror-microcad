@@ -3,9 +3,10 @@
 
 mod rich;
 
+use crate::ParseContext;
 use crate::parser::error::rich::RichPattern;
 use crate::tokens::Token;
-use microcad_lang_base::Span;
+use microcad_lang_base::{Diagnostics, Refer, Span};
 use miette::{Diagnostic, LabeledSpan};
 pub use rich::{Rich, RichReason};
 use std::error::Error;
@@ -13,20 +14,58 @@ use std::fmt::{Display, Formatter};
 use std::iter::once;
 use thiserror::Error;
 
+/// Type alias for RichError
+pub type RichError<'tokens> = Rich<'tokens, Token<'tokens>, Span, ParseErrorKind>;
+
 /// An error from building the abstract syntax tree
 #[derive(Debug)]
 pub struct ParseError {
     /// The span of the source that caused the error
     pub span: Span,
-    error: Rich<'static, Token<'static>, Span, ParseErrorKind>,
+    error: RichError<'static>,
 }
 
 impl ParseError {
-    pub(crate) fn new<'tokens>(error: Rich<'tokens, Token<'tokens>, Span, ParseErrorKind>) -> Self {
+    pub(crate) fn new<'tokens>(error: RichError<'tokens>) -> Self {
         Self {
             span: error.span().clone(),
             error: error.map_token(Token::into_owned).into_owned(),
         }
+    }
+}
+
+/// Parse error collection.
+#[derive(Debug, Error, derive_more::Deref, miette::Diagnostic)]
+pub struct ParseErrors(#[related] pub Vec<ParseError>);
+
+impl ParseErrors {
+    /// Convert parse errors to diagnostics
+    pub fn to_diagnostics(self, context: &ParseContext) -> Diagnostics {
+        let mut diag_list = Diagnostics::default();
+        use microcad_lang_base::{Diagnostic as D, PushDiag};
+
+        for err in self.0 {
+            let span = err.span.clone();
+            diag_list
+                .push_diag(D::Error(
+                    Refer::<miette::Report>::new(err.into(), context.src_ref(&span)).into(),
+                ))
+                .expect("Diag list must return no error");
+        }
+
+        diag_list
+    }
+}
+
+impl std::fmt::Display for ParseErrors {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Found {} parse errors", self.0.len())
+    }
+}
+
+impl<'tokens> From<Vec<RichError<'tokens>>> for ParseErrors {
+    fn from(errors: Vec<RichError<'tokens>>) -> Self {
+        Self(errors.into_iter().map(ParseError::new).collect())
     }
 }
 

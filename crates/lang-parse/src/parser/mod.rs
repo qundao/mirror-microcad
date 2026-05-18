@@ -3,34 +3,34 @@
 
 mod error;
 mod helpers;
+mod parse_context;
+pub mod parsers;
 
-use crate::ast::*;
-use crate::parser::error::{ParseErrorKind, Rich};
-use crate::parser::helpers::*;
+pub use error::{ParseError, ParseErrorKind, ParseErrors, RichError};
+pub use parse_context::ParseContext;
+
+use crate::ast;
+use crate::parser::{error::Rich, helpers::*};
 use crate::tokens::*;
 
-use chumsky::input::{Input, MappedInput};
-use chumsky::prelude::*;
-use chumsky::{Parser, extra, select_ref};
-pub use error::ParseError;
-use helpers::ParserExt;
+use chumsky::{
+    Parser, extra,
+    input::{Input, MappedInput},
+    prelude::*,
+    select_ref,
+};
+
 use std::str::FromStr;
 
-use microcad_lang_base::{Span, ToCompactString};
+use microcad_lang_base::Span;
 
-type Error<'tokens> = Rich<'tokens, Token<'tokens>, Span, ParseErrorKind>;
-type Extra<'tokens> = extra::Err<Error<'tokens>>;
+/// Extra error.
+pub type Extra<'tokens> = extra::Err<RichError<'tokens>>;
 
-pub fn map_token_input<'a, 'token>(
-    spanned: &'a SpannedToken<Token<'token>>,
-) -> (&'a Token<'token>, &'a Span) {
-    (&spanned.token, &spanned.span)
-}
-
-type InputMap<'input, 'token> =
+pub type InputMap<'input, 'token> =
     fn(&'input SpannedToken<Token<'token>>) -> (&'input Token<'token>, &'input Span);
 
-type ParserInput<'input, 'token> = MappedInput<
+pub type ParserInput<'input, 'token> = MappedInput<
     'input,
     Token<'token>,
     Span,
@@ -38,9 +38,16 @@ type ParserInput<'input, 'token> = MappedInput<
     InputMap<'input, 'token>,
 >;
 
-fn input<'input, 'tokens>(
+/// Get parser input from tokens
+pub fn input<'input, 'tokens>(
     input: &'input [SpannedToken<Token<'tokens>>],
 ) -> ParserInput<'input, 'tokens> {
+    fn map_token_input<'a, 'token>(
+        spanned: &'a SpannedToken<Token<'token>>,
+    ) -> (&'a Token<'token>, &'a Span) {
+        (&spanned.token, &spanned.span)
+    }
+
     let end = input.last().map(|t| t.span.end).unwrap_or_default();
     Input::map(input, end..end, map_token_input)
 }
@@ -48,11 +55,11 @@ fn input<'input, 'tokens>(
 /// Build an abstract syntax tree from a list of tokens
 pub fn parse<'tokens>(
     tokens: &'tokens [SpannedToken<Token<'tokens>>],
-) -> Result<Program, Vec<ParseError>> {
+) -> Result<ast::Program, ParseErrors> {
     parser()
         .parse(input(tokens))
         .into_result()
-        .map_err(|errors| errors.into_iter().map(ParseError::new).collect())
+        .map_err(|errors| errors.into())
 }
 
 const STRUCTURAL_TOKENS: &[Token] = &[
@@ -65,8 +72,10 @@ const STRUCTURAL_TOKENS: &[Token] = &[
     Token::SigilSemiColon,
 ];
 
-fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Program, Extra<'tokens>>
-{
+fn parser<'tokens>()
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Program, Extra<'tokens>> {
+    use crate::ast::Dummy;
+
     let mut statement_list_parser = Recursive::declare();
     let mut statement_parser = Recursive::declare();
     let mut expression_parser = Recursive::declare();
@@ -116,7 +125,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .then(expression_parser.clone())
             .with_extras()
             .map_with(
-                |((attributes, expression), extras), e| ExpressionStatement {
+                |((attributes, expression), extras), e| ast::ExpressionStatement {
                     span: e.span(),
                     extras,
                     attributes,
@@ -127,15 +136,15 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .or_not()
             .boxed();
 
-        whitespace_parser()
+        parsers::whitespace()
             .or_not()
             .ignore_then(statement_parser.clone())
-            .then(trailing_extras_parser())
+            .then(parsers::trailing_extras())
             .repeated()
-            .collect::<Vec<(Statement, TrailingExtras)>>()
+            .collect::<Vec<(ast::Statement, ast::TrailingExtras)>>()
             .then(trailing_expr)
             .with_extras()
-            .map_with(|((statements, tail), extras), e| StatementList {
+            .map_with(|((statements, tail), extras), e| ast::StatementList {
                 span: e.span(),
                 extras,
                 statements,
@@ -145,14 +154,14 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
     });
 
     let block_recovery =
-        ignore_till_matched_curly().map_with(|_, e| StatementList::dummy(e.span()));
+        ignore_till_matched_curly().map_with(|_, e| ast::StatementList::dummy(e.span()));
 
-    let body = whitespace_parser()
+    let body = parsers::whitespace()
         .or_not()
         .ignore_then(statement_list_parser.clone().delimited_with_spanned_error(
             just(Token::SigilOpenCurlyBracket),
             just(Token::SigilCloseCurlyBracket),
-            |err: Error, open, end| {
+            |err: RichError, open, end| {
                 Rich::custom(
                     err.span().clone(),
                     ParseErrorKind::UnclosedBracket {
@@ -165,13 +174,13 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             },
         ))
         .recover_with(via_parser(block_recovery))
-        .map_with(|statements, e| Body {
+        .map_with(|statements, e| ast::Body {
             span: e.span(),
             statements,
         })
         .boxed();
 
-    let identifier_parser = select_ref! { Token::Identifier(ident) = e => Identifier {
+    let identifier_parser = select_ref! { Token::Identifier(ident) = e => ast::Identifier {
         span: e.span(),
         name: ident.as_ref().into(),
     } }
@@ -184,7 +193,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             ));
             kind
         })
-        .map_with(|kind, e| Identifier {
+        .map_with(|kind, e| ast::Identifier {
             span: e.span(),
             name: kind.into(),
         }))
@@ -196,7 +205,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             ));
             kind
         })
-        .map_with(|kind, e| Identifier {
+        .map_with(|kind, e| ast::Identifier {
             span: e.span(),
             name: kind.into(),
         }))
@@ -209,7 +218,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
         .at_least(1)
         .collect::<Vec<_>>()
         .with_extras()
-        .map_with(|(parts, extras), e| QualifiedName {
+        .map_with(|(parts, extras), e| ast::QualifiedName {
             span: e.span(),
             parts,
             extras,
@@ -217,33 +226,20 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
         .labelled("qualified name")
         .boxed();
 
-    let single_type = select_ref! {
-        Token::Identifier(ident) = e => SingleType {
-            span: e.span(),
-            name: ident.as_ref().into()
-        },
-    }
-    .labelled("quantity type")
-    .boxed();
-
-    let unit = select_ref! {
-        Token::Identifier(ident) = e => Unit {
-            span: e.span(),
-            name: ident.as_ref().into()
-        },
-        Token::Unit(unit) = e => Unit {
-            span: e.span(),
-            name: unit.as_ref().into()
-        },
-        Token::SigilQuote = e => Unit {
-            span: e.span(),
-            name: r#"""#.into()
-        },
-    };
+    let unit = parsers::unit().boxed();
 
     type_parser.define({
-        let single = single_type.clone().map(Type::Single);
-        let array = whitespace_parser()
+        let single = select_ref! {
+            Token::Identifier(ident) = e => ast::SingleType {
+                span: e.span(),
+                name: ident.as_ref().into()
+            },
+        }
+        .map(ast::Type::Single)
+        .labelled("single type")
+        .boxed();
+
+        let array = parsers::whitespace()
             .or_not()
             .ignore_then(type_parser.clone())
             .then_maybe_whitespace()
@@ -252,7 +248,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 just(Token::SigilCloseSquareBracket),
             )
             .map_with(|inner, e| {
-                Type::Array(ArrayType {
+                ast::Type::Array(ast::ArrayType {
                     span: e.span(),
                     inner: Box::new(inner),
                 })
@@ -260,7 +256,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .labelled("array type")
             .boxed();
 
-        let tuple = whitespace_parser()
+        let tuple = parsers::whitespace()
             .or_not()
             .ignore_then(identifier_parser.clone())
             .then_ignore(just(Token::SigilColon))
@@ -275,7 +271,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .delimited_with_spanned_error(
                 just(Token::SigilOpenBracket),
                 just(Token::SigilCloseBracket),
-                |err: Error, open, end| {
+                |err: RichError, open, end| {
                     Rich::custom(
                         err.span().clone(),
                         ParseErrorKind::UnclosedBracket {
@@ -288,7 +284,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 },
             )
             .map_with(|inner, e| {
-                Type::Tuple(TupleType {
+                ast::Type::Tuple(ast::TupleType {
                     span: e.span(),
                     inner,
                 })
@@ -299,90 +295,10 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
         single.or(array).or(tuple).labelled("type").boxed()
     });
 
-    let literal_parser = {
-        let single_value = select_ref! {
-            Token::LiteralFloat(x) = e => {
-                match f64::from_str(x) {
-                    Ok(value) => LiteralKind::Float(FloatLiteral {
-                        value,
-                        raw: x.to_compact_string(),
-                        span: e.span(),
-                    }),
-                    Err(err) => LiteralKind::Error(LiteralError {
-                        span: e.span(),
-                        kind: err.into(),
-                    })
-                }
-            },
-            Token::LiteralInt(x) = e => {
-                match i64::from_str(x) {
-                    Ok(value) => LiteralKind::Integer(IntegerLiteral {
-                    value,
-                    raw: x.to_compact_string(),
-                    span: e.span(),
-                }),
-                    Err(err) => LiteralKind::Error(LiteralError {
-                        span: e.span(),
-                        kind: err.into(),
-                    })
-                }
-            },
-            Token::LiteralString(content) = e => {
-                LiteralKind::String(StringLiteral {
-                    span: e.span(),
-                    content: content.as_ref().into(),
-                })
-            },
-            Token::LiteralBool(value) = e => {
-                LiteralKind::Bool(BoolLiteral {
-                    span: e.span(),
-                    value: *value,
-                })
-            },
-        }
-        .boxed();
-
-        single_value
-            .then(unit.or_not())
-            .with_extras()
-            .try_map_with(|((literal, ty), extras), e| {
-                let literal = match (literal, ty) {
-                    (LiteralKind::Float(float), Some(unit)) => {
-                        LiteralKind::Quantity(QuantityLiteral {
-                            span: e.span(),
-                            value: float.value,
-                            raw: float.raw,
-                            unit,
-                        })
-                    }
-                    (LiteralKind::Integer(int), Some(unit)) => {
-                        LiteralKind::Quantity(QuantityLiteral {
-                            span: e.span(),
-                            value: int.value as f64,
-                            raw: int.raw,
-                            unit,
-                        })
-                    }
-                    (_, Some(_)) => LiteralKind::Error(LiteralError {
-                        span: e.span(),
-                        kind: LiteralErrorKind::Untypable,
-                    }),
-                    (literal, None) => literal,
-                };
-                Ok(Literal {
-                    span: e.span(),
-                    literal,
-                    extras,
-                })
-            })
-            .labelled("literal")
-            .boxed()
-    };
-
     let unary_operator_parser = select_ref! {
-        Token::OperatorSubtract = e => UnaryOperator { span: e.span(), operation: UnaryOperatorType::Minus },
-        Token::OperatorAdd = e => UnaryOperator { span: e.span(), operation: UnaryOperatorType::Plus },
-        Token::OperatorNot = e => UnaryOperator { span: e.span(), operation: UnaryOperatorType::Not },
+        Token::OperatorSubtract = e => ast::UnaryOperator { span: e.span(), operation: ast::UnaryOperatorType::Minus },
+        Token::OperatorAdd = e => ast::UnaryOperator { span: e.span(), operation: ast::UnaryOperatorType::Plus },
+        Token::OperatorNot = e => ast::UnaryOperator { span: e.span(), operation: ast::UnaryOperatorType::Not },
     }
     .labelled("unary operator")
     .boxed();
@@ -394,7 +310,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
     .then_whitespace()
     .repeated()
     .collect::<Vec<_>>()
-    .map_with(|lines, e| DocBlock {
+    .map_with(|lines, e| ast::DocBlock {
         span: e.span(),
         lines,
     })
@@ -413,7 +329,12 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
         ],
         |_| (),
     )
-    .map_with(|_, e| (vec![TupleItem::dummy(e.span())], ItemExtras::default()));
+    .map_with(|_, e| {
+        (
+            vec![ast::TupleItem::dummy(e.span())],
+            ast::ItemExtras::default(),
+        )
+    });
 
     let tuple_body = identifier_parser
         .clone()
@@ -422,7 +343,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
         .or_not()
         .then(expression_parser.clone())
         .with_extras()
-        .map_with(|((name, value), extras), e| TupleItem {
+        .map_with(|((name, value), extras), e| ast::TupleItem {
             span: e.span(),
             extras,
             name,
@@ -440,19 +361,19 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             tuple_body
                 .clone()
                 .with_extras()
-                .map_with(|(arguments, extras), e| ArgumentList {
+                .map_with(|(arguments, extras), e| ast::ArgumentList {
                     span: e.span(),
                     extras,
                     arguments: arguments
                         .into_iter()
                         .map(|item| match item.name {
-                            Some(name) => Argument::Named(NamedArgument {
+                            Some(name) => ast::Argument::Named(ast::NamedArgument {
                                 span: item.span,
                                 extras: item.extras,
                                 name,
                                 value: item.value,
                             }),
-                            None => Argument::Unnamed(UnnamedArgument {
+                            None => ast::Argument::Unnamed(ast::UnnamedArgument {
                                 span: item.span,
                                 extras: item.extras,
                                 value: item.value,
@@ -464,7 +385,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 .delimited_with_spanned_error(
                     just(Token::SigilOpenBracket),
                     just(Token::SigilCloseBracket),
-                    |err: Error, open, end| {
+                    |err: RichError, open, end| {
                         Rich::custom(
                             err.span().clone(),
                             ParseErrorKind::UnclosedBracket {
@@ -479,11 +400,11 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 .recover_with(via_parser(
                     tuple_recovery
                         .clone()
-                        .map_with(|_, e| ArgumentList::dummy(e.span())),
+                        .map_with(|_, e| ast::ArgumentList::dummy(e.span())),
                 )),
         )
         .with_extras()
-        .map_with(|((name, arguments), extras), e| Call {
+        .map_with(|((name, arguments), extras), e| ast::Call {
             span: e.span(),
             extras,
             name,
@@ -493,7 +414,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
 
     statement_parser.define({
         let visibility = select_ref! {
-            Token::KeywordPub => Visibility::Public,
+            Token::KeywordPub => ast::Visibility::Public,
         }
         .labelled("visibility");
 
@@ -502,14 +423,14 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .then(expression_parser.clone())
             .with_extras()
             .map_with(
-                |((attributes, expression), extras), e| ExpressionStatement {
+                |((attributes, expression), extras), e| ast::ExpressionStatement {
                     span: e.span(), // FIXME: This should only return the span of attributes and expression
                     extras,
                     attributes,
                     expression,
                 },
             )
-            .map(Statement::Expression)
+            .map(ast::Statement::Expression)
             .boxed();
 
         let expression_without_semi = outer_attribute_parser
@@ -526,14 +447,14 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             }))
             .with_extras()
             .map_with(
-                |((attributes, expression), extras), e| ExpressionStatement {
+                |((attributes, expression), extras), e| ast::ExpressionStatement {
                     span: e.span(), // FIXME: This should only return the span of attributes and expression
                     extras,
                     attributes,
                     expression,
                 },
             )
-            .map(Statement::Expression)
+            .map(ast::Statement::Expression)
             .boxed();
 
         let local_assignment_inner = outer_attribute_parser
@@ -553,12 +474,12 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 expression_parser.clone().recover_with(via_parser(
                     semi_recovery
                         .clone()
-                        .map_with(|_, e| Expression::Error(e.span())),
+                        .map_with(|_, e| ast::Expression::Error(e.span())),
                 )),
             )
             .with_extras()
             .map_with(
-                |((((attributes, name), ty), value), extras), e| LocalAssignment {
+                |((((attributes, name), ty), value), extras), e| ast::LocalAssignment {
                     span: e.span(),
                     extras,
                     attributes,
@@ -571,7 +492,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
 
         let local_assignment = local_assignment_inner
             .clone()
-            .map(Statement::LocalAssignment)
+            .map(ast::Statement::LocalAssignment)
             .labelled("local assignment");
 
         let const_assignment_inner = doc_block
@@ -595,7 +516,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 expression_parser.clone().recover_with(via_parser(
                     semi_recovery
                         .clone()
-                        .map_with(|_, e| Expression::Error(e.span())),
+                        .map_with(|_, e| ast::Expression::Error(e.span())),
                 )),
             )
             .with_extras()
@@ -605,7 +526,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                     extras,
                 ),
                  e| {
-                    ConstAssignment {
+                    ast::ConstAssignment {
                         span: e.span(),
                         keyword_span,
                         extras,
@@ -622,7 +543,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
 
         let const_assignment = const_assignment_inner
             .clone()
-            .map(Statement::Const)
+            .map(ast::Statement::Const)
             .labelled("const assignment");
 
         // A pub assignment without the `const` keyword will eventually become a const assignment
@@ -646,19 +567,19 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 expression_parser.clone().recover_with(via_parser(
                     semi_recovery
                         .clone()
-                        .map_with(|_, e| Expression::Error(e.span())),
+                        .map_with(|_, e| ast::Expression::Error(e.span())),
                 )),
             )
             .with_extras()
             .map_with(
                 |((((((doc, attributes), keyword_span), name), ty), value), extras), e| {
-                    ConstAssignment {
+                    ast::ConstAssignment {
                         span: e.span(),
                         keyword_span,
                         extras,
                         doc,
                         attributes,
-                        visibility: Some(Visibility::Public),
+                        visibility: Some(ast::Visibility::Public),
                         name,
                         value: Box::new(value),
                         ty,
@@ -669,7 +590,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
 
         let pub_assignment = pub_assignment_inner
             .clone()
-            .map(Statement::Const)
+            .map(ast::Statement::Const)
             .labelled("pub const assignment");
 
         let property_assignment_inner = doc_block
@@ -692,13 +613,13 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 expression_parser.clone().recover_with(via_parser(
                     semi_recovery
                         .clone()
-                        .map_with(|_, e| Expression::Error(e.span())),
+                        .map_with(|_, e| ast::Expression::Error(e.span())),
                 )),
             )
             .with_extras()
             .map_with(
                 |((((((doc, attributes), keyword_span), name), ty), value), extras), e| {
-                    PropertyAssignment {
+                    ast::PropertyAssignment {
                         span: e.span(),
                         keyword_span,
                         extras,
@@ -714,14 +635,14 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
 
         let property_assignment = property_assignment_inner
             .clone()
-            .map(Statement::Property)
+            .map(ast::Statement::Property)
             .labelled("property assignment");
 
         let attribute_command = local_assignment_inner
             .clone()
-            .map(AttributeCommand::Assignment)
-            .or(call_inner.clone().map(AttributeCommand::Call))
-            .or(identifier_parser.clone().map(AttributeCommand::Ident));
+            .map(ast::AttributeCommand::Assignment)
+            .or(call_inner.clone().map(ast::AttributeCommand::Call))
+            .or(identifier_parser.clone().map(ast::AttributeCommand::Ident));
 
         let attribute_inner = attribute_command
             .separated_by(just(Token::SigilComma).then_maybe_whitespace())
@@ -739,7 +660,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 .ignore_then(attribute_inner.clone())
                 .then_whitespace()
                 .with_extras()
-                .map_with(|(commands, extras), e| Attribute {
+                .map_with(|(commands, extras), e| ast::Attribute {
                     span: e.span(),
                     is_inner: false,
                     extras,
@@ -747,11 +668,11 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 })
                 .labelled("attribute")
                 .repeated()
-                .collect::<Vec<Attribute>>()
+                .collect::<Vec<ast::Attribute>>()
                 .boxed()
         });
 
-        let parameter_list_inner = whitespace_parser()
+        let parameter_list_inner = parsers::whitespace()
             .or_not()
             .ignore_then(identifier_parser.clone())
             .then_maybe_whitespace()
@@ -765,7 +686,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                                 Token::OperatorAssignment,
                                 Token::SigilCloseBracket,
                             ])
-                            .map_with(|_, e| Type::dummy(e.span())),
+                            .map_with(|_, e| ast::Type::dummy(e.span())),
                         )),
                     )
                     .then_maybe_whitespace()
@@ -780,14 +701,14 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                                 Token::SigilComma,
                                 Token::SigilCloseBracket,
                             ])
-                            .map_with(|_, e| Expression::Error(e.span())),
+                            .map_with(|_, e| ast::Expression::Error(e.span())),
                         )),
                     )
                     .then_maybe_whitespace()
                     .or_not(),
             )
             .with_extras()
-            .map_with(|(((name, ty), default), extras), e| Parameter {
+            .map_with(|(((name, ty), default), extras), e| ast::Parameter {
                 span: e.span(),
                 extras,
                 name,
@@ -802,7 +723,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
         let parameter_list = parameter_list_inner
             .then_maybe_whitespace()
             .with_extras()
-            .map_with(|(parameters, extras), e| ParameterList {
+            .map_with(|(parameters, extras), e| ast::ParameterList {
                 span: e.span(),
                 extras,
                 parameters,
@@ -810,7 +731,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .delimited_with_spanned_error(
                 just(Token::SigilOpenBracket),
                 just(Token::SigilCloseBracket),
-                |err: Error, open, end| {
+                |err: RichError, open, end| {
                     Rich::custom(
                         err.span().clone(),
                         ParseErrorKind::UnclosedBracket {
@@ -825,7 +746,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .recover_with(via_parser(
                 ignore_till_matched_brackets()
                     .or(none_of(STRUCTURAL_TOKENS).repeated())
-                    .map_with(|_, e| ParameterList::dummy(e.span())),
+                    .map_with(|_, e| ast::ParameterList::dummy(e.span())),
             ))
             .boxed();
 
@@ -838,7 +759,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .then(
                 identifier_parser.clone().recover_with(via_parser(
                     recovery_expect_any_except(&[Token::SigilOpenCurlyBracket])
-                        .map_with(|_, e| Identifier::dummy(e.span())),
+                        .map_with(|_, e| ast::Identifier::dummy(e.span())),
                 )),
             )
             .then_maybe_whitespace()
@@ -846,7 +767,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .with_extras()
             .map_with(
                 |((((((doc, attributes), visibility), keyword_span), name), body), extras), e| {
-                    Statement::InlineModule(InlineModule {
+                    ast::Statement::InlineModule(ast::InlineModule {
                         span: e.span(),
                         keyword_span,
                         extras,
@@ -869,13 +790,13 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .then(
                 identifier_parser.clone().recover_with(via_parser(
                     recovery_expect_any_except(&[Token::SigilOpenCurlyBracket])
-                        .map_with(|_, e| Identifier::dummy(e.span())),
+                        .map_with(|_, e| ast::Identifier::dummy(e.span())),
                 )),
             )
             .with_extras()
             .map_with(
                 |(((((doc, attributes), visibility), keyword_span), name), extras), e| {
-                    Statement::FileModule(FileModule {
+                    ast::Statement::FileModule(ast::FileModule {
                         span: e.span(),
                         keyword_span,
                         extras,
@@ -890,11 +811,12 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
 
         let use_part = identifier_parser
             .clone()
-            .map(UseStatementPart::Identifier)
-            .or(just(Token::OperatorMultiply).map_with(|_, e| UseStatementPart::Glob(e.span())))
+            .map(ast::UseStatementPart::Identifier)
+            .or(just(Token::OperatorMultiply)
+                .map_with(|_, e| ast::UseStatementPart::Glob(e.span())))
             .recover_with(via_parser(
                 recovery_expect_any_except(&[Token::SigilDoubleColon])
-                    .map_with(|_, e| UseStatementPart::Error(e.span())),
+                    .map_with(|_, e| ast::UseStatementPart::Error(e.span())),
             ))
             .boxed();
 
@@ -903,7 +825,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .at_least(1)
             .collect::<Vec<_>>()
             .with_extras()
-            .map_with(|(parts, extras), e| UseName {
+            .map_with(|(parts, extras), e| ast::UseName {
                 span: e.span(),
                 extras,
                 parts,
@@ -922,14 +844,14 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 }
                 .then_whitespace()
                 .ignore_then(identifier_parser.clone().recover_with(via_parser(
-                    recovery_expect_any().map_with(|_, e| Identifier::dummy(e.span())),
+                    recovery_expect_any().map_with(|_, e| ast::Identifier::dummy(e.span())),
                 )))
                 .or_not(),
             )
             .with_extras()
             .map_with(
                 |(((((attributes, visibility), keyword_span), name), use_as), extras), e| {
-                    Statement::Use(UseStatement {
+                    ast::Statement::Use(ast::UseStatement {
                         span: e.span(),
                         attributes,
                         visibility,
@@ -943,9 +865,9 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .boxed();
 
         let workbench_kind = select_ref! {
-            Token::KeywordSketch => WorkbenchKind::Sketch,
-            Token::KeywordPart => WorkbenchKind::Part,
-            Token::KeywordOp => WorkbenchKind::Op,
+            Token::KeywordSketch => ast::WorkbenchKind::Sketch,
+            Token::KeywordPart => ast::WorkbenchKind::Part,
+            Token::KeywordOp => ast::WorkbenchKind::Op,
         }
         .boxed();
 
@@ -959,7 +881,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .with_extras()
             .map_with(
                 |(((((doc, attributes), keyword_span), arguments), body), extras), e| {
-                    Statement::Init(InitDefinition {
+                    ast::Statement::Init(ast::InitDefinition {
                         span: e.span(),
                         keyword_span,
                         extras,
@@ -983,7 +905,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                         Token::SigilOpenCurlyBracket,
                         Token::SigilOpenBracket,
                     ])
-                    .map_with(|_, e| Identifier::dummy(e.span())),
+                    .map_with(|_, e| ast::Identifier::dummy(e.span())),
                 )),
             )
             .then_maybe_whitespace()
@@ -1003,7 +925,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                     extras,
                 ),
                  e| {
-                    Statement::Workbench(WorkbenchDefinition {
+                    ast::Statement::Workbench(ast::WorkbenchDefinition {
                         span: e.span(),
                         keyword_span,
                         extras,
@@ -1025,7 +947,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .then(expression_parser.clone().or_not())
             .with_extras()
             .map_with(|((keyword_span, value), extras), e| {
-                Statement::Return(Return {
+                ast::Statement::Return(ast::Return {
                     span: e.span(),
                     keyword_span,
                     extras,
@@ -1046,7 +968,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                         Token::SigilOpenCurlyBracket,
                         Token::SigilOpenBracket,
                     ])
-                    .map_with(|_, e| Identifier::dummy(e.span())),
+                    .map_with(|_, e| ast::Identifier::dummy(e.span())),
                 )),
             )
             .then_maybe_whitespace()
@@ -1073,7 +995,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                     extras,
                 ),
                  e| {
-                    Statement::Function(FunctionDefinition {
+                    ast::Statement::Function(ast::FunctionDefinition {
                         span: e.span(),
                         keyword_span,
                         extras,
@@ -1094,7 +1016,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
         }
         .labelled("inner doc-block")
         .map_with(|line, e| {
-            Statement::InnerDocComment(InnerDocComment {
+            ast::Statement::InnerDocComment(ast::InnerDocComment {
                 span: e.span(),
                 line,
             })
@@ -1105,17 +1027,17 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .ignore_then(just(Token::OperatorNot))
             .ignore_then(attribute_inner)
             .with_extras()
-            .map_with(|(commands, extras), e| Attribute {
+            .map_with(|(commands, extras), e| ast::Attribute {
                 span: e.span(),
                 is_inner: true,
                 extras,
                 commands,
             })
             .labelled("inner attribute")
-            .map(Statement::InnerAttribute)
+            .map(ast::Statement::InnerAttribute)
             .boxed();
 
-        let not_assignment = whitespace_parser()
+        let not_assignment = parsers::whitespace()
             .or_not()
             .then(none_of([
                 Token::OperatorAssignment,
@@ -1147,7 +1069,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                             .or(ignore_till_semi().then_ignore(just(Token::SigilSemiColon))),
                     ),
             ))
-            .map_with(|_, e| Statement::Error(e.span()))
+            .map_with(|_, e| ast::Statement::Error(e.span()))
             .boxed();
 
         let with_semi = return_statement
@@ -1195,7 +1117,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 .clone()
                 .try_map_with(|_, e| {
                     let span: Span = e.span();
-                    Err::<Expression, _>(Rich::custom(
+                    Err::<ast::Expression, _>(Rich::custom(
                         (span.start - 1)..span.end,
                         ParseErrorKind::UnterminatedString,
                     ))
@@ -1203,30 +1125,30 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 .recover_with(via_parser(
                     semi_recovery
                         .clone()
-                        .map_with(|_, e| Expression::Error(e.span())),
+                        .map_with(|_, e| ast::Expression::Error(e.span())),
                 )),
         )
         .labelled("unclosed string")
         .boxed();
 
-        let literal = literal_parser
-            .map(Expression::Literal)
+        let literal = parsers::literal()
+            .map(ast::Expression::Literal)
             .labelled("literal")
             .boxed()
             .or(unclosed_string);
 
         let marker = just(Token::SigilAt)
             .ignore_then(identifier_parser.clone())
-            .map(Expression::Marker)
+            .map(ast::Expression::Marker)
             .labelled("marker")
             .boxed();
 
         let string_content_part = select_ref! {
-            Token::StringContent(content) = e => StringPart::Content(StringLiteral {
+            Token::StringContent(content) = e => ast::StringPart::Content(ast::StringLiteral {
                 span: e.span(),
                 content: content.as_ref().into(),
             }),
-            Token::Character(char) = e => StringPart::Char(StringCharacter {
+            Token::Character(char) = e => ast::StringPart::Char(ast::StringCharacter {
                 span: e.span(),
                 character: *char,
             }),
@@ -1247,7 +1169,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
         let format_spec = format_width
             .or_not()
             .then(format_precision.or_not())
-            .map_with(|(width, precision), e| StringFormatSpecification {
+            .map_with(|(width, precision), e| ast::StringFormatSpecification {
                 span: e.span(),
                 width,
                 precision,
@@ -1264,14 +1186,14 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 just(Token::StringFormatClose),
             )
             .map_with(
-                |((expression, specification), extras), e| StringExpression {
+                |((expression, specification), extras), e| ast::StringExpression {
                     span: e.span(),
                     extras,
                     expression: Box::new(expression),
                     specification: Box::new(specification),
                 },
             )
-            .map(StringPart::Expression)
+            .map(ast::StringPart::Expression)
             .labelled("string format expression")
             .boxed();
         let string_part = string_content_part
@@ -1283,22 +1205,22 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .collect::<Vec<_>>()
             .delimited_by(just(Token::FormatStringStart), just(Token::FormatStringEnd))
             .with_extras()
-            .map_with(|(parts, extras), e| FormatString {
+            .map_with(|(parts, extras), e| ast::FormatString {
                 span: e.span(),
                 extras,
                 parts,
             })
-            .map(Expression::String)
+            .map(ast::Expression::String)
             .boxed();
 
-        let tuple = whitespace_parser()
+        let tuple = parsers::whitespace()
             .or_not()
             .ignore_then(tuple_body.clone())
             .with_extras()
             .delimited_with_spanned_error(
                 just(Token::SigilOpenBracket),
                 just(Token::SigilCloseBracket),
-                |err: Error, open, end| {
+                |err: RichError, open, end| {
                     Rich::custom(
                         err.span().clone(),
                         ParseErrorKind::UnclosedBracket {
@@ -1311,7 +1233,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 },
             )
             .map_with(|(values, extras), e| {
-                Expression::Tuple(TupleExpression {
+                ast::Expression::Tuple(ast::TupleExpression {
                     span: e.span(),
                     extras,
                     values,
@@ -1325,7 +1247,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .delimited_with_spanned_error(
                 just(Token::SigilOpenBracket).then_maybe_whitespace(),
                 just(Token::SigilCloseBracket),
-                |err: Error, open, end| {
+                |err: RichError, open, end| {
                     Rich::custom(
                         err.span().clone(),
                         ParseErrorKind::UnclosedBracket {
@@ -1337,13 +1259,13 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                     )
                 },
             )
-            .map_with(|expression, e| Expression::Bracketed(Box::new(expression), e.span()))
+            .map_with(|expression, e| ast::Expression::Bracketed(Box::new(expression), e.span()))
             .boxed();
 
         let array_item = expression_parser
             .clone()
             .with_extras()
-            .map_with(|(expression, extras), e| ArrayItem {
+            .map_with(|(expression, extras), e| ast::ArrayItem {
                 span: e.span(),
                 extras,
                 expression,
@@ -1359,9 +1281,9 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 just(Token::SigilOpenSquareBracket).then_maybe_whitespace(),
                 just(Token::SigilCloseSquareBracket),
             )
-            .then(unit.or_not())
+            .then(unit.clone().or_not())
             .map_with(|(((start, end), extras), unit), e| {
-                Expression::ArrayRange(ArrayRangeExpression {
+                ast::Expression::ArrayRange(ast::ArrayRangeExpression {
                     span: e.span(),
                     extras,
                     start: Box::new(start),
@@ -1382,9 +1304,9 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 just(Token::SigilOpenSquareBracket).then_maybe_whitespace(),
                 just(Token::SigilCloseSquareBracket),
             )
-            .then(unit.or_not())
+            .then(unit.clone().or_not())
             .map_with(|((items, extras), unit), e| {
-                Expression::ArrayList(ArrayListExpression {
+                ast::Expression::ArrayList(ast::ArrayListExpression {
                     span: e.span(),
                     extras,
                     items,
@@ -1396,7 +1318,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
 
         let body_expression = body
             .clone()
-            .map(Expression::Body)
+            .map(ast::Expression::Body)
             .labelled("body expression")
             .boxed();
 
@@ -1432,7 +1354,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                         let (else_span, else_body) = else_body
                             .map(|(span, body)| (Some(span), Some(body)))
                             .unwrap_or((None, None));
-                        If {
+                        ast::If {
                             span: e.span(),
                             if_span,
                             extras,
@@ -1448,16 +1370,16 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 .boxed(),
         );
         let if_expression = if_inner
-            .map(Expression::If)
+            .map(ast::Expression::If)
             .labelled("if expression")
             .boxed();
 
         let qualified_name_expr = identifier_parser
             .clone()
-            .map_with(|ident, e| QualifiedName {
+            .map_with(|ident, e| ast::QualifiedName {
                 span: e.span(),
                 parts: vec![ident],
-                extras: ItemExtras::default(),
+                extras: ast::ItemExtras::default(),
             })
             .foldl_with(
                 just(Token::SigilDoubleColon)
@@ -1474,18 +1396,18 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 name.extras = extras;
                 name
             })
-            .map(Expression::QualifiedName)
+            .map(ast::Expression::QualifiedName)
             .boxed();
 
         let call = call_inner
             .clone()
-            .map(Expression::Call)
+            .map(ast::Expression::Call)
             .labelled("method call");
 
         let bracket_based = bracketed.or(tuple).recover_with(via_parser(
             tuple_recovery
                 .clone()
-                .map_with(|_, e| Expression::Error(e.span())),
+                .map_with(|_, e| ast::Expression::Error(e.span())),
         ));
 
         let base = literal
@@ -1502,19 +1424,19 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
 
         let access_attribute = just(Token::SigilHash)
             .ignore_then(identifier_parser.clone())
-            .map(ElementInner::Attribute)
+            .map(ast::ElementInner::Attribute)
             .labelled("attribute access")
             .boxed();
 
         let access_tuple = just(Token::SigilDot)
             .ignore_then(identifier_parser.clone())
-            .map(ElementInner::Tuple)
+            .map(ast::ElementInner::Tuple)
             .labelled("tuple access")
             .boxed();
 
         let access_method = just(Token::SigilDot)
             .ignore_then(call_inner)
-            .map(ElementInner::Method)
+            .map(ast::ElementInner::Method)
             .labelled("method call")
             .boxed();
 
@@ -1525,7 +1447,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
                 just(Token::SigilCloseSquareBracket),
             )
             .map(Box::new)
-            .map(ElementInner::ArrayElement)
+            .map(ast::ElementInner::ArrayElement)
             .labelled("array access")
             .boxed();
 
@@ -1534,19 +1456,19 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .or(access_tuple)
             .or(access_array)
             .with_extras()
-            .map_with(|(inner, extras), e| Element {
+            .map_with(|(inner, extras), e| ast::Element {
                 span: e.span(),
                 inner,
                 extras,
             })
             .repeated()
             .at_least(1)
-            .collect::<Vec<Element>>();
+            .collect::<Vec<ast::Element>>();
 
         let element_access = base
             .clone()
             .foldl_with(access_item.repeated(), |value, element_chain, e| {
-                Expression::ElementAccess(ElementAccess {
+                ast::Expression::ElementAccess(ast::ElementAccess {
                     span: e.span(),
                     value: value.into(),
                     element_chain,
@@ -1560,7 +1482,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
             .then(element_access.clone())
             .with_extras()
             .map_with(|((op, rhs), extras), e| {
-                Expression::UnaryOperation(UnaryOperation {
+                ast::Expression::UnaryOperation(ast::UnaryOperation {
                     span: e.span(),
                     extras,
                     operation: op,
@@ -1598,8 +1520,30 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Prog
 
     statement_list_parser
         .then_ignore(end())
-        .map_with(move |statements, ex| Program {
+        .map_with(move |statements, ex| ast::Program {
             span: ex.span(),
             statements,
         })
+}
+
+impl crate::Parse for ast::Literal {
+    fn parse(context: &ParseContext) -> Result<Self, ParseErrors> {
+        fn literal<'tokens>()
+        -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Literal, Extra<'tokens>>
+        {
+            crate::parsers::literal()
+        }
+
+        match context {
+            ParseContext::Element(source) => {
+                use chumsky::Parser;
+                let tokens = crate::tokens::lex(source.value()).collect::<Vec<_>>();
+                literal()
+                    .parse(crate::parser::input(&tokens))
+                    .into_result()
+                    .map_err(|errors| errors.into())
+            }
+            _ => panic!("Not possible"),
+        }
+    }
 }

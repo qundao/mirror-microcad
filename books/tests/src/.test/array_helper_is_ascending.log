@@ -10,8 +10,5 @@
   95:   std::debug::assert_eq([ std::array::is_ascending([1,2,3]), true ]);
   96:   std::debug::assert_eq([ std::array::is_ascending([3,2,1]), false ]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

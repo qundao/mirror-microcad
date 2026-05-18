@@ -1,0 +1,24 @@
+use std::ops::*;
+use std::geo2d::Circle;
+
+op polar_array(n: Integer, r: Length) {
+    @input.translate(x = r).rotate([0..n - 1] / n * 360°)
+}
+
+sketch RustGear(r = 50mm) {
+    r_i = r * 80%;
+
+    rim = Circle(r) - Circle(r = r_i);
+
+    tooth = Circle(r * 2%).polar_array(3, r * 10%).hull();
+    teeth = tooth.polar_array(32, r);
+
+    hub = Circle(r * 4%).polar_array(4, r * 10%).hull();
+    hubs = hub.polar_array(5, r_i);
+
+    holes = Circle(r * 5%).polar_array(5, r_i);
+
+    rim | teeth | hubs - holes
+}
+
+RustGear(50mm).extrude(5mm);

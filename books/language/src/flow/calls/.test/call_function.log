@@ -13,8 +13,5 @@
   26:   // check value
   27:   std::debug::assert_eq([x, 2]);
 
--- No Output --
--- No Errors --
--- No Model --
 -- Test Result --
 OK

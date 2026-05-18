@@ -7,6 +7,8 @@ mod processor;
 
 use std::{path::PathBuf, sync::OnceLock};
 
+use microcad_driver::prelude as mu;
+
 use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
 use tower_lsp::{
     Client, LanguageServer, LspService, Server, async_trait,
@@ -29,6 +31,7 @@ struct Backend {
     client: Client,
     processor: processor::ProcessorInterface,
     viewer: OnceLock<ViewerProcessInterface>,
+    use_viewer: bool,
     search_paths: Vec<PathBuf>,
 }
 
@@ -42,6 +45,7 @@ impl Backend {
             client,
             processor,
             viewer: OnceLock::new(),
+            use_viewer: false,
             search_paths,
         }
     }
@@ -52,10 +56,14 @@ impl Backend {
         }
     }
     fn send_viewer(&self, req: ViewerRequest) -> miette::Result<()> {
-        self.viewer
-            .get_or_init(|| ViewerProcessInterface::run(&self.search_paths, true))
-            .send_request(req)
-            .inspect_err(|err| log::error!("Cannot send request to viewer: {err}"))
+        if self.use_viewer {
+            self.viewer
+                .get_or_init(|| ViewerProcessInterface::run(&self.search_paths, true))
+                .send_request(req)
+                .inspect_err(|err| log::error!("Cannot send request to viewer: {err}"))
+        } else {
+            Ok(())
+        }
     }
 
     async fn on_active_file_changed(&self, params: serde_json::Value) {
@@ -115,63 +123,38 @@ impl LanguageServer for Backend {
     }
 
     async fn shutdown(&self) -> Result<()> {
-        log::info!("shutdown");
+        //log::info!("shutdown");
         let _ = self.send_viewer(ViewerRequest::Exit);
         Ok(())
     }
 
     async fn did_change(&self, params: DidChangeTextDocumentParams) {
         let uri = params.text_document.uri;
-        match uri.to_file_path() {
-            Ok(path) => {
-                log::info!("Did change {path:?}");
-                if let Some(last) = params.content_changes.last() {
-                    self.send_lsp(ProcessorRequest::UpdateDocumentStr(uri, last.text.clone()));
-                }
-            }
-            Err(()) => log::error!("Cannot parse URI: {uri}"),
+        if let Some(last) = params.content_changes.last() {
+            self.send_lsp(ProcessorRequest::UpdateDocumentCode(uri, last.text.clone()));
         }
     }
 
     async fn did_open(&self, params: DidOpenTextDocumentParams) {
         let uri = params.text_document.uri;
-        match uri.to_file_path() {
-            Ok(path) => {
-                log::info!("Did open: {path:?}");
-                self.send_lsp(ProcessorRequest::AddDocument(uri.clone()));
-                match uri.to_file_path() {
-                    Ok(path) => {
-                        log::info!("New active document: {:?}", path);
-                        let _ = self.send_viewer(ViewerRequest::ShowSourceCodeFromFile { path });
-                    }
-                    Err(()) => log::error!("Cannot parse URI: {uri}"),
-                }
-            }
-            Err(_) => log::error!("Cannot parse URI: {uri}"),
-        }
+
+        self.send_lsp(ProcessorRequest::AddDocument(uri.clone()));
     }
 
     async fn did_save(&self, params: DidSaveTextDocumentParams) {
         let uri = params.text_document.uri;
-        match uri.to_file_path() {
-            Ok(path) => {
-                log::info!("Did save: {path:?}");
-                self.send_lsp(ProcessorRequest::UpdateDocument(uri.clone()));
-                let _ = self.send_viewer(ViewerRequest::ShowSourceCodeFromFile { path });
-            }
-            Err(_) => log::error!("Cannot parse URI: {uri}"),
-        }
+
+        /*self.client
+            .log_message(MessageType::INFO, format!("did save: {uri:?}!"))
+            .await;
+        */
+        self.send_lsp(ProcessorRequest::UpdateDocument(uri.clone()));
+        //let _ = self.send_viewer(ViewerRequest::ShowSourceCodeFromFile { path });
     }
 
     async fn did_close(&self, params: DidCloseTextDocumentParams) {
         let uri = params.text_document.uri;
-        match uri.to_file_path() {
-            Ok(path) => {
-                log::info!("Did close: {path:?}");
-                self.send_lsp(ProcessorRequest::RemoveDocument(uri))
-            }
-            Err(_) => log::error!("Cannot parse URI: {uri}"),
-        }
+        self.send_lsp(ProcessorRequest::RemoveDocument(uri))
     }
 
     async fn diagnostic(
@@ -287,16 +270,16 @@ impl LanguageServer for Backend {
     }
 
     async fn formatting(&self, params: DocumentFormattingParams) -> Result<Option<Vec<TextEdit>>> {
-        let _ = params;
-        log::error!("Got a textDocument/formatting request, but it is not implemented");
         let url = &params.text_document.uri;
         self.send_lsp(ProcessorRequest::FormatDocument(url.clone()));
-
+        self.client
+            .log_message(MessageType::INFO, format!("Formatting received: {url}"))
+            .await;
         // Wait for response
-        if let Ok(ProcessorResponse::FormattedDocument { url, code }) =
+        if let Ok(ProcessorResponse::UpdatedDocumentCode { url, code }) =
             self.processor.recv_response()
         {
-            log::info!("Formatted code received {url}");
+            log::error!("Formatted code received {url}");
             Ok(Some(vec![TextEdit {
                 range: Range {
                     start: Position {
@@ -305,7 +288,7 @@ impl LanguageServer for Backend {
                     },
                     end: Position {
                         line: u32::MAX,
-                        character: u32::MAX,
+                        character: 0,
                     },
                 },
                 new_text: code,
@@ -319,7 +302,7 @@ impl LanguageServer for Backend {
 use clap::Parser;
 
 use crate::processor::{
-    ProcessorRequest, ProcessorResponse, WorkspaceSettings,
+    ProcessorRequest, ProcessorResponse,
     semantic_tokens::{LEGEND_MODIFIERS, LEGEND_TYPES},
 };
 
@@ -332,45 +315,6 @@ struct Args {
 
     #[arg(long)]
     stdio: bool,
-
-    /// Paths to search for files.
-    ///
-    /// By default, `./lib` (if it exists) and `~/.microcad/lib` are used.
-    #[arg(short = 'P', long = "search-path", action = clap::ArgAction::Append)]
-    pub search_paths: Vec<std::path::PathBuf>,
-}
-
-impl Args {
-    /// Returns microcad's config dir, even if it does not exist.
-    ///
-    /// On Linux, the config dir is located in `~/.config/microcad`.
-    pub fn config_dir() -> Option<std::path::PathBuf> {
-        dirs::config_dir().map(|dir| dir.join("microcad"))
-    }
-
-    /// Returns global root dir, even if it does not exist.
-    ///
-    /// On Linux, the root dir is located in `~/.config/microcad/lib`.
-    pub fn global_root_dir() -> Option<std::path::PathBuf> {
-        Self::config_dir().map(|dir| dir.join("lib"))
-    }
-
-    /// `./lib` (if exists) and `~/.config/microcad/lib` (if exists).
-    pub fn default_search_paths() -> Vec<std::path::PathBuf> {
-        let local_dir = std::path::PathBuf::from("./lib");
-        let mut search_paths = Vec::new();
-
-        if let Some(global_root_dir) = Self::global_root_dir() {
-            if global_root_dir.exists() {
-                search_paths.push(global_root_dir);
-            }
-        }
-        if local_dir.exists() {
-            search_paths.push(local_dir);
-        }
-
-        search_paths
-    }
 }
 
 #[tokio::main]
@@ -386,27 +330,19 @@ async fn main() {
     } else {
         env_logger::init()
     }
-    /*    // construct a subscriber that prints formatted traces to stdout
-        let subscriber = tracing_subscriber::FmtSubscriber::new();
-        // use that subscriber to process traces emitted after this point
-        tracing::subscriber::set_global_default(subscriber).expect("init log failed");
-    */
+    // construct a subscriber that prints formatted traces to stdout
+    let subscriber = tracing_subscriber::FmtSubscriber::new();
+    // use that subscriber to process traces emitted after this point
+    tracing::subscriber::set_global_default(subscriber).expect("init log failed");
 
-    // add default paths if no search paths are given.
-    let mut search_paths = args.search_paths.clone();
-
-    if search_paths.is_empty() {
-        search_paths.append(&mut Args::default_search_paths())
-    };
+    let config = mu::Config::default();
 
     log::info!("Starting LSP server");
 
-    let processor = processor::ProcessorInterface::run(WorkspaceSettings {
-        search_paths: search_paths.clone(),
-    });
+    let processor = processor::ProcessorInterface::run();
 
     let (service, socket) =
-        LspService::build(|client| Backend::new(client, processor, search_paths))
+        LspService::build(|client| Backend::new(client, processor, config.search_paths))
             .custom_method("custom/activeFileChanged", Backend::on_active_file_changed)
             .finish();
     log::info!("LSP service has been created");

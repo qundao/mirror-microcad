@@ -44,10 +44,12 @@ impl TryFrom<Value> for ResolutionAttribute {
             Value::Quantity(Quantity {
                 value,
                 quantity_type: QuantityType::Scalar,
+                ..
             }) => Ok(ResolutionAttribute::Relative(value)),
             Value::Quantity(Quantity {
                 value,
                 quantity_type: QuantityType::Length,
+                ..
             }) => Ok(ResolutionAttribute::Absolute(value)),
             _ => Err(ValueError::CannotConvert(
                 value.to_string(),

@@ -32,17 +32,5 @@
   35:   std::debug::assert_eq([Wheel(radius = 5cm).radius, 5cm]);
   36:   std::debug::assert_eq([Wheel(radius = 5cm).diameter, 10cm]);
 
--- No Output --
--- Errors --
-  ⚠ warning: 23:8: Unused global symbol into_radius.
-    ╭─[../books/language/src/structure/workbenches/elements/init_code.md:23:8]
- 22 │     // function
- 23 │     fn into_radius(diameter: Length) {
-    ·        ─────┬─────
-    ·             ╰── Unused global symbol into_radius.
- 24 │         // use constant FACTOR from init code
-    ╰────
-Unexpected warnings(s) which did occur in line(s): 23
--- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

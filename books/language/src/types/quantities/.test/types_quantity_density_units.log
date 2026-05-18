@@ -9,15 +9,5 @@
 
  139:   gramm_per_square_centimeters = 19.302g/mm³;
 
--- No Output --
--- Errors --
-  ⚠ warning: 139:1: Unused local gramm_per_square_centimeters.
-     ╭─[../books/language/src/types/quantities/types.md:139:1]
- 139 │ gramm_per_square_centimeters = 19.302g/mm³;
-     · ──────────────┬─────────────
-     ·               ╰── Unused local gramm_per_square_centimeters.
-     ╰────
-Unexpected warnings(s) which did occur in line(s): 139
--- No Model --
 -- Test Result --
-OK (BUT WARNINGS)
+OK

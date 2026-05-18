@@ -229,7 +229,9 @@ impl Eval for ir::Expression {
                 src_ref: _,
             } => {
                 let value: Value = rhs.eval(context)?;
-                value.unary_op(op.as_str()).map_err(EvalError::ValueError)
+                value
+                    .unary_op(op.as_str())
+                    .map_err(|err| Box::new(err.into()))
             }
             Self::ArrayElementAccess(lhs, rhs, _) => {
                 let lhs = lhs.eval(context)?;
@@ -244,7 +246,8 @@ impl Eval for ir::Expression {
                                 None => Err(EvalError::ListIndexOutOfBounds {
                                     index,
                                     len: list.len(),
-                                }),
+                                }
+                                .into()),
                             }
                         } else {
                             context.error(

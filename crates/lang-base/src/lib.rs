@@ -13,6 +13,7 @@ mod identifier;
 mod ord_map;
 mod output;
 mod rc;
+mod source;
 mod src_ref;
 mod tree_display;
 
@@ -24,8 +25,47 @@ pub type Id = CompactString;
 /// URL to locate sources.
 pub use url::Url;
 
-pub fn virtual_url() -> Url {
-    Url::from_str("virtual://file").unwrap()
+pub fn virtual_url(name: &str) -> Url {
+    Url::from_str(&format!("virtual://{name}")).unwrap()
+}
+
+pub trait ResourceLocation {
+    /// The canonical identity of the resource.
+    fn url(&self) -> &Url;
+
+    /// Attempts to convert the location to a physical filesystem path.
+    /// Returns None if the resource is virtual (e.g., ucad-std:// or snippet://).
+    fn to_file_path(&self) -> Option<std::path::PathBuf> {
+        if self.url().scheme() == "file" {
+            self.url().to_file_path().ok()
+        } else {
+            None
+        }
+    }
+
+    /// Helper to identify if the resource exists on disk.
+    fn is_local(&self) -> bool {
+        self.url().scheme() == "file"
+    }
+
+    /// Return the relative file path from current directory.
+    fn relative_path(&self) -> Option<std::path::PathBuf> {
+        self.to_file_path().map(|path| {
+            let current_dir = std::env::current_dir().expect("current dir");
+            if let Ok(path) = path.canonicalize() {
+                pathdiff::diff_paths(path, current_dir).unwrap_or_default()
+            } else {
+                path.to_path_buf()
+            }
+        })
+    }
+
+    /// The source name
+    fn source_name(&self) -> String {
+        self.relative_path()
+            .map(|s| s.to_string_lossy().to_string())
+            .unwrap_or(self.url().path().to_string())
+    }
 }
 
 /// List of valid µcad extensions.
@@ -44,29 +84,36 @@ pub use src_ref::{LineCol, LineIndex, Refer, Span, SrcRef, SrcReferrer};
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
 pub use microcad_core::hash::{ComputedHash, HashId, HashMap, HashSet, Hashed};
+pub use source::Source;
 
 /// A compatibility layer for using SourceFile with miette
-pub struct MietteSourceFile<'a> {
+pub struct SourceLocInfo<'a> {
     /// The source text.
-    pub source: &'a str,
+    pub code: &'a str,
     /// Name of of file
-    pub name: String,
+    pub url: Url,
     /// Line offset (e.g. used when source comes from a markdown file).
     pub line_offset: u32,
 }
 
-impl MietteSourceFile<'static> {
+impl SourceLocInfo<'static> {
     /// Create an invalid source file for when we can't load the source
     pub fn invalid() -> Self {
-        MietteSourceFile {
-            source: "NO FILE",
-            name: "NO FILE".into(),
+        SourceLocInfo {
+            code: "NO FILE",
+            url: virtual_url("invalid"),
             line_offset: 0,
         }
     }
 }
 
-impl SourceCode for MietteSourceFile<'_> {
+impl<'a> ResourceLocation for SourceLocInfo<'a> {
+    fn url(&self) -> &Url {
+        &self.url
+    }
+}
+
+impl SourceCode for SourceLocInfo<'_> {
     fn read_span<'a>(
         &'a self,
         span: &SourceSpan,
@@ -74,10 +121,10 @@ impl SourceCode for MietteSourceFile<'_> {
         context_lines_after: usize,
     ) -> Result<Box<dyn SpanContents<'a> + 'a>, MietteError> {
         let inner_contents =
-            self.source
+            self.code
                 .read_span(span, context_lines_before, context_lines_after)?;
         let contents = MietteSpanContents::new_named(
-            self.name.clone(),
+            self.source_name(),
             inner_contents.data(),
             *inner_contents.span(),
             inner_contents.line() + self.line_offset as usize,
@@ -90,12 +137,9 @@ impl SourceCode for MietteSourceFile<'_> {
 }
 
 /// Trait that can fetch for a file by it's hash value.
-pub trait GetSourceStrByHash {
+pub trait GetSourceLocInfoByHash {
     /// Get a source string by it's hash value.
-    fn get_str_by_hash(&self, hash: u64) -> Option<&str>;
-
-    /// Get filename by hash
-    fn get_filename_by_hash(&self, hash: u64) -> Option<std::path::PathBuf>;
+    fn get_source_loc_info_by_hash(&'_ self, hash: HashId) -> Option<SourceLocInfo<'_>>;
 }
 
 /// Shortens given string to it's first line and to `max_chars` characters.

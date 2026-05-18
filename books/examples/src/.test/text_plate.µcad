@@ -14,4 +14,3 @@ sketch TextPlate(text: String, height: Length = 30mm) {
 
 TextPlate("Hello µcad", 10mm)
     .extrude(2mm, 0°);
-

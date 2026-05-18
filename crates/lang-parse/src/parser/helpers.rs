@@ -1,97 +1,16 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::ast::{
-    BinaryOperation, BinaryOperator, BinaryOperatorType, Comment, CommentInner, Expression,
-    ItemExtra, ItemExtras, LeadingExtras, TrailingExtras,
-};
+use crate::{ast, parsers};
 use microcad_lang_base::Span;
 
-use crate::parser::{Error, Extra, ParserInput};
+use crate::parser::{Extra, ParserInput, RichError};
 use crate::tokens::Token;
 use chumsky::extra::{Full, ParserExtra, SimpleState};
 use chumsky::input::Input;
 use chumsky::inspector::Inspector;
 use chumsky::prelude::*;
-use chumsky::{IterParser, Parser, extra, select_ref};
-
-pub fn comment_parser<'tokens, S, Ctx>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Comment, Full<Error<'tokens>, S, Ctx>> + 'tokens
-where
-    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
-    Ctx: 'tokens,
-{
-    let single_line_comments = select_ref! {
-        Token::SingleLineComment(comment) => comment
-    }
-    .map_with(|line, e| Comment {
-        span: e.span(),
-        inner: CommentInner::SingleLine(line.to_string()),
-    })
-    .boxed();
-    let multi_line = select_ref! {
-        Token::MultiLineComment(comment) = e => Comment {
-            span: e.span(),
-            inner: CommentInner::MultiLine(comment.to_string())
-        }
-    };
-
-    single_line_comments
-        .or(multi_line)
-        .labelled("comment")
-        .boxed()
-}
-
-pub fn whitespace_parser<'tokens, S, Ctx>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, String, Full<Error<'tokens>, S, Ctx>>
-+ 'tokens
-+ Clone
-where
-    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
-    Ctx: 'tokens,
-{
-    select_ref! {
-        Token::Whitespace(s) => s.to_string(),
-    }
-    .labelled("whitespace")
-    .boxed()
-}
-
-pub fn leading_extras_parser<'tokens, S, Ctx>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, LeadingExtras, Full<Error<'tokens>, S, Ctx>>
-where
-    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
-    Ctx: 'tokens,
-{
-    // Inline the whitespace logic and the comment logic
-    let whitespace = select_ref! { Token::Whitespace(s) => ItemExtra::Whitespace(s.to_string()) };
-    let comment = comment_parser().map(ItemExtra::Comment);
-
-    comment
-        .or(whitespace)
-        .repeated()
-        .collect::<Vec<_>>()
-        .map(LeadingExtras)
-        .boxed()
-}
-
-pub fn trailing_extras_parser<'tokens, S, Ctx>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, TrailingExtras, Full<Error<'tokens>, S, Ctx>>
-where
-    S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
-    Ctx: 'tokens,
-{
-    // Inline the whitespace logic and the comment logic
-    let whitespace = select_ref! { Token::Whitespace(s) => ItemExtra::Whitespace(s.to_string()) };
-    let comment = comment_parser().map(ItemExtra::Comment);
-
-    whitespace
-        .or(comment)
-        .repeated()
-        .collect::<Vec<_>>()
-        .map(TrailingExtras)
-        .boxed()
-}
+use chumsky::{Parser, extra};
 
 /// Ignore tokens, until we hit the end of a pair or nested curly brackets
 ///
@@ -151,35 +70,39 @@ pub fn ignore_till_semi<'tokens>()
 pub fn binop<'tokens, I>(
     params: I,
     tokens: &'static [Token<'static>],
-) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Expression, Extra<'tokens>> + Clone
+) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Expression, Extra<'tokens>> + Clone
 where
-    I: Parser<'tokens, ParserInput<'tokens, 'tokens>, Expression, Extra<'tokens>> + Clone + 'tokens,
+    I: Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Expression, Extra<'tokens>>
+        + Clone
+        + 'tokens,
 {
+    use ast::BinaryOperatorType::*;
+
     params
         .clone()
         .foldl_with(
-            whitespace_parser()
+            parsers::whitespace()
                 .or_not()
-                .ignore_then(one_of(tokens).map_with(|op, e| BinaryOperator {
+                .ignore_then(one_of(tokens).map_with(|op, e| ast::BinaryOperator {
                     span: e.span(),
                     operation: match op {
-                        Token::OperatorAdd => BinaryOperatorType::Add,
-                        Token::OperatorSubtract => BinaryOperatorType::Subtract,
-                        Token::OperatorMultiply => BinaryOperatorType::Multiply,
-                        Token::OperatorDivide => BinaryOperatorType::Divide,
-                        Token::OperatorUnion => BinaryOperatorType::Union,
-                        Token::OperatorIntersect => BinaryOperatorType::Intersect,
-                        Token::OperatorPowerXor => BinaryOperatorType::PowerXor,
-                        Token::OperatorGreaterThan => BinaryOperatorType::GreaterThan,
-                        Token::OperatorLessThan => BinaryOperatorType::LessThan,
-                        Token::OperatorGreaterEqual => BinaryOperatorType::GreaterEqual,
-                        Token::OperatorLessEqual => BinaryOperatorType::LessEqual,
-                        Token::OperatorNear => BinaryOperatorType::Near,
-                        Token::OperatorEqual => BinaryOperatorType::Equal,
-                        Token::OperatorNotEqual => BinaryOperatorType::NotEqual,
-                        Token::OperatorAnd => BinaryOperatorType::And,
-                        Token::OperatorOr => BinaryOperatorType::Or,
-                        Token::OperatorXor => BinaryOperatorType::Xor,
+                        Token::OperatorAdd => Add,
+                        Token::OperatorSubtract => Subtract,
+                        Token::OperatorMultiply => Multiply,
+                        Token::OperatorDivide => Divide,
+                        Token::OperatorUnion => Union,
+                        Token::OperatorIntersect => Intersect,
+                        Token::OperatorPowerXor => PowerXor,
+                        Token::OperatorGreaterThan => GreaterThan,
+                        Token::OperatorLessThan => LessThan,
+                        Token::OperatorGreaterEqual => GreaterEqual,
+                        Token::OperatorLessEqual => LessEqual,
+                        Token::OperatorNear => Near,
+                        Token::OperatorEqual => Equal,
+                        Token::OperatorNotEqual => NotEqual,
+                        Token::OperatorAnd => And,
+                        Token::OperatorOr => Or,
+                        Token::OperatorXor => Xor,
                         _ => unreachable!(),
                     },
                 }))
@@ -187,7 +110,7 @@ where
                 .then(params)
                 .repeated(),
             |lhs, (operation, rhs), e| {
-                Expression::BinaryOperation(BinaryOperation {
+                ast::Expression::BinaryOperation(ast::BinaryOperation {
                     span: e.span(),
                     lhs: lhs.into(),
                     operation,
@@ -203,7 +126,7 @@ where
 /// Matches anything but a semicolon or whitespace,
 /// if a semicolon or whitespace is encountered, no tokens will be consumed
 pub fn recovery_expect_any<'tokens, S, Ctx>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (), Full<Error<'tokens>, S, Ctx>>
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (), Full<RichError<'tokens>, S, Ctx>>
 + 'tokens
 + Clone
 where
@@ -216,7 +139,7 @@ where
 /// Same as `recovery_expect_any` but excluding certain tokens
 pub fn recovery_expect_any_except<'tokens, S, Ctx>(
     except: &'tokens [Token<'tokens>],
-) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (), Full<Error<'tokens>, S, Ctx>>
+) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (), Full<RichError<'tokens>, S, Ctx>>
 + 'tokens
 + Clone
 where
@@ -229,7 +152,7 @@ where
         .or(one_of(Token::SigilSemiColon)
             .ignored()
             .or(one_of(except).ignored())
-            .or(whitespace_parser().ignored())
+            .or(parsers::whitespace().ignored())
             .rewind())
 }
 
@@ -239,7 +162,7 @@ where
     E: ParserExtra<'src, I>,
     O: 'src,
 {
-    fn with_extras(self) -> impl Parser<'src, I, (O, ItemExtras), E> + 'src;
+    fn with_extras(self) -> impl Parser<'src, I, (O, ast::ItemExtras), E> + 'src;
 
     /// Required a whitespace
     fn then_whitespace(self) -> impl Parser<'src, I, O, E> + 'src;
@@ -260,34 +183,41 @@ where
 }
 
 impl<'tokens, O, P, S, Ctx>
-    ParserExt<'tokens, ParserInput<'tokens, 'tokens>, O, Full<Error<'tokens>, S, Ctx>> for P
+    ParserExt<'tokens, ParserInput<'tokens, 'tokens>, O, Full<RichError<'tokens>, S, Ctx>> for P
 where
-    P: Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<Error<'tokens>, S, Ctx>> + 'tokens,
+    P: Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<RichError<'tokens>, S, Ctx>>
+        + 'tokens,
     O: 'tokens,
     S: Inspector<'tokens, ParserInput<'tokens, 'tokens>> + Default + Clone + 'static,
     Ctx: 'tokens,
 {
     fn with_extras(
         self,
-    ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, (O, ItemExtras), Full<Error<'tokens>, S, Ctx>>
-    {
-        leading_extras_parser()
+    ) -> impl Parser<
+        'tokens,
+        ParserInput<'tokens, 'tokens>,
+        (O, ast::ItemExtras),
+        Full<RichError<'tokens>, S, Ctx>,
+    > {
+        parsers::leading_extras()
             .then(self)
-            .then(trailing_extras_parser())
-            .map(|((leading, res), trailing)| (res, ItemExtras { leading, trailing }))
+            .then(parsers::trailing_extras())
+            .map(|((leading, res), trailing)| (res, ast::ItemExtras { leading, trailing }))
             .boxed()
     }
 
     fn then_whitespace(
         self,
-    ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<Error<'tokens>, S, Ctx>> {
-        self.then_ignore(whitespace_parser())
+    ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<RichError<'tokens>, S, Ctx>>
+    {
+        self.then_ignore(parsers::whitespace())
     }
 
     fn then_maybe_whitespace(
         self,
-    ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<Error<'tokens>, S, Ctx>> {
-        self.then_ignore(whitespace_parser().or_not())
+    ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<RichError<'tokens>, S, Ctx>>
+    {
+        self.then_ignore(parsers::whitespace().or_not())
     }
 
     fn delimited_with_spanned_error<B, C, U, V, F>(
@@ -295,21 +225,21 @@ where
         before: B,
         after: C,
         err_map: F,
-    ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<Error<'tokens>, S, Ctx>>
+    ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<RichError<'tokens>, S, Ctx>>
     where
         B: Parser<
                 'tokens,
                 ParserInput<'tokens, 'tokens>,
                 U,
-                Full<Error<'tokens>, SimpleState<Span>, Ctx>,
+                Full<RichError<'tokens>, SimpleState<Span>, Ctx>,
             >,
         C: Parser<
                 'tokens,
                 ParserInput<'tokens, 'tokens>,
                 V,
-                Full<Error<'tokens>, SimpleState<Span>, Ctx>,
+                Full<RichError<'tokens>, SimpleState<Span>, Ctx>,
             >,
-        F: Fn(Error<'tokens>, Span, Span) -> Error<'tokens>,
+        F: Fn(RichError<'tokens>, Span, Span) -> RichError<'tokens>,
     {
         before
             .map_with(|_, e| *e.state() = e.span().into())

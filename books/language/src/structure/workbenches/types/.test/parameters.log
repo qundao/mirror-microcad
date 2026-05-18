@@ -24,24 +24,5 @@
   78:       std::geo2d::Circle(radius = 2cm);
   79:   }.punch_disk(radius = 1cm);
 
--- No Output --
--- Errors --
-  × error: 66:15: Symbol count not found.
-    ╭─[../books/language/src/structure/workbenches/types/operations.md:66:15]
- 65 │ op punch_disk(radius: Length) {
- 66 │     if @input.count() == 1 {
-    ·               ──┬──
-    ·                 ╰── Symbol count not found.
- 67 │         {
-    ╰────
-  × error: 66:5: If condition is not a boolean: <NO VALUE>
-    ╭─[../books/language/src/structure/workbenches/types/operations.md:66:8]
- 65 │ op punch_disk(radius: Length) {
- 66 │     if @input.count() == 1 {
-    ·        ──────────┬─────────
-    ·                  ╰── Not a boolean
- 67 │         {
-    ╰────
-Unexpected error(s) which did occur in line(s): 66
 -- Test Result --
 TODO

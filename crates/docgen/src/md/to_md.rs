@@ -9,7 +9,7 @@ use microcad_lang::{
     lower::{
         Identifiable, Initialized,
         ir::{
-            FunctionDefinition, InitDefinition, ModuleDefinition, ParameterList, SourceFile,
+            FunctionDefinition, InitDefinition, ModuleDefinition, ParameterList, Source,
             Visibility, WorkbenchDefinition,
         },
     },
@@ -55,7 +55,7 @@ impl ToMd for InitDefinition {
     }
 }
 
-impl ToMd for SourceFile {
+impl ToMd for Source {
     fn to_md(&self) -> Markdown {
         parse(format!("# {}\n{}", self.id(), fetch_doc(self)))
     }

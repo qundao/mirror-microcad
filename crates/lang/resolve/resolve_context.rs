@@ -5,8 +5,8 @@
 
 use microcad_core::hash::HashSet;
 use microcad_lang_base::{
-    Diag, DiagHandler, DiagResult, Diagnostic, GetSourceStrByHash, PushDiag, SrcReferrer,
-    TreeDisplay, TreeState, WriteToFile,
+    Diag, DiagHandler, DiagResult, Diagnostic, GetSourceLocInfoByHash, HashId, PushDiag,
+    ResourceLocation, SourceLocInfo, SrcReferrer, TreeDisplay, TreeState, WriteToFile,
 };
 
 use crate::{lower::ir, resolve::*, symbol::Symbol};
@@ -18,14 +18,14 @@ pub struct ResolveContext {
     /// Source file cache.
     pub(crate) sources: Sources,
     /// Diagnostic handler.
-    pub(crate) diag: DiagHandler,
+    pub diag: DiagHandler,
 }
 
 impl ResolveContext {
     /// Load resolve and check a source file and referenced files.
     pub fn create(
-        root: std::rc::Rc<ir::SourceFile>,
-        search_paths: &[impl AsRef<std::path::Path>],
+        root: std::rc::Rc<ir::Source>,
+        search_paths: Vec<std::path::PathBuf>,
         builtin: Option<Symbol>,
         diag: DiagHandler,
     ) -> ResolveResult<Self> {
@@ -64,7 +64,8 @@ impl ResolveContext {
             .iter()
             .map(|source| {
                 match (
-                    self.sources.generate_name_from_path(&source.filename()),
+                    self.sources
+                        .generate_name_from_path(&source.to_file_path().unwrap()),
                     source.symbolize(ir::Visibility::Public, self),
                 ) {
                     (Ok(name), Ok(symbol)) => Ok((name, symbol)),
@@ -83,7 +84,7 @@ impl ResolveContext {
         Ok(())
     }
 
-    pub(super) fn resolve(&mut self) -> ResolveResult<()> {
+    fn resolve(&mut self) -> ResolveResult<()> {
         // resolve std as first
         if let Some(std) = self.root.get_child(&ir::Identifier::no_ref("std")) {
             std.resolve(self)?;
@@ -148,13 +149,9 @@ impl PushDiag for ResolveContext {
     }
 }
 
-impl GetSourceStrByHash for ResolveContext {
-    fn get_str_by_hash(&self, hash: u64) -> Option<&str> {
-        self.sources.get_str_by_hash(hash)
-    }
-
-    fn get_filename_by_hash(&self, hash: u64) -> Option<std::path::PathBuf> {
-        self.sources.get_filename_by_hash(hash)
+impl GetSourceLocInfoByHash for ResolveContext {
+    fn get_source_loc_info_by_hash(&'_ self, hash: HashId) -> Option<SourceLocInfo<'_>> {
+        self.sources.get_source_loc_info_by_hash(hash)
     }
 }
 
@@ -181,7 +178,7 @@ impl Diag for ResolveContext {
 }
 
 impl GetSourceByHash for ResolveContext {
-    fn get_by_hash(&self, hash: u64) -> ResolveResult<std::rc::Rc<ir::SourceFile>> {
+    fn get_by_hash(&self, hash: u64) -> ResolveResult<std::rc::Rc<ir::Source>> {
         self.sources.get_by_hash(hash)
     }
 }

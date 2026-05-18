@@ -11,7 +11,6 @@
   95:     prop a = 1; // error
   96:   init(l:Length) {} } K();
 
--- No Output --
 -- Errors --
   × error: 95:3: Statement not allowed prior initializers
     ╭─[../books/tests/src/statement_usage/pre-init.md:95:3]
@@ -25,6 +24,6 @@
     · ──┬─
     ·   ╰── Before this initializer
     ╰────
-Evaluation aborted because of prior resolve errors!
+
 -- Test Result --
 FAILS AS EXPECTED

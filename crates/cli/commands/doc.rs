@@ -3,13 +3,7 @@
 
 //! µcad CLI doc command
 
-use microcad_builtin::Symbol;
-use microcad_docgen::*;
-
-use crate::{
-    Cli,
-    commands::{Resolve, RunCommand},
-};
+use crate::{Cli, commands::RunCommand};
 
 /// Generate documentation from code.
 #[derive(clap::Parser)]
@@ -17,8 +11,7 @@ pub struct Doc {
     /// Input file or library name.
     ///
     /// Build documentation for an external library (only `__builtin` and `std` are possible).
-    #[clap(flatten)]
-    resolve: Resolve,
+    input: String,
 
     /// Generator (md (default), mdbook).
     #[arg(short = 'g', long = "generator")]
@@ -29,48 +22,26 @@ pub struct Doc {
     output: Option<std::path::PathBuf>,
 }
 
-impl Doc {
-    /// Generator from arguments
-    fn generator(&self) -> miette::Result<Box<dyn DocGen>> {
-        let name = self.generator.clone().unwrap_or("md".to_string());
-
-        match name.as_str() {
-            "md" => Ok(Box::new(Md {
-                output_path: self.output.clone(),
-            })),
-            "mdbook" => Ok(Box::new(MdBook {
-                path: self.output.clone().unwrap_or_default(),
-            })),
-            _ => Err(miette::miette!("No generator with name `{name}`")),
-        }
-    }
-
-    /// Resolve symbol from arguments
-    fn symbol(&self, cli: &Cli) -> miette::Result<Symbol> {
-        let input = &self.resolve.parse.input;
-        // Handle special case for builtin symbol.
-        if let Some(s) = input.to_str()
-            && s == "__builtin"
-        {
-            return Ok(microcad_builtin::builtin_module());
-        }
-
-        let context = self.resolve.run(cli)?;
-        let symbol = context
-            .root
-            .get_child(&microcad_lang_base::Identifier::no_ref("mod")) // FIXME. This symbol should have same name as its parent directory (e.g. `std`)
-            .expect("Symbol");
-
-        Ok(symbol)
-    }
-}
-
 impl RunCommand<()> for Doc {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        let generator = self.generator()?;
-        let symbol = self.symbol(cli)?;
-        generator
-            .doc_gen(&symbol)
-            .map_err(|err| miette::miette!("{err}"))
+        use microcad_driver::prelude as mu;
+        use mu::traits::*;
+
+        let mut document = mu::Document::open(&self.input)?;
+        let params = mu::DocGenParameters {
+            generator_id: self.generator.clone(),
+            output_path: self.output.clone(),
+            resolve_parameters: mu::ResolveParameters::default(),
+        };
+
+        match document.doc_gen(params) {
+            Ok(_) => {}
+            Err(err) => {
+                eprintln!("Error generating documentation:\n{err}");
+                cli.print_diagnostics(&document);
+            }
+        }
+
+        Ok(())
     }
 }

@@ -20,6 +20,8 @@ use crate::{
     view_model::ViewerEvent,
 };
 
+use microcad_driver::prelude as mu;
+
 /// Whether a kind of watch event is relevant for compilation.
 fn is_relevant_event_kind(kind: &notify::EventKind) -> bool {
     match kind {
@@ -143,7 +145,7 @@ pub fn handle_processor_responses(
     mut events: EventWriter<ViewerEvent>,
 ) {
     let mut entities = Vec::new();
-    let mut ground_radius = microcad_core::Length::default();
+    let mut ground_radius = mu::core::Length::default();
 
     for response in view_model.processor.response_receiver.try_iter() {
         match response {
@@ -170,7 +172,7 @@ pub fn handle_processor_responses(
                     log::info!("Spawn model: {uuid}");
 
                     model_view_states.get(uuid).map(|view_state| {
-                        ground_radius = microcad_core::Length::mm(
+                        ground_radius = mu::core::Length::mm(
                             ground_radius.max(view_state.info().ground_radius.0),
                         );
 

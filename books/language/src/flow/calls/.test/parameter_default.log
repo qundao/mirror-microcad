@@ -16,10 +16,5 @@
   44:   // One matches by name another by type and one_more by default.
   45:   f(one = 1, 5m²);
 
--- Output --
-1 2000mm 5000000mm²
-
--- No Errors --
--- No Model --
 -- Test Result --
 OK

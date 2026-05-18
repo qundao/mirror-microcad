@@ -11,7 +11,6 @@
   63:     if std::math::PI == l { } // error
   64:   } } K(1cm);
 
--- No Output --
 -- Errors --
   × error: 63:3: If statement is not allowed within initializer
     ╭─[../books/tests/src/statement_usage/init.md:63:3]
@@ -24,6 +23,6 @@
  64 │ } } K(1cm);
     ╰────
   help: if statement is only allowed within source file, workbench, function, if statement or expression
-Evaluation aborted because of prior resolve errors!
+
 -- Test Result --
 FAILS AS EXPECTED

@@ -46,7 +46,7 @@ pub mod log {
     pub fn info() -> Symbol {
         |_, args, context| {
             args.iter()
-                .try_for_each(|(_, arg)| -> Result<(), EvalError> {
+                .try_for_each(|(_, arg)| -> Result<(), Box<EvalError>> {
                     context.info(args, format!("{value}", value = arg.value));
                     Ok(())
                 })?;

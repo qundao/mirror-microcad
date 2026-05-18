@@ -7,6 +7,7 @@ default-members = [
     "crates/builtin-proc-macros",
     "crates/cli",
     "crates/core",
+    "crates/driver",
     "crates/export",
     "crates/import",
     "crates/lang",
@@ -30,6 +31,7 @@ members = [
     "crates/builtin-proc-macros",
     "crates/cli",
     "crates/core",
+    "crates/driver",
     "crates/export",
     "crates/import",
     "crates/lang",
@@ -82,6 +84,7 @@ microcad-lang-markdown = { path = "crates/lang-markdown", version = "0.4.0" }
 microcad-lang-parse = { path = "crates/lang-parse", version = "0.4.0" }
 microcad-lang-proc-macros = { path = "crates/lang-proc-macros", version = "0.4.0" }
 microcad-docgen = { path = "crates/docgen", version = "0.4.0" }
+microcad-driver = { path = "crates/driver", version = "0.4.0" }
 microcad-builtin = { path = "crates/builtin", version = "0.4.0" }
 microcad-builtin-proc-macros = { path = "crates/builtin-proc-macros", version = "0.4.0" }
 microcad-viewer-ipc = { path = "crates/viewer-ipc", version = "0.4.0" }

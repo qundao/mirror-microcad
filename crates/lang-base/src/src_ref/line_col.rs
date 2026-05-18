@@ -4,7 +4,7 @@
 /// Line and column within a source code file
 #[derive(Clone, Debug, Default)]
 pub struct LineCol {
-    /// Line number (1..)
+    /// Line number (0..)
     pub line: u32,
     /// Column number (1..)
     pub col: u32,
@@ -12,6 +12,6 @@ pub struct LineCol {
 
 impl std::fmt::Display for LineCol {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}:{}", self.line, self.col)
+        write!(f, "{}:{}", self.line + 1, self.col)
     }
 }

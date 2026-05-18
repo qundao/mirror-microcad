@@ -1,7 +1,7 @@
 ﻿
 -- Test --
         Test name: no_building_plan_same_name_different_type
-  Expected result: todo_fail
+  Expected result: todo
       Source file: ../books/language/src/structure/workbenches/elements/initializers.md:132
         Test path: ../books/language/src/structure/workbenches/elements/.test
 
@@ -20,49 +20,5 @@
  142:   // Use initializer
  143:   Wheel(radius = 1.0, outer = 1cm);
 
--- No Output --
--- Errors --
-  × error: 140:21: Quantity error: Invalid operation: `1` + `9mm` (try `9mm` + `1`)
-  ╰─▶ Invalid operation: `1` + `9mm` (try `9mm` + `1`)
-     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:140:21]
- 139 │ 
- 140 │     Circle(radius = radius + thickness) - Circle(radius)
-     ·                     ─────────┬────────
-     ·                              ╰── Quantity error: Invalid operation: `1` + `9mm` (try `9mm` + `1`)
- 141 │ }
-     ╰────
-  × error: 140:12: Workbench Circle cannot find initialization for those arguments
-     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:140:5]
- 139 │ 
- 140 │     Circle(radius = radius + thickness) - Circle(radius)
-     ·     ──────────────────┬─────────────────
-     ·                       ╰── Got: Circle( radius = <NO VALUE> )
- 141 │ }
-     ╰────
-  help: Possible initializations:
-        	Circle( radius: Length, center = (x = 0mm, y = 0mm))
-        	Circle( diameter: Length, center = (x = 0mm, y = 0mm))
-  × error: 140:50: Workbench Circle cannot find initialization for those arguments
-     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:140:43]
- 139 │ 
- 140 │     Circle(radius = radius + thickness) - Circle(radius)
-     ·                                           ───────┬───────
-     ·                                                  ╰── Got: Circle( radius = 1 )
- 141 │ }
- 142 │ // Use initializer
-     ╰────
-  help: Possible initializations:
-        	Circle( radius: Length, center = (x = 0mm, y = 0mm))
-        	Circle( diameter: Length, center = (x = 0mm, y = 0mm))
-  × error: 140:5: The Sketch workbench produced a Undetermined output, but expected a 2D output.
-     ╭─[../books/language/src/structure/workbenches/elements/initializers.md:140:5]
- 139 │ 
- 140 │     Circle(radius = radius + thickness) - Circle(radius)
-     ·     ──────────────────────────┬──────────────────────────
-     ·                               ╰── The Sketch workbench produced a Undetermined output, but expected a 2D output.
- 141 │ }
- 142 │ // Use initializer
-     ╰────
-Expected error(s) which did not occur in line(s): 136
 -- Test Result --
-TODO (SHALL FAIL)
+TODO

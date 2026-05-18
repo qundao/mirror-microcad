@@ -7,12 +7,11 @@
 //! It runs in a separate thread and communication is handled via
 //! crossbeam channels with requests and responses.
 
-use std::path::PathBuf;
+use microcad_driver::prelude as mu;
+use mu::traits::*;
 
 use crossbeam::channel::{Receiver, Sender};
-use microcad_lang::{eval, lower::ir};
-use microcad_lang_base::{DiagHandler, HashMap, PushDiag, Refer, SrcRef, SrcReferrer};
-use microcad_lang_format::FormatConfig;
+
 use miette::IntoDiagnostic;
 use tower_lsp::lsp_types::{
     Diagnostic, DiagnosticSeverity, FullDocumentDiagnosticReport, Range, SemanticTokens,
@@ -33,7 +32,7 @@ pub enum ProcessorRequest {
     AddDocument(Url),
     RemoveDocument(Url),
     UpdateDocument(Url),
-    UpdateDocumentStr(Url, String),
+    UpdateDocumentCode(Url, String),
     GetDocumentDiagnostics(Url),
     GetFullSemanticTokens(Url),
     FormatDocument(Url),
@@ -44,216 +43,30 @@ pub enum ProcessorResponse {
     /// Error messages and warnings for a specific document received.
     DocumentDiagnostics(Url, FullDocumentDiagnosticReport),
     SemanticTokens(Url, SemanticTokensResult),
-    FormattedDocument {
+    UpdatedDocumentCode {
         url: Url,
         code: String,
     },
 }
 
-fn src_ref_to_lsp_range(src_ref: SrcRef) -> Option<Range> {
-    match src_ref.is_some() {
-        true => {
-            use tower_lsp::lsp_types::{Position, Range};
-
-            let start = Position::new(src_ref.at.line - 1, src_ref.at.col - 1);
-            let end = Position::new(
-                src_ref.at.line - 1,
-                (src_ref.at.col + src_ref.range.len() as u32) - 1,
-            );
-
-            Some(Range::new(start, end))
-        }
-        false => None,
-    }
-}
-
-pub struct WorkspaceSettings {
-    pub search_paths: Vec<PathBuf>,
-}
-
-#[derive(Default)]
-enum Context {
-    #[default]
-    None,
-    Parse(Box<DiagHandler>),
-    Eval(Box<eval::EvalContext>),
-}
-
-impl Context {
-    fn diag(&self) -> Option<&DiagHandler> {
-        match self {
-            Context::None => None,
-            Context::Parse(diag_handler) => Some(diag_handler),
-            Context::Eval(eval_context) => Some(&eval_context.diag),
-        }
-    }
-}
-
-/// The processor  responsible for generating view commands.
-///
-/// The processor itself runs in a separate thread and can be controlled
-/// via [`ProcessorInterface`] by sending requests and handling the corresponding responses.
-pub struct Processor {
-    workspace_settings: WorkspaceSettings,
-    context: Context,
-    pub request_handler: Receiver<ProcessorRequest>,
-    /// Outputs
-    pub response_sender: Sender<ProcessorResponse>,
-
-    pub buffers: HashMap<Url, String>,
-}
-
-pub type ProcessorResult = miette::Result<Vec<ProcessorResponse>>;
-
-impl Processor {
-    /// Handle processor request.
-    pub fn handle_request(&mut self, request: ProcessorRequest) -> ProcessorResult {
-        match request {
-            ProcessorRequest::SetCursorPosition { .. } => todo!(),
-            ProcessorRequest::AddDocument(url) => self.add_document(&url),
-            ProcessorRequest::RemoveDocument(_) => Ok(vec![]),
-            ProcessorRequest::UpdateDocument(url) => self.update_document(&url),
-            ProcessorRequest::UpdateDocumentStr(url, doc) => self.update_document_str(&url, &doc),
-            ProcessorRequest::GetDocumentDiagnostics(url) => self.get_document_diagnostics(&url),
-            ProcessorRequest::GetFullSemanticTokens(url) => self.get_full_semantic_tokens(&url),
-            ProcessorRequest::FormatDocument(url) => self.format_document(&url),
-        }
-    }
-
-    /// Process a µcad file (parse, resolve, eval).
-    pub fn add_document(&mut self, url: &Url) -> ProcessorResult {
-        self.update_document(url)
-    }
-
-    /// Update (re-evaluate) a document.
-    pub fn update_document(&mut self, url: &Url) -> ProcessorResult {
-        self.context = match ir::SourceFile::load(
-            url.to_file_path()
-                .map_err(|_| miette::miette!("Error converting {url} to file path."))?,
-        ) {
-            Ok(source_file) => {
-                self.buffers
-                    .insert(url.clone(), source_file.source.to_string());
-                match eval::EvalContext::from_source(
-                    source_file,
-                    Some(microcad_builtin::builtin_module()),
-                    &self.workspace_settings.search_paths,
-                    microcad_lang_base::Capture::new(),
-                    microcad_builtin::builtin_exporters(),
-                    microcad_builtin::builtin_importers(),
-                    0,
-                ) {
-                    Ok(eval) => Context::Eval(eval.into()),
-                    Err(_) => todo!(),
-                }
-            }
-
-            Err(err) => {
-                let mut diag = DiagHandler::default();
-                let src_ref = err.src_ref();
-                diag.push_diag(microcad_lang_base::Diagnostic::Error(Refer::new(
-                    err.into(),
-                    src_ref,
-                )))?;
-                Context::Parse(diag.into())
-            }
-        };
-
-        if let Context::Eval(context) = &mut self.context {
-            context.eval()?;
-        }
-
-        Ok(vec![])
-    }
-
-    pub fn update_document_str(&mut self, url: &Url, doc: &str) -> ProcessorResult {
-        let path = url
-            .to_file_path()
-            .map_err(|_| miette::miette!("Error converting {url} to file path."))?;
-        self.context = match ir::SourceFile::load_from_str(None, path, doc) {
-            Ok(source_file) => {
-                self.buffers
-                    .insert(url.clone(), source_file.source.to_string());
-                match eval::EvalContext::from_source(
-                    source_file,
-                    Some(microcad_builtin::builtin_module()),
-                    &self.workspace_settings.search_paths,
-                    microcad_lang_base::Capture::new(),
-                    microcad_builtin::builtin_exporters(),
-                    microcad_builtin::builtin_importers(),
-                    0,
-                ) {
-                    Ok(mut context) => {
-                        context.eval()?;
-                        Context::Eval(context.into())
-                    }
-                    Err(_) => todo!(),
-                }
-            }
-
-            Err(errors) => {
-                let mut diag = DiagHandler::default();
-                for err in errors {
-                    let src_ref = err.src_ref();
-                    diag.push_diag(microcad_lang_base::Diagnostic::Error(Refer::new(
-                        err.into(),
-                        src_ref,
-                    )))?;
-                }
-                Context::Parse(diag.into())
-            }
-        };
-        Ok(vec![])
-    }
-
-    pub fn get_document_string(&self, url: &Url) -> miette::Result<String> {
-        match self.buffers.get(url) {
-            Some(buffer) => Ok(buffer.clone()),
-            None => {
-                let path = url
-                    .to_file_path()
-                    .map_err(|_| miette::miette!("Error converting {url} to file path."))?;
-                std::fs::read_to_string(&path)
-                    .map_err(|err| miette::miette!("Error reading file: {err}"))
-            }
-        }
-    }
-
-    pub fn format_document(&mut self, url: &Url) -> ProcessorResult {
-        let src = self.get_document_string(url)?;
-        let doc = microcad_lang_parse::parse(&src)
-            .map_err(|err| miette::miette!("Parse error: {err:?}"))?;
-
-        Ok(vec![ProcessorResponse::FormattedDocument {
-            url: url.clone(),
-            code: microcad_lang_format::format(&doc, &FormatConfig::default()),
-        }])
-    }
-
-    pub fn get_document_diagnostics(&self, url: &Url) -> ProcessorResult {
-        let Some(diag) = &self.context.diag() else {
-            return Ok(vec![]);
-        };
-        Ok(vec![ProcessorResponse::DocumentDiagnostics(
+impl ProcessorResponse {
+    fn diagnostics(url: Url, diag: &mu::Diagnostics) -> Self {
+        use mu::base::Level;
+        Self::DocumentDiagnostics(
             url.clone(),
             FullDocumentDiagnosticReport {
                 result_id: None,
                 items: diag
-                    .diagnostics
                     .iter()
                     .filter_map(|diag| {
                         let message = diag.message();
                         match src_ref_to_lsp_range(diag.src_ref()) {
                             Some(range) => {
                                 let severity = match diag.level() {
-                                    microcad_lang_base::Level::Trace => DiagnosticSeverity::HINT,
-                                    microcad_lang_base::Level::Info => {
-                                        DiagnosticSeverity::INFORMATION
-                                    }
-                                    microcad_lang_base::Level::Warning => {
-                                        DiagnosticSeverity::WARNING
-                                    }
-                                    microcad_lang_base::Level::Error => DiagnosticSeverity::ERROR,
+                                    Level::Trace => DiagnosticSeverity::HINT,
+                                    Level::Info => DiagnosticSeverity::INFORMATION,
+                                    Level::Warning => DiagnosticSeverity::WARNING,
+                                    Level::Error => DiagnosticSeverity::ERROR,
                                 };
 
                                 Some(Diagnostic::new(
@@ -271,7 +84,141 @@ impl Processor {
                     })
                     .collect(),
             },
-        )])
+        )
+    }
+}
+
+fn src_ref_to_lsp_range(src_ref: mu::SrcRef) -> Option<Range> {
+    match src_ref.is_some() {
+        true => {
+            use tower_lsp::lsp_types::{Position, Range};
+
+            let start = Position::new(src_ref.at.line, src_ref.at.col - 1);
+            let end = Position::new(
+                src_ref.at.line,
+                (src_ref.at.col + src_ref.range.len() as u32) - 1,
+            );
+
+            Some(Range::new(start, end))
+        }
+        false => None,
+    }
+}
+
+/// The processor  responsible for generating view commands.
+///
+/// The processor itself runs in a separate thread and can be controlled
+/// via [`ProcessorInterface`] by sending requests and handling the corresponding responses.
+pub struct Processor {
+    pub request_handler: Receiver<ProcessorRequest>,
+    pub response_sender: Sender<ProcessorResponse>,
+
+    pub documents: mu::HashMap<Url, mu::document::Source>,
+}
+
+pub type ProcessorResult = miette::Result<Vec<ProcessorResponse>>;
+
+impl Processor {
+    /// Handle processor request.
+    pub fn handle_request(&mut self, request: ProcessorRequest) -> ProcessorResult {
+        match request {
+            ProcessorRequest::SetCursorPosition { .. } => todo!(),
+            ProcessorRequest::AddDocument(url) => self.add_document(url),
+            ProcessorRequest::RemoveDocument(url) => self.remove_document(&url),
+            ProcessorRequest::UpdateDocument(url) => self.update_document(&url),
+            ProcessorRequest::UpdateDocumentCode(url, doc) => self.update_document_code(&url, doc),
+            ProcessorRequest::GetDocumentDiagnostics(url) => self.get_document_diagnostics(&url),
+            ProcessorRequest::GetFullSemanticTokens(url) => self.get_full_semantic_tokens(&url),
+            ProcessorRequest::FormatDocument(url) => self.format_document(&url),
+        }
+    }
+
+    /// Process a µcad file (parse, resolve, eval).
+    pub fn add_document(&mut self, url: Url) -> ProcessorResult {
+        match mu::document::Source::load(url.clone()) {
+            Ok(mut document) => {
+                document.load_from_file()?;
+                Self::compile_document(&mut document)?;
+                self.documents.insert(url, document);
+            }
+            Err(_) => {
+                log::error!("Could not load document: {url}")
+            }
+        }
+        Ok(vec![])
+    }
+
+    pub fn remove_document(&mut self, url: &Url) -> ProcessorResult {
+        self.documents.remove(url);
+        Ok(vec![])
+    }
+
+    fn compile_document(document: &mut mu::document::Source) -> ProcessorResult {
+        match document
+            .parse()
+            .and(document.lower())
+            .and(document.resolve(mu::ResolveParameters::default()))
+            .and(document.eval())
+        {
+            Ok(_) => Ok(vec![]),
+            Err(_) => {
+                log::error!("Error compiling document");
+                Ok(vec![])
+            }
+        }
+    }
+
+    /// Update (re-evaluate) a document.
+    pub fn update_document(&mut self, url: &Url) -> ProcessorResult {
+        match self.documents.get_mut(url) {
+            Some(document) => Self::compile_document(document),
+            None => {
+                log::error!("Document does not exist!");
+                Ok(vec![])
+            }
+        }
+    }
+
+    pub fn update_document_code(&mut self, url: &Url, code: String) -> ProcessorResult {
+        let document =
+            self.documents
+                .entry(url.clone())
+                .or_insert(mu::document::Source::from_source(mu::base::Source {
+                    url: url.clone(),
+                    line_offset: 0,
+                    code: mu::Hashed::new(code),
+                }));
+
+        Self::compile_document(document)
+    }
+
+    pub fn format_document(&mut self, url: &Url) -> ProcessorResult {
+        match self.documents.get_mut(url) {
+            Some(document) => match document.format(&mu::FormatParameters::default()) {
+                Ok(true) => {
+                    Self::compile_document(document).and(document.sync())?;
+                    Ok(vec![ProcessorResponse::UpdatedDocumentCode {
+                        url: url.clone(),
+                        code: document
+                            .get_code()
+                            .map(|s| s.to_string())
+                            .unwrap_or_default(),
+                    }])
+                }
+                Ok(false) => {
+                    log::info!("Document is already formatted");
+                    Ok(vec![])
+                }
+                Err(err) => {
+                    log::error!("Error formatting document `{url}`: {err}");
+                    Ok(vec![])
+                }
+            },
+            None => {
+                log::error!("Document does not exist!");
+                Ok(vec![])
+            }
+        }
     }
 
     fn get_full_semantic_tokens(&self, url: &Url) -> ProcessorResult {
@@ -285,6 +232,16 @@ impl Processor {
                 data,
             }),
         )])
+    }
+
+    fn get_document_diagnostics(&self, url: &Url) -> ProcessorResult {
+        Ok(match self.documents.get(url) {
+            Some(document) => vec![ProcessorResponse::diagnostics(
+                url.clone(),
+                document.diags(),
+            )],
+            None => vec![],
+        })
     }
 }
 
@@ -305,17 +262,15 @@ impl ProcessorInterface {
     }
 
     /// Run the processing thread and create interface.
-    pub fn run(workspace_settings: WorkspaceSettings) -> Self {
+    pub fn run() -> Self {
         let (request_sender, request_receiver) = crossbeam::channel::unbounded();
         let (response_sender, response_receiver) = crossbeam::channel::unbounded();
 
         std::thread::spawn(move || {
             let mut processor = Processor {
-                workspace_settings,
                 request_handler: request_receiver,
                 response_sender,
-                context: Context::None,
-                buffers: HashMap::default(),
+                documents: mu::HashMap::default(),
             };
 
             loop {
@@ -323,7 +278,7 @@ impl ProcessorInterface {
                     && let Ok(responses) = processor.handle_request(request)
                 {
                     for response in responses {
-                        processor.response_sender.send(response).expect("No error");
+                        processor.response_sender.send(response).ok();
                     }
                 }
             }

@@ -3,10 +3,12 @@
 
 //! µcad CLI.
 
+use std::str::FromStr;
+
 use clap::Parser;
 
 use crate::commands::*;
-use crate::config::Config;
+use microcad_driver::prelude as mu;
 
 /// µcad cli
 #[derive(Parser)]
@@ -30,26 +32,46 @@ pub struct Cli {
 
     /// The loaded or default CLI config.
     #[clap(skip)]
-    pub config: Config,
+    pub config: std::rc::Rc<mu::Config>,
 }
 
 impl Cli {
     /// Create a new CLI.
     pub fn new() -> miette::Result<Self> {
         let mut cli = Self::parse();
+
+        #[cfg(not(debug_assertions))]
+        mu::install_std()?;
+
         if let Some(config_path) = &cli.config_path {
-            cli.config = Config::load(config_path)?
+            cli.config = std::rc::Rc::new(mu::Config::load(config_path)?);
         }
         Ok(cli)
     }
 
-    /// Return a path with default µcad extension given in the config.
-    pub fn path_with_default_ext(&self, path: impl AsRef<std::path::Path>) -> std::path::PathBuf {
-        let mut path = path.as_ref().to_path_buf();
-        if path.extension().is_none() {
-            path.set_extension(self.config.default_extension.clone());
-        }
-        path
+    /// Generate compile parameters
+    pub fn compile_parameters(
+        &self,
+        resolution: &str,
+    ) -> miette::Result<microcad_driver::commands::CompileParameters> {
+        use microcad_driver::commands::compile::*;
+        Ok(CompileParameters {
+            resolve: ResolveParameters {
+                search_paths: self.config.search_paths.clone(),
+            },
+            render: RenderParameters::from_str(resolution)?.with_empty_cache(),
+        })
+    }
+
+    /// Print diagnostics with colors and unicode.
+    pub fn print_diagnostics(&self, diag: &impl mu::traits::PrintDiagnostics) {
+        eprintln!(
+            "{}",
+            diag.diagnostics_string(&mu::PrintDiagnosticsParameters {
+                color: true,
+                unicode: true
+            })
+        );
     }
 
     /// Run the CLI.
@@ -57,14 +79,8 @@ impl Cli {
         let start = std::time::Instant::now();
 
         match &self.command {
-            Commands::Parse(parse) => {
-                parse.run(self)?;
-            }
-            Commands::Resolve(resolve) => {
-                resolve.run(self)?;
-            }
-            Commands::Eval(eval) => {
-                eval.run(self)?;
+            Commands::Check(check) => {
+                check.run(self)?;
             }
             Commands::Export(export) => {
                 export.run(self)?;
@@ -93,22 +109,6 @@ impl Cli {
             );
         }
         Ok(())
-    }
-
-    pub(super) fn is_parse(&self) -> bool {
-        matches!(self.command, Commands::Parse(..))
-    }
-
-    pub(super) fn is_resolve(&self) -> bool {
-        matches!(self.command, Commands::Resolve(..))
-    }
-
-    pub(super) fn is_eval(&self) -> bool {
-        matches!(self.command, Commands::Eval(..))
-    }
-
-    pub(super) fn is_export(&self) -> bool {
-        matches!(self.command, Commands::Export(..))
     }
 
     pub(super) fn time_to_string(duration: &std::time::Duration) -> String {

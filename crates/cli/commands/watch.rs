@@ -1,68 +1,71 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! µcad CLI parse command
-
-use microcad_lang::{model::Model, render::*, value::Value};
-use microcad_lang_base::RcMut;
+//! µcad CLI watch command
 
 use crate::*;
 
 #[derive(clap::Parser)]
 pub struct Watch {
-    /// Export arguments.
-    #[clap(flatten)]
-    pub export: Export,
+    pub input: String,
+
+    /// Output file (e.g. an SVG or STL).
+    pub output: Option<std::path::PathBuf>,
+
+    /// The resolution of this export.
+    ///
+    /// The resolution can changed relatively `200%` or to an absolute value `0.05mm`.
+    #[arg(short, long, default_value = "0.1mm")]
+    pub resolution: String,
 }
 
 /// Run this command for a CLI.
 impl RunCommand for Watch {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        let mut watcher = Watcher::new()?;
-        let render_cache = RcMut::new(RenderCache::default());
+        use microcad_driver::prelude as mu;
+        use mu::traits::*;
 
-        if !self.export.dry_run {
-            // Recompile whenever something relevant happens.
-            loop {
-                // run prior parse step
-                match self.export.run(cli) {
-                    Ok(target_models) => {
-                        target_models.iter().try_for_each(
-                            |(model, export)| -> miette::Result<()> {
-                                let mut render_context = RenderContext::new(
-                                    model,
-                                    self.export.resolution(),
-                                    Some(render_cache.clone()),
-                                    None,
-                                )?;
-                                let model: Model =
-                                    model.render_with_context(&mut render_context)?;
+        let mut watcher = mu::Watcher::new()?;
+        let render_cache = mu::RcMut::new(mu::RenderCache::new());
 
-                                let value = export.export(&model)?;
-                                if !matches!(value, Value::None) {
-                                    log::info!("{value}");
-                                };
-                                Ok(())
-                            },
-                        )?;
-                    }
-                    Err(err) => log::error!("{err}"),
+        let compile_params = cli.compile_parameters(&self.resolution)?;
+        let compile_params = mu::CompileParameters {
+            resolve: compile_params.resolve,
+            render: compile_params.render.with_cache(render_cache.clone()),
+        };
+
+        // Recompile whenever something relevant happens.
+        loop {
+            let export_params = mu::ExportParameters {
+                input_path: std::path::PathBuf::from(&self.input),
+                output_path: self.output.clone(),
+                config: cli.config.export.clone(),
+            };
+            let mut document = mu::Document::open(&self.input)?;
+            match document
+                .compile(compile_params.clone())
+                .and(document.export(export_params))
+            {
+                Ok(exported_files) => {
+                    eprint!("{exported_files}");
                 }
-
-                // Watch all dependencies of the most recent compilation.
-                watcher.update(vec![self.export.eval.resolve.parse.input_with_ext(cli)])?;
-
-                // Remove unused cache items.
-                {
-                    let mut cache = render_cache.borrow_mut();
-                    cache.garbage_collection();
+                Err(err) => {
+                    eprintln!("{err}");
+                    cli.print_diagnostics(&document);
                 }
-
-                // Wait until anything relevant happens.
-                watcher.wait()?;
             }
-        }
 
-        Ok(())
+            // Watch all dependencies of the most recent compilation.
+            watcher.update(vec![self.input.clone().into()])?;
+
+            // Remove unused cache items.
+            {
+                let mut cache = render_cache.borrow_mut();
+                cache.garbage_collection();
+            }
+
+            // Wait until anything relevant happens.
+            watcher.wait()?;
+        }
     }
 }

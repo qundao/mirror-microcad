@@ -12,12 +12,5 @@
  120:   }
  121:   MySketch();
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Workpiece(Sketch) const_assignment_workbench_code::MySketch() ->
-
-Export error: Render error: Nothing to render
 -- Test Result --
 OK

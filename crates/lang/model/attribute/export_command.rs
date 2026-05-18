@@ -6,19 +6,14 @@
 use crate::{
     builtin::{ExportError, Exporter},
     model::Model,
-    render::{RenderCache, RenderContext},
     value::Value,
 };
-use microcad_core::RenderResolution;
-use microcad_lang_base::RcMut;
 
 /// Export attribute, e.g. `#[export: "output.svg"]`.
 #[derive(Clone)]
 pub struct ExportCommand {
     /// Filename.
     pub filename: std::path::PathBuf,
-    /// Resolution
-    pub resolution: RenderResolution,
     /// Exporter.
     pub exporter: std::rc::Rc<dyn Exporter>,
 }
@@ -27,23 +22,6 @@ impl ExportCommand {
     /// Export the model. By the settings in the attribute.
     pub fn export(&self, model: &Model) -> Result<Value, ExportError> {
         self.exporter.export(model, &self.filename)
-    }
-
-    /// Render the model and export.
-    pub fn render_and_export(&self, model: &Model) -> Result<Value, ExportError> {
-        let render_cache = RcMut::new(RenderCache::default());
-        let mut render_context =
-            RenderContext::new(model, self.resolution.clone(), Some(render_cache), None)?;
-        log::trace!(
-            "Pre-rendered model:\n{}",
-            microcad_lang_base::FormatTree(model)
-        );
-
-        use crate::render::RenderWithContext;
-        self.exporter.export(
-            &model.render_with_context(&mut render_context)?,
-            &self.filename,
-        )
     }
 }
 

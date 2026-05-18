@@ -3,10 +3,7 @@
 
 //! µcad markdown parser.
 
-use crate::{
-    CodeBlock, Markdown, Paragraph, Section,
-    code_block::{CodeBlockHeader, TestResult},
-};
+use crate::{CodeBlock, Markdown, Paragraph, Section, code_block::CodeBlockHeader};
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -84,27 +81,26 @@ impl Parse for CodeBlockHeader {
         // Metadata is everything after "```"
         let meta = &trimmed[3..];
 
-        // 3. Locate structural delimiters
+        // 1. Locate structural delimiters
         let hash_pos = meta.find('#');
         let paren_pos = meta.find('(');
 
-        // 4. Parse Name (supports "µcad,my_name" or just "my_name")
+        // 2. Parse Name (supports "µcad,my_name" or just "my_name")
         let name_end = hash_pos.or(paren_pos).unwrap_or(meta.len());
         let name_part = meta[..name_end].trim();
         let name = name_part
             .find(',')
             .map(|comma_idx| name_part[comma_idx + 1..].trim().to_string());
 
-        // 5. Parse TestResult (#ok, #fail, etc.)
-        let mut test_result = Some(TestResult::Ok);
+        // 3. Parse fragment (#ok, #fail, etc.)
+        let mut fragment = None;
         if let Some(start) = hash_pos {
             let end = paren_pos.unwrap_or(meta.len());
             let status_str = meta[start + 1..end].trim();
-            use std::str::FromStr;
-            test_result = Some(TestResult::from_str(status_str)?);
+            fragment = Some(status_str.to_string());
         }
 
-        // 6. Parse Parameters ((hires, lowres))
+        // 4. Parse Parameters (hires, lowres)
         let mut parameters = Vec::new();
         if let Some(start) = paren_pos {
             let end = meta.find(')').ok_or(ParseError::MalformedHeader)?;
@@ -118,7 +114,7 @@ impl Parse for CodeBlockHeader {
 
         Ok(Self {
             name,
-            test_result,
+            fragment,
             parameters,
         })
     }

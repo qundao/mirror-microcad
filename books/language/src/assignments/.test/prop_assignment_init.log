@@ -17,7 +17,6 @@
   52:   }
   53:   std::debug::assert_eq([MySketch(5cm).diameter, 10cm])
 
--- No Output --
 -- Errors --
   × error: 46:5: Statement not allowed prior initializers
     ╭─[../books/language/src/assignments/property.md:46:5]
@@ -33,6 +32,6 @@
     ·       ╰── Before this initializer
  49 │         radius = 1;
     ╰────
-Evaluation aborted because of prior resolve errors!
+
 -- Test Result --
 FAILS AS EXPECTED

@@ -3,30 +3,26 @@
 
 use std::slice::Iter;
 
-use crate::{GetSourceStrByHash, diag::*};
+use crate::{GetSourceLocInfoByHash, diag::*};
 
 /// µcad source diagnostics.
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct Diagnostics {
     /// The number of overall errors in the evaluation process.
-    pub error_count: u32,
+    error_count: u32,
     /// The number of overall warnings in the evaluation process.
-    pub warning_count: u32,
+    warning_count: u32,
     /// The list of diagnostics
     diagnostics: Vec<Diagnostic>,
 }
 
 impl Diagnostics {
-    pub fn single_error(report: impl Into<Report>) -> Self {
-        Self {
-            error_count: 1,
-            warning_count: 0,
-            diagnostics: vec![Diagnostic::Error(Refer::none(report.into()))],
-        }
-    }
-
     pub fn has_errors(&self) -> bool {
         self.error_count > 0
+    }
+
+    pub fn has_warnings(&self) -> bool {
+        self.warning_count > 0
     }
 
     pub fn iter(&'_ self) -> Iter<'_, Diagnostic> {
@@ -44,13 +40,12 @@ impl Diagnostics {
     pub fn pretty_print(
         &self,
         f: &mut dyn std::fmt::Write,
-        source_by_hash: &impl GetSourceStrByHash,
-        line_offset: u32,
+        source_by_hash: &impl GetSourceLocInfoByHash,
         options: &DiagRenderOptions,
     ) -> std::fmt::Result {
         self.diagnostics
             .iter()
-            .try_for_each(|diag| diag.pretty_print(f, source_by_hash, line_offset, options))
+            .try_for_each(|diag| diag.pretty_print(f, source_by_hash, options))
     }
 
     /// Merges another Diagnostics collection into this one.
@@ -58,6 +53,57 @@ impl Diagnostics {
         self.error_count += other.error_count;
         self.warning_count += other.warning_count;
         self.diagnostics.append(&mut other.diagnostics);
+    }
+
+    /// Return overall number of occurred errors.
+    pub fn warning_count(&self) -> u32 {
+        self.warning_count
+    }
+
+    /// Return overall number of occurred errors.
+    pub fn error_count(&self) -> u32 {
+        self.error_count
+    }
+
+    /// return lines with errors
+    pub fn error_lines(&self) -> HashSet<u32> {
+        self.iter()
+            .filter_map(|d| {
+                if d.level() == Level::Error {
+                    d.src_ref().line()
+                } else {
+                    None
+                }
+            })
+            .collect()
+    }
+
+    /// return lines with warnings
+    pub fn warning_lines(&self) -> HashSet<u32> {
+        self.iter()
+            .filter_map(|d| {
+                if d.level() == Level::Warning {
+                    d.src_ref().line()
+                } else {
+                    None
+                }
+            })
+            .collect()
+    }
+}
+
+impl<R> From<R> for Diagnostics
+where
+    R: Into<Report>,
+{
+    fn from(report: R) -> Self {
+        Self {
+            error_count: 1,
+            warning_count: 0,
+            diagnostics: vec![Diagnostic::Error(std::rc::Rc::new(Refer::none(
+                report.into(),
+            )))],
+        }
     }
 }
 

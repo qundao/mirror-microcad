@@ -11,7 +11,6 @@
    7:     sketch F() {}  // error
    8:   init(l:Length) {} } K();
 
--- No Output --
 -- Errors --
   × error: 7:10: Statement not allowed within workbenches
    ╭─[../books/tests/src/statement_usage/pre-init.md:7:10]
@@ -32,6 +31,6 @@
  8 │ init(l:Length) {} } K();
    ╰────
   help: workbench is only allowed within source file or module
-Evaluation aborted because of prior resolve errors!
+
 -- Test Result --
 FAILS AS EXPECTED

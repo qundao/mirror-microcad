@@ -11,7 +11,6 @@
   71:     const B = l; // error
   72:   } } K(1cm);
 
--- No Output --
 -- Errors --
   × error: 71:3: Constant assignment is not allowed within initializer
     ╭─[../books/tests/src/statement_usage/init.md:71:3]
@@ -24,6 +23,6 @@
  72 │ } } K(1cm);
     ╰────
   help: constant assignment is only allowed within source file, module or workbench
-Evaluation aborted because of prior resolve errors!
+
 -- Test Result --
 FAILS AS EXPECTED

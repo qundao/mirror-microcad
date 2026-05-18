@@ -1,12 +1,14 @@
 ---
-source: crates/syntax/tests/parser.rs
-expression: parse(tokens.as_slice())
+source: crates/lang-parse/tests/parser.rs
+expression: parse(input)
 ---
 Err(
-    [
-        ParseError {
-            span: 4..20,
-            error: unclosed string at 4..20,
-        },
-    ],
+    ParseErrors(
+        [
+            ParseError {
+                span: 4..20,
+                error: unclosed string at 4..20,
+            },
+        ],
+    ),
 )

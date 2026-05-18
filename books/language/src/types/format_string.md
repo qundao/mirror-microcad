@@ -28,7 +28,7 @@ If a format string expression cannot be evaluated, you will get an error.
 [![test](.test/format_string_err.svg)](.test/format_string_err.log)
 
 ```µcad,format_string_err#fail
-fn print_length(length: Length) { // warning: unused length
+fn print_length(length: Length) {
     std::print("{size}"); // error: size is not known
 }
 

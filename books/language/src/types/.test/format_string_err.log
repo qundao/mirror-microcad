@@ -7,19 +7,16 @@
 
 -- Code --
 
-  31:   fn print_length(length: Length) { // warning: unused length
+  31:   fn print_length(length: Length) {
   32:       std::print("{size}"); // error: size is not known
   33:   }
   34:   
   35:   print_length(7mm);
 
--- Output --
-<NO VALUE>
-
 -- Errors --
   × error: 32:18: Symbol size not found.
     ╭─[../books/language/src/types/format_string.md:32:18]
- 31 │ fn print_length(length: Length) { // warning: unused length
+ 31 │ fn print_length(length: Length) {
  32 │     std::print("{size}"); // error: size is not known
     ·                  ──┬─
     ·                    ╰── Symbol size not found.
@@ -27,10 +24,11 @@
     ╰────
   ⚠ warning: 31:17: Unused local length.
     ╭─[../books/language/src/types/format_string.md:31:17]
- 31 │ fn print_length(length: Length) { // warning: unused length
+ 31 │ fn print_length(length: Length) {
     ·                 ───┬──
     ·                    ╰── Unused local length.
  32 │     std::print("{size}"); // error: size is not known
     ╰────
+
 -- Test Result --
 FAILS AS EXPECTED

@@ -264,7 +264,7 @@ pub enum EvalError {
 }
 
 /// Result type of any evaluation.
-pub type EvalResult<T> = std::result::Result<T, EvalError>;
+pub type EvalResult<T> = std::result::Result<T, Box<EvalError>>;
 
 impl From<ResolveError> for EvalError {
     fn from(err: ResolveError) -> Self {
@@ -272,5 +272,29 @@ impl From<ResolveError> for EvalError {
             ResolveError::SymbolNotFound(name) => EvalError::SymbolNotFound(name),
             other => EvalError::ResolveError(other),
         }
+    }
+}
+
+impl From<Box<EvalError>> for miette::Report {
+    fn from(value: Box<EvalError>) -> Self {
+        miette::Report::new(*value)
+    }
+}
+
+impl From<DiagError> for Box<EvalError> {
+    fn from(value: DiagError) -> Self {
+        Box::new(value.into())
+    }
+}
+
+impl From<ValueError> for Box<EvalError> {
+    fn from(value: ValueError) -> Self {
+        Box::new(value.into())
+    }
+}
+
+impl From<ResolveError> for Box<EvalError> {
+    fn from(value: ResolveError) -> Self {
+        Box::new(value.into())
     }
 }

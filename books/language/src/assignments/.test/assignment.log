@@ -15,10 +15,5 @@
   19:   
   20:   std::print("{c}");
 
--- Output --
-53.85164807134504mm²
-
--- No Errors --
--- No Model --
 -- Test Result --
 OK

@@ -14,31 +14,29 @@
   21:   Circle( radius = 5mm )
   22:       .translate(y = [-34mm/2 , 34mm/2]);
 
--- No Output --
--- No Errors --
 -- Model --
-  Group (root) ->
-    Multiplicity ->
-      Workpiece(Operation) std::ops::translate(x=0mm, y=-17mm, z=0mm) ->
+  Group (root) -> 2D (7CAD60B259A26C1B): Collection @0.25mm
+    Multiplicity -> 2D (7CAD60B259A26C1B): Collection @0.25mm
+      Workpiece(Operation) std::ops::translate(x=0mm, y=-17mm, z=0mm) -> 2D (6E51C020E8A97424): MultiPolygon @0.25mm
         - x = 0mm
         - y = -17mm
         - z = 0mm
-        Transform __builtin::ops::translate(x=0mm, y=-17mm, z=0mm) ->
-          Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=5mm) ->
+        Transform __builtin::ops::translate(x=0mm, y=-17mm, z=0mm) -> 2D (47FC830091DF99F5): MultiPolygon @0.25mm
+          Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=5mm) -> 2D (61CB8A420F4DFF8F): MultiPolygon @0.25mm
             - center = (x=0mm, y=0mm)
             - radius = 5mm
-            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-              Primitive2D __builtin::geo2d::Circle(radius=5mm) ->
-      Workpiece(Operation) std::ops::translate(x=0mm, y=17mm, z=0mm) ->
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (E7A1C53FF3FFAC8B): MultiPolygon @0.25mm
+              Primitive2D __builtin::geo2d::Circle(radius=5mm) -> 2D (7B392E9EF673E0E2): Polygon @0.25mm
+      Workpiece(Operation) std::ops::translate(x=0mm, y=17mm, z=0mm) -> 2D (5EBA7172F6FD0275): MultiPolygon @0.25mm
         - x = 0mm
         - y = 17mm
         - z = 0mm
-        Transform __builtin::ops::translate(x=0mm, y=17mm, z=0mm) ->
-          Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=5mm) ->
+        Transform __builtin::ops::translate(x=0mm, y=17mm, z=0mm) -> 2D (D07A1C6CE01F4949): MultiPolygon @0.25mm
+          Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=5mm) -> 2D (61CB8A420F4DFF8F): MultiPolygon @0.25mm
             - center = (x=0mm, y=0mm)
             - radius = 5mm
-            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) ->
-              Primitive2D __builtin::geo2d::Circle(radius=5mm) ->
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (E7A1C53FF3FFAC8B): MultiPolygon @0.25mm
+              Primitive2D __builtin::geo2d::Circle(radius=5mm) -> 2D (7B392E9EF673E0E2): Polygon @0.25mm
 
 Export of "../books/tests/src/.test/operation_no_body-out.svg" successful.
 -- Test Result --

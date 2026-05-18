@@ -158,31 +158,33 @@ impl std::fmt::Display for Unit {
     }
 }
 
-impl Unit {
+impl Ty for Unit {
     /// Return type to use with this unit.
-    pub fn ty(self) -> Type {
+    fn ty(&self) -> Type {
+        Type::Quantity(self.quantity_type())
+    }
+}
+
+impl Unit {
+    pub fn quantity_type(&self) -> QuantityType {
         match self {
-            Self::None | Self::Percent => Type::Quantity(QuantityType::Scalar),
+            Self::None | Self::Percent => QuantityType::Scalar,
             Self::Meter
             | Self::Centimeter
             | Self::Millimeter
             | Self::Micrometer
             | Self::Inch
             | Self::Foot
-            | Self::Yard => Type::Quantity(QuantityType::Length),
-            Self::Deg | Self::DegS | Self::Grad | Self::Turns | Self::Rad => {
-                Type::Quantity(QuantityType::Angle)
-            }
-            Self::Gram | Self::Kilogram | Self::Pound | Self::Ounce => {
-                Type::Quantity(QuantityType::Weight)
-            }
+            | Self::Yard => QuantityType::Length,
+            Self::Deg | Self::DegS | Self::Grad | Self::Turns | Self::Rad => QuantityType::Angle,
+            Self::Gram | Self::Kilogram | Self::Pound | Self::Ounce => QuantityType::Weight,
             Self::Meter2
             | Self::Centimeter2
             | Self::Millimeter2
             | Self::Micrometer2
             | Self::Inch2
             | Self::Foot2
-            | Self::Yard2 => Type::Quantity(QuantityType::Area),
+            | Self::Yard2 => QuantityType::Area,
             Self::Meter3
             | Self::Centimeter3
             | Self::Millimeter3
@@ -193,64 +195,73 @@ impl Unit {
             | Self::Liter
             | Self::Centiliter
             | Self::Milliliter
-            | Self::Microliter => Type::Quantity(QuantityType::Volume),
-            Self::GramPerMeter3 | Self::GramPerMillimeter3 => Type::Quantity(QuantityType::Density),
+            | Self::Microliter => QuantityType::Volume,
+            Self::GramPerMeter3 | Self::GramPerMillimeter3 => QuantityType::Density,
         }
     }
 
-    /// Normalize value to base unit.
-    pub fn normalize(self, x: f64) -> f64 {
-        match self {
+    pub fn factor(&self) -> f64 {
+        match &self {
             // Scalar
-            Self::None => x,
-            Self::Percent => x * 0.01_f64,
+            Self::None => 1.0,
+            Self::Percent => 0.01_f64,
 
             // Lengths
-            Self::Meter => x * 1_000_f64,
-            Self::Centimeter => x * 10_f64,
-            Self::Millimeter => x,
-            Self::Micrometer => x / 1_000_f64,
-            Self::Inch => x * 25.4_f64,
-            Self::Foot => x * 304.8_f64,
-            Self::Yard => x * 914.4_f64,
+            Self::Meter => 1_000_f64,
+            Self::Centimeter => 10_f64,
+            Self::Millimeter => 1.0,
+            Self::Micrometer => 1.0 / 1_000_f64,
+            Self::Inch => 25.4_f64,
+            Self::Foot => 304.8_f64,
+            Self::Yard => 914.4_f64,
 
             // Angles
-            Self::Deg | Self::DegS => x / 180. * std::f64::consts::PI,
-            Self::Grad => x / 200. * std::f64::consts::PI,
-            Self::Turns => x * 2.0 * std::f64::consts::PI,
-            Self::Rad => x,
+            Self::Deg | Self::DegS => 1.0 / 180. * std::f64::consts::PI,
+            Self::Grad => 1.0 / 200. * std::f64::consts::PI,
+            Self::Turns => 2.0 * std::f64::consts::PI,
+            Self::Rad => 1.0,
 
             // Weights
-            Self::Gram => x,
-            Self::Kilogram => x * 1_000_f64,
-            Self::Pound => x * 453.59237_f64,
-            Self::Ounce => x * 28.349_523_125_f64,
+            Self::Gram => 1.0,
+            Self::Kilogram => 1_000_f64,
+            Self::Pound => 453.59237_f64,
+            Self::Ounce => 28.349_523_125_f64,
 
             // Areas
-            Self::Meter2 => x * 1_000_000_f64,
-            Self::Centimeter2 => x * 100_f64,
-            Self::Millimeter2 => x,
-            Self::Micrometer2 => x * 0.000_000_1,
-            Self::Inch2 => x * 645.16_f64,
-            Self::Foot2 => x * 92_903_043.04_f64,
-            Self::Yard2 => x * 836_127.36_f64,
+            Self::Meter2 => 1_000_000_f64,
+            Self::Centimeter2 => 100_f64,
+            Self::Millimeter2 => 1.0,
+            Self::Micrometer2 => 0.000_000_1,
+            Self::Inch2 => 645.16_f64,
+            Self::Foot2 => 92_903_043.04_f64,
+            Self::Yard2 => 836_127.36_f64,
 
             // Volumes
-            Self::Meter3 => x * 1_000_000_000_f64,
-            Self::Centimeter3 => x * 1_000_f64,
-            Self::Millimeter3 => x,
-            Self::Micrometer3 => x * 0.000_000_000_1,
-            Self::Inch3 => x * 16_387.06_f64,
-            Self::Foot3 => x * 28_316_846.592_f64,
-            Self::Yard3 => x * 764_554_857.984_f64,
-            Self::Liter => x * 1_000_000_f64,
-            Self::Centiliter => x * 10_000_f64,
-            Self::Milliliter => x * 1_000_f64,
-            Self::Microliter => x * 1_000_000.0_f64,
+            Self::Meter3 => 1_000_000_000_f64,
+            Self::Centimeter3 => 1_000_f64,
+            Self::Millimeter3 => 1.0,
+            Self::Micrometer3 => 0.000_000_000_1,
+            Self::Inch3 => 16_387.06_f64,
+            Self::Foot3 => 28_316_846.592_f64,
+            Self::Yard3 => 764_554_857.984_f64,
+            Self::Liter => 1_000_000_f64,
+            Self::Centiliter => 10_000_f64,
+            Self::Milliliter => 1_000_f64,
+            Self::Microliter => 1_000_000.0_f64,
 
             // Densities
             Self::GramPerMeter3 => 1_000_000_000_f64,
             Self::GramPerMillimeter3 => 1_f64,
         }
+    }
+
+    /// Normalize value to base unit.
+    pub fn normalize(self, x: f64) -> f64 {
+        x * self.factor()
+    }
+
+    /// Denormalize value to unit
+    pub fn denormalize(self, x: f64) -> f64 {
+        x / self.factor()
     }
 }

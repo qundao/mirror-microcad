@@ -5,6 +5,8 @@
 
 use strum::IntoStaticStr;
 
+use crate::lower::ir;
+
 /// A quantity type with
 #[derive(Clone, Debug, IntoStaticStr, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum QuantityType {
@@ -28,15 +30,15 @@ pub enum QuantityType {
 
 impl QuantityType {
     /// Return base unit
-    pub fn base_unit(&self) -> &'static str {
+    pub fn base_unit(&self) -> ir::Unit {
         match self {
-            QuantityType::Scalar => "",
-            QuantityType::Length => "mm",
-            QuantityType::Area => "mm²",
-            QuantityType::Volume => "mm³",
-            QuantityType::Density => "g/mm³",
-            QuantityType::Angle => "rad",
-            QuantityType::Weight => "g",
+            QuantityType::Scalar => ir::Unit::None,
+            QuantityType::Length => ir::Unit::Millimeter,
+            QuantityType::Area => ir::Unit::Millimeter2,
+            QuantityType::Volume => ir::Unit::Millimeter3,
+            QuantityType::Density => ir::Unit::GramPerMeter3,
+            QuantityType::Angle => ir::Unit::Rad,
+            QuantityType::Weight => ir::Unit::Gram,
             QuantityType::Invalid => todo!(),
         }
     }

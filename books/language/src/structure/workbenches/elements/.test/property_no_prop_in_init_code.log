@@ -16,7 +16,6 @@
  101:   }
  102:   Wheel(inner = 0.5cm);
 
--- No Output --
 -- Errors --
   × error: 96:5: Statement not allowed prior initializers
     ╭─[../books/language/src/structure/workbenches/elements/properties.md:96:5]
@@ -32,6 +31,6 @@
     ·       ╰── Before this initializer
  99 │         outer = inner * 2;
     ╰────
-Evaluation aborted because of prior resolve errors!
+
 -- Test Result --
 FAILS AS EXPECTED

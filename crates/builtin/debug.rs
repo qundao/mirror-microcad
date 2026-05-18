@@ -114,9 +114,10 @@ pub mod debug {
         Ok(
             match context.lookup(&name, microcad_lang::resolve::LookupTarget::AnyButMethod) {
                 Ok(_) => true,
-                Err(EvalError::SymbolNotFound(_)) => false,
                 Err(err) => {
-                    context.error(&src_ref, err)?;
+                    if !matches!(*err, EvalError::SymbolNotFound(_)) {
+                        context.error(&src_ref, err)?;
+                    }
                     false
                 }
             },

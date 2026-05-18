@@ -11,7 +11,6 @@
   55:     return 1; // error
   56:   init(l:Length) {} } K();
 
--- No Output --
 -- Errors --
   × error: 55:3: Statement not allowed within workbenches
     ╭─[../books/tests/src/statement_usage/pre-init.md:55:3]
@@ -32,6 +31,6 @@
  56 │ init(l:Length) {} } K();
     ╰────
   help: return statement is only allowed within function
-Evaluation aborted because of prior resolve errors!
+
 -- Test Result --
 FAILS AS EXPECTED

@@ -35,14 +35,6 @@ pub enum ResolveError {
     #[error("Hash is zero")]
     NulHash,
 
-    /// Name of external symbol is unknown.
-    #[error("External symbol `{0}` not found")]
-    ExternalSymbolNotFound(ir::QualifiedName),
-
-    /// Path of external file is unknown.
-    #[error("External path `{0}` not found")]
-    ExternalPathNotFound(std::path::PathBuf),
-
     /// Can't find a project file by it's path.
     #[error("Could not find a file with path {0}")]
     FileNotFound(std::path::PathBuf),

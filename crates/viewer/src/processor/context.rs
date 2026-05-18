@@ -3,8 +3,7 @@
 
 //! The context of geometry processor.
 
-use microcad_lang::{lower::ir::SourceFile, model::Model, render::RenderCache};
-use microcad_lang_base::RcMut;
+use microcad_driver::prelude as mu;
 
 use crate::{config, processor::registry::InstanceRegistry};
 
@@ -32,23 +31,19 @@ pub struct ProcessorContext {
     /// Search paths are set during initialization.
     pub(super) search_paths: Vec<std::path::PathBuf>,
 
+    pub(super) document: Option<microcad_driver::document::Source>,
+
     /// The current render resolutions.
-    pub(super) resolution: microcad_core::RenderResolution,
+    pub(super) resolution: mu::core::RenderResolution,
     pub(super) theme: config::Theme,
 
     pub(super) line_number: Option<u32>,
-
-    /// The current source file being processed (if any).
-    pub(super) source_file: Option<std::rc::Rc<SourceFile>>,
-
-    /// Model resulted from an evaluation.
-    pub(super) model: Option<Model>,
 
     /// Keeps a UUID register of all model instances that have been rendered.
     pub(super) instance_registry: InstanceRegistry,
 
     /// µcad Render cache.
-    pub(super) render_cache: RcMut<RenderCache>,
+    pub(super) render_cache: mu::RcMut<mu::RenderCache>,
 }
 
 impl Default for ProcessorContext {
@@ -59,11 +54,10 @@ impl Default for ProcessorContext {
             search_paths: Default::default(),
             resolution: Default::default(),
             theme: Default::default(),
-            source_file: None,
-            model: None,
+            document: None,
             line_number: None,
             instance_registry: Default::default(),
-            render_cache: RcMut::new(RenderCache::new()),
+            render_cache: mu::RcMut::new(mu::RenderCache::new()),
         }
     }
 }

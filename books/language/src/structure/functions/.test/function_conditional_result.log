@@ -20,31 +20,5 @@
   31:   std::debug::assert_eq([pow(8.0, 2), 64.0]);
   32:   std::debug::assert_eq([pow(8.0, -2), 0.015625]);
 
--- No Output --
--- Errors --
-  ⚠ warning: 21:8: Unused local x.
-    ╭─[../books/language/src/structure/functions/result.md:21:8]
- 21 │ fn pow(x: Scalar, n: Integer) -> Scalar {
-    ·        ┬
-    ·        ╰── Unused local x.
- 22 │     if n > 1 {
-    ╰────
-  × error: 31:23: Assertion failed: Values differ: [8, 64]
-    ╭─[../books/language/src/structure/functions/result.md:31:23]
- 30 │ 
- 31 │ std::debug::assert_eq([pow(8.0, 2), 64.0]);
-    ·                       ─────────┬─────────
-    ·                                ╰── Assertion failed: Values differ: [8, 64]
- 32 │ std::debug::assert_eq([pow(8.0, -2), 0.015625]);
-    ╰────
-  ⚠ warning: 21:8: Unused local x.
-    ╭─[../books/language/src/structure/functions/result.md:21:8]
- 21 │ fn pow(x: Scalar, n: Integer) -> Scalar {
-    ·        ┬
-    ·        ╰── Unused local x.
- 22 │     if n > 1 {
-    ╰────
-Unexpected error(s) which did occur in line(s): 31
-Unexpected warnings(s) which did occur in line(s): 21
 -- Test Result --
 TODO

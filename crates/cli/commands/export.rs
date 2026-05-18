@@ -3,214 +3,62 @@
 
 //! µcad CLI export command
 
-use microcad_builtin::*;
-use microcad_core::RenderResolution;
-use microcad_lang::{lower::ir, model::*, ty::*, value::*};
-
-use crate::{config::Config, *};
+use crate::{Cli, commands::RunCommand};
 
 /// Parse and evaluate and export a µcad file.
 #[derive(clap::Parser)]
 pub struct Export {
-    #[clap(flatten)]
-    pub eval: Eval,
+    pub input: String,
 
     /// Output file (e.g. an SVG or STL).
     pub output: Option<std::path::PathBuf>,
-
-    /// List all export target files.
-    #[arg(short, long)]
-    pub targets: bool,
-
-    /// Omit export.
-    #[arg(short, long)]
-    pub dry_run: bool,
 
     /// The resolution of this export.
     ///
     /// The resolution can changed relatively `200%` or to an absolute value `0.05mm`.
     #[arg(short, long, default_value = "0.1mm")]
     pub resolution: String,
+
+    /// List all export target files.
+    #[arg(short, long)]
+    pub dry_run: bool,
 }
 
-impl RunCommand<Vec<(Model, ExportCommand)>> for Export {
-    fn run(&self, cli: &Cli) -> miette::Result<Vec<(Model, ExportCommand)>> {
-        // run prior parse step
-        let (context, model) = self.eval.run(cli)?;
+impl RunCommand for Export {
+    fn run(&self, cli: &Cli) -> miette::Result<()> {
+        use microcad_driver::prelude as mu;
+        use mu::traits::*;
 
-        if let Some(model) = model {
-            let target_models = self.target_models(&model, cli, context.exporters())?;
+        let mut document = mu::Document::open(&self.input)?;
 
-            if self.targets {
-                self.list_targets(&target_models)?;
-            }
+        let params = mu::ExportParameters {
+            input_path: std::path::PathBuf::from(&self.input),
+            output_path: self.output.clone(),
+            config: cli.config.export.clone(),
+        };
 
-            if !self.dry_run {
-                let start = std::time::Instant::now();
-                self.export_targets(&target_models)?;
-
-                if cli.time {
-                    eprintln!("Exporting Time : {}", Cli::time_to_string(&start.elapsed()));
-                }
-            }
-
-            if cli.is_export() {
+        match document
+            .compile(cli.compile_parameters(&self.resolution)?)
+            .and(document.get_export_targets(params))
+        {
+            Ok(targets) => {
                 if self.dry_run {
-                    eprintln!("Did not export {} file(s) (dry-run!).", target_models.len());
+                    eprintln!("{targets}");
                 } else {
-                    eprintln!("Exported {} file(s) successfully:", target_models.len());
-                    target_models.iter().for_each(|(_, export)| {
-                        let filename = export.filename.display();
-                        eprintln!("\t{filename}");
-                    })
+                    match targets.export() {
+                        Ok(exported_files) => {
+                            eprint!("{exported_files}");
+                        }
+                        Err(err) => {
+                            eprintln!("{err}");
+                            cli.print_diagnostics(&document);
+                        }
+                    }
                 }
             }
-            Ok(target_models)
-        } else {
-            miette::bail!("Model missing!")
-        }
-    }
-}
-
-impl Export {
-    /// Get default exporter.
-    fn default_exporter(
-        output_type: &OutputType,
-        config: &Config,
-        exporters: &ExporterRegistry,
-    ) -> miette::Result<std::rc::Rc<dyn Exporter>> {
-        match output_type {
-            OutputType::NotDetermined => Err(miette::miette!("Could not determine output type.")),
-            OutputType::Geometry2D => {
-                Ok(exporters.exporter_by_id(&(&config.export.sketch).into())?)
+            Err(_) => {
+                cli.print_diagnostics(&document);
             }
-            OutputType::Geometry3D => Ok(exporters.exporter_by_id(&(&config.export.part).into())?),
-            OutputType::InvalidMixed => Err(miette::miette!(
-                "Invalid output type, the model cannot be exported."
-            )),
-        }
-    }
-
-    /// Parse render resolution.
-    pub fn resolution(&self) -> RenderResolution {
-        use microcad_lang::*;
-
-        use std::str::FromStr;
-        let value = ir::NumberLiteral::from_str(&self.resolution)
-            .map(|literal| literal.value())
-            .unwrap_or(value::Value::None);
-
-        match value {
-            value::Value::Quantity(Quantity {
-                value,
-                quantity_type: QuantityType::Length,
-            }) => RenderResolution::new(value),
-            _ => {
-                let default = RenderResolution::default();
-                log::warn!(
-                    "Invalid resolution `{resolution}`. Using default resolution: {value}mm",
-                    resolution = self.resolution,
-                    value = default.linear
-                );
-                default
-            }
-        }
-    }
-
-    /// Get default export attribute.
-    fn default_export_attribute(
-        &self,
-        model: &Model,
-        cli: &Cli,
-        exporters: &ExporterRegistry,
-    ) -> miette::Result<ExportCommand> {
-        let default_exporter =
-            Self::default_exporter(&model.deduce_output_type(), &cli.config, exporters);
-        let resolution = self.resolution();
-
-        match &self.output {
-            Some(filename) => Ok(ExportCommand {
-                filename: filename.to_path_buf(),
-                resolution,
-                exporter: exporters
-                    .exporter_by_filename(filename)
-                    .or(default_exporter)?,
-            }),
-            None => {
-                let mut filename = self.eval.resolve.parse.input_with_ext(cli);
-                let exporter = default_exporter?;
-
-                let ext = exporter
-                    .file_extensions()
-                    .first()
-                    .unwrap_or(&exporter.id())
-                    .to_string();
-                filename.set_extension(&ext);
-
-                Ok(ExportCommand {
-                    filename,
-                    exporter,
-                    resolution,
-                })
-            }
-        }
-    }
-
-    /// Get all models that are supposed to be exported.
-    ///
-    /// All child models of `model` that are in the same source file and
-    /// that have an `export` attribute will be exported.
-    ///
-    /// If no models have been found, we simply export this model with the default export attribute.
-    pub fn target_models(
-        &self,
-        model: &Model,
-        cli: &Cli,
-        exporters: &ExporterRegistry,
-    ) -> miette::Result<Vec<(Model, ExportCommand)>> {
-        let mut models = model
-            .source_file_descendants()
-            .fold(Vec::new(), |mut models, model| {
-                let b = model.borrow();
-                models.append(
-                    &mut b
-                        .attributes
-                        .get_exports()
-                        .iter()
-                        .map(|attr| (model.clone(), attr.clone()))
-                        .collect(),
-                );
-                models
-            });
-
-        // No models with export attributes have been found.
-        if models.is_empty() {
-            // Add the root model with default exporters.
-            models.push((
-                model.clone(),
-                self.default_export_attribute(model, cli, exporters)?,
-            ))
-        }
-
-        Ok(models)
-    }
-
-    pub fn export_targets(&self, models: &[(Model, ExportCommand)]) -> miette::Result<()> {
-        models
-            .iter()
-            .try_for_each(|(model, export)| -> miette::Result<()> {
-                let value = export.render_and_export(model)?;
-                if !matches!(value, Value::None) {
-                    log::info!("{value}");
-                };
-                Ok(())
-            })?;
-        Ok(())
-    }
-
-    pub fn list_targets(&self, models: &Vec<(Model, ExportCommand)>) -> miette::Result<()> {
-        for (model, attr) in models {
-            eprintln!("{model} => {attr}");
         }
         Ok(())
     }

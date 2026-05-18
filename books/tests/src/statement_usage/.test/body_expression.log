@@ -11,13 +11,5 @@
  111:     1 + 2;
  112:   }
 
--- No Output --
--- No Errors --
--- Model --
-  Group (root) ->
-    Group ->
-
-Could not determine output type.
-Nothing will be exported.
 -- Test Result --
 OK
