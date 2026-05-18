@@ -36,7 +36,7 @@ pub enum SourceError {
 pub struct Source {
     /// Each source item keeps its [`Diagnostics`]
     pub url: Url,
-    pub diagnostics: RcMut<Diagnostics>,
+    diagnostics: Diagnostics,
     base_source: Option<base::Source>,
     ast_source: Option<ast::Source>,
     ir_source: Option<Rc<ir::Source>>,
@@ -49,7 +49,7 @@ impl Source {
     pub fn new(url: Url) -> Self {
         Self {
             url,
-            diagnostics: RcMut::new(Default::default()),
+            diagnostics: Default::default(),
             base_source: None,
             ast_source: None,
             ir_source: None,
@@ -68,16 +68,9 @@ impl Source {
     }
 
     pub fn from_source(source: base::Source) -> Self {
-        Self {
-            url: source.url.clone(),
-            diagnostics: RcMut::new(Default::default()),
-            base_source: Some(source),
-            ast_source: None,
-            ir_source: None,
-            resolve_context: None,
-            eval_context: None,
-            model: None,
-        }
+        let mut self_ = Self::new(source.url.clone());
+        self_.base_source = Some(source);
+        self_
     }
 
     pub fn from_file(path: impl AsRef<std::path::Path>) -> Result<Self> {
@@ -104,8 +97,12 @@ impl ResourceLocation for Source {
 impl TryFilePath for Source {}
 
 impl CaptureDiags for Source {
-    fn diags(&self) -> RcMut<Diagnostics> {
-        self.diagnostics.clone()
+    fn diags(&self) -> &Diagnostics {
+        &self.diagnostics
+    }
+
+    fn diags_mut(&mut self) -> &mut Diagnostics {
+        &mut self.diagnostics
     }
 }
 
@@ -230,8 +227,10 @@ impl commands::compile::Resolve for document::Source {
                     Some(microcad_builtin::builtin_module()),
                     DiagHandler::default(),
                 ) {
-                    if resolve_context.diag.error_count() > 0 {
-                        self.diagnostics = RcMut::new(resolve_context.diag.diagnostics);
+                    self.diagnostics
+                        .append(resolve_context.diag.diagnostics.clone());
+
+                    if self.diagnostics.has_errors() {
                         self.resolve_context = None;
                         Err(miette::miette!("Failed to resolve"))
                     } else {
@@ -270,9 +269,10 @@ impl commands::compile::Eval for document::Source {
 
         match eval_context.eval() {
             Ok(model) => {
-                if eval_context.diag.error_count() > 0 {
-                    let diag = RcMut::new(eval_context.diag.diagnostics);
-                    self.diagnostics = diag.clone();
+                self.diagnostics
+                    .append(eval_context.diag.diagnostics.clone());
+
+                if self.diags().has_errors() {
                     self.model = None;
                     self.eval_context = None;
                     Err(miette::miette!("Error during evaluation"))
@@ -345,8 +345,7 @@ impl commands::PrintDiagnostics for document::Source {
         f: &mut dyn std::fmt::Write,
         options: &DiagRenderOptions,
     ) -> std::fmt::Result {
-        let diag = self.diagnostics.borrow();
-
+        let diag = self.diags();
         if let Some(eval_context) = &self.eval_context {
             return diag.pretty_print(f, eval_context, options);
         } else if let Some(resolve_context) = &self.resolve_context {

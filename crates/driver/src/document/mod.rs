@@ -8,7 +8,7 @@ mod source;
 
 use derive_more::From;
 
-use microcad_lang_base::{DiagRenderOptions, Diagnostics, RcMut, ResourceLocation, Url};
+use microcad_lang_base::{DiagRenderOptions, Diagnostics, ResourceLocation, Url};
 pub use source::Source;
 
 use crate::Result;
@@ -36,17 +36,19 @@ pub trait GetCode {
 }
 
 pub trait CaptureDiags {
-    fn diags(&self) -> RcMut<Diagnostics>;
+    fn diags(&self) -> &Diagnostics;
+
+    fn diags_mut(&mut self) -> &mut Diagnostics;
 
     /// Internal helper to "capture" errors into the local diagnostics collection.
-    fn capture_diags<T, E>(&self, diags: std::result::Result<T, E>) -> Option<T>
+    fn capture_diags<T, E>(&mut self, diags: std::result::Result<T, E>) -> Option<T>
     where
         E: Into<Diagnostics>,
     {
         match diags {
             Ok(val) => Some(val),
-            Err(err_rc) => {
-                self.diags().replace(err_rc.into());
+            Err(diags) => {
+                self.diags_mut().append(diags.into());
                 None
             }
         }
@@ -126,12 +128,21 @@ impl Document {
 }
 
 impl CaptureDiags for Document {
-    fn diags(&self) -> RcMut<Diagnostics> {
+    fn diags(&self) -> &Diagnostics {
         match self {
             Document::Source(i) => i.diags(),
             Document::Markdown(i) => i.diags(),
             Document::MdBook(i) => i.diags(),
             Document::Builtin(i) => i.diags(),
+        }
+    }
+
+    fn diags_mut(&mut self) -> &mut Diagnostics {
+        match self {
+            Document::Source(i) => i.diags_mut(),
+            Document::Markdown(i) => i.diags_mut(),
+            Document::MdBook(i) => i.diags_mut(),
+            Document::Builtin(i) => i.diags_mut(),
         }
     }
 }

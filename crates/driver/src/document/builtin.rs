@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_builtin::Symbol;
-use microcad_lang_base::{Diagnostics, RcMut, ResourceLocation, Url};
+use microcad_lang_base::{Diagnostics, ResourceLocation, Url};
 
 use crate::{Result, commands, document};
 
@@ -10,6 +10,7 @@ use crate::{Result, commands, document};
 pub struct Builtin {
     url: Url,
     symbol: Symbol,
+    diags: Diagnostics,
 }
 
 impl Builtin {
@@ -17,13 +18,18 @@ impl Builtin {
         Self {
             url: "builtin://__builtin".try_into().unwrap(),
             symbol: microcad_builtin::__builtin(),
+            diags: Diagnostics::default(),
         }
     }
 }
 
 impl document::CaptureDiags for Builtin {
-    fn diags(&self) -> RcMut<Diagnostics> {
-        Diagnostics::default().into()
+    fn diags(&self) -> &Diagnostics {
+        &self.diags
+    }
+
+    fn diags_mut(&mut self) -> &mut Diagnostics {
+        &mut self.diags
     }
 }
 

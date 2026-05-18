@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{Diagnostics, RcMut, ResourceLocation, Url};
+use microcad_lang_base::{Diagnostics, ResourceLocation, Url};
 use microcad_lang_markdown::{MdBook, MdBookError};
 use miette::{Diagnostic, IntoDiagnostic};
 use thiserror::Error;
@@ -26,7 +26,7 @@ pub enum MdBookUnitError {
 pub struct MdBookDocument {
     url: Url,
     mdbook: Option<MdBook>,
-    diags: RcMut<Diagnostics>,
+    diags: Diagnostics,
 }
 
 impl MdBookDocument {
@@ -34,7 +34,7 @@ impl MdBookDocument {
         Self {
             url,
             mdbook: None,
-            diags: RcMut::new(Default::default()),
+            diags: Default::default(),
         }
     }
 }
@@ -48,8 +48,12 @@ impl ResourceLocation for MdBookDocument {
 impl TryFilePath for MdBookDocument {}
 
 impl CaptureDiags for MdBookDocument {
-    fn diags(&self) -> RcMut<Diagnostics> {
-        self.diags.clone()
+    fn diags(&self) -> &Diagnostics {
+        &self.diags
+    }
+
+    fn diags_mut(&mut self) -> &mut Diagnostics {
+        &mut self.diags
     }
 }
 
@@ -64,6 +68,7 @@ impl commands::Format for document::MdBook {
     fn format(&mut self, params: &commands::FormatParameters) -> Result<bool> {
         let mut formatted = false;
         let config = params;
+        self.diags.clear();
 
         match &mut self.mdbook {
             Some(mdbook) => {
@@ -84,8 +89,9 @@ impl commands::Format for document::MdBook {
                         }
                     });
 
-                if diags.has_errors() {
-                    self.diags().replace(diags);
+                self.diags.append(diags);
+
+                if self.diags().has_errors() {
                     Err(miette::miette!("Error formatting mdbook"))
                 } else {
                     Ok(formatted)

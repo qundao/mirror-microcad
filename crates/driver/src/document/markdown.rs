@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{Diagnostics, RcMut, ResourceLocation, Url};
+use microcad_lang_base::{Diagnostics, ResourceLocation, Url};
 use miette::{Diagnostic, IntoDiagnostic};
 use thiserror::Error;
 
@@ -25,7 +25,7 @@ pub enum MarkdownItemError {
 pub struct MarkdownDocument {
     url: Url,
     markdown: Option<Markdown>,
-    diagnostics: RcMut<Diagnostics>,
+    diagnostics: Diagnostics,
 }
 
 impl MarkdownDocument {
@@ -33,7 +33,7 @@ impl MarkdownDocument {
         Self {
             url,
             markdown: None,
-            diagnostics: RcMut::new(Default::default()),
+            diagnostics: Default::default(),
         }
     }
 }
@@ -47,8 +47,12 @@ impl ResourceLocation for MarkdownDocument {
 impl TryFilePath for MarkdownDocument {}
 
 impl CaptureDiags for MarkdownDocument {
-    fn diags(&self) -> RcMut<Diagnostics> {
-        self.diagnostics.clone()
+    fn diags(&self) -> &Diagnostics {
+        &self.diagnostics
+    }
+
+    fn diags_mut(&mut self) -> &mut Diagnostics {
+        &mut self.diagnostics
     }
 }
 
@@ -63,7 +67,7 @@ impl commands::Format for document::Markdown {
     fn format(&mut self, params: &commands::FormatParameters) -> Result<bool> {
         let mut formatted = false;
         let config = params;
-        let mut diags = Diagnostics::default();
+        self.diagnostics.clear();
 
         match &mut self.markdown {
             Some(markdown) => {
@@ -77,13 +81,12 @@ impl commands::Format for document::Markdown {
                                 code_block.code = code;
                             }
                             Err(diag) => {
-                                diags.append(diag);
+                                self.diagnostics.append(diag);
                             }
                         }
                     });
 
-                if diags.has_errors() {
-                    self.diags().replace(diags);
+                if self.diagnostics.has_errors() {
                     Err(miette::miette!("Error formatting markdown"))
                 } else {
                     Ok(formatted)
