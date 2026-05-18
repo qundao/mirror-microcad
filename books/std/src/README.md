@@ -1,4 +1,4 @@
-# mod
+# µcad Standard Library
 
 ## Sub-modules
 
