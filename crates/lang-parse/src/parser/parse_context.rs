@@ -99,7 +99,7 @@ impl<'source> From<&'source microcad_lang_base::Source> for ParseContext<'source
             url: source.url.clone(),
             line_index: LineIndex::new(&source.code),
             line_offset: source.line_offset,
-            code: Hashed::new(&source.code.value()),
+            code: Hashed::new(source.code.value()),
         }
     }
 }
