@@ -214,7 +214,7 @@ impl TestEnv {
 
     /// Return test source code.
     pub fn code(&self) -> &str {
-        &self.source.code.value()
+        self.source.code.value()
     }
 
     /// Return test parameters.
