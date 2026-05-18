@@ -1,3 +1,6 @@
+// Copyright © 2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 use zed_extension_api::{self as zed, LanguageServerId, Result, settings::LspSettings};
 
 const UCAD_BINARY_NAME: &str = "microcad-lsp";
