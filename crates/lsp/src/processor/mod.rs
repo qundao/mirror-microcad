@@ -238,7 +238,7 @@ impl Processor {
         Ok(match self.documents.get(url) {
             Some(document) => vec![ProcessorResponse::diagnostics(
                 url.clone(),
-                &document.diags().borrow(),
+                document.diags(),
             )],
             None => vec![],
         })
