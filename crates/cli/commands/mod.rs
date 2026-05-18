@@ -37,6 +37,7 @@ pub enum Commands {
     Watch(Watch),
 
     /// Format a µcad file
+    #[clap(alias = "fmt")]
     Format(Format),
 
     /// Generate Markdown docs.
