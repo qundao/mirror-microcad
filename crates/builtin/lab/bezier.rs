@@ -16,7 +16,7 @@ pub struct BezierPolygon {
 }
 
 impl BezierPolygon {
-    pub fn parse_continuous_cubic_subpath(input: &str, is_closed: bool) -> Result<Subpath, String> {
+    pub fn parse_continuous_cubic_subpath(input: &str) -> Result<Subpath, String> {
         let numbers: Vec<f64> = input
             .split_whitespace()
             .map(|s| s.parse::<f64>())
@@ -54,8 +54,8 @@ impl BezierPolygon {
 }
 
 impl Render<Geometry2D> for BezierPolygon {
-    fn render(&self, resolution: &RenderResolution) -> Geometry2D {
-        let subpath = Self::parse_continuous_cubic_subpath(&self.path, true).unwrap();
+    fn render(&self, _resolution: &RenderResolution) -> Geometry2D {
+        let subpath = Self::parse_continuous_cubic_subpath(&self.path).unwrap();
 
         subpath_to_geo_polygon(&subpath, 20).into()
     }
