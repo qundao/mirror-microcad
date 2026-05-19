@@ -99,7 +99,7 @@ macro_rules! node {
             $( $crate::Node::from($node) ),*
         ])
     };
-    // Multiple formatted elements with extras: node!(f => begin, body, end)
+    // Multiple formatted elements with extras: node!(f, extras => begin, body, end)
     ($f:ident, $extras:expr => $($node:expr)*) => {
         $crate::extras::with_extras(
             &$extras,
@@ -120,7 +120,7 @@ macro_rules! node {
 
 /// Format µcad program.
 pub fn format(program: &ast::Program, config: &FormatConfig) -> String {
-    program.format(config).to_string()
+    program.format(config).to_string().trim().to_string()
 }
 
 /// High-level API to format a &str containing µcad source code.
