@@ -4,6 +4,7 @@
 //! 2D Geometry
 
 mod align;
+pub mod bezier;
 mod bounds;
 mod circle;
 mod collection;
