@@ -2,33 +2,32 @@ import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } f
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-/*
+
 import {
     StreamInfo,
 } from 'vscode-languageclient/node';
 
 import * as net from 'net';
-*/
+
 
 let client: LanguageClient | undefined;
 
 export async function activate(context: vscode.ExtensionContext) {
     const serverCommand = "microcad-lsp";
+    /*
+        const serverOptions: ServerOptions = {
+            run: {
+                command: serverCommand,
+                args: ["-l", "microcad-lsp.log"],
+                transport: TransportKind.socket
+            },
+            debug: {
+                command: serverCommand,
+                args: ["-l", "microcad-lsp-debug.log"],
+                transport: TransportKind.socket
+            }
+        };
 
-    const serverOptions: ServerOptions = {
-        run: {
-            command: serverCommand,
-            args: ["-l", "microcad-lsp.log"],
-            transport: TransportKind.stdio
-        },
-        debug: {
-            command: serverCommand,
-            args: ["-l", "microcad-lsp-debug.log"],
-            transport: TransportKind.socket
-        }
-    };
-
-    /* 
     // With these server options you can connect to an already running LSP, which makes development more convenient.
     const serverOptions: ServerOptions = () => {
         return new Promise<StreamInfo>((resolve, reject) => {
@@ -49,21 +48,39 @@ export async function activate(context: vscode.ExtensionContext) {
     };
     */
 
-    const clientOptions: LanguageClientOptions = {
-        documentSelector: [{ scheme: 'file', language: 'microcad' }],
-        synchronize: {
-            fileEvents: vscode.workspace.createFileSystemWatcher('**/*.µcad')
-        }
-    };
+    // 1. Encapsulate startup logic
+    function startLanguageServer() {
+        const clientOptions: LanguageClientOptions = {
+            documentSelector: [{ scheme: 'file', language: 'microcad' }],
+            synchronize: {
+                fileEvents: vscode.workspace.createFileSystemWatcher('**/*.µcad')
+            }
+        };
 
-    client = new LanguageClient(
-        'microcadLSP',
-        'Microcad Language Server',
-        serverOptions,
-        clientOptions
-    );
+        const serverOptions: ServerOptions = {
+            run: {
+                command: serverCommand,
+                args: ["-l", "microcad-lsp.log"],
+                transport: TransportKind.stdio // Changed to stdio for reliable process lifecycle management
+            },
+            debug: {
+                command: serverCommand,
+                args: ["-l", "microcad-lsp-debug.log"],
+                transport: TransportKind.stdio
+            }
+        };
 
-    await client.start();
+        client = new LanguageClient(
+            'microcadLSP',
+            'Microcad Language Server',
+            serverOptions,
+            clientOptions
+        );
+        context.subscriptions.push(client);
+
+        // Start the client. This also launches the networking/process loop
+        client.start();
+    }
 
     const showPreviewCmd = vscode.commands.registerCommand(
         "microcad.showPreview",
@@ -106,9 +123,35 @@ export async function activate(context: vscode.ExtensionContext) {
         }
     );
 
+    // 2. Register the Restart Command
+    const restartCommand = vscode.commands.registerCommand('microcad.restartServer', async () => {
+        if (!client) {
+            vscode.window.showWarningMessage('Microcad server is not running.');
+            startLanguageServer();
+            return;
+        }
+
+        vscode.window.showInformationMessage('Restarting Microcad Language Server...');
+
+        try {
+            // Stop the current active process cleanly
+            await client.stop();
+            client = undefined;
+
+            // Fire up a brand new process instance
+            startLanguageServer();
+            vscode.window.showInformationMessage('Microcad Language Server restarted successfully!');
+        } catch (error) {
+            vscode.window.showErrorMessage(`Failed to restart server: ${error}`);
+        }
+    });
+
+    // Fire initial server initialization
+    startLanguageServer();
+
     context.subscriptions.push(showPreviewCmd);
     context.subscriptions.push(minimizePreviewCmd);
-    context.subscriptions.push(client);
+    context.subscriptions.push(restartCommand);
 
     vscode.window.onDidChangeActiveTextEditor((editor) => {
         if (editor && client) {
@@ -120,6 +163,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
 export async function deactivate() {
     if (client) {
-        await client.stop(); // Stoppt den LSP-Server sauber
+        await client.stop();
     }
 }
