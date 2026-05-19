@@ -1412,13 +1412,13 @@ fn parser<'tokens>()
 
         let base = literal
             .or(string_format)
+            .or(if_expression)
             .or(call)
             .or(marker)
             .or(bracket_based)
             .or(array_range)
             .or(array_list)
             .or(body_expression)
-            .or(if_expression)
             .or(qualified_name_expr)
             .boxed();
 

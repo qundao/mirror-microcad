@@ -127,6 +127,7 @@ use test_case::test_case;
 #[test_case("unary", "!input")]
 #[test_case("if", "if a > 1 { foo(); }")]
 #[test_case("if-else", "if a > 1 { 3 } else { 4 }")]
+#[test_case("if-bracket", "if (a > 1) { foo(); }")]
 #[test_case("else-if", "if a > 1 { 3 } else if a < -1 { 1 }")]
 #[test_case("else-if-else", "if a > 1 { 3 } else if a < -1 { 1 } else { 0 }")]
 #[test_case("sketch", "sketch Wheel(radius: Length) {std::geo2d::Circle(radius);}")]
