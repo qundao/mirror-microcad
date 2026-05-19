@@ -36,7 +36,13 @@ impl RunCommand<()> for Format {
 
                 Ok(())
             }
-            None => mu::document::Stdin.format(&params).map(|_| ()),
+            None => match mu::document::Stdin.format(&params).map(|_| ()) {
+                Ok(_) => Ok(()),
+                Err(err) => {
+                    eprintln!("{err}");
+                    Ok(())
+                }
+            },
         }
     }
 }
