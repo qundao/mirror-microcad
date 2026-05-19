@@ -171,7 +171,10 @@ impl Processor {
     /// Update (re-evaluate) a document.
     pub fn update_document(&mut self, url: &Url) -> ProcessorResult {
         match self.documents.get_mut(url) {
-            Some(document) => Self::compile_document(document),
+            Some(document) => {
+                document.load_from_file()?;
+                Self::compile_document(document)
+            }
             None => {
                 log::error!("Document does not exist!");
                 Ok(vec![])
@@ -194,9 +197,15 @@ impl Processor {
 
     pub fn format_document(&mut self, url: &Url) -> ProcessorResult {
         match self.documents.get_mut(url) {
-            Some(document) => match document.format(&mu::FormatParameters::default()) {
-                Ok(true) => {
-                    Self::compile_document(document).and(document.sync())?;
+            Some(document) => match document
+                .load_from_file()
+                .and(Self::compile_document(document))
+                .and(document.format(&mu::FormatParameters::default()))
+            {
+                Ok(formatted) => {
+                    if formatted {
+                        Self::compile_document(document)?;
+                    }
                     Ok(vec![ProcessorResponse::UpdatedDocumentCode {
                         url: url.clone(),
                         code: document
@@ -204,10 +213,6 @@ impl Processor {
                             .map(|s| s.to_string())
                             .unwrap_or_default(),
                     }])
-                }
-                Ok(false) => {
-                    log::info!("Document is already formatted");
-                    Ok(vec![])
                 }
                 Err(err) => {
                     log::error!("Error formatting document `{url}`: {err}");
