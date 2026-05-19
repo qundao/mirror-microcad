@@ -109,7 +109,7 @@ impl LanguageServer for Backend {
                         },
                     ),
                 ),
-                document_formatting_provider: Some(OneOf::Left(true)),
+                // document_formatting_provider: Some(OneOf::Left(true)),
                 ..Default::default()
             },
         })
@@ -270,11 +270,11 @@ impl LanguageServer for Backend {
     }
 
     async fn formatting(&self, params: DocumentFormattingParams) -> Result<Option<Vec<TextEdit>>> {
+        Ok(None)
+        /*
         let url = &params.text_document.uri;
         self.send_lsp(ProcessorRequest::FormatDocument(url.clone()));
-        self.client
-            .log_message(MessageType::INFO, format!("Formatting received: {url}"))
-            .await;
+
         // Wait for response
         if let Ok(ProcessorResponse::UpdatedDocumentCode { url, code }) =
             self.processor.recv_response()
@@ -288,14 +288,14 @@ impl LanguageServer for Backend {
                     },
                     end: Position {
                         line: u32::MAX,
-                        character: 0,
+                        character: u32::MAX,
                     },
                 },
                 new_text: code,
             }]))
         } else {
             Ok(None)
-        }
+        }*/
     }
 }
 
@@ -328,12 +328,15 @@ async fn main() {
             .filter(None, log::LevelFilter::Info)
             .init();
     } else {
-        env_logger::init()
+        env_logger::try_init_from_env("MICROCAD_LSP_LOG").ok();
     }
+
+    /*
     // construct a subscriber that prints formatted traces to stdout
     let subscriber = tracing_subscriber::FmtSubscriber::new();
     // use that subscriber to process traces emitted after this point
     tracing::subscriber::set_global_default(subscriber).expect("init log failed");
+    */
 
     let config = mu::Config::default();
 
