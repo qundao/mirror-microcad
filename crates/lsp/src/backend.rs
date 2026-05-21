@@ -5,8 +5,6 @@
 
 use std::{path::PathBuf, sync::OnceLock};
 
-use microcad_driver::prelude as mu;
-
 use crate::processor::{
     self as mu_processor,
     semantic_tokens::{LEGEND_MODIFIERS, LEGEND_TYPES},
@@ -135,7 +133,7 @@ impl LanguageServer for Backend {
                         },
                     ),
                 ),
-                // document_formatting_provider: Some(OneOf::Left(true)),
+                document_formatting_provider: Some(OneOf::Left(true)),
                 ..Default::default()
             },
         })
