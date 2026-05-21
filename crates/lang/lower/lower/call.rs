@@ -9,7 +9,7 @@ use microcad_lang_parse::ast;
 impl Lower for ir::Call {
     type AstNode = ast::Call;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(ir::Call {
             src_ref: context.src_ref(&node.span),
             name: ir::QualifiedName::lower(&node.name, context)?,
@@ -21,7 +21,7 @@ impl Lower for ir::Call {
 impl Lower for ir::ArgumentList {
     type AstNode = ast::ArgumentList;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         let mut argument_list =
             ir::ArgumentList(Refer::new(OrdMap::default(), context.src_ref(&node.span)));
         for arg in &node.arguments {
@@ -36,7 +36,7 @@ impl Lower for ir::ArgumentList {
 impl Lower for ir::Argument {
     type AstNode = ast::Argument;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(ir::Argument {
             id: node
                 .name()
@@ -51,7 +51,7 @@ impl Lower for ir::Argument {
 impl Lower for ir::MethodCall {
     type AstNode = ast::Call;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(ir::MethodCall {
             name: ir::QualifiedName::lower(&node.name, context)?,
             argument_list: ir::ArgumentList::lower(&node.arguments, context)?,

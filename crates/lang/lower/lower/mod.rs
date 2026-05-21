@@ -168,7 +168,7 @@ impl SrcReferrer for LowerErrorsWithSource {
 
 pub(crate) fn build_ast(
     source: &str,
-    lower_context: &super::LowerContext,
+    lower_context: &mut super::LowerContext,
 ) -> Result<microcad_lang_parse::ast::Program, LowerErrorsWithSource> {
     parse(source).map_err(|errors| {
         let errors = errors

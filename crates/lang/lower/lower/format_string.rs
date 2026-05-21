@@ -8,7 +8,7 @@ use microcad_lang_parse::ast;
 impl Lower for ir::FormatExpression {
     type AstNode = ast::StringExpression;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(ir::FormatExpression::new(
             node.specification
                 .is_some()
@@ -23,7 +23,7 @@ impl Lower for ir::FormatExpression {
 impl Lower for ir::FormatSpec {
     type AstNode = ast::StringFormatSpecification;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         fn transpose_ref<T: Clone, E: Clone>(opt: &Option<Result<T, E>>) -> Result<Option<&T>, E> {
             match opt.as_ref() {
                 None => Ok(None),
@@ -50,7 +50,7 @@ impl Lower for ir::FormatSpec {
 impl Lower for ir::FormatString {
     type AstNode = ast::FormatString;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         let parts = node
             .parts
             .iter()
@@ -66,7 +66,7 @@ impl Lower for ir::FormatString {
 impl Lower for ir::FormatStringInner {
     type AstNode = ast::StringPart;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(match node {
             ast::StringPart::Char(c) => ir::FormatStringInner::String(Refer::new(
                 c.character.into(),

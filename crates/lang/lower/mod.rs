@@ -57,6 +57,7 @@ pub struct LowerContext<'source> {
     pub source: Hashed<&'source str>,
     line_index: LineIndex,
     line_offset: u32,
+    diagnostics: Vec<LowerError>,
 }
 
 impl<'source> LowerContext<'source> {
@@ -65,6 +66,7 @@ impl<'source> LowerContext<'source> {
             source: Hashed::new(source),
             line_index: LineIndex::new(source),
             line_offset: 0,
+            diagnostics: Vec::new(),
         }
     }
 
@@ -73,6 +75,7 @@ impl<'source> LowerContext<'source> {
             source: self.source,
             line_index: self.line_index,
             line_offset,
+            diagnostics: Vec::new(),
         }
     }
 
@@ -81,10 +84,14 @@ impl<'source> LowerContext<'source> {
             .src_ref(self.source.value(), span, self.source.computed_hash())
             .with_line_offset(self.line_offset)
     }
+
+    pub fn add_diagnostic(&mut self, diagnostic: LowerError) {
+        self.diagnostics.push(diagnostic)
+    }
 }
 
 pub trait Lower: Sized {
     type AstNode;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError>;
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError>;
 }

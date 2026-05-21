@@ -9,7 +9,7 @@ use microcad_lang_parse::ast;
 impl Lower for ir::Parameter {
     type AstNode = ast::Parameter;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(ir::Parameter {
             src_ref: context.src_ref(&node.span),
             id: ir::Identifier::lower(&node.name, context)?,
@@ -30,7 +30,7 @@ impl Lower for ir::Parameter {
 impl Lower for ir::ParameterList {
     type AstNode = ast::ParameterList;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         let mut parameters: OrdMap<_, _> = Default::default();
 
         for param in &node.parameters {

@@ -10,7 +10,7 @@ use microcad_lang_parse::ast;
 impl Lower for ir::TupleType {
     type AstNode = ast::TupleType;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(TupleType {
             named: node
                 .inner

@@ -8,7 +8,7 @@ use microcad_lang_parse::ast;
 impl ir::Assignment {
     fn from_ast_local(
         node: &ast::LocalAssignment,
-        context: &LowerContext,
+        context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         Ok(ir::Assignment {
             doc: ir::DocBlock::default(),
@@ -27,7 +27,7 @@ impl ir::Assignment {
 
     fn from_ast_prop(
         node: &ast::PropertyAssignment,
-        context: &LowerContext,
+        context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         Ok(ir::Assignment {
             doc: ir::DocBlock::lower(&node.doc, context)?,
@@ -46,7 +46,7 @@ impl ir::Assignment {
 
     fn from_ast_const(
         node: &ast::ConstAssignment,
-        context: &LowerContext,
+        context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         Ok(ir::Assignment {
             doc: ir::DocBlock::lower(&node.doc, context)?,
@@ -73,7 +73,7 @@ impl ir::Assignment {
 impl ir::AssignmentStatement {
     fn from_ast_local(
         node: &ast::LocalAssignment,
-        context: &LowerContext,
+        context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         Ok(Self {
             attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
@@ -84,7 +84,7 @@ impl ir::AssignmentStatement {
 
     fn from_ast_prop(
         node: &ast::PropertyAssignment,
-        context: &LowerContext,
+        context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         Ok(Self {
             attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
@@ -95,7 +95,7 @@ impl ir::AssignmentStatement {
 
     fn from_ast_const(
         node: &ast::ConstAssignment,
-        context: &LowerContext,
+        context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         Ok(Self {
             attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
@@ -108,7 +108,7 @@ impl ir::AssignmentStatement {
 impl Lower for ir::If {
     type AstNode = ast::If;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(ir::If {
             if_ref: context.src_ref(&node.if_span),
             cond: ir::Expression::lower(&node.condition, context)?,
@@ -134,7 +134,7 @@ impl Lower for ir::If {
 impl Lower for ir::ExpressionStatement {
     type AstNode = ast::ExpressionStatement;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(ir::ExpressionStatement {
             src_ref: context.src_ref(&node.span),
             attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
@@ -146,7 +146,7 @@ impl Lower for ir::ExpressionStatement {
 impl Lower for ir::Statement {
     type AstNode = ast::Statement;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(match node {
             ast::Statement::InlineModule(module) => ir::Statement::Module(std::rc::Rc::new(
                 ir::ModuleDefinition::from_ast_inline(module, context)?,
@@ -203,7 +203,7 @@ impl Lower for ir::Statement {
 impl Lower for ir::ReturnStatement {
     type AstNode = ast::Return;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(ir::ReturnStatement {
             keyword_ref: context.src_ref(&node.keyword_span),
             result: node
@@ -219,7 +219,7 @@ impl Lower for ir::ReturnStatement {
 impl Lower for ir::StatementList {
     type AstNode = ast::StatementList;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         let mut statements = Vec::new();
         node.statements.iter().try_for_each(|(statement, _)| {
             statements.push(ir::Statement::lower(statement, context)?);

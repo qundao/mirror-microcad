@@ -9,7 +9,7 @@ impl ir::ModuleDefinition {
     /// Get inline module
     pub fn from_ast_inline(
         node: &ast::InlineModule,
-        context: &LowerContext,
+        context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         use crate::lower::Lower;
         Ok(Self {
@@ -29,7 +29,7 @@ impl ir::ModuleDefinition {
     /// Get file module
     pub fn from_ast_file(
         node: &ast::FileModule,
-        context: &LowerContext,
+        context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         use crate::lower::Lower;
         Ok(Self {

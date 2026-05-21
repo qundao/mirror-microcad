@@ -9,7 +9,7 @@ use microcad_lang_parse::ast;
 impl Lower for ir::AttributeCommand {
     type AstNode = ast::AttributeCommand;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(match node {
             ast::AttributeCommand::Ident(i) => {
                 ir::AttributeCommand::Ident(Identifier::lower(i, context)?)
@@ -29,7 +29,7 @@ impl Lower for ir::AttributeCommand {
 impl Lower for ir::Attribute {
     type AstNode = ast::Attribute;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(ir::Attribute {
             src_ref: context.src_ref(&node.span),
             is_inner: node.is_inner,
@@ -45,7 +45,7 @@ impl Lower for ir::Attribute {
 impl Lower for ir::AttributeList {
     type AstNode = Vec<ast::Attribute>;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         node.iter()
             .map(|a| ir::Attribute::lower(a, context))
             .collect::<Result<Vec<_>, _>>()
