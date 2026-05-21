@@ -83,7 +83,7 @@ pub use rc::{Rc, RcMut};
 pub use src_ref::{LineCol, LineIndex, Refer, Span, SrcRef, SrcReferrer};
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
-pub use microcad_core::hash::{ComputedHash, HashId, HashMap, HashSet, Hashed};
+pub use microcad_core::hash::{ComputedHash, HashId, HashMap, HashSet, Hashed, Hasher};
 pub use source::Source;
 
 /// A compatibility layer for using SourceFile with miette
