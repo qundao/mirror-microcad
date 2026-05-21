@@ -5,7 +5,7 @@
 
 use derive_more::Deref;
 use microcad_lang_base::{
-    GetSourceLocInfoByHash, HashId, ResourceLocation, SourceLocInfo, SrcReferrer,
+    Diagnostics, GetSourceLocInfoByHash, HashId, ResourceLocation, SourceLocInfo, SrcReferrer,
 };
 
 use crate::{
@@ -45,6 +45,7 @@ impl Sources {
     pub fn load(
         root: Rc<ir::Source>,
         search_paths: Vec<std::path::PathBuf>,
+        diagnostics: &mut Diagnostics,
     ) -> ResolveResult<Self> {
         let mut source_files = Vec::new();
         let mut by_name = HashMap::new();
@@ -59,7 +60,8 @@ impl Sources {
         // load all external source files into cache
         Externals::new(&search_paths)?.iter().try_for_each(
             |(name, path)| -> Result<(), LowerErrorsWithSource> {
-                let (source_file, error) = ir::Source::load_with_name(path.clone(), name.clone());
+                let (source_file, error) =
+                    ir::Source::load_with_name(path.clone(), name.clone(), diagnostics);
                 let index = source_files.len();
                 by_hash.insert(source_file.source_hash(), index);
                 by_path.insert(source_file.filename(), index);
@@ -213,6 +215,7 @@ impl Sources {
         &mut self,
         parent_path: impl AsRef<std::path::Path>,
         id: &ir::Identifier,
+        diagnostics: &mut Diagnostics,
     ) -> ResolveResult<Rc<ir::Source>> {
         log::trace!(
             "loading file: {:?} [{id}]",
@@ -220,7 +223,7 @@ impl Sources {
         );
         let file_path = find_mod_file_by_id(parent_path, id)?;
         let name = self.generate_name_from_path(&file_path)?;
-        let (source_file, error) = ir::Source::load_with_name(&file_path, name);
+        let (source_file, error) = ir::Source::load_with_name(&file_path, name, diagnostics);
         self.insert(source_file.clone());
         match error {
             Some(error) => Err(error.into()),

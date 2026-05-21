@@ -3,27 +3,37 @@
 
 use crate::lower::{Lower, LowerContext, LowerError, LowerErrorsWithSource, ir};
 
-use microcad_lang_base::{Hashed, SrcReferrer, Url, virtual_url};
+use microcad_lang_base::{Diagnostics, Hashed, PushDiag, SrcReferrer, Url, virtual_url};
 use microcad_lang_parse::ast;
 
 impl ir::Source {
-    pub fn from_source(source: &ast::Source) -> Result<std::rc::Rc<Self>, LowerError> {
+    pub fn from_source(
+        source: &ast::Source,
+        diagnostics: &mut Diagnostics,
+    ) -> Result<std::rc::Rc<Self>, LowerError> {
         let mut context =
             LowerContext::new(source.code.as_str()).with_line_offset(source.line_offset);
-        Ok(std::rc::Rc::new(Self {
+        let source = std::rc::Rc::new(Self {
             doc: None,
             statements: ir::StatementList::lower(&source.ast.statements, &mut context)?,
             source: source.code.clone(),
             name: ir::QualifiedName::default(),
             url: source.url.clone(),
             line_offset: source.line_offset,
-        }))
+        });
+        for diagnostic in context.diagnostics {
+            diagnostics
+                .push_diag(diagnostic)
+                .expect("Diag list must return no error");
+        }
+        Ok(source)
     }
 
     /// Load µcad source file from given `path`
     pub fn load_with_name(
         path: impl AsRef<std::path::Path> + std::fmt::Debug,
         name: ir::QualifiedName,
+        diagnostics: &mut Diagnostics,
     ) -> (std::rc::Rc<Self>, Option<LowerErrorsWithSource>) {
         let path = path.as_ref();
         log::trace!(
@@ -47,7 +57,7 @@ impl ir::Source {
             }
         };
 
-        let (mut source_file, errors) = Self::load_inner(None, path, &buf, 0);
+        let (mut source_file, errors) = Self::load_inner(None, path, &buf, 0, diagnostics);
         source_file.name = name;
         log::debug!(
             "Successfully loaded external file {} to {}",
@@ -63,6 +73,7 @@ impl ir::Source {
         path: impl AsRef<std::path::Path>,
         source_str: &str,
         line_offset: u32,
+        diagnostics: &mut Diagnostics,
     ) -> (Self, Option<LowerErrorsWithSource>) {
         log::trace!(
             "{load} source from string",
@@ -107,6 +118,13 @@ impl ir::Source {
         };
         source_file.set_filename(path);
         log::debug!("Successfully loaded source from string");
+
+        for diagnostic in lower_context.diagnostics {
+            diagnostics
+                .push_diag(diagnostic)
+                .expect("Diag list must return no error");
+        }
+
         (source_file.with_line_offset(line_offset), None)
     }
 

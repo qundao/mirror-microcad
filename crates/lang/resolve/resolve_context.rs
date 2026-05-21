@@ -27,10 +27,10 @@ impl ResolveContext {
         root: std::rc::Rc<ir::Source>,
         search_paths: Vec<std::path::PathBuf>,
         builtin: Option<Symbol>,
-        diag: DiagHandler,
+        mut diag: DiagHandler,
     ) -> ResolveResult<Self> {
         let mut context = Self {
-            sources: Sources::load(root.clone(), search_paths)?,
+            sources: Sources::load(root.clone(), search_paths, &mut diag.diagnostics)?,
             diag,
             root: Symbol::default(),
         };
@@ -134,7 +134,7 @@ impl ResolveContext {
     ) -> ResolveResult<Symbol> {
         let mut symbol = self
             .sources
-            .load_mod_file(parent_path, id)?
+            .load_mod_file(parent_path, id, &mut self.diag.diagnostics)?
             .symbolize(visibility, self)?;
         symbol.set_src_ref(id.src_ref());
         Ok(symbol)

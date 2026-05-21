@@ -8,7 +8,9 @@ pub mod ir;
 #[allow(clippy::module_inception)]
 mod lower;
 
-use microcad_lang_base::{ComputedHash, Hashed, Identifier, LineIndex, Span, SrcRef};
+use microcad_lang_base::{
+    ComputedHash, Diagnostic, Hashed, Identifier, LineIndex, Refer, Span, SrcRef, SrcReferrer,
+};
 
 pub use lower::{LowerError, LowerErrorsWithSource, LowerResult};
 
@@ -57,7 +59,7 @@ pub struct LowerContext<'source> {
     pub source: Hashed<&'source str>,
     line_index: LineIndex,
     line_offset: u32,
-    diagnostics: Vec<LowerError>,
+    diagnostics: Vec<Diagnostic>,
 }
 
 impl<'source> LowerContext<'source> {
@@ -85,8 +87,13 @@ impl<'source> LowerContext<'source> {
             .with_line_offset(self.line_offset)
     }
 
-    pub fn add_diagnostic(&mut self, diagnostic: LowerError) {
-        self.diagnostics.push(diagnostic)
+    pub fn warning(&mut self, diagnostic: LowerError) {
+        let src_ref = diagnostic.src_ref();
+        self.diagnostics
+            .push(Diagnostic::Warning(std::rc::Rc::new(Refer::new(
+                diagnostic.into(),
+                src_ref,
+            ))))
     }
 }
 
