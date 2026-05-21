@@ -4,7 +4,9 @@
 fn _formatted_test_case(name: &str) {
     use microcad_lang_format::{FormatConfig, format};
     let source = std::fs::read_to_string(format!("tests/test_cases/formatted/{name}.µcad"))
-        .expect("No errors");
+        .expect("No errors")
+        .trim()
+        .to_string();    // Trim the whitespace
     let ast = microcad_lang_parse::parse(&source).expect("No errors");
 
     pretty_assertions::assert_eq!(
