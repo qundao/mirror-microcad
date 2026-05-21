@@ -32,6 +32,10 @@ tracing-subscriber = "0.3"
 microcad-driver = { workspace = true }
 microcad-viewer-ipc = { workspace = true }
 
+[dev-dependencies]
+googletest = { git = "https://github.com/hovinen/googletest-rust.git", branch = "fix-container-iterating-over-owned-values" }
+
+microcad-driver = { workspace = true }
 
 [[bin]]
 name = "microcad-lsp-client"
