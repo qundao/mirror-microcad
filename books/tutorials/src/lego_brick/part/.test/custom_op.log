@@ -43,14 +43,14 @@
   68:   Knobs(rows, columns);
 
 -- Model --
-  Group (root) -> 2D (F518EF6F266ECF13): Collection @0.25mm
-    Workpiece(Sketch) <NO ID>::Base(columns=4, height=15.8mm, rows=2, width=31.8mm) -> 2D (D90CFF9D8162295B): MultiPolygon @0.25mm
+  Group (root) -> 2D (D1CCCEA4BEF8BA21): Collection @0.25mm
+    Workpiece(Sketch) <NO ID>::Base(columns=4, height=15.8mm, rows=2, width=31.8mm) -> 2D (27DCB551E4D5E183): MultiPolygon @0.25mm
       - columns = 4
       - height = 15.8mm
       - rows = 2
       - width = 31.8mm
-      Operation union() -> 2D (E07968E54DAE1EC4): MultiPolygon @0.25mm
-        Group -> 2D (B4F73415C4380BA0):  @0.25mm
+      Operation union() -> 2D (2F491E99B121D6EC): MultiPolygon @0.25mm
+        Group -> 2D (3C6E9CA2BABC3C8):  @0.25mm
           frame: Workpiece(Sketch) std::geo2d::Frame(height=15.8mm, thickness=1.2mm, width=31.8mm) -> 2D (7345FEA00B53A03B): MultiPolygon @0.25mm
             - height = 15.8mm
             - thickness = 1.2mm
@@ -69,11 +69,11 @@
                   - x = -14.7mm
                   - y = -6.7mm
                   Primitive2D __builtin::geo2d::Rect(height=13.4mm, width=29.4mm, x=-14.7mm, y=-6.7mm) -> 2D (BDF2A96CFC8DF9E3): Rect @0.25mm
-          struts: Workpiece(Operation) <NO ID>::grid(columns=3, rows=1) -> 2D (8F20538E3FC0E4C1): Collection @0.25mm
+          struts: Workpiece(Operation) <NO ID>::grid(columns=3, rows=1) -> 2D (DDF00942A3349CE8): Collection @0.25mm
             - columns = 3
             - rows = 1
-            Operation __builtin::ops::center() -> 2D (D47B49BBA50641DB): Collection @0.25mm
-              Multiplicity -> 2D (BE25F9B799BFA7E8): Collection @0.25mm
+            Operation __builtin::ops::center() -> 2D (234AFF700879FA03): Collection @0.25mm
+              Multiplicity -> 2D (CF5AF6BFD336010): Collection @0.25mm
                 Workpiece(Operation) std::ops::translate(x=8mm, y=8mm, z=0mm) -> 2D (F8BC851A872285E6): MultiPolygon @0.25mm
                   - x = 8mm
                   - y = 8mm
@@ -140,14 +140,14 @@
       - x = -15.9mm
       - y = -7.9mm
       Primitive2D __builtin::geo2d::Rect(height=15.8mm, width=31.8mm, x=-15.9mm, y=-7.9mm) -> 2D (4853518C521206E4): Rect @0.25mm
-    Workpiece(Sketch) <NO ID>::Knobs(columns=4, rows=2) -> 2D (A4CB8F58E9B61CBF): Collection @0.25mm
+    Workpiece(Sketch) <NO ID>::Knobs(columns=4, rows=2) -> 2D (368196E37EE1684F): Collection @0.25mm
       - columns = 4
       - rows = 2
-      Workpiece(Operation) <NO ID>::grid(columns=4, rows=2) -> 2D (7C1E64D4B79CF597): Collection @0.25mm
+      Workpiece(Operation) <NO ID>::grid(columns=4, rows=2) -> 2D (DD46C5F48C84127): Collection @0.25mm
         - columns = 4
         - rows = 2
-        Operation __builtin::ops::center() -> 2D (8E44171A3795A2F9): Collection @0.25mm
-          Multiplicity -> 2D (F206100D1BB74F40): Collection @0.25mm
+        Operation __builtin::ops::center() -> 2D (1FFA1EA4C8C0EE89): Collection @0.25mm
+          Multiplicity -> 2D (83BC1797ACE29AD0): Collection @0.25mm
             Workpiece(Operation) std::ops::translate(x=8mm, y=8mm, z=0mm) -> 2D (6BE3F13E015A0D42): MultiPolygon @0.25mm
               - x = 8mm
               - y = 8mm

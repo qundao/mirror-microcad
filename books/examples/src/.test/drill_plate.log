@@ -23,20 +23,20 @@
   19:   DrillPlate();
 
 -- Model --
-  Group (root) -> 2D (C5EE1B10E55E2F2E): MultiPolygon @0.25mm
-    Workpiece(Sketch) <NO ID>::DrillPlate(hole_size=10mm, size=100mm) -> 2D (C5EE1B10E55E2F2E): MultiPolygon @0.25mm
+  Group (root) -> 2D (FF90018FBA9A2FA4): MultiPolygon @0.25mm
+    Workpiece(Sketch) <NO ID>::DrillPlate(hole_size=10mm, size=100mm) -> 2D (FF90018FBA9A2FA4): MultiPolygon @0.25mm
       - hole_size = 10mm
       - size = 100mm
       #[color = rgba(1, 0, 0, 1)]
-      Operation subtract() -> 2D (ADC61595AA9D3BA5): MultiPolygon @0.25mm
-        Group -> 2D (211D9346C98CE14A):  @0.25mm
+      Operation subtract() -> 2D (E767FC147FD93C1B): MultiPolygon @0.25mm
+        Group -> 2D (5ABF79C59EC8E1C0):  @0.25mm
           Workpiece(Sketch) std::geo2d::Rect(size=100mm) -> 2D (4BB5BFE269B89BD8): Rect @0.25mm
             - height = 100mm
             - width = 100mm
             - x = -50mm
             - y = -50mm
             Primitive2D __builtin::geo2d::Rect(height=100mm, width=100mm, x=-50mm, y=-50mm) -> 2D (BEC315A81D0E315): Rect @0.25mm
-          Multiplicity -> 2D (5B2C219B4198A61D): Collection @0.25mm
+          Multiplicity -> 2D (94CE081A16D4A693): Collection @0.25mm
             Workpiece(Operation) std::ops::translate(x=-40mm, y=-40mm, z=0mm) -> 2D (41AC8492A5438311): MultiPolygon @0.25mm
               - x = -40mm
               - y = -40mm

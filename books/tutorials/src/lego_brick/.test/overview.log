@@ -39,12 +39,12 @@
   37:   Knobs();
 
 -- Model --
-  Group (root) -> 2D (7DA8D25D362D73D1): Collection @0.25mm
-    Workpiece(Sketch) <NO ID>::Base(height=15.8mm, width=31.8mm) -> 2D (632886825CF12C8C): MultiPolygon @0.25mm
+  Group (root) -> 2D (8D642F8BCCB3B3D7): Collection @0.25mm
+    Workpiece(Sketch) <NO ID>::Base(height=15.8mm, width=31.8mm) -> 2D (B1F83C36C064E4B3): MultiPolygon @0.25mm
       - height = 15.8mm
       - width = 31.8mm
-      Operation union() -> 2D (5F4CA2E777F6AAA7): MultiPolygon @0.25mm
-        Group -> 2D (809383758E015F80):  @0.25mm
+      Operation union() -> 2D (AE1C589BDB6A62CE): MultiPolygon @0.25mm
+        Group -> 2D (CF633929F17517A7):  @0.25mm
           frame: Workpiece(Sketch) std::geo2d::Frame(height=15.8mm, thickness=1.2mm, width=31.8mm) -> 2D (7345FEA00B53A03B): MultiPolygon @0.25mm
             - height = 15.8mm
             - thickness = 1.2mm
@@ -63,8 +63,8 @@
                   - x = -14.7mm
                   - y = -6.7mm
                   Primitive2D __builtin::geo2d::Rect(height=13.4mm, width=29.4mm, x=-14.7mm, y=-6.7mm) -> 2D (BDF2A96CFC8DF9E3): Rect @0.25mm
-          struts: Operation __builtin::ops::center() -> 2D (A86453ABA465EDE6): Collection @0.25mm
-            Multiplicity -> 2D (920F03A7991F53F3): Collection @0.25mm
+          struts: Operation __builtin::ops::center() -> 2D (F73409600BD9A60D): Collection @0.25mm
+            Multiplicity -> 2D (E0DEB95BFC930C1A): Collection @0.25mm
               Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (B74988A1C2F9D04D): MultiPolygon @0.25mm
                 - x = 0mm
                 - y = 0mm
@@ -131,12 +131,12 @@
       - x = -15.9mm
       - y = -7.9mm
       Primitive2D __builtin::geo2d::Rect(height=15.8mm, width=31.8mm, x=-15.9mm, y=-7.9mm) -> 2D (4853518C521206E4): Rect @0.25mm
-    Workpiece(Sketch) <NO ID>::Knobs() -> 2D (38A403E9BDD0D2EF): Collection @0.25mm
-      Operation __builtin::ops::center() -> 2D (2124A4F6F62094A3): Collection @0.25mm
-        Workpiece(Sketch) std::geo2d::Circle(center=(x=[0mm, 8mm, 16mm, 24mm], y=[0mm, 8mm]), diameter=4.8mm) -> 2D (E50D17FE85E07AF): Collection @0.25mm
+    Workpiece(Sketch) <NO ID>::Knobs() -> 2D (34BC8DFBD244684F): Collection @0.25mm
+      Operation __builtin::ops::center() -> 2D (1D3D2F090A942A03): Collection @0.25mm
+        Workpiece(Sketch) std::geo2d::Circle(center=(x=[0mm, 8mm, 16mm, 24mm], y=[0mm, 8mm]), diameter=4.8mm) -> 2D (A695B91FCD19D0F): Collection @0.25mm
           - center = (x=[0mm, 8mm, 16mm, 24mm], y=[0mm, 8mm])
           - radius = 2.4mm
-          Multiplicity -> 2D (E31A3C0BFF366696): Collection @0.25mm
+          Multiplicity -> 2D (DF32C61E13A9FBF6): Collection @0.25mm
             Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (74AF96CEED54ECBF): MultiPolygon @0.25mm
               Primitive2D __builtin::geo2d::Circle(radius=2.4mm) -> 2D (847002DF3C92116): Polygon @0.25mm
             Transform __builtin::ops::translate(x=8mm, y=0mm, z=0mm) -> 2D (CFA9CB3B655AD90E): MultiPolygon @0.25mm

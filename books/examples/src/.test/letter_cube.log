@@ -36,16 +36,16 @@
   32:   LetterCube(20mm).translate(z = 10mm);
 
 -- Model --
-  Group (root) -> 3D (F2B412DDF75F904C): Mesh @0.25mm
-    Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=10mm) -> 3D (F2B412DDF75F904C): Mesh @0.25mm
+  Group (root) -> 3D (E297C2D843D92218): Mesh @0.25mm
+    Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=10mm) -> 3D (E297C2D843D92218): Mesh @0.25mm
       - x = 0mm
       - y = 0mm
       - z = 10mm
-      Transform __builtin::ops::translate(x=0mm, y=0mm, z=10mm) -> 3D (DC471C927B7F6C9C): Mesh @0.25mm
-        Workpiece(Part) <NO ID>::LetterCube(size=20mm) -> 3D (8BF33522407D8AD9): Manifold @0.25mm
+      Transform __builtin::ops::translate(x=0mm, y=0mm, z=10mm) -> 3D (CC2ACC8CC7F8FE68): Mesh @0.25mm
+        Workpiece(Part) <NO ID>::LetterCube(size=20mm) -> 3D (7BD6E51C8CF71CA5): Manifold @0.25mm
           - size = 20mm
-          Operation subtract() -> 3D (AE1408840CB25C10): Manifold @0.25mm
-            Group -> 3D (55B936B6AD517793):  @0.25mm
+          Operation subtract() -> 3D (9DF7B87E592BEDDC): Manifold @0.25mm
+            Group -> 3D (459CE6B0F9CB095F):  @0.25mm
               body: Operation intersect() -> 3D (8910C6C8AA2D9099): Manifold @0.25mm
                 Group -> 3D (88C118F2E1BF9650):  @0.25mm
                   Workpiece(Part) std::geo3d::Cube(size=20mm) -> 3D (2CE4F35B99FF3D87): Mesh @0.25mm
@@ -71,14 +71,14 @@
                   Workpiece(Part) std::geo3d::Sphere(radius=13.80131118684708mm) -> 3D (316FFB1D0ABBE92A): Manifold @0.25mm
                     - radius = 13.80131118684708mm
                     Primitive3D __builtin::geo3d::Sphere(radius=13.80131118684708mm) -> 3D (2B6D2A904E68A115): Manifold @0.25mm
-              Operation union() -> 3D (C92A176AA75D16E6): Manifold @0.25mm
-                Group -> 3D (381B01ECDC08B510):  @0.25mm
-                  Operation union() -> 3D (C65DFD06ECF02E3C): Manifold @0.25mm
-                    Group -> 3D (93A901F8843AAA26):  @0.25mm
-                      p: Workpiece(Operation) std::ops::rotate(x=0°, y=0°, z=-90°) -> 3D (3100F6F72F7191C6): Mesh @0.25mm
+              Operation union() -> 3D (B90DC764F3D6A8B2): Manifold @0.25mm
+                Group -> 3D (27FEB1E7288246DC):  @0.25mm
+                  Operation union() -> 3D (B1FE61C2465E4CA5): Manifold @0.25mm
+                    Group -> 3D (7F4966B3DDA8C88F):  @0.25mm
+                      p: Workpiece(Operation) std::ops::rotate(x=0°, y=0°, z=-90°) -> 3D (C2B6FE81C09CDD55): Mesh @0.25mm
                         - matrix = Matrix3 [[6.123233995736766e-17, -1.0, 0.0], [1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
-                        Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, -1.0, 0.0], [1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) -> 3D (26F4F0EC1E7216D5): Mesh @0.25mm
-                          Multiplicity -> 3D (9DF0CC5885EB4C43): Collection @0.25mm
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, -1.0, 0.0], [1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) -> 3D (B8AAF876B39D6264): Mesh @0.25mm
+                          Multiplicity -> 3D (2FA6D3E31B1697D3): Collection @0.25mm
                             Workpiece(Part) <NO ID>::Letter(axis=(x=-0, y=-0, z=-1), letter=P, size=20mm) -> 3D (7719E142ED141F1F): Mesh @0.25mm
                               - axis = (x=-0, y=-0, z=-1)
                               - letter = P
@@ -159,10 +159,10 @@
                                                         - height = 20mm
                                                         - text = P
                                                         Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=P) -> 2D (C2DEA3FD7BEBF72):  @0.25mm
-                      t: Workpiece(Operation) std::ops::rotate(x=90°, y=0°, z=0°) -> 3D (EEE419D68BEAC5DD): Mesh @0.25mm
+                      t: Workpiece(Operation) std::ops::rotate(x=90°, y=0°, z=0°) -> 3D (809A21611D16116D): Mesh @0.25mm
                         - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]
-                        Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) -> 3D (5BC707278D1AA28F): Mesh @0.25mm
-                          Multiplicity -> 3D (D70D1D1CDA370995): Collection @0.25mm
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) -> 3D (ED7D0EB22245EE1E): Mesh @0.25mm
+                          Multiplicity -> 3D (68C324A76F625525): Collection @0.25mm
                             Workpiece(Part) <NO ID>::Letter(axis=(x=-1, y=-0, z=-0), letter=T, size=20mm) -> 3D (E7C7A1ABA849EA4C): Mesh @0.25mm
                               - axis = (x=-1, y=-0, z=-0)
                               - letter = T
@@ -243,7 +243,7 @@
                                                         - height = 20mm
                                                         - text = T
                                                         Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=T) -> 2D (B5D813B0C1A3B5CE):  @0.25mm
-                  f: Multiplicity -> 3D (C12DE41EC05B313E): Collection @0.25mm
+                  f: Multiplicity -> 3D (52E3EBA955867CCE): Collection @0.25mm
                     Workpiece(Part) <NO ID>::Letter(axis=(x=-0, y=-1, z=-0), letter=F, size=20mm) -> 3D (60AD0326B27473D4): Mesh @0.25mm
                       - axis = (x=-0, y=-1, z=-0)
                       - letter = F

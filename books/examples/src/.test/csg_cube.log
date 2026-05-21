@@ -24,11 +24,11 @@
   20:   CsgCube(50mm);
 
 -- Model --
-  Group (root) -> 3D (8CAC32850BA71A9): Manifold @0.25mm
-    Workpiece(Part) <NO ID>::CsgCube(size=50mm) -> 3D (8CAC32850BA71A9): Manifold @0.25mm
+  Group (root) -> 3D (4301E16285D51588): Manifold @0.25mm
+    Workpiece(Part) <NO ID>::CsgCube(size=50mm) -> 3D (4301E16285D51588): Manifold @0.25mm
       - size = 50mm
-      Operation subtract() -> 3D (EF66198BED4AF142): Manifold @0.25mm
-        Group -> 3D (44E9E6088F8C4D6D):  @0.25mm
+      Operation subtract() -> 3D (299D37C622659522): Manifold @0.25mm
+        Group -> 3D (7F210442C0A6F14C):  @0.25mm
           body: Operation intersect() -> 3D (356430DCDDEB11DD): Manifold @0.25mm
             Group -> 3D (35148307157D1794):  @0.25mm
               Workpiece(Part) std::geo3d::Sphere(radius=34.50327796711771mm) -> 3D (31649E7C7762D19B): Manifold @0.25mm
@@ -54,7 +54,7 @@
                           - x = -25mm
                           - y = -25mm
                           Primitive2D __builtin::geo2d::Rect(height=50mm, width=50mm, x=-25mm, y=-25mm) -> 2D (2E569164EF04F020): Rect @0.25mm
-          holes: Multiplicity -> 3D (A0C5765B60F14930): Collection @0.25mm
+          holes: Multiplicity -> 3D (DAFC9495960BED0F): Collection @0.25mm
             Workpiece(Operation) std::ops::orient(v=(x=1, y=0, z=0)) -> 3D (5EC1F97719DAB65D): Mesh @0.25mm
               - v = (x=1, y=0, z=0)
               Transform __builtin::ops::orient(x=1, y=0, z=0) -> 3D (34DFF0266DF31E28): Mesh @0.25mm

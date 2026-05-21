@@ -20,13 +20,13 @@
   30:   Base(width = 31.8mm, height = 15.8mm);
 
 -- Model --
-  Group (root) -> 2D (786EE65BEE260D3C): MultiPolygon @0.25mm
-    Workpiece(Sketch) <NO ID>::Base(height=15.8mm, thickness=1.2mm, width=31.8mm) -> 2D (786EE65BEE260D3C): MultiPolygon @0.25mm
+  Group (root) -> 2D (C73E9C105199C563): MultiPolygon @0.25mm
+    Workpiece(Sketch) <NO ID>::Base(height=15.8mm, thickness=1.2mm, width=31.8mm) -> 2D (C73E9C105199C563): MultiPolygon @0.25mm
       - height = 15.8mm
       - thickness = 1.2mm
       - width = 31.8mm
-      Operation union() -> 2D (5D51C4865A62A243): MultiPolygon @0.25mm
-        Group -> 2D (E0E2A7F5927C6F32):  @0.25mm
+      Operation union() -> 2D (AC217A3ABDD65A6A): MultiPolygon @0.25mm
+        Group -> 2D (2FB25DA9F5F0275A):  @0.25mm
           frame: Workpiece(Sketch) std::geo2d::Frame(height=15.8mm, thickness=1.2mm, width=31.8mm) -> 2D (7345FEA00B53A03B): MultiPolygon @0.25mm
             - height = 15.8mm
             - thickness = 1.2mm
@@ -45,7 +45,7 @@
                   - x = -14.7mm
                   - y = -6.7mm
                   Primitive2D __builtin::geo2d::Rect(height=13.4mm, width=29.4mm, x=-14.7mm, y=-6.7mm) -> 2D (BDF2A96CFC8DF9E3): Rect @0.25mm
-          struts: Multiplicity -> 2D (99E33EECCB28E24A): Collection @0.25mm
+          struts: Multiplicity -> 2D (E8B2F4A12E9C9A71): Collection @0.25mm
             Workpiece(Operation) std::ops::translate(x=-8mm, y=0mm, z=0mm) -> 2D (64AA4D41195BD5D3): MultiPolygon @0.25mm
               - x = -8mm
               - y = 0mm

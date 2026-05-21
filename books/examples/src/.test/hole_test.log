@@ -34,9 +34,9 @@
   30:   r - holes;
 
 -- Model --
-  Group (root) -> 3D (E25EF01F23381936): Manifold @0.25mm
-    Operation subtract() -> 3D (E25EF01F23381936): Manifold @0.25mm
-      Group -> 3D (1CFD5BECC21493B4):  @0.25mm
+  Group (root) -> 3D (1D32B718867B79FA): Manifold @0.25mm
+    Operation subtract() -> 3D (1D32B718867B79FA): Manifold @0.25mm
+      Group -> 3D (57D122E62557F477):  @0.25mm
         r: Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=100%, y=100%), twist=0°) -> 3D (7D162F860218D1B6): Mesh @0.25mm
           - height = 2mm
           - scale = (x=100%, y=100%)
@@ -52,15 +52,15 @@
               - x = -30mm
               - y = -30mm
               Primitive2D __builtin::geo2d::RoundedRect(height=60mm, radius_bottom_left=10mm, radius_bottom_right=10mm, radius_top_left=10mm, radius_top_right=10mm, width=60mm, x=-30mm, y=-30mm) -> 2D (1A7D11876AA78B6B): Polygon @0.25mm
-        holes: Workpiece(Operation) std::ops::distribute_grid(columns=3, rows=3, size=60mm) -> 3D (B1987B46C15CACE3): Collection @0.25mm
+        holes: Workpiece(Operation) std::ops::distribute_grid(columns=3, rows=3, size=60mm) -> 3D (EC6C424024A00DA6): Collection @0.25mm
           - columns = 3
           - height = 60mm
           - rows = 3
           - width = 60mm
           - x = -30mm
           - y = -30mm
-          Operation __builtin::ops::distribute_grid(columns=3, height=60mm, rows=3, width=60mm, x=-30mm, y=-30mm) -> 3D (B9FE5A738E1B543B): Collection @0.25mm
-            Multiplicity -> 3D (89F4538C42088E4B):  @0.25mm
+          Operation __builtin::ops::distribute_grid(columns=3, height=60mm, rows=3, width=60mm, x=-30mm, y=-30mm) -> 3D (F4D2216CF15EB4FE): Collection @0.25mm
+            Multiplicity -> 3D (C4C81A85A54BEF0E):  @0.25mm
               Workpiece(Part) <NO ID>::Hole(diameter=0.25mm) -> 3D (C37A41B9336F1AF6):  @0.25mm
                 - diameter = 0.25mm
                 Workpiece(Part) std::geo3d::Cylinder(height=2mm, offset=0mm, radius_bottom=0.125mm, radius_top=1.125mm) -> 3D (B4236AD43B37D758): Mesh @0.25mm

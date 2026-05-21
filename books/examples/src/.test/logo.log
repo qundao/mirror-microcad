@@ -101,25 +101,25 @@
   97:   
 
 -- Model --
-  Group (root) -> 3D (2D8BC69F8B16EDC4): Mesh @0.25mm
-    Workpiece(Operation) std::ops::extrude(height=4mm, scale=(x=100%, y=100%), twist=0°) -> 3D (2D8BC69F8B16EDC4): Mesh @0.25mm
+  Group (root) -> 3D (B82E83337E6E4436): Mesh @0.25mm
+    Workpiece(Operation) std::ops::extrude(height=4mm, scale=(x=100%, y=100%), twist=0°) -> 3D (B82E83337E6E4436): Mesh @0.25mm
       - height = 4mm
       - scale = (x=100%, y=100%)
       - twist = 0°
-      Operation __builtin::ops::extrude(height=4mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (3A4C68BA8A45BFBC): Mesh @0.25mm
-        Workpiece(Sketch) <NO ID>::microcad::Logo(size=1cm) -> 2D (F86B7A7390CA4F7): Collection @0.25mm
+      Operation __builtin::ops::extrude(height=4mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (C4EF254E7D9D162E): Mesh @0.25mm
+        Workpiece(Sketch) <NO ID>::microcad::Logo(size=1cm) -> 2D (9A29743B2C63FB69): Collection @0.25mm
           - radius = 5mm
           - thickness = 2mm
-          Operation __builtin::ops::center() -> 2D (98D0012881141E97): Collection @0.25mm
-            Workpiece(Operation) std::ops::align(direction=(x=1, y=0, z=0), spacing=4mm) -> 2D (CA28B694074E463C): Collection @0.25mm
+          Operation __builtin::ops::center() -> 2D (2372BDBC746B750A): Collection @0.25mm
+            Workpiece(Operation) std::ops::align(direction=(x=1, y=0, z=0), spacing=4mm) -> 2D (54CB7327FAA59CAF): Collection @0.25mm
               - direction = (x=1, y=0, z=0)
               - spacing = 4mm
-              Operation __builtin::ops::align(spacing=4mm, x=1, y=0, z=0) -> 2D (38F4A55D8B040B94): Collection @0.25mm
-                Group -> 2D (CCE55DDE776EB73B):  @0.25mm
-                  Workpiece(Sketch) <NO ID>::microcad::Icon(radius=5mm) -> 2D (8D53A2D263791E74):  @0.25mm
+              Operation __builtin::ops::align(spacing=4mm, x=1, y=0, z=0) -> 2D (C39761F17E5B6206): Collection @0.25mm
+                Group -> 2D (57881A726AC60DAE):  @0.25mm
+                  Workpiece(Sketch) <NO ID>::microcad::Icon(radius=5mm) -> 2D (8E0003873730BE3C):  @0.25mm
                     - gap = 1mm
                     - radius = 5mm
-                    Multiplicity -> 2D (1021F39ACBF74490): Collection @0.25mm
+                    Multiplicity -> 2D (10CE544F9FAEE458): Collection @0.25mm
                       Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) -> 2D (B5E4E5EC2E53B72F): MultiPolygon @0.25mm
                         - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
                         Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) -> 2D (3A27D4BCC9A97CAD): MultiPolygon @0.25mm
