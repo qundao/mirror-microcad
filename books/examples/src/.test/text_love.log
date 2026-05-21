@@ -29,7 +29,7 @@
   27:   Text("PTF", height = 80mm).center().translate(x = 90mm).extrude(4mm);
 
 -- Model --
-  Group (root) -> 3D (38E83EBA228E6F16): Collection @0.25mm
+  Group (root) -> 3D (424D804745510277): Collection @0.25mm
     Workpiece(Operation) std::ops::extrude(height=4mm, scale=(x=100%, y=100%), twist=0°) -> 3D (D16791521A669F3B): Mesh @0.25mm
       - height = 4mm
       - scale = (x=100%, y=100%)
@@ -47,17 +47,17 @@
                 - height = 80mm
                 - text = µcad
                 Primitive2D __builtin::geo2d::Text(font_file=, height=80mm, text=µcad) -> 2D (2214B102CAEB94D7): MultiPolygon @0.25mm
-    Workpiece(Operation) std::ops::extrude(height=12mm, scale=(x=100%, y=100%), twist=0°) -> 3D (B5A56307F0E88C50): Mesh @0.25mm
+    Workpiece(Operation) std::ops::extrude(height=12mm, scale=(x=100%, y=100%), twist=0°) -> 3D (C61F325F278FA470): Mesh @0.25mm
       - height = 12mm
       - scale = (x=100%, y=100%)
       - twist = 0°
       #[color = rgba(1, 0, 0, 1)]
-      Operation __builtin::ops::extrude(height=12mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (58EB4FBB050246FE): Mesh @0.25mm
-        Workpiece(Sketch) <NO ID>::Heart(size=40mm) -> 2D (1566E7983520C14F): MultiPolygon @0.25mm
+      Operation __builtin::ops::extrude(height=12mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (69651F123BA95F1E): Mesh @0.25mm
+        Workpiece(Sketch) <NO ID>::Heart(size=40mm) -> 2D (25E0B6EF6BC7D96F): MultiPolygon @0.25mm
           - size = 40mm
-          Operation union() -> 2D (163652B0B94ECCB7): MultiPolygon @0.25mm
-            Group -> 2D (37E2F4E9B266077C):  @0.25mm
-              Multiplicity -> 2D (136855141DDCBDD9): Collection @0.25mm
+          Operation union() -> 2D (26B02207EFF5E4D7): MultiPolygon @0.25mm
+            Group -> 2D (485CC440E50D1F9C):  @0.25mm
+              Multiplicity -> 2D (49CB1CD493D5B346): Collection @0.25mm
                 Workpiece(Operation) std::ops::translate(x=13.33333333333334mm, y=13.33333333333334mm, z=0mm) -> 2D (3748D098EF495F75): MultiPolygon @0.25mm
                   - x = 13.33333333333334mm
                   - y = 13.33333333333334mm

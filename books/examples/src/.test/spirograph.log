@@ -131,19 +131,19 @@
  127:   gear.translate(x = ring_1.shift + ring_2.shift + ring_3.shift);
 
 -- Model --
-  Group (root) -> 3D (5E675EA95646A89): Collection @0.25mm
-    Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=0mm) -> 3D (3FEFF5029B09E843): Mesh @0.25mm
+  Group (root) -> 3D (505DE0588B77B860): Collection @0.25mm
+    Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=0mm) -> 3D (5CB972AD7D77286D): Mesh @0.25mm
       - x = 0mm
       - y = 0mm
       - z = 0mm
       #[export = "spirograph_frame.stl" with exporter `stl`]
       #[color = rgba(0, 0, 1, 1)]
-      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 3D (D0F1A05E9EA65CD0): Mesh @0.25mm
-        Group -> 3D (6652083B0019CC9B): Manifold @0.25mm
-          Operation subtract() -> 3D (6652083B0019CC9B): Manifold @0.25mm
-            Group -> 3D (C01F451CA2D04D0D):  @0.25mm
-              Operation subtract() -> 3D (EC9055D3E04B0FF5): Manifold @0.25mm
-                Group -> 3D (3BBF7C0D036A768D):  @0.25mm
+      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 3D (EDBB1E0981139CFA): Mesh @0.25mm
+        Group -> 3D (831B85E5E6870CC5): Manifold @0.25mm
+          Operation subtract() -> 3D (831B85E5E6870CC5): Manifold @0.25mm
+            Group -> 3D (DCE8C2C7853D8D37):  @0.25mm
+              Operation subtract() -> 3D (77331267D7A26668): Manifold @0.25mm
+                Group -> 3D (C66238A0F6C1CCFF):  @0.25mm
                   frame: Workpiece(Operation) std::ops::extrude(height=4mm, scale=(x=100%, y=100%), twist=0°) -> 3D (63C29A02584AB308): Mesh @0.25mm
                     - height = 4mm
                     - scale = (x=100%, y=100%)
@@ -175,29 +175,29 @@
                                 - teeth = 180
                                 - tooth_angle = 0.03490658503989rad
                                 Primitive2D __builtin::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=180) -> 2D (C3455206D1225329): Polygon @0.25mm
-                  logo2: Workpiece(Operation) std::ops::translate(x=70.35000000000001mm, y=86.42999999999999mm, z=3mm) -> 3D (92DFBEB7C9E9017E): Mesh @0.25mm
+                  logo2: Workpiece(Operation) std::ops::translate(x=70.35000000000001mm, y=86.42999999999999mm, z=3mm) -> 3D (1D827B4BBD4057F1): Mesh @0.25mm
                     - x = 70.35000000000001mm
                     - y = 86.42999999999999mm
                     - z = 3mm
-                    Transform __builtin::ops::translate(x=70.35000000000001mm, y=86.42999999999999mm, z=3mm) -> 3D (B75CE0F15023B07E): Mesh @0.25mm
-                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=100%, y=100%), twist=0°) -> 3D (FE7A639368A3516D): Mesh @0.25mm
+                    Transform __builtin::ops::translate(x=70.35000000000001mm, y=86.42999999999999mm, z=3mm) -> 3D (41FF9D85477B06F1): Mesh @0.25mm
+                      Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=100%, y=100%), twist=0°) -> 3D (891D20275FFAA7E0): Mesh @0.25mm
                         - height = 2mm
                         - scale = (x=100%, y=100%)
                         - twist = 0°
-                        Operation __builtin::ops::extrude(height=2mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (96BFBB3D7E06900C): Mesh @0.25mm
-                          Workpiece(Sketch) <NO ID>::logo::microcad::Logo(size=5.95mm) -> 2D (BFC5613F8A75221B): Collection @0.25mm
+                        Operation __builtin::ops::extrude(height=2mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (216277D1715DE67F): Mesh @0.25mm
+                          Workpiece(Sketch) <NO ID>::logo::microcad::Logo(size=5.95mm) -> 2D (4A681DD37DCC788E): Collection @0.25mm
                             - radius = 2.975mm
                             - thickness = 1.19mm
-                            Operation __builtin::ops::center() -> 2D (B161C285D40C07F5): Collection @0.25mm
-                              Workpiece(Operation) std::ops::align(direction=(x=1, y=0, z=0), spacing=4mm) -> 2D (E2BA77F15A462F9A): Collection @0.25mm
+                            Operation __builtin::ops::center() -> 2D (3C047F19CB635E68): Collection @0.25mm
+                              Workpiece(Operation) std::ops::align(direction=(x=1, y=0, z=0), spacing=4mm) -> 2D (6D5D34854D9D860D): Collection @0.25mm
                                 - direction = (x=1, y=0, z=0)
                                 - spacing = 4mm
-                                Operation __builtin::ops::align(spacing=4mm, x=1, y=0, z=0) -> 2D (518666BADDFBF4F2): Collection @0.25mm
-                                  Group -> 2D (E5771F3BCA66A099):  @0.25mm
-                                    Workpiece(Sketch) <NO ID>::logo::microcad::Icon(radius=2.975mm) -> 2D (4D99574669C70C4C):  @0.25mm
+                                Operation __builtin::ops::align(spacing=4mm, x=1, y=0, z=0) -> 2D (DC29234ED1534B64): Collection @0.25mm
+                                  Group -> 2D (7019DBCFBDBDF70C):  @0.25mm
+                                    Workpiece(Sketch) <NO ID>::logo::microcad::Icon(radius=2.975mm) -> 2D (4E45B7FB3D7EAC14):  @0.25mm
                                       - gap = 0.595mm
                                       - radius = 2.975mm
-                                      Multiplicity -> 2D (6BD66C8B49B09695): Collection @0.25mm
+                                      Multiplicity -> 2D (6C82CD401D68365D): Collection @0.25mm
                                         Workpiece(Operation) std::ops::rotate(angle=0rad, axis=(x=0, y=0, z=1)) -> 2D (9B6195340E2F5FF5): MultiPolygon @0.25mm
                                           - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
                                           Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) -> 2D (1FA48404A9852573): MultiPolygon @0.25mm
@@ -447,16 +447,16 @@
                           - height = 10.5mm
                           - text = microcad.xyz
                           Primitive2D __builtin::geo2d::Text(font_file=, height=10.5mm, text=microcad.xyz) -> 2D (721685B4C12C7CE7): MultiPolygon @0.25mm
-    Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=0mm) -> 3D (3633635027C68019): Mesh @0.25mm
+    Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=0mm) -> 3D (96ACDAE0B24AF7D9): Mesh @0.25mm
       - x = 0mm
       - y = 0mm
       - z = 0mm
       #[export = "spirograph_ring_1.stl" with exporter `stl`]
       #[color = rgba(0, 1, 0, 1)]
-      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 3D (AA56141B0A203B5B): Mesh @0.25mm
-        Group -> 3D (48C52CCB4F5AA7FA): Manifold @0.25mm
-          Operation subtract() -> 3D (48C52CCB4F5AA7FA): Manifold @0.25mm
-            Group -> 3D (46ADC2B7ED49F9FC):  @0.25mm
+      Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 3D (ACF8BAB94A4B31C): Mesh @0.25mm
+        Group -> 3D (A93EA45BD9DF1FBA): Manifold @0.25mm
+          Operation subtract() -> 3D (A93EA45BD9DF1FBA): Manifold @0.25mm
+            Group -> 3D (A7273A487BCE71BC):  @0.25mm
               ring: Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=100%, y=100%), twist=0°) -> 3D (CC072B9F4774E222): Mesh @0.25mm
                 - height = 2mm
                 - scale = (x=100%, y=100%)
@@ -554,16 +554,16 @@
                                 - teeth = 120
                                 - tooth_angle = 0.05235987755983rad
                                 Primitive2D __builtin::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=120) -> 2D (955AB2C7DCFC2620): Polygon @0.25mm
-              pencil_holes: Workpiece(Part) <NO ID>::PencilHoles(angle=22.5°, n=6, radius=90mm, start=6) -> 3D (A52DB4D239556C31): Mesh @0.25mm
+              pencil_holes: Workpiece(Part) <NO ID>::PencilHoles(angle=22.5°, n=6, radius=90mm, start=6) -> 3D (5A72C62C7D9E3F2): Mesh @0.25mm
                 - angle = 22.5°
                 - n = 6
                 - radius = 90mm
                 - start = 6
-                Workpiece(Operation) std::ops::rotate(angle=90°, axis=(x=0, y=0, z=1)) -> 3D (6B64249459807E1C): Mesh @0.25mm
+                Workpiece(Operation) std::ops::rotate(angle=90°, axis=(x=0, y=0, z=1)) -> 3D (CBDD9C24E404F5DC): Mesh @0.25mm
                   - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
-                  Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) -> 3D (CA0E5A15C0499B3A): Mesh @0.25mm
-                    Group -> 3D (6D13DE46468A8F74): Collection @0.25mm
-                      Multiplicity -> 3D (B81312D48DE7E910): Collection @0.25mm
+                  Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) -> 3D (2A87D1A64ECE12FB): Mesh @0.25mm
+                    Group -> 3D (CD8D55D6D10F0734): Collection @0.25mm
+                      Multiplicity -> 3D (FA57977CA325A5A8): Collection @0.25mm
                         Workpiece(Part) <NO ID>::PencilHole(offset=45mm, pencil_hole_diameter=0.5mm) -> 3D (409E776B6C56CFAD): Mesh @0.25mm
                           - offset = 45mm
                           - pencil_hole_diameter = 0.5mm
@@ -672,10 +672,10 @@
                                     - radius = 0.25mm
                                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
                                       Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
-                      Workpiece(Operation) std::ops::rotate(angle=-22.5°, axis=(x=0, y=0, z=1)) -> 3D (44EC4C40D32C9310): Mesh @0.25mm
+                      Workpiece(Operation) std::ops::rotate(angle=-22.5°, axis=(x=0, y=0, z=1)) -> 3D (8730D0E8E46A4FA8): Mesh @0.25mm
                         - matrix = Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
-                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (F6E63BF0BCB3ACE0): Mesh @0.25mm
-                          Multiplicity -> 3D (DEA05FD43AD407BA): Collection @0.25mm
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (392AC098D1F16979): Mesh @0.25mm
+                          Multiplicity -> 3D (20E4E47C4C11C453): Collection @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=48.75mm, pencil_hole_diameter=0.5mm) -> 3D (DEBA716CA2C6E39E): Mesh @0.25mm
                               - offset = 48.75mm
                               - pencil_hole_diameter = 0.5mm
@@ -784,10 +784,10 @@
                                         - radius = 0.25mm
                                         Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
                                           Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
-                      Workpiece(Operation) std::ops::rotate(angle=22.5°, axis=(x=0, y=0, z=1)) -> 3D (AEA4E1FFC996AAB6): Mesh @0.25mm
+                      Workpiece(Operation) std::ops::rotate(angle=22.5°, axis=(x=0, y=0, z=1)) -> 3D (F0E966A7DED4674E): Mesh @0.25mm
                         - matrix = Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
-                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (7E87DBEBCB1CB419): Mesh @0.25mm
-                          Multiplicity -> 3D (246DF78E0C46C8D9): Collection @0.25mm
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (C0CC6093DC5A70B1): Mesh @0.25mm
+                          Multiplicity -> 3D (66B27C3621848571): Collection @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=47.5mm, pencil_hole_diameter=0.5mm) -> 3D (629AA359F3EA69BA): Mesh @0.25mm
                               - offset = 47.5mm
                               - pencil_hole_diameter = 0.5mm
@@ -896,16 +896,16 @@
                                         - radius = 0.25mm
                                         Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
                                           Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
-    Workpiece(Operation) std::ops::translate(x=24mm, y=0mm, z=0mm) -> 3D (86DCF84D80E0AE7F): Mesh @0.25mm
+    Workpiece(Operation) std::ops::translate(x=24mm, y=0mm, z=0mm) -> 3D (61AC60D50CD76036): Mesh @0.25mm
       - x = 24mm
       - y = 0mm
       - z = 0mm
       #[export = "spirograph_ring_2.stl" with exporter `stl`]
       #[color = rgba(1, 0, 0, 1)]
-      Transform __builtin::ops::translate(x=24mm, y=0mm, z=0mm) -> 3D (784DA2EA932D0C7F): Mesh @0.25mm
-        Group -> 3D (90642D451045C5C6): Manifold @0.25mm
-          Operation subtract() -> 3D (90642D451045C5C6): Manifold @0.25mm
-            Group -> 3D (B81C506DB2008257):  @0.25mm
+      Transform __builtin::ops::translate(x=24mm, y=0mm, z=0mm) -> 3D (531D0B721F23BE36): Mesh @0.25mm
+        Group -> 3D (6B3395CC9C3C777D): Manifold @0.25mm
+          Operation subtract() -> 3D (6B3395CC9C3C777D): Manifold @0.25mm
+            Group -> 3D (92EBB8F53DF7340E):  @0.25mm
               ring: Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=100%, y=100%), twist=0°) -> 3D (4444531F40145559): Mesh @0.25mm
                 - height = 2mm
                 - scale = (x=100%, y=100%)
@@ -1003,16 +1003,16 @@
                                 - teeth = 72
                                 - tooth_angle = 0.08726646259972rad
                                 Primitive2D __builtin::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=72) -> 2D (645C6AD857AEA966): Polygon @0.25mm
-              pencil_holes: Workpiece(Part) <NO ID>::PencilHoles(angle=22.5°, n=5, radius=60mm, start=5) -> 3D (7D2F0F1B7072E1E5): Mesh @0.25mm
+              pencil_holes: Workpiece(Part) <NO ID>::PencilHoles(angle=22.5°, n=5, radius=60mm, start=5) -> 3D (57FE77A2FC69939C): Mesh @0.25mm
                 - angle = 22.5°
                 - n = 5
                 - radius = 60mm
                 - start = 5
-                Workpiece(Operation) std::ops::rotate(angle=90°, axis=(x=0, y=0, z=1)) -> 3D (CD0222246222B88C): Mesh @0.25mm
+                Workpiece(Operation) std::ops::rotate(angle=90°, axis=(x=0, y=0, z=1)) -> 3D (A7D18AABEE196A43): Mesh @0.25mm
                   - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
-                  Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) -> 3D (F3FD2A4CC8C080E6): Mesh @0.25mm
-                    Group -> 3D (6C7169FECC7C5745): Collection @0.25mm
-                      Multiplicity -> 3D (A7E92C620E57FA07): Collection @0.25mm
+                  Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) -> 3D (CECC92D454B7329D): Mesh @0.25mm
+                    Group -> 3D (4740D286587308FC): Collection @0.25mm
+                      Multiplicity -> 3D (399F33ECA3834597): Collection @0.25mm
                         Workpiece(Part) <NO ID>::PencilHole(offset=30mm, pencil_hole_diameter=0.5mm) -> 3D (9139B6760463FBBD): Mesh @0.25mm
                           - offset = 30mm
                           - pencil_hole_diameter = 0.5mm
@@ -1103,10 +1103,10 @@
                                     - radius = 0.25mm
                                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
                                       Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
-                      Workpiece(Operation) std::ops::rotate(angle=-22.5°, axis=(x=0, y=0, z=1)) -> 3D (C0D816E80E53AB23): Mesh @0.25mm
+                      Workpiece(Operation) std::ops::rotate(angle=-22.5°, axis=(x=0, y=0, z=1)) -> 3D (528E1E72A37EF6B3): Mesh @0.25mm
                         - matrix = Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
-                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (273F4EB57BCADFF0): Mesh @0.25mm
-                          Multiplicity -> 3D (E73786A877F483E9): Collection @0.25mm
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (B8F556400CF62B7F): Mesh @0.25mm
+                          Multiplicity -> 3D (78ED8E33091FCF79): Collection @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=33mm, pencil_hole_diameter=0.5mm) -> 3D (C2252E1585268177): Mesh @0.25mm
                               - offset = 33mm
                               - pencil_hole_diameter = 0.5mm
@@ -1197,10 +1197,10 @@
                                         - radius = 0.25mm
                                         Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
                                           Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
-                      Workpiece(Operation) std::ops::rotate(angle=22.5°, axis=(x=0, y=0, z=1)) -> 3D (CD9A7E560470EC11): Mesh @0.25mm
+                      Workpiece(Operation) std::ops::rotate(angle=22.5°, axis=(x=0, y=0, z=1)) -> 3D (5F5085E0999C37A1): Mesh @0.25mm
                         - matrix = Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
-                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (EE1ED5C205C2BC5F): Mesh @0.25mm
-                          Multiplicity -> 3D (E719980CCAA4767A): Collection @0.25mm
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (7FD4DD4C9AEE07EF): Mesh @0.25mm
+                          Multiplicity -> 3D (78CF9F975FCFC20A): Collection @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=32mm, pencil_hole_diameter=0.5mm) -> 3D (B8A121B42289658D): Mesh @0.25mm
                               - offset = 32mm
                               - pencil_hole_diameter = 0.5mm
@@ -1291,16 +1291,16 @@
                                         - radius = 0.25mm
                                         Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
                                           Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
-    Workpiece(Operation) std::ops::translate(x=38.4mm, y=0mm, z=0mm) -> 3D (D22907D67EDF829E): Mesh @0.25mm
+    Workpiece(Operation) std::ops::translate(x=38.4mm, y=0mm, z=0mm) -> 3D (A16FA335081461B3): Mesh @0.25mm
       - x = 38.4mm
       - y = 0mm
       - z = 0mm
       #[export = "spirograph_ring_3.stl" with exporter `stl`]
       #[color = rgba(1, 1, 0, 1)]
-      Transform __builtin::ops::translate(x=38.4mm, y=0mm, z=0mm) -> 3D (26A961DE8E1F7D65): Mesh @0.25mm
-        Group -> 3D (44CB03FAB3C19A3B): Manifold @0.25mm
-          Operation subtract() -> 3D (44CB03FAB3C19A3B): Manifold @0.25mm
-            Group -> 3D (6A615ADF531E5934):  @0.25mm
+      Transform __builtin::ops::translate(x=38.4mm, y=0mm, z=0mm) -> 3D (F5EFFD3D1B545C79): Mesh @0.25mm
+        Group -> 3D (14119F593CF67950): Manifold @0.25mm
+          Operation subtract() -> 3D (14119F593CF67950): Manifold @0.25mm
+            Group -> 3D (39A7F63DDC533849):  @0.25mm
               ring: Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=100%, y=100%), twist=0°) -> 3D (BC1BAD52142C6CC1): Mesh @0.25mm
                 - height = 2mm
                 - scale = (x=100%, y=100%)
@@ -1398,16 +1398,16 @@
                                 - teeth = 36
                                 - tooth_angle = 0.17453292519943rad
                                 Primitive2D __builtin::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=36) -> 2D (EB40EF9126D220E4): Polygon @0.25mm
-              pencil_holes: Workpiece(Part) <NO ID>::PencilHoles(angle=22.5°, n=4, radius=36mm, start=4) -> 3D (377EF5D90F62231A): Mesh @0.25mm
+              pencil_holes: Workpiece(Part) <NO ID>::PencilHoles(angle=22.5°, n=4, radius=36mm, start=4) -> 3D (6C591379897022F): Mesh @0.25mm
                 - angle = 22.5°
                 - n = 4
                 - radius = 36mm
                 - start = 4
-                Workpiece(Operation) std::ops::rotate(angle=90°, axis=(x=0, y=0, z=1)) -> 3D (1845BC3CE6884CC3): Mesh @0.25mm
+                Workpiece(Operation) std::ops::rotate(angle=90°, axis=(x=0, y=0, z=1)) -> 3D (E78C579B73BD2BD7): Mesh @0.25mm
                   - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
-                  Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) -> 3D (CF4BE1AC4EA0A05F): Mesh @0.25mm
-                    Group -> 3D (B48AEB6FD20F5BC6): Collection @0.25mm
-                      Multiplicity -> 3D (1985E34C9213AA5): Collection @0.25mm
+                  Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) -> 3D (9E927D0ADBD57F74): Mesh @0.25mm
+                    Group -> 3D (83D186CE5F443ADB): Collection @0.25mm
+                      Multiplicity -> 3D (F37B00F1DF1DFA9F): Collection @0.25mm
                         Workpiece(Part) <NO ID>::PencilHole(offset=18mm, pencil_hole_diameter=0.5mm) -> 3D (93DBC3E0B96B7858): Mesh @0.25mm
                           - offset = 18mm
                           - pencil_hole_diameter = 0.5mm
@@ -1480,10 +1480,10 @@
                                     - radius = 0.25mm
                                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
                                       Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
-                      Workpiece(Operation) std::ops::rotate(angle=-22.5°, axis=(x=0, y=0, z=1)) -> 3D (BFF81D51E7FD02F9): Mesh @0.25mm
+                      Workpiece(Operation) std::ops::rotate(angle=-22.5°, axis=(x=0, y=0, z=1)) -> 3D (B1DAC00EF9F9C2F4): Mesh @0.25mm
                         - matrix = Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
-                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (DF2E4ECD0463253): Mesh @0.25mm
-                          Multiplicity -> 3D (D5B5A6DF4F536481): Collection @0.25mm
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (FFD587A9E642F24D): Mesh @0.25mm
+                          Multiplicity -> 3D (C798499C6150247C): Collection @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=20.25mm, pencil_hole_diameter=0.5mm) -> 3D (F92D93B087FA0CA1): Mesh @0.25mm
                               - offset = 20.25mm
                               - pencil_hole_diameter = 0.5mm
@@ -1556,10 +1556,10 @@
                                         - radius = 0.25mm
                                         Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
                                           Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
-                      Workpiece(Operation) std::ops::rotate(angle=22.5°, axis=(x=0, y=0, z=1)) -> 3D (56F344F976B70938): Mesh @0.25mm
+                      Workpiece(Operation) std::ops::rotate(angle=22.5°, axis=(x=0, y=0, z=1)) -> 3D (48D5E7B688B3C933): Mesh @0.25mm
                         - matrix = Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
-                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (7788A9E575D4298C): Mesh @0.25mm
-                          Multiplicity -> 3D (C0AC33E8B8E80DDE): Collection @0.25mm
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (696B4CA28BD0E987): Mesh @0.25mm
+                          Multiplicity -> 3D (B28ED6A5CEE4CDD9): Collection @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=19.5mm, pencil_hole_diameter=0.5mm) -> 3D (AD6B27FC8065F659): Mesh @0.25mm
                               - offset = 19.5mm
                               - pencil_hole_diameter = 0.5mm
@@ -1632,16 +1632,16 @@
                                         - radius = 0.25mm
                                         Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
                                           Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
-    Workpiece(Operation) std::ops::translate(x=45.6mm, y=0mm, z=0mm) -> 3D (948DF8187C2F47F5): Mesh @0.25mm
+    Workpiece(Operation) std::ops::translate(x=45.6mm, y=0mm, z=0mm) -> 3D (4CA5E02E09F7CA85): Mesh @0.25mm
       - x = 45.6mm
       - y = 0mm
       - z = 0mm
       #[export = "spirograph_gear.stl" with exporter `stl`]
       #[color = rgba(0, 0.5, 0.5, 1)]
-      Transform __builtin::ops::translate(x=45.6mm, y=0mm, z=0mm) -> 3D (C0D97251F8B9A7DF): Mesh @0.25mm
-        gear: Group -> 3D (25B83937B9BF4CD0): Manifold @0.25mm
-          Operation subtract() -> 3D (25B83937B9BF4CD0): Manifold @0.25mm
-            Group -> 3D (6056A505589BC74D):  @0.25mm
+      Transform __builtin::ops::translate(x=45.6mm, y=0mm, z=0mm) -> 3D (78F15A6786822A6F): Mesh @0.25mm
+        gear: Group -> 3D (DDD0214D4787CF5F): Manifold @0.25mm
+          Operation subtract() -> 3D (DDD0214D4787CF5F): Manifold @0.25mm
+            Group -> 3D (186E8D1AE66449DD):  @0.25mm
               gear: Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=100%, y=100%), twist=0°) -> 3D (DBE14DA0432F9BE8): Mesh @0.25mm
                 - height = 2mm
                 - scale = (x=100%, y=100%)
@@ -1660,16 +1660,16 @@
                       - teeth = 36
                       - tooth_angle = 0.17453292519943rad
                       Primitive2D __builtin::geo2d::SinusoidalGearProfile(module=0.5mm, roundness=0.6, stretch=0.6, teeth=36) -> 2D (EB40EF9126D220E4): Polygon @0.25mm
-              pencil_holes: Workpiece(Part) <NO ID>::PencilHoles(angle=119.99999999999999°, n=2, radius=18mm, start=1) -> 3D (D6FF4F0619D6528A): Mesh @0.25mm
+              pencil_holes: Workpiece(Part) <NO ID>::PencilHoles(angle=119.99999999999999°, n=2, radius=18mm, start=1) -> 3D (8F17371BA79ED51A): Mesh @0.25mm
                 - angle = 119.99999999999999°
                 - n = 2
                 - radius = 18mm
                 - start = 1
-                Workpiece(Operation) std::ops::rotate(angle=90°, axis=(x=0, y=0, z=1)) -> 3D (D5990C88D85CFC3C): Mesh @0.25mm
+                Workpiece(Operation) std::ops::rotate(angle=90°, axis=(x=0, y=0, z=1)) -> 3D (8DB0F49E66257ECC): Mesh @0.25mm
                   - matrix = Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]
-                  Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) -> 3D (616D15DF4142AE97): Mesh @0.25mm
-                    Group -> 3D (C0D7AE444600566C): Collection @0.25mm
-                      Multiplicity -> 3D (55BBE289A7765B82): Collection @0.25mm
+                  Transform __builtin::ops::rotate(matrix=Matrix3 [[6.123233995736766e-17, 1.0, 0.0], [-1.0, 6.123233995736766e-17, 0.0], [0.0, 0.0, 1.0]]) -> 3D (1984FDF4CF0B3127): Mesh @0.25mm
+                    Group -> 3D (78EF9659D3C8D8FC): Collection @0.25mm
+                      Multiplicity -> 3D (26E0C2C93853DF49): Collection @0.25mm
                         Workpiece(Part) <NO ID>::PencilHole(offset=4.5mm, pencil_hole_diameter=0.5mm) -> 3D (3D0F2EBA42EA45C4): Mesh @0.25mm
                           - offset = 4.5mm
                           - pencil_hole_diameter = 0.5mm
@@ -1724,10 +1724,10 @@
                                     - radius = 0.25mm
                                     Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
                                       Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
-                      Workpiece(Operation) std::ops::rotate(angle=-119.99999999999999°, axis=(x=0, y=0, z=1)) -> 3D (55FF9FDA1888628F): Mesh @0.25mm
+                      Workpiece(Operation) std::ops::rotate(angle=-119.99999999999999°, axis=(x=0, y=0, z=1)) -> 3D (27248019AD65E656): Mesh @0.25mm
                         - matrix = Matrix3 [[-0.4999999999999998, -0.8660254037844387, 0.0], [0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]
-                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.4999999999999998, -0.8660254037844387, 0.0], [0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]) -> 3D (C25C90737C16E70E): Mesh @0.25000000000000006mm
-                          Multiplicity -> 3D (32EF891E998DFE70): Collection @0.25000000000000006mm
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.4999999999999998, -0.8660254037844387, 0.0], [0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]) -> 3D (938170B310F46AD5): Mesh @0.25000000000000006mm
+                          Multiplicity -> 3D (414695E2E6B8237): Collection @0.25000000000000006mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=6.75mm, pencil_hole_diameter=0.5mm) -> 3D (5DD77B38A26E0E07): Mesh @0.25000000000000006mm
                               - offset = 6.75mm
                               - pencil_hole_diameter = 0.5mm
@@ -1782,10 +1782,10 @@
                                         - radius = 0.25mm
                                         Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25000000000000006mm
                                           Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25000000000000006mm
-                      Workpiece(Operation) std::ops::rotate(angle=119.99999999999999°, axis=(x=0, y=0, z=1)) -> 3D (356E4833CA48A8FF): Mesh @0.25mm
+                      Workpiece(Operation) std::ops::rotate(angle=119.99999999999999°, axis=(x=0, y=0, z=1)) -> 3D (69328735F262CC6): Mesh @0.25mm
                         - matrix = Matrix3 [[-0.4999999999999998, 0.8660254037844387, 0.0], [-0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]
-                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.4999999999999998, 0.8660254037844387, 0.0], [-0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]) -> 3D (FEA09C00AD963A1C): Mesh @0.25000000000000006mm
-                          Multiplicity -> 3D (8D77EDA57683A257): Collection @0.25000000000000006mm
+                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.4999999999999998, 0.8660254037844387, 0.0], [-0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]) -> 3D (CFC57C404273BDE3): Mesh @0.25000000000000006mm
+                          Multiplicity -> 3D (5E9CCDE50B61261E): Collection @0.25000000000000006mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=6mm, pencil_hole_diameter=0.5mm) -> 3D (A68419E86F2646C4): Mesh @0.25000000000000006mm
                               - offset = 6mm
                               - pencil_hole_diameter = 0.5mm

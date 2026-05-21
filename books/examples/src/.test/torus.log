@@ -13,8 +13,8 @@
    9:   std::geo3d::Torus([1..5] * 10mm, minor_radius = 3mm);
 
 -- Model --
-  Group (root) -> 3D (99AA24D12FA64EE3): Collection @0.25mm
-    Multiplicity -> 3D (99AA24D12FA64EE3): Collection @0.25mm
+  Group (root) -> 3D (2B602C5BC0D19A73): Collection @0.25mm
+    Multiplicity -> 3D (2B602C5BC0D19A73): Collection @0.25mm
       Workpiece(Part) std::geo3d::Torus(major_radius=10mm, minor_radius=3mm) -> 3D (33462253EFDE5A83): Mesh @0.25mm
         - major_radius = 10mm
         - minor_radius = 3mm

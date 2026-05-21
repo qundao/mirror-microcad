@@ -12,8 +12,8 @@
   17:   r.std::ops::translate(x = [-4mm, 4mm], y = [-4mm, 4mm]);
 
 -- Model --
-  Group (root) -> 2D (ABF17AFF5C34489): Collection @0.25mm
-    Multiplicity -> 2D (ABF17AFF5C34489): Collection @0.25mm
+  Group (root) -> 2D (6D7A1C20A36D9E9): Collection @0.25mm
+    Multiplicity -> 2D (6D7A1C20A36D9E9): Collection @0.25mm
       Workpiece(Operation) std::ops::translate(x=-4mm, y=-4mm, z=0mm) -> 2D (1F433A34AE295DDF): MultiPolygon @0.25mm
         - x = -4mm
         - y = -4mm

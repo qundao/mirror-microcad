@@ -52,23 +52,23 @@
   52:   LegoBrick();
 
 -- Model --
-  Group (root) -> 3D (298EEAF21D7BB18C): Manifold @0.1mm
-    Workpiece(Part) <NO ID>::LegoBrick(base_height=9.6mm) -> 3D (298EEAF21D7BB18C): Manifold @0.1mm
+  Group (root) -> 3D (D2BE844036DE938F): Manifold @0.1mm
+    Workpiece(Part) <NO ID>::LegoBrick(base_height=9.6mm) -> 3D (D2BE844036DE938F): Manifold @0.1mm
       - base_height = 9.6mm
-      Operation union() -> 3D (C0A5D35FF23DD165): Manifold @0.1mm
-        Group -> 3D (DBB6E20EB04D9AA):  @0.1mm
-          Operation union() -> 3D (87238EACB0452348): Manifold @0.1mm
-            Group -> 3D (972ECD4568B90BAE):  @0.1mm
-              base: Workpiece(Operation) std::ops::extrude(height=9.6mm, scale=(x=100%, y=100%), twist=0°) -> 3D (A1E79DA5424BF12F): Mesh @0.1mm
+      Operation union() -> 3D (69D56CAE0BA0B369): Manifold @0.1mm
+        Group -> 3D (B6EB076F0067BBAD):  @0.1mm
+          Operation union() -> 3D (302783BA349450F8): Manifold @0.1mm
+            Group -> 3D (4032C252ED08395E):  @0.1mm
+              base: Workpiece(Operation) std::ops::extrude(height=9.6mm, scale=(x=100%, y=100%), twist=0°) -> 3D (F0B75359A5BFA956): Mesh @0.1mm
                 - height = 9.6mm
                 - scale = (x=100%, y=100%)
                 - twist = 0°
-                Operation __builtin::ops::extrude(height=9.6mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (E4C42A4274798A94): Mesh @0.1mm
-                  Workpiece(Sketch) <NO ID>::Base(height=31.8mm, width=15.8mm) -> 2D (BED6649D1E53EB75): MultiPolygon @0.1mm
+                Operation __builtin::ops::extrude(height=9.6mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (3393DFF6DBED42BC): Mesh @0.1mm
+                  Workpiece(Sketch) <NO ID>::Base(height=31.8mm, width=15.8mm) -> 2D (DA61A5181C7A39D): MultiPolygon @0.1mm
                     - height = 31.8mm
                     - width = 15.8mm
-                    Operation union() -> 2D (11DC4C679733BC05): MultiPolygon @0.1mm
-                      Group -> 2D (33232CF5AD3E70DE):  @0.1mm
+                    Operation union() -> 2D (60AC021BFAA7742C): MultiPolygon @0.1mm
+                      Group -> 2D (81F2E2AA10B22905):  @0.1mm
                         frame: Workpiece(Sketch) std::geo2d::Frame(height=31.8mm, thickness=1.2mm, width=15.8mm) -> 2D (43903784D22D222F): MultiPolygon @0.1mm
                           - height = 31.8mm
                           - thickness = 1.2mm
@@ -87,8 +87,8 @@
                                 - x = -6.7mm
                                 - y = -14.7mm
                                 Primitive2D __builtin::geo2d::Rect(height=29.4mm, width=13.4mm, x=-6.7mm, y=-14.7mm) -> 2D (94F84880D0A3861A): Rect @0.1mm
-                        struts: Operation __builtin::ops::center() -> 2D (36B87F401FB452E6): Collection @0.1mm
-                          Multiplicity -> 2D (20632F3C106DB8F3): Collection @0.1mm
+                        struts: Operation __builtin::ops::center() -> 2D (858834F483280B0D): Collection @0.1mm
+                          Multiplicity -> 2D (6F32E4F077E1711A): Collection @0.1mm
                             Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (B74988A1C2F9D04D): MultiPolygon @0.1mm
                               - x = 0mm
                               - y = 0mm
@@ -165,22 +165,22 @@
                         - x = -7.9mm
                         - y = -15.9mm
                         Primitive2D __builtin::geo2d::Rect(height=31.8mm, width=15.8mm, x=-7.9mm, y=-15.9mm) -> 2D (B4CBCF5582C0712): Rect @0.1mm
-          knobs: Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=9.6mm) -> 3D (F97661363A1B698E): Mesh @0.1mm
+          knobs: Workpiece(Operation) std::ops::translate(x=0mm, y=0mm, z=9.6mm) -> 3D (F58EEB484E8EFEEE): Mesh @0.1mm
             - x = 0mm
             - y = 0mm
             - z = 9.6mm
-            Transform __builtin::ops::translate(x=0mm, y=0mm, z=9.6mm) -> 3D (EB51C0173073CE81): Mesh @0.1mm
-              Workpiece(Operation) std::ops::extrude(height=1.7mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1A484BBB3846F8CA): Mesh @0.1mm
+            Transform __builtin::ops::translate(x=0mm, y=0mm, z=9.6mm) -> 3D (E76A4A2944E763E1): Mesh @0.1mm
+              Workpiece(Operation) std::ops::extrude(height=1.7mm, scale=(x=100%, y=100%), twist=0°) -> 3D (1660D5CD4CBA8E2A): Mesh @0.1mm
                 - height = 1.7mm
                 - scale = (x=100%, y=100%)
                 - twist = 0°
-                Operation __builtin::ops::extrude(height=1.7mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (2FAB3DAB6AAFD8B7): Mesh @0.1mm
-                  Workpiece(Sketch) <NO ID>::Knobs() -> 2D (17CAD5F09AF1049C): Collection @0.1mm
-                    Operation __builtin::ops::center() -> 2D (4B76FDD340C650): Collection @0.1mm
-                      Workpiece(Sketch) std::geo2d::Circle(center=(x=[0mm, 8mm], y=[0mm, 8mm, 16mm, 24mm]), diameter=4.8mm) -> 2D (ED77A386C57E395B): Collection @0.1mm
+                Operation __builtin::ops::extrude(height=1.7mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (2BC3C7BD7F236E17): Mesh @0.1mm
+                  Workpiece(Sketch) <NO ID>::Knobs() -> 2D (13E36002AF6499FC): Collection @0.1mm
+                    Operation __builtin::ops::center() -> 2D (FC64010FE7B45BAF): Collection @0.1mm
+                      Workpiece(Sketch) std::geo2d::Circle(center=(x=[0mm, 8mm], y=[0mm, 8mm, 16mm, 24mm]), diameter=4.8mm) -> 2D (E9902D98D9F1CEBB): Collection @0.1mm
                         - center = (x=[0mm, 8mm], y=[0mm, 8mm, 16mm, 24mm])
                         - radius = 2.4mm
-                        Multiplicity -> 2D (7DDE6D460DC090EC): Collection @0.1mm
+                        Multiplicity -> 2D (79F6F7582234264C): Collection @0.1mm
                           Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (74AF96CEED54ECBF): MultiPolygon @0.1mm
                             Primitive2D __builtin::geo2d::Circle(radius=2.4mm) -> 2D (847002DF3C92116): Polygon @0.1mm
                           Transform __builtin::ops::translate(x=8mm, y=0mm, z=0mm) -> 2D (CFA9CB3B655AD90E): MultiPolygon @0.1mm

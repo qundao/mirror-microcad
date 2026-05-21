@@ -24,12 +24,12 @@
   61:   MySketch([-1, 0, 2]).align(X, 5mm);
 
 -- Model --
-  Group (root) -> 2D (FFD680868F54AD6E): Collection @0.25mm
-    Workpiece(Operation) std::ops::align(direction=(x=1, y=0, z=0), spacing=5mm) -> 2D (FFD680868F54AD6E): Collection @0.25mm
+  Group (root) -> 2D (10504FDDC1FBC58F): Collection @0.25mm
+    Workpiece(Operation) std::ops::align(direction=(x=1, y=0, z=0), spacing=5mm) -> 2D (10504FDDC1FBC58F): Collection @0.25mm
       - direction = (x=1, y=0, z=0)
       - spacing = 5mm
-      Operation __builtin::ops::align(spacing=5mm, x=1, y=0, z=0) -> 2D (5960848DE651F9E2): Collection @0.25mm
-        Multiplicity -> 2D (DD06097BD14757EE):  @0.25mm
+      Operation __builtin::ops::align(spacing=5mm, x=1, y=0, z=0) -> 2D (69DA53E518F91202): Collection @0.25mm
+        Multiplicity -> 2D (ED7FD8D307EE700E):  @0.25mm
           Workpiece(Sketch) <NO ID>::MySketch(x=-1) -> 2D (9AA4113ADFE94D58):  @0.25mm
             - x = -1
             Group -> 2D (B58CA0EEA9BF5CAB): Rect @0.25mm

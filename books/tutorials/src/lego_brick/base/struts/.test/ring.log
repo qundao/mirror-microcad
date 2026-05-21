@@ -14,8 +14,8 @@
   15:       .translate(x = [-1..1] * 8mm);
 
 -- Model --
-  Group (root) -> 2D (99E33EECCB28E24A): Collection @0.25mm
-    Multiplicity -> 2D (99E33EECCB28E24A): Collection @0.25mm
+  Group (root) -> 2D (E8B2F4A12E9C9A71): Collection @0.25mm
+    Multiplicity -> 2D (E8B2F4A12E9C9A71): Collection @0.25mm
       Workpiece(Operation) std::ops::translate(x=-8mm, y=0mm, z=0mm) -> 2D (64AA4D41195BD5D3): MultiPolygon @0.25mm
         - x = -8mm
         - y = 0mm

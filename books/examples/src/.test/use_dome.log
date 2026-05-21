@@ -15,21 +15,21 @@
   11:   dome::Dome(10mm, strut_width = 0.5mm).std::ops::mirror(std::math::Z);
 
 -- Model --
-  Group (root) -> 3D (93A5F804AB32E8EE): Collection @0.25mm
-    Workpiece(Operation) std::ops::mirror(n=(x=0, y=0, z=1), x=0mm, y=0mm, z=0mm) -> 3D (93A5F804AB32E8EE): Collection @0.25mm
+  Group (root) -> 3D (344ED3DD6E5B1BB6): Collection @0.25mm
+    Workpiece(Operation) std::ops::mirror(n=(x=0, y=0, z=1), x=0mm, y=0mm, z=0mm) -> 3D (344ED3DD6E5B1BB6): Collection @0.25mm
       - n = (x=0, y=0, z=1)
       - x = 0mm
       - y = 0mm
       - z = 0mm
-      Operation __builtin::ops::mirror(nx=0, ny=0, nz=1, x=0mm, y=0mm, z=0mm) -> 3D (829ADE4EA091D037): Collection @0.25mm
-        Workpiece(Part) <NO ID>::dome::Dome(size=10mm, strut_width=0.5mm) -> 3D (F8E1444CA2A8656A): Collection @0.25mm
+      Operation __builtin::ops::mirror(nx=0, ny=0, nz=1, x=0mm, y=0mm, z=0mm) -> 3D (2343BA2767BA02FF): Collection @0.25mm
+        Workpiece(Part) <NO ID>::dome::Dome(size=10mm, strut_width=0.5mm) -> 3D (998A202565D09832): Collection @0.25mm
           - size = 10mm
           - strut_width = 0.5mm
-          Multiplicity -> 3D (28C20386D403FC9B): Collection @0.25mm
-            Workpiece(Operation) std::ops::rotate(x=0°, y=0°, z=0rad) -> 3D (E25AEF7B2F320202): Mesh @0.25mm
+          Multiplicity -> 3D (C96ADF5F9B2C2F62): Collection @0.25mm
+            Workpiece(Operation) std::ops::rotate(x=0°, y=0°, z=0rad) -> 3D (14A7BF90C1EDA003): Mesh @0.25mm
               - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
-              Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) -> 3D (D08EF3EBAF892A71): Mesh @0.25mm
-                Multiplicity -> 3D (CA2E1D95370585EB): Collection @0.25mm
+              Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) -> 3D (2DBC4014244C872): Mesh @0.25mm
+                Multiplicity -> 3D (FC7AEDAAC9C123EB): Collection @0.25mm
                   Workpiece(Operation) std::ops::rotate(x=0rad, y=0°, z=0°) -> 3D (BE385CDC53925DE): Mesh @0.25mm
                     - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
                     Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) -> 3D (B221B8A8472EA4E2): Mesh @0.25mm
@@ -149,10 +149,10 @@
                                 - x = -0.25mm
                                 - y = -0.25mm
                                 Primitive2D __builtin::geo2d::Rect(height=0.5mm, width=0.5mm, x=-0.25mm, y=-0.25mm) -> 2D (4902BE0B799B5715): Rect @0.25mm
-            Workpiece(Operation) std::ops::rotate(x=0°, y=0°, z=1.0471975511966rad) -> 3D (CD82BFAE82D54C67): Mesh @0.25mm
+            Workpiece(Operation) std::ops::rotate(x=0°, y=0°, z=1.0471975511966rad) -> 3D (FFCF8FC41590EA67): Mesh @0.25mm
               - matrix = Matrix3 [[0.5000000000000001, 0.8660254037844386, 0.0], [-0.8660254037844386, 0.5000000000000001, 0.0], [0.0, 0.0, 1.0]]
-              Transform __builtin::ops::rotate(matrix=Matrix3 [[0.5000000000000001, 0.8660254037844386, 0.0], [-0.8660254037844386, 0.5000000000000001, 0.0], [0.0, 0.0, 1.0]]) -> 3D (B09477FDCFFA9C0): Mesh @0.25mm
-                Multiplicity -> 3D (CA2E1D95370585EB): Collection @0.25mm
+              Transform __builtin::ops::rotate(matrix=Matrix3 [[0.5000000000000001, 0.8660254037844386, 0.0], [-0.8660254037844386, 0.5000000000000001, 0.0], [0.0, 0.0, 1.0]]) -> 3D (3D56179573BB47C0): Mesh @0.25mm
+                Multiplicity -> 3D (FC7AEDAAC9C123EB): Collection @0.25mm
                   Workpiece(Operation) std::ops::rotate(x=0rad, y=0°, z=0°) -> 3D (BE385CDC53925DE): Mesh @0.25mm
                     - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
                     Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) -> 3D (B221B8A8472EA4E2): Mesh @0.25mm
@@ -272,10 +272,10 @@
                                 - x = -0.25mm
                                 - y = -0.25mm
                                 Primitive2D __builtin::geo2d::Rect(height=0.5mm, width=0.5mm, x=-0.25mm, y=-0.25mm) -> 2D (4902BE0B799B5715): Rect @0.25mm
-            Workpiece(Operation) std::ops::rotate(x=0°, y=0°, z=2.0943951023932rad) -> 3D (A8A409593E79A125): Mesh @0.25mm
+            Workpiece(Operation) std::ops::rotate(x=0°, y=0°, z=2.0943951023932rad) -> 3D (DAF0D96ED1353F25): Mesh @0.25mm
               - matrix = Matrix3 [[-0.4999999999999998, 0.8660254037844387, 0.0], [-0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]
-              Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.4999999999999998, 0.8660254037844387, 0.0], [-0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]) -> 3D (26C9FA146EE04E4C): Mesh @0.25000000000000006mm
-                Multiplicity -> 3D (CA2E1D95370585EB): Collection @0.25000000000000006mm
+              Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.4999999999999998, 0.8660254037844387, 0.0], [-0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]) -> 3D (5916CA2A019BEC4C): Mesh @0.25000000000000006mm
+                Multiplicity -> 3D (FC7AEDAAC9C123EB): Collection @0.25000000000000006mm
                   Workpiece(Operation) std::ops::rotate(x=0rad, y=0°, z=0°) -> 3D (BE385CDC53925DE): Mesh @0.25mm
                     - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
                     Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) -> 3D (B221B8A8472EA4E2): Mesh @0.25mm
@@ -395,10 +395,10 @@
                                 - x = -0.25mm
                                 - y = -0.25mm
                                 Primitive2D __builtin::geo2d::Rect(height=0.5mm, width=0.5mm, x=-0.25mm, y=-0.25mm) -> 2D (4902BE0B799B5715): Rect @0.25mm
-            Workpiece(Operation) std::ops::rotate(x=0°, y=0°, z=3.14159265358979rad) -> 3D (9D5B220FB1F041BF): Mesh @0.25mm
+            Workpiece(Operation) std::ops::rotate(x=0°, y=0°, z=3.14159265358979rad) -> 3D (CFA7F22544ABDFBF): Mesh @0.25mm
               - matrix = Matrix3 [[-1.0, 1.2246467991473532e-16, 0.0], [-1.2246467991473532e-16, -1.0, 0.0], [0.0, 0.0, 1.0]]
-              Transform __builtin::ops::rotate(matrix=Matrix3 [[-1.0, 1.2246467991473532e-16, 0.0], [-1.2246467991473532e-16, -1.0, 0.0], [0.0, 0.0, 1.0]]) -> 3D (BA4746B2DD58ACB3): Mesh @0.25mm
-                Multiplicity -> 3D (CA2E1D95370585EB): Collection @0.25mm
+              Transform __builtin::ops::rotate(matrix=Matrix3 [[-1.0, 1.2246467991473532e-16, 0.0], [-1.2246467991473532e-16, -1.0, 0.0], [0.0, 0.0, 1.0]]) -> 3D (EC9416C870144AB3): Mesh @0.25mm
+                Multiplicity -> 3D (FC7AEDAAC9C123EB): Collection @0.25mm
                   Workpiece(Operation) std::ops::rotate(x=0rad, y=0°, z=0°) -> 3D (BE385CDC53925DE): Mesh @0.25mm
                     - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
                     Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]) -> 3D (B221B8A8472EA4E2): Mesh @0.25mm

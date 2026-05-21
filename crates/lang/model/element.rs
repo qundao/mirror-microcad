@@ -7,7 +7,7 @@ use crate::{builtin::*, model::*, value::*};
 use strum::IntoStaticStr;
 
 /// An element defines the entity of a [`Model`].
-#[derive(Clone, IntoStaticStr, Debug, Default)]
+#[derive(Clone, IntoStaticStr, Debug, Default, derive_more::From)]
 pub enum Element {
     #[default]
     /// A group element is created by a body `{}`.

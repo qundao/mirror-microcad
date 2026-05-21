@@ -32,23 +32,23 @@
  164:   third_3x2.translate(y = 40mm);
 
 -- Model --
-  Group (root) -> 3D (96F718FB56F1F469): Collection @0.25mm
-    single_4x2: Workpiece(Part) <NO ID>::brick::Brick(base_height=9.6mm, columns=2, rows=4) -> 3D (3522FE972DD6CD2A): Manifold @0.25mm
+  Group (root) -> 3D (63DEA7D63C7BC877): Collection @0.25mm
+    single_4x2: Workpiece(Part) <NO ID>::brick::Brick(base_height=9.6mm, columns=2, rows=4) -> 3D (844AEA611770ABFC): Manifold @0.25mm
       - base_height = 9.6mm
       - columns = 2
       - rows = 4
-      Operation __builtin::ops::union() -> 3D (1B405B9A044BED6C): Manifold @0.25mm
-        Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) -> 3D (88BEF0F4FCE43F53): Collection @0.25mm
+      Operation __builtin::ops::union() -> 3D (6A684763EDE5CC3E): Manifold @0.25mm
+        Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) -> 3D (D7E6DCBEE67E1E25): Collection @0.25mm
           - direction = (x=0, y=0, z=1)
           - spacing = 0mm
-          Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) -> 3D (B303CE0438F5D742): Collection @0.25mm
-            Group -> 3D (A54FA9B491500295):  @0.25mm
-              base: Workpiece(Operation) std::ops::extrude(height=8.4mm, scale=(x=100%, y=100%), twist=0°) -> 3D (CC1571F96F69CC4):  @0.25mm
+          Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) -> 3D (22BB9CE228FB615): Collection @0.25mm
+            Group -> 3D (F477957E7AE9E167):  @0.25mm
+              base: Workpiece(Operation) std::ops::extrude(height=8.4mm, scale=(x=100%, y=100%), twist=0°) -> 3D (D359C1EBD9C11C78):  @0.25mm
                 - height = 8.4mm
                 - scale = (x=100%, y=100%)
                 - twist = 0°
-                Operation __builtin::ops::extrude(height=8.4mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (9AFA7C1399A734F5): Mesh @0.25mm
-                  Group -> 2D (C7479FDFAD88D599): Collection @0.25mm
+                Operation __builtin::ops::extrude(height=8.4mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (6192E6DFDC71B4AA): Mesh @0.25mm
+                  Group -> 2D (8DE00AABF053554E): Collection @0.25mm
                     Workpiece(Sketch) std::geo2d::Frame(height=31.8mm, thickness=1.2mm, width=15.8mm) -> 2D (43903784D22D222F): MultiPolygon @0.25mm
                       - height = 31.8mm
                       - thickness = 1.2mm
@@ -67,16 +67,16 @@
                             - x = -6.7mm
                             - y = -14.7mm
                             Primitive2D __builtin::geo2d::Rect(height=29.4mm, width=13.4mm, x=-6.7mm, y=-14.7mm) -> 2D (94F84880D0A3861A): Rect @0.25mm
-                    Group -> 2D (E33FB0591F1C84D8): Collection @0.25mm
-                      Workpiece(Operation) std::ops::distribute_grid(columns=1, height=23.85mm, rows=3, width=7.9mm) -> 2D (E33FB0591F1C84D8): Collection @0.25mm
+                    Group -> 2D (A9D81B2561E7048D): Collection @0.25mm
+                      Workpiece(Operation) std::ops::distribute_grid(columns=1, height=23.85mm, rows=3, width=7.9mm) -> 2D (A9D81B2561E7048D): Collection @0.25mm
                         - columns = 1
                         - height = 23.85mm
                         - rows = 3
                         - width = 7.9mm
                         - x = -3.95mm
                         - y = -11.925mm
-                        Operation __builtin::ops::distribute_grid(columns=1, height=23.85mm, rows=3, width=7.9mm, x=-3.95mm, y=-11.925mm) -> 2D (DE6074BDE095052B): Collection @0.25mm
-                          Multiplicity -> 2D (D46F3C6567447581):  @0.25mm
+                        Operation __builtin::ops::distribute_grid(columns=1, height=23.85mm, rows=3, width=7.9mm, x=-3.95mm, y=-11.925mm) -> 2D (A4F8DF8A275F84E0): Collection @0.25mm
+                          Multiplicity -> 2D (9B07A731AA0EF536):  @0.25mm
                             Workpiece(Sketch) std::geo2d::Ring(inner_diameter=4.8mm, outer_diameter=6.51mm) -> 2D (C23A4BD36A217D4E):  @0.25mm
                               - inner_radius = 2.4mm
                               - outer_radius = 3.255mm
@@ -133,20 +133,20 @@
                     - x = -7.9mm
                     - y = -15.9mm
                     Primitive2D __builtin::geo2d::Rect(height=31.8mm, width=15.8mm, x=-7.9mm, y=-15.9mm) -> 2D (B4CBCF5582C0712): Rect @0.25mm
-              knobs: Workpiece(Operation) std::ops::extrude(height=1.7mm, scale=(x=100%, y=100%), twist=0°) -> 3D (C8CFB8BC873EF365):  @0.25mm
+              knobs: Workpiece(Operation) std::ops::extrude(height=1.7mm, scale=(x=100%, y=100%), twist=0°) -> 3D (99F498FC181C772C):  @0.25mm
                 - height = 1.7mm
                 - scale = (x=100%, y=100%)
                 - twist = 0°
-                Operation __builtin::ops::extrude(height=1.7mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (6961B150F5F357EF): Mesh @0.25mm
-                  Workpiece(Operation) std::ops::distribute_grid(columns=2, height=31.8mm, rows=4, width=15.8mm) -> 2D (AE3E8F16669E0D5E): Collection @0.25mm
+                Operation __builtin::ops::extrude(height=1.7mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (3A8691908AD0DBB6): Mesh @0.25mm
+                  Workpiece(Operation) std::ops::distribute_grid(columns=2, height=31.8mm, rows=4, width=15.8mm) -> 2D (7F636F55FB7B9125): Collection @0.25mm
                     - columns = 2
                     - height = 31.8mm
                     - rows = 4
                     - width = 15.8mm
                     - x = -7.9mm
                     - y = -15.9mm
-                    Operation __builtin::ops::distribute_grid(columns=2, height=31.8mm, rows=4, width=15.8mm, x=-7.9mm, y=-15.9mm) -> 2D (1D6D70770ACE3C03): Collection @0.25mm
-                      Multiplicity -> 2D (4712AA4B1C94458F):  @0.25mm
+                    Operation __builtin::ops::distribute_grid(columns=2, height=31.8mm, rows=4, width=15.8mm, x=-7.9mm, y=-15.9mm) -> 2D (EE9250B69FABBFC9): Collection @0.25mm
+                      Multiplicity -> 2D (18378A8AB171C956):  @0.25mm
                         Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=4.8mm) -> 2D (99D6364AC639573B):  @0.25mm
                           - center = (x=0mm, y=0mm)
                           - radius = 2.4mm
@@ -187,27 +187,27 @@
                           - radius = 2.4mm
                           Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (74AF96CEED54ECBF): MultiPolygon @0.25mm
                             Primitive2D __builtin::geo2d::Circle(radius=2.4mm) -> 2D (847002DF3C92116): Polygon @0.25mm
-    Workpiece(Operation) std::ops::translate(x=0mm, y=-40mm, z=0mm) -> 3D (A259B5FFBF24F9E2): Mesh @0.25mm
+    Workpiece(Operation) std::ops::translate(x=0mm, y=-40mm, z=0mm) -> 3D (5491DA7346DDB3A0): Mesh @0.25mm
       - x = 0mm
       - y = -40mm
       - z = 0mm
-      Transform __builtin::ops::translate(x=0mm, y=-40mm, z=0mm) -> 3D (151E55BF5D9CAF58): Mesh @0.25mm
-        double_2x2: Workpiece(Part) <NO ID>::brick::Brick(base_height=19.2mm, columns=2, rows=2) -> 3D (6710628990DC3CBC): Manifold @0.25mm
+      Transform __builtin::ops::translate(x=0mm, y=-40mm, z=0mm) -> 3D (C7567A32E5556915): Mesh @0.25mm
+        double_2x2: Workpiece(Part) <NO ID>::brick::Brick(base_height=19.2mm, columns=2, rows=2) -> 3D (194886FD1894F67A): Manifold @0.25mm
           - base_height = 19.2mm
           - columns = 2
           - rows = 2
-          Operation __builtin::ops::union() -> 3D (8C4C45C348541921): Manifold @0.25mm
-            Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) -> 3D (B424EBF5810EB5C7): Collection @0.25mm
+          Operation __builtin::ops::union() -> 3D (3E846A36D00CD2DF): Manifold @0.25mm
+            Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) -> 3D (665D106908C76F85): Collection @0.25mm
               - direction = (x=0, y=0, z=1)
               - spacing = 0mm
-              Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) -> 3D (A83C291A5FA1235B): Collection @0.25mm
-                Group -> 3D (C8B82FE2F7653571):  @0.25mm
-                  base: Workpiece(Operation) std::ops::extrude(height=18mm, scale=(x=100%, y=100%), twist=0°) -> 3D (7AD0043A344029F8):  @0.25mm
+              Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) -> 3D (5A744D8DE759DD19): Collection @0.25mm
+                Group -> 3D (7AF054567F1DEF2F):  @0.25mm
+                  base: Workpiece(Operation) std::ops::extrude(height=18mm, scale=(x=100%, y=100%), twist=0°) -> 3D (4B25C641AF1CE22):  @0.25mm
                     - height = 18mm
                     - scale = (x=100%, y=100%)
                     - twist = 0°
-                    Operation __builtin::ops::extrude(height=18mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (C56518C6EA366D21): Mesh @0.25mm
-                      Group -> 2D (437CC941B1E060E0): Collection @0.25mm
+                    Operation __builtin::ops::extrude(height=18mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (4F4770F0CCE8114B): Mesh @0.25mm
+                      Group -> 2D (CD5F216B94920509): Collection @0.25mm
                         Workpiece(Sketch) std::geo2d::Frame(height=15.8mm, thickness=1.2mm, width=15.8mm) -> 2D (97A1F6CA028CC855): MultiPolygon @0.25mm
                           - height = 15.8mm
                           - thickness = 1.2mm
@@ -226,16 +226,16 @@
                                 - x = -6.7mm
                                 - y = -6.7mm
                                 Primitive2D __builtin::geo2d::Rect(height=13.4mm, width=13.4mm, x=-6.7mm, y=-6.7mm) -> 2D (549B21F370EEBA50): Rect @0.25mm
-                        Group -> 2D (6A87CC2FB3A6AB8D): Collection @0.25mm
-                          Workpiece(Operation) std::ops::distribute_grid(columns=1, height=7.9mm, rows=1, width=7.9mm) -> 2D (6A87CC2FB3A6AB8D): Collection @0.25mm
+                        Group -> 2D (F46A245996584FB6): Collection @0.25mm
+                          Workpiece(Operation) std::ops::distribute_grid(columns=1, height=7.9mm, rows=1, width=7.9mm) -> 2D (F46A245996584FB6): Collection @0.25mm
                             - columns = 1
                             - height = 7.9mm
                             - rows = 1
                             - width = 7.9mm
                             - x = -3.95mm
                             - y = -3.95mm
-                            Operation __builtin::ops::distribute_grid(columns=1, height=7.9mm, rows=1, width=7.9mm, x=-3.95mm, y=-3.95mm) -> 2D (6C6908165F894463): Collection @0.25mm
-                              Multiplicity -> 2D (5FE15451163669CB):  @0.25mm
+                            Operation __builtin::ops::distribute_grid(columns=1, height=7.9mm, rows=1, width=7.9mm, x=-3.95mm, y=-3.95mm) -> 2D (F64B6040423AE88C): Collection @0.25mm
+                              Multiplicity -> 2D (E9C3AC7AF8E80DF4):  @0.25mm
                                 Workpiece(Sketch) std::geo2d::Ring(inner_diameter=4.8mm, outer_diameter=6.51mm) -> 2D (C23A4BD36A217D4E):  @0.25mm
                                   - inner_radius = 2.4mm
                                   - outer_radius = 3.255mm
@@ -262,20 +262,20 @@
                         - x = -7.9mm
                         - y = -7.9mm
                         Primitive2D __builtin::geo2d::Rect(height=15.8mm, width=15.8mm, x=-7.9mm, y=-7.9mm) -> 2D (465BD0FC6A3B7FE5): Rect @0.25mm
-                  knobs: Workpiece(Operation) std::ops::extrude(height=1.7mm, scale=(x=100%, y=100%), twist=0°) -> 3D (849FB1ACDAD9C2DE):  @0.25mm
+                  knobs: Workpiece(Operation) std::ops::extrude(height=1.7mm, scale=(x=100%, y=100%), twist=0°) -> 3D (FCA0B7E62D77D8BC):  @0.25mm
                     - height = 1.7mm
                     - scale = (x=100%, y=100%)
                     - twist = 0°
-                    Operation __builtin::ops::extrude(height=1.7mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (4C9B5EFE4ABF2494): Mesh @0.25mm
-                      Workpiece(Operation) std::ops::distribute_grid(columns=2, height=15.8mm, rows=2, width=15.8mm) -> 2D (C9BD3030B8D130A3): Collection @0.25mm
+                    Operation __builtin::ops::extrude(height=1.7mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (C49C65379D5D3A72): Mesh @0.25mm
+                      Workpiece(Operation) std::ops::distribute_grid(columns=2, height=15.8mm, rows=2, width=15.8mm) -> 2D (41BE366A0F6F4682): Collection @0.25mm
                         - columns = 2
                         - height = 15.8mm
                         - rows = 2
                         - width = 15.8mm
                         - x = -7.9mm
                         - y = -7.9mm
-                        Operation __builtin::ops::distribute_grid(columns=2, height=15.8mm, rows=2, width=15.8mm, x=-7.9mm, y=-7.9mm) -> 2D (538AB3AEEF27B902): Collection @0.25mm
-                          Multiplicity -> 2D (AEDE0BEAFD7C39D):  @0.25mm
+                        Operation __builtin::ops::distribute_grid(columns=2, height=15.8mm, rows=2, width=15.8mm, x=-7.9mm, y=-7.9mm) -> 2D (CB8BB9E841C5CEE0): Collection @0.25mm
+                          Multiplicity -> 2D (82EEE6F80275D97B):  @0.25mm
                             Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=4.8mm) -> 2D (99D6364AC639573B):  @0.25mm
                               - center = (x=0mm, y=0mm)
                               - radius = 2.4mm
@@ -296,27 +296,27 @@
                               - radius = 2.4mm
                               Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (74AF96CEED54ECBF): MultiPolygon @0.25mm
                                 Primitive2D __builtin::geo2d::Circle(radius=2.4mm) -> 2D (847002DF3C92116): Polygon @0.25mm
-    Workpiece(Operation) std::ops::translate(x=0mm, y=40mm, z=0mm) -> 3D (FC702017DEB75F15): Mesh @0.25mm
+    Workpiece(Operation) std::ops::translate(x=0mm, y=40mm, z=0mm) -> 3D (56CE56997705484C): Mesh @0.25mm
       - x = 0mm
       - y = 40mm
       - z = 0mm
-      Transform __builtin::ops::translate(x=0mm, y=40mm, z=0mm) -> 3D (296AE68815F19C9B): Mesh @0.25mm
-        third_3x2: Workpiece(Part) <NO ID>::brick::Brick(base_height=3.2mm, columns=2, rows=3) -> 3D (3B9F7D56DF7D175A): Manifold @0.25mm
+      Transform __builtin::ops::translate(x=0mm, y=40mm, z=0mm) -> 3D (83C91D09AE3F85D1): Mesh @0.25mm
+        third_3x2: Workpiece(Part) <NO ID>::brick::Brick(base_height=3.2mm, columns=2, rows=3) -> 3D (95FDB3D877CB0090): Manifold @0.25mm
           - base_height = 3.2mm
           - columns = 2
           - rows = 3
-          Operation __builtin::ops::union() -> 3D (D918E8D7D2958B18): Manifold @0.25mm
-            Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) -> 3D (6EFCEFA6AA0DFFA3): Collection @0.25mm
+          Operation __builtin::ops::union() -> 3D (33771F596AE3744F): Manifold @0.25mm
+            Workpiece(Operation) std::ops::align(direction=(x=0, y=0, z=1), spacing=0mm) -> 3D (C95B2628425BE8D9): Collection @0.25mm
               - direction = (x=0, y=0, z=1)
               - spacing = 0mm
-              Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) -> 3D (74CF6536D4917C43): Collection @0.25mm
-                Group -> 3D (97B202508D037167):  @0.25mm
-                  base: Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=100%, y=100%), twist=0°) -> 3D (3F6FC095761F8168):  @0.25mm
+              Operation __builtin::ops::align(spacing=0mm, x=0, y=0, z=1) -> 3D (CF2D9BB86CDF6579): Collection @0.25mm
+                Group -> 3D (F21038D225515A9D):  @0.25mm
+                  base: Workpiece(Operation) std::ops::extrude(height=2mm, scale=(x=100%, y=100%), twist=0°) -> 3D (E946F937687F5696):  @0.25mm
                     - height = 2mm
                     - scale = (x=100%, y=100%)
                     - twist = 0°
-                    Operation __builtin::ops::extrude(height=2mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (ACA499F09AAF85C9): Mesh @0.25mm
-                      Group -> 2D (9CBBD14016663E45): Collection @0.25mm
+                    Operation __builtin::ops::extrude(height=2mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (567BD2928D0F5AF8): Mesh @0.25mm
+                      Group -> 2D (469309E208C61374): Collection @0.25mm
                         Workpiece(Sketch) std::geo2d::Frame(height=23.8mm, thickness=1.2mm, width=15.8mm) -> 2D (7CD6363954C30F3D): MultiPolygon @0.25mm
                           - height = 23.8mm
                           - thickness = 1.2mm
@@ -335,16 +335,16 @@
                                 - x = -6.7mm
                                 - y = -10.7mm
                                 Primitive2D __builtin::geo2d::Rect(height=21.4mm, width=13.4mm, x=-6.7mm, y=-10.7mm) -> 2D (58ACC2ADC3D1CF19): Rect @0.25mm
-                        Group -> 2D (A48FEF6B20D07903): Collection @0.25mm
-                          Workpiece(Operation) std::ops::distribute_grid(columns=1, height=15.86666666666667mm, rows=2, width=7.9mm) -> 2D (A48FEF6B20D07903): Collection @0.25mm
+                        Group -> 2D (4E67280D17304E32): Collection @0.25mm
+                          Workpiece(Operation) std::ops::distribute_grid(columns=1, height=15.86666666666667mm, rows=2, width=7.9mm) -> 2D (4E67280D17304E32): Collection @0.25mm
                             - columns = 1
                             - height = 15.86666666666667mm
                             - rows = 2
                             - width = 7.9mm
                             - x = -3.95mm
                             - y = -7.93333333333333mm
-                            Operation __builtin::ops::distribute_grid(columns=1, height=15.86666666666667mm, rows=2, width=7.9mm, x=-3.95mm, y=-7.93333333333333mm) -> 2D (C197FF65FCD9DE4C): Collection @0.25mm
-                              Multiplicity -> 2D (F9D36B8F4ECF44C9):  @0.25mm
+                            Operation __builtin::ops::distribute_grid(columns=1, height=15.86666666666667mm, rows=2, width=7.9mm, x=-3.95mm, y=-7.93333333333333mm) -> 2D (6B6F3807F339B37B): Collection @0.25mm
+                              Multiplicity -> 2D (A3AAA431412F19F8):  @0.25mm
                                 Workpiece(Sketch) std::geo2d::Ring(inner_diameter=4.8mm, outer_diameter=6.51mm) -> 2D (C23A4BD36A217D4E):  @0.25mm
                                   - inner_radius = 2.4mm
                                   - outer_radius = 3.255mm
@@ -386,20 +386,20 @@
                         - x = -7.9mm
                         - y = -11.9mm
                         Primitive2D __builtin::geo2d::Rect(height=23.8mm, width=15.8mm, x=-7.9mm, y=-11.9mm) -> 2D (14C18B3F99998BE8): Rect @0.25mm
-                  knobs: Workpiece(Operation) std::ops::extrude(height=1.7mm, scale=(x=100%, y=100%), twist=0°) -> 3D (CE8D8F0D515587C7):  @0.25mm
+                  knobs: Workpiece(Operation) std::ops::extrude(height=1.7mm, scale=(x=100%, y=100%), twist=0°) -> 3D (7864C7AF47B55CF6):  @0.25mm
                     - height = 1.7mm
                     - scale = (x=100%, y=100%)
                     - twist = 0°
-                    Operation __builtin::ops::extrude(height=1.7mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (3BFBAC92421EE01D): Mesh @0.25mm
-                      Workpiece(Operation) std::ops::distribute_grid(columns=2, height=23.8mm, rows=3, width=15.8mm) -> 2D (50EDE680318B6613): Collection @0.25mm
+                    Operation __builtin::ops::extrude(height=1.7mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (E5D2E534347EB54B): Mesh @0.25mm
+                      Workpiece(Operation) std::ops::distribute_grid(columns=2, height=23.8mm, rows=3, width=15.8mm) -> 2D (FAC51F2227EB3B41): Collection @0.25mm
                         - columns = 2
                         - height = 23.8mm
                         - rows = 3
                         - width = 15.8mm
                         - x = -7.9mm
                         - y = -11.9mm
-                        Operation __builtin::ops::distribute_grid(columns=2, height=23.8mm, rows=3, width=15.8mm, x=-7.9mm, y=-11.9mm) -> 2D (53497B67C7E2E9D0): Collection @0.25mm
-                          Multiplicity -> 2D (8C3AA7F843031AD):  @0.25mm
+                        Operation __builtin::ops::distribute_grid(columns=2, height=23.8mm, rows=3, width=15.8mm, x=-7.9mm, y=-11.9mm) -> 2D (FD20B409BA42BEFE): Collection @0.25mm
+                          Multiplicity -> 2D (B29AE3217A9006DB):  @0.25mm
                             Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=4.8mm) -> 2D (99D6364AC639573B):  @0.25mm
                               - center = (x=0mm, y=0mm)
                               - radius = 2.4mm
