@@ -3,6 +3,8 @@
 
 //! A single argument
 
+use std::fmt::Display;
+
 use crate::lower::ir;
 
 use microcad_lang_base::{Identifier, OrdMapValue, SrcRef};
@@ -19,13 +21,16 @@ pub struct Argument<EXPR = ir::Expression> {
     pub src_ref: SrcRef,
 }
 
-impl OrdMapValue<Identifier> for Argument {
+impl<EXPR> OrdMapValue<Identifier> for Argument<EXPR> {
     fn key(&self) -> Option<Identifier> {
         self.id.clone()
     }
 }
 
-impl std::fmt::Display for Argument {
+impl<EXPR> std::fmt::Display for Argument<EXPR>
+where
+    EXPR: Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self.id {
             Some(ref id) => write!(f, "{id} = {}", self.expression),
@@ -54,7 +59,7 @@ fn test_argument_debug() {
         src_ref: SrcRef::none(),
     };
 
-    let mut args = ir::ArgumentList::default();
+    let mut args = ir::ArgumentList::<ir::Expression>::default();
 
     args.try_push(arg1).expect("test error");
     args.try_push(arg2).expect("test error");

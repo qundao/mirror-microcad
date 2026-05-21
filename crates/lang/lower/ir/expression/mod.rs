@@ -19,7 +19,7 @@ use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// List of expressions.
-pub type ListExpression = Vec<Expression>;
+pub type ListExpression<EXPR = ir::Expression> = Vec<EXPR>;
 
 /// If statement.
 #[derive(Clone, Debug, SrcReferrer)]
