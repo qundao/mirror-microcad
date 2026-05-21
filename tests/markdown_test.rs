@@ -104,12 +104,26 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                 } else {
                     TestResult::OkWarn
                 }
+            } else if diag.has_errors() {
+                writeln!(log, "-- Errors --")?;
+                writeln!(log, "{}", source.diagnostics_string(&diag_render_options))?;
+
+                TestResult::Fail
             } else {
                 TestResult::OkFail
             }
         }
         // test is expected to succeed?
-        TestMode::Ok => TestResult::Ok,
+        TestMode::Ok => {
+            if diag.has_errors() {
+                writeln!(log, "-- Errors --")?;
+                writeln!(log, "{}", source.diagnostics_string(&diag_render_options))?;
+
+                TestResult::Fail
+            } else {
+                TestResult::Ok
+            }
+        }
         TestMode::Ignore => {
             return Ok(());
         }
