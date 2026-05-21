@@ -3,7 +3,7 @@
 
 //! µcad language server backend
 
-use std::{path::PathBuf, sync::OnceLock};
+use std::sync::OnceLock;
 
 use crate::processor::{
     self as mu_processor,
@@ -12,7 +12,7 @@ use crate::processor::{
 
 use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
 use tower_lsp::{
-    Client, LanguageServer, LspService, Server, async_trait,
+    Client, LanguageServer, async_trait,
     jsonrpc::Result,
     lsp_types::{
         DiagnosticOptions, DiagnosticServerCapabilities, DidChangeTextDocumentParams,
@@ -27,27 +27,27 @@ use tower_lsp::{
     },
 };
 
+/// LSP backend
 #[derive(Debug)]
 pub struct Backend {
     client: Client,
     processor: mu_processor::ProcessorInterface,
     viewer: OnceLock<ViewerProcessInterface>,
-    use_viewer: bool,
-    search_paths: Vec<PathBuf>,
+    config: crate::Config,
 }
 
 impl Backend {
+    /// New µcad LSP backend
     pub fn new(
         client: Client,
         processor: mu_processor::ProcessorInterface,
-        search_paths: Vec<PathBuf>,
+        config: crate::Config,
     ) -> Self {
         Backend {
             client,
             processor,
             viewer: OnceLock::new(),
-            use_viewer: false,
-            search_paths,
+            config,
         }
     }
 
@@ -57,9 +57,9 @@ impl Backend {
         }
     }
     fn send_viewer(&self, req: ViewerRequest) -> miette::Result<()> {
-        if self.use_viewer {
+        if self.config.use_viewer {
             self.viewer
-                .get_or_init(|| ViewerProcessInterface::run(&self.search_paths, true))
+                .get_or_init(|| ViewerProcessInterface::run(&self.config.driver.search_paths, true))
                 .send_request(req)
                 .inspect_err(|err| log::error!("Cannot send request to viewer: {err}"))
         } else {
@@ -67,6 +67,7 @@ impl Backend {
         }
     }
 
+    /// Handle active file changed.
     pub async fn on_active_file_changed(&self, params: serde_json::Value) {
         log::info!("on_active_file_changed: {params:?}");
         if let Ok(Some(uri)) = read_uri("uri", &params) {

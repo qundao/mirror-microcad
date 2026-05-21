@@ -38,10 +38,6 @@ googletest = { git = "https://github.com/hovinen/googletest-rust.git", branch = 
 microcad-driver = { workspace = true }
 
 [[bin]]
-name = "microcad-lsp-client"
-path = "src/client.rs"
-
-[[bin]]
 name = "microcad-lsp"
 path = "src/server.rs"
 
