@@ -7,8 +7,8 @@ use microcad_core::RenderResolution;
 use miette::IntoDiagnostic;
 use serde::Deserialize;
 
-#[derive(Deserialize)]
-pub struct Config {
+#[derive(Deserialize, Debug)]
+pub struct DriverConfig {
     pub no_std: bool,
 
     pub search_paths: Vec<std::path::PathBuf>,
@@ -26,7 +26,7 @@ pub struct Config {
     pub diagnostics: DiagnosticsConfig,
 }
 
-impl Default for Config {
+impl Default for DriverConfig {
     fn default() -> Self {
         Self {
             no_std: false,
@@ -39,14 +39,14 @@ impl Default for Config {
     }
 }
 
-impl Config {
+impl DriverConfig {
     /// Load config from TOML file.
     pub fn load(filename: &std::path::Path) -> miette::Result<Self> {
         let content = std::fs::read_to_string(filename).into_diagnostic()?;
-        let mut config: Config = toml::from_str(&content).into_diagnostic()?;
+        let mut config: DriverConfig = toml::from_str(&content).into_diagnostic()?;
 
         if !microcad_lang_base::MICROCAD_EXTENSIONS.contains(&config.default_extension.as_str()) {
-            let fallback = Config::default().default_extension;
+            let fallback = DriverConfig::default().default_extension;
             log::warn!(
                 "`{}` is a valid µcad extension, switching to `{fallback}`.",
                 &config.default_extension
@@ -68,7 +68,7 @@ impl Config {
 }
 
 /// Export settings.
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Clone, Debug)]
 pub struct ExportConfig {
     /// Default sketch exporter.
     pub sketch: String,
@@ -91,8 +91,8 @@ impl ExportConfig {
     }
 }
 
-#[derive(Deserialize, Clone, Default)]
-pub struct FormatConfig {}
+#[derive(Deserialize, Clone, Default, Debug)]
+pub struct FormatConfig;
 
 impl From<&FormatConfig> for microcad_lang_format::FormatConfig {
     fn from(_: &FormatConfig) -> Self {
@@ -100,8 +100,8 @@ impl From<&FormatConfig> for microcad_lang_format::FormatConfig {
     }
 }
 
-#[derive(Deserialize, Clone, Default)]
-pub struct DiagnosticsConfig {}
+#[derive(Deserialize, Clone, Default, Debug)]
+pub struct DiagnosticsConfig;
 
 impl From<&DiagnosticsConfig> for microcad_lang_base::DiagRenderOptions {
     fn from(_: &DiagnosticsConfig) -> Self {

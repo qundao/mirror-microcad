@@ -11,11 +11,11 @@ pub struct Session {
 
     pub render_cache: Option<RcMut<RenderCache>>,
 
-    pub config: Config,
+    pub config: DriverConfig,
 }
 
 impl Session {
-    pub fn new(config: Config) -> Self {
+    pub fn new(config: DriverConfig) -> Self {
         Self {
             documents: HashMap::default(),
             render_cache: Some(RcMut::new(RenderCache::new())),

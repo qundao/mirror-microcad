@@ -24,7 +24,7 @@ pub fn report(s: &str) -> Report {
     miette::miette!("{s}")
 }
 
-pub use config::Config;
+pub use config::DriverConfig;
 
 /// Parse a value from a string containing a literal.
 pub fn value_from_str(s: &str) -> Result<Value> {

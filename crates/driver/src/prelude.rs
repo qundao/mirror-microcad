@@ -58,7 +58,7 @@ pub use microcad_lang::ty::Type;
 
 pub use microcad_lang::symbol::{Symbol, SymbolDef};
 
-pub use crate::config::Config;
+pub use crate::config::DriverConfig;
 pub use crate::document::Document;
 pub use crate::session::Session;
 pub use crate::watcher::Watcher;
