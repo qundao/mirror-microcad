@@ -19,6 +19,12 @@ impl Lower for std::rc::Rc<ir::WorkbenchDefinition> {
     type AstNode = ast::WorkbenchDefinition;
 
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+        if let Some(tail) = node.body.statements.tail.as_ref() {
+            context.add_diagnostic(LowerError::ImplicitWorkbenchReturn {
+                src_ref: context.src_ref(&tail.span),
+            });
+        }
+
         Ok(std::rc::Rc::new(ir::WorkbenchDefinition {
             keyword_ref: context.src_ref(&node.keyword_span),
             doc: ir::DocBlock::lower(&node.doc, context)?,
