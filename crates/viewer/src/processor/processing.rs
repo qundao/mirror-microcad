@@ -166,6 +166,7 @@ impl Processor {
         let model_ = model.borrow();
         // We only consider output geometries of workpieces and ignore the rest.
         let recurse = match model_.element() {
+            Value(_) => true, // Values might produce geometries at some point (to draw Vec2, Vec3 etc. in the scene)
             InputPlaceholder | Multiplicity | Group => true,
             Workpiece(_) | BuiltinWorkpiece(_) => {
                 let uuid = crate::processor::registry::generate_model_geometry_output_uuid(model);
