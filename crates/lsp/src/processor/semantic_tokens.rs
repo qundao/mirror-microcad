@@ -634,7 +634,7 @@ impl TokenContext {
         Ok(tokens)
     }
 
-    fn parse_if_stmt(&mut self, if_stmt: &ir::IfStatement) -> miette::Result<Vec<SemanticToken>> {
+    fn parse_if_stmt(&mut self, if_stmt: &ir::If) -> miette::Result<Vec<SemanticToken>> {
         let mut tokens = vec![];
         tokens.push(self.output_semantic_token(
             if_stmt.if_ref.clone(),
