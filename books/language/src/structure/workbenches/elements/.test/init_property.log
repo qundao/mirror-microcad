@@ -21,7 +21,7 @@
   25:       }
   26:   
   27:       // Now radius and thickness can be used
-  28:       Circle(radius = radius + thickness) - Circle(radius)
+  28:       Circle(radius = radius + thickness) - Circle(radius);
   29:   }
   30:   // call with building plan
   31:   Wheel(radius = 1.5cm, thickness = 2mm);

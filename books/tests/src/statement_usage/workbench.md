@@ -68,7 +68,7 @@ sketch K() {
 
 ```µcad,workbench_marker#fail
 sketch K() {
-  @input // error: Input marker is not allowed here.
+  @input; // error: Input marker is not allowed here.
 } K();
 ```
 

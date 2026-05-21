@@ -15,7 +15,7 @@
   72:           // thickness has been set automatically by the default in the building plan
   73:       }
   74:   
-  75:       Circle(radius = radius + thickness) - Circle(radius)
+  75:       Circle(radius = radius + thickness) - Circle(radius);
   76:   }
   77:   
   78:   Wheel(diameter = 1cm);

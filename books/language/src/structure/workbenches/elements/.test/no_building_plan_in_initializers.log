@@ -15,7 +15,7 @@
   96:           radius = diameter / 2; // instead you need to set it
   97:       }
   98:   
-  99:       Circle(radius = radius + thickness) - Circle(radius)
+  99:       Circle(radius = radius + thickness) - Circle(radius);
  100:   }
  101:   Wheel(diameter = 1cm);
 

@@ -25,7 +25,7 @@ sketch Wheel(radius: Length, thickness = 5mm) {
     }
 
     // Now radius and thickness can be used
-    Circle(radius = radius + thickness) - Circle(radius)
+    Circle(radius = radius + thickness) - Circle(radius);
 }
 // call with building plan
 Wheel(radius = 1.5cm, thickness = 2mm);
@@ -51,7 +51,7 @@ sketch Wheel(radius: Length, thickness = 5mm) {
 
     init(thickness: Length) {} // error: misses to set radius from building plan
 
-    Circle(radius = radius + thickness) - Circle(radius) // error: radius is missing
+    Circle(radius = radius + thickness) - Circle(radius); // error: radius is missing
 }
 Wheel(thickness = 1cm);
 ```
@@ -72,7 +72,7 @@ sketch Wheel(radius: Length, thickness = 5mm) {
         // thickness has been set automatically by the default in the building plan
     }
 
-    Circle(radius = radius + thickness) - Circle(radius)
+    Circle(radius = radius + thickness) - Circle(radius);
 }
 
 Wheel(diameter = 1cm);
@@ -96,7 +96,7 @@ sketch Wheel(radius: Length, thickness = 5mm) {
         radius = diameter / 2; // instead you need to set it
     }
 
-    Circle(radius = radius + thickness) - Circle(radius)
+    Circle(radius = radius + thickness) - Circle(radius);
 }
 Wheel(diameter = 1cm);
 ```
@@ -118,7 +118,7 @@ sketch Wheel(radius: Length, thickness: Length) {
         radius = radius * 2; // error: it cannot be set a second time
         thickness = 5mm;
     }
-    Circle(radius = radius + thickness) - Circle(radius)
+    Circle(radius = radius + thickness) - Circle(radius);
 }
 // Use initializer
 Wheel(radius = 1cm);
@@ -137,7 +137,7 @@ sketch Wheel(radius: Length, thickness: Length) {
         thickness = outer - (radius * 1mm);
     }
 
-    Circle(radius = radius + thickness) - Circle(radius)
+    Circle(radius = radius + thickness) - Circle(radius);
 }
 // Use initializer
 Wheel(radius = 1.0, outer = 1cm);
@@ -161,7 +161,7 @@ sketch Wheel(radius: Length, thickness = 5mm) {
         radius = height / 2;
     }
 
-    Circle(radius = radius + thickness) - Circle(radius)
+    Circle(radius = radius + thickness) - Circle(radius);
 }
 Wheel(radius = 1cm);
 ```
