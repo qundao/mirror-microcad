@@ -14,8 +14,6 @@ mod value_access;
 mod value_error;
 mod value_list;
 
-use std::hash::Hasher;
-
 pub use array::*;
 use derive_more::From;
 pub use matrix::*;
@@ -25,9 +23,10 @@ pub use value_access::*;
 pub use value_error::*;
 pub use value_list::*;
 
-use crate::{lower::ir, model::*, ty::*};
+use crate::{lower::ir, model, ty::*};
 use microcad_core::*;
 use microcad_lang_base::SrcRef;
+use std::hash::Hasher;
 
 pub(crate) type ValueResult<Type = Value> = std::result::Result<Type, ValueError>;
 
@@ -52,7 +51,7 @@ pub enum Value {
     /// A matrix.
     Matrix(Box<Matrix>),
     /// A model in the model tree.
-    Model(Model),
+    Model(model::Model),
     /// Return value
     Return(Box<Value>),
 }
@@ -239,6 +238,18 @@ impl std::ops::Add for Value {
     }
 }
 
+/// Hack to map the errors from model operators.
+///
+/// This function will be removed once `Value::Model` is removed eventually.
+fn map_model_result(result: crate::model::ops::ModelResult) -> ValueResult {
+    result
+        .map_err(|err| match *err {
+            crate::eval::EvalError::ValueError(value_error) => value_error,
+            _ => unreachable!(),
+        })
+        .map(|model| Value::from(model))
+}
+
 /// Rules for operator `-`.
 impl std::ops::Sub for Value {
     type Output = ValueResult;
@@ -259,9 +270,7 @@ impl std::ops::Sub for Value {
             (Value::Tuple(lhs), Value::Tuple(rhs)) => Ok((*lhs - *rhs)?.into()),
 
             // Boolean difference operator for models
-            (Value::Model(lhs), Value::Model(rhs)) => Ok(Value::Model(
-                lhs.boolean_op(microcad_core::BooleanOp::Subtract, rhs),
-            )),
+            (Value::Model(lhs), Value::Model(rhs)) => map_model_result(lhs - rhs),
             (lhs, rhs) => Err(ValueError::InvalidOperator(format!("{lhs} - {rhs}"))),
         }
     }
@@ -273,9 +282,7 @@ impl std::ops::Mul for Value {
 
     fn mul(self, rhs: Self) -> Self::Output {
         match (self, rhs) {
-            (Value::Integer(lhs), Value::Model(rhs)) => Ok(Value::Model(
-                Models::from(rhs.multiply(lhs)).to_multiplicity(SrcRef::none()),
-            )),
+            (Value::Integer(lhs), Value::Model(rhs)) => map_model_result(lhs * rhs),
             // Multiply two integers
             (Value::Integer(lhs), Value::Integer(rhs)) => Ok(Value::Integer(lhs * rhs)),
             // Multiply an integer and a scalar, result is scalar
@@ -343,9 +350,7 @@ impl std::ops::BitOr for Value {
 
     fn bitor(self, rhs: Self) -> Self::Output {
         match (self, rhs) {
-            (Value::Model(lhs), Value::Model(rhs)) => Ok(Value::Model(
-                lhs.boolean_op(microcad_core::BooleanOp::Union, rhs),
-            )),
+            (Value::Model(lhs), Value::Model(rhs)) => map_model_result(lhs | rhs),
             (Value::Bool(lhs), Value::Bool(rhs)) => Ok(Value::Bool(lhs | rhs)),
             (lhs, rhs) => Err(ValueError::InvalidOperator(format!("{lhs} | {rhs}"))),
         }
@@ -358,9 +363,7 @@ impl std::ops::BitAnd for Value {
 
     fn bitand(self, rhs: Self) -> Self::Output {
         match (self, rhs) {
-            (Value::Model(lhs), Value::Model(rhs)) => {
-                Ok(Value::Model(lhs.boolean_op(BooleanOp::Intersect, rhs)))
-            }
+            (Value::Model(lhs), Value::Model(rhs)) => map_model_result(lhs & rhs),
             (Value::Bool(lhs), Value::Bool(rhs)) => Ok(Value::Bool(lhs & rhs)),
             (lhs, rhs) => Err(ValueError::InvalidOperator(format!("{lhs} & {rhs}"))),
         }
@@ -587,7 +590,7 @@ impl FromIterator<Value> for Value {
     }
 }
 
-impl AttributesAccess for Value {
+impl model::AttributesAccess for Value {
     fn get_attributes_by_id(&self, id: &ir::Identifier) -> Vec<crate::model::Attribute> {
         match self {
             Value::Model(model) => model.get_attributes_by_id(id),

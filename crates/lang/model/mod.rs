@@ -11,6 +11,7 @@ mod inner;
 pub mod iter;
 pub mod models;
 pub mod operation;
+pub mod ops;
 pub mod output_type;
 pub mod properties;
 pub mod workpiece;
@@ -313,5 +314,11 @@ impl ComputedHash for Model {
     fn computed_hash(&self) -> HashId {
         let self_ = self.borrow();
         self_.output().computed_hash()
+    }
+}
+
+impl From<Value> for Model {
+    fn from(value: Value) -> Self {
+        Model::new(RcMut::new(ModelInner::new(value.into(), SrcRef::none())))
     }
 }
