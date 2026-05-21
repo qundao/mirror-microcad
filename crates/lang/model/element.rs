@@ -13,6 +13,9 @@ pub enum Element {
     /// A group element is created by a body `{}`.
     Group,
 
+    /// An element containing a value.
+    Value(Value),
+
     /// A workpiece that holds properties.
     ///
     /// A workpiece is created by workbenches.
@@ -51,9 +54,10 @@ impl Element {
                     builtin_workpiece.output_type
                 }
             },
-            Element::Group | Element::Multiplicity | Element::InputPlaceholder => {
-                OutputType::NotDetermined
-            }
+            Element::Group
+            | Element::Multiplicity
+            | Element::InputPlaceholder
+            | Element::Value(_) => OutputType::NotDetermined,
         }
     }
 }
@@ -81,6 +85,7 @@ impl std::hash::Hash for Element {
             Element::BuiltinWorkpiece(builtin_workpiece) => {
                 builtin_workpiece.computed_hash().hash(state)
             }
+            Element::Value(value) => value.computed_hash().hash(state),
         }
     }
 }

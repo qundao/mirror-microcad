@@ -14,6 +14,8 @@ mod value_access;
 mod value_error;
 mod value_list;
 
+use std::hash::Hasher;
+
 pub use array::*;
 use derive_more::From;
 pub use matrix::*;
@@ -396,6 +398,15 @@ impl std::hash::Hash for Value {
             Value::Model(model) => model.hash(state),
             Value::Return(value) => value.hash(state),
         }
+    }
+}
+
+impl microcad_lang_base::ComputedHash for Value {
+    fn computed_hash(&self) -> hash::HashId {
+        use std::hash::Hash;
+        let mut hasher = microcad_lang_base::Hasher::default();
+        self.hash(&mut hasher);
+        hasher.finish()
     }
 }
 

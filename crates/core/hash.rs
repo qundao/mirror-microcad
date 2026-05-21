@@ -3,8 +3,6 @@
 
 //! Render hash functionality.
 
-use std::hash::Hasher;
-
 use derive_more::Deref;
 
 /// Render hash type.
@@ -12,6 +10,7 @@ pub type HashId = u64;
 
 pub use rustc_hash::FxHashMap as HashMap;
 pub use rustc_hash::FxHashSet as HashSet;
+pub use rustc_hash::FxHasher as Hasher;
 
 /// Trait to implement for typed that contain a pre-computed hash value.
 pub trait ComputedHash {
@@ -30,11 +29,11 @@ pub struct Hashed<T: std::hash::Hash> {
 impl<T: std::hash::Hash> Hashed<T> {
     /// Create a new wrapper with hashed.
     pub fn new(inner: T) -> Self {
-        let mut hasher = rustc_hash::FxHasher::default();
+        let mut hasher = Hasher::default();
         inner.hash(&mut hasher);
         Self {
             inner,
-            hash: hasher.finish(),
+            hash: std::hash::Hasher::finish(&hasher),
         }
     }
 
