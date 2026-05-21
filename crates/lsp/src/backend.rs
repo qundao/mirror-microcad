@@ -7,7 +7,10 @@ use std::{path::PathBuf, sync::OnceLock};
 
 use microcad_driver::prelude as mu;
 
-use crate::processor as mu_processor;
+use crate::processor::{
+    self as mu_processor,
+    semantic_tokens::{LEGEND_MODIFIERS, LEGEND_TYPES},
+};
 
 use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
 use tower_lsp::{
@@ -27,7 +30,7 @@ use tower_lsp::{
 };
 
 #[derive(Debug)]
-struct Backend {
+pub struct Backend {
     client: Client,
     processor: mu_processor::ProcessorInterface,
     viewer: OnceLock<ViewerProcessInterface>,
@@ -66,7 +69,7 @@ impl Backend {
         }
     }
 
-    async fn on_active_file_changed(&self, params: serde_json::Value) {
+    pub async fn on_active_file_changed(&self, params: serde_json::Value) {
         log::info!("on_active_file_changed: {params:?}");
         if let Ok(Some(uri)) = read_uri("uri", &params) {
             self.send_lsp(mu_processor::ProcessorRequest::UpdateDocument(uri.clone()));
@@ -94,6 +97,16 @@ fn read_uri(value: &str, uri_obj: &serde_json::Value) -> std::result::Result<Opt
     }
 
     Ok(None)
+}
+
+fn uri_obj_to_lsp_url(uri_obj: &serde_json::Value) -> std::result::Result<Url, String> {
+    if let Some(uri) = read_uri("external", uri_obj)? {
+        return Ok(uri);
+    }
+    if let Some(fs_path) = read_uri("fsPath", uri_obj)? {
+        return Ok(fs_path);
+    }
+    Err("Neither external nor fsPath found in uri object".to_string())
 }
 
 #[async_trait]
@@ -144,14 +157,17 @@ impl LanguageServer for Backend {
     async fn did_change(&self, params: DidChangeTextDocumentParams) {
         let uri = params.text_document.uri;
         if let Some(last) = params.content_changes.last() {
-            self.send_lsp(ProcessorRequest::UpdateDocumentCode(uri, last.text.clone()));
+            self.send_lsp(mu_processor::ProcessorRequest::UpdateDocumentCode(
+                uri,
+                last.text.clone(),
+            ));
         }
     }
 
     async fn did_open(&self, params: DidOpenTextDocumentParams) {
         let uri = params.text_document.uri;
 
-        self.send_lsp(ProcessorRequest::AddDocument(uri.clone()));
+        self.send_lsp(mu_processor::ProcessorRequest::AddDocument(uri.clone()));
     }
 
     async fn did_save(&self, params: DidSaveTextDocumentParams) {
@@ -161,25 +177,25 @@ impl LanguageServer for Backend {
             .log_message(MessageType::INFO, format!("did save: {uri:?}!"))
             .await;
         */
-        self.send_lsp(ProcessorRequest::UpdateDocument(uri.clone()));
+        self.send_lsp(mu_processor::ProcessorRequest::UpdateDocument(uri.clone()));
         //let _ = self.send_viewer(ViewerRequest::ShowSourceCodeFromFile { path });
     }
 
     async fn did_close(&self, params: DidCloseTextDocumentParams) {
         let uri = params.text_document.uri;
-        self.send_lsp(ProcessorRequest::RemoveDocument(uri))
+        self.send_lsp(mu_processor::ProcessorRequest::RemoveDocument(uri))
     }
 
     async fn diagnostic(
         &self,
         params: DocumentDiagnosticParams,
     ) -> Result<DocumentDiagnosticReportResult> {
-        self.send_lsp(ProcessorRequest::GetDocumentDiagnostics(
+        self.send_lsp(mu_processor::ProcessorRequest::GetDocumentDiagnostics(
             params.text_document.uri,
         ));
 
         // Wait for response
-        if let Ok(ProcessorResponse::DocumentDiagnostics(_url, diag)) =
+        if let Ok(mu_processor::ProcessorResponse::DocumentDiagnostics(_url, diag)) =
             self.processor.recv_response()
         {
             log::info!("Diagnostics received!");
@@ -202,12 +218,14 @@ impl LanguageServer for Backend {
         &self,
         params: SemanticTokensParams,
     ) -> Result<Option<SemanticTokensResult>> {
-        self.send_lsp(ProcessorRequest::GetFullSemanticTokens(
+        self.send_lsp(mu_processor::ProcessorRequest::GetFullSemanticTokens(
             params.text_document.uri,
         ));
 
         // Wait for response
-        if let Ok(ProcessorResponse::SemanticTokens(url, result)) = self.processor.recv_response() {
+        if let Ok(mu_processor::ProcessorResponse::SemanticTokens(url, result)) =
+            self.processor.recv_response()
+        {
             log::info!("Semantic tokens received! for {url}");
             Ok(Some(result))
         } else {
@@ -284,10 +302,10 @@ impl LanguageServer for Backend {
 
     async fn formatting(&self, params: DocumentFormattingParams) -> Result<Option<Vec<TextEdit>>> {
         let url = &params.text_document.uri;
-        self.send_lsp(ProcessorRequest::FormatDocument(url.clone()));
+        self.send_lsp(mu_processor::ProcessorRequest::FormatDocument(url.clone()));
 
         // Wait for response
-        if let Ok(ProcessorResponse::UpdatedDocumentCode { url, code }) =
+        if let Ok(mu_processor::ProcessorResponse::UpdatedDocumentCode { url, code }) =
             self.processor.recv_response()
         {
             log::error!("Formatted code received {url}");

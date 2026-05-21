@@ -3,33 +3,12 @@
 
 //! µcad language server.
 
-use std::{path::PathBuf, sync::OnceLock};
-
 use microcad_driver::prelude as mu;
 
-use microcad_viewer_ipc::{ViewerProcessInterface, ViewerRequest};
-use tower_lsp::{
-    Client, LanguageServer, LspService, Server, async_trait,
-    jsonrpc::Result,
-    lsp_types::{
-        DiagnosticOptions, DiagnosticServerCapabilities, DidChangeTextDocumentParams,
-        DidCloseTextDocumentParams, DidOpenTextDocumentParams, DidSaveTextDocumentParams,
-        DocumentDiagnosticParams, DocumentDiagnosticReport, DocumentDiagnosticReportPartialResult,
-        DocumentDiagnosticReportResult, DocumentFormattingParams, ExecuteCommandParams,
-        InitializeParams, InitializeResult, InitializedParams, MessageType, OneOf, Position, Range,
-        RelatedFullDocumentDiagnosticReport, SemanticTokensFullOptions, SemanticTokensLegend,
-        SemanticTokensOptions, SemanticTokensParams, SemanticTokensPartialResult,
-        SemanticTokensResult, SemanticTokensServerCapabilities, ServerCapabilities,
-        TextDocumentSyncCapability, TextDocumentSyncKind, TextEdit, Url,
-    },
-};
+use tower_lsp::{LspService, Server};
 
 use clap::Parser;
-
-use crate::processor::{
-    ProcessorRequest, ProcessorResponse,
-    semantic_tokens::{LEGEND_MODIFIERS, LEGEND_TYPES},
-};
+use microcad_lsp as mu_lsp;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -67,15 +46,16 @@ async fn main() {
 
     log::info!("Starting LSP server");
 
-    let processor = processor::ProcessorInterface::run();
+    let processor = mu_lsp::processor::ProcessorInterface::run();
 
-    let (service, socket) =
-        LspService::build(|client| backend::Backend::new(client, processor, config.search_paths))
-            .custom_method(
-                "custom/activeFileChanged",
-                backend::Backend::on_active_file_changed,
-            )
-            .finish();
+    let (service, socket) = LspService::build(|client| {
+        mu_lsp::backend::Backend::new(client, processor, config.search_paths)
+    })
+    .custom_method(
+        "custom/activeFileChanged",
+        mu_lsp::backend::Backend::on_active_file_changed,
+    )
+    .finish();
     log::info!("LSP service has been created");
 
     if args.stdio {
@@ -91,14 +71,4 @@ async fn main() {
         let (read, write) = tokio::io::split(stream);
         Server::new(read, write, socket).serve(service).await;
     };
-}
-
-fn uri_obj_to_lsp_url(uri_obj: &serde_json::Value) -> std::result::Result<Url, String> {
-    if let Some(uri) = read_uri("external", uri_obj)? {
-        return Ok(uri);
-    }
-    if let Some(fs_path) = read_uri("fsPath", uri_obj)? {
-        return Ok(fs_path);
-    }
-    Err("Neither external nor fsPath found in uri object".to_string())
 }
