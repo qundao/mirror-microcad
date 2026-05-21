@@ -261,6 +261,13 @@ pub enum EvalError {
         )]
         src_ref: SrcRef,
     },
+
+    #[error("Cannot call a workbench from inside a {context_kind}")]
+    InvalidWorkbenchContext {
+        context_kind: &'static str,
+        #[label("Cannot call a workbench here.")]
+        src_ref: SrcRef,
+    },
 }
 
 /// Result type of any evaluation.

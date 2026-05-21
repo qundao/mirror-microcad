@@ -5,7 +5,7 @@
 // Copyright © 2025 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::PushDiag;
+use microcad_lang_base::{PushDiag, SrcReferrer};
 
 use crate::{eval::*, lower::ir, model::*, symbol::SymbolDef};
 
@@ -110,22 +110,27 @@ impl Eval<Models> for ir::StatementList {
                     SymbolDef::Workbench(workbench_definition) => {
                         let frame = context.stack.current_frame().expect("Some stack frame");
                         match frame {
-                            StackFrame::Workbench(..) => Some(workbench_definition.kind.value),
-                            _ => None,
+                            StackFrame::Workbench(..) => Ok(Some(workbench_definition.kind.value)),
+                            _ => Ok(None),
                         }
                     }
-                    SymbolDef::SourceFile(_) | SymbolDef::Builtin(_) => None,
-                    _ => unreachable!(),
+                    SymbolDef::SourceFile(_) | SymbolDef::Builtin(_) => Ok(None),
+                    symbol => Err(symbol.kind_str()),
                 })
             })
-            .unwrap_or_default();
+            .unwrap_or(Ok(None));
 
         for statement in self.iter() {
             if let Some(model) = statement.eval(context)? {
                 output_type = output_type.merge(&model.deduce_output_type());
 
                 // We are in a workbench. Check if the workbench kind matches the current output type.
-                if let Some(kind) = kind {
+                if let Some(kind) =
+                    kind.map_err(|context_kind| EvalError::InvalidWorkbenchContext {
+                        context_kind,
+                        src_ref: statement.src_ref(),
+                    })?
+                {
                     let expected_output_type = kind.into();
                     if expected_output_type != OutputType::NotDetermined
                         && output_type != expected_output_type

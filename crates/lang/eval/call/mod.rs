@@ -47,6 +47,17 @@ impl Eval for ir::Call {
             }
         };
 
+        if let Some(current) = context.current_symbol()
+            && !current.is_workbench()
+            && symbol.is_workbench()
+        {
+            return Err(EvalError::InvalidWorkbenchContext {
+                context_kind: current.kind_str(),
+                src_ref: self.src_ref(),
+            }
+            .into());
+        }
+
         // evaluate arguments
         let args: ArgumentValueList = self.argument_list.eval(context)?;
 

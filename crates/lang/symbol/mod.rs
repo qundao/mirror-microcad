@@ -341,6 +341,10 @@ impl Symbol {
         matches!(self.inner.borrow().def, SymbolDef::Workbench(..))
     }
 
+    pub(crate) fn kind_str(&self) -> &'static str {
+        self.inner.borrow().def.kind_str()
+    }
+
     /// Overwrite any value in this symbol
     pub(crate) fn set_value(&self, new_value: Value) -> ResolveResult<()> {
         let is_a_value = match &mut self.inner.borrow_mut().def {
