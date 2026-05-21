@@ -146,7 +146,7 @@ impl Grant for ir::ReturnStatement {
     }
 }
 
-impl Grant for ir::IfStatement {
+impl Grant for ir::If {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
         let scope = Scope(If, self.src_ref());

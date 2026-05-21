@@ -10,11 +10,11 @@ use microcad_lang_proc_macros::SrcReferrer;
 
 /// Argument in a [`Call`].
 #[derive(Clone, Debug, PartialEq, SrcReferrer)]
-pub struct Argument {
+pub struct Argument<EXPR = ir::Expression> {
     /// Name of the argument
     pub id: Option<Identifier>,
     /// Value of the argument
-    pub expression: ir::Expression,
+    pub expression: EXPR,
     /// Source code reference
     pub src_ref: SrcRef,
 }

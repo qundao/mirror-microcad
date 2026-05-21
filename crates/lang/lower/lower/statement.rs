@@ -105,11 +105,11 @@ impl ir::AssignmentStatement {
     }
 }
 
-impl Lower for ir::IfStatement {
+impl Lower for ir::If {
     type AstNode = ast::If;
 
     fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
-        Ok(ir::IfStatement {
+        Ok(ir::If {
             if_ref: context.src_ref(&node.if_span),
             cond: ir::Expression::lower(&node.condition, context)?,
             body: ir::Body::lower(&node.body, context)?,
@@ -117,7 +117,7 @@ impl Lower for ir::IfStatement {
             next_if: node
                 .next_if
                 .as_ref()
-                .map(|next| ir::IfStatement::lower(next, context))
+                .map(|next| ir::If::lower(next, context))
                 .transpose()?
                 .map(Box::new),
             else_ref: node.else_span.as_ref().map(|span| context.src_ref(span)),
@@ -160,7 +160,7 @@ impl Lower for ir::Statement {
             ast::Statement::Expression(ast::ExpressionStatement {
                 expression: ast::Expression::If(if_statement),
                 ..
-            }) => ir::Statement::If(ir::IfStatement::lower(if_statement, context)?),
+            }) => ir::Statement::If(ir::If::lower(if_statement, context)?),
             ast::Statement::Expression(statement) => {
                 ir::Statement::Expression(ir::ExpressionStatement::lower(statement, context)?)
             }

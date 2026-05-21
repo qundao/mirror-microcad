@@ -7,14 +7,12 @@ use crate::lower::ir;
 
 mod assignment_statement;
 mod expression_statement;
-mod if_statement;
 mod inner_doc_comment;
 mod return_statement;
 mod statement_list;
 
 pub use assignment_statement::*;
 pub use expression_statement::*;
-pub use if_statement::*;
 pub use inner_doc_comment::*;
 use microcad_lang_base::{SrcRef, SrcReferrer};
 pub use return_statement::*;
@@ -39,7 +37,7 @@ pub enum Statement {
     /// Return statement
     Return(ir::ReturnStatement),
     /// If statement
-    If(ir::IfStatement),
+    If(ir::If),
     /// Inner attribute statement: `#![size = std::A4]`.
     InnerAttribute(ir::Attribute),
     /// Inner doc comment: `//! Text`.

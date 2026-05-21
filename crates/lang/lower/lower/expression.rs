@@ -196,9 +196,7 @@ impl Lower for ir::Expression {
                     })
                 },
             )?,
-            ast::Expression::If(i) => {
-                ir::Expression::If(Box::new(ir::IfStatement::lower(i, context)?))
-            }
+            ast::Expression::If(i) => ir::Expression::If(Box::new(ir::If::lower(i, context)?)),
             ast::Expression::Error(span) => {
                 return Err(LowerError::InvalidExpression {
                     src_ref: context.src_ref(span),
