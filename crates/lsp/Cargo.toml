@@ -32,6 +32,9 @@ tracing-subscriber = "0.3"
 microcad-driver = { workspace = true }
 microcad-viewer-ipc = { workspace = true }
 
+[dev-dependencies]
+microcad-driver = { workspace = true }
+googletest = "0.11"
 
 [[bin]]
 name = "microcad-lsp-client"
