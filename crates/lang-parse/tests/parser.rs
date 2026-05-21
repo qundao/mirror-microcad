@@ -215,6 +215,7 @@ use test_case::test_case;
 )]
 #[test_case("body expr method tail", "{}.foo()")]
 #[test_case("body expr method", "{}.foo();")]
+#[test_case("body expr and_tail_expr", "{}bar.foo();")]
 fn test_parser(name: &str, input: &str) {
     assert_debug_snapshot!(format!("parser_{name}"), parse(input));
 }
