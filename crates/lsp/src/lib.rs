@@ -6,20 +6,25 @@
 pub mod backend;
 pub mod processor;
 
-mod config;
 pub use config::Config;
+
+mod config;
+mod semantic_tokens;
+mod to_lsp;
 
 use backend::Backend;
 
-pub use tower_lsp::{ClientSocket, LspService, Server};
+pub use tower_lsp as lsp;
+
+pub use lsp::Server;
 
 /// µcad lsp service
-pub fn lsp_service(config: Config) -> (LspService<Backend>, ClientSocket) {
+pub fn build_lsp_service(config: Config) -> (lsp::LspService<Backend>, lsp::ClientSocket) {
     log::info!("Starting LSP server");
 
     let processor = processor::ProcessorInterface::run();
 
-    tower_lsp::LspService::build(|client| Backend::new(client, processor, config))
+    lsp::LspService::build(|client| Backend::new(client, processor, config))
         .custom_method("custom/activeFileChanged", Backend::on_active_file_changed)
         .finish()
 }

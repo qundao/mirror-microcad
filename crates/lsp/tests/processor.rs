@@ -10,7 +10,7 @@ use googletest::prelude::*;
 #[tokio::test]
 async fn initialize() -> Result<()> {
     let config = mu_lsp::Config::default();
-    let (service, _) = mu_lsp::lsp_service(config);
+    let (service, _) = mu_lsp::build_lsp_service(config);
     let params = lsp::InitializeParams::default();
 
     let backend = service.inner();

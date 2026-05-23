@@ -33,7 +33,7 @@ async fn main() {
 
     let config = mu_lsp::Config::default();
 
-    let (service, socket) = mu_lsp::lsp_service(config);
+    let (service, socket) = mu_lsp::build_lsp_service(config);
     log::info!("LSP service has been created");
 
     if args.stdio {
