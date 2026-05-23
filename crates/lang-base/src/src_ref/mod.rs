@@ -40,6 +40,8 @@ pub struct SrcRef {
     /// Line and column
     pub at: LineCol,
     /// Hash of the source code file to map `SrcRef` -> `SourceFile`
+    ///
+    /// A `source_hash == 0` is considered as `None`.
     pub source_hash: HashId,
 }
 
