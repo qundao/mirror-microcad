@@ -27,6 +27,7 @@ pub(crate) struct TokenContext<'ast> {
     diag: mu::Diagnostics,
 }
 
+/// Macro for token implementation
 #[macro_export]
 macro_rules! impl_tokens {
     // 2. The Enum Delegation Arm
@@ -95,7 +96,9 @@ impl<'ast> TokenContext<'ast> {
     }
 
     fn error(&mut self, span: &mu::base::Span, err: miette::ErrReport) {
-        self.diag.error(&self.span_to_src_ref(&span), err);
+        self.diag
+            .error(&self.span_to_src_ref(&span), err)
+            .expect("No error");
     }
 
     fn push_token(
