@@ -38,7 +38,7 @@ pub struct Source {
     pub url: Url,
     diagnostics: Diagnostics,
     base_source: Option<base::Source>,
-    ast_source: Option<ast::Source>,
+    pub ast_source: Option<ast::Source>,
     ir_source: Option<Rc<ir::Source>>,
     resolve_context: Option<ResolveContext>,
     eval_context: Option<EvalContext>,
