@@ -48,40 +48,7 @@ pub enum ProcessorResponse {
 
 impl ProcessorResponse {
     fn diagnostics(url: Url, diag: &mu::Diagnostics) -> Self {
-        use mu::base::Level;
-        Self::DocumentDiagnostics(
-            url.clone(),
-            lsp::FullDocumentDiagnosticReport {
-                result_id: None,
-                items: diag
-                    .iter()
-                    .filter_map(|diag| {
-                        let message = diag.message();
-                        match diag.src_ref().to_lsp() {
-                            Some(range) => {
-                                let severity = match diag.level() {
-                                    Level::Trace => lsp::DiagnosticSeverity::HINT,
-                                    Level::Info => lsp::DiagnosticSeverity::INFORMATION,
-                                    Level::Warning => lsp::DiagnosticSeverity::WARNING,
-                                    Level::Error => lsp::DiagnosticSeverity::ERROR,
-                                };
-
-                                Some(lsp::Diagnostic::new(
-                                    range,
-                                    Some(severity),
-                                    None,
-                                    None,
-                                    message,
-                                    None,
-                                    None,
-                                ))
-                            }
-                            None => None,
-                        }
-                    })
-                    .collect(),
-            },
-        )
+        Self::DocumentDiagnostics(url.clone(), diag.to_lsp())
     }
 }
 
@@ -90,9 +57,13 @@ impl ProcessorResponse {
 /// The processor itself runs in a separate thread and can be controlled
 /// via [`ProcessorInterface`] by sending requests and handling the corresponding responses.
 pub struct Processor {
+    /// Request handler.
     pub request_handler: Receiver<ProcessorRequest>,
+
+    /// Response handler.
     pub response_sender: Sender<ProcessorResponse>,
 
+    /// Processor documents.
     pub documents: mu::HashMap<Url, mu::document::Source>,
 }
 
