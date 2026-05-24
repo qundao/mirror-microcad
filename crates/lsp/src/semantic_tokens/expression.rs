@@ -1,17 +1,10 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use tower_lsp::lsp_types::{self as lsp, SemanticToken};
-
-use microcad_driver::prelude::{
-    self as mu,
-    ast::{ElementAccess, QualifiedName},
-    builtin::__builtin::string,
-    parse::tokens::Token,
-};
+use microcad_driver::prelude as mu;
 use mu::ast;
 
-use super::{SemanticTokens, SemanticTokensResult, TokenContext, TokenModifier, TokenType};
+use super::{SemanticTokens, TokenContext, TokenType};
 
 use crate::impl_tokens;
 
@@ -134,7 +127,7 @@ impl<'ast> SemanticTokens<'ast> for ast::Expression {
     fn semantic_tokens(&self, context: &'ast mut TokenContext) {
         match &self {
             ast::Expression::Literal(literal) => literal.semantic_tokens(context),
-            ast::Expression::Bracketed(expression, range) => expression.semantic_tokens(context),
+            ast::Expression::Bracketed(expression, _) => expression.semantic_tokens(context),
             ast::Expression::Tuple(tuple_expression) => tuple_expression.semantic_tokens(context),
             ast::Expression::ArrayRange(array_range_expression) => {
                 array_range_expression.semantic_tokens(context)
@@ -161,7 +154,7 @@ impl<'ast> SemanticTokens<'ast> for ast::Expression {
                 element_access.semantic_tokens(context)
             }
             ast::Expression::If(_) => todo!(),
-            ast::Expression::Error(range) => todo!(),
+            ast::Expression::Error(range) => {}
         }
     }
 }

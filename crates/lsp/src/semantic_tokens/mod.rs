@@ -27,14 +27,6 @@ pub(crate) struct TokenContext<'ast> {
 
 #[macro_export]
 macro_rules! impl_tokens {
-    // 1. Single Token Arm: Triggers when the right side is a type path (e.g., TokenType::COMMENT)
-    ($t:ty => $token_type:path) => {
-        impl<'ast> SemanticTokens<'ast> for $t {
-            fn semantic_tokens(&self, ctx: &'ast mut TokenContext) {
-                ctx.push_token(&self.span, $token_type, &[]);
-            }
-        }
-    };
 
     // 2. The Enum Delegation Arm
     // Triggers when you pass a bracketed list of variants: Enum => [Variant1, Variant2]
@@ -60,6 +52,16 @@ macro_rules! impl_tokens {
             }
         }
     };
+
+    // 1. Single Token Arm: Triggers when the right side is a type path (e.g., TokenType::COMMENT)
+    ($t:ty => $token_type:path) => {
+        impl<'ast> SemanticTokens<'ast> for $t {
+            fn semantic_tokens(&self, ctx: &'ast mut TokenContext) {
+                ctx.push_token(&self.span, $token_type, &[]);
+            }
+        }
+    };
+
 
     // 4. Custom Block Arm: Fallback for matches or custom logic
     ($t:ty => |$self:ident, $ctx:ident| $body:block) => {
@@ -118,29 +120,25 @@ impl<'ast> TokenContext<'ast> {
             }
         }
     }
-
-    fn push_tokens(&mut self, tokens: impl IntoIterator<Item = SemanticToken>) {
-        self.tokens.extend(tokens);
-    }
 }
-
-type SemanticTokensResult = Vec<lsp::SemanticToken>;
 
 pub trait SemanticTokens<'ast> {
-    fn semantic_tokens(&'ast self, context: &'ast mut TokenContext);
-}
-
-impl<'ast> SemanticTokens<'ast> for ast::Return {
-    fn semantic_tokens(&'ast self, context: &'ast mut TokenContext) {
-        context.push_token(&self.keyword_span, TokenType::KEYWORD, &[]);
-        self.value
-            .as_ref()
-            .map(|expr| expr.semantic_tokens(context));
-    }
+    fn semantic_tokens(&'ast self, ctx: &'ast mut TokenContext);
 }
 
 impl_tokens!(ast::Comment => TokenType::COMMENT);
 impl_tokens!(ast::Unit => TokenType::KEYWORD); // TODO: A custom "unit" token type is preferred
+
+impl_tokens!(ast::ArrayType => inner);
+impl_tokens!(ast::TupleType => |self_, ctx| {
+    self_.inner.iter().for_each(|(id, ty)| {
+        ty.semantic_tokens(ctx);
+        id.as_ref().map(|id| ctx.push_token(&id.span, TokenType::PROPERTY, &[]));
+    });
+});
+
+impl_tokens!(ast::SingleType => TokenType::TYPE);
+impl_tokens!(ast::Type => [Array, Tuple, Single]);
 
 impl_tokens!(ast::ItemExtra => |item, ctx| {
     match item {
