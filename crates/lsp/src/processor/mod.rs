@@ -13,14 +13,11 @@ use mu::traits::*;
 use crossbeam::channel::{Receiver, Sender};
 
 use miette::IntoDiagnostic;
-use tower_lsp::lsp_types::{
-    Diagnostic, DiagnosticSeverity, FullDocumentDiagnosticReport, Range, SemanticTokens,
-    SemanticTokensResult, Url,
-};
 
-use crate::processor::semantic_tokens::TokenContext;
+use mu::Url;
+use tower_lsp::lsp_types as lsp;
 
-pub mod semantic_tokens;
+use crate::to_lsp::ToLsp;
 
 /// A processor request.
 ///
@@ -41,8 +38,8 @@ pub enum ProcessorRequest {
 /// A processor response.
 pub enum ProcessorResponse {
     /// Error messages and warnings for a specific document received.
-    DocumentDiagnostics(Url, FullDocumentDiagnosticReport),
-    SemanticTokens(Url, SemanticTokensResult),
+    DocumentDiagnostics(Url, lsp::FullDocumentDiagnosticReport),
+    SemanticTokens(Url, lsp::SemanticTokensResult),
     UpdatedDocumentCode {
         url: Url,
         code: String,
@@ -54,22 +51,22 @@ impl ProcessorResponse {
         use mu::base::Level;
         Self::DocumentDiagnostics(
             url.clone(),
-            FullDocumentDiagnosticReport {
+            lsp::FullDocumentDiagnosticReport {
                 result_id: None,
                 items: diag
                     .iter()
                     .filter_map(|diag| {
                         let message = diag.message();
-                        match src_ref_to_lsp_range(diag.src_ref()) {
+                        match diag.src_ref().to_lsp() {
                             Some(range) => {
                                 let severity = match diag.level() {
-                                    Level::Trace => DiagnosticSeverity::HINT,
-                                    Level::Info => DiagnosticSeverity::INFORMATION,
-                                    Level::Warning => DiagnosticSeverity::WARNING,
-                                    Level::Error => DiagnosticSeverity::ERROR,
+                                    Level::Trace => lsp::DiagnosticSeverity::HINT,
+                                    Level::Info => lsp::DiagnosticSeverity::INFORMATION,
+                                    Level::Warning => lsp::DiagnosticSeverity::WARNING,
+                                    Level::Error => lsp::DiagnosticSeverity::ERROR,
                                 };
 
-                                Some(Diagnostic::new(
+                                Some(lsp::Diagnostic::new(
                                     range,
                                     Some(severity),
                                     None,
@@ -85,23 +82,6 @@ impl ProcessorResponse {
                     .collect(),
             },
         )
-    }
-}
-
-fn src_ref_to_lsp_range(src_ref: mu::SrcRef) -> Option<Range> {
-    match src_ref.is_some() {
-        true => {
-            use tower_lsp::lsp_types::{Position, Range};
-
-            let start = Position::new(src_ref.at.line, src_ref.at.col - 1);
-            let end = Position::new(
-                src_ref.at.line,
-                (src_ref.at.col + src_ref.range.len() as u32) - 1,
-            );
-
-            Some(Range::new(start, end))
-        }
-        false => None,
     }
 }
 
@@ -227,16 +207,26 @@ impl Processor {
     }
 
     fn get_full_semantic_tokens(&self, url: &Url) -> ProcessorResult {
-        let mut context = TokenContext::new(url)?;
-        let data = context.parse_semantic_tokens()?;
+        match self
+            .documents
+            .get(url)
+            .and_then(|doc| doc.ast_source.as_ref())
+        {
+            Some(ast) => {
+                use crate::semantic_tokens::SemanticTokens;
+                let mut ctx = crate::semantic_tokens::TokenContext::new(&ast);
+                ast.ast.semantic_tokens(&mut ctx);
 
-        Ok(vec![ProcessorResponse::SemanticTokens(
-            url.clone(),
-            SemanticTokensResult::Tokens(SemanticTokens {
-                result_id: None, // TODO: support delta updates
-                data,
-            }),
-        )])
+                Ok(vec![ProcessorResponse::SemanticTokens(
+                    url.clone(),
+                    lsp::SemanticTokensResult::Tokens(lsp::SemanticTokens {
+                        result_id: None, // TODO: support delta updates
+                        data: ctx.tokens().clone(),
+                    }),
+                )])
+            }
+            None => Ok(vec![]),
+        }
     }
 
     fn get_document_diagnostics(&self, url: &Url) -> ProcessorResult {

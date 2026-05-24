@@ -5,8 +5,8 @@
 
 use std::sync::OnceLock;
 
-use crate::processor::{
-    self as mu_processor,
+use crate::{
+    processor::{self as mu_processor},
     semantic_tokens::{LEGEND_MODIFIERS, LEGEND_TYPES},
 };
 

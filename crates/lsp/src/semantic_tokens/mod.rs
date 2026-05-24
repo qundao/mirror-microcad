@@ -5,6 +5,8 @@ mod expression;
 mod statement;
 
 use microcad_driver::prelude as mu;
+use microcad_driver::prelude::Diagnostics;
+use microcad_driver::prelude::base::LineCol;
 use microcad_driver::prelude::base::PushDiag;
 
 use mu::ast;
@@ -27,7 +29,6 @@ pub(crate) struct TokenContext<'ast> {
 
 #[macro_export]
 macro_rules! impl_tokens {
-
     // 2. The Enum Delegation Arm
     // Triggers when you pass a bracketed list of variants: Enum => [Variant1, Variant2]
     ($t:ty => [$($variant:ident),+ $(,)?]) => {
@@ -62,7 +63,6 @@ macro_rules! impl_tokens {
         }
     };
 
-
     // 4. Custom Block Arm: Fallback for matches or custom logic
     ($t:ty => |$self:ident, $ctx:ident| $body:block) => {
         impl<'ast> SemanticTokens<'ast> for $t {
@@ -75,6 +75,20 @@ macro_rules! impl_tokens {
 }
 
 impl<'ast> TokenContext<'ast> {
+    pub fn new(source: &'ast ast::Source) -> Self {
+        Self {
+            source,
+            line_index: mu::base::LineIndex::new(&source.code),
+            last: LineCol::default(),
+            tokens: Vec::default(),
+            diag: Diagnostics::default(),
+        }
+    }
+
+    pub fn tokens(&self) -> &Vec<SemanticToken> {
+        &self.tokens
+    }
+
     fn span_to_src_ref(&self, span: &mu::base::Span) -> mu::base::SrcRef {
         self.line_index
             .src_ref(&self.source.code, span, self.source.code.computed_hash())
@@ -156,6 +170,8 @@ impl_tokens!(ast::LeadingExtras => |self_, ctx| {
 });
 
 impl_tokens!(ast::ItemExtras => leading, trailing);
+
+impl_tokens!(ast::Program => statements);
 
 const SEMANTIC_LENGTH: TokenType = TokenType::new("length");
 
