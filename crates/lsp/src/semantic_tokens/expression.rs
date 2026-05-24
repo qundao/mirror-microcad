@@ -123,38 +123,41 @@ impl_tokens!(ast::ElementAccess => |self_, ctx| {
     self_.element_chain.iter().for_each(|element| element.semantic_tokens(ctx));
 });
 
-impl<'ast> SemanticTokens<'ast> for ast::Expression {
-    fn semantic_tokens(&self, context: &'ast mut TokenContext) {
-        match &self {
-            ast::Expression::Literal(literal) => literal.semantic_tokens(context),
-            ast::Expression::Bracketed(expression, _) => expression.semantic_tokens(context),
-            ast::Expression::Tuple(tuple_expression) => tuple_expression.semantic_tokens(context),
-            ast::Expression::ArrayRange(array_range_expression) => {
-                array_range_expression.semantic_tokens(context)
-            }
-            ast::Expression::ArrayList(array_list_expression) => {
-                array_list_expression.semantic_tokens(context)
-            }
-            ast::Expression::String(format_string) => format_string.semantic_tokens(context),
-            ast::Expression::QualifiedName(qualified_name) => {
-                qualified_name.semantic_tokens(context)
-            }
-            ast::Expression::Marker(identifier) => {
-                context.push_token(&identifier.span, TokenType::EVENT, &[])
-            }
-            ast::Expression::BinaryOperation(binary_operation) => {
-                binary_operation.semantic_tokens(context)
-            }
-            ast::Expression::UnaryOperation(unary_operation) => {
-                unary_operation.semantic_tokens(context)
-            }
-            ast::Expression::Body(body) => todo!(),
-            ast::Expression::Call(call) => call.semantic_tokens(context),
-            ast::Expression::ElementAccess(element_access) => {
-                element_access.semantic_tokens(context)
-            }
-            ast::Expression::If(_) => todo!(),
-            ast::Expression::Error(range) => {}
+impl_tokens!(ast::If => |self_, ctx| {
+    self_.extras.semantic_tokens(ctx);
+    ctx.push_token(&self_.if_span, TokenType::KEYWORD, &[]);
+    self_.condition.semantic_tokens(ctx);
+    self_.else_span.as_ref().map(|span| ctx.push_token(span, TokenType::KEYWORD, &[]));
+    self_.else_body.as_ref().map(|body| body.semantic_tokens(ctx));
+    self_.next_if.as_ref().map(|if_| if_.semantic_tokens(ctx));
+});
+
+impl_tokens!(ast::Expression => |self_, ctx| {
+    match &self_ {
+        ast::Expression::Literal(literal) => literal.semantic_tokens(ctx),
+        ast::Expression::Bracketed(expression, _) => expression.semantic_tokens(ctx),
+        ast::Expression::Tuple(tuple_expression) => tuple_expression.semantic_tokens(ctx),
+        ast::Expression::ArrayRange(array_range_expression) => {
+            array_range_expression.semantic_tokens(ctx)
         }
+        ast::Expression::ArrayList(array_list_expression) => {
+            array_list_expression.semantic_tokens(ctx)
+        }
+        ast::Expression::String(format_string) => format_string.semantic_tokens(ctx),
+        ast::Expression::QualifiedName(qualified_name) => qualified_name.semantic_tokens(ctx),
+        ast::Expression::Marker(identifier) => {
+            ctx.push_token(&identifier.span, TokenType::EVENT, &[])
+        }
+        ast::Expression::BinaryOperation(binary_operation) => {
+            binary_operation.semantic_tokens(ctx)
+        }
+        ast::Expression::UnaryOperation(unary_operation) => {
+            unary_operation.semantic_tokens(ctx)
+        }
+        ast::Expression::Body(body) => body.semantic_tokens(ctx),
+        ast::Expression::Call(call) => call.semantic_tokens(ctx),
+        ast::Expression::ElementAccess(element_access) => element_access.semantic_tokens(ctx),
+        ast::Expression::If(if_) => if_.semantic_tokens(ctx),
+        ast::Expression::Error(_) => {}
     }
-}
+});
