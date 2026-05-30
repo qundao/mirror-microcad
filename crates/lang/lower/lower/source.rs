@@ -20,17 +20,6 @@ impl ir::Source {
     }
 
     /// Load µcad source file from given `path`
-    pub fn load(
-        path: impl AsRef<std::path::Path> + std::fmt::Debug,
-    ) -> Result<std::rc::Rc<Self>, LowerErrorsWithSource> {
-        let (source, error) = Self::load_with_name(&path, Self::name_from_path(&path));
-        match error {
-            Some(error) => Err(error),
-            None => Ok(source),
-        }
-    }
-
-    /// Load µcad source file from given `path`
     pub fn load_with_name(
         path: impl AsRef<std::path::Path> + std::fmt::Debug,
         name: ir::QualifiedName,
@@ -66,20 +55,6 @@ impl ir::Source {
         );
 
         (std::rc::Rc::new(source_file), errors)
-    }
-
-    /// Create `SourceFile` from string
-    /// The hash of the result will be of `crate::from_str!()`.
-    pub fn load_from_str(
-        name: Option<&str>,
-        path: impl AsRef<std::path::Path>,
-        source_str: &str,
-    ) -> Result<std::rc::Rc<Self>, Vec<LowerError>> {
-        let (source, error) = Self::load_inner(name, path, source_str, 0);
-        match error {
-            Some(error) => Err(error.errors),
-            None => Ok(std::rc::Rc::new(source)),
-        }
     }
 
     fn load_inner(
