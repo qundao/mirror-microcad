@@ -17,7 +17,7 @@ impl mu::Format for Stdin {
             .read_to_string(&mut full_buffer)
             .into_diagnostic()?;
 
-        microcad_lang_format::format_str(&full_buffer, &params)
+        microcad_lang_format::format_str(&full_buffer, params)
             .map(|s| {
                 println!("{s}");
                 s != full_buffer
