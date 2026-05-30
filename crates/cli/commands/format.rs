@@ -19,7 +19,7 @@ impl RunCommand<()> for Format {
 
         match &self.input {
             Some(input) => {
-                let mut document = mu::Document::open(&input)?;
+                let mut document = mu::Document::open(input)?;
 
                 match document.parse().and(document.format(&params)) {
                     Ok(true) => {

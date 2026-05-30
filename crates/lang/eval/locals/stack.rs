@@ -84,13 +84,10 @@ impl Stack {
                     StackFrame::Source(id, ..) => {
                         module_name.insert(0, id.clone());
                     }
-                    StackFrame::Call { symbol, .. } => {
-                        if n > 0 {
-                            // log::trace!("CALL: {}, {}", symbol.full_name(), module_name);
-                            module_name =
-                                symbol.full_name().remove_last().with_prefix(&module_name);
-                            break;
-                        }
+                    StackFrame::Call { symbol, .. } if n > 0 => {
+                        // log::trace!("CALL: {}, {}", symbol.full_name(), module_name);
+                        module_name = symbol.full_name().remove_last().with_prefix(&module_name);
+                        break;
                     }
                     _ => (),
                 }

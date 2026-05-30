@@ -32,7 +32,7 @@ pub struct Cli {
 
     /// The loaded or default CLI config.
     #[clap(skip)]
-    pub config: std::rc::Rc<mu::Config>,
+    pub config: std::rc::Rc<mu::DriverConfig>,
 }
 
 impl Cli {
@@ -44,22 +44,18 @@ impl Cli {
         mu::install_std()?;
 
         if let Some(config_path) = &cli.config_path {
-            cli.config = std::rc::Rc::new(mu::Config::load(config_path)?);
+            cli.config = std::rc::Rc::new(mu::DriverConfig::load(config_path)?);
         }
         Ok(cli)
     }
 
     /// Generate compile parameters
-    pub fn compile_parameters(
-        &self,
-        resolution: &str,
-    ) -> miette::Result<microcad_driver::commands::CompileParameters> {
-        use microcad_driver::commands::compile::*;
-        Ok(CompileParameters {
-            resolve: ResolveParameters {
+    pub fn compile_parameters(&self, resolution: &str) -> miette::Result<mu::CompileParameters> {
+        Ok(mu::CompileParameters {
+            resolve: mu::ResolveParameters {
                 search_paths: self.config.search_paths.clone(),
             },
-            render: RenderParameters::from_str(resolution)?.with_empty_cache(),
+            render: mu::RenderParameters::from_str(resolution)?.with_empty_cache(),
         })
     }
 

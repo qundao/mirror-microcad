@@ -168,28 +168,6 @@ impl Tuple {
         })
     }
 
-    /// Dissolve unnamed them.
-    ///
-    /// Transparent tuples are unnamed tuple items of a tuple.
-    ///
-    /// ```,ucad
-    /// assert_eq!( (x=0, (y=0, z=0)), (x=0, y=0, z=0) );
-    /// ///               ^ unnamed tuple
-    /// ```
-    pub fn ray(&mut self) {
-        self.unnamed.retain(|_, value| {
-            if let Value::Tuple(tuple) = value {
-                tuple.ray();
-                tuple.named.drain().for_each(|(k, v)| {
-                    self.named.insert(k, v);
-                });
-                false
-            } else {
-                true
-            }
-        });
-    }
-
     /// Call a predicate for each tuple multiplicity.
     ///
     /// - `ids`: Items to multiply.

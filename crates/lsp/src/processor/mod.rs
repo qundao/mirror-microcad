@@ -13,20 +13,17 @@ use mu::traits::*;
 use crossbeam::channel::{Receiver, Sender};
 
 use miette::IntoDiagnostic;
-use tower_lsp::lsp_types::{
-    Diagnostic, DiagnosticSeverity, FullDocumentDiagnosticReport, Range, SemanticTokens,
-    SemanticTokensResult, Url,
-};
 
-use crate::processor::semantic_tokens::TokenContext;
+use mu::Url;
+use tower_lsp::lsp_types as lsp;
 
-pub mod semantic_tokens;
+use crate::to_lsp::ToLsp;
 
 /// A processor request.
 ///
 /// Commands that can be passed to the [`Processor`].
 #[derive(Clone)]
-#[allow(unused)]
+#[allow(unused, missing_docs)]
 pub enum ProcessorRequest {
     SetCursorPosition { url: Url, line: u32, col: u32 },
     AddDocument(Url),
@@ -41,67 +38,21 @@ pub enum ProcessorRequest {
 /// A processor response.
 pub enum ProcessorResponse {
     /// Error messages and warnings for a specific document received.
-    DocumentDiagnostics(Url, FullDocumentDiagnosticReport),
-    SemanticTokens(Url, SemanticTokensResult),
+    DocumentDiagnostics(Url, lsp::FullDocumentDiagnosticReport),
+    /// Output semantic tokens.
+    SemanticTokens(Url, lsp::SemanticTokensResult),
+    /// Update the code of the document (e.g. after linting or formatting)
     UpdatedDocumentCode {
+        /// Document URL
         url: Url,
+        /// The new code of the document
         code: String,
     },
 }
 
 impl ProcessorResponse {
     fn diagnostics(url: Url, diag: &mu::Diagnostics) -> Self {
-        use mu::base::Level;
-        Self::DocumentDiagnostics(
-            url.clone(),
-            FullDocumentDiagnosticReport {
-                result_id: None,
-                items: diag
-                    .iter()
-                    .filter_map(|diag| {
-                        let message = diag.message();
-                        match src_ref_to_lsp_range(diag.src_ref()) {
-                            Some(range) => {
-                                let severity = match diag.level() {
-                                    Level::Trace => DiagnosticSeverity::HINT,
-                                    Level::Info => DiagnosticSeverity::INFORMATION,
-                                    Level::Warning => DiagnosticSeverity::WARNING,
-                                    Level::Error => DiagnosticSeverity::ERROR,
-                                };
-
-                                Some(Diagnostic::new(
-                                    range,
-                                    Some(severity),
-                                    None,
-                                    None,
-                                    message,
-                                    None,
-                                    None,
-                                ))
-                            }
-                            None => None,
-                        }
-                    })
-                    .collect(),
-            },
-        )
-    }
-}
-
-fn src_ref_to_lsp_range(src_ref: mu::SrcRef) -> Option<Range> {
-    match src_ref.is_some() {
-        true => {
-            use tower_lsp::lsp_types::{Position, Range};
-
-            let start = Position::new(src_ref.at.line, src_ref.at.col - 1);
-            let end = Position::new(
-                src_ref.at.line,
-                (src_ref.at.col + src_ref.range.len() as u32) - 1,
-            );
-
-            Some(Range::new(start, end))
-        }
-        false => None,
+        Self::DocumentDiagnostics(url.clone(), diag.to_lsp())
     }
 }
 
@@ -110,12 +61,17 @@ fn src_ref_to_lsp_range(src_ref: mu::SrcRef) -> Option<Range> {
 /// The processor itself runs in a separate thread and can be controlled
 /// via [`ProcessorInterface`] by sending requests and handling the corresponding responses.
 pub struct Processor {
+    /// Request handler.
     pub request_handler: Receiver<ProcessorRequest>,
+
+    /// Response handler.
     pub response_sender: Sender<ProcessorResponse>,
 
+    /// Processor documents.
     pub documents: mu::HashMap<Url, mu::document::Source>,
 }
 
+/// Type alias for a Result from a processor command.
 pub type ProcessorResult = miette::Result<Vec<ProcessorResponse>>;
 
 impl Processor {
@@ -148,6 +104,7 @@ impl Processor {
         Ok(vec![])
     }
 
+    /// Remove µcad file.
     pub fn remove_document(&mut self, url: &Url) -> ProcessorResult {
         self.documents.remove(url);
         Ok(vec![])
@@ -171,7 +128,10 @@ impl Processor {
     /// Update (re-evaluate) a document.
     pub fn update_document(&mut self, url: &Url) -> ProcessorResult {
         match self.documents.get_mut(url) {
-            Some(document) => Self::compile_document(document),
+            Some(document) => {
+                document.load_from_file()?;
+                Self::compile_document(document)
+            }
             None => {
                 log::error!("Document does not exist!");
                 Ok(vec![])
@@ -179,6 +139,7 @@ impl Processor {
         }
     }
 
+    /// Update document code.
     pub fn update_document_code(&mut self, url: &Url, code: String) -> ProcessorResult {
         let document =
             self.documents
@@ -192,11 +153,18 @@ impl Processor {
         Self::compile_document(document)
     }
 
+    /// Format document code.
     pub fn format_document(&mut self, url: &Url) -> ProcessorResult {
         match self.documents.get_mut(url) {
-            Some(document) => match document.format(&mu::FormatParameters::default()) {
-                Ok(true) => {
-                    Self::compile_document(document).and(document.sync())?;
+            Some(document) => match document
+                .load_from_file()
+                .and(Self::compile_document(document))
+                .and(document.format(&mu::FormatParameters::default()))
+            {
+                Ok(formatted) => {
+                    if formatted {
+                        Self::compile_document(document)?;
+                    }
                     Ok(vec![ProcessorResponse::UpdatedDocumentCode {
                         url: url.clone(),
                         code: document
@@ -204,10 +172,6 @@ impl Processor {
                             .map(|s| s.to_string())
                             .unwrap_or_default(),
                     }])
-                }
-                Ok(false) => {
-                    log::info!("Document is already formatted");
-                    Ok(vec![])
                 }
                 Err(err) => {
                     log::error!("Error formatting document `{url}`: {err}");
@@ -222,16 +186,26 @@ impl Processor {
     }
 
     fn get_full_semantic_tokens(&self, url: &Url) -> ProcessorResult {
-        let mut context = TokenContext::new(url)?;
-        let data = context.parse_semantic_tokens()?;
+        match self
+            .documents
+            .get(url)
+            .and_then(|doc| doc.ast_source.as_ref())
+        {
+            Some(ast) => {
+                use crate::semantic_tokens::SemanticTokens;
+                let mut ctx = crate::semantic_tokens::TokenContext::new(ast);
+                ast.ast.semantic_tokens(&mut ctx);
 
-        Ok(vec![ProcessorResponse::SemanticTokens(
-            url.clone(),
-            SemanticTokensResult::Tokens(SemanticTokens {
-                result_id: None, // TODO: support delta updates
-                data,
-            }),
-        )])
+                Ok(vec![ProcessorResponse::SemanticTokens(
+                    url.clone(),
+                    lsp::SemanticTokensResult::Tokens(lsp::SemanticTokens {
+                        result_id: None, // TODO: support delta updates
+                        data: ctx.tokens().clone(),
+                    }),
+                )])
+            }
+            None => Ok(vec![]),
+        }
     }
 
     fn get_document_diagnostics(&self, url: &Url) -> ProcessorResult {
@@ -245,18 +219,22 @@ impl Processor {
     }
 }
 
+/// Send request to the µcad processor and recv requests.
 #[derive(Debug)]
-pub struct ProcessorInterface {
+pub struct ProcessorController {
+    /// Send req interface.
     pub request_sender: Sender<ProcessorRequest>,
+    /// Response recv interface.
     pub response_receiver: Receiver<ProcessorResponse>,
 }
 
-impl ProcessorInterface {
+impl ProcessorController {
     /// Send request.
     pub fn send_request(&self, request: ProcessorRequest) -> miette::Result<()> {
         self.request_sender.send(request).into_diagnostic()
     }
 
+    /// Recv response.
     pub fn recv_response(&self) -> miette::Result<ProcessorResponse> {
         self.response_receiver.recv().into_diagnostic()
     }

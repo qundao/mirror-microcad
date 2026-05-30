@@ -8,6 +8,7 @@
 pub mod dirs;
 pub mod geo2d;
 pub mod geo3d;
+pub mod lab;
 pub mod ops;
 
 mod array;
@@ -32,6 +33,7 @@ pub mod __builtin {
     pub use crate::geo2d::geo2d;
     pub use crate::geo3d::geo3d;
     pub use crate::import::import;
+    pub use crate::lab::lab;
     pub use crate::log::log;
     pub use crate::math::math;
     pub use crate::ops::ops;

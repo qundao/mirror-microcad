@@ -5248,6 +5248,7 @@ dependencies = [
 name = "microcad-core"
 version = "0.5.0"
 dependencies = [
+ "bezier-rs",
  "bytemuck",
  "cgmath",
  "derive_more 2.1.1",
@@ -5451,6 +5452,7 @@ dependencies = [
  "miette",
  "serde",
  "serde_json",
+ "test-that",
  "tokio",
  "tower-lsp",
  "tracing",
@@ -8210,6 +8212,26 @@ dependencies = [
  "quote",
  "syn",
  "test-case-core",
+]
+
+[[package]]
+name = "test-that"
+version = "0.99.0"
+source = "git+https://github.com/hovinen/test-that?branch=main#58912fd4785bbea166a1a85ccea947db9f71691c"
+dependencies = [
+ "num-traits",
+ "regex",
+ "rustversion",
+ "test-that-macro",
+]
+
+[[package]]
+name = "test-that-macro"
+version = "0.99.0"
+source = "git+https://github.com/hovinen/test-that?branch=main#58912fd4785bbea166a1a85ccea947db9f71691c"
+dependencies = [
+ "quote",
+ "syn",
 ]
 
 [[package]]

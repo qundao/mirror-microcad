@@ -59,6 +59,10 @@
       {
         "command": "microcad.minimizePreview",
         "title": "MicroCAD: Minimize Preview"
+      },
+      {
+        "command": "microcad.restartServer",
+        "title": "MicroCAD: Restart Language Server"
       }
     ]
   },

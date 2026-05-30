@@ -247,7 +247,7 @@ fn map_model_result(result: crate::model::ops::ModelResult) -> ValueResult {
             crate::eval::EvalError::ValueError(value_error) => value_error,
             _ => unreachable!(),
         })
-        .map(|model| Value::from(model))
+        .map(Value::from)
 }
 
 /// Rules for operator `-`.

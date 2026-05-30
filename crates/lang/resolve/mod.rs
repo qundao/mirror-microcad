@@ -1,20 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Single symbol resolving
-//!
-//! After parsing a source file (see [`mod@crate::parse`]) it must be resolved to get a symbol out of it:
-//!
-//! ```no_run
-//! use microcad_lang::{lower::ir, resolve::*};
-//! let source_file = ir::Source::load("my.µcad").expect("parsing success");
-//! let mut context = ResolveContext::create(
-//!     source_file,
-//!     vec!["./std/lib".into()],
-//!     None,
-//!     microcad_lang_base::DiagHandler::default(),
-//! ).unwrap();
-//! ```
+//! Resolve the intermediate represnetions into a symbol.
 //!
 //! To "run" the source file (and get the expected output) it must now be evaluated (see [`crate::eval`])  .
 

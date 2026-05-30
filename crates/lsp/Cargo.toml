@@ -32,10 +32,10 @@ tracing-subscriber = "0.3"
 microcad-driver = { workspace = true }
 microcad-viewer-ipc = { workspace = true }
 
+[dev-dependencies]
+test-that = { git = "https://github.com/hovinen/test-that", branch = "main" }
 
-[[bin]]
-name = "microcad-lsp-client"
-path = "src/client.rs"
+microcad-driver = { workspace = true }
 
 [[bin]]
 name = "microcad-lsp"
