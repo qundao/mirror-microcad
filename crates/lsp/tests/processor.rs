@@ -4,7 +4,7 @@ use tower_lsp::{LanguageServer, lsp_types as lsp};
 
 use microcad_lsp as mu_lsp;
 
-use googletest::prelude::*;
+use test_that::prelude::*;
 
 /// check `lsp::InitializeParams` -> `lsp::InitializeResult`
 #[tokio::test]

@@ -33,7 +33,7 @@ microcad-driver = { workspace = true }
 microcad-viewer-ipc = { workspace = true }
 
 [dev-dependencies]
-googletest = { git = "https://github.com/hovinen/googletest-rust.git", branch = "fix-container-iterating-over-owned-values" }
+test-that = { git = "https://github.com/hovinen/test-that", branch = "main" }
 
 microcad-driver = { workspace = true }
 

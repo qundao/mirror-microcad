@@ -23,7 +23,7 @@ use crate::to_lsp::ToLsp;
 ///
 /// Commands that can be passed to the [`Processor`].
 #[derive(Clone)]
-#[allow(unused)]
+#[allow(unused, missing_docs)]
 pub enum ProcessorRequest {
     SetCursorPosition { url: Url, line: u32, col: u32 },
     AddDocument(Url),
@@ -39,9 +39,13 @@ pub enum ProcessorRequest {
 pub enum ProcessorResponse {
     /// Error messages and warnings for a specific document received.
     DocumentDiagnostics(Url, lsp::FullDocumentDiagnosticReport),
+    /// Output semantic tokens.
     SemanticTokens(Url, lsp::SemanticTokensResult),
+    /// Update the code of the document (e.g. after linting or formatting)
     UpdatedDocumentCode {
+        /// Document URL
         url: Url,
+        /// The new code of the document
         code: String,
     },
 }
@@ -67,6 +71,7 @@ pub struct Processor {
     pub documents: mu::HashMap<Url, mu::document::Source>,
 }
 
+/// Type alias for a Result from a processor command.
 pub type ProcessorResult = miette::Result<Vec<ProcessorResponse>>;
 
 impl Processor {
@@ -99,6 +104,7 @@ impl Processor {
         Ok(vec![])
     }
 
+    /// Remove µcad file.
     pub fn remove_document(&mut self, url: &Url) -> ProcessorResult {
         self.documents.remove(url);
         Ok(vec![])
