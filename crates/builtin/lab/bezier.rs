@@ -55,7 +55,7 @@ impl BezierPolygon {
 
 impl Render<Geometry2D> for BezierPolygon {
     fn render(&self, _resolution: &RenderResolution) -> Geometry2D {
-        let subpath = Self::parse_continuous_cubic_subpath(&self.path).unwrap();
+        let subpath = Self::parse_continuous_cubic_subpath(&self.path).expect("A valid subpath");
 
         subpath_to_geo_polygon(&subpath, 20).into()
     }
