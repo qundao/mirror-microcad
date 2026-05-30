@@ -118,7 +118,7 @@ impl MdBook {
             .collect();
 
         if !modules.is_empty() {
-            recurse(self, writer, modules.into_iter(), depth)?;
+            recurse(self, writer, modules, depth)?;
         }
 
         // All workbenches (including built-ins) are in separate file.
@@ -135,7 +135,7 @@ impl MdBook {
             .collect();
 
         if !workbenches.is_empty() {
-            recurse(self, writer, workbenches.into_iter(), depth)?;
+            recurse(self, writer, workbenches, depth)?;
         }
 
         Ok(())
