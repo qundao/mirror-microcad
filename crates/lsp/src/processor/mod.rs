@@ -139,6 +139,7 @@ impl Processor {
         }
     }
 
+    /// Update document code.
     pub fn update_document_code(&mut self, url: &Url, code: String) -> ProcessorResult {
         let document =
             self.documents
@@ -152,6 +153,7 @@ impl Processor {
         Self::compile_document(document)
     }
 
+    /// Format document code.
     pub fn format_document(&mut self, url: &Url) -> ProcessorResult {
         match self.documents.get_mut(url) {
             Some(document) => match document
@@ -191,7 +193,7 @@ impl Processor {
         {
             Some(ast) => {
                 use crate::semantic_tokens::SemanticTokens;
-                let mut ctx = crate::semantic_tokens::TokenContext::new(&ast);
+                let mut ctx = crate::semantic_tokens::TokenContext::new(ast);
                 ast.ast.semantic_tokens(&mut ctx);
 
                 Ok(vec![ProcessorResponse::SemanticTokens(
@@ -217,18 +219,22 @@ impl Processor {
     }
 }
 
+/// Send request to the µcad processor and recv requests.
 #[derive(Debug)]
-pub struct ProcessorInterface {
+pub struct ProcessorController {
+    /// Send req interface.
     pub request_sender: Sender<ProcessorRequest>,
+    /// Response recv interface.
     pub response_receiver: Receiver<ProcessorResponse>,
 }
 
-impl ProcessorInterface {
+impl ProcessorController {
     /// Send request.
     pub fn send_request(&self, request: ProcessorRequest) -> miette::Result<()> {
         self.request_sender.send(request).into_diagnostic()
     }
 
+    /// Recv response.
     pub fn recv_response(&self) -> miette::Result<ProcessorResponse> {
         self.response_receiver.recv().into_diagnostic()
     }

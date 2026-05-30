@@ -55,8 +55,8 @@ impl ToLsp for mu::Diagnostics {
                 .iter()
                 .filter_map(|diag| {
                     let message = diag.message();
-                    match diag.src_ref().to_lsp() {
-                        Some(range) => Some(lsp::Diagnostic::new(
+                    diag.src_ref().to_lsp().map(|range| {
+                        lsp::Diagnostic::new(
                             range,
                             Some(diag.level().to_lsp()),
                             None,
@@ -64,9 +64,8 @@ impl ToLsp for mu::Diagnostics {
                             message,
                             None,
                             None,
-                        )),
-                        None => None,
-                    }
+                        )
+                    })
                 })
                 .collect(),
         }

@@ -97,7 +97,7 @@ impl<'ast> TokenContext<'ast> {
 
     fn error(&mut self, span: &mu::base::Span, err: miette::ErrReport) {
         self.diag
-            .error(&self.span_to_src_ref(&span), err)
+            .error(&self.span_to_src_ref(span), err)
             .expect("No error");
     }
 
@@ -107,7 +107,7 @@ impl<'ast> TokenContext<'ast> {
         token_type: TokenType,
         modifiers: &[lsp::SemanticTokenModifier],
     ) {
-        let src_ref = self.span_to_src_ref(&span);
+        let src_ref = self.span_to_src_ref(span);
         assert!(src_ref.is_some());
 
         let length = src_ref.len() as u32;
@@ -133,7 +133,7 @@ impl<'ast> TokenContext<'ast> {
                 });
             }
             None => {
-                self.error(&span, miette::miette!("Line overflow"));
+                self.error(span, miette::miette!("Line overflow"));
             }
         }
     }
@@ -150,7 +150,7 @@ impl_tokens!(ast::ArrayType => inner);
 impl_tokens!(ast::TupleType => |self_, ctx| {
     self_.inner.iter().for_each(|(id, ty)| {
         ty.semantic_tokens(ctx);
-        id.as_ref().map(|id| ctx.push_token(&id.span, TokenType::PROPERTY, &[]));
+         if let Some(id) = id.as_ref() { ctx.push_token(&id.span, TokenType::PROPERTY, &[]) };
     });
 });
 
@@ -158,9 +158,8 @@ impl_tokens!(ast::SingleType => TokenType::TYPE);
 impl_tokens!(ast::Type => [Array, Tuple, Single]);
 
 impl_tokens!(ast::ItemExtra => |item, ctx| {
-    match item {
-        ast::ItemExtra::Comment(comment) => comment.semantic_tokens(ctx),
-        _ => {}
+    if let ast::ItemExtra::Comment(comment) = item {
+        comment.semantic_tokens(ctx);
     }
 });
 

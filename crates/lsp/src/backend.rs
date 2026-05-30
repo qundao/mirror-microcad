@@ -31,7 +31,7 @@ use tower_lsp::{
 #[derive(Debug)]
 pub struct Backend {
     client: Client,
-    processor: mu_processor::ProcessorInterface,
+    processor: mu_processor::ProcessorController,
     viewer: OnceLock<ViewerProcessInterface>,
     config: crate::Config,
 }
@@ -40,7 +40,7 @@ impl Backend {
     /// New µcad LSP backend
     pub fn new(
         client: Client,
-        processor: mu_processor::ProcessorInterface,
+        processor: mu_processor::ProcessorController,
         config: crate::Config,
     ) -> Self {
         Backend {

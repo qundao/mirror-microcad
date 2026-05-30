@@ -22,7 +22,7 @@ pub use lsp::Server;
 pub fn build_lsp_service(config: Config) -> (lsp::LspService<Backend>, lsp::ClientSocket) {
     log::info!("Starting LSP server");
 
-    let processor = processor::ProcessorInterface::run();
+    let processor = processor::ProcessorController::run();
 
     lsp::LspService::build(|client| Backend::new(client, processor, config))
         .custom_method("custom/activeFileChanged", Backend::on_active_file_changed)

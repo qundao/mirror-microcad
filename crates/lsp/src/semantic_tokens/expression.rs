@@ -28,9 +28,7 @@ impl_tokens!(ast::Literal => |self_, ctx| {
 
 impl_tokens!(ast::TupleItem => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
-    self_.name
-        .as_ref()
-        .map(|name| ctx.push_token(&name.span, TokenType::PROPERTY, &[]));
+    if let Some(name) = self_.name.as_ref() { ctx.push_token(&name.span, TokenType::PROPERTY, &[]) };
     self_.value.semantic_tokens(ctx);
 });
 
@@ -47,7 +45,7 @@ impl_tokens!(ast::ArrayRangeExpression => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
     self_.start.semantic_tokens(ctx);
     self_.end.semantic_tokens(ctx);
-    self_.unit.as_ref().map(|unit| unit.semantic_tokens(ctx));
+    if let Some(unit) = self_.unit.as_ref() { unit.semantic_tokens(ctx) }
 });
 
 impl_tokens!(ast::ArrayListExpression => |self_, ctx| {
@@ -55,7 +53,7 @@ impl_tokens!(ast::ArrayListExpression => |self_, ctx| {
     self_.items
         .iter()
         .for_each(|item| item.semantic_tokens(ctx));
-    self_.unit.as_ref().map(|unit| unit.semantic_tokens(ctx));
+    if let Some(unit) = self_.unit.as_ref() { unit.semantic_tokens(ctx) }
 });
 
 impl_tokens!(ast::StringCharacter => TokenType::STRING);
@@ -127,9 +125,9 @@ impl_tokens!(ast::If => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
     ctx.push_token(&self_.if_span, TokenType::KEYWORD, &[]);
     self_.condition.semantic_tokens(ctx);
-    self_.else_span.as_ref().map(|span| ctx.push_token(span, TokenType::KEYWORD, &[]));
-    self_.else_body.as_ref().map(|body| body.semantic_tokens(ctx));
-    self_.next_if.as_ref().map(|if_| if_.semantic_tokens(ctx));
+    if let Some(span) = self_.else_span.as_ref() { ctx.push_token(span, TokenType::KEYWORD, &[]) }
+    if let Some(body) = self_.else_body.as_ref() { body.semantic_tokens(ctx) }
+    if let Some(if_) = self_.next_if.as_ref() { if_.semantic_tokens(ctx) }
 });
 
 impl_tokens!(ast::Expression => |self_, ctx| {
