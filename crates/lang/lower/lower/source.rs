@@ -3,7 +3,7 @@
 
 use crate::lower::{Lower, LowerContext, LowerError, LowerErrorsWithSource, ir};
 
-use microcad_lang_base::{Diagnostics, Hashed, PushDiag, SrcReferrer, Url, virtual_url};
+use microcad_lang_base::{Diagnostics, Hashed, SrcReferrer, Url, virtual_url};
 use microcad_lang_parse::ast;
 
 impl ir::Source {
@@ -21,11 +21,7 @@ impl ir::Source {
             url: source.url.clone(),
             line_offset: source.line_offset,
         });
-        for diagnostic in context.diagnostics {
-            diagnostics
-                .push_diag(diagnostic)
-                .expect("Diag list must return no error");
-        }
+        diagnostics.append(context.diagnostics);
         Ok(source)
     }
 
@@ -119,11 +115,7 @@ impl ir::Source {
         source_file.set_filename(path);
         log::debug!("Successfully loaded source from string");
 
-        for diagnostic in lower_context.diagnostics {
-            diagnostics
-                .push_diag(diagnostic)
-                .expect("Diag list must return no error");
-        }
+        diagnostics.append(lower_context.diagnostics);
 
         (source_file.with_line_offset(line_offset), None)
     }

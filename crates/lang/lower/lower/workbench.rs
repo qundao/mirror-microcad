@@ -20,9 +20,11 @@ impl Lower for std::rc::Rc<ir::WorkbenchDefinition> {
 
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         if let Some(tail) = node.body.statements.tail.as_ref() {
-            context.warning(LowerError::ImplicitWorkbenchReturn {
-                src_ref: context.src_ref(&tail.span),
-            });
+            context
+                .warning(LowerError::ImplicitWorkbenchReturn {
+                    src_ref: context.src_ref(&tail.span),
+                })
+                .ok();
         }
 
         Ok(std::rc::Rc::new(ir::WorkbenchDefinition {
