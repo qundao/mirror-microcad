@@ -195,8 +195,9 @@ impl commands::compile::Lower for document::Source {
     fn lower(&mut self) -> Result {
         match &self.ast_source {
             Some(ast_source) => {
+                let ir_source = ir::Source::from_source(ast_source, &mut self.diagnostics);
                 self.ir_source = Some(
-                    self.capture_diags(ir::Source::from_source(ast_source))
+                    self.capture_diags(ir_source)
                         .ok_or_else(|| miette::miette!("Failed to lower"))?,
                 );
 

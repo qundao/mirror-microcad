@@ -12,7 +12,7 @@ use microcad_lang_parse::ast;
 impl Lower for ir::Literal {
     type AstNode = ast::Literal;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(match &node.literal {
             ast::LiteralKind::Bool(lit) => {
                 ir::Literal(Refer::new(lit.value.into(), context.src_ref(&lit.span)))
@@ -52,7 +52,7 @@ impl Lower for ir::Literal {
 impl Lower for ir::Unit {
     type AstNode = ast::Unit;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         use std::str::FromStr;
         ir::Unit::from_str(node.name.as_str()).map_err(|_| {
             LowerError::UnknownUnit(Refer::new(

@@ -8,7 +8,7 @@ use microcad_lang_parse::ast;
 impl Lower for ir::Identifier {
     type AstNode = ast::Identifier;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(Self(Refer::new(
             node.name.clone(),
             context.src_ref(&node.span),
@@ -19,7 +19,7 @@ impl Lower for ir::Identifier {
 impl Lower for ir::QualifiedName {
     type AstNode = ast::QualifiedName;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         let parts = node
             .parts
             .iter()

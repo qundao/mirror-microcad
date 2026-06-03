@@ -18,7 +18,7 @@
  161:           radius = height / 2;
  162:       }
  163:   
- 164:       Circle(radius = radius + thickness) - Circle(radius)
+ 164:       Circle(radius = radius + thickness) - Circle(radius);
  165:   }
  166:   Wheel(radius = 1cm);
 

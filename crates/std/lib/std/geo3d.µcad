@@ -27,7 +27,7 @@ pub part Cube(size_x: Length, size_y: Length, size_z: Length) {
 
     std::geo2d::Rect(width = size_x, height = size_y)
         .std::ops::extrude(height = size_z)
-        .std::ops::translate(z = -size_z / 2.0)
+        .std::ops::translate(z = -size_z / 2.0);
 }
 
 /// Cylinder definition.
@@ -67,7 +67,7 @@ pub part Cylinder(radius_bottom: Length, radius_top: Length, height: Length, off
     s = radius_top / radius_bottom;
     std::geo2d::Circle(radius = radius_bottom)
         .std::ops::extrude(height, scale = (x = s, y = s))
-        .std::ops::translate(z = offset)
+        .std::ops::translate(z = offset);
 }
 
 /// A torus.

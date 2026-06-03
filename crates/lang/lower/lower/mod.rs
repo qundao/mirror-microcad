@@ -92,6 +92,14 @@ pub enum LowerError {
     /// A type range between non-integer literals
     #[error("range expressions must be between integers")]
     InvalidRangeType { src_ref: SrcRef },
+
+    /// Implicit returns in tail expressions are treated as regular statements inside workbenches
+    #[error("Ignored implicit return in workbench")]
+    #[diagnostic(help("Add a trailing semicolon to remove the implicit return"))]
+    ImplicitWorkbenchReturn {
+        #[label("Workbenches don't return any value")]
+        src_ref: SrcRef,
+    },
 }
 
 /// Result with parse error
@@ -107,7 +115,8 @@ impl SrcReferrer for LowerError {
             | LowerError::InvalidLiteral { src_ref, .. }
             | LowerError::InvalidExpression { src_ref }
             | LowerError::InvalidStatement { src_ref }
-            | LowerError::InvalidRangeType { src_ref } => src_ref.clone(),
+            | LowerError::InvalidRangeType { src_ref }
+            | LowerError::ImplicitWorkbenchReturn { src_ref } => src_ref.clone(),
             LowerError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
             LowerError::InvalidIdentifier(id) => id.src_ref(),
             LowerError::UnknownUnit(unit) => unit.src_ref(),
@@ -168,7 +177,7 @@ impl SrcReferrer for LowerErrorsWithSource {
 
 pub(crate) fn build_ast(
     source: &str,
-    lower_context: &super::LowerContext,
+    lower_context: &mut super::LowerContext,
 ) -> Result<microcad_lang_parse::ast::Program, LowerErrorsWithSource> {
     parse(source).map_err(|errors| {
         let errors = errors

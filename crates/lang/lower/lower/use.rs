@@ -8,7 +8,7 @@ use microcad_lang_parse::ast;
 impl Lower for ir::UseStatement {
     type AstNode = ast::UseStatement;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         let glob_index = node
             .name
             .parts
@@ -64,7 +64,7 @@ impl Lower for ir::UseStatement {
 impl Lower for ir::Visibility {
     type AstNode = ast::Visibility;
 
-    fn lower(node: &Self::AstNode, _context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, _context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(match node {
             ast::Visibility::Public => Self::Public,
         })

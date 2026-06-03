@@ -1,9 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Resolve the intermediate represnetions into a symbol.
-//!
-//! To "run" the source file (and get the expected output) it must now be evaluated (see [`crate::eval`])  .
+//! Resolve the intermediate representation into a [`Symbol`].
 
 mod externals;
 mod grant;

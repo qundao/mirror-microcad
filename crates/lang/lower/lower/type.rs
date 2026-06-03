@@ -50,7 +50,7 @@ impl Type {
 impl Lower for ir::Type {
     type AstNode = ast::Type;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(match node {
             ast::Type::Single(ty) => {
                 Type::parse_str(ty.name.as_str(), context.src_ref(&node.span()))?
@@ -64,7 +64,7 @@ impl Lower for ir::Type {
 impl Lower for ir::TypeAnnotation {
     type AstNode = ast::Type;
 
-    fn lower(node: &Self::AstNode, context: &LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(ir::TypeAnnotation(Refer::new(
             Type::lower(node, context)?,
             context.src_ref(&node.span()),

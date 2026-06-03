@@ -8,16 +8,16 @@
 -- Code --
 
   70:   sketch K() {
-  71:     @input // error: Input marker is not allowed here.
+  71:     @input; // error: Input marker is not allowed here.
   72:   } K();
 
 -- Errors --
   × error: 71:3: The Sketch workbench produced a Undetermined output, but expected a 2D output.
     ╭─[../books/tests/src/statement_usage/workbench.md:71:3]
  70 │ sketch K() {
- 71 │   @input // error: Input marker is not allowed here.
-    ·   ─────────────────────────┬─────────────────────────
-    ·                            ╰── The Sketch workbench produced a Undetermined output, but expected a 2D output.
+ 71 │   @input; // error: Input marker is not allowed here.
+    ·   ───┬──
+    ·      ╰── The Sketch workbench produced a Undetermined output, but expected a 2D output.
  72 │ } K();
     ╰────
 

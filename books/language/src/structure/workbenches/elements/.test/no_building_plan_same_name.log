@@ -15,7 +15,7 @@
  118:           radius = radius * 2; // error: it cannot be set a second time
  119:           thickness = 5mm;
  120:       }
- 121:       Circle(radius = radius + thickness) - Circle(radius)
+ 121:       Circle(radius = radius + thickness) - Circle(radius);
  122:   }
  123:   // Use initializer
  124:   Wheel(radius = 1cm);

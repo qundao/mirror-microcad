@@ -15,7 +15,7 @@
  137:           thickness = outer - (radius * 1mm);
  138:       }
  139:   
- 140:       Circle(radius = radius + thickness) - Circle(radius)
+ 140:       Circle(radius = radius + thickness) - Circle(radius);
  141:   }
  142:   // Use initializer
  143:   Wheel(radius = 1.0, outer = 1cm);
