@@ -3,6 +3,8 @@
 
 //! Method call syntax elements.
 
+use std::fmt::Display;
+
 use crate::lower::ir;
 
 use microcad_lang_base::SrcRef;
@@ -10,16 +12,19 @@ use microcad_lang_proc_macros::SrcReferrer;
 
 /// Method call syntax entity.
 #[derive(Clone, Debug, SrcReferrer)]
-pub struct MethodCall {
+pub struct MethodCall<EXPR = ir::Expression> {
     /// Name of the method.
     pub name: ir::QualifiedName,
     /// List of arguments.
-    pub argument_list: ir::ArgumentList,
+    pub argument_list: ir::ArgumentList<EXPR>,
     /// Source code reference.
     pub src_ref: SrcRef,
 }
 
-impl std::fmt::Display for MethodCall {
+impl<EXPR> std::fmt::Display for MethodCall<EXPR>
+where
+    EXPR: Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}({})", self.name, self.argument_list)
     }

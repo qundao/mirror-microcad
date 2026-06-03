@@ -11,9 +11,12 @@ use microcad_lang_proc_macros::SrcReferrer;
 
 /// *Ordered map* of arguments in a [`Call`].
 #[derive(Clone, Debug, Default, Deref, DerefMut, PartialEq, SrcReferrer)]
-pub struct ArgumentList(pub Refer<OrdMap<Identifier, ir::Argument>>);
+pub struct ArgumentList<EXPR = ir::Expression>(pub Refer<OrdMap<Identifier, ir::Argument<EXPR>>>);
 
-impl std::fmt::Display for ArgumentList {
+impl<EXPR> std::fmt::Display for ArgumentList<EXPR>
+where
+    EXPR: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", {
             let mut v = self

@@ -10,17 +10,11 @@ use microcad_lang_proc_macros::SrcReferrer;
 
 /// Inner of an [`ArrayExpression`].
 #[derive(Clone, Debug, PartialEq)]
-pub enum ArrayExpressionInner {
+pub enum ArrayExpressionInner<EXPR = ir::Expression> {
     /// List: `a,b,c`.
-    List(ir::ListExpression),
+    List(ir::ListExpression<EXPR>),
     /// Range: `a..b`.
-    Range(ir::RangeExpression),
-}
-
-impl Default for ArrayExpressionInner {
-    fn default() -> Self {
-        Self::List(Default::default())
-    }
+    Range(ir::RangeExpression<EXPR>),
 }
 
 impl std::fmt::Display for ArrayExpressionInner {
@@ -59,7 +53,7 @@ impl SrcReferrer for ArrayExpressionInner {
 }
 
 /// Array of expressions with common result unit, e.g. `[1+2,4,9]`.
-#[derive(Default, Clone, Debug, Deref, DerefMut, PartialEq, SrcReferrer)]
+#[derive(Clone, Debug, Deref, DerefMut, PartialEq, SrcReferrer)]
 pub struct ArrayExpression {
     /// Expression list.
     #[deref]

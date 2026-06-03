@@ -11,7 +11,7 @@ use crate::lower::ir;
 
 /// Range start.
 #[derive(Clone, Debug, Default, Deref, PartialEq, SrcReferrer)]
-pub struct RangeFirst(pub Box<ir::Expression>);
+pub struct RangeFirst<EXPR = ir::Expression>(pub Box<EXPR>);
 
 impl std::fmt::Display for RangeFirst {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -21,7 +21,7 @@ impl std::fmt::Display for RangeFirst {
 
 /// Range end.
 #[derive(Clone, Debug, Default, Deref, PartialEq, SrcReferrer)]
-pub struct RangeLast(pub Box<ir::Expression>);
+pub struct RangeLast<EXPR = ir::Expression>(pub Box<EXPR>);
 
 impl std::fmt::Display for RangeLast {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -31,11 +31,11 @@ impl std::fmt::Display for RangeLast {
 
 /// Range expression, e.g. `a..b`.
 #[derive(Clone, Debug, Default, PartialEq, SrcReferrer)]
-pub struct RangeExpression {
+pub struct RangeExpression<EXPR = ir::Expression> {
     /// First value in the range.
-    pub first: RangeFirst,
+    pub first: RangeFirst<EXPR>,
     /// Last value in the range.
-    pub last: RangeLast,
+    pub last: RangeLast<EXPR>,
     /// Source code reference.
     pub src_ref: SrcRef,
 }

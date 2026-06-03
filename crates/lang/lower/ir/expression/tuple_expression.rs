@@ -10,14 +10,17 @@ use microcad_lang_proc_macros::SrcReferrer;
 
 /// Tuple expression, e.g. `(x=1+2,4,z=9)`.
 #[derive(Clone, Debug, Default, PartialEq, SrcReferrer)]
-pub struct TupleExpression {
+pub struct TupleExpression<EXPR = ir::Expression> {
     /// List of tuple members.
-    pub args: ir::ArgumentList,
+    pub args: ir::ArgumentList<EXPR>,
     /// Source code reference
     pub src_ref: SrcRef,
 }
 
-impl std::fmt::Display for TupleExpression {
+impl<EXPR> std::fmt::Display for TupleExpression<EXPR>
+where
+    EXPR: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(
             f,
