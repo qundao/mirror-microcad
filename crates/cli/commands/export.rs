@@ -38,7 +38,8 @@ impl RunCommand for Export {
         };
 
         match document
-            .compile(cli.compile_parameters(&self.resolution)?)
+            .compile(cli.compile_parameters())
+            .and(document.render(cli.render_params(&self.resolution)?))
             .and(document.get_export_targets(params))
         {
             Ok(targets) => {
