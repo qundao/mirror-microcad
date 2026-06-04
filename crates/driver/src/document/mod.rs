@@ -210,8 +210,8 @@ impl commands::compile::Eval for Document {
     }
 }
 
-impl commands::compile::Render for Document {
-    fn render(&mut self, params: impl Into<commands::compile::RenderParameters>) -> Result<Model> {
+impl commands::Render for Document {
+    fn render(&mut self, params: impl Into<commands::RenderParameters>) -> Result<Model> {
         match self {
             Document::Source(source) => source.render(params),
             _ => unimplemented!(),

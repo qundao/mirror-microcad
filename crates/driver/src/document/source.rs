@@ -288,10 +288,10 @@ impl commands::compile::Eval for document::Source {
     }
 }
 
-impl commands::compile::Render for document::Source {
+impl commands::Render for document::Source {
     fn render(
         &mut self,
-        parameters: impl Into<commands::compile::RenderParameters>,
+        parameters: impl Into<commands::RenderParameters>,
     ) -> document::Result<Model> {
         if self.model.is_none() {
             return Err(SourceError::InvalidState(self.url.clone()).into());
