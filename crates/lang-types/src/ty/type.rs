@@ -69,6 +69,41 @@ impl Type {
     }
 }
 
+impl std::str::FromStr for Type {
+    type Err = TypeError;
+
+    /// Parse a type from &str
+    fn from_str(ty: &str) -> Result<Self, TypeError> {
+        if let Some(dimensions) = ty.strip_prefix("Matrix") {
+            let (x, y) = dimensions
+                .split_once('x')
+                .unwrap_or((dimensions, dimensions));
+            let x = usize::from_str(x).map_err(|_| TypeError::InvalidMatrixType(ty.to_string()))?;
+            let y = usize::from_str(y).map_err(|_| TypeError::InvalidMatrixType(ty.to_string()))?;
+            return Ok(Type::Matrix(MatrixType::new(x, y)));
+        }
+
+        match ty {
+            "Color" => Ok(Type::Tuple(Box::new(TupleType::new_color()))),
+            "Vec2" => Ok(Type::Tuple(Box::new(TupleType::new_vec2()))),
+            "Vec3" => Ok(Type::Tuple(Box::new(TupleType::new_vec3()))),
+            "Size2" => Ok(Type::Tuple(Box::new(TupleType::new_size2()))),
+            "Integer" => Ok(Type::Integer),
+            "Bool" => Ok(Type::Bool),
+            "String" => Ok(Type::String),
+            "Scalar" => Ok(Type::Quantity(QuantityType::Scalar)),
+            "Length" => Ok(Type::Quantity(QuantityType::Length)),
+            "Area" => Ok(Type::Quantity(QuantityType::Area)),
+            "Angle" => Ok(Type::Quantity(QuantityType::Angle)),
+            "Volume" => Ok(Type::Quantity(QuantityType::Volume)),
+            "Weight" => Ok(Type::Quantity(QuantityType::Weight)),
+            "Density" => Ok(Type::Quantity(QuantityType::Density)),
+            "Model" => Ok(Type::Model),
+            _ => Err(TypeError::UnknownType(ty.to_string())),
+        }
+    }
+}
+
 impl std::ops::Mul for Type {
     type Output = Type;
 

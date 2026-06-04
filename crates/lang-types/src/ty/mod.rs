@@ -17,6 +17,21 @@ pub use r#type::*;
 pub use type_list::*;
 pub use unit::*;
 
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+pub enum TypeError {
+    #[error("Unknown unit: {0}")]
+    UnknownUnit(String),
+
+    #[error("Unknown type: {0}")]
+    UnknownType(String),
+
+    /// Matrix type with invalid dimensions
+    #[error("Invalid matrix type: {0}")]
+    InvalidMatrixType(String),
+}
+
 /// Trait for structs and expressions that have a type
 pub trait Ty {
     /// Return type
