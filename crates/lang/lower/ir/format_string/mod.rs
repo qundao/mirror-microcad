@@ -13,7 +13,7 @@ use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// Format string item.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone)]
 pub enum FormatStringInner {
     /// String literal.
     String(Refer<String>),
@@ -31,7 +31,7 @@ impl SrcReferrer for FormatStringInner {
 }
 
 /// Format string.
-#[derive(Default, Clone, Debug, PartialEq, SrcReferrer)]
+#[derive(Default, Clone, Debug, SrcReferrer)]
 pub struct FormatString(pub Refer<Vec<FormatStringInner>>);
 
 impl FormatString {

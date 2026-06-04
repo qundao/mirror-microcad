@@ -203,19 +203,14 @@ impl Eval for ir::Expression {
             Self::FormatString(format_string) => format_string.eval(context),
             Self::ArrayExpression(array_expression) => array_expression.eval(context),
             Self::TupleExpression(tuple_expression) => tuple_expression.eval(context),
-            Self::BinaryOp {
-                lhs,
-                op,
-                rhs,
-                src_ref: _,
-            } => {
-                let lhs: Value = lhs.eval(context)?;
-                let rhs: Value = rhs.eval(context)?;
+            Self::BinaryOp(binary_op) => {
+                let lhs: Value = binary_op.lhs.eval(context)?;
+                let rhs: Value = binary_op.rhs.eval(context)?;
                 if lhs.is_invalid() || rhs.is_invalid() {
                     return Ok(Value::None);
                 }
 
-                match Value::binary_op(lhs, rhs, op.as_str()) {
+                match Value::binary_op(lhs, rhs, binary_op.op.as_str()) {
                     Err(err) => {
                         context.error(self, err)?;
                         Ok(Value::None)
@@ -223,14 +218,10 @@ impl Eval for ir::Expression {
                     Ok(value) => Ok(value),
                 }
             }
-            Self::UnaryOp {
-                op,
-                rhs,
-                src_ref: _,
-            } => {
-                let value: Value = rhs.eval(context)?;
+            Self::UnaryOp(unary_op) => {
+                let value: Value = unary_op.rhs.eval(context)?;
                 value
-                    .unary_op(op.as_str())
+                    .unary_op(unary_op.op.as_str())
                     .map_err(|err| Box::new(err.into()))
             }
             Self::ArrayElementAccess(lhs, rhs, _) => {
