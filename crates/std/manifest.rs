@@ -43,13 +43,7 @@ impl Default for Library {
         Self {
             description: Some(String::from("µcad standard library")),
             version: crate::version(),
-            authors: Some(
-                [
-                    String::from("Patrick Hoffmann"),
-                    String::from("Michael Winkelmann"),
-                ]
-                .into(),
-            ),
+            authors: Some([String::from("Michael Winkelmann")].into()),
         }
     }
 }

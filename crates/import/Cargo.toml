@@ -18,7 +18,6 @@ path = "lib.rs"
 
 [dependencies]
 microcad-core = { workspace = true }
-microcad-lang = { workspace = true }
 microcad-lang-base = { workspace = true }
 
 thiserror = "2.0.12"

@@ -105,8 +105,8 @@ impl SymbolInfo {
     }
 }
 
-impl From<&Rc<mu::ir::Assignment>> for SymbolInfo {
-    fn from(def: &Rc<mu::ir::Assignment>) -> Self {
+impl From<&Rc<mu::ir::LocalAssignment>> for SymbolInfo {
+    fn from(def: &Rc<mu::ir::LocalAssignment>) -> Self {
         SymbolInfo {
             id: def.id().to_string(),
             kind: "Assignment".into(),
