@@ -17,7 +17,10 @@ pub enum ArrayExpressionInner<EXPR = ir::Expression> {
     Range(ir::RangeExpression<EXPR>),
 }
 
-impl std::fmt::Display for ArrayExpressionInner {
+impl<EXPR> std::fmt::Display for ArrayExpressionInner<EXPR>
+where
+    EXPR: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
@@ -65,7 +68,10 @@ pub struct ArrayExpression<EXPR = ir::Expression> {
     pub src_ref: SrcRef,
 }
 
-impl std::fmt::Display for ArrayExpression {
+impl<EXPR> std::fmt::Display for ArrayExpression<EXPR>
+where
+    EXPR: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "[{}]{}", self.inner, self.unit)
     }

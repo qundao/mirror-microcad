@@ -26,7 +26,10 @@ pub struct Call<EXPR = ir::Expression> {
     pub src_ref: SrcRef,
 }
 
-impl std::fmt::Display for Call {
+impl<EXPR> std::fmt::Display for Call<EXPR>
+where
+    EXPR: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}({})", self.name, self.argument_list)
     }
