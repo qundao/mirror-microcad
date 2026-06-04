@@ -182,7 +182,8 @@ where
 /// An expression that can be evaluated during `resolve` phase.
 ///
 /// Use for `Constant` and default values for `Parameter`.
-#[derive(Debug, derive_more::From)]
+/// TODO: ElementAccess are missing.
+#[derive(Debug, Clone, derive_more::From)]
 pub enum ConstantExpression {
     Invalid,
     Literal(ir::Literal),
@@ -193,7 +194,26 @@ pub enum ConstantExpression {
     TupleExpression(ir::TupleExpression<ConstantExpression>),
     BinaryOp(ir::BinaryOp<ConstantExpression>),
     UnaryOp(ir::UnaryOp<ConstantExpression>),
-    //ArrayElementAccess(Box<Expression>, Box<Expression>, SrcRef),
+}
+
+impl std::fmt::Display for ConstantExpression {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match &self {
+            ConstantExpression::Literal(literal) => write!(f, "{literal}"),
+            ConstantExpression::Call(call) => write!(f, "{call}"),
+            ConstantExpression::QualifiedName(qualified_name) => write!(f, "{qualified_name}"),
+            ConstantExpression::FormatString(format_string) => write!(f, "{format_string}"),
+            ConstantExpression::ArrayExpression(array_expression) => {
+                write!(f, "{array_expression}")
+            }
+            ConstantExpression::TupleExpression(tuple_expression) => {
+                write!(f, "{tuple_expression}")
+            }
+            ConstantExpression::BinaryOp(binary_op) => write!(f, "{binary_op}"),
+            ConstantExpression::UnaryOp(unary_op) => write!(f, "{unary_op}"),
+            _ => unimplemented!(),
+        }
+    }
 }
 
 impl crate::lower::SingleIdentifier for Expression {
@@ -266,45 +286,3 @@ impl std::fmt::Display for Expression {
         }
     }
 }
-
-/*impl PartialEq for Expression {
-    fn eq(&self, other: &Self) -> bool {
-        match (self, other) {
-            (Self::Literal(l0), Self::Literal(r0)) => l0 == r0,
-            (Self::FormatString(l0), Self::FormatString(r0)) => l0 == r0,
-            (Self::ArrayExpression(l0), Self::ArrayExpression(r0)) => l0 == r0,
-            (Self::TupleExpression(l0), Self::TupleExpression(r0)) => l0 == r0,
-            (Self::QualifiedName(l0), Self::QualifiedName(r0)) => l0 == r0,
-            (
-                Self::BinaryOp {
-                    lhs: l_lhs,
-                    op: l_op,
-                    rhs: l_rhs,
-                    src_ref: l_src_ref,
-                },
-                Self::BinaryOp {
-                    lhs: r_lhs,
-                    op: r_op,
-                    rhs: r_rhs,
-                    src_ref: r_src_ref,
-                },
-            ) => l_lhs == r_lhs && l_op == r_op && l_rhs == r_rhs && l_src_ref == r_src_ref,
-            (
-                Self::UnaryOp {
-                    op: l_op,
-                    rhs: l_rhs,
-                    src_ref: l_src_ref,
-                },
-                Self::UnaryOp {
-                    op: r_op,
-                    rhs: r_rhs,
-                    src_ref: r_src_ref,
-                },
-            ) => l_op == r_op && l_rhs == r_rhs && l_src_ref == r_src_ref,
-            (Self::ArrayElementAccess(l0, l1, l2), Self::ArrayElementAccess(r0, r1, r2)) => {
-                l0 == r0 && l1 == r1 && l2 == r2
-            }
-            _ => unreachable!("PartialEq implemented for const expressions only"),
-        }
-    }
-}*/

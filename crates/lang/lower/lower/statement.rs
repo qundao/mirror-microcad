@@ -4,17 +4,38 @@
 use crate::lower::{Lower, LowerContext, LowerError, ir};
 use microcad_lang_parse::ast;
 
-/// Note: These constructors are a workaround until the assignment in microcad-lang is split up
-impl ir::Assignment {
-    fn from_ast_local(
-        node: &ast::LocalAssignment,
-        context: &mut LowerContext,
-    ) -> Result<Self, LowerError> {
-        Ok(ir::Assignment {
-            doc: ir::DocBlock::default(),
-            visibility: ir::Visibility::Private,
+impl Lower for ir::Constant {
+    type AstNode = ast::ConstAssignment;
+
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+        Ok(ir::Constant {
+            doc: ir::DocBlock::lower(&node.doc, context)?,
+            attr: ir::AttributeList::lower(&node.attributes, context)?,
+            visibility: node
+                .visibility
+                .as_ref()
+                .map(|vis| ir::Visibility::lower(vis, context))
+                .transpose()?
+                .unwrap_or_default(),
+            keyword_src_ref: context.src_ref(&node.keyword_span),
+            src_ref: context.src_ref(&node.span),
             id: ir::Identifier::lower(&node.name, context)?,
-            qualifier: ir::Qualifier::Value,
+            ty: node
+                .ty
+                .as_ref()
+                .map(|ty| ir::TypeAnnotation::lower(ty, context))
+                .transpose()?,
+            expr: ir::ConstantExpression::lower(&node.value, context)?,
+        })
+    }
+}
+
+impl Lower for ir::LocalAssignment {
+    type AstNode = ast::LocalAssignment;
+
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+        Ok(ir::LocalAssignment {
+            id: ir::Identifier::lower(&node.name, context)?,
             specified_type: node
                 .ty
                 .as_ref()
@@ -24,16 +45,36 @@ impl ir::Assignment {
             src_ref: context.src_ref(&node.span),
         })
     }
+}
 
+impl Lower for ir::PropertyAssignment {
+    type AstNode = ast::PropertyAssignment;
+
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+        Ok(ir::PropertyAssignment {
+            doc: ir::DocBlock::lower(&node.doc, context)?,
+            attr: ir::AttributeList::lower(&node.attributes, context)?,
+            keyword_src_ref: context.src_ref(&node.keyword_span),
+            src_ref: context.src_ref(&node.span),
+            id: ir::Identifier::lower(&node.name, context)?,
+            ty: node
+                .ty
+                .as_ref()
+                .map(|ty| ir::TypeAnnotation::lower(ty, context))
+                .transpose()?,
+            expr: ir::Expression::lower(&node.value, context)?,
+        })
+    }
+}
+
+/// Note: These constructors are a workaround until the assignment in microcad-lang is split up
+impl ir::LocalAssignment {
     fn from_ast_prop(
         node: &ast::PropertyAssignment,
         context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
-        Ok(ir::Assignment {
-            doc: ir::DocBlock::lower(&node.doc, context)?,
-            visibility: ir::Visibility::Private,
+        Ok(ir::LocalAssignment {
             id: ir::Identifier::lower(&node.name, context)?,
-            qualifier: ir::Qualifier::Prop,
             specified_type: node
                 .ty
                 .as_ref()
@@ -48,16 +89,8 @@ impl ir::Assignment {
         node: &ast::ConstAssignment,
         context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
-        Ok(ir::Assignment {
-            doc: ir::DocBlock::lower(&node.doc, context)?,
-            visibility: node
-                .visibility
-                .as_ref()
-                .map(|v| ir::Visibility::lower(v, context))
-                .transpose()?
-                .unwrap_or_default(),
+        Ok(ir::LocalAssignment {
             id: ir::Identifier::lower(&node.name, context)?,
-            qualifier: ir::Qualifier::Const,
             specified_type: node
                 .ty
                 .as_ref()
@@ -70,14 +103,14 @@ impl ir::Assignment {
 }
 
 /// Note: These constructors are a workaround until the assignment in microcad-lang is split up
-impl ir::AssignmentStatement {
+impl ir::LocalAssignmentStatement {
     fn from_ast_local(
         node: &ast::LocalAssignment,
         context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         Ok(Self {
             attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
-            assignment: std::rc::Rc::new(ir::Assignment::from_ast_local(node, context)?),
+            assignment: std::rc::Rc::new(ir::LocalAssignment::lower(node, context)?),
             src_ref: context.src_ref(&node.span),
         })
     }
@@ -88,7 +121,7 @@ impl ir::AssignmentStatement {
     ) -> Result<Self, LowerError> {
         Ok(Self {
             attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
-            assignment: std::rc::Rc::new(ir::Assignment::from_ast_prop(node, context)?),
+            assignment: std::rc::Rc::new(ir::LocalAssignment::from_ast_prop(node, context)?),
             src_ref: context.src_ref(&node.span),
         })
     }
@@ -99,7 +132,7 @@ impl ir::AssignmentStatement {
     ) -> Result<Self, LowerError> {
         Ok(Self {
             attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
-            assignment: std::rc::Rc::new(ir::Assignment::from_ast_const(node, context)?),
+            assignment: std::rc::Rc::new(ir::LocalAssignment::from_ast_const(node, context)?),
             src_ref: context.src_ref(&node.span),
         })
     }
@@ -182,15 +215,15 @@ impl Lower for ir::Statement {
             ast::Statement::InnerDocComment(i) => {
                 ir::Statement::InnerDocComment(ir::InnerDocComment::lower(i, context)?)
             }
-            ast::Statement::LocalAssignment(a) => {
-                ir::Statement::Assignment(ir::AssignmentStatement::from_ast_local(a, context)?)
-            }
-            ast::Statement::Property(a) => {
-                ir::Statement::Assignment(ir::AssignmentStatement::from_ast_prop(a, context)?)
-            }
-            ast::Statement::Const(a) => {
-                ir::Statement::Assignment(ir::AssignmentStatement::from_ast_const(a, context)?)
-            }
+            ast::Statement::LocalAssignment(a) => ir::Statement::LocalAssignment(
+                ir::LocalAssignmentStatement::from_ast_local(a, context)?,
+            ),
+            ast::Statement::Property(a) => ir::Statement::LocalAssignment(
+                ir::LocalAssignmentStatement::from_ast_prop(a, context)?,
+            ),
+            ast::Statement::Const(a) => ir::Statement::LocalAssignment(
+                ir::LocalAssignmentStatement::from_ast_const(a, context)?,
+            ),
             ast::Statement::Error(span) => {
                 return Err(LowerError::InvalidStatement {
                     src_ref: context.src_ref(span),

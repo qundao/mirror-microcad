@@ -13,7 +13,10 @@ use crate::lower::ir;
 #[derive(Clone, Debug, Default, Deref, PartialEq, SrcReferrer)]
 pub struct RangeFirst<EXPR = ir::Expression>(pub Box<EXPR>);
 
-impl std::fmt::Display for RangeFirst {
+impl<EXPR> std::fmt::Display for RangeFirst<EXPR>
+where
+    EXPR: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.0)
     }
@@ -23,7 +26,10 @@ impl std::fmt::Display for RangeFirst {
 #[derive(Clone, Debug, Default, Deref, PartialEq, SrcReferrer)]
 pub struct RangeLast<EXPR = ir::Expression>(pub Box<EXPR>);
 
-impl std::fmt::Display for RangeLast {
+impl<EXPR> std::fmt::Display for RangeLast<EXPR>
+where
+    EXPR: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}", self.0)
     }
@@ -40,7 +46,10 @@ pub struct RangeExpression<EXPR = ir::Expression> {
     pub src_ref: SrcRef,
 }
 
-impl std::fmt::Display for RangeExpression {
+impl<EXPR> std::fmt::Display for RangeExpression<EXPR>
+where
+    EXPR: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}..{}", self.first, self.last)
     }

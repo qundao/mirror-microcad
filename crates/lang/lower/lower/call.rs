@@ -6,7 +6,10 @@ use crate::lower::{Lower, LowerContext, LowerError, ir};
 use microcad_lang_base::{Identifier, OrdMap, Refer};
 use microcad_lang_parse::ast;
 
-impl Lower for ir::Call {
+impl<EXPR> Lower for ir::Call<EXPR>
+where
+    EXPR: Lower<AstNode = ast::Expression>,
+{
     type AstNode = ast::Call;
 
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
@@ -18,7 +21,10 @@ impl Lower for ir::Call {
     }
 }
 
-impl Lower for ir::ArgumentList {
+impl<EXPR> Lower for ir::ArgumentList<EXPR>
+where
+    EXPR: Lower<AstNode = ast::Expression>,
+{
     type AstNode = ast::ArgumentList;
 
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
@@ -33,7 +39,10 @@ impl Lower for ir::ArgumentList {
     }
 }
 
-impl Lower for ir::Argument {
+impl<EXPR> Lower for ir::Argument<EXPR>
+where
+    EXPR: Lower<AstNode = ast::Expression>,
+{
     type AstNode = ast::Argument;
 
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
@@ -43,12 +52,15 @@ impl Lower for ir::Argument {
                 .map(|name| Identifier::lower(name, context))
                 .transpose()?,
             src_ref: context.src_ref(node.span()),
-            expression: ir::Expression::lower(node.value(), context)?,
+            expression: EXPR::lower(node.value(), context)?,
         })
     }
 }
 
-impl Lower for ir::MethodCall {
+impl<EXPR> Lower for ir::MethodCall<EXPR>
+where
+    EXPR: Lower<AstNode = ast::Expression>,
+{
     type AstNode = ast::Call;
 
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
