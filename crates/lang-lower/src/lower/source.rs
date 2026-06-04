@@ -1,7 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::lower::{Lower, LowerContext, LowerError, LowerErrorsWithSource, ir};
+use crate::{Lower, LowerContext, LowerError, LowerErrorsWithSource, ir};
 
 use microcad_lang_base::{Diagnostics, Hashed, SrcReferrer, Url, virtual_url};
 use microcad_lang_parse::ast;
@@ -32,11 +32,6 @@ impl ir::Source {
         diagnostics: &mut Diagnostics,
     ) -> (std::rc::Rc<Self>, Option<LowerErrorsWithSource>) {
         let path = path.as_ref();
-        log::trace!(
-            "{load} file {path} [{name}]",
-            path = path.display(),
-            load = microcad_lang_base::mark!(LOAD)
-        );
 
         let buf = match std::fs::read_to_string(path) {
             Ok(buf) => buf,
@@ -71,10 +66,6 @@ impl ir::Source {
         line_offset: u32,
         diagnostics: &mut Diagnostics,
     ) -> (Self, Option<LowerErrorsWithSource>) {
-        log::trace!(
-            "{load} source from string",
-            load = microcad_lang_base::mark!(LOAD)
-        );
         let mut lower_context = LowerContext::new(source_str).with_line_offset(line_offset);
 
         let dummy_source = || {
@@ -87,7 +78,7 @@ impl ir::Source {
             .with_line_offset(line_offset)
         };
 
-        let ast = match crate::lower::lower::build_ast(source_str, &mut lower_context) {
+        let ast = match crate::lower::build_ast(source_str, &mut lower_context) {
             Ok(ast) => ast,
             Err(error) => {
                 return (dummy_source(), Some(error));

@@ -6,7 +6,7 @@
 use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 
-use crate::lower::ir;
+use crate::ir;
 
 /// Return statement.
 #[derive(Clone, Debug, SrcReferrer)]

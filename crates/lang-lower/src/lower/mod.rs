@@ -25,6 +25,7 @@ mod workbench;
 use microcad_lang_base::{Hashed, Identifier, Refer, SrcRef, SrcReferrer};
 use microcad_lang_parse::ast::LiteralErrorKind;
 use microcad_lang_parse::parse;
+use microcad_lang_types::ty::TypeError;
 use miette::{Diagnostic, SourceCode};
 use thiserror::Error;
 
@@ -57,8 +58,8 @@ pub enum LowerError {
     UnknownType(#[label("Unknown type")] Refer<String>),
 
     /// Matrix type with invalid dimensions
-    #[error("Invalid matrix type: {0}")]
-    InvalidMatrixType(Refer<String>),
+    #[error("Type error: {0}")]
+    TypeError(#[from] Refer<TypeError>),
 
     /// Invalid glob pattern
     #[error("Invalid glob pattern, wildcard must be at the end of the pattern")]
@@ -121,7 +122,7 @@ impl SrcReferrer for LowerError {
             LowerError::InvalidIdentifier(id) => id.src_ref(),
             LowerError::UnknownUnit(unit) => unit.src_ref(),
             LowerError::UnknownType(ty) => ty.src_ref(),
-            LowerError::InvalidMatrixType(ty) => ty.src_ref(),
+            LowerError::TypeError(ty) => ty.src_ref(),
             LowerError::AstParser(err) => err.src_ref(),
         }
     }

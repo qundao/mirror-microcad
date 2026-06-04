@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::lower::{Lower, LowerContext, LowerError, ir};
+use crate::{Lower, LowerContext, LowerError, LowerResult, ir};
 
 use microcad_lang_base::{Identifier, PushDiag, Refer};
 use microcad_lang_parse::ast;
@@ -207,7 +207,7 @@ impl Lower for ir::Expression {
             ast::Expression::Body(b) => ir::Expression::Body(ir::Body::lower(b, context)?),
             ast::Expression::ElementAccess(access) => access.element_chain.iter().try_fold(
                 ir::Expression::lower(&access.value, context)?,
-                |acc, element| {
+                |acc, element| -> LowerResult<ir::Expression> {
                     use ast::ElementInner::*;
 
                     Ok(match &element.inner {

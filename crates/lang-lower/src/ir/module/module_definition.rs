@@ -8,7 +8,7 @@ use std::rc::Rc;
 use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Identifiable;
 
-use crate::lower::ir;
+use crate::ir;
 
 /// Module definition.
 #[derive(Clone, Debug, Default, Identifiable)]

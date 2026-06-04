@@ -3,7 +3,7 @@
 
 //! µcad assignment syntax element
 
-use crate::{lower::ir, ty::*};
+use crate::ir;
 
 use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
@@ -23,6 +23,7 @@ pub struct LocalAssignment<EXPR = ir::Expression> {
 
 impl std::fmt::Display for LocalAssignment {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        use microcad_lang_types::ty::Ty;
         match &self.specified_type {
             Some(t) => write!(
                 f,

@@ -3,7 +3,7 @@
 
 //! Use statement syntax element.
 
-use crate::lower::ir;
+use crate::ir;
 
 use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
 

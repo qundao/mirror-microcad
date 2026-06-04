@@ -3,7 +3,7 @@
 
 //! µcad syntax elements related to expressions
 
-use crate::lower::{SingleIdentifier, ir};
+use crate::{SingleIdentifier, ir};
 
 mod array_expression;
 mod marker;
@@ -216,7 +216,7 @@ impl std::fmt::Display for ConstantExpression {
     }
 }
 
-impl crate::lower::SingleIdentifier for Expression {
+impl crate::SingleIdentifier for Expression {
     /// If the expression includes just one identifier, e.g. `a` or `a * (a + 2)`
     fn single_identifier(&self) -> Option<&Identifier> {
         match &self {

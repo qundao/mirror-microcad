@@ -5,7 +5,7 @@
 
 use std::fmt::Display;
 
-use crate::lower::ir;
+use crate::ir;
 
 use microcad_lang_base::{Identifier, OrdMapValue, SrcRef};
 use microcad_lang_proc_macros::SrcReferrer;

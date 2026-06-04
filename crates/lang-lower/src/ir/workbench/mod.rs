@@ -3,9 +3,8 @@
 
 //! Workbench definition syntax element
 
-use crate::lower::ir;
+use crate::ir;
 
-use custom_debug::Debug;
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Identifiable;
 use strum::Display;
@@ -55,7 +54,7 @@ pub struct WorkbenchDefinition {
 
 impl WorkbenchDefinition {
     pub(crate) fn possible_params(&self) -> Vec<String> {
-        use crate::lower::Initialized;
+        use crate::Initialized;
         std::iter::once(&self.plan)
             .chain(self.inits().map(|init| &init.parameters))
             .map(|params| format!("{}( {})", self.id, params))
@@ -63,7 +62,7 @@ impl WorkbenchDefinition {
     }
 }
 
-impl<'a> crate::lower::Initialized<'a> for WorkbenchDefinition {
+impl<'a> crate::Initialized<'a> for WorkbenchDefinition {
     fn statements(&'a self) -> std::slice::Iter<'a, ir::Statement> {
         self.body.statements.iter()
     }

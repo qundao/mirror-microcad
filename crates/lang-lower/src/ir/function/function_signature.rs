@@ -3,7 +3,7 @@
 
 //! Function signature syntax element
 
-use crate::lower::ir;
+use crate::ir;
 
 use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_proc_macros::SrcReferrer;
@@ -22,7 +22,7 @@ pub struct FunctionSignature {
 impl FunctionSignature {
     /// Get parameter by name
     pub fn parameter_by_name(&self, name: &Identifier) -> Option<&ir::Parameter> {
-        use crate::lower::Identifiable;
+        use crate::Identifiable;
         self.parameters.iter().find(|arg| arg.id_ref() == name)
     }
 }

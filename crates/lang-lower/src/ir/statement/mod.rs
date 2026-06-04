@@ -3,7 +3,7 @@
 
 //! statement syntax elements
 
-use crate::lower::ir;
+use crate::ir;
 
 mod assignment_statement;
 mod expression_statement;
@@ -141,7 +141,7 @@ impl SrcReferrer for Statement {
 
 impl std::fmt::Display for Statement {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        use crate::lower::Identifiable;
+        use crate::Identifiable;
         match self {
             Self::Workbench(w) => {
                 write!(f, "{w}")

@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::lower::{Lower, LowerContext, LowerError, ir};
+use crate::{Lower, LowerContext, LowerError, ir};
 use microcad_lang_parse::ast;
 
 impl Lower for ir::Constant {
@@ -254,10 +254,12 @@ impl Lower for ir::StatementList {
 
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         let mut statements = Vec::new();
-        node.statements.iter().try_for_each(|(statement, _)| {
-            statements.push(ir::Statement::lower(statement, context)?);
-            Ok(())
-        })?;
+        node.statements
+            .iter()
+            .try_for_each(|(statement, _)| -> Result<(), LowerError> {
+                statements.push(ir::Statement::lower(statement, context)?);
+                Ok(())
+            })?;
 
         if let Some(tail) = &node.tail {
             statements.push(ir::Statement::Expression(ir::ExpressionStatement::lower(

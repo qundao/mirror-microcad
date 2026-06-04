@@ -8,7 +8,7 @@ use std::rc::Rc;
 use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 
-use crate::lower::ir;
+use crate::ir;
 
 /// An assignment statement, e.g. `#[aux] s = Sphere(3.0mm);`.
 #[derive(Clone, Debug, SrcReferrer)]

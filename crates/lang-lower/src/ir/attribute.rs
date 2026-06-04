@@ -3,7 +3,7 @@
 
 //! Attribute syntax entities.
 
-use crate::lower::{Identifiable, SingleIdentifier, ir};
+use crate::{Identifiable, SingleIdentifier, ir};
 
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};

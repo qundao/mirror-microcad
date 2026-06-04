@@ -3,7 +3,7 @@
 
 //! Function definition syntax element
 
-use crate::lower::ir;
+use crate::ir;
 
 use microcad_lang_base::{SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Identifiable;
