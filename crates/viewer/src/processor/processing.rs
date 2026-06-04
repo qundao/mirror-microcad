@@ -59,14 +59,17 @@ impl Processor {
             resolve: compile::ResolveParameters {
                 search_paths: self.context.search_paths.clone(),
             },
-            render: compile::RenderParameters {
-                resolution: self.context.resolution.clone(),
-                cache: Some(self.context.render_cache.clone()),
-                progress_tx: Some(tx),
-            },
+        };
+        let render_params = RenderParameters {
+            resolution: self.context.resolution.clone(),
+            cache: Some(self.context.render_cache.clone()),
+            progress_tx: Some(tx),
         };
 
-        let responses = match document.compile(compiler_params) {
+        let responses = match document
+            .compile(compiler_params)
+            .and(document.render(render_params))
+        {
             Ok(model) => self.respond(model),
             Err(err) => {
                 eprintln!(
