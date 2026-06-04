@@ -1,0 +1,32 @@
+# Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+[package]
+name = "microcad-lang-types"
+description = "µcad language types"
+authors = ["Michael Winkelmann (michael@winkelmann.site)"]
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[dependencies]
+derive_more = { version = "2.0.1", features = [
+    "deref",
+    "deref_mut",
+    "display",
+    "debug",
+] }
+log = "0.4"
+miette = { version = "7.6.0", features = ["derive", "fancy"] }
+rustc-hash = "2.1.1"
+thiserror = "2.0.17"
+
+microcad-lang-base = { workspace = true }
+microcad-lang-proc-macros = { workspace = true }
+
+[dev-dependencies]
+pretty_assertions = "1.4"
+insta = "1.45.0"
