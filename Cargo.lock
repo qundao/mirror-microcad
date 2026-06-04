@@ -2563,28 +2563,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f27ae1dd37df86211c42e150270f82743308803d90a6f6e6651cd730d5e1732f"
 
 [[package]]
-name = "custom_debug"
-version = "0.6.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2da7d1ad9567b3e11e877f1d7a0fa0360f04162f94965fc4448fbed41a65298e"
-dependencies = [
- "custom_debug_derive",
-]
-
-[[package]]
-name = "custom_debug_derive"
-version = "0.6.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a707ceda8652f6c7624f2be725652e9524c815bf3b9d55a0b2320be2303f9c11"
-dependencies = [
- "darling",
- "proc-macro2",
- "quote",
- "syn",
- "synstructure",
-]
-
-[[package]]
 name = "cxx"
 version = "1.0.194"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2647,41 +2625,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "darling"
-version = "0.20.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fc7f46116c46ff9ab3eb1597a45688b6715c6e628b5c133e288e709a29bcb4ee"
-dependencies = [
- "darling_core",
- "darling_macro",
-]
-
-[[package]]
-name = "darling_core"
-version = "0.20.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d00b9596d185e565c2207a0b01f8bd1a135483d02d9b7b0a54b11da8d53412e"
-dependencies = [
- "fnv",
- "ident_case",
- "proc-macro2",
- "quote",
- "strsim",
- "syn",
-]
-
-[[package]]
-name = "darling_macro"
-version = "0.20.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fc34b93ccb385b40dc71c6fceac4b2ad23662c7eeb248cf10d529b7e055b6ead"
-dependencies = [
- "darling_core",
- "quote",
- "syn",
-]
-
-[[package]]
 name = "dashmap"
 version = "5.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2705,17 +2648,6 @@ name = "data-url"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "be1e0bca6c3637f992fc1cc7cbc52a78c1ef6db076dbf1059c4323d6a2048376"
-
-[[package]]
-name = "delegate"
-version = "0.13.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "780eb241654bf097afb00fc5f054a09b687dad862e485fdcf8399bb056565370"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
 
 [[package]]
 name = "derive_more"
@@ -4484,12 +4416,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3d3067d79b975e8844ca9eb072e16b31c3c1c36928edf9c6789548c524d0d954"
 
 [[package]]
-name = "ident_case"
-version = "1.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b9e0384b61958566e926dc50660321d12159025e767c18e043daf26b70104c39"
-
-[[package]]
 name = "idna"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5196,7 +5122,7 @@ dependencies = [
 
 [[package]]
 name = "microcad"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "clap",
  "clap_complete",
@@ -5216,7 +5142,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-builtin"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "cgmath",
  "dirs",
@@ -5226,17 +5152,15 @@ dependencies = [
  "lazy_static",
  "log",
  "microcad-builtin-proc-macros",
- "microcad-core",
  "microcad-export",
  "microcad-import",
- "microcad-lang",
  "microcad-lang-base",
  "rusttype",
 ]
 
 [[package]]
 name = "microcad-builtin-proc-macros"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "convert_case 0.11.0",
  "proc-macro2",
@@ -5246,7 +5170,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-core"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "bezier-rs",
  "bytemuck",
@@ -5264,14 +5188,14 @@ dependencies = [
 
 [[package]]
 name = "microcad-docgen"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "clap",
  "derive_more 2.1.1",
  "log",
  "microcad-builtin",
- "microcad-lang",
  "microcad-lang-markdown",
+ "microcad-symbol",
  "serde",
  "thiserror 2.0.18",
  "toml 1.1.2+spec-1.1.0",
@@ -5279,7 +5203,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-driver"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "derive_more 2.1.1",
  "log",
@@ -5287,11 +5211,12 @@ dependencies = [
  "microcad-core",
  "microcad-docgen",
  "microcad-export",
- "microcad-lang",
  "microcad-lang-base",
  "microcad-lang-format",
+ "microcad-lang-lower",
  "microcad-lang-markdown",
  "microcad-lang-parse",
+ "microcad-lang-types",
  "microcad-std",
  "miette",
  "notify",
@@ -5304,7 +5229,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-export"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "cgmath",
  "derive_more 2.1.1",
@@ -5312,8 +5237,9 @@ dependencies = [
  "geo",
  "log",
  "microcad-core",
- "microcad-lang",
  "microcad-lang-base",
+ "microcad-lang-types",
+ "microcad-render",
  "serde_json",
  "thiserror 2.0.18",
  "wkt",
@@ -5321,11 +5247,9 @@ dependencies = [
 
 [[package]]
 name = "microcad-import"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
- "microcad-core",
- "microcad-lang",
- "microcad-lang-base",
+ "microcad-lang-types",
  "miette",
  "serde",
  "thiserror 2.0.18",
@@ -5334,7 +5258,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-inspector"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "clap",
  "crossbeam",
@@ -5351,35 +5275,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "microcad-lang"
-version = "0.5.0"
-dependencies = [
- "bytemuck",
- "cgmath",
- "color-print",
- "custom_debug",
- "delegate",
- "derive_more 2.1.1",
- "env_logger",
- "indexmap",
- "lazy_static",
- "log",
- "microcad-core",
- "microcad-lang-base",
- "microcad-lang-parse",
- "microcad-lang-proc-macros",
- "miette",
- "pathdiff",
- "round",
- "rustc-hash 2.1.2",
- "scan_dir",
- "strum 0.28.0",
- "thiserror 2.0.18",
-]
-
-[[package]]
 name = "microcad-lang-base"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "color-print",
  "compact_str",
@@ -5393,8 +5290,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "microcad-lang-eval"
+version = "0.6.0"
+dependencies = [
+ "derive_more 2.1.1",
+ "insta",
+ "log",
+ "microcad-lang-base",
+ "microcad-lang-proc-macros",
+ "microcad-lang-resolve",
+ "miette",
+ "pretty_assertions",
+ "rustc-hash 2.1.2",
+ "thiserror 2.0.18",
+]
+
+[[package]]
 name = "microcad-lang-format"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "insta",
  "microcad-lang-base",
@@ -5404,8 +5317,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "microcad-lang-lower"
+version = "0.6.0"
+dependencies = [
+ "derive_more 2.1.1",
+ "insta",
+ "log",
+ "microcad-lang-base",
+ "microcad-lang-parse",
+ "microcad-lang-proc-macros",
+ "microcad-lang-types",
+ "miette",
+ "pretty_assertions",
+ "rustc-hash 2.1.2",
+ "strum 0.28.0",
+ "thiserror 2.0.18",
+]
+
+[[package]]
 name = "microcad-lang-markdown"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "derive_more 2.1.1",
  "insta",
@@ -5415,7 +5346,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-lang-parse"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "chumsky",
  "derive_more 2.1.1",
@@ -5430,7 +5361,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-lang-proc-macros"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "convert_case 0.11.0",
  "proc-macro2",
@@ -5439,8 +5370,44 @@ dependencies = [
 ]
 
 [[package]]
+name = "microcad-lang-resolve"
+version = "0.6.0"
+dependencies = [
+ "derive_more 2.1.1",
+ "insta",
+ "log",
+ "microcad-lang-base",
+ "microcad-lang-lower",
+ "microcad-lang-proc-macros",
+ "miette",
+ "pretty_assertions",
+ "rustc-hash 2.1.2",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "microcad-lang-types"
+version = "0.6.0"
+dependencies = [
+ "bytemuck",
+ "cgmath",
+ "derive_more 2.1.1",
+ "insta",
+ "log",
+ "microcad-core",
+ "microcad-lang-base",
+ "microcad-lang-proc-macros",
+ "miette",
+ "pretty_assertions",
+ "round",
+ "rustc-hash 2.1.2",
+ "strum 0.28.0",
+ "thiserror 2.0.18",
+]
+
+[[package]]
 name = "microcad-lsp"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "clap",
  "crossbeam",
@@ -5460,8 +5427,37 @@ dependencies = [
 ]
 
 [[package]]
+name = "microcad-model"
+version = "0.6.0"
+dependencies = [
+ "derive_more 2.1.1",
+ "insta",
+ "log",
+ "microcad-lang-base",
+ "microcad-lang-types",
+ "miette",
+ "pretty_assertions",
+ "rustc-hash 2.1.2",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "microcad-render"
+version = "0.6.0"
+dependencies = [
+ "derive_more 2.1.1",
+ "insta",
+ "log",
+ "microcad-model",
+ "miette",
+ "pretty_assertions",
+ "rustc-hash 2.1.2",
+ "thiserror 2.0.18",
+]
+
+[[package]]
 name = "microcad-std"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "dirs",
  "rust-embed",
@@ -5472,8 +5468,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "microcad-symbol"
+version = "0.6.0"
+dependencies = [
+ "derive_more 2.1.1",
+ "insta",
+ "log",
+ "microcad-model",
+ "miette",
+ "pretty_assertions",
+ "rustc-hash 2.1.2",
+ "thiserror 2.0.18",
+]
+
+[[package]]
 name = "microcad-tests"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "env_logger",
  "log",
@@ -5487,7 +5497,7 @@ dependencies = [
 
 [[package]]
 name = "microcad-viewer"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "bevy",
  "bevy_mod_outline",
@@ -5514,14 +5524,13 @@ dependencies = [
 
 [[package]]
 name = "microcad-viewer-ipc"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "crossbeam",
  "env_logger",
  "log",
  "microcad-builtin",
  "microcad-core",
- "microcad-lang",
  "miette",
  "serde",
  "serde_json",
@@ -5538,7 +5547,7 @@ dependencies = [
 
 [[package]]
 name = "microcad_markdown_test"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "env_logger",
  "log",
@@ -5550,7 +5559,7 @@ dependencies = [
 
 [[package]]
 name = "microcad_test_tools"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "env_logger",
  "log",
@@ -8873,7 +8882,7 @@ checksum = "6d49784317cd0d1ee7ec5c716dd598ec5b4483ea832a2dced265471cc0f690ae"
 
 [[package]]
 name = "update_copyright"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "chrono",
  "clap",
@@ -8885,7 +8894,7 @@ dependencies = [
 
 [[package]]
 name = "update_md_banner"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "env_logger",
  "regex",
