@@ -3,8 +3,8 @@
 
 //! Import values from TOML
 
-use microcad_lang::{builtin::*, value::*};
 use microcad_lang_base::{Id, SrcRef};
+use microcad_lang_types::Value;
 
 /// Import TOML files into a tuple.
 pub struct TomlImporter;

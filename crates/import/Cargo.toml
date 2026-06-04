@@ -17,8 +17,7 @@ version.workspace = true
 path = "lib.rs"
 
 [dependencies]
-microcad-core = { workspace = true }
-microcad-lang-base = { workspace = true }
+microcad-lang-types = { workspace = true }
 
 thiserror = "2.0.12"
 toml = "1.1.2"
