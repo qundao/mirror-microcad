@@ -17,11 +17,11 @@ use crate::lower::ir;
 
 /// Call of a *workbench* or *function*.
 #[derive(Clone, Debug, Default, SrcReferrer)]
-pub struct Call {
+pub struct Call<EXPR = ir::Expression> {
     /// Qualified name of the call.
     pub name: ir::QualifiedName,
     /// Argument list of the call.
-    pub argument_list: ir::ArgumentList,
+    pub argument_list: ir::ArgumentList<EXPR>,
     /// Source code reference.
     pub src_ref: SrcRef,
 }

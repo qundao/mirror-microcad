@@ -3,7 +3,7 @@
 
 //! µcad syntax elements related to expressions
 
-use crate::lower::ir;
+use crate::lower::{SingleIdentifier, ir};
 
 mod array_expression;
 mod marker;
@@ -80,25 +80,9 @@ pub enum Expression {
     /// A marker expression: `@input`.
     Marker(Marker),
     /// A binary operation: `a + b`
-    BinaryOp {
-        /// Left-hand side
-        lhs: Box<Expression>,
-        /// Operator  ('+', '-', '/', '*', '<', '>', '≤', '≥', '&', '|')
-        op: Refer<String>,
-        /// Right -hand side
-        rhs: Box<Expression>,
-        /// Source code reference
-        src_ref: SrcRef,
-    },
+    BinaryOp(BinaryOp),
     /// A unary operation: !a
-    UnaryOp {
-        /// Operator ('+', '-', '!')
-        op: Refer<String>,
-        /// Right -hand side
-        rhs: Box<Expression>,
-        /// Source code reference
-        src_ref: SrcRef,
-    },
+    UnaryOp(UnaryOp),
     /// Access an element of a list (`a[0]`) or a tuple (`a.0` or `a.b`)
     ArrayElementAccess(Box<Expression>, Box<Expression>, SrcRef),
     /// Access an element of a tuple: `a.b`.
@@ -110,6 +94,106 @@ pub enum Expression {
     /// Call to a method: `[2,3].len()`
     /// First expression must evaluate to a value
     MethodCall(Box<Expression>, ir::MethodCall, SrcRef),
+}
+
+/// A binary operation: `a + b`
+#[derive(Clone, Debug)]
+pub struct BinaryOp<EXPR = ir::Expression> {
+    /// Left-hand side
+    pub lhs: Box<EXPR>,
+    /// Operator  ('+', '-', '/', '*', '<', '>', '≤', '≥', '&', '|')
+    pub op: Refer<String>,
+    /// Right -hand side
+    pub rhs: Box<EXPR>,
+    /// Source code reference
+    pub src_ref: SrcRef,
+}
+
+impl<EXPR> SrcReferrer for BinaryOp<EXPR> {
+    fn src_ref(&self) -> SrcRef {
+        self.src_ref.clone()
+    }
+}
+
+impl SingleIdentifier for BinaryOp {
+    fn single_identifier(&self) -> Option<&Identifier> {
+        match (self.lhs.single_identifier(), self.rhs.single_identifier()) {
+            (None, Some(lhs)) => Some(lhs),
+            (Some(rhs), None) => Some(rhs),
+            (Some(lhs), Some(rhs)) => {
+                if lhs == rhs {
+                    Some(lhs)
+                } else {
+                    None
+                }
+            }
+            _ => None,
+        }
+    }
+}
+
+impl<EXPR> std::fmt::Display for BinaryOp<EXPR>
+where
+    EXPR: std::fmt::Display,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{lhs} {op} {rhs}",
+            lhs = self.lhs,
+            op = self.op,
+            rhs = self.rhs
+        )
+    }
+}
+
+/// A unary operation: !a
+#[derive(Clone, Debug)]
+pub struct UnaryOp<EXPR = ir::Expression> {
+    /// Operator ('+', '-', '!')
+    pub op: Refer<String>,
+    /// Right -hand side
+    pub rhs: Box<EXPR>,
+    /// Source code reference
+    pub src_ref: SrcRef,
+}
+
+impl<EXPR> SrcReferrer for UnaryOp<EXPR> {
+    fn src_ref(&self) -> SrcRef {
+        self.src_ref.clone()
+    }
+}
+
+impl SingleIdentifier for UnaryOp {
+    fn single_identifier(&self) -> Option<&Identifier> {
+        self.rhs.single_identifier()
+    }
+}
+
+impl<EXPR> std::fmt::Display for UnaryOp<EXPR>
+where
+    EXPR: std::fmt::Display,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{op}{rhs}", op = self.op, rhs = self.rhs)
+    }
+}
+
+/// An expression that can be evaluated during `resolve` phase.
+///
+/// Use for `Constant` and default values for `Parameter`.
+#[derive(Debug, derive_more::From)]
+pub enum ConstantExpression {
+    Invalid,
+    Literal(ir::Literal),
+    Call(ir::Call<ConstantExpression>),
+    QualifiedName(ir::QualifiedName),
+    FormatString(ir::FormatString),
+    ArrayExpression(ir::ArrayExpression<ConstantExpression>),
+    TupleExpression(ir::TupleExpression<ConstantExpression>),
+    BinaryOp(ir::BinaryOp<ConstantExpression>),
+    UnaryOp(ir::UnaryOp<ConstantExpression>),
+    //ArrayElementAccess(Box<Expression>, Box<Expression>, SrcRef),
 }
 
 impl crate::lower::SingleIdentifier for Expression {
@@ -130,27 +214,8 @@ impl crate::lower::SingleIdentifier for Expression {
             | Expression::Call(..) => None,
 
             Expression::QualifiedName(qualified_name) => qualified_name.single_identifier(),
-            Expression::BinaryOp {
-                lhs,
-                op: _,
-                rhs,
-                src_ref: _,
-            } => {
-                let l = lhs.single_identifier();
-                let r = rhs.single_identifier();
-                if l == r || r.is_none() {
-                    l
-                } else if l.is_none() {
-                    r
-                } else {
-                    None
-                }
-            }
-            Expression::UnaryOp {
-                op: _,
-                rhs,
-                src_ref: _,
-            } => rhs.single_identifier(),
+            Expression::BinaryOp(binary_op) => binary_op.single_identifier(),
+            Expression::UnaryOp(unary_op) => unary_op.single_identifier(),
             Expression::ArrayElementAccess(expression, ..) => expression.single_identifier(),
         }
     }
@@ -169,17 +234,8 @@ impl SrcReferrer for Expression {
             Self::If(i) => i.src_ref(),
             Self::QualifiedName(q) => q.src_ref(),
             Self::Marker(m) => m.src_ref(),
-            Self::BinaryOp {
-                lhs: _,
-                op: _,
-                rhs: _,
-                src_ref,
-            } => src_ref.clone(),
-            Self::UnaryOp {
-                op: _,
-                rhs: _,
-                src_ref,
-            } => src_ref.clone(),
+            Self::BinaryOp(binary_op) => binary_op.src_ref(),
+            Self::UnaryOp(unary_op) => unary_op.src_ref(),
             Self::ArrayElementAccess(_, _, src_ref) => src_ref.clone(),
             Self::PropertyAccess(_, _, src_ref) => src_ref.clone(),
             Self::AttributeAccess(_, _, src_ref) => src_ref.clone(),
@@ -195,17 +251,8 @@ impl std::fmt::Display for Expression {
             Self::FormatString(format_string) => write!(f, "{format_string}"),
             Self::ArrayExpression(array_expression) => write!(f, "{array_expression}"),
             Self::TupleExpression(tuple_expression) => write!(f, "{tuple_expression}"),
-            Self::BinaryOp {
-                lhs,
-                op,
-                rhs,
-                src_ref: _,
-            } => write!(f, "{lhs} {op} {rhs}"),
-            Self::UnaryOp {
-                op,
-                rhs,
-                src_ref: _,
-            } => write!(f, "{op}{rhs}"),
+            Self::BinaryOp(binary_op) => write!(f, "{binary_op}"),
+            Self::UnaryOp(unary_op) => write!(f, "{unary_op}"),
             Self::ArrayElementAccess(lhs, rhs, _) => write!(f, "{lhs}[{rhs}]"),
             Self::PropertyAccess(lhs, rhs, _) => write!(f, "{lhs}.{rhs}"),
             Self::AttributeAccess(lhs, rhs, _) => write!(f, "{lhs}#{rhs}"),
@@ -220,13 +267,7 @@ impl std::fmt::Display for Expression {
     }
 }
 
-impl AsRef<Self> for Expression {
-    fn as_ref(&self) -> &Self {
-        self
-    }
-}
-
-impl PartialEq for Expression {
+/*impl PartialEq for Expression {
     fn eq(&self, other: &Self) -> bool {
         match (self, other) {
             (Self::Literal(l0), Self::Literal(r0)) => l0 == r0,
@@ -266,4 +307,4 @@ impl PartialEq for Expression {
             _ => unreachable!("PartialEq implemented for const expressions only"),
         }
     }
-}
+}*/

@@ -149,7 +149,7 @@ impl Lower for ir::Expression {
                 ir::Expression::QualifiedName(ir::QualifiedName::lower(n, context)?)
             }
             ast::Expression::Marker(m) => ir::Expression::Marker(ir::Marker::lower(m, context)?),
-            ast::Expression::BinaryOperation(binop) => ir::Expression::BinaryOp {
+            ast::Expression::BinaryOperation(binop) => ir::Expression::BinaryOp(ir::BinaryOp {
                 lhs: Box::new(ir::Expression::lower(&binop.lhs, context)?),
                 rhs: Box::new(ir::Expression::lower(&binop.rhs, context)?),
                 op: Refer::new(
@@ -157,15 +157,15 @@ impl Lower for ir::Expression {
                     context.src_ref(&binop.operation.span),
                 ),
                 src_ref: context.src_ref(&binop.span),
-            },
-            ast::Expression::UnaryOperation(unop) => ir::Expression::UnaryOp {
+            }),
+            ast::Expression::UnaryOperation(unop) => ir::Expression::UnaryOp(ir::UnaryOp {
                 rhs: Box::new(ir::Expression::lower(&unop.rhs, context)?),
                 op: Refer::new(
                     unop.operation.operation.as_str().into(),
                     context.src_ref(&unop.operation.span),
                 ),
                 src_ref: context.src_ref(&unop.span),
-            },
+            }),
             ast::Expression::Body(b) => ir::Expression::Body(ir::Body::lower(b, context)?),
             ast::Expression::ElementAccess(access) => access.element_chain.iter().try_fold(
                 ir::Expression::lower(&access.value, context)?,

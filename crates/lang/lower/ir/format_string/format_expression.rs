@@ -9,7 +9,7 @@ use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// Format expression including format specification.
-#[derive(Clone, Debug, PartialEq, SrcReferrer)]
+#[derive(Clone, Debug, SrcReferrer)]
 pub struct FormatExpression {
     /// Format specifier
     pub spec: Option<ir::FormatSpec>,

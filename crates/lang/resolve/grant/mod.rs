@@ -415,20 +415,11 @@ impl Grant for ir::Expression {
                 .map(|arg| &arg.expression)
                 .try_for_each(|exp| exp.grant(context)),
 
-            BinaryOp {
-                lhs,
-                op: _,
-                rhs,
-                src_ref: _,
-            } => {
-                lhs.grant(context)?;
-                rhs.grant(context)
+            BinaryOp(binary_op) => {
+                binary_op.lhs.grant(context)?;
+                binary_op.rhs.grant(context)
             }
-            UnaryOp {
-                op: _,
-                rhs,
-                src_ref: _,
-            } => rhs.grant(context),
+            UnaryOp(unary_op) => unary_op.rhs.grant(context),
             ArrayElementAccess(exp, exp1, _) => {
                 exp.grant(context)?;
                 exp1.grant(context)

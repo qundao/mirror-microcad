@@ -54,11 +54,11 @@ impl SrcReferrer for ArrayExpressionInner {
 
 /// Array of expressions with common result unit, e.g. `[1+2,4,9]`.
 #[derive(Clone, Debug, Deref, DerefMut, PartialEq, SrcReferrer)]
-pub struct ArrayExpression {
+pub struct ArrayExpression<EXPR = ir::Expression> {
     /// Expression list.
     #[deref]
     #[deref_mut]
-    pub inner: ArrayExpressionInner,
+    pub inner: ArrayExpressionInner<EXPR>,
     /// Unit.
     pub unit: ir::Unit,
     /// Source code reference.
