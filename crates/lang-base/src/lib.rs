@@ -79,7 +79,7 @@ pub use diag::{
     Diag, DiagError, DiagHandler, DiagRenderOptions, DiagResult, Diagnostic, Diagnostics, Level,
     Level as DiagLevel, PushDiag,
 };
-pub use identifier::Identifier;
+pub use identifier::{Identifier, IdentifierList};
 pub use ord_map::{OrdMap, OrdMapValue};
 pub use output::{Capture, Output, Stdout};
 pub use rc::{Rc, RcMut};
