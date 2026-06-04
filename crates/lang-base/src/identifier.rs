@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use compact_str::{CompactString, ToCompactString};
-use derive_more::Deref;
+use derive_more::{Deref, DerefMut};
 use miette::SourceSpan;
 
 use crate::{Id, Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
@@ -218,6 +218,46 @@ impl TreeDisplay for Identifier {
 }
 
 static UNIQUE_ID_NEXT: std::sync::Mutex<usize> = std::sync::Mutex::new(0);
+
+/// A list of identifiers
+///
+/// Used e.g. for multiple variable declarations.
+/// Cannot contain duplicates.
+#[derive(Default, Debug, Clone, PartialEq, Deref, DerefMut)]
+pub struct IdentifierList(pub Refer<Vec<Identifier>>);
+
+impl FromIterator<Identifier> for IdentifierList {
+    fn from_iter<T: IntoIterator<Item = Identifier>>(iter: T) -> Self {
+        let v: Vec<_> = iter.into_iter().collect();
+        let src_ref = SrcRef::merge_all(v.iter());
+        Self(Refer::new(v, src_ref))
+    }
+}
+
+impl std::fmt::Display for IdentifierList {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let mut sorted = self.0.clone();
+        sorted.sort();
+        write!(
+            f,
+            "{}",
+            sorted
+                .iter()
+                .map(|id| id.to_string())
+                .collect::<Vec<_>>()
+                .join(",")
+        )
+    }
+}
+
+impl std::iter::IntoIterator for IdentifierList {
+    type Item = Identifier;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.0.into_iter()
+    }
+}
 
 #[test]
 fn identifier_comparison() {
