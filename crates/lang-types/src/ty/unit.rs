@@ -265,3 +265,67 @@ impl Unit {
         x / self.factor()
     }
 }
+
+impl std::str::FromStr for Unit {
+    type Err = TypeError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            // Scalars
+            "" => Ok(Self::None),
+            "%" => Ok(Self::Percent),
+
+            // Lengths
+            "m" => Ok(Self::Meter),
+            "cm" => Ok(Self::Centimeter),
+            "mm" => Ok(Self::Millimeter),
+            "µm" => Ok(Self::Micrometer),
+            "in" => Ok(Self::Inch),
+            "\"" => Ok(Self::Inch),
+            "ft" => Ok(Self::Foot),
+            "\'" => Ok(Self::Foot),
+            "yd" => Ok(Self::Yard),
+
+            // Angles
+            "deg" => Ok(Self::Deg),
+            "°" => Ok(Self::DegS),
+            "grad" => Ok(Self::Grad),
+            "turns" => Ok(Self::Turns),
+            "rad" => Ok(Self::Rad),
+
+            // Weights
+            "g" => Ok(Self::Gram),
+            "kg" => Ok(Self::Kilogram),
+            "lb" => Ok(Self::Pound),
+            "oz" => Ok(Self::Ounce),
+
+            // Areas
+            "m²" | "m2" => Ok(Self::Meter2),
+            "cm²" | "cm2" => Ok(Self::Centimeter2),
+            "mm²" | "mm2" => Ok(Self::Millimeter2),
+            "µm²" | "µm2" => Ok(Self::Micrometer2),
+            "in²" | "in2" => Ok(Self::Inch2),
+            "ft²" | "ft2" => Ok(Self::Foot2),
+            "yd²" | "yd2" => Ok(Self::Yard2),
+
+            // Volumes
+            "m³" | "m3" => Ok(Self::Meter3),
+            "cm³" | "cm3" => Ok(Self::Centimeter3),
+            "mm³" | "mm3" => Ok(Self::Millimeter3),
+            "µm³" | "µm3" => Ok(Self::Micrometer3),
+            "in³" | "in3" => Ok(Self::Inch3),
+            "ft³" | "ft3" => Ok(Self::Foot3),
+            "yd³" | "yd3" => Ok(Self::Yard3),
+            "ml" => Ok(Self::Milliliter),
+            "cl" => Ok(Self::Centiliter),
+            "l" => Ok(Self::Liter),
+            "µl" => Ok(Self::Microliter),
+
+            "g/mm³" => Ok(Self::GramPerMillimeter3),
+            "g/m³" => Ok(Self::GramPerMeter3),
+
+            // Unknown
+            _ => Err(TypeError::UnknownUnit(s.into())),
+        }
+    }
+}
