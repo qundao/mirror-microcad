@@ -13,5 +13,6 @@
  152:   
  153:   std::debug::assert_eq([gram, kilogram]);
 
+-- No Model --
 -- Test Result --
 OK

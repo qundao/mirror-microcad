@@ -241,16 +241,16 @@
                                   - outer_radius = 3.255mm
                                   Operation subtract() -> 2D (3F1966BB97BC196): MultiPolygon @0.25mm
                                     Group -> 2D (97C5133259B1D890):  @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3.255mm) -> 2D (CAE02744C61140EC):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3.255mm) -> 2D (CAE02744C61140EC): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 3.255mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (1A5615F6BD8050E7):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=3.255mm) -> 2D (ADED7F55C3F4853D):  @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=2.4mm) -> 2D (C1C8D281A666C1FF):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (1A5615F6BD8050E7): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=3.255mm) -> 2D (ADED7F55C3F4853D): Polygon @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=2.4mm) -> 2D (C1C8D281A666C1FF): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 2.4mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (74AF96CEED54ECBF):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) -> 2D (847002DF3C92116):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (74AF96CEED54ECBF): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) -> 2D (847002DF3C92116): Polygon @0.25mm
                   cap: Workpiece(Operation) std::ops::extrude(height=1.2mm, scale=(x=100%, y=100%), twist=0°) -> 3D (AC708DA1786F0740):  @0.25mm
                     - height = 1.2mm
                     - scale = (x=100%, y=100%)
@@ -350,31 +350,31 @@
                                   - outer_radius = 3.255mm
                                   Operation subtract() -> 2D (3F1966BB97BC196): MultiPolygon @0.25mm
                                     Group -> 2D (97C5133259B1D890):  @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3.255mm) -> 2D (CAE02744C61140EC):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3.255mm) -> 2D (CAE02744C61140EC): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 3.255mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (1A5615F6BD8050E7):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=3.255mm) -> 2D (ADED7F55C3F4853D):  @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=2.4mm) -> 2D (C1C8D281A666C1FF):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (1A5615F6BD8050E7): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=3.255mm) -> 2D (ADED7F55C3F4853D): Polygon @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=2.4mm) -> 2D (C1C8D281A666C1FF): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 2.4mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (74AF96CEED54ECBF):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) -> 2D (847002DF3C92116):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (74AF96CEED54ECBF): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) -> 2D (847002DF3C92116): Polygon @0.25mm
                                 Workpiece(Sketch) std::geo2d::Ring(inner_diameter=4.8mm, outer_diameter=6.51mm) -> 2D (C23A4BD36A217D4E):  @0.25mm
                                   - inner_radius = 2.4mm
                                   - outer_radius = 3.255mm
                                   Operation subtract() -> 2D (3F1966BB97BC196): MultiPolygon @0.25mm
                                     Group -> 2D (97C5133259B1D890):  @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3.255mm) -> 2D (CAE02744C61140EC):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=3.255mm) -> 2D (CAE02744C61140EC): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 3.255mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (1A5615F6BD8050E7):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=3.255mm) -> 2D (ADED7F55C3F4853D):  @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=2.4mm) -> 2D (C1C8D281A666C1FF):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (1A5615F6BD8050E7): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=3.255mm) -> 2D (ADED7F55C3F4853D): Polygon @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=2.4mm) -> 2D (C1C8D281A666C1FF): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 2.4mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (74AF96CEED54ECBF):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) -> 2D (847002DF3C92116):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (74AF96CEED54ECBF): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=2.4mm) -> 2D (847002DF3C92116): Polygon @0.25mm
                   cap: Workpiece(Operation) std::ops::extrude(height=1.2mm, scale=(x=100%, y=100%), twist=0°) -> 3D (898064DD79517CF1):  @0.25mm
                     - height = 1.2mm
                     - scale = (x=100%, y=100%)

@@ -34,5 +34,6 @@
   59:   // b not known here anymore
   60:   assert_invalid("b");
 
+Render error: No model to render
 -- Test Result --
 TODO

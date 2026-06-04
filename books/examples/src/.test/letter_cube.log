@@ -136,29 +136,29 @@
                                         - scale = (x=100%, y=100%)
                                         - twist = 0°
                                         Operation __builtin::ops::extrude(height=1mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (1177DF592EEBCAB6): Mesh @0.25mm
-                                          Workpiece(Operation) std::ops::contour(distance=0.5mm, thickness=0.25mm) -> 2D (393D74715779DF2F):  @0.25mm
+                                          Workpiece(Operation) std::ops::contour(distance=0.5mm, thickness=0.25mm) -> 2D (393D74715779DF2F): MultiPolygon @0.25mm
                                             - distance = 0.5mm
                                             - thickness = 0.25mm
-                                            Operation subtract() -> 2D (3ABA4FFEE447B5EA):  @0.25mm
+                                            Operation subtract() -> 2D (3ABA4FFEE447B5EA): MultiPolygon @0.25mm
                                               Group -> 2D (7BCE05CB87BA518C):  @0.25mm
-                                                Workpiece(Operation) std::ops::buffer(distance=0.625mm) -> 2D (1DF4244094428478):  @0.25mm
+                                                Workpiece(Operation) std::ops::buffer(distance=0.625mm) -> 2D (1DF4244094428478): MultiPolygon @0.25mm
                                                   - distance = 0.625mm
-                                                  Operation __builtin::ops::buffer(distance=0.625mm) -> 2D (AA56EAAC2F827938):  @0.25mm
-                                                    Operation __builtin::ops::center() -> 2D (C8D6CCA727179D0D):  @0.25mm
-                                                      Workpiece(Sketch) std::geo2d::Text(font_file=, height=20mm, text=P) -> 2D (F5043CFD193D23F6):  @0.25mm
+                                                  Operation __builtin::ops::buffer(distance=0.625mm) -> 2D (AA56EAAC2F827938): MultiPolygon @0.25mm
+                                                    Operation __builtin::ops::center() -> 2D (C8D6CCA727179D0D): Collection @0.25mm
+                                                      Workpiece(Sketch) std::geo2d::Text(font_file=, height=20mm, text=P) -> 2D (F5043CFD193D23F6): MultiPolygon @0.25mm
                                                         - font_file = 
                                                         - height = 20mm
                                                         - text = P
-                                                        Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=P) -> 2D (C2DEA3FD7BEBF72):  @0.25mm
-                                                Workpiece(Operation) std::ops::buffer(distance=0.375mm) -> 2D (DA18ADBDE15C2187):  @0.25mm
+                                                        Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=P) -> 2D (C2DEA3FD7BEBF72): MultiPolygon @0.25mm
+                                                Workpiece(Operation) std::ops::buffer(distance=0.375mm) -> 2D (DA18ADBDE15C2187): MultiPolygon @0.25mm
                                                   - distance = 0.375mm
-                                                  Operation __builtin::ops::buffer(distance=0.375mm) -> 2D (4EB1BB3540BC4AD5):  @0.25mm
-                                                    Operation __builtin::ops::center() -> 2D (C8D6CCA727179D0D):  @0.25mm
-                                                      Workpiece(Sketch) std::geo2d::Text(font_file=, height=20mm, text=P) -> 2D (F5043CFD193D23F6):  @0.25mm
+                                                  Operation __builtin::ops::buffer(distance=0.375mm) -> 2D (4EB1BB3540BC4AD5): MultiPolygon @0.25mm
+                                                    Operation __builtin::ops::center() -> 2D (C8D6CCA727179D0D): Collection @0.25mm
+                                                      Workpiece(Sketch) std::geo2d::Text(font_file=, height=20mm, text=P) -> 2D (F5043CFD193D23F6): MultiPolygon @0.25mm
                                                         - font_file = 
                                                         - height = 20mm
                                                         - text = P
-                                                        Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=P) -> 2D (C2DEA3FD7BEBF72):  @0.25mm
+                                                        Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=P) -> 2D (C2DEA3FD7BEBF72): MultiPolygon @0.25mm
                       t: Workpiece(Operation) std::ops::rotate(x=90°, y=0°, z=0°) -> 3D (809A21611D16116D): Mesh @0.25mm
                         - matrix = Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]
                         Transform __builtin::ops::rotate(matrix=Matrix3 [[1.0, 0.0, 0.0], [0.0, 6.123233995736766e-17, 1.0], [0.0, -1.0, 6.123233995736766e-17]]) -> 3D (ED7D0EB22245EE1E): Mesh @0.25mm
@@ -220,29 +220,29 @@
                                         - scale = (x=100%, y=100%)
                                         - twist = 0°
                                         Operation __builtin::ops::extrude(height=1mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (813B2AEBF7198B61): Mesh @0.25mm
-                                          Workpiece(Operation) std::ops::contour(distance=0.5mm, thickness=0.25mm) -> 2D (A900C0041FA79FDA):  @0.25mm
+                                          Workpiece(Operation) std::ops::contour(distance=0.5mm, thickness=0.25mm) -> 2D (A900C0041FA79FDA): MultiPolygon @0.25mm
                                             - distance = 0.5mm
                                             - thickness = 0.25mm
-                                            Operation subtract() -> 2D (AA7D9B91AC757695):  @0.25mm
+                                            Operation subtract() -> 2D (AA7D9B91AC757695): MultiPolygon @0.25mm
                                               Group -> 2D (EB91515E4FE81237):  @0.25mm
-                                                Workpiece(Operation) std::ops::buffer(distance=0.625mm) -> 2D (416BBC298018EF57):  @0.25mm
+                                                Workpiece(Operation) std::ops::buffer(distance=0.625mm) -> 2D (416BBC298018EF57): MultiPolygon @0.25mm
                                                   - distance = 0.625mm
-                                                  Operation __builtin::ops::buffer(distance=0.625mm) -> 2D (CDCE82951B58E417):  @0.25mm
-                                                    Operation __builtin::ops::center() -> 2D (EC4E649012EE07EC):  @0.25mm
-                                                      Workpiece(Sketch) std::geo2d::Text(font_file=, height=20mm, text=T) -> 2D (187BD4E605138ED6):  @0.25mm
+                                                  Operation __builtin::ops::buffer(distance=0.625mm) -> 2D (CDCE82951B58E417): MultiPolygon @0.25mm
+                                                    Operation __builtin::ops::center() -> 2D (EC4E649012EE07EC): Collection @0.25mm
+                                                      Workpiece(Sketch) std::geo2d::Text(font_file=, height=20mm, text=T) -> 2D (187BD4E605138ED6): MultiPolygon @0.25mm
                                                         - font_file = 
                                                         - height = 20mm
                                                         - text = T
-                                                        Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=T) -> 2D (B5D813B0C1A3B5CE):  @0.25mm
-                                                Workpiece(Operation) std::ops::buffer(distance=0.375mm) -> 2D (FD9045A6CD328C66):  @0.25mm
+                                                        Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=T) -> 2D (B5D813B0C1A3B5CE): MultiPolygon @0.25mm
+                                                Workpiece(Operation) std::ops::buffer(distance=0.375mm) -> 2D (FD9045A6CD328C66): MultiPolygon @0.25mm
                                                   - distance = 0.375mm
-                                                  Operation __builtin::ops::buffer(distance=0.375mm) -> 2D (7229531E2C92B5B4):  @0.25mm
-                                                    Operation __builtin::ops::center() -> 2D (EC4E649012EE07EC):  @0.25mm
-                                                      Workpiece(Sketch) std::geo2d::Text(font_file=, height=20mm, text=T) -> 2D (187BD4E605138ED6):  @0.25mm
+                                                  Operation __builtin::ops::buffer(distance=0.375mm) -> 2D (7229531E2C92B5B4): MultiPolygon @0.25mm
+                                                    Operation __builtin::ops::center() -> 2D (EC4E649012EE07EC): Collection @0.25mm
+                                                      Workpiece(Sketch) std::geo2d::Text(font_file=, height=20mm, text=T) -> 2D (187BD4E605138ED6): MultiPolygon @0.25mm
                                                         - font_file = 
                                                         - height = 20mm
                                                         - text = T
-                                                        Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=T) -> 2D (B5D813B0C1A3B5CE):  @0.25mm
+                                                        Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=T) -> 2D (B5D813B0C1A3B5CE): MultiPolygon @0.25mm
                   f: Multiplicity -> 3D (52E3EBA955867CCE): Collection @0.25mm
                     Workpiece(Part) <NO ID>::Letter(axis=(x=-0, y=-1, z=-0), letter=F, size=20mm) -> 3D (60AD0326B27473D4): Mesh @0.25mm
                       - axis = (x=-0, y=-1, z=-0)
@@ -301,29 +301,29 @@
                                 - scale = (x=100%, y=100%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=1mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (C1255E9B5DA95498): Mesh @0.25mm
-                                  Workpiece(Operation) std::ops::contour(distance=0.5mm, thickness=0.25mm) -> 2D (E8EAF3B386376911):  @0.25mm
+                                  Workpiece(Operation) std::ops::contour(distance=0.5mm, thickness=0.25mm) -> 2D (E8EAF3B386376911): MultiPolygon @0.25mm
                                     - distance = 0.5mm
                                     - thickness = 0.25mm
-                                    Operation subtract() -> 2D (EA67CF4117053FCC):  @0.25mm
+                                    Operation subtract() -> 2D (EA67CF4117053FCC): MultiPolygon @0.25mm
                                       Group -> 2D (2B7B850DB677DB6F):  @0.25mm
-                                        Workpiece(Operation) std::ops::buffer(distance=0.625mm) -> 2D (D4FF2F45CDB7C6E):  @0.25mm
+                                        Workpiece(Operation) std::ops::buffer(distance=0.625mm) -> 2D (D4FF2F45CDB7C6E): MultiPolygon @0.25mm
                                           - distance = 0.625mm
-                                          Operation __builtin::ops::buffer(distance=0.625mm) -> 2D (99B2B95FF41B712E):  @0.25mm
-                                            Operation __builtin::ops::center() -> 2D (B8329B5AEFB09503):  @0.25mm
-                                              Workpiece(Sketch) std::geo2d::Text(font_file=, height=20mm, text=F) -> 2D (E4600BB0E1D61BEC):  @0.25mm
+                                          Operation __builtin::ops::buffer(distance=0.625mm) -> 2D (99B2B95FF41B712E): MultiPolygon @0.25mm
+                                            Operation __builtin::ops::center() -> 2D (B8329B5AEFB09503): Collection @0.25mm
+                                              Workpiece(Sketch) std::geo2d::Text(font_file=, height=20mm, text=F) -> 2D (E4600BB0E1D61BEC): MultiPolygon @0.25mm
                                                 - font_file = 
                                                 - height = 20mm
                                                 - text = F
-                                                Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=F) -> 2D (7A9006C7A39B0F31):  @0.25mm
-                                        Workpiece(Operation) std::ops::buffer(distance=0.375mm) -> 2D (C9747C71A9F5197D):  @0.25mm
+                                                Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=F) -> 2D (7A9006C7A39B0F31): MultiPolygon @0.25mm
+                                        Workpiece(Operation) std::ops::buffer(distance=0.375mm) -> 2D (C9747C71A9F5197D): MultiPolygon @0.25mm
                                           - distance = 0.375mm
-                                          Operation __builtin::ops::buffer(distance=0.375mm) -> 2D (3E0D89E9095542CB):  @0.25mm
-                                            Operation __builtin::ops::center() -> 2D (B8329B5AEFB09503):  @0.25mm
-                                              Workpiece(Sketch) std::geo2d::Text(font_file=, height=20mm, text=F) -> 2D (E4600BB0E1D61BEC):  @0.25mm
+                                          Operation __builtin::ops::buffer(distance=0.375mm) -> 2D (3E0D89E9095542CB): MultiPolygon @0.25mm
+                                            Operation __builtin::ops::center() -> 2D (B8329B5AEFB09503): Collection @0.25mm
+                                              Workpiece(Sketch) std::geo2d::Text(font_file=, height=20mm, text=F) -> 2D (E4600BB0E1D61BEC): MultiPolygon @0.25mm
                                                 - font_file = 
                                                 - height = 20mm
                                                 - text = F
-                                                Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=F) -> 2D (7A9006C7A39B0F31):  @0.25mm
+                                                Primitive2D __builtin::geo2d::Text(font_file=, height=20mm, text=F) -> 2D (7A9006C7A39B0F31): MultiPolygon @0.25mm
 
 Export of "../books/examples/src/.test/letter_cube-out.stl" successful.
 -- Test Result --

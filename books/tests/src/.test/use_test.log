@@ -37,14 +37,14 @@
   33:   // public use operation from `std/module.µcad`
   34:   pub use std::ops;
   35:   assert_valid("ops");
-  36:   assert_valid("use_test::ops");
-  37:   
-  38:   part MyPart() {
-  39:       Circle(radius=1);
-  40:       Sphere(radius=1);
-  41:   }
-  42:   
-  43:   assert_valid("MyPart");
+  36:   
+  37:   part MyPart() {
+  38:       Circle(radius=1);
+  39:       Sphere(radius=1);
+  40:   }
+  41:   
+  42:   assert_valid("MyPart");
 
+-- No Model --
 -- Test Result --
 OK

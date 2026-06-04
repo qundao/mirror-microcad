@@ -16,5 +16,6 @@
   20:   print_error("first");
   21:   print_error("second");
 
+-- No Model --
 -- Test Result --
 OK

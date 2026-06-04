@@ -28,5 +28,6 @@
   42:   // use the function and the constant
   43:   x = my::math::abs(-1.0) * my::math::PI;
 
+-- No Model --
 -- Test Result --
 OK

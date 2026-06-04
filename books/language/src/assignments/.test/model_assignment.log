@@ -10,5 +10,6 @@
    9:   m = std::geo2d::Circle(radius = 10mm); // assign the model of a circle into m
   10:   std::debug::assert_eq([m.radius, 10mm]); // access property radius of m
 
+-- No Model --
 -- Test Result --
 OK

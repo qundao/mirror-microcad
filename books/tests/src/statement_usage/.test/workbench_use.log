@@ -11,5 +11,6 @@
   39:     use std;
   40:   } K();
 
+Render error: No model to render
 -- Test Result --
 OK

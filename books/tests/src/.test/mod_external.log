@@ -10,5 +10,6 @@
   13:   // file: external.µcad
   14:   pub const a =1;
 
+-- No Model --
 -- Test Result --
 OK

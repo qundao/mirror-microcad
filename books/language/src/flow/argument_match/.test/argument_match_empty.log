@@ -11,5 +11,6 @@
   27:   
   28:   f(); // no arguments
 
+-- No Model --
 -- Test Result --
 OK

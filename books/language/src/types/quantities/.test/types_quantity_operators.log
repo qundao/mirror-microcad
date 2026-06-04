@@ -14,5 +14,6 @@
   17:   assert_eq([6cm + 2cm, 80mm]);
   18:   assert_eq([6cm - 2cm, 0.04m]);
 
+-- No Model --
 -- Test Result --
 OK

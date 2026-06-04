@@ -12,5 +12,6 @@
   40:   
   41:   std::debug::assert_eq([s.radius, 1cm]);
 
+-- No Model --
 -- Test Result --
 OK

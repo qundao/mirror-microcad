@@ -11,5 +11,6 @@
   95:     prop a = 1;
   96:   } K();
 
+Render error: No model to render
 -- Test Result --
 OK

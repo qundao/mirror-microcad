@@ -20,5 +20,6 @@
   16:   a::b::c::M1();
   17:   a::M2();
 
+Render error: No model to render
 -- Test Result --
 OK

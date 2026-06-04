@@ -25,5 +25,6 @@
   50:   // usual comment for non-symbols
   51:   f(1);
 
+-- No Model --
 -- Test Result --
 OK

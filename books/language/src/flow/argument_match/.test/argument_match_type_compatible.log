@@ -11,5 +11,6 @@
   95:   // giving an integer `1` to a `Scalar` parameter `a`
   96:   f(1, 2cm, 3cm²);
 
+-- No Model --
 -- Test Result --
 OK

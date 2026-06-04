@@ -11,5 +11,6 @@
   15:   
   16:   std::debug::assert(color.r == 100%);
 
+-- No Model --
 -- Test Result --
 OK

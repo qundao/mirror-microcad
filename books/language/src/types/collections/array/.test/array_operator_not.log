@@ -9,5 +9,6 @@
 
   29:   std::debug::assert_eq([![true, false], [false, true]]);
 
+-- No Model --
 -- Test Result --
 OK

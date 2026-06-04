@@ -17,5 +17,6 @@
   61:   assert_eq([ f(1), 2 ]);
   62:   assert_eq([ f(4), 3 ]);
 
+-- No Model --
 -- Test Result --
 OK

@@ -12,5 +12,6 @@
   68:   const MyValue = 1; // warning
   69:   const MY_VALUE = 1; // ok
 
+-- No Model --
 -- Test Result --
 TODO

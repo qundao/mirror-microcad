@@ -9,5 +9,6 @@
 
   10:   std::debug::assert(true != false);
 
+-- No Model --
 -- Test Result --
 OK

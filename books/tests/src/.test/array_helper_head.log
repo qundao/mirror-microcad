@@ -9,5 +9,6 @@
 
   44:   std::debug::assert_eq([ std::array::head([1,2,3]), 1 ]);
 
+-- No Model --
 -- Test Result --
 OK

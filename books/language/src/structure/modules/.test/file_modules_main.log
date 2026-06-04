@@ -10,5 +10,6 @@
   11:   mod second;
   12:   second::f();
 
+-- No Model --
 -- Test Result --
 OK

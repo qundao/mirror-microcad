@@ -93,5 +93,6 @@
  101:   assert_invalid("module::pub_sub_module::PrivateWorkbench");
  102:   assert_eq([module::function(), 0]);
 
+-- No Model --
 -- Test Result --
 OK

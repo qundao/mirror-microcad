@@ -14,5 +14,6 @@
   88:   
   89:   std::debug::assert_eq([square_millimeter, square_centimeter]);
 
+-- No Model --
 -- Test Result --
 OK

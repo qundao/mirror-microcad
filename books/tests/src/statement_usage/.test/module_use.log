@@ -11,5 +11,6 @@
   39:     use std::geo2d;
   40:   }
 
+-- No Model --
 -- Test Result --
 OK

@@ -9,5 +9,6 @@
 
   10:   outer = std::geo2d::Rect(width = 31.8mm, height = 15.8mm);
 
+-- No Model --
 -- Test Result --
 OK

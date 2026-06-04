@@ -16,5 +16,6 @@
   62:   
   63:   std::debug::assert_eq([degree, degree_, grad, turn, radian]);
 
+-- No Model --
 -- Test Result --
 OK

@@ -11,5 +11,6 @@
   63:     if std::math::PI == 3 { __builtin::geo2d::Circle(radius=1); }
   64:   } f();
 
+-- No Model --
 -- Test Result --
 OK

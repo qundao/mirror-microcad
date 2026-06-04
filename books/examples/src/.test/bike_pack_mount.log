@@ -219,36 +219,36 @@
                             - scale = (x=100%, y=100%)
                             - twist = 0°
                             Operation __builtin::ops::extrude(height=40mm, scale_x=100%, scale_y=100%, twist=0°) -> 3D (1AEECC71BA1326E6): Mesh @0.25mm
-                              Group -> 2D (AD29A92D656256E8):  @0.25mm
-                                Multiplicity -> 2D (AD29A92D656256E8):  @0.25mm
-                                  Workpiece(Operation) std::ops::translate(x=-55.25mm, y=0mm, z=0mm) -> 2D (7B2F81E8B2942C0A):  @0.25mm
+                              Group -> 2D (AD29A92D656256E8): Collection @0.25mm
+                                Multiplicity -> 2D (AD29A92D656256E8): Collection @0.25mm
+                                  Workpiece(Operation) std::ops::translate(x=-55.25mm, y=0mm, z=0mm) -> 2D (7B2F81E8B2942C0A): MultiPolygon @0.25mm
                                     - x = -55.25mm
                                     - y = 0mm
                                     - z = 0mm
-                                    Transform __builtin::ops::translate(x=-55.25mm, y=0mm, z=0mm) -> 2D (A91BAE8B60E621BA):  @0.25mm
-                                      Operation __builtin::ops::hull() -> 2D (9A81456B82D844E9):  @0.25mm
-                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) -> 2D (E2816EE1B4CA2C68):  @0.25mm
+                                    Transform __builtin::ops::translate(x=-55.25mm, y=0mm, z=0mm) -> 2D (A91BAE8B60E621BA): MultiPolygon @0.25mm
+                                      Operation __builtin::ops::hull() -> 2D (9A81456B82D844E9): Polygon @0.25mm
+                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) -> 2D (E2816EE1B4CA2C68): Collection @0.25mm
                                           - center = (x=[-0.5mm, 0.5mm], y=0mm)
                                           - radius = 5.25mm
-                                          Multiplicity -> 2D (8F0CD1763676B74B):  @0.25mm
-                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) -> 2D (4923316413A98F97):  @0.25mm
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) -> 2D (11CFFBD020EDEA2E):  @0.25mm
-                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) -> 2D (41B7288954AF759D):  @0.25mm
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) -> 2D (11CFFBD020EDEA2E):  @0.25mm
-                                  Workpiece(Operation) std::ops::translate(x=55.25mm, y=0mm, z=0mm) -> 2D (A3DCF71426A89D0F):  @0.25mm
+                                          Multiplicity -> 2D (8F0CD1763676B74B): Collection @0.25mm
+                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) -> 2D (4923316413A98F97): MultiPolygon @0.25mm
+                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) -> 2D (11CFFBD020EDEA2E): Polygon @0.25mm
+                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) -> 2D (41B7288954AF759D): MultiPolygon @0.25mm
+                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) -> 2D (11CFFBD020EDEA2E): Polygon @0.25mm
+                                  Workpiece(Operation) std::ops::translate(x=55.25mm, y=0mm, z=0mm) -> 2D (A3DCF71426A89D0F): MultiPolygon @0.25mm
                                     - x = 55.25mm
                                     - y = 0mm
                                     - z = 0mm
-                                    Transform __builtin::ops::translate(x=55.25mm, y=0mm, z=0mm) -> 2D (B006366D30C18A9C):  @0.25mm
-                                      Operation __builtin::ops::hull() -> 2D (9A81456B82D844E9):  @0.25mm
-                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) -> 2D (E2816EE1B4CA2C68):  @0.25mm
+                                    Transform __builtin::ops::translate(x=55.25mm, y=0mm, z=0mm) -> 2D (B006366D30C18A9C): MultiPolygon @0.25mm
+                                      Operation __builtin::ops::hull() -> 2D (9A81456B82D844E9): Polygon @0.25mm
+                                        Workpiece(Sketch) std::geo2d::Circle(center=(x=[-0.5mm, 0.5mm], y=0mm), diameter=10.5mm) -> 2D (E2816EE1B4CA2C68): Collection @0.25mm
                                           - center = (x=[-0.5mm, 0.5mm], y=0mm)
                                           - radius = 5.25mm
-                                          Multiplicity -> 2D (8F0CD1763676B74B):  @0.25mm
-                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) -> 2D (4923316413A98F97):  @0.25mm
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) -> 2D (11CFFBD020EDEA2E):  @0.25mm
-                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) -> 2D (41B7288954AF759D):  @0.25mm
-                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) -> 2D (11CFFBD020EDEA2E):  @0.25mm
+                                          Multiplicity -> 2D (8F0CD1763676B74B): Collection @0.25mm
+                                            Transform __builtin::ops::translate(x=-0.5mm, y=0mm, z=0mm) -> 2D (4923316413A98F97): MultiPolygon @0.25mm
+                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) -> 2D (11CFFBD020EDEA2E): Polygon @0.25mm
+                                            Transform __builtin::ops::translate(x=0.5mm, y=0mm, z=0mm) -> 2D (41B7288954AF759D): MultiPolygon @0.25mm
+                                              Primitive2D __builtin::geo2d::Circle(radius=5.25mm) -> 2D (11CFFBD020EDEA2E): Polygon @0.25mm
 
 Export of "../books/examples/src/.test/bike_pack_mount-out.stl" successful.
 -- Test Result --

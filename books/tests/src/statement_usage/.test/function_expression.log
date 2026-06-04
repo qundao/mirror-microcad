@@ -11,5 +11,6 @@
  103:     1 + 2;
  104:   } f();
 
+-- No Model --
 -- Test Result --
 OK

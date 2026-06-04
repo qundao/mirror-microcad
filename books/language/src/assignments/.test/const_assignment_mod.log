@@ -28,5 +28,6 @@
   33:   std::debug::assert_eq([my_module::f(), "Hello my_module"]);
   34:   std::debug::assert_eq([TEXT, "Hello"]);
 
+Render error: No model to render
 -- Test Result --
 OK

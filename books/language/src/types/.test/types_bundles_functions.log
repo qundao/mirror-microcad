@@ -10,5 +10,6 @@
   49:   fn f(x = 4mm) {} // use unit (with default)
   50:   fn g(x: Length) {} // use type (without default)
 
+-- No Model --
 -- Test Result --
 OK
