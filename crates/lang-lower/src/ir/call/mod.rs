@@ -13,7 +13,7 @@ pub use method_call::*;
 use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 
-use crate::lower::ir;
+use crate::ir;
 
 /// Call of a *workbench* or *function*.
 #[derive(Clone, Debug, Default, SrcReferrer)]

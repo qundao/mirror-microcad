@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::lower::{LowerContext, LowerError, ir};
+use crate::{Lower, LowerContext, LowerError, ir};
 
 use microcad_lang_parse::ast;
 
@@ -11,7 +11,6 @@ impl ir::ModuleDefinition {
         node: &ast::InlineModule,
         context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
-        use crate::lower::Lower;
         Ok(Self {
             keyword_ref: context.src_ref(&node.keyword_span),
             doc: ir::DocBlock::lower(&node.doc, context)?,
@@ -31,7 +30,6 @@ impl ir::ModuleDefinition {
         node: &ast::FileModule,
         context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
-        use crate::lower::Lower;
         Ok(Self {
             keyword_ref: context.src_ref(&node.keyword_span),
             doc: ir::DocBlock::lower(&node.doc, context)?,

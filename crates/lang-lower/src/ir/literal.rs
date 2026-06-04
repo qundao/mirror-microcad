@@ -4,8 +4,7 @@
 //! µcad literal syntax elements
 
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
-
-use crate::{ty::*, value::Value};
+use microcad_lang_types::{Type, Value, ty};
 
 /// Literal of any kind.
 #[derive(Clone, Debug, PartialEq)]
@@ -24,7 +23,7 @@ impl SrcReferrer for Literal {
     }
 }
 
-impl crate::ty::Ty for Literal {
+impl ty::Ty for Literal {
     fn ty(&self) -> Type {
         self.value().ty()
     }

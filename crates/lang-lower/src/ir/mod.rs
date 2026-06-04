@@ -47,4 +47,4 @@ pub use r#use::*;
 pub use visibility::*;
 pub use workbench::*;
 
-pub use crate::ty::{MatrixType, QuantityType, TupleType, Type, Unit};
+pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Type, Unit};

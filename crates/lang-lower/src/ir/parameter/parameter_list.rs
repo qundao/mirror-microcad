@@ -3,7 +3,7 @@
 
 //! Parameter list syntax element
 
-use crate::lower::ir;
+use crate::ir;
 
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{Identifier, OrdMap, Refer};

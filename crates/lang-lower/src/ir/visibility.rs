@@ -3,7 +3,7 @@
 
 //! Visibility of an entity.
 
-use crate::lower::ir;
+use crate::ir;
 
 /// Visibility of an entity.
 ///

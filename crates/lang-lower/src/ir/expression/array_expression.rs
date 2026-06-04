@@ -3,7 +3,7 @@
 
 //! List of expression
 
-use crate::lower::ir;
+use crate::ir;
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;

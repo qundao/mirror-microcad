@@ -92,7 +92,7 @@ impl QualifiedName {
     }
 }
 
-impl crate::lower::SingleIdentifier for QualifiedName {
+impl crate::SingleIdentifier for QualifiedName {
     fn single_identifier(&self) -> Option<&Identifier> {
         if self.is_single_identifier() {
             self.0.first()

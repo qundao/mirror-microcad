@@ -3,7 +3,7 @@
 
 //! Initialization definition syntax element
 
-use crate::lower::ir;
+use crate::ir;
 
 use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
@@ -50,7 +50,7 @@ pub struct Inits<'a>(std::slice::Iter<'a, ir::Statement>);
 
 impl<'a> Inits<'a> {
     /// Create new init for a part.
-    pub fn new(def: &'a impl crate::lower::Initialized<'a>) -> Self {
+    pub fn new(def: &'a impl crate::Initialized<'a>) -> Self {
         Self(def.statements())
     }
 }

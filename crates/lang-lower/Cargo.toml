@@ -22,11 +22,13 @@ derive_more = { version = "2.0.1", features = [
 log = "0.4"
 miette = { version = "7.6.0", features = ["derive", "fancy"] }
 rustc-hash = "2.1.1"
+strum = { version = "0.28", features = ["derive"] }
 thiserror = "2.0.17"
 
 microcad-lang-base = { workspace = true }
 microcad-lang-proc-macros = { workspace = true }
 microcad-lang-parse = { workspace = true }
+microcad-lang-types = { workspace = true }
 
 [dev-dependencies]
 pretty_assertions = "1.4"

@@ -3,14 +3,14 @@
 
 //! µcad Type annotation.
 
-use crate::ty::*;
+use microcad_lang_types::ty;
 
 use microcad_lang_base::Refer;
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// Type within source code.
 #[derive(Clone, Debug, PartialEq, SrcReferrer)]
-pub struct TypeAnnotation(pub Refer<Type>);
+pub struct TypeAnnotation(pub Refer<ty::Type>);
 
 impl std::fmt::Display for TypeAnnotation {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -18,8 +18,8 @@ impl std::fmt::Display for TypeAnnotation {
     }
 }
 
-impl crate::ty::Ty for TypeAnnotation {
-    fn ty(&self) -> Type {
+impl ty::Ty for TypeAnnotation {
+    fn ty(&self) -> ty::Type {
         self.0.value.clone()
     }
 }

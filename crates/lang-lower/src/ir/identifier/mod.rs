@@ -3,10 +3,8 @@
 
 //! µcad identifier syntax elements
 
-mod identifier_list;
 mod qualified_name;
 
-pub use identifier_list::*;
 pub use qualified_name::*;
 
 pub use microcad_lang_base::Identifier;

@@ -3,7 +3,7 @@
 
 //! µcad source file representation
 
-use crate::lower::ir;
+use crate::ir;
 
 use microcad_lang_base::{
     ComputedHash, Hashed, Identifier, LineCol, ResourceLocation, SourceLocInfo, SrcRef,

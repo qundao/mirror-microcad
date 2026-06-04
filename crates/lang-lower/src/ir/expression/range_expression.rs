@@ -7,7 +7,7 @@ use derive_more::Deref;
 use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 
-use crate::lower::ir;
+use crate::ir;
 
 /// Range start.
 #[derive(Clone, Debug, Default, Deref, PartialEq, SrcReferrer)]
