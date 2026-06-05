@@ -3,12 +3,14 @@
 
 //! Viewer materials.
 
+use std::marker::PhantomData;
+
 use bevy::{
     app::{App, Plugin, Startup},
     asset::{Assets, Handle, uuid::Uuid},
     color::Alpha,
     ecs::system::ResMut,
-    render::render_resource::{Shader, ShaderRef},
+    shader::{Shader, ShaderRef},
 };
 
 mod angle;
@@ -25,7 +27,8 @@ pub mod bevy_types {
     pub use bevy::{
         asset::Asset,
         pbr::{Material, StandardMaterial},
-        render::render_resource::{AsBindGroup, ShaderRef},
+        render::render_resource::AsBindGroup,
+        shader::ShaderRef,
     };
 }
 
@@ -41,9 +44,7 @@ fn asset_uuid_from_str(s: &'static str) -> Uuid {
 
 /// Build a shader ref from a string (mostly the shader filename).
 pub fn shader_ref_from_str(s: &'static str) -> ShaderRef {
-    ShaderRef::Handle(Handle::Weak(bevy::asset::AssetId::<Shader>::Uuid {
-        uuid: asset_uuid_from_str(s),
-    }))
+    ShaderRef::Handle(Handle::Uuid(asset_uuid_from_str(s), PhantomData))
 }
 
 /// Get correct alpha mode for colors.
@@ -95,10 +96,12 @@ impl Plugin for MaterialPlugin {
 
 macro_rules! add_shader_asset {
     ($shaders:ident, $s:literal) => {
-        $shaders.insert(
-            asset_uuid_from_str($s),
-            Shader::from_wgsl(include_str!($s), $s.to_string()),
-        );
+        $shaders
+            .insert(
+                asset_uuid_from_str($s),
+                Shader::from_wgsl(include_str!($s), $s.to_string()),
+            )
+            .ok();
     };
 }
 

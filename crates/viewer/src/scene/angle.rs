@@ -3,7 +3,7 @@
 
 //! microcad Angle measure scene item.
 
-use bevy::render::mesh::{Mesh, Mesh3d};
+use bevy::mesh::{Mesh, Mesh3d};
 use bevy::{
     asset::Assets,
     ecs::system::{Commands, ResMut},

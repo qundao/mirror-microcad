@@ -26,7 +26,7 @@ impl ToBevyMesh for mu::core::LineString {
 
     fn to_bevy_mesh(&self, z: f32) -> Mesh {
         let mut mesh = Mesh::new(
-            bevy::render::mesh::PrimitiveTopology::LineStrip,
+            bevy::mesh::PrimitiveTopology::LineStrip,
             RenderAssetUsages::default(),
         );
         mesh.insert_attribute(
@@ -44,7 +44,7 @@ impl ToBevyMesh for mu::core::MultiLineString {
 
     fn to_bevy_mesh(&self, z: Self::Parameters) -> Mesh {
         let mut mesh = Mesh::new(
-            bevy::render::mesh::PrimitiveTopology::LineList,
+            bevy::mesh::PrimitiveTopology::LineList,
             RenderAssetUsages::default(),
         );
         mesh.insert_attribute(
@@ -105,7 +105,7 @@ impl Triangulation {
     /// Return triangulation as bevy mesh.
     fn mesh(self) -> Mesh {
         let mut mesh = Mesh::new(
-            bevy::render::mesh::PrimitiveTopology::TriangleList,
+            bevy::mesh::PrimitiveTopology::TriangleList,
             RenderAssetUsages::default(),
         );
         mesh.insert_attribute(Mesh::ATTRIBUTE_POSITION, self.positions);
@@ -260,7 +260,7 @@ impl ToBevyMesh for mu::core::Bounds2D {
 
     fn to_bevy_mesh(&self, _: Self::Parameters) -> Mesh {
         let mut mesh = Mesh::new(
-            bevy::render::mesh::PrimitiveTopology::LineStrip,
+            bevy::mesh::PrimitiveTopology::LineStrip,
             RenderAssetUsages::default(),
         );
         use bevy::prelude::{Vec2, Vec3};
@@ -290,7 +290,7 @@ impl ToBevyMesh for mu::core::Bounds3D {
 
     fn to_bevy_mesh(&self, _: Self::Parameters) -> Mesh {
         let mut mesh = Mesh::new(
-            bevy::render::mesh::PrimitiveTopology::LineStrip,
+            bevy::mesh::PrimitiveTopology::LineStrip,
             RenderAssetUsages::default(),
         );
         use bevy::prelude::Vec3;

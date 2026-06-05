@@ -5,6 +5,8 @@
 
 use bevy::{
     asset::Assets,
+    camera::visibility::Visibility,
+    camera::{Camera, Projection},
     ecs::{
         component::Component,
         query::With,
@@ -12,12 +14,8 @@ use bevy::{
     },
     input::{ButtonInput, keyboard::KeyCode},
     math::{Vec2, Vec3, primitives::Plane3d},
+    mesh::{Mesh, Mesh3d},
     pbr::MeshMaterial3d,
-    render::{
-        camera::{Camera, Projection},
-        mesh::{Mesh, Mesh3d},
-        view::Visibility,
-    },
     transform::components::Transform,
     window::Window,
 };

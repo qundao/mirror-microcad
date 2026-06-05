@@ -39,7 +39,7 @@ pub fn zoom_to_fit(projection: &mut Projection, window: &Window) {
     match projection {
         Projection::Orthographic(ortho) => {
             // Change the projection parameters
-            use bevy::render::camera::CameraProjection;
+            use bevy::camera::CameraProjection;
             ortho.scale = 1.0;
             ortho.update(window.width(), window.height());
         }

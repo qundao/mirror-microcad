@@ -5,8 +5,8 @@ use bevy::{
     asset::Assets,
     ecs::system::{Commands, ResMut},
     math::{Vec2, Vec3, primitives::Plane3d},
+    mesh::{Mesh, Mesh3d},
     pbr::MeshMaterial3d,
-    render::mesh::{Mesh, Mesh3d},
 };
 
 use crate::material;

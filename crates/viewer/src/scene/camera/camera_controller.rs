@@ -12,7 +12,7 @@ use crate::ViewModel;
 use bevy::{
     input::mouse::{AccumulatedMouseMotion, AccumulatedMouseScroll, MouseScrollUnit},
     prelude::*,
-    window::CursorGrabMode,
+    window::{CursorGrabMode, CursorOptions},
 };
 
 /// A freecam-style camera controller plugin.
@@ -100,6 +100,7 @@ impl Default for CameraController {
 fn run_camera_controller(
     time: Res<Time>,
     mut windows: Query<&mut Window>,
+    mut cursor_options: Query<&mut CursorOptions>,
     accumulated_mouse_motion: Res<AccumulatedMouseMotion>,
     accumulated_mouse_scroll: Res<AccumulatedMouseScroll>,
     mouse_button_input: Res<ButtonInput<MouseButton>>,
@@ -159,10 +160,10 @@ fn run_camera_controller(
     let current_scale = match projection.as_mut() {
         Projection::Orthographic(ortho) => {
             // Change the projection parameters
-            use bevy::render::camera::CameraProjection;
+            use bevy::camera::CameraProjection;
             ortho.scale *= 1.0 + scroll / 50.0;
             ortho.far = state.scene.radius * 6.0;
-            ortho.scaling_mode = bevy::render::camera::ScalingMode::FixedVertical {
+            ortho.scaling_mode = bevy::camera::ScalingMode::FixedVertical {
                 viewport_height: 2.0 * state.scene.radius,
             };
             match windows.single() {
@@ -218,18 +219,19 @@ fn run_camera_controller(
     // Handle cursor grab
     if cursor_grab_change {
         if cursor_grab {
-            for mut window in &mut windows {
+            for window in &mut windows {
                 if !window.focused {
                     continue;
                 }
-
-                window.cursor_options.grab_mode = CursorGrabMode::Locked;
-                window.cursor_options.visible = false;
+                for mut cursor_option in &mut cursor_options {
+                    cursor_option.grab_mode = CursorGrabMode::Locked;
+                    cursor_option.visible = false;
+                }
             }
         } else {
-            for mut window in &mut windows {
-                window.cursor_options.grab_mode = CursorGrabMode::None;
-                window.cursor_options.visible = true;
+            for mut cursor_option in &mut cursor_options {
+                cursor_option.grab_mode = CursorGrabMode::None;
+                cursor_option.visible = true;
             }
         }
     }

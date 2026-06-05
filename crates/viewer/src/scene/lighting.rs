@@ -6,8 +6,8 @@ use bevy::{
         entity::Entity,
         system::{Commands, ResMut},
     },
+    light::{DirectionalLight, light_consts},
     math::Vec3,
-    pbr::{DirectionalLight, light_consts},
     transform::components::Transform,
 };
 

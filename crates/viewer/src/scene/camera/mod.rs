@@ -18,7 +18,7 @@ pub fn setup_camera(mut commands: Commands, state: Res<ViewModel>) {
         Camera3d::default(),
         camera_controller::CameraController::default(),
         Projection::from(OrthographicProjection {
-            scaling_mode: bevy::render::camera::ScalingMode::FixedVertical {
+            scaling_mode: bevy::camera::ScalingMode::FixedVertical {
                 viewport_height: 2.0 * radius,
             },
             ..OrthographicProjection::default_3d()

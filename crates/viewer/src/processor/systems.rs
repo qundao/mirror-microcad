@@ -3,12 +3,14 @@
 
 //! microcad Viewer bevy systems
 
+use std::marker::PhantomData;
+
 use bevy::{
     asset::Assets,
     ecs::system::{Commands, Res, ResMut},
+    mesh::{Mesh, Mesh3d},
     pbr::StandardMaterial,
     prelude::*,
-    render::mesh::{Mesh, Mesh3d},
 };
 use bevy_mod_outline::{OutlineMode, OutlineVolume};
 
@@ -142,7 +144,7 @@ pub fn handle_processor_responses(
     mut meshes: ResMut<Assets<Mesh>>,
     mut model_view_states: ResMut<Assets<ModelViewState>>,
     mut view_model: ResMut<ViewModel>,
-    mut events: EventWriter<ViewerEvent>,
+    mut events: MessageWriter<ViewerEvent>,
 ) {
     let mut entities = Vec::new();
     let mut ground_radius = mu::core::Length::default();
@@ -178,14 +180,11 @@ pub fn handle_processor_responses(
 
                         commands
                             .spawn((
-                                Mesh3d(Handle::Weak(bevy::asset::AssetId::<Mesh>::Uuid {
-                                    uuid: view_state.info().geometry_output_uuid,
-                                })),
-                                MeshMaterial3d(Handle::Weak(bevy::asset::AssetId::<
-                                    StandardMaterial,
-                                >::Uuid {
-                                    uuid,
-                                })),
+                                Mesh3d(Handle::Uuid(
+                                    view_state.info().geometry_output_uuid,
+                                    PhantomData,
+                                )),
+                                MeshMaterial3d::<StandardMaterial>(Handle::Uuid(uuid, PhantomData)),
                                 view_state.info().transform,
                                 view_state.outline_volume.clone(),
                                 OutlineMode::FloodFlat,
@@ -225,7 +224,7 @@ pub fn handle_pick_event(
         &mut MeshMaterial3d<StandardMaterial>,
         &mut OutlineVolume,
     )>,
-    mut events: EventWriter<ViewerEvent>,
+    mut events: MessageWriter<ViewerEvent>,
 ) {
     for (entity, _) in pointers
         .iter()
