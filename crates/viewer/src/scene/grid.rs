@@ -57,10 +57,12 @@ pub fn spawn_grid_plane(
             .spawn((
                 Mesh3d(mesh_handle),
                 MeshMaterial3d(materials.add(material::Grid {
-                    grid_color: theme.darker.to_bevy(),
-                    x_axis_color: theme.bright.to_bevy(),
-                    y_axis_color: theme.bright.to_bevy(),
-                    ..Default::default()
+                    parameters: material::GridUniform {
+                        grid_color: theme.darker.to_bevy(),
+                        x_axis_color: theme.bright.to_bevy(),
+                        y_axis_color: theme.bright.to_bevy(),
+                        ..Default::default()
+                    },
                 })),
                 bevy::picking::Pickable::IGNORE,
                 Visibility::Visible,
@@ -88,8 +90,8 @@ pub fn update_grid(
             && let Ok(material) = mat_query.get(grid)
             && let Some(material) = materials.get_mut(material)
         {
-            material.radius = radius;
-            material.zoom_level = window.width().max(window.height())
+            material.parameters.radius = radius;
+            material.parameters.zoom_level = window.width().max(window.height())
                 / 20.0
                 / get_current_zoom_level(projection)
                 / radius;
@@ -108,7 +110,7 @@ pub fn update_grid_on_view_angle_change(
             && let Ok(material) = mat_query.get(grid)
             && let Some(material) = materials.get_mut(material)
         {
-            material.view_angle = transform.forward().normalize();
+            material.parameters.view_angle = transform.forward().normalize();
         }
     }
 }

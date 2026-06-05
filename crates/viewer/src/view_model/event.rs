@@ -82,7 +82,7 @@ pub fn handle_viewer_event(
                     && let Some(material) = grid_materials.get_mut(material)
                 {
                     state.scene.radius = **radius as f32;
-                    material.radius = **radius as f32;
+                    material.parameters.radius = **radius as f32;
                 }
             }
             ViewerEvent::SelectAll => {

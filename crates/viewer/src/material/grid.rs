@@ -3,37 +3,39 @@
 
 //! Grid material.
 
-use bevy::render::render_resource::RenderPipelineDescriptor;
+use bevy::render::render_resource::*;
 
 use super::bevy_types::*;
 
 /// A colored zoom-adaptive grid and fade out radius.
-///
-/// This struct defines the data that will be passed to your shader.
 #[derive(Asset, AsBindGroup, Debug, Clone, TypePath)]
 pub struct Grid {
-    /// Grid fade out radius.
+    /// Grid parameters
     #[uniform(0)]
+    pub parameters: GridUniform,
+}
+
+/// Parameters for a colored zoom-adaptive grid and fade out radius.
+///
+/// This struct defines the data that will be passed to your shader.
+#[derive(Clone, ShaderType, Debug, Default)]
+pub struct GridUniform {
+    /// Grid fade out radius.
     pub radius: f32,
 
     /// Zoom level (defines the tile size of the grid).
-    #[uniform(1)]
     pub zoom_level: f32,
 
     /// Camera view angle.
-    #[uniform(2)]
     pub view_angle: Vec3,
 
     /// RGB color of the grid.
-    #[uniform(3)]
     pub grid_color: Vec3,
 
     /// RGB Color for the x axis.
-    #[uniform(4)]
     pub x_axis_color: Vec3,
 
     /// RGB Color for the y axis.
-    #[uniform(5)]
     pub y_axis_color: Vec3,
 }
 
@@ -46,12 +48,14 @@ impl Grid {
 impl Default for Grid {
     fn default() -> Self {
         Self {
-            radius: 1.0,
-            zoom_level: 1.0,
-            view_angle: Vec3::new(0.0, 0.0, 1.0),
-            grid_color: Vec3::new(0.7, 0.7, 0.7),
-            x_axis_color: Vec3::new(1.0, 0.0, 0.0),
-            y_axis_color: Vec3::new(0.0, 1.0, 0.0),
+            parameters: GridUniform {
+                radius: 1.0,
+                zoom_level: 1.0,
+                view_angle: Vec3::new(0.0, 0.0, 1.0),
+                grid_color: Vec3::new(0.7, 0.7, 0.7),
+                x_axis_color: Vec3::new(1.0, 0.0, 0.0),
+                y_axis_color: Vec3::new(0.0, 1.0, 0.0),
+            },
         }
     }
 }

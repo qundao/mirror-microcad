@@ -4,14 +4,16 @@
 #import bevy_pbr::forward_io::{Vertex, VertexOutput};
 #import bevy_pbr::mesh_functions::{get_world_from_local, mesh_position_local_to_clip, mesh_position_local_to_world, mesh_position_world_to_clip}
 
-@group(2) @binding(0) var<uniform> radius: f32;
-@group(2) @binding(1) var<uniform> zoom_level: f32;
-@group(2) @binding(2) var<uniform> view_angle: vec3<f32>;
-@group(2) @binding(3) var<uniform> grid_color: vec3<f32>;
-@group(2) @binding(4) var<uniform> x_axis_color: vec3<f32>;
-@group(2) @binding(5) var<uniform> y_axis_color: vec3<f32>;
+struct GridConfig {
+    radius: f32,
+    zoom_level: f32,
+    view_angle: vec3<f32>, 
+    grid_color: vec3<f32>,
+    x_axis_color: vec3<f32>,
+    y_axis_color: vec3<f32>,
+}
 
-
+@group(3) @binding(0) var<uniform> grid_config: GridConfig;
 
 @vertex
 fn vertex(input: Vertex) -> VertexOutput {
@@ -19,7 +21,7 @@ fn vertex(input: Vertex) -> VertexOutput {
 
     let matrix = get_world_from_local(input.instance_index);
     // Translate vertex position -0.05 in Z
-    let world_pos = vec4<f32>(input.position + vec3<f32>(0.0, 0.0, -0.05 / zoom_level), 1.0);
+    let world_pos = vec4<f32>(input.position + vec3<f32>(0.0, 0.0, -0.05 / grid_config.zoom_level), 1.0);
 
     output.position = mesh_position_local_to_clip(matrix, world_pos);
     output.world_position = vec4<f32>(input.position, 1.0);
@@ -29,7 +31,7 @@ fn vertex(input: Vertex) -> VertexOutput {
 
 
 fn grid_opacity(pos: vec2<f32>, zoom: f32) -> vec4<f32> {
-    let angle_z = pow(abs(view_angle.z), 1.0 / 3.0);
+    let angle_z = pow(abs(grid_config.view_angle.z), 1.0 / 3.0);
 
     let logz = log2(zoom / angle_z) / log2(10.0); // log10(zoom)
     let spacing = pow(10.0, floor(logz));
@@ -64,12 +66,12 @@ fn grid_opacity(pos: vec2<f32>, zoom: f32) -> vec4<f32> {
 
     let grid = (line_a * w_a + line_b * w_b) / (w_a + w_b); // Always adds to 1.0 total brightness
 
-    var color = grid_color;
+    var color = grid_config.grid_color;
     if fw_a < abs(uv_a.x) && fw_a > abs(uv_a.y)  {
-        color = x_axis_color;
+        color = grid_config.x_axis_color;
     }
     if fw_a < abs(uv_a.y) && fw_a > abs(uv_a.x) {
-        color = y_axis_color;
+        color = grid_config.y_axis_color;
     }
 
     let fade_z = (max(angle_z / 0.8 - 0.2, 0.0));
@@ -82,8 +84,8 @@ fn fragment(
     mesh: VertexOutput,
 ) -> @location(0) vec4<f32> {
     let p = mesh.world_position.xy;
-    let grid = grid_opacity(p, 8.0 / zoom_level);
-    let fade = min(2.0 - length(p) / radius, 1.0);
+    let grid = grid_opacity(p, 8.0 / grid_config.zoom_level);
+    let fade = min(2.0 - length(p) / grid_config.radius, 1.0);
     return vec4(grid.xyz, grid.w * fade);
 }
 

@@ -15,7 +15,6 @@ version.workspace = true
 [dependencies]
 bevy = { version = "0.18.1", default-features = false, features = [
     "png",
-    "mesh_picking",
     "bevy_core_pipeline",
     "bevy_asset",
     "bevy_color",

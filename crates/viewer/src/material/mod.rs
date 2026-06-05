@@ -18,7 +18,7 @@ mod grid;
 mod ruler;
 
 pub use angle::Angle;
-pub use grid::Grid;
+pub use grid::{Grid, GridUniform};
 pub use ruler::Ruler;
 
 /// Common types to be used from bevy.
@@ -106,8 +106,8 @@ macro_rules! add_shader_asset {
 }
 
 fn load_materials(mut shaders: ResMut<Assets<Shader>>) {
-    add_shader_asset!(shaders, "angle.wgsl");
-    add_shader_asset!(shaders, "arrow.wgsl");
+    //add_shader_asset!(shaders, "angle.wgsl");
+    //add_shader_asset!(shaders, "arrow.wgsl");
     add_shader_asset!(shaders, "grid.wgsl");
-    add_shader_asset!(shaders, "ruler.wgsl");
+    //add_shader_asset!(shaders, "ruler.wgsl");
 }
