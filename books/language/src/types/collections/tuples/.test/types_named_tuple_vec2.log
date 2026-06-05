@@ -11,5 +11,6 @@
   28:   
   29:   std::debug::assert(v.x + v.y == 5.0);
 
+-- No Model --
 -- Test Result --
 OK

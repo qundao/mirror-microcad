@@ -12,5 +12,6 @@
   46:   
   47:   std::debug::assert_eq([c#resolution, 200%]);
 
+-- No Model --
 -- Test Result --
 OK

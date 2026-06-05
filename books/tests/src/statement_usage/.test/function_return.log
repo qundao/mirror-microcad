@@ -11,5 +11,6 @@
   55:     return 1;
   56:   } f();
 
+-- No Model --
 -- Test Result --
 OK

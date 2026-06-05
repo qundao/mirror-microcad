@@ -11,5 +11,6 @@
   39:     use std;
   40:   } } K(1cm);
 
+Render error: No model to render
 -- Test Result --
 OK

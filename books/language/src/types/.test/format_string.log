@@ -9,5 +9,6 @@
 
    9:   std::debug::assert_eq(["{2 + 5}", "7"]);
 
+-- No Model --
 -- Test Result --
 OK

@@ -15,5 +15,6 @@
   45:       std::log::todo("print proper message");
   46:   }
 
+Render error: No model to render
 -- Test Result --
 OK

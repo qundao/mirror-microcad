@@ -15,5 +15,6 @@
   13:   
   14:   std::print(my_module::sub_module::TEXT);
 
+-- No Model --
 -- Test Result --
 OK

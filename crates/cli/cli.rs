@@ -50,13 +50,17 @@ impl Cli {
     }
 
     /// Generate compile parameters
-    pub fn compile_parameters(&self, resolution: &str) -> miette::Result<mu::CompileParameters> {
-        Ok(mu::CompileParameters {
+    pub fn compile_parameters(&self) -> mu::CompileParameters {
+        mu::CompileParameters {
             resolve: mu::ResolveParameters {
                 search_paths: self.config.search_paths.clone(),
             },
-            render: mu::RenderParameters::from_str(resolution)?.with_empty_cache(),
-        })
+        }
+    }
+
+    /// Retrieve render parameters from resolution string.
+    pub fn render_params(&self, resolution: &str) -> mu::Result<mu::RenderParameters> {
+        Ok(mu::RenderParameters::from_str(resolution)?.with_empty_cache())
     }
 
     /// Print diagnostics with colors and unicode.

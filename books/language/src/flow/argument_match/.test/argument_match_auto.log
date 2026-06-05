@@ -11,5 +11,6 @@
   12:   x = 1;
   13:   f(x, y = 2); // matches because argument `x` matches the name of parameter `x`
 
+-- No Model --
 -- Test Result --
 OK

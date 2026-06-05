@@ -11,5 +11,6 @@
   10:   4.0mm; // Quantity literal
   11:   "Hello"; // String literal
 
+-- No Model --
 -- Test Result --
 OK

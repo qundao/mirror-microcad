@@ -1,17 +1,9 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use std::str::FromStr;
+use crate::prelude::*;
 
-use microcad_core::RenderResolution;
-use microcad_lang::{
-    render::{ProgressTx, RenderCache},
-    value::Quantity,
-};
-use microcad_lang_base::RcMut;
-
-use crate::document::{self, Result};
-
+#[derive(Default, Clone)]
 pub struct RenderParameters {
     pub resolution: RenderResolution,
     pub cache: Option<RcMut<RenderCache>>,
@@ -19,14 +11,6 @@ pub struct RenderParameters {
 }
 
 impl RenderParameters {
-    pub fn new(resolution: RenderResolution) -> Self {
-        Self {
-            resolution,
-            cache: None,
-            progress_tx: None,
-        }
-    }
-
     pub fn with_cache(self, cache: RcMut<RenderCache>) -> Self {
         Self {
             resolution: self.resolution,
@@ -34,18 +18,33 @@ impl RenderParameters {
             progress_tx: self.progress_tx,
         }
     }
+
+    /// Creates a new render cache for this render parameter set.
+    pub fn with_empty_cache(self) -> Self {
+        self.with_cache(RcMut::new(RenderCache::default()))
+    }
 }
 
-impl FromStr for RenderParameters {
+impl From<RenderResolution> for RenderParameters {
+    fn from(resolution: RenderResolution) -> Self {
+        Self {
+            resolution,
+            cache: None,
+            progress_tx: None,
+        }
+    }
+}
+
+impl std::str::FromStr for RenderParameters {
     type Err = miette::Report;
 
-    fn from_str(s: &str) -> document::Result<Self> {
+    fn from_str(s: &str) -> Result<Self> {
         use microcad_lang::value::Value;
 
         match crate::value_from_str(s)? {
             Value::Quantity(q) => match q.quantity_type {
                 microcad_lang::ty::QuantityType::Length => {
-                    Ok(RenderParameters::new(RenderResolution::new(q.value)))
+                    Ok(RenderParameters::from(RenderResolution::new(q.value)))
                 }
                 _ => Err(miette::miette!(
                     "Cannot convert quantity `{q}` into `RenderParameters`"
@@ -58,6 +57,7 @@ impl FromStr for RenderParameters {
     }
 }
 
+/// Render a model.
 pub trait Render {
-    fn render(&mut self, params: &RenderParameters) -> document::Result;
+    fn render(&mut self, params: impl Into<RenderParameters>) -> Result<Model>;
 }

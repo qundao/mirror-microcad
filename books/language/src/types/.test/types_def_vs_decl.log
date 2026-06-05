@@ -10,5 +10,6 @@
   29:   x: Length = 4mm; // explicit type declaration
   30:   y = 4mm; // implicit type declaration via units.
 
+-- No Model --
 -- Test Result --
 OK

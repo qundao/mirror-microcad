@@ -73,7 +73,7 @@ pub use crate::locate;
 
 pub use crate::commands::{
     CompileParameters, DocGen, DocGenParameters, Export, ExportCommand, ExportParameters, Format,
-    FormatParameters, PrintDiagnosticsParameters, Sync, compile::Parse, compile::RenderParameters,
+    FormatParameters, PrintDiagnosticsParameters, RenderParameters, Sync, compile::Parse,
     compile::ResolveParameters,
 };
 
@@ -84,8 +84,8 @@ pub mod traits {
     pub use microcad_lang::{doc::Doc, ty::Ty};
 
     pub use super::commands::{
-        Compile, DocGen, Export, Format, LoadFromFile, PrintDiagnostics, Sync, compile::Eval,
-        compile::Lower, compile::Parse, compile::Resolve,
+        Compile, DocGen, Export, Format, LoadFromFile, PrintDiagnostics, Render, Sync,
+        compile::Eval, compile::Lower, compile::Parse, compile::Resolve,
     };
     pub use super::document::{CaptureDiags, GetCode, GetSymbol};
 }

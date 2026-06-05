@@ -13,5 +13,6 @@
   26:   // check value
   27:   std::debug::assert_eq([x, 2]);
 
+-- No Model --
 -- Test Result --
 OK

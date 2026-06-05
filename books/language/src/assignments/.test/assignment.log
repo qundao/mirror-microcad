@@ -15,5 +15,6 @@
   19:   
   20:   std::print("{c}");
 
+-- No Model --
 -- Test Result --
 OK

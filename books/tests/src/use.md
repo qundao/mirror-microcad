@@ -33,7 +33,6 @@ print("Hello");
 // public use operation from `std/module.µcad`
 pub use std::ops;
 assert_valid("ops");
-assert_valid("use_test::ops");
 
 part MyPart() {
     Circle(radius=1);

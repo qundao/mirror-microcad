@@ -1,7 +1,10 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_driver::prelude as mu;
+use microcad_driver::{
+    commands::Render,
+    prelude::{self as mu, RenderParameters},
+};
 
 use microcad_test_tools::test_env::*;
 use std::rc::Rc;
@@ -53,17 +56,10 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
 
     use microcad_driver::commands::Compile;
 
-    let resolution = if env.hires() {
-        mu::RenderResolution::high()
-    } else {
-        mu::RenderResolution::medium()
-    };
-
     let model = source.compile(mu::CompileParameters {
         resolve: mu::ResolveParameters {
             search_paths: vec!["../crates/std/lib".into(), "../assets".into()],
         },
-        render: mu::RenderParameters::from(resolution).with_empty_cache(),
     });
     let diag = source.diags();
     let error_lines = diag.error_lines();
@@ -104,19 +100,33 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                 } else {
                     TestResult::OkWarn
                 }
+            } else if diag.has_errors() {
+                writeln!(log, "-- Errors --")?;
+                writeln!(log, "{}", source.diagnostics_string(&diag_render_options))?;
+
+                TestResult::Fail
             } else {
                 TestResult::OkFail
             }
         }
         // test is expected to succeed?
-        TestMode::Ok => TestResult::Ok,
+        TestMode::Ok => {
+            if diag.has_errors() {
+                writeln!(log, "-- Errors --")?;
+                writeln!(log, "{}", source.diagnostics_string(&diag_render_options))?;
+
+                TestResult::Fail
+            } else {
+                TestResult::Ok
+            }
+        }
         TestMode::Ignore => {
             return Ok(());
         }
     };
 
     if let Ok(model) = model {
-        report_model(&env, log, model)?;
+        report_model(&env, log, source, model)?;
     }
 
     writeln!(log, "{}", env.result(&result))?;
@@ -134,17 +144,32 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
 fn report_model(
     env: &TestEnv,
     log: &mut dyn std::io::Write,
+    mut source: mu::document::Source,
     model: mu::Model,
 ) -> std::io::Result<()> {
     if model.has_no_output() {
         return writeln!(log, "-- No Model --");
     }
 
+    use mu::OutputType::*;
     use mu::export::{stl::StlExporter, svg::SvgExporter};
 
+    let model = match source.render(RenderParameters {
+        resolution: if env.hires() {
+            mu::RenderResolution::high()
+        } else {
+            mu::RenderResolution::medium()
+        },
+        cache: None,
+        progress_tx: None,
+    }) {
+        Ok(model) => model,
+        Err(err) => {
+            return writeln!(log, "Render error: {err}");
+        }
+    };
     writeln!(log, "-- Model --\n{}", mu::base::FormatTree(&model))?;
 
-    use mu::OutputType::*;
     let export = match model.deduce_output_type() {
         Geometry2D => Some(mu::ExportCommand {
             filename: env.out_file("svg"),

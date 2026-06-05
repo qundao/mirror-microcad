@@ -10,5 +10,6 @@
   18:   // file: second.µcad
   19:   pub fn f() {}
 
+-- No Model --
 -- Test Result --
 OK

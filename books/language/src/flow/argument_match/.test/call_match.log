@@ -11,5 +11,6 @@
   17:   
   18:   std::debug::assert_eq([f(x = 10m), 20m]);
 
+-- No Model --
 -- Test Result --
 OK

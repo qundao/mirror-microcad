@@ -13,5 +13,6 @@
   47:   // logging
   48:   std::print(text);
 
+-- No Model --
 -- Test Result --
 OK

@@ -11,5 +11,6 @@
   71:     const B = 1;
   72:   init(l:Length) {} } K();
 
+Render error: No model to render
 -- Test Result --
 OK

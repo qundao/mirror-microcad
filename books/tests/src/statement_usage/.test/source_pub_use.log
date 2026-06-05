@@ -9,5 +9,6 @@
 
   36:   pub use std;
 
+-- No Model --
 -- Test Result --
 OK

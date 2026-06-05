@@ -11,5 +11,6 @@
   79:     const B = 1;
   80:   } K();
 
+Render error: No model to render
 -- Test Result --
 OK

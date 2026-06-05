@@ -32,5 +32,6 @@
   35:   std::debug::assert_eq([Wheel(radius = 5cm).radius, 5cm]);
   36:   std::debug::assert_eq([Wheel(radius = 5cm).diameter, 10cm]);
 
+-- No Model --
 -- Test Result --
 OK

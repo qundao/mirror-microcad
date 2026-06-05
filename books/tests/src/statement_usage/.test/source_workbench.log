@@ -9,5 +9,6 @@
 
    6:   sketch F() {} F();
 
+Render error: No model to render
 -- Test Result --
 OK

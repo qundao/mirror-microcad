@@ -13,5 +13,6 @@
   20:   
   21:   print_length(7mm);
 
+-- No Model --
 -- Test Result --
 OK

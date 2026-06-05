@@ -9,5 +9,6 @@
 
   18:   fn f() {} f();
 
+-- No Model --
 -- Test Result --
 OK

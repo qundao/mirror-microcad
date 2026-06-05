@@ -11,5 +11,6 @@
   39:     use std;
   40:   init(l:Length) {} } K();
 
+Render error: No model to render
 -- Test Result --
 OK

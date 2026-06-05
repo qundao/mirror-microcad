@@ -11,5 +11,6 @@
   23:     fn f() {}
   24:   }
 
+-- No Model --
 -- Test Result --
 OK

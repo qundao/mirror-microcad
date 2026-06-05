@@ -12,5 +12,6 @@
   23:   y = 2;
   24:   f(x * 2, y * y); // matches because `x` and `y` match parameter names `x` and `y`
 
+-- No Model --
 -- Test Result --
 OK

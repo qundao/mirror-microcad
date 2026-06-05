@@ -13,5 +13,6 @@
   12:   
   13:   std::debug::assert_eq([square(8.0), 64.0]);
 
+-- No Model --
 -- Test Result --
 OK

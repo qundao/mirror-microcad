@@ -9,5 +9,6 @@
 
   39:   {}.std::ops::translate(x = 5mm);
 
+Render error: No model to render
 -- Test Result --
 TODO

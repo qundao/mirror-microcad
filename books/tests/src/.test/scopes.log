@@ -37,5 +37,6 @@
   35:   assert_invalid("b");
   36:   assert_invalid("c");
 
+Render error: No model to render
 -- Test Result --
 OK

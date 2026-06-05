@@ -11,5 +11,6 @@
  111:     1 + 2;
  112:   }
 
+Render error: No model to render
 -- Test Result --
 OK

@@ -11,5 +11,6 @@
   15:     mod m {}
   16:   }
 
+-- No Model --
 -- Test Result --
 OK

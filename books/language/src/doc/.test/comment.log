@@ -17,5 +17,6 @@
   17:   std::print("Hello, "); // Line comments can be appended to a line
   18:   std::print( /* Block comments can be placed almost anywhere */ "world!");
 
+-- No Model --
 -- Test Result --
 OK

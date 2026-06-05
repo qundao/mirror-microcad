@@ -26,5 +26,6 @@
   29:   std::print("outer: {t.outer}");
   30:   std::print("inner: {t.inner}");
 
+-- No Model --
 -- Test Result --
 OK

@@ -16,5 +16,6 @@
   20:       std::geo3d::Sphere(radius = 1cm),
   21:   ];
 
+-- No Model --
 -- Test Result --
 OK

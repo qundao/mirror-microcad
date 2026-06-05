@@ -11,5 +11,6 @@
   41:   
   42:   std::debug::assert(v.x + v.y + v.z == 9.0);
 
+-- No Model --
 -- Test Result --
 OK

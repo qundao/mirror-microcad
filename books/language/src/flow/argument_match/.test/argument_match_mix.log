@@ -15,5 +15,6 @@
  124:   // `d` does not need a name because `b` has one
  125:   f(b = 2cm, 1, 3cm);
 
+-- No Model --
 -- Test Result --
 OK

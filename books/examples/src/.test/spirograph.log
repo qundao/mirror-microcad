@@ -412,19 +412,19 @@
                                                   - thickness = 1.19mm
                                                   Operation subtract() -> 2D (64C9F235EC0F53D3): MultiPolygon @0.25mm
                                                     Group -> 2D (78B156AF0FDCDB6D):  @0.25mm
-                                                      Workpiece(Operation) std::ops::rotate(angle=-2.0943951023932rad, axis=(x=0, y=0, z=1)) -> 2D (77EB1DEFB12F2C90):  @0.25mm
+                                                      Workpiece(Operation) std::ops::rotate(angle=-2.0943951023932rad, axis=(x=0, y=0, z=1)) -> 2D (77EB1DEFB12F2C90): MultiPolygon @0.25mm
                                                         - matrix = Matrix3 [[-0.5000000000000002, -0.8660254037844385, 0.0], [0.8660254037844385, -0.5000000000000002, 0.0], [0.0, 0.0, 1.0]]
-                                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.5000000000000002, -0.8660254037844385, 0.0], [0.8660254037844385, -0.5000000000000002, 0.0], [0.0, 0.0, 1.0]]) -> 2D (944C29B7BE630D35):  @0.25000000000000006mm
-                                                          Workpiece(Sketch) std::geo2d::Sector(end=2.61799387799149rad, radius=2.975mm, start=-2.61799387799149rad) -> 2D (34E83F762222A4C1):  @0.25000000000000006mm
+                                                        Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.5000000000000002, -0.8660254037844385, 0.0], [0.8660254037844385, -0.5000000000000002, 0.0], [0.0, 0.0, 1.0]]) -> 2D (944C29B7BE630D35): MultiPolygon @0.25000000000000006mm
+                                                          Workpiece(Sketch) std::geo2d::Sector(end=2.61799387799149rad, radius=2.975mm, start=-2.61799387799149rad) -> 2D (34E83F762222A4C1): Polygon @0.25000000000000006mm
                                                             - end = 2.61799387799149rad
                                                             - radius = 2.975mm
                                                             - start = -2.61799387799149rad
-                                                            Primitive2D __builtin::geo2d::Sector(end=2.61799387799149rad, radius=2.975mm, start=-2.61799387799149rad) -> 2D (DC1312396AE27125):  @0.25000000000000006mm
-                                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1.785mm) -> 2D (F708B22A1EF6B4D7):  @0.25mm
+                                                            Primitive2D __builtin::geo2d::Sector(end=2.61799387799149rad, radius=2.975mm, start=-2.61799387799149rad) -> 2D (DC1312396AE27125): Polygon @0.25000000000000006mm
+                                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), radius=1.785mm) -> 2D (F708B22A1EF6B4D7): MultiPolygon @0.25mm
                                                         - center = (x=0mm, y=0mm)
                                                         - radius = 1.785mm
-                                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (CC05EFA41B0D1819):  @0.25mm
-                                                          Primitive2D __builtin::geo2d::Circle(radius=1.785mm) -> 2D (5F9D59031D814C70):  @0.25mm
+                                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (CC05EFA41B0D1819): MultiPolygon @0.25mm
+                                                          Primitive2D __builtin::geo2d::Circle(radius=1.785mm) -> 2D (5F9D59031D814C70): Polygon @0.25mm
                                                 Workpiece(Sketch) std::geo2d::Rect(height=8.925mm, width=1.19mm, x=1.4875mm, y=-2.975mm) -> 2D (10831DB109E1DABB): Rect @0.25mm
                                                   - height = 8.925mm
                                                   - width = 1.19mm
@@ -595,11 +595,11 @@
                                 - scale = (x=300%, y=300%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                     - center = (x=0mm, y=0mm)
                                     - radius = 0.25mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                         Workpiece(Part) <NO ID>::PencilHole(offset=60mm, pencil_hole_diameter=0.5mm) -> 3D (15D1F5F4DA7845C6): Mesh @0.25mm
                           - offset = 60mm
                           - pencil_hole_diameter = 0.5mm
@@ -613,11 +613,11 @@
                                 - scale = (x=300%, y=300%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                     - center = (x=0mm, y=0mm)
                                     - radius = 0.25mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                         Workpiece(Part) <NO ID>::PencilHole(offset=67.5mm, pencil_hole_diameter=0.5mm) -> 3D (4BDF430D9D6729C2): Mesh @0.25mm
                           - offset = 67.5mm
                           - pencil_hole_diameter = 0.5mm
@@ -631,11 +631,11 @@
                                 - scale = (x=300%, y=300%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                     - center = (x=0mm, y=0mm)
                                     - radius = 0.25mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                         Workpiece(Part) <NO ID>::PencilHole(offset=75mm, pencil_hole_diameter=0.5mm) -> 3D (1DCE3E153F6306EB): Mesh @0.25mm
                           - offset = 75mm
                           - pencil_hole_diameter = 0.5mm
@@ -649,11 +649,11 @@
                                 - scale = (x=300%, y=300%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                     - center = (x=0mm, y=0mm)
                                     - radius = 0.25mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                         Workpiece(Part) <NO ID>::PencilHole(offset=82.5mm, pencil_hole_diameter=0.5mm) -> 3D (39C8B9A1C905E4B8): Mesh @0.25mm
                           - offset = 82.5mm
                           - pencil_hole_diameter = 0.5mm
@@ -667,11 +667,11 @@
                                 - scale = (x=300%, y=300%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                     - center = (x=0mm, y=0mm)
                                     - radius = 0.25mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                       Workpiece(Operation) std::ops::rotate(angle=-22.5°, axis=(x=0, y=0, z=1)) -> 3D (8730D0E8E46A4FA8): Mesh @0.25mm
                         - matrix = Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
                         Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (392AC098D1F16979): Mesh @0.25mm
@@ -689,11 +689,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=56.25mm, pencil_hole_diameter=0.5mm) -> 3D (513E0B15020E65B0): Mesh @0.25mm
                               - offset = 56.25mm
                               - pencil_hole_diameter = 0.5mm
@@ -707,11 +707,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=63.75mm, pencil_hole_diameter=0.5mm) -> 3D (CDAB77B47B6A9D7A): Mesh @0.25mm
                               - offset = 63.75mm
                               - pencil_hole_diameter = 0.5mm
@@ -725,11 +725,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=71.25mm, pencil_hole_diameter=0.5mm) -> 3D (6B5B209CCF0BB0B8): Mesh @0.25mm
                               - offset = 71.25mm
                               - pencil_hole_diameter = 0.5mm
@@ -743,11 +743,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=78.75mm, pencil_hole_diameter=0.5mm) -> 3D (3FBC02531C0B7C18): Mesh @0.25mm
                               - offset = 78.75mm
                               - pencil_hole_diameter = 0.5mm
@@ -761,11 +761,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=86.25mm, pencil_hole_diameter=0.5mm) -> 3D (6CB43F3D7E5FFBF1): Mesh @0.25mm
                               - offset = 86.25mm
                               - pencil_hole_diameter = 0.5mm
@@ -779,11 +779,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                       Workpiece(Operation) std::ops::rotate(angle=22.5°, axis=(x=0, y=0, z=1)) -> 3D (F0E966A7DED4674E): Mesh @0.25mm
                         - matrix = Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
                         Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (C0CC6093DC5A70B1): Mesh @0.25mm
@@ -801,11 +801,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=55mm, pencil_hole_diameter=0.5mm) -> 3D (2D0FE647DB1A13F4): Mesh @0.25mm
                               - offset = 55mm
                               - pencil_hole_diameter = 0.5mm
@@ -819,11 +819,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=62.5mm, pencil_hole_diameter=0.5mm) -> 3D (41BA946DC93B9CA): Mesh @0.25mm
                               - offset = 62.5mm
                               - pencil_hole_diameter = 0.5mm
@@ -837,11 +837,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=70mm, pencil_hole_diameter=0.5mm) -> 3D (3B21F527897EC45D): Mesh @0.25mm
                               - offset = 70mm
                               - pencil_hole_diameter = 0.5mm
@@ -855,11 +855,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=77.5mm, pencil_hole_diameter=0.5mm) -> 3D (A2FA0588A693DA53): Mesh @0.25mm
                               - offset = 77.5mm
                               - pencil_hole_diameter = 0.5mm
@@ -873,11 +873,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=85mm, pencil_hole_diameter=0.5mm) -> 3D (C6EE1458025421F6): Mesh @0.25mm
                               - offset = 85mm
                               - pencil_hole_diameter = 0.5mm
@@ -891,11 +891,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
     Workpiece(Operation) std::ops::translate(x=24mm, y=0mm, z=0mm) -> 3D (61AC60D50CD76036): Mesh @0.25mm
       - x = 24mm
       - y = 0mm
@@ -1026,11 +1026,11 @@
                                 - scale = (x=300%, y=300%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                     - center = (x=0mm, y=0mm)
                                     - radius = 0.25mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                         Workpiece(Part) <NO ID>::PencilHole(offset=36mm, pencil_hole_diameter=0.5mm) -> 3D (D09E5612FC7E979): Mesh @0.25mm
                           - offset = 36mm
                           - pencil_hole_diameter = 0.5mm
@@ -1044,11 +1044,11 @@
                                 - scale = (x=300%, y=300%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                     - center = (x=0mm, y=0mm)
                                     - radius = 0.25mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                         Workpiece(Part) <NO ID>::PencilHole(offset=42mm, pencil_hole_diameter=0.5mm) -> 3D (5AF96592C453B66D): Mesh @0.25mm
                           - offset = 42mm
                           - pencil_hole_diameter = 0.5mm
@@ -1062,11 +1062,11 @@
                                 - scale = (x=300%, y=300%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                     - center = (x=0mm, y=0mm)
                                     - radius = 0.25mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                         Workpiece(Part) <NO ID>::PencilHole(offset=48mm, pencil_hole_diameter=0.5mm) -> 3D (A3B2C221188FFDE7): Mesh @0.25mm
                           - offset = 48mm
                           - pencil_hole_diameter = 0.5mm
@@ -1080,11 +1080,11 @@
                                 - scale = (x=300%, y=300%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                     - center = (x=0mm, y=0mm)
                                     - radius = 0.25mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                         Workpiece(Part) <NO ID>::PencilHole(offset=54mm, pencil_hole_diameter=0.5mm) -> 3D (9AA4690DC5B8446A): Mesh @0.25mm
                           - offset = 54mm
                           - pencil_hole_diameter = 0.5mm
@@ -1098,11 +1098,11 @@
                                 - scale = (x=300%, y=300%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                     - center = (x=0mm, y=0mm)
                                     - radius = 0.25mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                       Workpiece(Operation) std::ops::rotate(angle=-22.5°, axis=(x=0, y=0, z=1)) -> 3D (528E1E72A37EF6B3): Mesh @0.25mm
                         - matrix = Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
                         Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (B8F556400CF62B7F): Mesh @0.25mm
@@ -1120,11 +1120,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=39mm, pencil_hole_diameter=0.5mm) -> 3D (D5E1973E441A96C3): Mesh @0.25mm
                               - offset = 39mm
                               - pencil_hole_diameter = 0.5mm
@@ -1138,11 +1138,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=45mm, pencil_hole_diameter=0.5mm) -> 3D (409E776B6C56CFAD): Mesh @0.25mm
                               - offset = 45mm
                               - pencil_hole_diameter = 0.5mm
@@ -1156,11 +1156,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=51mm, pencil_hole_diameter=0.5mm) -> 3D (B6F7C9AAD92D49D4): Mesh @0.25mm
                               - offset = 51mm
                               - pencil_hole_diameter = 0.5mm
@@ -1174,11 +1174,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=57mm, pencil_hole_diameter=0.5mm) -> 3D (B55A1DA02CA5290E): Mesh @0.25mm
                               - offset = 57mm
                               - pencil_hole_diameter = 0.5mm
@@ -1192,11 +1192,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                       Workpiece(Operation) std::ops::rotate(angle=22.5°, axis=(x=0, y=0, z=1)) -> 3D (5F5085E0999C37A1): Mesh @0.25mm
                         - matrix = Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
                         Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (7FD4DD4C9AEE07EF): Mesh @0.25mm
@@ -1214,11 +1214,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=38mm, pencil_hole_diameter=0.5mm) -> 3D (68988F871B48A9D6): Mesh @0.25mm
                               - offset = 38mm
                               - pencil_hole_diameter = 0.5mm
@@ -1232,11 +1232,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=44mm, pencil_hole_diameter=0.5mm) -> 3D (946040E38639EA14): Mesh @0.25mm
                               - offset = 44mm
                               - pencil_hole_diameter = 0.5mm
@@ -1250,11 +1250,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=50.00000000000001mm, pencil_hole_diameter=0.5mm) -> 3D (C0473380E561A43): Mesh @0.25mm
                               - offset = 50.00000000000001mm
                               - pencil_hole_diameter = 0.5mm
@@ -1268,11 +1268,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=56mm, pencil_hole_diameter=0.5mm) -> 3D (13B0BDB1C79AAC0F): Mesh @0.25mm
                               - offset = 56mm
                               - pencil_hole_diameter = 0.5mm
@@ -1286,11 +1286,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
     Workpiece(Operation) std::ops::translate(x=38.4mm, y=0mm, z=0mm) -> 3D (A16FA335081461B3): Mesh @0.25mm
       - x = 38.4mm
       - y = 0mm
@@ -1421,11 +1421,11 @@
                                 - scale = (x=300%, y=300%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                     - center = (x=0mm, y=0mm)
                                     - radius = 0.25mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                         Workpiece(Part) <NO ID>::PencilHole(offset=22.5mm, pencil_hole_diameter=0.5mm) -> 3D (45888B5E21EAA1E3): Mesh @0.25mm
                           - offset = 22.5mm
                           - pencil_hole_diameter = 0.5mm
@@ -1439,11 +1439,11 @@
                                 - scale = (x=300%, y=300%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                     - center = (x=0mm, y=0mm)
                                     - radius = 0.25mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                         Workpiece(Part) <NO ID>::PencilHole(offset=27mm, pencil_hole_diameter=0.5mm) -> 3D (4522AA3147835238): Mesh @0.25mm
                           - offset = 27mm
                           - pencil_hole_diameter = 0.5mm
@@ -1457,11 +1457,11 @@
                                 - scale = (x=300%, y=300%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                     - center = (x=0mm, y=0mm)
                                     - radius = 0.25mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                         Workpiece(Part) <NO ID>::PencilHole(offset=31.5mm, pencil_hole_diameter=0.5mm) -> 3D (326DDCD2F39BBF8C): Mesh @0.25mm
                           - offset = 31.5mm
                           - pencil_hole_diameter = 0.5mm
@@ -1475,11 +1475,11 @@
                                 - scale = (x=300%, y=300%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                     - center = (x=0mm, y=0mm)
                                     - radius = 0.25mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                       Workpiece(Operation) std::ops::rotate(angle=-22.5°, axis=(x=0, y=0, z=1)) -> 3D (B1DAC00EF9F9C2F4): Mesh @0.25mm
                         - matrix = Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
                         Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, -0.3826834323650898, 0.0], [0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (FFD587A9E642F24D): Mesh @0.25mm
@@ -1497,11 +1497,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=24.75mm, pencil_hole_diameter=0.5mm) -> 3D (ECF7EA7D7ED7C3C1): Mesh @0.25mm
                               - offset = 24.75mm
                               - pencil_hole_diameter = 0.5mm
@@ -1515,11 +1515,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=29.25mm, pencil_hole_diameter=0.5mm) -> 3D (5ADBD3D9AA78C3FA): Mesh @0.25mm
                               - offset = 29.25mm
                               - pencil_hole_diameter = 0.5mm
@@ -1533,11 +1533,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=33.75mm, pencil_hole_diameter=0.5mm) -> 3D (DE2B64B5E96FC477): Mesh @0.25mm
                               - offset = 33.75mm
                               - pencil_hole_diameter = 0.5mm
@@ -1551,11 +1551,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                       Workpiece(Operation) std::ops::rotate(angle=22.5°, axis=(x=0, y=0, z=1)) -> 3D (48D5E7B688B3C933): Mesh @0.25mm
                         - matrix = Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]
                         Transform __builtin::ops::rotate(matrix=Matrix3 [[0.9238795325112867, 0.3826834323650898, 0.0], [-0.3826834323650898, 0.9238795325112867, 0.0], [0.0, 0.0, 1.0]]) -> 3D (696B4CA28BD0E987): Mesh @0.25mm
@@ -1573,11 +1573,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=24mm, pencil_hole_diameter=0.5mm) -> 3D (5EA757C5C1226529): Mesh @0.25mm
                               - offset = 24mm
                               - pencil_hole_diameter = 0.5mm
@@ -1591,11 +1591,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=28.5mm, pencil_hole_diameter=0.5mm) -> 3D (B6F40570BBF3BC57): Mesh @0.25mm
                               - offset = 28.5mm
                               - pencil_hole_diameter = 0.5mm
@@ -1609,11 +1609,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=33mm, pencil_hole_diameter=0.5mm) -> 3D (C2252E1585268177): Mesh @0.25mm
                               - offset = 33mm
                               - pencil_hole_diameter = 0.5mm
@@ -1627,11 +1627,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
     Workpiece(Operation) std::ops::translate(x=45.6mm, y=0mm, z=0mm) -> 3D (4CA5E02E09F7CA85): Mesh @0.25mm
       - x = 45.6mm
       - y = 0mm
@@ -1683,11 +1683,11 @@
                                 - scale = (x=300%, y=300%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                     - center = (x=0mm, y=0mm)
                                     - radius = 0.25mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                         Workpiece(Part) <NO ID>::PencilHole(offset=9mm, pencil_hole_diameter=0.5mm) -> 3D (40185F21F7F96043): Mesh @0.25mm
                           - offset = 9mm
                           - pencil_hole_diameter = 0.5mm
@@ -1701,11 +1701,11 @@
                                 - scale = (x=300%, y=300%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                     - center = (x=0mm, y=0mm)
                                     - radius = 0.25mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                         Workpiece(Part) <NO ID>::PencilHole(offset=13.5mm, pencil_hole_diameter=0.5mm) -> 3D (B4E76CCD3419BCB6): Mesh @0.25mm
                           - offset = 13.5mm
                           - pencil_hole_diameter = 0.5mm
@@ -1719,11 +1719,11 @@
                                 - scale = (x=300%, y=300%)
                                 - twist = 0°
                                 Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25mm
-                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25mm
+                                  Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25mm
                                     - center = (x=0mm, y=0mm)
                                     - radius = 0.25mm
-                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25mm
-                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25mm
+                                    Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25mm
+                                      Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25mm
                       Workpiece(Operation) std::ops::rotate(angle=-119.99999999999999°, axis=(x=0, y=0, z=1)) -> 3D (27248019AD65E656): Mesh @0.25mm
                         - matrix = Matrix3 [[-0.4999999999999998, -0.8660254037844387, 0.0], [0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]
                         Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.4999999999999998, -0.8660254037844387, 0.0], [0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]) -> 3D (938170B310F46AD5): Mesh @0.25000000000000006mm
@@ -1741,11 +1741,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25000000000000006mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25000000000000006mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25000000000000006mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25000000000000006mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25000000000000006mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25000000000000006mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25000000000000006mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=11.25mm, pencil_hole_diameter=0.5mm) -> 3D (CBA3108C51D89FD2): Mesh @0.25000000000000006mm
                               - offset = 11.25mm
                               - pencil_hole_diameter = 0.5mm
@@ -1759,11 +1759,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25000000000000006mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25000000000000006mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25000000000000006mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25000000000000006mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25000000000000006mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25000000000000006mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25000000000000006mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=15.75mm, pencil_hole_diameter=0.5mm) -> 3D (A806E10CEEFDFDA6): Mesh @0.25000000000000006mm
                               - offset = 15.75mm
                               - pencil_hole_diameter = 0.5mm
@@ -1777,11 +1777,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25000000000000006mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25000000000000006mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25000000000000006mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25000000000000006mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25000000000000006mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25000000000000006mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25000000000000006mm
                       Workpiece(Operation) std::ops::rotate(angle=119.99999999999999°, axis=(x=0, y=0, z=1)) -> 3D (69328735F262CC6): Mesh @0.25mm
                         - matrix = Matrix3 [[-0.4999999999999998, 0.8660254037844387, 0.0], [-0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]
                         Transform __builtin::ops::rotate(matrix=Matrix3 [[-0.4999999999999998, 0.8660254037844387, 0.0], [-0.8660254037844387, -0.4999999999999998, 0.0], [0.0, 0.0, 1.0]]) -> 3D (CFC57C404273BDE3): Mesh @0.25000000000000006mm
@@ -1799,11 +1799,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25000000000000006mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25000000000000006mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25000000000000006mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25000000000000006mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25000000000000006mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25000000000000006mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25000000000000006mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=10.5mm, pencil_hole_diameter=0.5mm) -> 3D (D1442947F140F99F): Mesh @0.25000000000000006mm
                               - offset = 10.5mm
                               - pencil_hole_diameter = 0.5mm
@@ -1817,11 +1817,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25000000000000006mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25000000000000006mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25000000000000006mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25000000000000006mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25000000000000006mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25000000000000006mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25000000000000006mm
                             Workpiece(Part) <NO ID>::PencilHole(offset=15mm, pencil_hole_diameter=0.5mm) -> 3D (FAE78ABF5C23CCF2): Mesh @0.25000000000000006mm
                               - offset = 15mm
                               - pencil_hole_diameter = 0.5mm
@@ -1835,11 +1835,11 @@
                                     - scale = (x=300%, y=300%)
                                     - twist = 0°
                                     Operation __builtin::ops::extrude(height=2mm, scale_x=300%, scale_y=300%, twist=0°) -> 3D (60B528DDDCCB4ECE): Mesh @0.25000000000000006mm
-                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916):  @0.25000000000000006mm
+                                      Workpiece(Sketch) std::geo2d::Circle(center=(x=0mm, y=0mm), diameter=0.5mm) -> 2D (9ED364D59945D916): MultiPolygon @0.25000000000000006mm
                                         - center = (x=0mm, y=0mm)
                                         - radius = 0.25mm
-                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261):  @0.25000000000000006mm
-                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8):  @0.25000000000000006mm
+                                        Transform __builtin::ops::translate(x=0mm, y=0mm, z=0mm) -> 2D (A597B6E003454261): MultiPolygon @0.25000000000000006mm
+                                          Primitive2D __builtin::geo2d::Circle(radius=0.25mm) -> 2D (392F203F05B976B8): Polygon @0.25000000000000006mm
 
 Export of "../books/examples/src/.test/spirograph-out.stl" successful.
 -- Test Result --

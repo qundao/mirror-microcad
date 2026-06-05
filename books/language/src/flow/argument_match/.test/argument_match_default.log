@@ -11,5 +11,6 @@
  108:   // a has default
  109:   f();
 
+-- No Model --
 -- Test Result --
 OK

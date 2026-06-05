@@ -3,7 +3,7 @@
 
 use crate::{Cli, commands::RunCommand};
 
-/// Check a µcad file for error but do not export anything.
+/// Check a µcad file for errors but do not render or export anything.
 #[derive(clap::Parser)]
 pub struct Check {
     /// Input µcad file.
@@ -17,7 +17,7 @@ impl RunCommand<()> for Check {
 
         let mut document = mu::Document::open(&self.input)?;
 
-        match document.compile(cli.compile_parameters("0.1mm")?) {
+        match document.compile(cli.compile_parameters()) {
             Ok(_) => {
                 eprintln!("✅ File is valid: {}", self.input);
             }

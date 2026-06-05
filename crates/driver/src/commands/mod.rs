@@ -9,12 +9,14 @@ mod format;
 mod print_diagnostics;
 
 pub mod compile;
+pub mod render;
 
 pub use compile::{Compile, CompileParameters};
 pub use doc_gen::*;
 pub use export::*;
 pub use format::*;
 pub use print_diagnostics::*;
+pub use render::*;
 
 /// Load something from a file
 pub trait LoadFromFile {

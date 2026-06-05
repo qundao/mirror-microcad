@@ -28,11 +28,10 @@ impl RunCommand for Watch {
         let mut watcher = mu::Watcher::new()?;
         let render_cache = mu::RcMut::new(mu::RenderCache::new());
 
-        let compile_params = cli.compile_parameters(&self.resolution)?;
-        let compile_params = mu::CompileParameters {
-            resolve: compile_params.resolve,
-            render: compile_params.render.with_cache(render_cache.clone()),
-        };
+        let compile_params = cli.compile_parameters();
+        let render_params = cli
+            .render_params(&self.resolution)?
+            .with_cache(render_cache.clone());
 
         // Recompile whenever something relevant happens.
         loop {
@@ -44,6 +43,7 @@ impl RunCommand for Watch {
             let mut document = mu::Document::open(&self.input)?;
             match document
                 .compile(compile_params.clone())
+                .and(document.render(render_params.clone()))
                 .and(document.export(export_params))
             {
                 Ok(exported_files) => {

@@ -17,5 +17,6 @@
   18:   // `height` with `Scalar` `2` and add ten centimeters
   19:   width = height * 2 + 10cm;
 
+-- No Model --
 -- Test Result --
 OK

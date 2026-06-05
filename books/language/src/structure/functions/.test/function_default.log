@@ -14,5 +14,6 @@
   44:   std::debug::assert_eq([f(2), 2mm]);
   45:   std::debug::assert_eq([f(2, 2mm), 4mm]);
 
+-- No Model --
 -- Test Result --
 OK

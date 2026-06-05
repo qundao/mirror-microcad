@@ -11,5 +11,6 @@
   87:     a = 1;
   88:   } f();
 
+-- No Model --
 -- Test Result --
 OK

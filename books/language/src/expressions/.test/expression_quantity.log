@@ -26,5 +26,6 @@
   50:   // dividing an area by a length is a length
   51:   assert_eq([20mm² / 4mm, 5mm]);
 
+-- No Model --
 -- Test Result --
 OK
