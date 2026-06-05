@@ -122,7 +122,6 @@ fn main() {
     let mut app = App::new();
     app
         // Power-saving reactive rendering for applications.
-        // .insert_resource(Msaa::Off) // or Msaa::Off depending on your needs
         .insert_resource(bevy::winit::WinitSettings {
             focused_mode: UpdateMode::reactive(Duration::from_millis(1000 / 60)),
             unfocused_mode: UpdateMode::reactive_low_power(Duration::from_millis(1000 / 10)),
