@@ -163,12 +163,3 @@ impl std::fmt::Display for Type {
         }
     }
 }
-
-#[test]
-fn type_matching() {
-    assert!(Type::scalar().is_matching(&Type::scalar()));
-    assert!(!Type::scalar().is_matching(&Type::Integer));
-    assert!(Type::Integer.is_matching(&Type::scalar()));
-    assert!(!Type::scalar().is_matching(&Type::String));
-    assert!(!Type::String.is_matching(&Type::scalar()));
-}

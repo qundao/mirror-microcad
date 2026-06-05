@@ -55,7 +55,7 @@ impl TupleType {
     }
 
     /// Match tuples by id.
-    pub(crate) fn is_matching(&self, params: &TupleType) -> bool {
+    pub fn is_matching(&self, params: &TupleType) -> bool {
         if self == params {
             true
         } else if self.unnamed.is_empty()
@@ -185,35 +185,4 @@ impl std::fmt::Display for TupleType {
             types.join(", ")
         })
     }
-}
-
-#[test]
-fn test_tuple_type_eq() {
-    assert_eq!(TupleType::new_color(), TupleType::new_color());
-}
-
-#[test]
-fn test_tuple_type_match() {
-    let args = TupleType {
-        named: [
-            (Identifier::no_ref("x"), Type::Integer),
-            (
-                Identifier::no_ref("y"),
-                Type::Array(Box::new(Type::Integer)),
-            ),
-        ]
-        .into_iter()
-        .collect(),
-        unnamed: Default::default(),
-    };
-    let params = TupleType {
-        named: [
-            (Identifier::no_ref("x"), Type::Integer),
-            (Identifier::no_ref("y"), Type::Integer),
-        ]
-        .into_iter()
-        .collect(),
-        unnamed: Default::default(),
-    };
-    assert!(args.is_matching(&params));
 }

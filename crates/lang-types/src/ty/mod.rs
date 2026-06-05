@@ -37,3 +37,6 @@ pub trait Ty {
     /// Return type
     fn ty(&self) -> Type;
 }
+
+/// Re-import from microcad_core
+pub use microcad_core::{Integer, Length, Scalar};
