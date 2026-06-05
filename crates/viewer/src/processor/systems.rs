@@ -157,16 +157,16 @@ pub fn handle_processor_responses(
             }),
             ProcessorResponse::NewMeshAsset(uuid, mesh) => {
                 log::info!("New mesh: {uuid}");
-                meshes.insert(uuid, mesh);
+                let _ = meshes.insert(uuid, mesh);
             }
             ProcessorResponse::NewModelInfo(uuid, info) => {
                 log::info!("New model info: {uuid}");
-                model_view_states.insert(uuid, ModelViewState::new(info, &view_model));
+                let _ = model_view_states.insert(uuid, ModelViewState::new(info, &view_model));
             }
             ProcessorResponse::UpdateMaterials(uuids) => {
                 uuids.iter().for_each(|uuid| {
                     let view_state = model_view_states.get(*uuid).expect("Model info");
-                    materials.insert(*uuid, view_state.generate_material());
+                    let _ = materials.insert(*uuid, view_state.generate_material());
                 });
             }
             ProcessorResponse::SpawnModelInstances(uuids) => {
