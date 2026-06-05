@@ -152,7 +152,7 @@ impl Plugin for MicrocadPlugin {
             .add_plugins(processor::ProcessorPlugin)
             .add_plugins(material::MaterialPlugin)
             .add_plugins(scene::ScenePlugin)
-            .add_plugins(OutlinePlugin)
+            .add_plugins((OutlinePlugin, MeshPickingPlugin))
             .add_systems(Startup, apply_window_settings)
             .add_systems(Update, stdin::handle_stdin_messages)
             .add_systems(Update, view_model::handle_viewer_event);

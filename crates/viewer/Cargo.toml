@@ -28,6 +28,7 @@ bevy = { version = "0.18.1", default-features = false, features = [
     "bevy_anti_alias",
     "bevy_post_process",
     "bevy_winit",
+    "mesh_picking",
     "tonemapping_luts",
     "x11",
     "wayland",
