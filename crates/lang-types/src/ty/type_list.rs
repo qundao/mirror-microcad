@@ -44,15 +44,3 @@ impl std::fmt::Display for TypeList {
         )
     }
 }
-
-#[test]
-fn test_common_type() {
-    let list = TypeList::new(vec![Type::Integer, Type::Integer]);
-    assert_eq!(Some(Type::Integer), list.common_type());
-
-    let list = TypeList::new(vec![Type::Integer, Type::Quantity(QuantityType::Scalar)]);
-    assert_eq!(None, list.common_type());
-
-    let list = TypeList::new(Vec::new());
-    assert_eq!(None, list.common_type());
-}

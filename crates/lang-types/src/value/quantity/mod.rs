@@ -7,7 +7,6 @@ pub mod error;
 pub mod ops;
 
 use crate::ty::*;
-use microcad_core::*;
 
 pub use error::*;
 
