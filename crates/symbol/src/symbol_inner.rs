@@ -2,15 +2,21 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use custom_debug::Debug;
-use microcad_lang_base::{SrcRef, SrcReferrer};
+use microcad_lang_base::{SrcRef, SrcReferrer, element::Visibility};
 
 use crate::symbol::{Symbol, SymbolDef, SymbolMap};
 
 /// Symbol content
 #[derive(Default, Debug, Clone)]
 pub(super) struct SymbolInner {
+    /// Attributes
+    pub attr: SymbolAttributes,
+
     /// Symbol definition
     pub def: SymbolDef,
+
+    pub visibility: Visibility,
+
     /// Symbol's parent
     #[debug(skip)]
     pub parent: Option<Symbol>,

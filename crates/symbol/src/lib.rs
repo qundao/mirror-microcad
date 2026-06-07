@@ -22,11 +22,7 @@ use symbol_inner::*;
 
 /// Symbol
 #[derive(Clone)]
-pub struct Symbol {
-    visibility: std::cell::RefCell<ir::Visibility>,
-    src_ref: SrcRef,
-    inner: RcMut<SymbolInner>,
-}
+pub struct Symbol(RcMut<SymbolInner>);
 
 // creation
 impl Symbol {
@@ -35,36 +31,11 @@ impl Symbol {
     /// - `def`: Symbol definition
     /// - `parent`: Symbol's parent symbol or none for root
     pub(crate) fn new(def: SymbolDef, parent: Option<Symbol>) -> Self {
-        Symbol {
-            visibility: std::cell::RefCell::new(def.visibility()),
-            inner: RcMut::new(SymbolInner {
-                def,
-                parent,
-                ..Default::default()
-            }),
+        Symbol(RcMut::new(SymbolInner {
+            def,
+            parent,
             ..Default::default()
-        }
-    }
-
-    /// Create new symbol without children.
-    /// # Arguments
-    /// - `visibility`: Visibility of the symbol
-    /// - `def`: Symbol definition
-    /// - `parent`: Symbol's parent symbol or none for root
-    pub(crate) fn new_with_visibility(
-        visibility: ir::Visibility,
-        def: SymbolDef,
-        parent: Option<Symbol>,
-    ) -> Self {
-        Symbol {
-            visibility: std::cell::RefCell::new(visibility),
-            inner: RcMut::new(SymbolInner {
-                def,
-                parent,
-                ..Default::default()
-            }),
-            ..Default::default()
-        }
+        }))
     }
 
     /// Create a symbol node for a built-in.
