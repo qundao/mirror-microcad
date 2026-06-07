@@ -19,7 +19,9 @@ miette = { version = "7.6.0", features = ["derive", "fancy"] }
 rustc-hash = "2.1.1"
 thiserror = "2.0.17"
 
-microcad-model = { workspace = true }
+microcad-core = { workspace = true }
+microcad-lang-types = { workspace = true }
+microcad-lang-base = { workspace = true }
 
 [dev-dependencies]
 pretty_assertions = "1.4"
