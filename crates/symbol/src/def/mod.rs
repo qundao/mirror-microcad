@@ -4,6 +4,7 @@
 mod attribute;
 mod expression;
 mod function;
+mod library;
 mod source;
 mod workbench;
 
@@ -38,7 +39,7 @@ pub enum SymbolDef {
     /// A library symbol, containing a manifest file and a `lib.µcad` source file.
     Library,
     /// Source file symbol.
-    Source,
+    SourceFile,
     /// Inline Module symbol: `mod foo {}`
     InlineModule,
     /// File Module Symbol: `mod foo;`
@@ -47,7 +48,7 @@ pub enum SymbolDef {
     Workbench,
     /// Function symbol.
     Function,
-    /// Assignment.
+    /// Constant.
     Constant,
     /// Builtin symbol.
     Builtin,
@@ -55,25 +56,4 @@ pub enum SymbolDef {
     Alias,
     /// Use all available symbols in the module with the given name.
     Glob,
-}
-
-impl std::fmt::Display for SymbolDef {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            match &self {
-                SymbolDef::Empty => "<empty>",
-                SymbolDef::Library => "lib",
-                SymbolDef::Source => "source",
-                SymbolDef::InlineModule => "mod",
-                SymbolDef::Workbench => "workbench",
-                SymbolDef::Function => "fn",
-                SymbolDef::Constant => "const",
-                SymbolDef::Builtin => "builtin",
-                SymbolDef::Alias => "alias",
-                SymbolDef::Glob => "glob",
-            }
-        )
-    }
 }
