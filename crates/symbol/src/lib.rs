@@ -3,7 +3,7 @@
 
 //! µcad symbol tree.
 
-mod defs;
+mod def;
 mod iterators;
 mod symbol_definition;
 mod symbol_inner;
@@ -19,8 +19,6 @@ pub(crate) use symbol_map::*;
 pub(crate) use symbols::*;
 
 use symbol_inner::*;
-
-use crate::{builtin::*, lower::ir, resolve::*, value::*};
 
 /// Symbol
 #[derive(Clone)]
@@ -111,53 +109,6 @@ impl Symbol {
     }
 }
 
-impl Symbol {
-    /// Return a list of unused private symbols
-    ///
-    /// Use this after eval for any useful result.
-    pub(crate) fn unused_private(&self) -> Symbols {
-        let used_in_module = &mut IndexSet::new();
-        let mut symbols: Symbols = self
-            .riter()
-            .skip(1) // skip root
-            .filter(|symbol| {
-                if let Some(in_module) = symbol.in_module()
-                    && symbol.is_used()
-                {
-                    used_in_module.insert(in_module);
-                }
-                symbol.is_unused_private()
-            })
-            .collect();
-
-        symbols.retain(|symbol| {
-            if let Some(in_module) = symbol.in_module() {
-                !used_in_module.contains(&in_module)
-            } else {
-                true
-            }
-        });
-        symbols.sort_by_key(|s| s.full_name());
-        symbols
-    }
-
-    /// Search a *symbol* by it's *qualified name* **and** within a *symbol* given by name.
-    ///
-    /// If both are found
-    /// # Arguments
-    /// - `name`: *qualified name* to search for.
-    /// - `within`: Searches in the *symbol* with this name too.
-    /// - `target`: What to search for
-    pub(crate) fn lookup_within_name(
-        &self,
-        name: &ir::QualifiedName,
-        within: &ir::QualifiedName,
-        target: LookupTarget,
-    ) -> ResolveResult<Symbol> {
-        self.lookup_within(name, &self.search(within, false)?, target)
-    }
-}
-
 // tree structure
 impl Symbol {
     /// Get any child with the given `id`.
@@ -173,7 +124,7 @@ impl Symbol {
     }
 
     /// Add a new symbol to children with specific id.
-    pub(super) fn insert_symbol(&mut self, id: Identifier, symbol: Symbol) -> ResolveResult<()> {
+    pub fn insert_symbol(&mut self, id: Identifier, symbol: Symbol) -> ResolveResult<()> {
         log::trace!("insert symbol: {id}");
         if let Some(symbol) = self.inner.borrow_mut().children.insert(id, symbol.clone()) {
             Err(ResolveError::SymbolAlreadyDefined(symbol.full_name()))
@@ -249,7 +200,7 @@ impl Symbol {
     }
 
     /// Set new parent.
-    pub(super) fn set_parent(&mut self, parent: Symbol) {
+    pub(crate) fn set_parent(&mut self, parent: Symbol) {
         self.inner.borrow_mut().parent = Some(parent);
     }
 
@@ -281,14 +232,6 @@ impl Symbol {
         matches!(self.visibility(), ir::Visibility::Public)
     }
 
-    pub(super) fn is_deleted(&self) -> bool {
-        matches!(self.visibility(), ir::Visibility::Deleted)
-    }
-
-    pub(super) fn delete(&self) {
-        self.visibility.replace(ir::Visibility::Deleted);
-    }
-
     /// Clone this symbol but give the clone another visibility.
     pub(crate) fn clone_with(&self, visibility: ir::Visibility, src_ref: SrcRef) -> Self {
         Self {
@@ -306,81 +249,6 @@ impl Symbol {
         self.inner.borrow().def.id()
     }
 
-    /// check if a value on the stack may be declared within this symbol
-    pub(super) fn can_value(&self) -> bool {
-        matches!(
-            self.inner.borrow().def,
-            SymbolDef::Function(..) | SymbolDef::Workbench(..) | SymbolDef::SourceFile(..)
-        )
-    }
-
-    /// check if a property may be declared within this symbol
-    pub(super) fn can_prop(&self) -> bool {
-        matches!(self.inner.borrow().def, SymbolDef::Workbench(..))
-    }
-
-    fn is_root(&self) -> bool {
-        matches!(self.inner.borrow().def, SymbolDef::Root)
-    }
-
-    pub(crate) fn is_module(&self) -> bool {
-        matches!(
-            self.inner.borrow().def,
-            SymbolDef::SourceFile(..) | SymbolDef::Module(..)
-        )
-    }
-
-    pub(crate) fn is_workbench(&self) -> bool {
-        matches!(self.inner.borrow().def, SymbolDef::Workbench(..))
-    }
-
-    /// Return file path of top level parent source file.
-    pub(super) fn source_path(&self) -> Option<std::path::PathBuf> {
-        if let SymbolDef::SourceFile(source_file) = &self.inner.borrow().def {
-            return source_file
-                .filename()
-                .parent()
-                .map(|path| path.to_path_buf());
-        }
-        self.get_parent().and_then(|parent| parent.source_path())
-    }
-
-    pub(super) fn is_resolvable(&self) -> bool {
-        matches!(
-            self.inner.borrow().def,
-            SymbolDef::SourceFile(..)
-                | SymbolDef::Module(..)
-                | SymbolDef::Function(..)
-                | SymbolDef::Workbench(..)
-                | SymbolDef::UseAll(..)
-                | SymbolDef::Alias(..)
-        ) && !self.is_deleted()
-    }
-
-    pub(super) fn is_link(&self) -> bool {
-        matches!(
-            self.inner.borrow().def,
-            SymbolDef::UseAll(..) | SymbolDef::Alias(..)
-        )
-    }
-
-    pub(super) fn is_alias(&self) -> bool {
-        matches!(self.inner.borrow().def, SymbolDef::Alias(..))
-    }
-
-    pub(super) fn has_links(&self) -> bool {
-        if self.is_link() {
-            true
-        } else {
-            self.inner
-                .borrow()
-                .children
-                .values()
-                .filter(|symbol| !symbol.is_deleted())
-                .any(|symbol| symbol.has_links())
-        }
-    }
-
     /// Work with the symbol definition.
     pub fn with_def<T>(&self, mut f: impl FnMut(&SymbolDef) -> T) -> T {
         f(&self.inner.borrow().def)
@@ -394,125 +262,8 @@ impl Symbol {
 
 // check
 impl Symbol {
-    pub(super) fn source_hash(&self) -> u64 {
+    pub fn source_hash(&self) -> u64 {
         self.inner.borrow().def.source_hash()
-    }
-
-    pub(crate) fn is_used(&self) -> bool {
-        self.inner.borrow().used.get().is_some()
-    }
-
-    /// Mark this symbol as *used*.
-    pub(crate) fn set_used(&self) {
-        let _ = self.inner.borrow().used.set(());
-    }
-
-    pub(crate) fn is_unused_private(&self) -> bool {
-        !self.is_used() && !self.is_public() && !self.is_deleted()
-    }
-
-    pub(crate) fn in_module(&self) -> Option<ir::QualifiedName> {
-        if let ir::Visibility::PrivateUse(module) = self.visibility() {
-            Some(module.clone())
-        } else {
-            None
-        }
-    }
-
-    /// Resolve aliases and use statements in this symbol.
-    pub(super) fn resolve(&self, context: &mut ResolveContext) -> ResolveResult<SymbolMap> {
-        log::trace!("resolving: {self}");
-
-        // retrieve symbols from any use statements
-        let mut from_self = {
-            let inner = self.inner.borrow();
-            match &inner.def {
-                SymbolDef::Alias(visibility, id, name) => {
-                    log::trace!("resolving use (as): {self} => {visibility}{id} ({name})");
-                    let symbol = context
-                        .root
-                        .lookup_within_opt(name, &inner.parent, LookupTarget::Any)?
-                        .clone_with(visibility.clone(), name.src_ref.clone());
-                    self.delete();
-                    [(id.clone(), symbol)].into_iter().collect()
-                }
-                SymbolDef::UseAll(visibility, name) => {
-                    let visibility = &if matches!(visibility, &ir::Visibility::Private) {
-                        ir::Visibility::PrivateUse(name.clone())
-                    } else {
-                        visibility.clone()
-                    };
-                    log::trace!("resolving use all: {self} => {visibility}{name}");
-                    let symbols = context
-                        .root
-                        .lookup_within_opt(name, &inner.parent, LookupTarget::Any)?
-                        .public_children(visibility.clone(), name.src_ref.clone());
-                    if !symbols.is_empty() {
-                        self.delete();
-                    }
-                    symbols
-                }
-                // skip others
-                _ => SymbolMap::default(),
-            }
-        };
-
-        let resolved = from_self.resolve_all(context)?;
-        from_self.extend(resolved.iter().map(|(k, v)| (k.clone(), v.clone())));
-        // collect symbols resolved from children
-        let from_children = self.inner.borrow().children.resolve_all(context)?;
-        self.inner
-            .borrow_mut()
-            .children
-            .extend(from_children.iter().map(|(k, v)| (k.clone(), v.clone())));
-        // return symbols collected from self
-        Ok(from_self)
-    }
-
-    /// Search down the symbol tree for a qualified name.
-    /// # Arguments
-    /// - `name`: Name to search for.
-    pub(crate) fn search(&self, name: &ir::QualifiedName, respect: bool) -> ResolveResult<Symbol> {
-        log::trace!("Searching {name} in {:?}", self.full_name());
-        if let Some(id) = name.first() {
-            if id.is_super() {
-                if let Some(parent) = self.get_parent() {
-                    return parent.search(&name[1..].iter().cloned().collect(), respect);
-                }
-            }
-        }
-        self.search_inner(name, true, respect)
-    }
-
-    fn search_inner(
-        &self,
-        name: &ir::QualifiedName,
-        top_level: bool,
-        respect: bool,
-    ) -> ResolveResult<Symbol> {
-        use crate::lower::SingleIdentifier;
-
-        if let Some(first) = name.first() {
-            if let Some(child) = self.get_child(first) {
-                if respect && !top_level && !child.is_public() {
-                    log::trace!("Symbol {:?} is private", child.full_name());
-                    Err(ResolveError::SymbolIsPrivate(child.full_name().clone()))
-                } else if name.is_single_identifier() && !child.is_deleted() {
-                    log::trace!("Found {name:?} in {:?}", self.full_name());
-                    self.set_used();
-                    Ok(child.clone())
-                } else {
-                    let name = &name.remove_first();
-                    child.search_inner(name, false, respect)
-                }
-            } else {
-                log::trace!("No child in {:?} while searching for {name:?}", self.id());
-                Err(ResolveError::SymbolNotFound(name.clone()))
-            }
-        } else {
-            log::warn!("Cannot search for an anonymous name");
-            Err(ResolveError::SymbolNotFound(name.clone()))
-        }
     }
 
     /// Print out symbols from that point.
@@ -520,7 +271,7 @@ impl Symbol {
     /// - `f`: Output formatter
     /// - `id`: Overwrite symbol's internal `id` with this one if given (e.g. when using in a map).
     /// - `state`: TreeState
-    pub(super) fn print_symbol(
+    pub fn print_symbol(
         &self,
         f: &mut impl std::fmt::Write,
         id: Option<&ir::Identifier>,
@@ -547,10 +298,6 @@ impl Symbol {
             }
         }
         Ok(())
-    }
-
-    pub(super) fn set_src_ref(&mut self, src_ref: SrcRef) {
-        self.src_ref = src_ref;
     }
 }
 
@@ -604,45 +351,5 @@ impl TreeDisplay for Symbol {
         } else {
             self.print_symbol(f, Some(&self.id()), state, true)
         }
-    }
-}
-
-impl Lookup for Symbol {
-    /// Lookup a symbol from global symbols.
-    fn lookup(&self, name: &ir::QualifiedName, target: LookupTarget) -> ResolveResult<Symbol> {
-        log::trace!(
-            "{lookup} for global symbol '{name:?}'",
-            lookup = microcad_lang_base::mark!(LOOKUP)
-        );
-
-        let symbol = match self.search(name, true) {
-            Ok(symbol) => {
-                if target.matches(&symbol) {
-                    symbol
-                } else {
-                    log::trace!(
-                        "{not_found} global symbol: {name:?}",
-                        not_found = microcad_lang_base::mark!(NOT_FOUND),
-                    );
-                    return Err(ResolveError::WrongTarget);
-                }
-            }
-            Err(err) => {
-                log::trace!(
-                    "{not_found} global symbol: {name:?}",
-                    not_found = microcad_lang_base::mark!(NOT_FOUND),
-                );
-                return Err(err)?;
-            }
-        };
-        log::trace!(
-            "{found} global symbol: {symbol:?}",
-            found = microcad_lang_base::mark!(FOUND),
-        );
-        Ok(symbol)
-    }
-
-    fn ambiguity_error(ambiguous: ir::QualifiedName, others: ir::QualifiedNames) -> ResolveError {
-        ResolveError::AmbiguousSymbol(ambiguous, others)
     }
 }

@@ -3,7 +3,7 @@
 
 //! Symbol iterators
 
-use crate::symbol::{Symbol, Symbols};
+use crate::{Symbol, Symbols};
 
 /// Iterator over children of a symbol.
 pub struct Children {

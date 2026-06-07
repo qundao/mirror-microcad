@@ -10,14 +10,12 @@ use crate::symbol::{Symbol, SymbolDef, SymbolMap};
 #[derive(Default, Debug, Clone)]
 pub(super) struct SymbolInner {
     /// Symbol definition
-    pub(super) def: SymbolDef,
+    pub def: SymbolDef,
     /// Symbol's parent
     #[debug(skip)]
-    pub(super) parent: Option<Symbol>,
+    pub parent: Option<Symbol>,
     /// Symbol's children
-    pub(super) children: SymbolMap,
-    /// Flag if this symbol was in use
-    pub(super) used: std::cell::OnceCell<()>,
+    pub children: SymbolMap,
 }
 
 impl SymbolInner {
