@@ -93,30 +93,7 @@ impl Statement {
     }
 }
 
-/// The possible type of workbenches
-#[derive(Debug, PartialEq, Copy, Clone)]
-pub enum WorkbenchKind {
-    /// `sketch`
-    Sketch,
-    /// `part`
-    Part,
-    /// `op`
-    Op,
-}
-
-impl std::fmt::Display for WorkbenchKind {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            match &self {
-                WorkbenchKind::Sketch => "sketch",
-                WorkbenchKind::Part => "part",
-                WorkbenchKind::Op => "op",
-            }
-        )
-    }
-}
+pub use microcad_lang_base::element::WorkbenchKind;
 
 /// A definition of a workbench
 #[derive(Debug, PartialEq)]
