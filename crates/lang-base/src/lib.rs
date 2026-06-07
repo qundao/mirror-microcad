@@ -9,7 +9,7 @@ use miette::{MietteError, MietteSpanContents, SourceCode, SourceSpan, SpanConten
 
 mod code_display;
 mod diag;
-mod identifier;
+pub mod element;
 mod ord_map;
 mod output;
 mod rc;
@@ -76,7 +76,7 @@ pub use diag::{
     Diag, DiagError, DiagHandler, DiagRenderOptions, DiagResult, Diagnostic, Diagnostics, Level,
     Level as DiagLevel, PushDiag,
 };
-pub use identifier::{Identifier, IdentifierList};
+pub use element::{Identifier, IdentifierList};
 pub use ord_map::{OrdMap, OrdMapValue};
 pub use output::{Capture, Output, Stdout};
 pub use rc::{Rc, RcMut};
