@@ -24,26 +24,9 @@ impl Identifier {
         Self(Refer::none("".into()))
     }
 
-    /// Create new identifier with a new unique name.
-    ///
-    /// Every call will return a new identifier (which is a `$` followed by an counter)
-    pub fn unique() -> Self {
-        let mut num = UNIQUE_ID_NEXT
-            .lock()
-            .expect("lock on UNIQUE_ID_NEXT failed");
-        let id = format!("${num}");
-        *num += 1;
-        Identifier::no_ref(&id)
-    }
-
     /// Check if id shall be ignored when warn about unused symbols
     pub fn ignore(&self) -> bool {
         self.0.starts_with("_")
-    }
-
-    /// Check if id is the `super` id
-    pub fn is_super(&self) -> bool {
-        *self.0 == "super"
     }
 
     /// Make empty (invalid) id
@@ -217,8 +200,6 @@ impl TreeDisplay for Identifier {
         writeln!(f, "{:depth$}Identifier: {}", "", self.id())
     }
 }
-
-static UNIQUE_ID_NEXT: std::sync::Mutex<usize> = std::sync::Mutex::new(0);
 
 /// A list of identifiers
 ///
