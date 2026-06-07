@@ -21,7 +21,8 @@ thiserror = "2.0.17"
 
 microcad-lang-base = { workspace = true }
 microcad-lang-proc-macros = { workspace = true }
-microcad-lang-resolve = { workspace = true }
+microcad-symbol = { workspace = true }
+microcad-model = { workspace = true }
 
 [dev-dependencies]
 pretty_assertions = "1.4"
