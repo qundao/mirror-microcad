@@ -1,14 +1,14 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use bevy::camera::visibility::Visibility;
 use bevy::ecs::component::Component;
 use bevy::ecs::query::{With, Without};
 use bevy::ecs::system::{Commands, Query, Res};
 use bevy::prelude::{Color, Val};
-use bevy::render::view::Visibility;
 use bevy::ui::{BackgroundColor, BorderColor, Node, UiRect};
 
-use crate::{ViewModel, ToBevy};
+use crate::{ToBevy, ViewModel};
 
 #[derive(Component)]
 pub struct ProgressBar;
@@ -19,7 +19,7 @@ pub struct ErrorFrame;
 pub fn setup_overlay(state: Res<ViewModel>, mut commands: Commands) {
     commands.spawn((
         BackgroundColor(Color::NONE),
-        BorderColor(Color::srgb(1.0, 0.0, 0.0)),
+        BorderColor::all(Color::srgb(1.0, 0.0, 0.0)),
         Node {
             width: Val::Percent(100.0),
             height: Val::Percent(100.0),

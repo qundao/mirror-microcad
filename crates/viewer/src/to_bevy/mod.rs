@@ -9,7 +9,7 @@ pub use to_mesh::ToBevyMesh;
 
 use bevy::{asset::RenderAssetUsages, math::Vec3, platform::collections::HashMap};
 use bevy::{
-    render::mesh::{Indices, Mesh},
+    mesh::{Indices, Mesh},
     transform::components::Transform,
 };
 

@@ -10,7 +10,7 @@ use bevy::window::Window;
 use crossbeam::channel::Receiver;
 
 use bevy::ecs::resource::Resource;
-use bevy::prelude::{AppExit, EventWriter};
+use bevy::prelude::{AppExit, MessageWriter};
 
 use microcad_viewer_ipc::ViewerRequest;
 
@@ -71,9 +71,9 @@ impl StdinMessageReceiver {
 /// Process stdin messages into processor requests.
 pub fn handle_stdin_messages(
     mut state: bevy::prelude::ResMut<crate::ViewModel>,
-    mut exit: EventWriter<AppExit>,
+    mut exit: MessageWriter<AppExit>,
     mut windows: Query<&mut Window>,
-    mut events: EventWriter<ViewerEvent>,
+    mut events: MessageWriter<ViewerEvent>,
 ) {
     let mut requests = Vec::new();
     if let Some(MicrocadPluginInput::Stdin(Some(stdin))) = &mut state.input {

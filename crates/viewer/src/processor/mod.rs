@@ -18,7 +18,7 @@ use crate::processor::{context::ProcessorContext, processing::Processor};
 use bevy::{
     app::{Plugin, Startup, Update},
     asset::uuid::Uuid,
-    render::mesh::Mesh,
+    mesh::Mesh,
 };
 
 use crossbeam::channel::{Receiver, Sender};

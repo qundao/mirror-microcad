@@ -13,25 +13,29 @@ rust-version.workspace = true
 version.workspace = true
 
 [dependencies]
-bevy = { version = "0.16.1", default-features = false, features = [
+bevy = { version = "0.18.1", default-features = false, features = [
     "png",
+    "bevy_core_pipeline",
     "bevy_asset",
     "bevy_color",
     "bevy_gizmos",
-    "bevy_mesh_picking_backend",
     "bevy_picking",
     "bevy_pbr",
     "bevy_render",
     "bevy_ui",
     "bevy_text",
     "bevy_window",
+    "bevy_anti_alias",
+    "bevy_post_process",
     "bevy_winit",
+    "mesh_picking",
     "tonemapping_luts",
     "x11",
     "wayland",
+    "zstd_rust",
 ] }
 
-bevy_mod_outline = "0.10.3"
+bevy_mod_outline = "0.12.1"
 bytemuck = "1.24"
 clap = { version = "4.5.48", features = ["derive"] }
 cgmath = { version = "0.18", features = ["serde"] }

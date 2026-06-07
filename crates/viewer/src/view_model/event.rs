@@ -5,13 +5,13 @@
 
 use bevy::{
     asset::{Assets, uuid::Uuid},
+    camera::{Camera, Projection},
     ecs::{
-        event::{Event, EventReader},
+        message::{Message, MessageReader},
         query::With,
         system::{Query, ResMut},
     },
     pbr::{MeshMaterial3d, StandardMaterial},
-    render::camera::{Camera, Projection},
     window::Window,
 };
 
@@ -24,7 +24,7 @@ use crate::{
 };
 
 /// An event that is fired when the view model changes in some way.
-#[derive(Event)]
+#[derive(Message)]
 pub enum ViewerEvent {
     /// The ground radius has changed.
     ChangeGroundRadius(mu::core::Length),
@@ -72,7 +72,7 @@ pub fn handle_viewer_event(
     mut state: ResMut<ViewModel>,
     mut view_states: ResMut<Assets<ModelViewState>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
-    mut events: EventReader<ViewerEvent>,
+    mut events: MessageReader<ViewerEvent>,
 ) {
     for event in events.read() {
         match event {
@@ -82,7 +82,7 @@ pub fn handle_viewer_event(
                     && let Some(material) = grid_materials.get_mut(material)
                 {
                     state.scene.radius = **radius as f32;
-                    material.radius = **radius as f32;
+                    material.parameters.radius = **radius as f32;
                 }
             }
             ViewerEvent::SelectAll => {
