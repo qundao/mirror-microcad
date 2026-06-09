@@ -5,12 +5,12 @@
 
 pub mod backend;
 pub mod processor;
+pub mod to_lsp;
 
 pub use config::Config;
 
 mod config;
 mod semantic_tokens;
-mod to_lsp;
 
 use backend::Backend;
 

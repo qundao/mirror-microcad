@@ -14,7 +14,6 @@ async fn initialize() -> Result<()> {
     let params = lsp::InitializeParams::default();
 
     let backend = service.inner();
-
     let init_result = backend.initialize(params).await;
 
     assert_that!(
@@ -28,3 +27,5 @@ async fn initialize() -> Result<()> {
 
     Ok(())
 }
+
+fn processor() -> Result<()> {}

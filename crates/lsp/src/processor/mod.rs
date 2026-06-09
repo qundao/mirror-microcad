@@ -45,8 +45,10 @@ pub enum ProcessorResponse {
     UpdatedDocumentCode {
         /// Document URL
         url: Url,
+        /// The old code of the document
+        old: String,
         /// The new code of the document
-        code: String,
+        new: String,
     },
 }
 
@@ -67,8 +69,8 @@ pub struct Processor {
     /// Response handler.
     pub response_sender: Sender<ProcessorResponse>,
 
-    /// Processor documents.
-    pub documents: mu::HashMap<Url, mu::document::Source>,
+    /// Driver session
+    pub session: mu::Session,
 }
 
 /// Type alias for a Result from a processor command.
@@ -86,42 +88,6 @@ impl Processor {
             ProcessorRequest::GetDocumentDiagnostics(url) => self.get_document_diagnostics(&url),
             ProcessorRequest::GetFullSemanticTokens(url) => self.get_full_semantic_tokens(&url),
             ProcessorRequest::FormatDocument(url) => self.format_document(&url),
-        }
-    }
-
-    /// Process a µcad file (parse, resolve, eval).
-    pub fn add_document(&mut self, url: Url) -> ProcessorResult {
-        match mu::document::Source::load(url.clone()) {
-            Ok(mut document) => {
-                document.load_from_file()?;
-                Self::compile_document(&mut document)?;
-                self.documents.insert(url, document);
-            }
-            Err(_) => {
-                log::error!("Could not load document: {url}")
-            }
-        }
-        Ok(vec![])
-    }
-
-    /// Remove µcad file.
-    pub fn remove_document(&mut self, url: &Url) -> ProcessorResult {
-        self.documents.remove(url);
-        Ok(vec![])
-    }
-
-    fn compile_document(document: &mut mu::document::Source) -> ProcessorResult {
-        match document
-            .parse()
-            .and(document.lower())
-            .and(document.resolve(mu::ResolveParameters::default()))
-            .and(document.eval())
-        {
-            Ok(_) => Ok(vec![]),
-            Err(_) => {
-                log::error!("Error compiling document");
-                Ok(vec![])
-            }
         }
     }
 
@@ -144,7 +110,7 @@ impl Processor {
         let document =
             self.documents
                 .entry(url.clone())
-                .or_insert(mu::document::Source::from_source(mu::base::Source {
+                .or_insert(mu::document::SourceFile::from_source(mu::base::Source {
                     url: url.clone(),
                     line_offset: 0,
                     code: mu::Hashed::new(code),
@@ -156,28 +122,34 @@ impl Processor {
     /// Format document code.
     pub fn format_document(&mut self, url: &Url) -> ProcessorResult {
         match self.documents.get_mut(url) {
-            Some(document) => match document
-                .load_from_file()
-                .and(Self::compile_document(document))
-                .and(document.format(&mu::FormatParameters::default()))
-            {
-                Ok(formatted) => {
-                    if formatted {
-                        Self::compile_document(document)?;
+            Some(document) => {
+                let old = document
+                    .get_code()
+                    .map(|s| s.to_string())
+                    .unwrap_or_default();
+
+                match Self::compile_document(document)
+                    .and(document.format(&mu::FormatParameters::default()))
+                {
+                    Ok(formatted) => {
+                        if formatted {
+                            Self::compile_document(document)?;
+                        }
+                        Ok(vec![ProcessorResponse::UpdatedDocumentCode {
+                            url: url.clone(),
+                            old,
+                            new: document
+                                .get_code()
+                                .map(|s| s.to_string())
+                                .unwrap_or_default(),
+                        }])
                     }
-                    Ok(vec![ProcessorResponse::UpdatedDocumentCode {
-                        url: url.clone(),
-                        code: document
-                            .get_code()
-                            .map(|s| s.to_string())
-                            .unwrap_or_default(),
-                    }])
+                    Err(err) => {
+                        log::error!("Error formatting document `{url}`: {err}");
+                        Ok(vec![])
+                    }
                 }
-                Err(err) => {
-                    log::error!("Error formatting document `{url}`: {err}");
-                    Ok(vec![])
-                }
-            },
+            }
             None => {
                 log::error!("Document does not exist!");
                 Ok(vec![])
