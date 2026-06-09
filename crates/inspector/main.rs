@@ -86,7 +86,8 @@ impl Inspector {
 
                 let search_paths = search_paths.clone();
 
-                let mut document = mu::document::Source::new(mu::locate::to_url(&self.args.input)?);
+                let mut document =
+                    mu::document::SourceFile::new(mu::locate::to_url(&self.args.input)?);
 
                 document.load_from_file().and_then(|_| {
                     tx.send(ViewModelRequest::SetSourceCode {
