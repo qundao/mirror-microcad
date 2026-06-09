@@ -19,10 +19,10 @@ pub enum ProcessorRequest {
         /// The initial config
         config: Config,
     },
-    /// Parse file.
-    ParseFile(std::path::PathBuf),
-    /// Parse some code into a SourceFile.
-    ParseSource {
+    /// Compile a file.
+    CompileFile(std::path::PathBuf),
+    /// Compile some source code.
+    CompileSource {
         /// Virtual file path
         path: Option<std::path::PathBuf>,
         /// Optional name of the source code snippet, e.g. the full file name.
@@ -30,8 +30,6 @@ pub enum ProcessorRequest {
         /// The actual source code.
         source: String,
     },
-    /// Evaluate source file into a model to be rendered.
-    Eval,
     /// Render the geometry. This message should be sent when the source code has been modified.
     Render(Option<mu::core::RenderResolution>),
     /// Export the geometry to a file.

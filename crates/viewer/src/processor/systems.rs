@@ -67,7 +67,7 @@ pub fn initialize_processor(mut state: ResMut<crate::view_model::ViewModel>) {
         }) => {
             let flag_clone = last_modified.clone();
             let path = path.clone();
-            requests.push(ProcessorRequest::ParseFile(path.clone()));
+            requests.push(ProcessorRequest::CompileFile(path.clone()));
             requests.push(ProcessorRequest::SetLineNumber(*line));
 
             // Run file watcher thread.
@@ -125,7 +125,7 @@ pub fn file_reload(state: ResMut<crate::view_model::ViewModel>) {
             {
                 state
                     .processor
-                    .send_request(ProcessorRequest::ParseFile(path.to_path_buf()))
+                    .send_request(ProcessorRequest::CompileFile(path.to_path_buf()))
                     .expect("No error");
                 log::info!("Changed file");
 

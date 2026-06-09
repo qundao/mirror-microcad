@@ -84,11 +84,11 @@ pub fn handle_stdin_messages(
             match viewer_request {
                 ShowSourceCodeFromFile { path } => {
                     stdin.current_path = Some(path.clone());
-                    requests.push(ProcessorRequest::ParseFile(path));
+                    requests.push(ProcessorRequest::CompileFile(path));
                 }
                 ShowSourceCode { path, name, code } => {
                     stdin.current_path = path.clone();
-                    requests.push(ProcessorRequest::ParseSource {
+                    requests.push(ProcessorRequest::CompileSource {
                         path,
                         name,
                         source: code,
