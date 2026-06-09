@@ -59,7 +59,13 @@ impl_tokens!(ast::ArrayListExpression => |self_, ctx| {
 impl_tokens!(ast::StringCharacter => TokenType::STRING);
 impl_tokens!(ast::StringExpression => extras, expr);
 
-impl_tokens!(ast::StringPart => [Char, Content, Expression]);
+impl_tokens!(ast::StringPart => |self_, ctx| {
+    match self_ {
+        ast::StringPart::Char(c) => c.semantic_tokens(ctx),
+        ast::StringPart::Content(s) => s.semantic_tokens(ctx),
+        ast::StringPart::Expression(e) => e.semantic_tokens(ctx),
+    }
+});
 
 impl_tokens!(ast::FormatString => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
@@ -68,15 +74,13 @@ impl_tokens!(ast::FormatString => |self_, ctx| {
          .for_each(|part| part.semantic_tokens(ctx));
 });
 
-impl<'ast> SemanticTokens<'ast> for ast::QualifiedName {
-    fn semantic_tokens(&'ast self, context: &'ast mut TokenContext) {
-        // TODO The token type might be different than `NAMESPACE`, depending on the context.
-        self.extras.semantic_tokens(context);
-        self.parts
-            .iter()
-            .for_each(|part| context.push_token(&part.span, TokenType::NAMESPACE, &[]));
-    }
-}
+impl_tokens!(ast::QualifiedName => |self_, ctx| {
+    // TODO The token type might be different than `NAMESPACE`, depending on the context.
+    self_.extras.semantic_tokens(ctx);
+    self_.parts
+        .iter()
+        .for_each(|part| ctx.push_token(&part.span, TokenType::NAMESPACE, &[]));
+});
 
 impl_tokens!(mu::base::Spanned<ast::BinaryOperator> => TokenType::OPERATOR);
 impl_tokens!(ast::BinaryOperation => lhs, op, rhs);
@@ -90,7 +94,12 @@ impl_tokens!(ast::NamedArgument => |self_, ctx| {
 });
 
 impl_tokens!(ast::UnnamedArgument => extras, expr);
-impl_tokens!(ast::Argument => [Unnamed, Named]);
+impl_tokens!(ast::Argument => |self_, ctx| {
+    match self_ {
+        ast::Argument::Named(n) => n.semantic_tokens(ctx),
+        ast::Argument::Unnamed(u) => u.semantic_tokens(ctx),
+    }
+});
 
 impl_tokens!(ast::ArgumentList => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
