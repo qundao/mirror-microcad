@@ -36,6 +36,10 @@ impl Source {
     pub fn code(&self) -> &str {
         self.code.value()
     }
+
+    pub fn set_code(&mut self, code: String) {
+        self.code = Hashed::new(code);
+    }
 }
 
 impl GetSourceLocInfoByHash for Source {
