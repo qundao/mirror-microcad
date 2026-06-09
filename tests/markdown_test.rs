@@ -52,7 +52,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
         ..Default::default()
     };
 
-    let mut source = mu::document::Source::from_source(env.source.clone());
+    let mut source = mu::document::SourceFile::from_source(env.source.clone());
 
     use microcad_driver::commands::Compile;
 
@@ -144,7 +144,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
 fn report_model(
     env: &TestEnv,
     log: &mut dyn std::io::Write,
-    mut source: mu::document::Source,
+    mut source: mu::document::SourceFile,
     model: mu::Model,
 ) -> std::io::Result<()> {
     if model.has_no_output() {
