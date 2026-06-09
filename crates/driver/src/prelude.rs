@@ -84,8 +84,8 @@ pub mod traits {
     pub use microcad_lang::{doc::Doc, ty::Ty};
 
     pub use super::commands::{
-        Compile, DocGen, Export, Format, LoadFromFile, PrintDiagnostics, Render, Sync,
-        compile::Eval, compile::Lower, compile::Parse, compile::Resolve,
+        Compile, DocGen, Export, Format, GetCode, LoadFromFile, PrintDiagnostics, Render, SetCode,
+        Sync, compile::Eval, compile::Lower, compile::Parse, compile::Resolve,
     };
-    pub use super::document::{CaptureDiags, GetCode, GetSymbol};
+    pub use super::document::{CaptureDiags, GetSymbol};
 }

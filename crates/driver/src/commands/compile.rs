@@ -48,7 +48,7 @@ pub struct CompileParameters {
 
 /// Trait for compilation toolchain.
 pub trait Compile: Parse + Lower + Resolve + Eval {
-    /// Compile a document.
+    /// Compile a document into a `Model`.
     fn compile(&mut self, parameters: impl Into<CompileParameters>) -> Result<Model> {
         let parameters = parameters.into();
         self.parse()?;

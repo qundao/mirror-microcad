@@ -16,6 +16,7 @@ keywords.workspace = true
 
 [dependencies]
 derive_more = { version = "2.0.1", features = ["deref", "deref_mut"] }
+dissimilar = "1.0.7"
 log = "0.4"
 miette = { version = "7.6.0", features = ["derive", "fancy"] }
 notify = "8"

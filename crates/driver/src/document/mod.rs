@@ -4,17 +4,19 @@
 mod builtin;
 mod markdown;
 mod mdbook;
-mod source;
+mod source_file;
 mod stdin;
 
 use derive_more::From;
 
 use microcad_lang_base::{DiagRenderOptions, Diagnostics, ResourceLocation, Url};
-pub use source::Source;
+pub use source_file::SourceFile;
 pub use stdin::Stdin;
 
 use crate::Result;
 use crate::prelude::*;
+
+pub use dissimilar::Chunk;
 
 /// Return the symbol for document
 pub trait GetSymbol {
@@ -31,10 +33,6 @@ pub trait TryFilePath: ResourceLocation {
             None => Err(miette::miette!("No local path: {}", self.url())),
         }
     }
-}
-
-pub trait GetCode {
-    fn get_code(&self) -> Option<&str>;
 }
 
 pub trait CaptureDiags {
@@ -65,7 +63,7 @@ pub type Builtin = builtin::Builtin;
 #[derive(From)]
 pub enum Document {
     /// A single source file
-    Source(Box<Source>),
+    SourceFile(Box<SourceFile>),
 
     /// A markdown file containing source code snippets
     Markdown(Markdown),
@@ -93,7 +91,7 @@ impl Document {
         } else if url.scheme() == "builtin" {
             Ok(Builtin::new().into())
         } else if url.scheme() == "file" {
-            Ok(Box::new(Source::new(url)).into())
+            Ok(Box::new(SourceFile::new(url)).into())
         } else {
             Err(miette::miette!("Invalid document type: {}", url.path()))
         }
@@ -111,28 +109,30 @@ impl Document {
     pub fn open(location: impl AsRef<str>) -> Result<Self> {
         Self::load(crate::locate::to_url(location.as_ref())?)
     }
+}
 
-    /// Load a document from file.
-    pub fn from_file(path: impl AsRef<std::path::Path>) -> Result<Self> {
-        use commands::LoadFromFile;
-        use miette::IntoDiagnostic;
-        let absolute_path = std::fs::canonicalize(&path).into_diagnostic()?;
-        let url = Url::from_file_path(&absolute_path).map_err(|_| {
-            miette::miette!(
-                "URL {path} does not contain a file path!",
-                path = path.as_ref().display()
-            )
-        })?;
-        let mut document = Self::new(url)?;
-        document.load_from_file()?;
-        Ok(document)
+impl commands::GetCode for Document {
+    fn get_code(&self) -> Option<&str> {
+        match self {
+            Self::SourceFile(source_file) => source_file.get_code(),
+            Self::Markdown(_) | Self::MdBook(_) | Self::Builtin(_) => None,
+        }
+    }
+}
+
+impl commands::SetCode for Document {
+    fn set_code(&mut self, new_code: String) -> Option<&str> {
+        match self {
+            Self::SourceFile(source_file) => source_file.set_code(new_code),
+            Self::Markdown(_) | Self::MdBook(_) | Self::Builtin(_) => None,
+        }
     }
 }
 
 impl CaptureDiags for Document {
     fn diags(&self) -> &Diagnostics {
         match self {
-            Document::Source(i) => i.diags(),
+            Document::SourceFile(i) => i.diags(),
             Document::Markdown(i) => i.diags(),
             Document::MdBook(i) => i.diags(),
             Document::Builtin(i) => i.diags(),
@@ -141,7 +141,7 @@ impl CaptureDiags for Document {
 
     fn diags_mut(&mut self) -> &mut Diagnostics {
         match self {
-            Document::Source(i) => i.diags_mut(),
+            Document::SourceFile(i) => i.diags_mut(),
             Document::Markdown(i) => i.diags_mut(),
             Document::MdBook(i) => i.diags_mut(),
             Document::Builtin(i) => i.diags_mut(),
@@ -152,7 +152,7 @@ impl CaptureDiags for Document {
 impl ResourceLocation for Document {
     fn url(&self) -> &Url {
         match self {
-            Document::Source(u) => u.url(),
+            Document::SourceFile(u) => u.url(),
             Document::Markdown(u) => u.url(),
             Document::MdBook(u) => u.url(),
             Document::Builtin(u) => u.url(),
@@ -163,7 +163,7 @@ impl ResourceLocation for Document {
 impl commands::LoadFromFile for Document {
     fn load_from_file(&mut self) -> Result {
         match self {
-            Document::Source(item) => item.load_from_file(),
+            Document::SourceFile(item) => item.load_from_file(),
             Document::Markdown(item) => item.load_from_file(),
             Document::MdBook(item) => item.load_from_file(),
             Document::Builtin(_) => Ok(()), // Builtin is already loaded.
@@ -174,7 +174,7 @@ impl commands::LoadFromFile for Document {
 impl commands::compile::Parse for Document {
     fn parse(&mut self) -> Result {
         match self {
-            Document::Source(source) => source.parse(),
+            Document::SourceFile(source) => source.parse(),
             _ => unimplemented!(),
         }
     }
@@ -183,7 +183,7 @@ impl commands::compile::Parse for Document {
 impl commands::compile::Lower for Document {
     fn lower(&mut self) -> Result {
         match self {
-            Document::Source(source) => source.lower(),
+            Document::SourceFile(source) => source.lower(),
             _ => unimplemented!(),
         }
     }
@@ -195,7 +195,7 @@ impl commands::compile::Resolve for Document {
         parameters: impl Into<commands::compile::ResolveParameters>,
     ) -> Result<Symbol> {
         match self {
-            Document::Source(source) => source.resolve(parameters),
+            Document::SourceFile(source) => source.resolve(parameters),
             _ => unimplemented!(),
         }
     }
@@ -204,7 +204,7 @@ impl commands::compile::Resolve for Document {
 impl commands::compile::Eval for Document {
     fn eval(&mut self) -> Result<Model> {
         match self {
-            Document::Source(source) => source.eval(),
+            Document::SourceFile(source) => source.eval(),
             _ => unimplemented!(),
         }
     }
@@ -213,7 +213,7 @@ impl commands::compile::Eval for Document {
 impl commands::Render for Document {
     fn render(&mut self, params: impl Into<commands::RenderParameters>) -> Result<Model> {
         match self {
-            Document::Source(source) => source.render(params),
+            Document::SourceFile(source) => source.render(params),
             _ => unimplemented!(),
         }
     }
@@ -227,7 +227,7 @@ impl commands::Export for Document {
         params: impl Into<commands::ExportParameters>,
     ) -> Result<commands::ExportTargets> {
         match self {
-            Document::Source(source) => source.get_export_targets(params),
+            Document::SourceFile(source) => source.get_export_targets(params),
             Document::Markdown(_) => todo!(),
             Document::MdBook(_) => todo!(),
             Document::Builtin(_) => todo!(),
@@ -238,7 +238,7 @@ impl commands::Export for Document {
 impl commands::Format for Document {
     fn format(&mut self, params: &commands::FormatParameters) -> Result<bool> {
         match self {
-            Document::Source(item) => item.format(params),
+            Document::SourceFile(item) => item.format(params),
             Document::Markdown(item) => item.format(params),
             Document::MdBook(item) => item.format(params),
             _ => unimplemented!(),
@@ -249,7 +249,7 @@ impl commands::Format for Document {
 impl commands::Sync for Document {
     fn sync(&self) -> Result {
         match &self {
-            Document::Source(source) => source.sync(),
+            Document::SourceFile(source) => source.sync(),
             Document::Markdown(markdown) => markdown.sync(),
             Document::MdBook(mdbook) => mdbook.sync(),
             _ => unimplemented!(),
@@ -263,7 +263,7 @@ impl GetSymbol for Document {
         params: impl Into<commands::compile::ResolveParameters>,
     ) -> Result<Symbol> {
         match self {
-            Document::Source(asset) => asset.get_symbol(params),
+            Document::SourceFile(asset) => asset.get_symbol(params),
             Document::Markdown(_) => todo!(),
             Document::MdBook(_) => todo!(),
             Document::Builtin(asset) => asset.get_symbol(params),
@@ -274,7 +274,7 @@ impl GetSymbol for Document {
 impl commands::DocGen for Document {
     fn doc_gen(&mut self, params: impl Into<commands::DocGenParameters>) -> Result {
         match self {
-            Document::Source(asset) => asset.doc_gen(params),
+            Document::SourceFile(asset) => asset.doc_gen(params),
             Document::Markdown(_) => todo!(),
             Document::MdBook(_) => todo!(),
             Document::Builtin(asset) => asset.doc_gen(params),
@@ -289,7 +289,7 @@ impl commands::PrintDiagnostics for Document {
         options: &DiagRenderOptions,
     ) -> std::fmt::Result {
         match self {
-            Document::Source(i) => i.print_diagnostics(f, options),
+            Document::SourceFile(i) => i.print_diagnostics(f, options),
             Document::Markdown(_) => todo!(),
             Document::MdBook(_) => todo!(),
             Document::Builtin(_) => todo!(),

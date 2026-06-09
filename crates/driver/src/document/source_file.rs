@@ -33,7 +33,8 @@ pub enum SourceError {
     InvalidState(Url),
 }
 
-pub struct Source {
+/// A µcad source file document.
+pub struct SourceFile {
     /// Each source item keeps its [`Diagnostics`]
     pub url: Url,
     diagnostics: Diagnostics,
@@ -45,7 +46,7 @@ pub struct Source {
     model: Option<Model>,
 }
 
-impl Source {
+impl SourceFile {
     pub fn new(url: Url) -> Self {
         Self {
             url,
@@ -82,21 +83,30 @@ impl Source {
     }
 }
 
-impl document::GetCode for Source {
+impl commands::GetCode for SourceFile {
     fn get_code(&self) -> Option<&str> {
         self.base_source.as_ref().map(|s| s.code.value().as_str())
     }
 }
 
-impl ResourceLocation for Source {
+impl commands::SetCode for SourceFile {
+    fn set_code(&mut self, code: String) -> Option<&str> {
+        self.base_source.as_mut().map(|s| {
+            s.set_code(code);
+            s.code.value().as_str()
+        })
+    }
+}
+
+impl ResourceLocation for SourceFile {
     fn url(&self) -> &Url {
         &self.url
     }
 }
 
-impl TryFilePath for Source {}
+impl TryFilePath for SourceFile {}
 
-impl CaptureDiags for Source {
+impl CaptureDiags for SourceFile {
     fn diags(&self) -> &Diagnostics {
         &self.diagnostics
     }
@@ -106,7 +116,7 @@ impl CaptureDiags for Source {
     }
 }
 
-impl commands::Format for Source {
+impl commands::Format for SourceFile {
     fn format(&mut self, params: &commands::FormatParameters) -> Result<bool> {
         if self.base_source.is_none() {
             return Err(SourceError::InvalidState(self.url.clone()).into());
@@ -140,7 +150,7 @@ impl commands::Format for Source {
     }
 }
 
-impl commands::LoadFromFile for document::Source {
+impl commands::LoadFromFile for SourceFile {
     fn load_from_file(&mut self) -> Result {
         let path = self
             .url
@@ -156,7 +166,7 @@ impl commands::LoadFromFile for document::Source {
     }
 }
 
-impl commands::Sync for document::Source {
+impl commands::Sync for SourceFile {
     fn sync(&self) -> Result {
         match &self.base_source {
             Some(base_source) => {
@@ -168,7 +178,7 @@ impl commands::Sync for document::Source {
     }
 }
 
-impl commands::compile::Parse for document::Source {
+impl commands::compile::Parse for SourceFile {
     fn parse(&mut self) -> Result {
         match &self.base_source {
             Some(base_source) => {
@@ -191,7 +201,7 @@ impl commands::compile::Parse for document::Source {
     }
 }
 
-impl commands::compile::Lower for document::Source {
+impl commands::compile::Lower for SourceFile {
     fn lower(&mut self) -> Result {
         match &self.ast_source {
             Some(ast_source) => {
@@ -211,7 +221,7 @@ impl commands::compile::Lower for document::Source {
     }
 }
 
-impl commands::compile::Resolve for document::Source {
+impl commands::compile::Resolve for SourceFile {
     fn resolve(
         &mut self,
         parameters: impl Into<commands::compile::ResolveParameters>,
@@ -250,7 +260,7 @@ impl commands::compile::Resolve for document::Source {
     }
 }
 
-impl commands::compile::Eval for document::Source {
+impl commands::compile::Eval for SourceFile {
     fn eval(&mut self) -> Result<Model> {
         if self.resolve_context.is_none() {
             return Err(SourceError::InvalidState(self.url.clone()).into());
@@ -291,7 +301,7 @@ impl commands::compile::Eval for document::Source {
     }
 }
 
-impl commands::Render for document::Source {
+impl commands::Render for SourceFile {
     fn render(
         &mut self,
         parameters: impl Into<commands::RenderParameters>,
@@ -327,9 +337,9 @@ impl commands::Render for document::Source {
     }
 }
 
-impl commands::Compile for document::Source {}
+impl commands::Compile for SourceFile {}
 
-impl document::GetSymbol for document::Source {
+impl document::GetSymbol for SourceFile {
     fn get_symbol(
         &mut self,
         parameters: impl Into<commands::compile::ResolveParameters>,
@@ -341,9 +351,9 @@ impl document::GetSymbol for document::Source {
     }
 }
 
-impl commands::DocGen for document::Source {}
+impl commands::DocGen for SourceFile {}
 
-impl commands::PrintDiagnostics for document::Source {
+impl commands::PrintDiagnostics for SourceFile {
     fn print_diagnostics(
         &self,
         f: &mut dyn std::fmt::Write,
@@ -364,7 +374,7 @@ impl commands::PrintDiagnostics for document::Source {
     }
 }
 
-impl commands::Export for document::Source {
+impl commands::Export for SourceFile {
     fn get_export_targets(
         &self,
         params: impl Into<commands::ExportParameters>,
