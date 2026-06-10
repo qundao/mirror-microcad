@@ -1,16 +1,14 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Lower, LowerContext, LowerError, ir};
+use crate::{Lower, LowerContext, LowerError, LowerResult, ir};
 
 use microcad_lang_base::Refer;
 use microcad_lang_parse::ast;
 use microcad_lang_types::value;
 
-impl Lower for ir::Literal {
-    type AstNode = ast::Literal;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+impl Lower<ast::Literal> for ir::Literal {
+    fn lower(node: &ast::Literal, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match &node.literal {
             ast::LiteralKind::Bool(lit) => {
                 ir::Literal(Refer::new(lit.value.into(), context.src_ref(&lit.span)))
@@ -47,10 +45,8 @@ impl Lower for ir::Literal {
     }
 }
 
-impl Lower for ir::Unit {
-    type AstNode = ast::Unit;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+impl Lower<ast::Unit> for ir::Unit {
+    fn lower(node: &ast::Unit, context: &mut LowerContext) -> LowerResult<Self> {
         use std::str::FromStr;
         ir::Unit::from_str(node.name.as_str()).map_err(|_| {
             LowerError::UnknownUnit(Refer::new(
