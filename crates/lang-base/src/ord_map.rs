@@ -74,7 +74,7 @@ where
 impl<K, V> OrdMap<K, V>
 where
     V: OrdMapValue<K>,
-    K: std::cmp::Eq + std::hash::Hash,
+    K: std::cmp::Eq + std::hash::Hash + Clone,
 {
     /// get iterator over values in original order
     pub fn iter(&self) -> std::slice::Iter<'_, V> {
@@ -89,6 +89,20 @@ where
     /// `true` no values are stored`
     pub fn is_empty(&self) -> bool {
         self.vec.is_empty()
+    }
+
+    /// add new value
+    ///
+    /// On duplicated named entries, it returns the existing key and the new, duplicate key
+    pub fn push(&'_ mut self, item: V) -> Option<K> {
+        if let Some(key) = item.key() {
+            match self.map.get(&key) {
+                None => self.map.insert(key, self.vec.len()),
+                Some(_) => return Some(key),
+            };
+        }
+        self.vec.push(item);
+        None
     }
 
     /// get value by key
