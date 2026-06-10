@@ -53,11 +53,12 @@ impl<EXPR> ArgumentList<EXPR> {
         arg: ir::Argument<EXPR>,
         context: &mut LowerContext,
     ) -> LowerResult<()> {
+        let src_ref = arg.src_ref.clone();
         match self.0.value.push(arg) {
-            Some(key) => {
+            Some(_) => {
                 context
                     .diagnostics
-                    .error(&arg.src_ref, miette::miette!("Duplicated argument"))
+                    .error(&src_ref, miette::miette!("Duplicated argument"))
                     .ok(); // TODO Better error handling
             }
             None => {}
