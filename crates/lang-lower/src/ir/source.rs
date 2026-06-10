@@ -6,71 +6,39 @@
 use crate::ir;
 
 use microcad_lang_base::{
-    ComputedHash, Hashed, Identifier, LineCol, ResourceLocation, SourceLocInfo, SrcRef,
-    SrcReferrer, Url,
+    ComputedHash, LineCol, ResourceLocation, SourceLocInfo, SrcRef, SrcReferrer,
 };
 
 /// µcad source file
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct Source {
-    /// Documentation.
-    pub doc: Option<ir::DocBlock>,
-    /// Qualified name of the file if loaded from externals
-    pub name: ir::QualifiedName,
+    /// Inner attributes.
+    pub attr: Option<ir::DocBlock>,
+
+    /// List of file modules: `mod foo;`.
+    pub file_modules: ir::FileModules,
+    /// Use statements: `use ...`.
+    pub aliases: ir::Aliases,
+    /// Inline modules: `mod bar {...}`.
+    pub inline_modules: ir::InlineModules,
+    /// Constants: `const FOO = 42;`.
+    pub constants: ir::Constants,
+    /// Functions: `fn foo(...) {...}`.
+    pub functions: ir::Functions,
+    /// Workbenches: `part Bar(...) {...}`.
+    pub workbenches: ir::Workbenches,
+
     /// Root code body.
-    pub statements: ir::StatementList,
-    /// Name of loaded file.
-    pub url: Url,
-    /// Source file string with hash
-    pub source: Hashed<String>,
-    /// Line offset
-    pub line_offset: u32,
+    pub statements: ir::WorkbenchStatements,
+    /// Original source
+    pub source: microcad_lang_base::Source,
 }
 
 impl Source {
-    /// Create new source file from existing source.
-    pub fn new(
-        doc: Option<ir::DocBlock>,
-        statements: ir::StatementList,
-        source: Hashed<String>,
-        url: Url,
-    ) -> Self {
-        Self {
-            doc,
-            statements,
-            source,
-            url,
-            name: ir::QualifiedName::default(),
-            line_offset: 0,
-        }
-    }
-
     pub fn with_line_offset(self, line_offset: u32) -> Self {
         let mut src = self;
-        src.line_offset = line_offset;
+        src.source.line_offset = line_offset;
         src
-    }
-
-    /// Return the module name from the file name
-    pub fn id(&self) -> Identifier {
-        self.name.last().unwrap_or(&Identifier::none()).clone()
-    }
-
-    /// Return filename of loaded file or `<NO FILE>`
-    pub fn filename(&self) -> std::path::PathBuf {
-        self.to_file_path()
-            .unwrap_or(std::path::PathBuf::from("<NO FILE>"))
-    }
-
-    /// Return filename of loaded file or `<NO FILE>`
-    pub fn set_filename(&mut self, path: impl AsRef<std::path::Path>) {
-        assert!(self.to_file_path().is_none());
-        self.url = Url::from_file_path(
-            path.as_ref()
-                .canonicalize()
-                .unwrap_or(path.as_ref().to_path_buf()),
-        )
-        .unwrap_or(self.url.clone());
     }
 
     /// get a specific line
@@ -88,31 +56,25 @@ impl Source {
     /// Get a miette source adapter for the SourceFile
     pub fn source_loc_info<'a>(&'a self) -> SourceLocInfo<'a> {
         SourceLocInfo {
-            code: &self.source,
-            url: self.url.clone(),
-            line_offset: self.line_offset,
+            code: &self.source.code,
+            url: self.source.url.clone(),
+            line_offset: self.source.line_offset,
         }
     }
 }
 
 impl ResourceLocation for Source {
     fn url(&self) -> &microcad_lang_base::Url {
-        &self.url
-    }
-}
-
-impl std::fmt::Display for Source {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.statements.iter().try_for_each(|s| writeln!(f, "{s}"))
+        &self.source.url
     }
 }
 
 impl SrcReferrer for Source {
     fn src_ref(&self) -> SrcRef {
         SrcRef::new(
-            0..self.source.len(),
+            0..self.source.code.len(),
             LineCol::default(),
-            self.source.computed_hash(),
+            self.source.code.computed_hash(),
         )
     }
 }

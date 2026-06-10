@@ -6,11 +6,10 @@
 use crate::ir;
 
 use microcad_lang_base::SrcRef;
-use microcad_lang_proc_macros::SrcReferrer;
 
 /// Tuple expression, e.g. `(x=1+2,4,z=9)`.
-#[derive(Clone, Debug, Default, PartialEq, SrcReferrer)]
-pub struct TupleExpression<EXPR = ir::Expression> {
+#[derive(Debug, Default, PartialEq)]
+pub struct TupleExpression<EXPR> {
     /// List of tuple members.
     pub args: ir::ArgumentList<EXPR>,
     /// Source code reference

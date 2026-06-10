@@ -1,16 +1,15 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! List of expression
+//! Array expressions
 
 use crate::ir;
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{SrcRef, SrcReferrer};
-use microcad_lang_proc_macros::SrcReferrer;
 
 /// Inner of an [`ArrayExpression`].
 #[derive(Clone, Debug, PartialEq)]
-pub enum ArrayExpressionInner<EXPR = ir::Expression> {
+pub enum ArrayExpressionInner<EXPR> {
     /// List: `a,b,c`.
     List(ir::ListExpression<EXPR>),
     /// Range: `a..b`.
@@ -37,7 +36,10 @@ where
     }
 }
 
-impl SrcReferrer for ArrayExpressionInner {
+impl<EXPR> SrcReferrer for ArrayExpressionInner<EXPR>
+where
+    EXPR: SrcReferrer,
+{
     fn src_ref(&self) -> SrcRef {
         match &self {
             ArrayExpressionInner::List(expressions) => SrcRef::merge(
@@ -50,14 +52,14 @@ impl SrcReferrer for ArrayExpressionInner {
                     .map(|end| end.src_ref())
                     .unwrap_or_default(),
             ),
-            ArrayExpressionInner::Range(range_expression) => range_expression.src_ref(),
+            ArrayExpressionInner::Range(range_expression) => range_expression.src_ref.clone(),
         }
     }
 }
 
-/// Array of expressions with common result unit, e.g. `[1+2,4,9]`.
-#[derive(Clone, Debug, Deref, DerefMut, PartialEq, SrcReferrer)]
-pub struct ArrayExpression<EXPR = ir::Expression> {
+/// Array of expressions with common result unit, e.g. `[1+2,4,9]mm`.
+#[derive(Clone, Debug, Deref, DerefMut, PartialEq)]
+pub struct ArrayExpression<EXPR> {
     /// Expression list.
     #[deref]
     #[deref_mut]
