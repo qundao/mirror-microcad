@@ -674,7 +674,9 @@ fn parser<'tokens>()
 
         let parameter_list_inner = parsers::whitespace()
             .or_not()
-            .ignore_then(identifier_parser.clone())
+            .ignore_then(doc_block.clone())
+            .then(outer_attribute_parser.clone())
+            .then(identifier_parser.clone())
             .then_maybe_whitespace()
             .then(
                 just(Token::SigilColon)
@@ -708,13 +710,17 @@ fn parser<'tokens>()
                     .or_not(),
             )
             .with_extras()
-            .map_with(|(((name, ty), default), extras), e| ast::Parameter {
-                span: e.span(),
-                extras,
-                name,
-                ty,
-                default,
-            })
+            .map_with(
+                |(((((doc, attributes), name), ty), default), extras), e| ast::Parameter {
+                    span: e.span(),
+                    doc,
+                    attributes,
+                    extras,
+                    name,
+                    ty,
+                    default,
+                },
+            )
             .separated_by(just(Token::SigilComma))
             .allow_trailing()
             .collect::<Vec<_>>()
