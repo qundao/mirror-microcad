@@ -3,9 +3,9 @@
 
 //! Syntax elements related to calls.
 
-use crate::ir;
+use crate::{LowerContext, LowerResult, ir};
 use derive_more::{Deref, DerefMut};
-use microcad_lang_base::{Identifier, OrdMap, OrdMapValue, Refer, SrcRef};
+use microcad_lang_base::{Identifier, OrdMap, OrdMapValue, PushDiag, Refer, SrcRef};
 
 /// Argument in a [`Call`].
 #[derive(Debug, PartialEq)]
@@ -39,6 +39,33 @@ where
 /// *Ordered map* of arguments in a [`Call`].
 #[derive(Debug, Deref, DerefMut, PartialEq)]
 pub struct ArgumentList<EXPR>(pub Refer<OrdMap<Identifier, ir::Argument<EXPR>>>);
+
+impl<EXPR> ArgumentList<EXPR> {
+    pub(crate) fn new() -> Self {
+        Self(Refer::none(microcad_lang_base::OrdMap::<
+            ir::Identifier,
+            ir::Argument<EXPR>,
+        >::default()))
+    }
+
+    pub(crate) fn try_push(
+        &mut self,
+        arg: ir::Argument<EXPR>,
+        context: &mut LowerContext,
+    ) -> LowerResult<()> {
+        match self.0.value.push(arg) {
+            Some(key) => {
+                context
+                    .diagnostics
+                    .error(&arg.src_ref, miette::miette!("Duplicated argument"))
+                    .ok(); // TODO Better error handling
+            }
+            None => {}
+        }
+
+        Ok(())
+    }
+}
 
 impl<EXPR> std::fmt::Display for ArgumentList<EXPR>
 where

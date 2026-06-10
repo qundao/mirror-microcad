@@ -7,7 +7,7 @@ use microcad_lang_parse::ast;
 impl Lower for ir::InitDefinition {
     type AstNode = ast::InitDefinition;
 
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::InitDefinition {
             doc: ir::DocBlock::lower(&node.doc, context)?,
             keyword_ref: context.src_ref(&node.keyword_span),

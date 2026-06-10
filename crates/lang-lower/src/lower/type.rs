@@ -7,10 +7,8 @@ use microcad_lang_base::Refer;
 use microcad_lang_parse::ast;
 use microcad_lang_types::{Type, ty};
 
-impl Lower for Type {
-    type AstNode = ast::Type;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
+impl Lower<ast::Type> for Type {
+    fn lower(node: &ast::Type, context: &mut LowerContext) -> LowerResult<Self> {
         use std::str::FromStr;
         Ok(match node {
             ast::Type::Single(ty) => Type::from_str(ty.name.as_str())
@@ -21,13 +19,19 @@ impl Lower for Type {
     }
 }
 
-impl Lower for ir::TypeAnnotation {
-    type AstNode = ast::Type;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
+impl Lower<ast::Type> for ir::TypeAnnotation {
+    fn lower(node: &ast::Type, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::TypeAnnotation(Refer::new(
             Type::lower(node, context)?,
             context.src_ref(&node.span()),
         )))
+    }
+}
+
+impl Lower<Option<ast::Type>> for Option<ir::TypeAnnotation> {
+    fn lower(node: &Option<ast::Type>, context: &mut LowerContext) -> LowerResult<Self> {
+        node.as_ref()
+            .map(|ty| ir::TypeAnnotation::lower(ty, context))
+            .transpose()
     }
 }

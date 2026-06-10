@@ -18,7 +18,7 @@ impl From<ast::WorkbenchKind> for ir::WorkbenchKind {
 impl Lower for std::rc::Rc<ir::WorkbenchDefinition> {
     type AstNode = ast::WorkbenchDefinition;
 
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
         if let Some(tail) = node.body.statements.tail.as_ref() {
             context
                 .warning(LowerError::ImplicitWorkbenchReturn {

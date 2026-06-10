@@ -5,8 +5,7 @@
 
 use crate::ir;
 
-use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
-use microcad_lang_proc_macros::Identifiable;
+use microcad_lang_base::{Refer, SrcRef};
 
 /// Parameters and return type of a function
 #[derive(Debug)]
@@ -78,50 +77,27 @@ pub struct Scope(pub Refer<Vec<FunctionStatement>>);
 
 #[derive(Debug)]
 pub struct Function {
+    /// Source ref for the whole definition
+    pub src_ref: SrcRef,
+    /// Outer attributes
     pub outer_attr: ir::Attributes,
+    /// public / private
+    pub visibility: ir::Visibility,
+    /// SrcRef of the `fn` keyword
+    pub keyword_ref: SrcRef,
+    /// Name of the function
+    pub id: ir::Identifier,
     /// Function signature
-    pub signature: FunctionSignature,
-
+    pub signature: ir::FunctionSignature,
+    /// #![...]
+    pub inner_attr: ir::Attributes,
     /// use ...
     pub aliases: ir::Aliases,
     /// const FOO =
     pub constants: ir::Constants,
-
-    /// #![...]
-    pub inner_attr: ir::Attributes,
-
     /// Function statements
     pub statements: Vec<FunctionStatement>,
 }
 
 #[derive(Debug)]
 pub struct Functions(pub Vec<Function>);
-
-/// Function definition
-#[derive(Debug, Identifiable)]
-pub struct FunctionDefinition {
-    /// SrcRef of the `fn` keyword
-    pub keyword_ref: SrcRef,
-    /// Documentation.
-    pub attr: ir::Attributes,
-    /// Visibility
-    pub visibility: ir::Visibility,
-    /// Name of the function
-    pub(crate) id: ir::Identifier,
-    /// Function signature
-    pub signature: ir::FunctionSignature,
-    /// Function body
-    pub statements: Function,
-}
-
-impl SrcReferrer for FunctionDefinition {
-    fn src_ref(&self) -> SrcRef {
-        self.id.src_ref()
-    }
-}
-
-impl std::fmt::Display for FunctionDefinition {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "fn {}{}", self.id, self.signature)
-    }
-}

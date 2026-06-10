@@ -3,19 +3,20 @@
 
 use crate::{Lower, LowerContext, LowerError, LowerResult, ir};
 
+mod call;
+mod literal;
+
 use microcad_lang_base::{Identifier, PushDiag, Refer};
 use microcad_lang_parse::ast;
 
-impl<EXPR> Lower for ir::BinaryOp<EXPR>
+impl<EXPR> Lower<ast::BinaryOperation> for ir::BinaryOp<EXPR>
 where
-    EXPR: Lower<AstNode = ast::Expression>,
+    EXPR: Lower<ast::Expression>,
 {
-    type AstNode = ast::BinaryOperation;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
-        Ok(ir::BinaryOp {
-            lhs: Box::new(EXPR::lower(&node.lhs, context)?),
-            rhs: Box::new(EXPR::lower(&node.rhs, context)?),
+    fn lower(node: &ast::BinaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
+            lhs: Box::new(EXPR::lower(node.lhs.as_ref(), context)?),
+            rhs: Box::new(EXPR::lower(node.rhs.as_ref(), context)?),
             op: Refer::new(
                 node.operation.operation.as_str().into(),
                 context.src_ref(&node.operation.span),
@@ -25,13 +26,11 @@ where
     }
 }
 
-impl<EXPR> Lower for ir::UnaryOp<EXPR>
+impl<EXPR> Lower<ast::UnaryOperation> for ir::UnaryOp<EXPR>
 where
-    EXPR: Lower<AstNode = ast::Expression>,
+    EXPR: Lower<ast::Expression>,
 {
-    type AstNode = ast::UnaryOperation;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &ast::UnaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::UnaryOp {
             rhs: Box::new(EXPR::lower(&node.rhs, context)?),
             op: Refer::new(
@@ -43,13 +42,11 @@ where
     }
 }
 
-impl<EXPR> Lower for ir::RangeFirst<EXPR>
+impl<EXPR> Lower<ast::ArrayItem> for ir::RangeFirst<EXPR>
 where
-    EXPR: Lower<AstNode = ast::Expression>,
+    EXPR: Lower<ast::Expression>,
 {
-    type AstNode = ast::ArrayItem;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &ast::ArrayItem, context: &mut LowerContext) -> LowerResult<Self> {
         if matches!(
             node.expression,
             ast::Expression::Literal(
@@ -74,13 +71,11 @@ where
     }
 }
 
-impl<EXPR> Lower for ir::RangeLast<EXPR>
+impl<EXPR> Lower<ast::ArrayItem> for ir::RangeLast<EXPR>
 where
-    EXPR: Lower<AstNode = ast::Expression>,
+    EXPR: Lower<ast::Expression>,
 {
-    type AstNode = ast::ArrayItem;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &ast::ArrayItem, context: &mut LowerContext) -> LowerResult<Self> {
         if matches!(
             node.expression,
             ast::Expression::Literal(
@@ -105,14 +100,12 @@ where
     }
 }
 
-impl<EXPR> Lower for ir::RangeExpression<EXPR>
+impl<EXPR> Lower<ast::ArrayRangeExpression> for ir::RangeExpression<EXPR>
 where
-    EXPR: Lower<AstNode = ast::Expression>,
+    EXPR: Lower<ast::Expression>,
 {
-    type AstNode = ast::ArrayRangeExpression;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
-        Ok(ir::RangeExpression {
+    fn lower(node: &ast::ArrayRangeExpression, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
             first: ir::RangeFirst::lower(&node.start, context)?,
             last: ir::RangeLast::lower(&node.end, context)?,
             src_ref: context.src_ref(&node.span),
@@ -120,13 +113,11 @@ where
     }
 }
 
-impl<EXPR> Lower for ir::ListExpression<EXPR>
+impl<EXPR> Lower<ast::ArrayListExpression> for ir::ListExpression<EXPR>
 where
-    EXPR: Lower<AstNode = ast::Expression>,
+    EXPR: Lower<ast::Expression>,
 {
-    type AstNode = ast::ArrayListExpression;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &ast::ArrayListExpression, context: &mut LowerContext) -> LowerResult<Self> {
         node.items
             .iter()
             .map(|item| EXPR::lower(&item.expression, context))
@@ -134,21 +125,20 @@ where
     }
 }
 
-impl Lower for ir::Marker {
-    type AstNode = ast::Identifier;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
-        Ok(ir::Marker {
+impl Lower<ast::Identifier> for ir::Marker {
+    fn lower(node: &ast::Identifier, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
             id: Identifier::lower(node, context)?,
             src_ref: context.src_ref(&node.span),
         })
     }
 }
 
+/*
 impl Lower for ir::Expression {
     type AstNode = ast::Expression;
 
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
             ast::Expression::Call(expr) => ir::Expression::Call(ir::Call::lower(expr, context)?),
             ast::Expression::Bracketed(expr, _) => ir::Expression::lower(expr, context)?,
@@ -244,38 +234,50 @@ impl Lower for ir::Expression {
     }
 }
 
-impl<EXPR> Lower for ir::TupleExpression<EXPR>
-where
-    EXPR: Lower<AstNode = ast::Expression>,
-{
-    type AstNode = ast::TupleExpression;
+    */
 
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
-        let mut args = microcad_lang_base::OrdMap::<ir::Identifier, ir::Argument<EXPR>>::default();
-        for value in &node.values {
-            args.try_push(ir::Argument {
-                id: value
-                    .name
-                    .as_ref()
-                    .map(|name| Identifier::lower(name, context))
-                    .transpose()?,
-                expression: EXPR::lower(&value.value, context)?,
-                src_ref: context.src_ref(&value.span),
-            })
-            .map_err(|(previous, id)| LowerError::DuplicateArgument { previous, id })?;
-        }
+impl Lower<ast::QualifiedName> for ir::QualifiedName {
+    fn lower(node: &ast::QualifiedName, context: &mut LowerContext) -> LowerResult<Self> {
+        let parts = node
+            .parts
+            .iter()
+            .map(|ident| ir::Identifier::lower(ident, context))
+            .collect::<Result<Vec<_>, _>>()?;
+        Ok(Self::new(parts, context.src_ref(&node.span)))
+    }
+}
+
+impl<EXPR> Lower<ast::TupleExpression> for ir::TupleExpression<EXPR>
+where
+    EXPR: Lower<ast::Expression>,
+{
+    fn lower(node: &ast::TupleExpression, context: &mut LowerContext) -> LowerResult<Self> {
+        let mut args = ir::ArgumentList::new();
+
+        node.values.iter().try_for_each(|value| {
+            args.try_push(
+                ir::Argument {
+                    id: value
+                        .name
+                        .as_ref()
+                        .map(|name| Identifier::lower(name, context))
+                        .transpose()?,
+                    expression: EXPR::lower(&value.value, context)?,
+                    src_ref: context.src_ref(&value.span),
+                },
+                context,
+            )
+        })?;
 
         Ok(Self {
-            args: ir::ArgumentList(Refer::none(args)),
+            args,
             src_ref: context.src_ref(&node.span),
         })
     }
 }
 
-impl Lower for ir::ConstantExpression {
-    type AstNode = ast::Expression;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+impl Lower<ast::Expression> for ir::ConstantExpression {
+    fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
             ast::Expression::Call(expr) => Self::Call(ir::Call::lower(expr, context)?),
             ast::Expression::Bracketed(expr, _) => Self::lower(expr, context)?,

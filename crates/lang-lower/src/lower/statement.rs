@@ -7,7 +7,7 @@ use microcad_lang_parse::ast;
 impl Lower for ir::Constant {
     type AstNode = ast::ConstAssignment;
 
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::Constant {
             doc: ir::DocBlock::lower(&node.doc, context)?,
             attr: ir::AttributeList::lower(&node.attributes, context)?,
@@ -33,7 +33,7 @@ impl Lower for ir::Constant {
 impl Lower for ir::LocalAssignment {
     type AstNode = ast::LocalAssignment;
 
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::LocalAssignment {
             id: ir::Identifier::lower(&node.name, context)?,
             specified_type: node
@@ -50,7 +50,7 @@ impl Lower for ir::LocalAssignment {
 impl Lower for ir::PropertyAssignment {
     type AstNode = ast::PropertyAssignment;
 
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::PropertyAssignment {
             doc: ir::DocBlock::lower(&node.doc, context)?,
             attr: ir::AttributeList::lower(&node.attributes, context)?,
@@ -72,7 +72,7 @@ impl ir::LocalAssignment {
     fn from_ast_prop(
         node: &ast::PropertyAssignment,
         context: &mut LowerContext,
-    ) -> Result<Self, LowerError> {
+    ) -> LowerResult<Self> {
         Ok(ir::LocalAssignment {
             id: ir::Identifier::lower(&node.name, context)?,
             specified_type: node
@@ -88,7 +88,7 @@ impl ir::LocalAssignment {
     fn from_ast_const(
         node: &ast::ConstAssignment,
         context: &mut LowerContext,
-    ) -> Result<Self, LowerError> {
+    ) -> LowerResult<Self> {
         Ok(ir::LocalAssignment {
             id: ir::Identifier::lower(&node.name, context)?,
             specified_type: node
@@ -107,7 +107,7 @@ impl ir::LocalAssignmentStatement {
     fn from_ast_local(
         node: &ast::LocalAssignment,
         context: &mut LowerContext,
-    ) -> Result<Self, LowerError> {
+    ) -> LowerResult<Self> {
         Ok(Self {
             attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
             assignment: std::rc::Rc::new(ir::LocalAssignment::lower(node, context)?),
@@ -118,7 +118,7 @@ impl ir::LocalAssignmentStatement {
     fn from_ast_prop(
         node: &ast::PropertyAssignment,
         context: &mut LowerContext,
-    ) -> Result<Self, LowerError> {
+    ) -> LowerResult<Self> {
         Ok(Self {
             attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
             assignment: std::rc::Rc::new(ir::LocalAssignment::from_ast_prop(node, context)?),
@@ -129,7 +129,7 @@ impl ir::LocalAssignmentStatement {
     fn from_ast_const(
         node: &ast::ConstAssignment,
         context: &mut LowerContext,
-    ) -> Result<Self, LowerError> {
+    ) -> LowerResult<Self> {
         Ok(Self {
             attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
             assignment: std::rc::Rc::new(ir::LocalAssignment::from_ast_const(node, context)?),
@@ -141,7 +141,7 @@ impl ir::LocalAssignmentStatement {
 impl Lower for ir::If {
     type AstNode = ast::If;
 
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::If {
             if_ref: context.src_ref(&node.if_span),
             cond: ir::Expression::lower(&node.condition, context)?,
@@ -167,7 +167,7 @@ impl Lower for ir::If {
 impl Lower for ir::ExpressionStatement {
     type AstNode = ast::ExpressionStatement;
 
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::ExpressionStatement {
             src_ref: context.src_ref(&node.span),
             attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
@@ -179,7 +179,7 @@ impl Lower for ir::ExpressionStatement {
 impl Lower for ir::Statement {
     type AstNode = ast::Statement;
 
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
             ast::Statement::InlineModule(module) => ir::Statement::Module(std::rc::Rc::new(
                 ir::ModuleDefinition::from_ast_inline(module, context)?,
@@ -236,7 +236,7 @@ impl Lower for ir::Statement {
 impl Lower for ir::ReturnStatement {
     type AstNode = ast::Return;
 
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::ReturnStatement {
             keyword_ref: context.src_ref(&node.keyword_span),
             result: node
@@ -252,7 +252,7 @@ impl Lower for ir::ReturnStatement {
 impl Lower for ir::StatementList {
     type AstNode = ast::StatementList;
 
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
         let mut statements = Vec::new();
         node.statements
             .iter()
