@@ -21,16 +21,13 @@ impl Lower<ast::ConstAssignment> for ir::Constant {
 
 impl Lower<ast::StatementList> for ir::Constants {
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self(
-            extract_statements(node, |stmt| {
-                Ok(match stmt {
-                    ast::Statement::Const(const_assignment) => {
-                        Some(ir::Constant::lower(const_assignment, context)?)
-                    }
-                    _ => None,
-                })
-            })?
-            .into_boxed_slice(),
-        ))
+        Ok(Self(extract_statements(node, |stmt| {
+            Ok(match stmt {
+                ast::Statement::Const(const_assignment) => {
+                    Some(ir::Constant::lower(const_assignment, context)?)
+                }
+                _ => None,
+            })
+        })?))
     }
 }

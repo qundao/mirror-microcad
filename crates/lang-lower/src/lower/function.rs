@@ -24,29 +24,14 @@ impl Lower<ast::FunctionDefinition> for ir::FunctionSignature {
 
 impl Lower<ast::FunctionDefinition> for ir::Constants {
     fn lower(node: &ast::FunctionDefinition, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self(
-            extract_statements(&node.body.statements, |stmt| match stmt {
+        Ok(Self(extract_statements(&node.body.statements, |stmt| {
+            Ok(match stmt {
                 ast::Statement::Const(const_assignment) => {
-                    Some(ir::Constant::lower(&const_assignment, context))
+                    Some(ir::Constant::lower(&const_assignment, context)?)
                 }
                 _ => None,
-            })?
-            .into_boxed_slice(),
-        ))
-    }
-}
-
-impl Lower<ast::FunctionDefinition> for ir::Aliases {
-    fn lower(node: &ast::FunctionDefinition, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self(
-            extract_statements(&node.body.statements, |stmt| match stmt {
-                ast::Statement::Use(const_assignment) => {
-                    Some(ir::Constant::lower(&const_assignment, context))
-                }
-                _ => None,
-            })?
-            .into_boxed_slice(),
-        ))
+            })
+        })?))
     }
 }
 
@@ -56,8 +41,8 @@ impl Lower<ast::StatementList> for ir::FunctionStatements {
             ast::Statement::Return(_) => todo!(),
             ast::Statement::LocalAssignment(local_assignment) => todo!(),
             ast::Statement::Expression(expression_statement) => todo!(),
-            _ => None,
-        })))
+            _ => todo!(),
+        })?))
     }
 }
 
@@ -71,9 +56,22 @@ impl Lower<ast::FunctionDefinition> for ir::Function {
             id: Identifier::lower(&node.name, context)?,
             signature: ir::FunctionSignature::lower(&node, context)?,
             inner_attr: ir::Attributes::lower(&node.body.statements, context)?,
-            aliases: ir::Aliases::lower(&node, context)?,
-            constants: ir::Constants::lower(&node, context)?,
+            aliases: ir::Aliases::lower(&node.body.statements, context)?,
+            constants: ir::Constants::lower(&node.body.statements, context)?,
             statements: ir::FunctionStatements::lower(&node.body.statements, context)?,
         })
+    }
+}
+
+impl Lower<ast::StatementList> for ir::Functions {
+    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self(extract_statements(node, |stmt| {
+            Ok(match stmt {
+                ast::Statement::Function(function_definition) => {
+                    Some(ir::Function::lower(function_definition, context)?)
+                }
+                _ => None,
+            })
+        })?))
     }
 }

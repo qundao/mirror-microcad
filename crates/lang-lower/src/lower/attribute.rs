@@ -53,7 +53,7 @@ impl Lower<Vec<ast::Attribute>> for ir::Attributes {
 impl Lower<ast::DocBlock> for ir::DocBlock {
     fn lower(node: &ast::DocBlock, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self(Refer::new(
-            node.lines.clone(),
+            node.lines.clone().into_boxed_slice(),
             context.src_ref(&node.span),
         )))
     }
