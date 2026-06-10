@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Lower, LowerContext, LowerError, LowerResult, ir};
+use crate::{Lower, LowerContext, LowerResult, ir};
 
 use microcad_lang_base::Refer;
 use microcad_lang_parse::ast;
@@ -20,6 +20,7 @@ where
         .collect()
 }
 
+/// Helper function to get outer attributes
 pub fn outer_attr(
     doc: &ast::DocBlock,
     attr: &Vec<ast::Attribute>,
@@ -59,7 +60,7 @@ impl Lower<ast::StatementList> for ir::DocBlock {
 }
 
 impl Lower<&[ast::Attribute]> for Box<[ir::Meta]> {
-    fn lower(node: &[&ast::Attribute], context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &[&ast::Attribute], context: &mut LowerContext) -> LowerResult<Self> {
         let mut meta = Vec::new();
 
         node.iter()
@@ -74,7 +75,7 @@ impl Lower<&[ast::Attribute]> for Box<[ir::Meta]> {
                                 vec![identifier],
                                 context.src_ref(&local_assignment.name.span),
                             ),
-                            expr: ir::ConstantExpression::lower(local_assignment.value, context)?,
+                            expr: ir::ConstantExpression::lower(&local_assignment.value, context)?,
                         });
                         Ok(())
                     }
@@ -93,7 +94,7 @@ impl Lower<Vec<ast::Attribute>> for Box<[ir::Meta]> {
 }
 
 impl Lower<ast::StatementList> for Box<[ir::Meta]> {
-    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         let attr: Vec<ast::Attribute> = extract_statements(node, |stmt| match stmt {
             ast::Statement::InnerAttribute(attribute) => Some(*attribute),
             _ => None,
@@ -135,7 +136,7 @@ impl Lower<Vec<ast::Attribute>> for Box<[ir::Command]> {
 }
 
 impl Lower<ast::StatementList> for Box<[ir::Command]> {
-    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         let attr: Vec<ast::Attribute> = extract_statements(node, |stmt| match stmt {
             ast::Statement::InnerAttribute(attribute) => Some(*attribute),
             _ => None,
@@ -174,7 +175,7 @@ impl Lower<Vec<ast::Attribute>> for Box<[ir::Tag]> {
 }
 
 impl Lower<ast::StatementList> for Box<[ir::Tag]> {
-    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         let attr: Vec<ast::Attribute> = extract_statements(node, |stmt| match stmt {
             ast::Statement::InnerAttribute(attribute) => Some(*attribute),
             _ => None,
@@ -185,10 +186,7 @@ impl Lower<ast::StatementList> for Box<[ir::Tag]> {
 }
 
 impl Lower<ast::FunctionDefinition> for ir::Attributes {
-    fn lower(
-        node: &ast::FunctionDefinition,
-        context: &mut LowerContext,
-    ) -> Result<Self, LowerError> {
+    fn lower(node: &ast::FunctionDefinition, context: &mut LowerContext) -> LowerResult<Self> {
         outer_attr(&node.doc, &node.attributes, context)
     }
 }
