@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -60,6 +60,11 @@ Ok(
                                                 [],
                                             ),
                                         },
+                                        doc: DocBlock {
+                                            span: 7..7,
+                                            lines: [],
+                                        },
+                                        attributes: [],
                                         name: Identifier {
                                             span: 7..8,
                                             name: "a",
