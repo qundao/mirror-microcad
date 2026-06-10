@@ -13,14 +13,14 @@ use microcad_lang_base::{
 #[derive(Debug)]
 pub struct Source {
     /// Inner attributes.
-    pub attr: Option<ir::DocBlock>,
+    pub attr: ir::Attributes,
 
     /// List of file modules: `mod foo;`.
     pub file_modules: ir::FileModules,
-    /// Use statements: `use ...`.
-    pub aliases: ir::Aliases,
     /// Inline modules: `mod bar {...}`.
     pub inline_modules: ir::InlineModules,
+    /// Use statements: `use ...`.
+    pub aliases: ir::Aliases,
     /// Constants: `const FOO = 42;`.
     pub constants: ir::Constants,
     /// Functions: `fn foo(...) {...}`.
