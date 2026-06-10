@@ -8,18 +8,46 @@ use microcad_lang_base::Refer;
 use microcad_lang_parse::ast;
 
 /// Helper function to get outer attributes
-pub fn outer(
+pub fn outer_with_doc(
     doc: &ast::DocBlock,
     attr: &Vec<ast::Attribute>,
     context: &mut LowerContext,
 ) -> LowerResult<ir::Attributes> {
-    Ok(ir::Attributes {
-        doc: ir::DocBlock::lower(doc, context)?,
-        meta: Box::<[ir::Meta]>::lower(attr, context)?,
-        commands: Box::<[ir::Command]>::lower(attr, context)?,
-        tags: Box::<[ir::Tag]>::lower(attr, context)?,
-        is_inner: false,
-    })
+    let mut attr = ir::Attributes::lower(attr, context)?;
+    attr.doc = ir::DocBlock::lower(doc, context)?;
+    Ok(attr)
+}
+
+fn extract_attributes<'a, T, F>(
+    i: impl Iterator<Item = &'a ast::Attribute>,
+    mut f: F,
+) -> LowerResult<Box<[T]>>
+where
+    F: FnMut(&ast::AttributeCommand) -> LowerResult<Option<T>>,
+{
+    let mut items = Vec::new();
+    i.flat_map(|attr| attr.commands.iter())
+        .try_for_each(|cmd| -> LowerResult<()> {
+            match f(cmd)? {
+                Some(item) => Ok(items.push(item)),
+                None => Ok(()),
+            }
+        })?;
+
+    Ok(items.into_boxed_slice())
+}
+
+impl Lower<Vec<ast::Attribute>> for ir::Attributes {
+    fn lower(node: &Vec<ast::Attribute>, context: &mut LowerContext) -> LowerResult<Self> {
+        // Generate outer attributes without doc
+        Ok(Self {
+            doc: ir::DocBlock::default(),
+            meta: Box::<[ir::Meta]>::lower(node, context)?,
+            commands: Box::<[ir::Command]>::lower(node, context)?,
+            tags: Box::<[ir::Tag]>::lower(node, context)?,
+            is_inner: false,
+        })
+    }
 }
 
 impl Lower<ast::DocBlock> for ir::DocBlock {
@@ -35,146 +63,138 @@ impl Lower<ast::StatementList> for ir::DocBlock {
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         // This does not check if statements are allowed in this context
         Ok(Self(Refer::new(
-            extract_statements(node, |stmt| match stmt {
-                ast::Statement::InnerDocComment(inner_doc_comment) => {
-                    Some(Ok(inner_doc_comment.line.clone()))
-                }
-                _ => None,
+            extract_statements(node, |stmt| {
+                Ok(match stmt {
+                    ast::Statement::InnerDocComment(inner_doc_comment) => {
+                        Some(inner_doc_comment.line.clone())
+                    }
+                    _ => None,
+                })
             })?,
             context.src_ref(&node.span),
         )))
     }
 }
 
-impl Lower<&[ast::Attribute]> for Box<[ir::Meta]> {
-    fn lower(node: &[&ast::Attribute], context: &mut LowerContext) -> LowerResult<Self> {
-        let mut meta = Vec::new();
-
-        node.iter()
-            .flat_map(|attr| attr.commands.iter())
-            .try_for_each(|cmd| {
-                match cmd {
-                    // 1. Process Metadata Assignments: #[color = "red"]
-                    ast::AttributeCommand::Assignment(local_assignment) => {
-                        let identifier = ir::Identifier::lower(local_assignment.name, context)?;
-                        meta.push(ir::Meta {
-                            name: ir::QualifiedName::new(
-                                vec![identifier],
-                                context.src_ref(&local_assignment.name.span),
-                            ),
-                            expr: ir::ConstantExpression::lower(&local_assignment.value, context)?,
-                        });
-                        Ok(())
-                    }
-                    _ => Ok(()),
+impl Lower<Vec<ast::Attribute>> for Box<[ir::Meta]> {
+    fn lower(node: &Vec<ast::Attribute>, context: &mut LowerContext) -> LowerResult<Self> {
+        extract_attributes(node.into_iter(), |cmd| -> LowerResult<_> {
+            Ok(match cmd {
+                ast::AttributeCommand::Assignment(local_assignment) => {
+                    Some(ir::Meta::lower(local_assignment, context)?)
                 }
-            })?;
-
-        Ok(meta.into_boxed_slice())
+                _ => None,
+            })
+        })
     }
 }
 
-impl Lower<Vec<ast::Attribute>> for Box<[ir::Meta]> {
-    fn lower(node: &Vec<ast::Attribute>, context: &mut LowerContext) -> LowerResult<Self> {
-        Self::lower(&node.as_slice(), context)
+impl Lower<ast::LocalAssignment> for ir::Meta {
+    fn lower(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
+        let identifier = ir::Identifier::lower(&node.name, context)?;
+        Ok(ir::Meta {
+            name: ir::QualifiedName::new(vec![identifier], context.src_ref(&node.name.span)),
+            expr: ir::ConstantExpression::lower(&node.value, context)?,
+        })
     }
 }
 
 impl Lower<ast::StatementList> for Box<[ir::Meta]> {
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
-        let attr: Vec<ast::Attribute> = extract_statements(node, |stmt| match stmt {
-            ast::Statement::InnerAttribute(attribute) => Some(Ok(*attribute)),
-            _ => None,
-        })?;
-
-        Self::lower(&attr, context)
+        extract_attributes(
+            node.statements.iter().filter_map(|(stmt, _)| match stmt {
+                ast::Statement::InnerAttribute(attribute) => Some(attribute),
+                _ => None,
+            }),
+            |cmd| -> LowerResult<_> {
+                Ok(match cmd {
+                    ast::AttributeCommand::Assignment(local_assignment) => {
+                        Some(ir::Meta::lower(local_assignment, context)?)
+                    }
+                    _ => None,
+                })
+            },
+        )
     }
 }
 
-impl Lower<&[ast::Attribute]> for Box<[ir::Command]> {
-    fn lower(node: &Vec<ast::Attribute>, context: &mut LowerContext) -> LowerResult<Self> {
-        let mut commands = Vec::new();
-
-        node.iter()
-            .flat_map(|attr| attr.commands.iter())
-            .try_for_each(|cmd| {
-                match cmd {
-                    // 1. Process Metadata Assignments: #[color = "red"]
-                    ast::AttributeCommand::Call(call) => {
-                        commands.push(ir::Command {
-                            name: ir::QualifiedName::lower(&call.name, context)?,
-                            argument_list: ir::ArgumentList::lower(&call.arguments, context)?,
-                            src_ref: context.src_ref(&call.span),
-                        });
-                        Ok(())
-                    }
-                    _ => Ok(()),
-                }
-            })?;
-
-        Ok(commands.into_boxed_slice())
+impl Lower<ast::Call> for ir::Command {
+    fn lower(node: &ast::Call, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
+            name: ir::QualifiedName::lower(&node.name, context)?,
+            argument_list: ir::ArgumentList::lower(&node.arguments, context)?,
+            src_ref: context.src_ref(&node.span),
+        })
     }
 }
 
 impl Lower<Vec<ast::Attribute>> for Box<[ir::Command]> {
     fn lower(node: &Vec<ast::Attribute>, context: &mut LowerContext) -> LowerResult<Self> {
-        Self::lower(&node.as_slice(), context)
+        extract_attributes(node.iter(), |cmd| -> LowerResult<_> {
+            Ok(match cmd {
+                ast::AttributeCommand::Call(call) => Some(ir::Command::lower(call, context)?),
+                _ => None,
+            })
+        })
     }
 }
 
 impl Lower<ast::StatementList> for Box<[ir::Command]> {
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
-        let attr: Vec<ast::Attribute> = extract_statements(node, |stmt| match stmt {
-            ast::Statement::InnerAttribute(attribute) => Some(Ok(*attribute)),
-            _ => None,
-        })?;
-
-        Self::lower(&attr, context)
+        extract_attributes(
+            node.statements.iter().filter_map(|(stmt, _)| match stmt {
+                ast::Statement::InnerAttribute(attribute) => Some(attribute),
+                _ => None,
+            }),
+            |cmd| -> LowerResult<_> {
+                Ok(match cmd {
+                    ast::AttributeCommand::Call(call) => Some(ir::Command::lower(call, context)?),
+                    _ => None,
+                })
+            },
+        )
     }
 }
 
-impl Lower<&[ast::Attribute]> for Box<[ir::Tag]> {
-    fn lower(node: &[ast::Attribute], context: &mut LowerContext) -> LowerResult<Self> {
-        let mut commands = Vec::new();
-
-        node.iter()
-            .flat_map(|attr| attr.commands.iter())
-            .try_for_each(|cmd| {
-                match cmd {
-                    // 1. Process Metadata Assignments: #[color = "red"]
-                    ast::AttributeCommand::Ident(tag) => {
-                        commands.push(ir::Tag {
-                            name: ir::Identifier::lower(&tag.name, context)?,
-                        });
-                        Ok(())
-                    }
-                    _ => Ok(()),
-                }
-            })?;
-
-        Ok(commands.into_boxed_slice())
+impl Lower<ast::Identifier> for ir::Tag {
+    fn lower(node: &ast::Identifier, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
+            name: ir::Identifier::lower(node, context)?,
+        })
     }
 }
+
 impl Lower<Vec<ast::Attribute>> for Box<[ir::Tag]> {
     fn lower(node: &Vec<ast::Attribute>, context: &mut LowerContext) -> LowerResult<Self> {
-        Self::lower(&node.as_slice(), context)
+        extract_attributes(node.iter(), |cmd| -> LowerResult<_> {
+            Ok(match cmd {
+                ast::AttributeCommand::Ident(ident) => Some(ir::Tag::lower(ident, context)?),
+                _ => None,
+            })
+        })
     }
 }
 
 impl Lower<ast::StatementList> for Box<[ir::Tag]> {
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
-        let attr: Vec<ast::Attribute> = extract_statements(node, |stmt| match stmt {
-            ast::Statement::InnerAttribute(attribute) => Some(Ok(*attribute)),
-            _ => None,
-        })?;
-
-        Self::lower(&attr, context)
+        extract_attributes(
+            node.statements.iter().filter_map(|(stmt, _)| match stmt {
+                ast::Statement::InnerAttribute(attribute) => Some(attribute),
+                _ => None,
+            }),
+            |cmd| -> LowerResult<_> {
+                Ok(match cmd {
+                    ast::AttributeCommand::Ident(ident) => Some(ir::Tag::lower(ident, context)?),
+                    _ => None,
+                })
+            },
+        )
     }
 }
 
 impl Lower<ast::WorkbenchDefinition> for ir::Attributes {
     fn lower(node: &ast::WorkbenchDefinition, context: &mut LowerContext) -> LowerResult<Self> {
-        outer(&node.doc, &node.attributes, context)
+        outer_with_doc(&node.doc, &node.attributes, context)
     }
 }
 

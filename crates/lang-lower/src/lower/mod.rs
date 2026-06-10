@@ -6,15 +6,11 @@
 mod attribute;
 mod constant;
 mod expression;
-mod format_string;
 mod function;
-mod identifier;
-mod init_definition;
 mod lang_type;
 mod module;
 mod parameter;
 mod source;
-mod statement;
 mod r#type;
 mod workbench;
 
@@ -75,7 +71,7 @@ pub enum LowerError {
     /// An invalid literal was encountered
     #[error("Invalid literal: {error}")]
     InvalidLiteral {
-        error: LiteralErrorKind,
+        error: ast::LiteralErrorKind,
         #[label("{error}")]
         src_ref: SrcRef,
     },
@@ -174,8 +170,6 @@ impl SrcReferrer for LowerErrorsWithSource {
     }
 }
 
-use microcad_lang_parse::ast;
-
 pub(crate) fn build_ast(
     source: &str,
     lower_context: &mut LowerContext,
@@ -209,13 +203,21 @@ pub fn extract_statements<F, T>(
     mut extractor: F,
 ) -> LowerResult<Vec<T>>
 where
-    F: FnMut(&ast::Statement) -> Option<LowerResult<T>>,
+    F: FnMut(&ast::Statement) -> LowerResult<Option<T>>,
 {
-    Ok(statements
+    let mut mapped = Vec::new();
+    statements
         .statements
         .iter()
-        .filter_map(|(statement, _)| extractor(statement))
-        .collect::<Result<Vec<T>, _>>()?)
+        .try_for_each(|(stmt, _)| -> Result<(), LowerError> {
+            match extractor(stmt)? {
+                Some(m) => mapped.push(m),
+                None => {}
+            }
+            Ok(())
+        })?;
+
+    Ok(mapped)
 }
 
 impl Lower<Option<ast::Visibility>> for ir::Visibility {
@@ -224,6 +226,15 @@ impl Lower<Option<ast::Visibility>> for ir::Visibility {
             Some(ast::Visibility::Public) => Self::Public,
             None => Self::Private,
         })
+    }
+}
+
+impl Lower<ast::Identifier> for ir::Identifier {
+    fn lower(node: &ast::Identifier, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self(Refer::new(
+            node.name.clone(),
+            context.src_ref(&node.span),
+        )))
     }
 }
 
@@ -251,39 +262,39 @@ impl Lower<ast::StatementList> for ir::Aliases {
         Ok(Self {
             explicit_aliases: extract_statements(node, |stmt| match stmt {
                 ast::Statement::Use(use_statement) => match use_statement.name.parts.last() {
-                    Some(ast::UseStatementPart::Identifier(id)) => Some(Ok(ir::ExplicitAlias {
-                        attr: crate::lower::attribute::outer(
-                            &ast::DocBlock::default(),
-                            &use_statement.attributes,
-                            context,
-                        )?,
+                    Some(ast::UseStatementPart::Identifier(id)) => Ok(Some(ir::ExplicitAlias {
+                        attr: ir::Attributes::lower(&use_statement.attributes, context)?,
                         keyword_src_ref: context.src_ref(&use_statement.keyword_span),
                         visibility: ir::Visibility::lower(&use_statement.visibility, context)?,
                         path: ir::QualifiedName::lower(&use_statement.name, context)?,
-                        id: ir::Identifier::lower(&id, context)?,
+                        id: ir::Identifier::lower(
+                            match &use_statement.use_as {
+                                // Use id `C` from `as C`
+                                Some(id) => id,
+                                // Use id `Circle` from last part of path `std::geo2d::Circle`
+                                None => id,
+                            },
+                            context,
+                        )?,
                     })),
                     None => unreachable!(),
-                    Some(_) => None,
+                    Some(_) => Ok(None),
                 },
-                _ => None,
+                _ => Ok(None),
             })?
             .into_boxed_slice(),
             wildcards: extract_statements(node, |stmt| match stmt {
                 ast::Statement::Use(use_statement) => match use_statement.name.parts.last() {
-                    Some(ast::UseStatementPart::Glob(_)) => Some(Ok(ir::WildcardAlias {
-                        attr: crate::lower::attribute::outer(
-                            &ast::DocBlock::default(),
-                            &use_statement.attributes,
-                            context,
-                        )?,
+                    Some(ast::UseStatementPart::Glob(_)) => Ok(Some(ir::WildcardAlias {
+                        attr: ir::Attributes::lower(&use_statement.attributes, context)?,
                         keyword_src_ref: context.src_ref(&use_statement.keyword_span),
                         visibility: ir::Visibility::lower(&use_statement.visibility, context)?,
                         path: ir::QualifiedName::lower(&use_statement.name, context)?,
                     })),
                     None => unreachable!(),
-                    Some(_) => None,
+                    Some(_) => Ok(None),
                 },
-                _ => None,
+                _ => Ok(None),
             })?
             .into_boxed_slice(),
         })

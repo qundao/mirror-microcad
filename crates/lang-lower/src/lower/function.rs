@@ -8,7 +8,7 @@ use microcad_lang_parse::ast;
 
 impl Lower<ast::FunctionDefinition> for ir::Attributes {
     fn lower(node: &ast::FunctionDefinition, context: &mut LowerContext) -> LowerResult<Self> {
-        crate::lower::attribute::outer(&node.doc, &node.attributes, context)
+        crate::lower::attribute::outer_with_doc(&node.doc, &node.attributes, context)
     }
 }
 
@@ -50,7 +50,16 @@ impl Lower<ast::FunctionDefinition> for ir::Aliases {
     }
 }
 
-impl Lower<ast::FunctionDefinition> for Vec<ir::FunctionStatement> {}
+impl Lower<ast::StatementList> for ir::FunctionStatements {
+    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self(extract_statements(node, |stmt| match stmt {
+            ast::Statement::Return(_) => todo!(),
+            ast::Statement::LocalAssignment(local_assignment) => todo!(),
+            ast::Statement::Expression(expression_statement) => todo!(),
+            _ => None,
+        })))
+    }
+}
 
 impl Lower<ast::FunctionDefinition> for ir::Function {
     fn lower(node: &ast::FunctionDefinition, context: &mut LowerContext) -> LowerResult<Self> {
@@ -64,7 +73,7 @@ impl Lower<ast::FunctionDefinition> for ir::Function {
             inner_attr: ir::Attributes::lower(&node.body.statements, context)?,
             aliases: ir::Aliases::lower(&node, context)?,
             constants: ir::Constants::lower(&node, context)?,
-            statements: Vec::<ir::FunctionStatement>::lower(&node, context)?,
+            statements: ir::FunctionStatements::lower(&node.body.statements, context)?,
         })
     }
 }

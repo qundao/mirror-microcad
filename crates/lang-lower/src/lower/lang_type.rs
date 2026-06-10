@@ -1,15 +1,13 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Lower, LowerContext, LowerError, LowerResult, ir};
+use crate::{Lower, LowerContext, LowerResult, ir};
 use microcad_lang_parse::ast;
 use microcad_lang_types::ty;
 
-impl Lower for ir::TupleType {
-    type AstNode = ast::TupleType;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(ty::TupleType {
+impl Lower<ast::TupleType> for ir::TupleType {
+    fn lower(node: &ast::TupleType, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
             named: node
                 .inner
                 .iter()
