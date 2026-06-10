@@ -28,8 +28,10 @@ pub use workbench::*;
 pub use microcad_lang_base::Identifier;
 pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Ty, Type, Unit};
 
-use microcad_lang_base::Refer;
+use microcad_lang_base::{Refer, SrcRef};
 use microcad_lang_proc_macros::SrcReferrer;
+
+use crate::ir;
 
 /// Visibility of an entity.
 ///
@@ -69,12 +71,29 @@ impl Ty for TypeAnnotation {
     }
 }
 
+/// `use std::geo2d::Circle as C` => (path = "std::geo2d::Circle", id = "C")
+/// `use std::geo2d::Circle` => (path = "std::geo2d::Circle", id = "Circle")
+#[derive(Debug)]
+pub struct ExplicitAlias {
+    pub attr: ir::Attributes,
+    pub visibility: ir::Visibility,
+    pub keyword_src_ref: SrcRef,
+    pub path: QualifiedName,
+    pub id: Identifier,
+}
+
+/// `use std::geo2d::*`
+#[derive(Debug)]
+pub struct WildcardAlias {
+    pub attr: ir::Attributes,
+    pub visibility: ir::Visibility,
+    pub keyword_src_ref: SrcRef,
+    pub path: QualifiedName,
+}
+
 /// Aliases lowered from `use` statements.
 #[derive(Debug)]
 pub struct Aliases {
-    /// `use std::geo2d::Circle as C` => ("std::geo2d::Circle", "C")
-    /// `use std::geo2d::Circle` => ("std::geo2d::Circle", "Circle")
-    names: Vec<(QualifiedName, Identifier)>,
-    /// `use std::geo2d::*`
-    globs: Vec<QualifiedName>,
+    pub explicit_aliases: Box<[ExplicitAlias]>,
+    pub wildcards: Box<[WildcardAlias]>,
 }
