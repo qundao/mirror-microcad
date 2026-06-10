@@ -29,7 +29,8 @@ pub struct WorkbenchStatements(pub Box<[WorkbenchStatement]>);
 pub struct Group(pub Refer<Box<[WorkbenchStatement]>>);
 
 #[derive(Debug)]
-pub struct InitBody(pub Vec<ir::LocalAssignment<ir::WorkbenchExpression>>);
+pub struct InitBody(pub Box<[ir::LocalAssignment<ir::WorkbenchExpression>]>);
+
 #[derive(Debug)]
 pub struct Init {
     /// SrcRef of the `init` keyword
@@ -45,7 +46,7 @@ pub struct Init {
 }
 
 #[derive(Debug)]
-pub struct Inits(pub Vec<Init>);
+pub struct Inits(pub Box<[Init]>);
 
 /// Node marker, e.g. `@input`.
 #[derive(Debug)]
@@ -99,26 +100,24 @@ pub struct Workbench {
     pub keyword_ref: SrcRef,
     /// Workbench outer attributes.
     pub outer_attr: ir::Attributes,
-
     /// Visibility from outside modules.
     pub visibility: ir::Visibility,
     /// Workbench kind.
     pub kind: Refer<WorkbenchKind>,
     /// Workbench name.
-    pub(crate) id: ir::Identifier,
+    pub id: ir::Identifier,
     /// Workbench's building plan.
     pub parameters: ir::ParameterList,
-
     /// Workbench inner attributes
     pub inner_attr: ir::Attributes,
-
+    /// `use`
     pub aliases: ir::Aliases,
-
+    /// `const`
     pub constants: ir::Constants,
-
+    /// `init`
     pub inits: ir::Inits,
-
-    pub statements: Vec<WorkbenchStatement>,
+    /// The actual statements building the model
+    pub statements: ir::WorkbenchStatements,
 }
 
 impl Workbench {

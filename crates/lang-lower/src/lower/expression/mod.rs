@@ -4,6 +4,7 @@
 use crate::{Lower, LowerContext, LowerError, LowerResult, ir};
 
 mod call;
+mod format_string;
 mod literal;
 
 use microcad_lang_base::{Identifier, PushDiag, Refer};
@@ -129,6 +130,34 @@ impl Lower<ast::Identifier> for ir::Marker {
     fn lower(node: &ast::Identifier, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             id: Identifier::lower(node, context)?,
+            src_ref: context.src_ref(&node.span),
+        })
+    }
+}
+
+impl<EXPR, BODY> Lower<ast::If> for ir::If<EXPR, BODY>
+where
+    EXPR: Lower<ast::Expression>,
+    BODY: Lower<ast::Body>,
+{
+    fn lower(node: &ast::If, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(ir::If {
+            if_ref: context.src_ref(&node.if_span),
+            cond: Box::new(EXPR::lower(node.condition.as_ref(), context)?),
+            body: BODY::lower(&node.body, context)?,
+            next_if_ref: node.next_if_span.as_ref().map(|span| context.src_ref(span)),
+            next_if: node
+                .next_if
+                .as_ref()
+                .map(|next| ir::If::lower(next, context))
+                .transpose()?
+                .map(Box::new),
+            else_ref: node.else_span.as_ref().map(|span| context.src_ref(span)),
+            body_else: node
+                .else_body
+                .as_ref()
+                .map(|body| BODY::lower(body, context))
+                .transpose()?,
             src_ref: context.src_ref(&node.span),
         })
     }

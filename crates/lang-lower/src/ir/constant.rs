@@ -13,7 +13,6 @@ pub struct Constant {
     pub attr: ir::Attributes,
     pub visibility: ir::Visibility,
     pub keyword_src_ref: SrcRef,
-    pub src_ref: SrcRef,
     pub id: ir::Identifier,
     pub ty: Option<ir::TypeAnnotation>,
     pub expr: ir::ConstantExpression,

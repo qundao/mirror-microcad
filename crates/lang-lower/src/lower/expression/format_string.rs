@@ -1,29 +1,28 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Lower, LowerContext, LowerError, ir};
+use crate::{Lower, LowerContext, LowerError, LowerResult, ir};
 use microcad_lang_base::Refer;
 use microcad_lang_parse::ast;
 
-impl Lower for ir::FormatExpression {
-    type AstNode = ast::StringExpression;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(ir::FormatExpression::new(
+impl Lower<ast::StringExpression> for ir::FormatExpression {
+    fn lower(node: &ast::StringExpression, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self::new(
             node.specification
                 .is_some()
                 .then(|| ir::FormatSpec::lower(&node.specification, context))
                 .transpose()?,
-            ir::Expression::lower(&node.expression, context)?,
+            ir::ConstantExpression::lower(&node.expression, context)?,
             context.src_ref(&node.span),
         ))
     }
 }
 
-impl Lower for ir::FormatSpec {
-    type AstNode = ast::StringFormatSpecification;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
+impl Lower<ast::StringFormatSpecification> for ir::FormatSpec {
+    fn lower(
+        node: &ast::StringFormatSpecification,
+        context: &mut LowerContext,
+    ) -> LowerResult<Self> {
         fn transpose_ref<T: Clone, E: Clone>(opt: &Option<Result<T, E>>) -> Result<Option<&T>, E> {
             match opt.as_ref() {
                 None => Ok(None),
@@ -47,10 +46,8 @@ impl Lower for ir::FormatSpec {
     }
 }
 
-impl Lower for ir::FormatString {
-    type AstNode = ast::FormatString;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
+impl Lower<ast::FormatString> for ir::FormatString {
+    fn lower(node: &ast::FormatString, context: &mut LowerContext) -> LowerResult<Self> {
         let parts = node
             .parts
             .iter()
@@ -63,10 +60,8 @@ impl Lower for ir::FormatString {
     }
 }
 
-impl Lower for ir::FormatStringInner {
-    type AstNode = ast::StringPart;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
+impl Lower<ast::StringPart> for ir::FormatStringInner {
+    fn lower(node: &ast::StringPart, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
             ast::StringPart::Char(c) => ir::FormatStringInner::String(Refer::new(
                 c.character.into(),
