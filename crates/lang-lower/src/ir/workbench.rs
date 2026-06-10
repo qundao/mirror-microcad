@@ -149,4 +149,4 @@ impl std::fmt::Display for Workbench {
 }
 
 #[derive(Debug, Default)]
-pub struct Workbenches(pub Vec<Workbench>);
+pub struct Workbenches(pub Box<[Workbench]>);
