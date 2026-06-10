@@ -85,5 +85,5 @@ impl<'source> LowerContext<'source> {
 }
 
 pub trait Lower<AstNode> {
-    fn lower(node: &AstNode, context: &mut LowerContext) -> Result<Self, LowerError>;
+    fn lower(node: &AstNode, context: &mut LowerContext) -> LowerResult<Self>;
 }
