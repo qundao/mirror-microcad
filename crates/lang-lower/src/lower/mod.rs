@@ -4,28 +4,28 @@
 //! Lowering the AST.
 
 mod attribute;
-mod call;
+mod constant;
 mod expression;
 mod format_string;
 mod function;
 mod identifier;
 mod init_definition;
 mod lang_type;
-mod literal;
 mod module;
 mod parameter;
 mod source;
 mod statement;
 mod r#type;
-mod r#use;
 mod workbench;
 
 use microcad_lang_base::{Hashed, Identifier, Refer, SrcRef, SrcReferrer};
-use microcad_lang_parse::ast::LiteralErrorKind;
+use microcad_lang_parse::ast;
 use microcad_lang_parse::parse;
 use microcad_lang_types::ty::TypeError;
 use miette::{Diagnostic, SourceCode};
 use thiserror::Error;
+
+use crate::{Lower, LowerContext, ir};
 
 /// Parsing errors
 #[derive(Debug, Error, Diagnostic)]
@@ -174,10 +174,12 @@ impl SrcReferrer for LowerErrorsWithSource {
     }
 }
 
+use microcad_lang_parse::ast;
+
 pub(crate) fn build_ast(
     source: &str,
-    lower_context: &mut super::LowerContext,
-) -> Result<microcad_lang_parse::ast::Program, LowerErrorsWithSource> {
+    lower_context: &mut LowerContext,
+) -> Result<ast::Program, LowerErrorsWithSource> {
     parse(source).map_err(|errors| {
         let errors = errors
             .0
@@ -197,4 +199,93 @@ pub(crate) fn build_ast(
             ),
         }
     })
+}
+
+/// Extracts and maps specific variants out of a statement collection tuple list.
+///
+/// Does not check if the statements are actually valid in this context.
+pub fn extract_statements<F, T>(
+    statements: &ast::StatementList,
+    mut extractor: F,
+) -> LowerResult<Vec<T>>
+where
+    F: FnMut(&ast::Statement) -> Option<LowerResult<T>>,
+{
+    Ok(statements
+        .statements
+        .iter()
+        .filter_map(|(statement, _)| extractor(statement))
+        .collect::<Result<Vec<T>, _>>()?)
+}
+
+impl Lower<Option<ast::Visibility>> for ir::Visibility {
+    fn lower(node: &Option<ast::Visibility>, _context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(match node {
+            Some(ast::Visibility::Public) => Self::Public,
+            None => Self::Private,
+        })
+    }
+}
+
+impl Lower<ast::UseName> for ir::QualifiedName {
+    fn lower(node: &ast::UseName, context: &mut LowerContext) -> LowerResult<Self> {
+        let name = node
+            .parts
+            .iter()
+            .filter_map(|part| match part {
+                ast::UseStatementPart::Identifier(ident) => {
+                    Some(ir::Identifier::lower(ident, context))
+                }
+                ast::UseStatementPart::Glob(_) => None,
+                ast::UseStatementPart::Error(_) => None,
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+
+        let name = ir::QualifiedName::new(name, context.src_ref(&node.span));
+        Ok(name)
+    }
+}
+
+impl Lower<ast::StatementList> for ir::Aliases {
+    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
+            explicit_aliases: extract_statements(node, |stmt| match stmt {
+                ast::Statement::Use(use_statement) => match use_statement.name.parts.last() {
+                    Some(ast::UseStatementPart::Identifier(id)) => Some(Ok(ir::ExplicitAlias {
+                        attr: crate::lower::attribute::outer(
+                            &ast::DocBlock::default(),
+                            &use_statement.attributes,
+                            context,
+                        )?,
+                        keyword_src_ref: context.src_ref(&use_statement.keyword_span),
+                        visibility: ir::Visibility::lower(&use_statement.visibility, context)?,
+                        path: ir::QualifiedName::lower(&use_statement.name, context)?,
+                        id: ir::Identifier::lower(&id, context)?,
+                    })),
+                    None => unreachable!(),
+                    Some(_) => None,
+                },
+                _ => None,
+            })?
+            .into_boxed_slice(),
+            wildcards: extract_statements(node, |stmt| match stmt {
+                ast::Statement::Use(use_statement) => match use_statement.name.parts.last() {
+                    Some(ast::UseStatementPart::Glob(_)) => Some(Ok(ir::WildcardAlias {
+                        attr: crate::lower::attribute::outer(
+                            &ast::DocBlock::default(),
+                            &use_statement.attributes,
+                            context,
+                        )?,
+                        keyword_src_ref: context.src_ref(&use_statement.keyword_span),
+                        visibility: ir::Visibility::lower(&use_statement.visibility, context)?,
+                        path: ir::QualifiedName::lower(&use_statement.name, context)?,
+                    })),
+                    None => unreachable!(),
+                    Some(_) => None,
+                },
+                _ => None,
+            })?
+            .into_boxed_slice(),
+        })
+    }
 }

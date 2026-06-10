@@ -8,7 +8,7 @@ use microcad_lang_types::ty;
 impl Lower for ir::TupleType {
     type AstNode = ast::TupleType;
 
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ty::TupleType {
             named: node
                 .inner

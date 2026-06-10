@@ -10,7 +10,7 @@ impl ir::ModuleDefinition {
     pub fn from_ast_inline(
         node: &ast::InlineModule,
         context: &mut LowerContext,
-    ) -> Result<Self, LowerError> {
+    ) -> LowerResult<Self> {
         Ok(Self {
             keyword_ref: context.src_ref(&node.keyword_span),
             doc: ir::DocBlock::lower(&node.doc, context)?,
@@ -29,7 +29,7 @@ impl ir::ModuleDefinition {
     pub fn from_ast_file(
         node: &ast::FileModule,
         context: &mut LowerContext,
-    ) -> Result<Self, LowerError> {
+    ) -> LowerResult<Self> {
         Ok(Self {
             keyword_ref: context.src_ref(&node.keyword_span),
             doc: ir::DocBlock::lower(&node.doc, context)?,

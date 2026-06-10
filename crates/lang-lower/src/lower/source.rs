@@ -127,7 +127,7 @@ impl ir::Source {
 impl Lower for ir::Source {
     type AstNode = ast::Program;
 
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
+    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::Source::new(
             None, // todo
             ir::StatementList::lower(&node.statements, context)?,
