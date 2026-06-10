@@ -46,7 +46,7 @@ pub enum Visibility {
 }
 
 /// Lines of inner or outer doc block including prefix `///`/`//!`.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Default, PartialEq)]
 pub struct DocBlock<REF = SrcRef> {
     pub src_ref: REF,
     pub lines: Vec<String>,
@@ -58,7 +58,7 @@ pub struct DocBlock<REF = SrcRef> {
 pub struct BinaryOperation<EXPR> {
     pub src_ref: SrcRef,
     pub lhs: Box<EXPR>,
-    pub operation: Refer<BinaryOperator>,
+    pub op: Refer<BinaryOperator>,
     pub rhs: Box<EXPR>,
 }
 
@@ -117,6 +117,6 @@ pub enum UnaryOperator {
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
 pub struct UnaryOperation<EXPR> {
-    pub operation: UnaryOperator,
+    pub op: UnaryOperator,
     pub rhs: Box<EXPR>,
 }
