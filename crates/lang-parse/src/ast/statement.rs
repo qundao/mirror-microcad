@@ -233,6 +233,8 @@ impl ast::Dummy for ParameterList {
 pub struct Parameter {
     pub span: Span,
     pub extras: ast::ItemExtras,
+    pub doc: ast::DocBlock,
+    pub attributes: Vec<Attribute>,
     pub name: ast::Identifier,
     pub ty: Option<ast::Type>,
     pub default: Option<ast::Expression>,
