@@ -41,20 +41,6 @@ pub trait Identifiable {
     }
 }
 
-/// Interface for elements which have *initializers*.
-pub trait Initialized<'a> {
-    /// return iterator of body statements.
-    fn statements(&'a self) -> std::slice::Iter<'a, ir::Statement>;
-
-    /// Return iterator over all initializers.
-    fn inits(&'a self) -> ir::Inits<'a>
-    where
-        Self: std::marker::Sized,
-    {
-        ir::Inits::new(self)
-    }
-}
-
 pub struct LowerContext<'source> {
     pub source: Hashed<&'source str>,
     line_index: LineIndex,
