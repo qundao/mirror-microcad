@@ -198,18 +198,21 @@ pub(crate) fn build_ast(
 /// Extracts and maps specific variants out of a statement collection tuple list.
 ///
 /// Does not check if the statements are actually valid in this context.
-pub fn extract_statements<F, T>(
+pub fn extract_statements_with_tail<F, G, T>(
     statements: &ast::StatementList,
     mut extractor: F,
-) -> LowerResult<Vec<T>>
+    mut tail_extractor: G,
+) -> LowerResult<Box<[T]>>
 where
     F: FnMut(&ast::Statement) -> LowerResult<Option<T>>,
+    G: FnMut(&ast::ExpressionStatement) -> LowerResult<Option<T>>,
 {
     let mut mapped = Vec::new();
     statements
         .statements
         .iter()
-        .try_for_each(|(stmt, _)| -> Result<(), LowerError> {
+        .map(|(stmt, _)| stmt)
+        .try_for_each(|stmt| -> Result<(), LowerError> {
             match extractor(stmt)? {
                 Some(m) => mapped.push(m),
                 None => {}
@@ -217,7 +220,41 @@ where
             Ok(())
         })?;
 
-    Ok(mapped)
+    match &statements.tail {
+        Some(tail) => match tail_extractor(tail)? {
+            Some(m) => mapped.push(m),
+            None => {}
+        },
+        None => {}
+    }
+
+    Ok(mapped.into_boxed_slice())
+}
+
+/// Extracts and maps specific variants out of a statement collection tuple list.
+///
+/// Does not check if the statements are actually valid in this context.
+pub fn extract_statements<F, T>(
+    statements: &ast::StatementList,
+    mut extractor: F,
+) -> LowerResult<Box<[T]>>
+where
+    F: FnMut(&ast::Statement) -> LowerResult<Option<T>>,
+{
+    let mut mapped = Vec::new();
+    statements
+        .statements
+        .iter()
+        .map(|(stmt, _)| stmt)
+        .try_for_each(|stmt| -> Result<(), LowerError> {
+            match extractor(stmt)? {
+                Some(m) => mapped.push(m),
+                None => {}
+            }
+            Ok(())
+        })?;
+
+    Ok(mapped.into_boxed_slice())
 }
 
 impl Lower<Option<ast::Visibility>> for ir::Visibility {
@@ -281,8 +318,7 @@ impl Lower<ast::StatementList> for ir::Aliases {
                     Some(_) => Ok(None),
                 },
                 _ => Ok(None),
-            })?
-            .into_boxed_slice(),
+            })?,
             wildcards: extract_statements(node, |stmt| match stmt {
                 ast::Statement::Use(use_statement) => match use_statement.name.parts.last() {
                     Some(ast::UseStatementPart::Glob(_)) => Ok(Some(ir::WildcardAlias {
@@ -295,8 +331,7 @@ impl Lower<ast::StatementList> for ir::Aliases {
                     Some(_) => Ok(None),
                 },
                 _ => Ok(None),
-            })?
-            .into_boxed_slice(),
+            })?,
         })
     }
 }
