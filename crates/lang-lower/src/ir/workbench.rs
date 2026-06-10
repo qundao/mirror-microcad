@@ -34,7 +34,7 @@ pub struct InitBody(pub Vec<ir::LocalAssignment<ir::WorkbenchExpression>>);
 pub struct Init {
     /// SrcRef of the `init` keyword
     pub keyword_ref: SrcRef,
-    /// Documentation.
+    /// Outer attributes.
     pub attr: ir::Attributes,
     /// Parameter list for this init definition
     pub parameters: ir::ParameterList,
