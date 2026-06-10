@@ -3,17 +3,13 @@
 
 //! µcad format expression syntax elements
 
-mod format_expression;
-mod format_spec;
-
-pub use format_expression::*;
-pub use format_spec::*;
+use crate::ir;
 
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;
 
 /// Format string item.
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub enum FormatStringInner {
     /// String literal.
     String(Refer<String>),
@@ -31,7 +27,7 @@ impl SrcReferrer for FormatStringInner {
 }
 
 /// Format string.
-#[derive(Default, Clone, Debug, SrcReferrer)]
+#[derive(Default, Debug, SrcReferrer)]
 pub struct FormatString(pub Refer<Vec<FormatStringInner>>);
 
 impl FormatString {
@@ -73,5 +69,63 @@ impl std::fmt::Display for FormatString {
         }
         write!(f, r#"""#)?;
         Ok(())
+    }
+}
+
+/// Format expression including format specification.
+#[derive(Debug, SrcReferrer)]
+pub struct FormatExpression {
+    /// Format specifier
+    pub spec: Option<ir::FormatSpec>,
+    /// Expression to format
+    pub expression: ir::ConstantExpression,
+    /// Source code reference
+    src_ref: SrcRef,
+}
+
+impl FormatExpression {
+    /// Create new format expression.
+    pub fn new(
+        spec: Option<ir::FormatSpec>,
+        expression: ir::ConstantExpression,
+        src_ref: SrcRef,
+    ) -> Self {
+        Self {
+            src_ref,
+            spec,
+            expression,
+        }
+    }
+}
+
+impl std::fmt::Display for FormatExpression {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        if let Some(spec) = &self.spec {
+            write!(f, "{{{}:{}}}", spec, self.expression)
+        } else {
+            write!(f, "{{{}}}", self.expression)
+        }
+    }
+}
+
+/// Format specification.
+#[derive(Debug, Default, PartialEq, SrcReferrer)]
+pub struct FormatSpec {
+    /// Precision for number formatting.
+    pub precision: Option<u32>,
+    /// Alignment width (leading zeros).
+    pub width: Option<u32>,
+    /// Source code reference.
+    pub src_ref: SrcRef,
+}
+
+impl std::fmt::Display for FormatSpec {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match (self.width, self.precision) {
+            (Some(width), Some(precision)) => write!(f, "0{width}.{precision}"),
+            (None, Some(precision)) => write!(f, ".{precision}"),
+            (Some(width), None) => write!(f, "0{width}"),
+            _ => Ok(()),
+        }
     }
 }

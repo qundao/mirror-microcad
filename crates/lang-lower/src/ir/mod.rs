@@ -7,44 +7,78 @@
 
 pub mod assignment;
 pub mod attribute;
-pub mod body;
-pub mod call;
+pub mod constant;
 pub mod doc_block;
 pub mod expression;
-pub mod format_string;
 pub mod function;
-pub mod identifier;
-pub mod init_definition;
 pub mod literal;
 pub mod module;
 pub mod parameter;
-pub mod qualifier;
 pub mod source;
-pub mod statement;
-pub mod type_annotation;
-pub mod r#use;
-pub mod visibility;
 pub mod workbench;
 
 pub use assignment::*;
 pub use attribute::*;
-pub use body::*;
-pub use call::*;
+pub use constant::*;
 pub use doc_block::*;
 pub use expression::*;
-pub use format_string::*;
 pub use function::*;
-pub use identifier::*;
-pub use init_definition::*;
 pub use literal::*;
+use microcad_lang_base::Refer;
 pub use module::*;
 pub use parameter::*;
-pub use qualifier::*;
 pub use source::*;
-pub use statement::*;
-pub use type_annotation::*;
-pub use r#use::*;
-pub use visibility::*;
 pub use workbench::*;
 
-pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Type, Unit};
+pub use microcad_lang_proc_macros::SrcReferrer;
+pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Ty, Type, Unit};
+
+pub use microcad_lang_base::Identifier;
+
+/// Visibility of an entity.
+///
+/// This is used to determine if an entity is public or private.
+/// By default, entities are private.
+#[derive(Clone, Debug, Default, PartialEq)]
+pub enum Visibility {
+    /// Private visibility
+    #[default]
+    Private,
+    /// Public visibility
+    Public,
+}
+
+impl std::fmt::Display for Visibility {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Visibility::Private => Ok(()),
+            Visibility::Public => write!(f, "pub "),
+        }
+    }
+}
+
+/// Type within source code.
+#[derive(Clone, Debug, PartialEq, SrcReferrer)]
+pub struct TypeAnnotation(pub Refer<Type>);
+
+impl std::fmt::Display for TypeAnnotation {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+impl Ty for TypeAnnotation {
+    fn ty(&self) -> Type {
+        self.0.value.clone()
+    }
+}
+
+/// Aliases lowered from `use` statements.
+#[derive(Debug)]
+pub struct Aliases {
+    /// `use std::geo2d::Circle as C` => ("std::geo2d::Circle", "C")
+    /// `use std::geo2d::Circle` => ("std::geo2d::Circle", "Circle")
+    names: Vec<(QualifiedName, Identifier)>,
+    /// `use std::geo2d::*`
+    globs: Vec<QualifiedName>,
+}

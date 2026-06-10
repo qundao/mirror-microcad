@@ -6,11 +6,10 @@
 use crate::ir;
 
 use microcad_lang_base::{Identifier, SrcRef};
-use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
 
 /// A local assignment specifying an identifier, type and value
-#[derive(Clone, Debug, SrcReferrer, Identifiable)]
-pub struct LocalAssignment<EXPR = ir::Expression> {
+#[derive(Clone, Debug)]
+pub struct LocalAssignment<EXPR> {
     /// Assignee
     pub(crate) id: Identifier,
     /// Type of the assignee
@@ -21,7 +20,10 @@ pub struct LocalAssignment<EXPR = ir::Expression> {
     pub src_ref: SrcRef,
 }
 
-impl std::fmt::Display for LocalAssignment {
+impl<EXPR> std::fmt::Display for LocalAssignment<EXPR>
+where
+    EXPR: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         use microcad_lang_types::ty::Ty;
         match &self.specified_type {

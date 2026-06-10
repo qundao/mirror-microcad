@@ -5,13 +5,10 @@
 
 use derive_more::Deref;
 use microcad_lang_base::SrcRef;
-use microcad_lang_proc_macros::SrcReferrer;
-
-use crate::ir;
 
 /// Range start.
-#[derive(Clone, Debug, Default, Deref, PartialEq, SrcReferrer)]
-pub struct RangeFirst<EXPR = ir::Expression>(pub Box<EXPR>);
+#[derive(Clone, Debug, Default, Deref, PartialEq)]
+pub struct RangeFirst<EXPR>(pub Box<EXPR>);
 
 impl<EXPR> std::fmt::Display for RangeFirst<EXPR>
 where
@@ -23,8 +20,8 @@ where
 }
 
 /// Range end.
-#[derive(Clone, Debug, Default, Deref, PartialEq, SrcReferrer)]
-pub struct RangeLast<EXPR = ir::Expression>(pub Box<EXPR>);
+#[derive(Clone, Debug, Default, Deref, PartialEq)]
+pub struct RangeLast<EXPR>(pub Box<EXPR>);
 
 impl<EXPR> std::fmt::Display for RangeLast<EXPR>
 where
@@ -36,8 +33,8 @@ where
 }
 
 /// Range expression, e.g. `a..b`.
-#[derive(Clone, Debug, Default, PartialEq, SrcReferrer)]
-pub struct RangeExpression<EXPR = ir::Expression> {
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct RangeExpression<EXPR> {
     /// First value in the range.
     pub first: RangeFirst<EXPR>,
     /// Last value in the range.

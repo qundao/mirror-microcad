@@ -6,28 +6,31 @@
 use crate::{SingleIdentifier, ir};
 
 mod array_expression;
-mod marker;
+mod call;
+mod format_string;
+mod qualified_name;
 mod range_expression;
 mod tuple_expression;
 
 pub use array_expression::*;
-pub use marker::*;
+pub use call::*;
+pub use format_string::*;
+pub use qualified_name::*;
 pub use range_expression::*;
 pub use tuple_expression::*;
 
 use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer};
-use microcad_lang_proc_macros::SrcReferrer;
 
 /// List of expressions.
-pub type ListExpression<EXPR = ir::Expression> = Vec<EXPR>;
+pub type ListExpression<EXPR> = Vec<EXPR>;
 
 /// If statement.
-#[derive(Clone, Debug, SrcReferrer)]
-pub struct If<BODY = ir::Body> {
+#[derive(Clone, Debug)]
+pub struct If<EXPR, BODY> {
     /// SrcRef of the `if` keyword.
     pub if_ref: SrcRef,
     /// If condition.
-    pub cond: ir::Expression,
+    pub cond: Box<EXPR>,
     /// Body if `true`.
     pub body: BODY,
     /// SrcRef of the `else` keyword, if present.
@@ -37,12 +40,16 @@ pub struct If<BODY = ir::Body> {
     /// SrcRef of the `else[ if]` keyword, if present.
     pub next_if_ref: Option<SrcRef>,
     /// Next if statement: `else if x == 1`.
-    pub next_if: Option<Box<If<BODY>>>,
+    pub next_if: Option<Box<If<EXPR, BODY>>>,
     /// Source code reference.
     pub src_ref: SrcRef,
 }
 
-impl std::fmt::Display for If {
+impl<EXPR, BODY> std::fmt::Display for If<EXPR, BODY>
+where
+    EXPR: std::fmt::Display,
+    BODY: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         writeln!(f, "if {cond} {body}", cond = self.cond, body = self.body)?;
         if let Some(next) = &self.next_if {
@@ -55,50 +62,9 @@ impl std::fmt::Display for If {
     }
 }
 
-/// Any expression.
-#[derive(Clone, Debug, Default)]
-pub enum Expression {
-    /// Something went wrong (and an error will be reported)
-    #[default]
-    Invalid,
-    /// An integer, float, color or bool literal: 1, 1.0, #00FF00, false
-    Literal(ir::Literal),
-    /// A string that contains format expressions: "value = {a}"
-    FormatString(ir::FormatString),
-    /// A list: [a, b, c]
-    ArrayExpression(ArrayExpression),
-    /// A tuple: (a, b, c)
-    TupleExpression(TupleExpression),
-    /// A body: `{}`.
-    Body(ir::Body),
-    /// An if statement: `if {} else {}`.
-    If(Box<ir::If<ir::Body>>),
-    /// A call: `ops::subtract()`.
-    Call(ir::Call),
-    /// A qualified name: `foo::bar`.
-    QualifiedName(ir::QualifiedName),
-    /// A marker expression: `@input`.
-    Marker(Marker),
-    /// A binary operation: `a + b`
-    BinaryOp(BinaryOp),
-    /// A unary operation: !a
-    UnaryOp(UnaryOp),
-    /// Access an element of a list (`a[0]`) or a tuple (`a.0` or `a.b`)
-    ArrayElementAccess(Box<Expression>, Box<Expression>, SrcRef),
-    /// Access an element of a tuple: `a.b`.
-    PropertyAccess(Box<Expression>, Identifier, SrcRef),
-
-    /// Access an attribute of a model: `a#b`.
-    AttributeAccess(Box<Expression>, Identifier, SrcRef),
-
-    /// Call to a method: `[2,3].len()`
-    /// First expression must evaluate to a value
-    MethodCall(Box<Expression>, ir::MethodCall, SrcRef),
-}
-
 /// A binary operation: `a + b`
 #[derive(Clone, Debug)]
-pub struct BinaryOp<EXPR = ir::Expression> {
+pub struct BinaryOp<EXPR> {
     /// Left-hand side
     pub lhs: Box<EXPR>,
     /// Operator  ('+', '-', '/', '*', '<', '>', '≤', '≥', '&', '|')
@@ -115,7 +81,10 @@ impl<EXPR> SrcReferrer for BinaryOp<EXPR> {
     }
 }
 
-impl SingleIdentifier for BinaryOp {
+impl<EXPR> SingleIdentifier for BinaryOp<EXPR>
+where
+    EXPR: SingleIdentifier,
+{
     fn single_identifier(&self) -> Option<&Identifier> {
         match (self.lhs.single_identifier(), self.rhs.single_identifier()) {
             (None, Some(lhs)) => Some(lhs),
@@ -149,7 +118,7 @@ where
 
 /// A unary operation: !a
 #[derive(Clone, Debug)]
-pub struct UnaryOp<EXPR = ir::Expression> {
+pub struct UnaryOp<EXPR> {
     /// Operator ('+', '-', '!')
     pub op: Refer<String>,
     /// Right -hand side
@@ -164,7 +133,10 @@ impl<EXPR> SrcReferrer for UnaryOp<EXPR> {
     }
 }
 
-impl SingleIdentifier for UnaryOp {
+impl<EXPR> SingleIdentifier for UnaryOp<EXPR>
+where
+    EXPR: SingleIdentifier,
+{
     fn single_identifier(&self) -> Option<&Identifier> {
         self.rhs.single_identifier()
     }
@@ -179,11 +151,18 @@ where
     }
 }
 
+#[derive(Debug)]
+pub struct ElementAccess<EXPR, ELEMENT> {
+    pub lhs: Box<EXPR>,
+    pub element: ELEMENT,
+    pub src_ref: SrcRef,
+}
+
 /// An expression that can be evaluated during `resolve` phase.
 ///
 /// Use for `Constant` and default values for `Parameter`.
 /// TODO: ElementAccess are missing.
-#[derive(Debug, Clone, derive_more::From)]
+#[derive(Debug, derive_more::From)]
 pub enum ConstantExpression {
     Invalid,
     Literal(ir::Literal),
@@ -211,77 +190,6 @@ impl std::fmt::Display for ConstantExpression {
             }
             ConstantExpression::BinaryOp(binary_op) => write!(f, "{binary_op}"),
             ConstantExpression::UnaryOp(unary_op) => write!(f, "{unary_op}"),
-            _ => unimplemented!(),
-        }
-    }
-}
-
-impl crate::SingleIdentifier for Expression {
-    /// If the expression includes just one identifier, e.g. `a` or `a * (a + 2)`
-    fn single_identifier(&self) -> Option<&Identifier> {
-        match &self {
-            Expression::Invalid
-            | Expression::Literal(..)
-            | Expression::FormatString(..)
-            | Expression::Marker(..)
-            | Expression::PropertyAccess(..)
-            | Expression::AttributeAccess(..)
-            | Expression::MethodCall(..)
-            | Expression::ArrayExpression(..)
-            | Expression::TupleExpression(..)
-            | Expression::Body(..)
-            | Expression::If(..)
-            | Expression::Call(..) => None,
-
-            Expression::QualifiedName(qualified_name) => qualified_name.single_identifier(),
-            Expression::BinaryOp(binary_op) => binary_op.single_identifier(),
-            Expression::UnaryOp(unary_op) => unary_op.single_identifier(),
-            Expression::ArrayElementAccess(expression, ..) => expression.single_identifier(),
-        }
-    }
-}
-
-impl SrcReferrer for Expression {
-    fn src_ref(&self) -> SrcRef {
-        match self {
-            Self::Invalid => SrcRef::none(),
-            Self::Literal(l) => l.src_ref(),
-            Self::FormatString(fs) => fs.src_ref(),
-            Self::ArrayExpression(le) => le.src_ref(),
-            Self::TupleExpression(te) => te.src_ref(),
-            Self::Call(c) => c.src_ref(),
-            Self::Body(b) => b.src_ref(),
-            Self::If(i) => i.src_ref(),
-            Self::QualifiedName(q) => q.src_ref(),
-            Self::Marker(m) => m.src_ref(),
-            Self::BinaryOp(binary_op) => binary_op.src_ref(),
-            Self::UnaryOp(unary_op) => unary_op.src_ref(),
-            Self::ArrayElementAccess(_, _, src_ref) => src_ref.clone(),
-            Self::PropertyAccess(_, _, src_ref) => src_ref.clone(),
-            Self::AttributeAccess(_, _, src_ref) => src_ref.clone(),
-            Self::MethodCall(_, _, src_ref) => src_ref.clone(),
-        }
-    }
-}
-
-impl std::fmt::Display for Expression {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Self::Literal(literal) => write!(f, "{literal}"),
-            Self::FormatString(format_string) => write!(f, "{format_string}"),
-            Self::ArrayExpression(array_expression) => write!(f, "{array_expression}"),
-            Self::TupleExpression(tuple_expression) => write!(f, "{tuple_expression}"),
-            Self::BinaryOp(binary_op) => write!(f, "{binary_op}"),
-            Self::UnaryOp(unary_op) => write!(f, "{unary_op}"),
-            Self::ArrayElementAccess(lhs, rhs, _) => write!(f, "{lhs}[{rhs}]"),
-            Self::PropertyAccess(lhs, rhs, _) => write!(f, "{lhs}.{rhs}"),
-            Self::AttributeAccess(lhs, rhs, _) => write!(f, "{lhs}#{rhs}"),
-            Self::MethodCall(lhs, method_call, _) => write!(f, "{lhs}.{method_call}"),
-            Self::Call(call) => write!(f, "{call}"),
-            Self::Body(body) => write!(f, "{body}"),
-            Self::If(if_) => write!(f, "{if_}"),
-            Self::QualifiedName(qualified_name) => write!(f, "{qualified_name}"),
-            Self::Marker(marker) => write!(f, "{marker}"),
             _ => unimplemented!(),
         }
     }

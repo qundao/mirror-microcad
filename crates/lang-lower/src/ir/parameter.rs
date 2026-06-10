@@ -3,23 +3,24 @@
 
 //! µcad parameter syntax elements
 
-mod parameter_list;
-
 use crate::ir;
 
-use microcad_lang_base::{Identifier, OrdMapValue, SrcRef};
+use microcad_lang_base::{Identifier, OrdMap, OrdMapValue, Refer, SrcRef};
 use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
-pub use parameter_list::*;
+
+use derive_more::{Deref, DerefMut};
 
 /// A parameter of a parameter list.
-#[derive(Clone, Debug, Default, SrcReferrer, Identifiable)]
+#[derive(Debug, Default, SrcReferrer, Identifiable)]
 pub struct Parameter {
+    /// Parameter attributes
+    pub attr: ir::Attributes,
     /// Name of the parameter
     pub(crate) id: Identifier,
     /// Type of the parameter or `None`
     pub specified_type: Option<ir::TypeAnnotation>,
     /// default value of the parameter or `None`
-    pub default_value: Option<ir::Expression>,
+    pub default_value: Option<ir::ConstantExpression>,
     /// Source code reference
     pub src_ref: SrcRef,
 }
@@ -38,5 +39,35 @@ impl std::fmt::Display for Parameter {
             (None, Some(v)) => write!(f, "{} = {v}", self.id),
             _ => Ok(()),
         }
+    }
+}
+
+/// Parameter list
+#[derive(Debug, Default, Deref, DerefMut, SrcReferrer)]
+pub struct ParameterList(pub Refer<OrdMap<Identifier, ir::Parameter>>);
+
+impl ParameterList {
+    /// Return ids of all parameters
+    pub fn ids(&self) -> impl Iterator<Item = Identifier> {
+        self.keys().cloned()
+    }
+
+    /// Return if given identifier is in parameter list
+    pub fn contains_key(&self, id: &Identifier) -> bool {
+        self.iter().any(|p| *id == p.id)
+    }
+}
+
+impl std::fmt::Display for ParameterList {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            self.0
+                .iter()
+                .map(|p| p.to_string())
+                .collect::<Vec<_>>()
+                .join(", ")
+        )
     }
 }
