@@ -12,7 +12,7 @@ use microcad_core::hash::HashMap;
 /// `K`: key type
 pub trait OrdMapValue<K>
 where
-    K: std::cmp::Eq + std::hash::Hash + Clone,
+    K: std::cmp::Eq + std::hash::Hash,
 {
     /// return some unique key of this value or `None`
     fn key(&self) -> Option<K>;
@@ -23,7 +23,7 @@ where
 pub struct OrdMap<K, V>
 where
     V: OrdMapValue<K>,
-    K: std::cmp::Eq + std::hash::Hash + Clone,
+    K: std::cmp::Eq + std::hash::Hash,
 {
     /// vec to store values
     vec: Vec<V>,
@@ -34,7 +34,7 @@ where
 impl<K, V> Default for OrdMap<K, V>
 where
     V: OrdMapValue<K>,
-    K: std::cmp::Eq + std::hash::Hash + Clone,
+    K: std::cmp::Eq + std::hash::Hash,
 {
     fn default() -> Self {
         Self {
@@ -47,7 +47,7 @@ where
 impl<K, V> std::fmt::Debug for OrdMap<K, V>
 where
     V: OrdMapValue<K> + std::fmt::Debug,
-    K: std::cmp::Eq + std::hash::Hash + Clone,
+    K: std::cmp::Eq + std::hash::Hash,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("OrdMap").field("vec", &self.vec).finish()
@@ -57,7 +57,7 @@ where
 impl<K, V> From<Vec<V>> for OrdMap<K, V>
 where
     V: OrdMapValue<K>,
-    K: std::cmp::Eq + std::hash::Hash + Clone,
+    K: std::cmp::Eq + std::hash::Hash,
 {
     fn from(vec: Vec<V>) -> Self {
         Self {
@@ -74,7 +74,7 @@ where
 impl<K, V> OrdMap<K, V>
 where
     V: OrdMapValue<K>,
-    K: std::cmp::Eq + std::hash::Hash + Clone,
+    K: std::cmp::Eq + std::hash::Hash,
 {
     /// get iterator over values in original order
     pub fn iter(&self) -> std::slice::Iter<'_, V> {
@@ -89,22 +89,6 @@ where
     /// `true` no values are stored`
     pub fn is_empty(&self) -> bool {
         self.vec.is_empty()
-    }
-
-    /// add new value
-    ///
-    /// On duplicated named entries, it returns the existing key and the new, duplicate key
-    pub fn try_push(&mut self, item: V) -> Result<(), (K, K)> {
-        if let Some(key) = item.key() {
-            match self.map.entry(key) {
-                std::collections::hash_map::Entry::Vacant(entry) => entry.insert(self.vec.len()),
-                std::collections::hash_map::Entry::Occupied(entry) => {
-                    return Err((entry.key().clone(), item.key().expect("ord_map error")));
-                }
-            };
-        }
-        self.vec.push(item);
-        Ok(())
     }
 
     /// get value by key
