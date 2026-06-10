@@ -9,6 +9,7 @@ use crate::ir;
 /// A constant definition: `const FOO: Length = 32mm`.
 #[derive(Debug, SrcReferrer)]
 pub struct Constant {
+    pub src_ref: SrcRef,
     pub attr: ir::Attributes,
     pub visibility: ir::Visibility,
     pub keyword_src_ref: SrcRef,

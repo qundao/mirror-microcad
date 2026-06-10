@@ -39,6 +39,8 @@ pub struct InlineModule {
 
     pub inner_attr: ir::Attributes,
 
+    pub modules: ir::InlineModules,
+
     pub aliases: ir::Aliases,
 
     pub constants: ir::Constants,

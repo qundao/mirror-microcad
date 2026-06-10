@@ -73,7 +73,10 @@ pub enum FunctionStatement {
 }
 
 #[derive(Debug)]
-pub struct Scope(pub Refer<Vec<FunctionStatement>>);
+pub struct FunctionStatements(pub Box<[FunctionStatement]>);
+
+#[derive(Debug)]
+pub struct Scope(pub Refer<FunctionStatements>);
 
 #[derive(Debug)]
 pub struct Function {
@@ -96,8 +99,8 @@ pub struct Function {
     /// const FOO =
     pub constants: ir::Constants,
     /// Function statements
-    pub statements: Vec<FunctionStatement>,
+    pub statements: ir::FunctionStatements,
 }
 
 #[derive(Debug)]
-pub struct Functions(pub Vec<Function>);
+pub struct Functions(pub Box<[Function]>);
