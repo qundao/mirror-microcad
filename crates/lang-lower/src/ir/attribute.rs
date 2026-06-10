@@ -10,7 +10,7 @@ use microcad_lang_proc_macros::SrcReferrer;
 
 /// Block of documentation comments, starting with `/// `.
 #[derive(Clone, Debug, Default, SrcReferrer)]
-pub struct DocBlock(pub Refer<Vec<String>>);
+pub struct DocBlock(pub Refer<Box<[String]>>);
 
 impl DocBlock {
     /// Create new doc block for builtin.
@@ -40,7 +40,7 @@ impl DocBlock {
                         .cloned()
                         .collect::<Vec<_>>();
                 Self(Refer::new(
-                    merged,
+                    merged.into_boxed_slice(),
                     SrcRef::merge(&a.src_ref(), &b.src_ref()),
                 ))
             }
