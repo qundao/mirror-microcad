@@ -79,6 +79,9 @@ fn main() {
     // Parse the command-line args before starting the app
     let args = Args::parse();
 
+    #[cfg(not(debug_assertions))]
+    mu::install_std().ok();
+
     // Initialize env_logger with a default filter level
     env_logger::Builder::from_default_env()
         .filter_level(match args.verbose {
