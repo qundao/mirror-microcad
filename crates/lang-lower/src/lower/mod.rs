@@ -4,9 +4,7 @@
 //! Lowering the AST.
 
 mod attribute;
-mod body;
 mod call;
-mod doc_block;
 mod expression;
 mod format_string;
 mod function;
