@@ -98,8 +98,6 @@ impl<'source> LowerContext<'source> {
     }
 }
 
-pub trait Lower: Sized {
-    type AstNode;
-
-    fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError>;
+pub trait Lower<AstNode> {
+    fn lower(node: &AstNode, context: &mut LowerContext) -> Result<Self, LowerError>;
 }
