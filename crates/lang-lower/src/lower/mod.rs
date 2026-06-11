@@ -201,12 +201,13 @@ pub(crate) fn build_ast(
 /// Does not check if the statements are actually valid in this context.
 pub fn extract_statements_with_tail<F, G, T>(
     statements: &ast::StatementList,
+    context: &mut LowerContext,
     mut extractor: F,
     mut tail_extractor: G,
 ) -> LowerResult<Box<[T]>>
 where
-    F: FnMut(&ast::Statement) -> LowerResult<Option<T>>,
-    G: FnMut(&ast::ExpressionStatement) -> LowerResult<Option<T>>,
+    F: FnMut(&ast::Statement, &mut LowerContext) -> LowerResult<Option<T>>,
+    G: FnMut(&ast::ExpressionStatement, &mut LowerContext) -> LowerResult<T>,
 {
     let mut mapped = Vec::new();
     statements
@@ -214,7 +215,7 @@ where
         .iter()
         .map(|(stmt, _)| stmt)
         .try_for_each(|stmt| -> Result<(), LowerError> {
-            match extractor(stmt)? {
+            match extractor(stmt, context)? {
                 Some(m) => mapped.push(m),
                 None => {}
             }
@@ -222,10 +223,7 @@ where
         })?;
 
     match &statements.tail {
-        Some(tail) => match tail_extractor(tail)? {
-            Some(m) => mapped.push(m),
-            None => {}
-        },
+        Some(tail) => mapped.push(tail_extractor(tail, context)?),
         None => {}
     }
 
@@ -326,6 +324,20 @@ impl Lower<ast::UseName> for ir::QualifiedName {
 
         let name = ir::QualifiedName::new(name, context.src_ref(&node.span));
         Ok(name)
+    }
+}
+
+impl<EXPR> Lower<ast::LocalAssignment> for ir::LocalAssignment<EXPR>
+where
+    EXPR: Lower<ast::Expression>,
+{
+    fn lower(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
+            id: ir::Identifier::lower(&node.name, context)?,
+            specified_type: Option::<ir::TypeAnnotation>::lower(&node.ty, context)?,
+            expression: EXPR::lower(node.value.as_ref(), context)?,
+            src_ref: context.src_ref(&node.span),
+        })
     }
 }
 
