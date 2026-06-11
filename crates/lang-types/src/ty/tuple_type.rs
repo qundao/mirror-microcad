@@ -6,9 +6,10 @@
 use crate::ty::*;
 
 use microcad_lang_base::Identifier;
+use serde::Serialize;
 
 /// (Partially named) tuple (e.g. `(n: Scalar, m: String, Integer)`)
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize)]
 pub struct TupleType {
     /// Named fields
     pub named: microcad_core::hash::HashMap<Identifier, Type>,

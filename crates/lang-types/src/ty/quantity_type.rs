@@ -3,12 +3,13 @@
 
 //! µcad quantity type
 
+use serde::Serialize;
 use strum::IntoStaticStr;
 
 use crate::ty::Unit;
 
 /// A quantity type with
-#[derive(Clone, Debug, IntoStaticStr, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Clone, Debug, IntoStaticStr, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 pub enum QuantityType {
     /// A unitless scalar value.
     Scalar,

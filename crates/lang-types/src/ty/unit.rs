@@ -3,10 +3,12 @@
 
 //! µcad unit syntax element.
 
+use serde::Serialize;
+
 use crate::ty::*;
 
 /// Definition of type & scale of numbers.
-#[derive(Default, Clone, Debug, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Default, Clone, Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize)]
 pub enum Unit {
     // Scalar
     /// No unit was given.

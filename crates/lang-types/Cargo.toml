@@ -26,6 +26,7 @@ miette = { version = "7.6.0", features = ["derive", "fancy"] }
 round = "0.1.2"
 rustc-hash = "2.1.1"
 strum = { version = "0.28", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
 
 thiserror = "2.0.17"
 

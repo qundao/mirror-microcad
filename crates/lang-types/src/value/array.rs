@@ -6,8 +6,10 @@
 use crate::{ty::*, value::*};
 use derive_more::{Deref, DerefMut};
 
+use serde::Serialize;
+
 /// Collection of values of the same type.
-#[derive(Clone, Debug, Deref, DerefMut)]
+#[derive(Clone, Debug, Deref, DerefMut, Serialize)]
 pub struct Array {
     /// List of values
     #[deref]
