@@ -1,0 +1,6 @@
+// Extracted from: libraries.md
+// [![test](.test/lib_std.svg)](.test/lib_std.log)
+
+use std::print;
+
+print("Hello, µcad standard library!");

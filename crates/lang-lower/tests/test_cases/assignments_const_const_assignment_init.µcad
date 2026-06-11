@@ -1,0 +1,9 @@
+// Extracted from: assignments/const.md
+// [![test](.test/const_assignment_init.svg)](.test/const_assignment_init.log)
+
+sketch MySketch() {
+    init(_: Integer) {
+        const MY_CONST = 1; // error: not allowed in initializers
+    }
+}
+MySketch();

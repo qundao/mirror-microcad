@@ -1,0 +1,4 @@
+// Extracted from: types/primitives.md
+// [![test](.test/types_primitive_bool.svg)](.test/types_primitive_bool.log)
+
+std::debug::assert(true != false);

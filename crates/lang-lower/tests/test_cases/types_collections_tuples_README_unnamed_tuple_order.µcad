@@ -1,0 +1,5 @@
+// Extracted from: types/collections/tuples/README.md
+// [![test](.test/unnamed_tuple_order.svg)](.test/unnamed_tuple_order.log)
+
+// these tuples are equal
+std::debug::assert_eq([(1l, 10cm, 10cm²), (10cm, 10cm², 1l)]);

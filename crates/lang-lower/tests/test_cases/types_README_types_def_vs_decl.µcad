@@ -1,0 +1,5 @@
+// Extracted from: types/README.md
+// [![test](.test/types_def_vs_decl.svg)](.test/types_def_vs_decl.log)
+
+x: Length = 4mm; // explicit type declaration
+y = 4mm; // implicit type declaration via units.

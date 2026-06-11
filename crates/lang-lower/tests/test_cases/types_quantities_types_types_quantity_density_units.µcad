@@ -1,0 +1,4 @@
+// Extracted from: types/quantities/types.md
+// [![test](.test/types_quantity_density_units.svg)](.test/types_quantity_density_units.log)
+
+gramm_per_square_centimeters = 19.302g/mm³;

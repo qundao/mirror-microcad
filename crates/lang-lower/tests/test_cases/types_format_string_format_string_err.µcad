@@ -1,0 +1,8 @@
+// Extracted from: types/format_string.md
+// [![test](.test/format_string_err.svg)](.test/format_string_err.log)
+
+fn print_length(length: Length) {
+    std::print("{size}"); // error: size is not known
+}
+
+print_length(7mm);

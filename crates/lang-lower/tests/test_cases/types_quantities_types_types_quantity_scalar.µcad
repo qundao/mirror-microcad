@@ -1,0 +1,6 @@
+// Extracted from: types/quantities/types.md
+// [![test](.test/types_quantity_scalar.svg)](.test/types_quantity_scalar.log)
+
+zero = 0;
+pi = 3.1415;
+percent = 55%;

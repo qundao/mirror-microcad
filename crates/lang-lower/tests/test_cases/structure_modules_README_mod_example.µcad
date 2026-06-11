@@ -1,0 +1,23 @@
+// Extracted from: structure/modules/README.md
+// [![test](.test/mod_example.svg)](.test/mod_example.log)
+
+// define private module
+mod my {
+    // define public module
+    pub mod math {
+        // define PI as a public constant value
+        pub const PI = 3.14159;
+
+        // define some public calculation function
+        pub fn abs(x: Scalar) -> Scalar {
+            if x < 0 {
+                return -x;
+            } else {
+                return x;
+            }
+        }
+    }
+}
+
+// use the function and the constant
+x = my::math::abs(-1.0) * my::math::PI;

@@ -1,0 +1,11 @@
+// Extracted from: structure/functions/README.md
+// [![test](.test/example.svg)](.test/example.log)
+
+// define function print_error with text as parameter of type String
+fn print_error(text: String) {
+    // code body
+    std::print("ERROR: {text}");
+}
+
+print_error("first");
+print_error("second");

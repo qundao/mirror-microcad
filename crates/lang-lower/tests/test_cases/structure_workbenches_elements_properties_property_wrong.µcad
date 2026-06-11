@@ -1,0 +1,19 @@
+// Extracted from: structure/workbenches/elements/properties.md
+// [![test](.test/property_wrong.svg)](.test/property_wrong.log)
+
+sketch Wheel(outer: Length) {
+    use std::geo2d::Circle;
+
+    // `inner` is declared as variable and may not be read
+    // from outside this workbench
+    inner = outer / 2;
+
+    Circle(radius = outer) - Circle(radius = inner);
+}
+
+t = Wheel(outer = 1cm);
+
+// you can still extract and display `outer`
+std::print("outer: {t.outer}");
+// but you cannot access `inner` anymore
+std::print("inner: {t.inner}"); // error

@@ -1,0 +1,11 @@
+// Extracted from: flow/calls/args_params.md
+// [![test](.test/parameter_default.svg)](.test/parameter_default.log)
+
+// function with two parameters (`one`, `another`, and `one_more`)
+fn f(one: Integer, another = 2m, one_more: Area) {
+    std::print("{one} {another} {one_more}");
+}
+
+// call function with two arguments.
+// One matches by name another by type and one_more by default.
+f(one = 1, 5m²);

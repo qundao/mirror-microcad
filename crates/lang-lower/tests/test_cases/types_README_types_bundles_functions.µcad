@@ -1,0 +1,5 @@
+// Extracted from: types/README.md
+// [![test](.test/types_bundles_functions.svg)](.test/types_bundles_functions.log)
+
+fn f(x = 4mm) {} // use unit (with default)
+fn g(x: Length) {} // use type (without default)

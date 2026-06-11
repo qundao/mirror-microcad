@@ -1,0 +1,6 @@
+// Extracted from: flow/argument_match/priorities.md
+// [![test](.test/argument_match_type_compatible.svg)](.test/argument_match_type_compatible.log)
+
+fn f(a: Scalar, b: Length, c: Area) {} // warning: unused a,b,c
+// giving an integer `1` to a `Scalar` parameter `a`
+f(1, 2cm, 3cm²);

@@ -1,0 +1,7 @@
+// Extracted from: flow/calls/README.md
+// [![test](.test/call_workbench.svg)](.test/call_workbench.log)
+
+// call sketch Circle with a size and store object node in s
+s = std::geo2d::Circle(diameter = 2cm);
+
+std::debug::assert_eq([s.radius, 1cm]);

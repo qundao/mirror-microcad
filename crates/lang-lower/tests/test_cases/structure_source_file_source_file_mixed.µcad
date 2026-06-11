@@ -1,0 +1,5 @@
+// Extracted from: structure/source_file.md
+// [![test](.test/source_file_mixed.svg)](.test/source_file_mixed.log)
+
+std::geo2d::Circle(radius = 1cm);
+std::geo3d::Sphere(radius = 1cm); // error: can't mix 2D and 3D

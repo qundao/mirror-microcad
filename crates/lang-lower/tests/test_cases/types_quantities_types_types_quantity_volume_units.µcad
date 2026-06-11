@@ -1,0 +1,20 @@
+// Extracted from: types/quantities/types.md
+// [![test](.test/types_quantity_volume_units.svg)](.test/types_quantity_volume_units.log)
+
+cubic_millimeter = 1000000.0mm³;
+cubic_centimeter = 100.0cl;
+cubic_meter = 0.001m3;
+cubic_inch = 61.0237in³;
+liter = 1.0l;
+centiliter = 100.0cl;
+milliliter = 1000.0ml;
+
+std::debug::assert_eq(
+    [
+        cubic_millimeter,
+        cubic_centimeter,
+        cubic_meter,
+        centiliter,
+        milliliter,
+    ],
+);

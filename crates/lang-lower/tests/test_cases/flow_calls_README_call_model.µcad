@@ -1,0 +1,8 @@
+// Extracted from: flow/calls/README.md
+// [![test](.test/call_model.svg)](.test/call_model.log)
+
+// call square with a size and store object node in s
+s = std::geo2d::Circle(radius = 2cm);
+
+// translate object s
+s.std::ops::translate(x = 1cm);

@@ -1,0 +1,5 @@
+// Extracted from: flow/argument_match/errors.md
+// [![test](.test/match_errors.svg)](.test/match_errors.log)
+
+fn f(x: Length, y: Length, z: Length) {}
+f(x = 1cm, z = 3cm); // error: y is missing here

@@ -1,0 +1,17 @@
+// Extracted from: structure/workbenches/elements/initializers.md
+// [![test](.test/code_between_initializers.svg)](.test/code_between_initializers.log)
+
+sketch Wheel(radius: Length, thickness = 5mm) {
+    use std::geo2d::Circle;
+
+    init(width: Length, thickness = 5mm) {
+        radius = width / 2;
+    }
+    radius = 1; // error: code between initializers not allowed
+    init(height: Length, thickness = 5mm) {
+        radius = height / 2;
+    }
+
+    Circle(radius = radius + thickness) - Circle(radius);
+}
+Wheel(radius = 1cm);

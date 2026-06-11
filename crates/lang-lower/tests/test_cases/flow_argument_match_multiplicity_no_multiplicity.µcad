@@ -1,0 +1,10 @@
+// Extracted from: flow/argument_match/multiplicity.md
+// [![test](.test/no_multiplicity.svg)](.test/no_multiplicity.log)
+
+r = std::geo2d::Rect(width = 2mm, height = 2mm);
+
+use std::ops::translate;
+r.translate(x = -4mm, y = -4mm);
+r.translate(x = -4mm, y = 4mm);
+r.translate(x = 4mm, y = -4mm);
+r.translate(x = 4mm, y = 4mm);

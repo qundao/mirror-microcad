@@ -1,0 +1,10 @@
+// Extracted from: types/quantities/types.md
+// [![test](.test/types_quantity_volume.svg)](.test/types_quantity_volume.log)
+
+a = 3mm;
+b = 2mm;
+c = 4mm;
+
+volume = a * b * c;
+
+std::debug::assert(volume == 24mm³);

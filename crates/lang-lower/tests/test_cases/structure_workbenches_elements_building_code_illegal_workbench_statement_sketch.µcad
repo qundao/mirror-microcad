@@ -1,0 +1,8 @@
+// Extracted from: structure/workbenches/elements/building_code.md
+// [![test](.test/illegal_workbench_statement_sketch.svg)](.test/illegal_workbench_statement_sketch.log)
+
+sketch Wheel(radius: Length) {
+    sketch A() {} // error
+    part B() {} // error
+    op C() {} // error
+}

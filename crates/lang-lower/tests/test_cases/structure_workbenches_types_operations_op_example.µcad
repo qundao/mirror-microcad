@@ -1,0 +1,8 @@
+// Extracted from: structure/workbenches/types/operations.md
+// [![test](.test/op_example.svg)](.test/op_example.log)
+
+// define operation nop without parameters
+op nop() { @input }
+
+// use operation `nop` on a circle results in the same circle
+std::geo2d::Circle(radius = 1cm).nop();

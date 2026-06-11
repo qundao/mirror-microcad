@@ -1,0 +1,8 @@
+// Extracted from: structure/use.md
+// [![test](.test/use_all.svg)](.test/use_all.log)
+
+use std::geo3d::*;
+
+Sphere(radius = 4mm);
+Cube(size = 40mm);
+Torus(major_radius = 40mm, minor_radius = 20mm);

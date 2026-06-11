@@ -1,0 +1,7 @@
+// Extracted from: structure/modules/inline_modules.md
+// [![test](.test/inline_mod.svg)](.test/inline_mod.log)
+
+mod my_module {
+    // e.g. define a constant
+    pub const VALUE = 1;
+}

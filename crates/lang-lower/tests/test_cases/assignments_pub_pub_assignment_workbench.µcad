@@ -1,0 +1,9 @@
+// Extracted from: assignments/pub.md
+// [![test](.test/pub_assignment_workbench.svg)](.test/pub_assignment_workbench.log)
+
+sketch MySketch() {
+    pub const TEXT = "Hello"; // error
+    std::print(TEXT);
+}
+
+MySketch();

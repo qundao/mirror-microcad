@@ -1,0 +1,9 @@
+// Extracted from: assignments/model.md
+// [![test](.test/assignment_model_workbench.svg)](.test/assignment_model_workbench.log)
+
+sketch MySketch() {
+    a = std::geo2d::Circle(radius = 1mm); // error
+    init(_x: Scalar) {}
+}
+
+MySketch();

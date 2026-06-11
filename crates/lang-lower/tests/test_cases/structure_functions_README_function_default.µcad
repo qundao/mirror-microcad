@@ -1,0 +1,9 @@
+// Extracted from: structure/functions/README.md
+// [![test](.test/function_default.svg)](.test/function_default.log)
+
+fn f(x: Scalar, y = 1mm) -> Length {
+    x * y
+}
+
+std::debug::assert_eq([f(2), 2mm]);
+std::debug::assert_eq([f(2, 2mm), 4mm]);

@@ -1,0 +1,8 @@
+// Extracted from: assignments/property.md
+// [![test](.test/prop_assignment.svg)](.test/prop_assignment.log)
+
+sketch MySketch(radius: Length) {
+    prop diameter = radius * 2;
+    std::geo2d::Circle(radius);
+}
+std::debug::assert_eq([MySketch(5cm).diameter, 10cm])

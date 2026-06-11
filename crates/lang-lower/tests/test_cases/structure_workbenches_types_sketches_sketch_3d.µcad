@@ -1,0 +1,9 @@
+// Extracted from: structure/workbenches/types/sketches.md
+// [![test](.test/sketch_3d.svg)](.test/sketch_3d.log)
+
+sketch MySketch(radius: Length) {
+    use std::geo3d::*;
+    Sphere(radius) - Cube(size = radius); // error: Sphere and Cube are 3D
+}
+
+MySketch(1cm);

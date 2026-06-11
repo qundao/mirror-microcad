@@ -1,0 +1,6 @@
+// Extracted from: assignments/value.md
+// [![test](.test/assignment_module.svg)](.test/assignment_module.log)
+
+mod my_module {
+    a = 1; // error
+}

@@ -1,0 +1,15 @@
+// Extracted from: structure/workbenches/elements/init_code.md
+// [![test](.test/init_code_no_building_plan.svg)](.test/init_code_no_building_plan.log)
+
+sketch Wheel(radius: Length, thickness = 5mm) {
+    use std::geo2d::Circle;
+
+    const _ = radius * 2; // error: cannot use radius from building plan
+
+    init(diameter: Length) {
+        radius = diameter / 2;
+    }
+    Circle(radius + thickness) - Circle(radius)
+}
+
+Wheel(radius = 1cm);

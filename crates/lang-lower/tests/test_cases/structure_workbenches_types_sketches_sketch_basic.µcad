@@ -1,0 +1,9 @@
+// Extracted from: structure/workbenches/types/sketches.md
+// [![test](.test/sketch_basic.svg)](.test/sketch_basic.log)
+
+sketch MySketch(radius: Length) {
+    use std::geo2d::*;
+    Circle(radius) - Rect(size = radius);
+}
+
+MySketch(1cm);
