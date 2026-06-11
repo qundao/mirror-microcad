@@ -39,7 +39,7 @@ impl std::fmt::Display for CodeBlockHeader {
             writeln!(f, "{}\n", Self::test_banner_string(name))?
         }
 
-        write!(f, "```µcad")?;
+        write!(f, "```{ext}", ext = microcad_lang_base::MICROCAD_EXTENSION)?;
         if let Some(name) = &self.name {
             write!(f, ",{name}")?
         }
