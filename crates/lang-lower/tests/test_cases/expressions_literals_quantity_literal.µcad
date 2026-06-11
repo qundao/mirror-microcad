@@ -1,0 +1,9 @@
+// Extracted from: expressions/literals.md
+// [![test](.test/quantity_literal.svg)](.test/quantity_literal.log)
+
+4.0mm; // 4 millimeters
+5l; // 5 liters
+4m²; // 4 square meters
+4m2; // also 4 square meters
+10°; // 10 degree angle
+10deg // also 10 degree angle

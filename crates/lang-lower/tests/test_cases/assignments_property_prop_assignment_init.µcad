@@ -1,0 +1,12 @@
+// Extracted from: assignments/property.md
+// [![test](.test/prop_assignment_init.svg)](.test/prop_assignment_init.log)
+
+sketch MySketch(radius: Length) {
+    prop diameter = radius * 2; // error: not in initialization code
+
+    init() {
+        radius = 1;
+    }
+    std::geo2d::Circle(radius);
+}
+std::debug::assert_eq([MySketch(5cm).diameter, 10cm])

@@ -1,0 +1,7 @@
+// Extracted from: assignments/pub.md
+// [![test](.test/pub_assignment_fn.svg)](.test/pub_assignment_fn.log)
+
+fn f() {
+    const MY_CONST = 1; // error: not allowed in functions
+}
+f();

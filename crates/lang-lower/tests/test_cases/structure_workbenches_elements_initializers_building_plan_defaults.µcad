@@ -1,0 +1,15 @@
+// Extracted from: structure/workbenches/elements/initializers.md
+// [![test](.test/building_plan_defaults.svg)](.test/building_plan_defaults.log)
+
+sketch Wheel(radius: Length, thickness = 5mm) {
+    use std::geo2d::Circle;
+
+    init(diameter: Length) {
+        radius = diameter / 2;
+        // thickness has been set automatically by the default in the building plan
+    }
+
+    Circle(radius = radius + thickness) - Circle(radius);
+}
+
+Wheel(diameter = 1cm);

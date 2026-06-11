@@ -1,0 +1,4 @@
+// Extracted from: expressions/model_expression.md
+// [![test](.test/model_expression.svg)](.test/model_expression.log)
+
+std::geo2d::Rect(1cm) - std::geo2d::Circle(radius = 3mm);

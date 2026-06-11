@@ -1,0 +1,15 @@
+// Extracted from: assignments/const.md
+// [![test](.test/const_assignment_workbench.svg)](.test/const_assignment_workbench.log)
+
+sketch MySketch(text: String) {
+    // constant assignment in initialization code
+    const TEXT = "Hello";
+
+    init() {
+        text = TEXT;
+    }
+
+    std::print(text);
+}
+
+MySketch();

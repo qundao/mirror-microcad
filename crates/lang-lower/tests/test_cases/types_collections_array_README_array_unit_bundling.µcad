@@ -1,0 +1,4 @@
+// Extracted from: types/collections/array/README.md
+// [![test](.test/array_unit_bundling.svg)](.test/array_unit_bundling.log)
+
+std::debug::assert_eq([[1mm, 2mm, 3mm], [1, 2, 3]mm]);

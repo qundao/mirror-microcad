@@ -1,0 +1,6 @@
+// Extracted from: libraries.md
+// [![test](.test/lib_builtin.svg)](.test/lib_builtin.log)
+
+use __builtin::print;
+
+print("Hello, µcad builtin library!");

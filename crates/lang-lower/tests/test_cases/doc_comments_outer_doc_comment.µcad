@@ -1,0 +1,20 @@
+// Extracted from: doc/comments.md
+// [![test](.test/outer_doc_comment.svg)](.test/outer_doc_comment.log)
+
+/// A function which returns what it gets.
+///
+/// It simply returns the **same** value...
+///
+/// ...as it got from the *parameter*.
+///
+/// ## Arguments
+///
+/// - `n`: input value
+///
+/// ## Returns
+///
+/// Output value.
+fn f(n: Integer) -> Integer { n }
+
+// usual comment for non-symbols
+f(1);

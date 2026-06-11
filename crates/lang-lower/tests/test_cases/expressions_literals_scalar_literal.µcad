@@ -1,0 +1,10 @@
+// Extracted from: expressions/literals.md
+// [![test](.test/scalar_literal.svg)](.test/scalar_literal.log)
+
+1.23;
+0.3252;
+.4534;
+1.;
+-1200.0;
+12.0E+12;
+50% // = 0.5

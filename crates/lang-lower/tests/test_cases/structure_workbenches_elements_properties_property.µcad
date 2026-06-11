@@ -1,0 +1,21 @@
+// Extracted from: structure/workbenches/elements/properties.md
+// [![test](.test/property.svg)](.test/property.log)
+
+// `outer` will automatically become a property because
+// it is declared in the building plan:
+sketch Wheel(outer: Length) {
+    use std::geo2d::Circle;
+
+    // `inner` is declared as property
+    prop inner = outer / 2;
+
+    // generate wheel (and use property `outer` and `inner`)
+    Circle(radius = outer) - Circle(radius = inner);
+}
+
+// evaluate wheel
+t = Wheel(1cm);
+
+// extract and display `outer` and `inner` from generated wheel
+std::print("outer: {t.outer}");
+std::print("inner: {t.inner}");

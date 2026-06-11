@@ -1,0 +1,6 @@
+// Extracted from: types/collections/tuples/aliases.md
+// [![test](.test/types_named_tuple_vec2.svg)](.test/types_named_tuple_vec2.log)
+
+v: Vec2 = (x = 2.0, y = 3.0);
+
+std::debug::assert(v.x + v.y == 5.0);

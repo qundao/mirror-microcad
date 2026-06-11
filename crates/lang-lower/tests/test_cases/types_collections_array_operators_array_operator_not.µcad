@@ -1,0 +1,4 @@
+// Extracted from: types/collections/array/operators.md
+// [![test](.test/array_operator_not.svg)](.test/array_operator_not.log)
+
+std::debug::assert_eq([![true, false], [false, true]]);

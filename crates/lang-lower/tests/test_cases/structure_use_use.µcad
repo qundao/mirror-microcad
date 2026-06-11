@@ -1,0 +1,8 @@
+// Extracted from: structure/use.md
+// [![test](.test/use.svg)](.test/use.log)
+
+use std::geo3d::Sphere;
+use std::geo3d::Cube;
+
+Sphere(radius = 4mm);
+Cube(size = 40mm);

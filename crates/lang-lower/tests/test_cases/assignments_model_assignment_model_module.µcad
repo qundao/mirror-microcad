@@ -1,0 +1,6 @@
+// Extracted from: assignments/model.md
+// [![test](.test/assignment_model_module.svg)](.test/assignment_model_module.log)
+
+mod my_module {
+    a = std::geo2d::Circle(radius = 1mm); // error
+}

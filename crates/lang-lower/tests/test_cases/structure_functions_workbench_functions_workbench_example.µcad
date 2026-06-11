@@ -1,0 +1,14 @@
+// Extracted from: structure/functions/workbench_functions.md
+// [![test](.test/workbench_example.svg)](.test/workbench_example.log)
+
+sketch PunchedDisk(radius: Length) {
+    use std::geo2d::Circle;
+
+    // function to calculate inner from radius
+    fn inner(radius: Length) { radius / 2 }
+
+    // generate donut (and call inner)
+    Circle(radius) - Circle(radius = inner(radius));
+}
+
+PunchedDisk(1cm);

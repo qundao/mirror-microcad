@@ -1,0 +1,17 @@
+// Extracted from: structure/functions/workbench_functions.md
+// [![test](.test/workbench_fn_prop.svg)](.test/workbench_fn_prop.log)
+
+sketch PunchedDisk(radius: Length) {
+    use std::geo2d::Circle;
+
+    fn inner() {
+        prop hole = radius / 2; // error: prop not allowed in function
+        hole
+    }
+
+    prop hole = radius / 2; // correct prop definition
+
+    Circle(radius) - Circle(radius = inner());
+}
+
+PunchedDisk(1cm);

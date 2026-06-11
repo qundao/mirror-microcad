@@ -1,0 +1,10 @@
+// Extracted from: structure/use.md
+// [![test](.test/use_statement_pub.svg)](.test/use_statement_pub.log)
+
+mod my {
+    pub use std::geo3d::Sphere;
+    pub use std::geo3d::Cube;
+}
+
+my::Sphere(radius = 4mm);
+my::Cube(size = 40mm);

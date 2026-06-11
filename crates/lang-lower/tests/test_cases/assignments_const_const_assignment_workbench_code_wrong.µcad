@@ -1,0 +1,8 @@
+// Extracted from: assignments/const.md
+// [![test](.test/const_assignment_workbench_code_wrong.svg)](.test/const_assignment_workbench_code_wrong.log)
+
+sketch MySketch() {
+    _i = 5; // any non const code
+    const MY_CONST = 1; // error: const not allowed then
+}
+MySketch();

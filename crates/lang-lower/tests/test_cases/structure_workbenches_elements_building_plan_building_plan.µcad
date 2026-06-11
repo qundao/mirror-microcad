@@ -1,0 +1,19 @@
+// Extracted from: structure/workbenches/elements/building_plan.md
+// [![test](.test/building_plan.svg)](.test/building_plan.log)
+
+// sketch with a radius as building plan
+sketch Wheel(radius: Length, thickness = 5mm) {
+    use std::geo2d::Circle;
+
+    // access property radius from the building plan
+    Circle(radius = radius + thickness) - Circle(radius)
+}
+
+// access property radius of a Wheel
+w = Wheel(1cm);
+// render Wheel
+w;
+
+// check if r is 5cm an thickness equals the default (1cm)
+std::debug::assert_eq([w.radius, 1cm]);
+std::debug::assert_eq([w.thickness, 5mm]);

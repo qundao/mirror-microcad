@@ -1,0 +1,6 @@
+// Extracted from: structure/use.md
+// [![test](.test/use_as.svg)](.test/use_as.log)
+
+use std::geo3d::Sphere as Ball;
+
+Ball(radius = 4mm);

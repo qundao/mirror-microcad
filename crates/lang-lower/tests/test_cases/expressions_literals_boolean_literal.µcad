@@ -1,0 +1,5 @@
+// Extracted from: expressions/literals.md
+// [![test](.test/boolean_literal.svg)](.test/boolean_literal.log)
+
+true;
+false

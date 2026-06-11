@@ -1,0 +1,11 @@
+// Extracted from: types/models/measures.md
+// [![test](.test/measure.svg)](.test/measure.log)
+
+// use measure area() on a circle
+__builtin::debug::assert_eq(
+    [
+        std::geo2d::Circle(radius = 10mm).area(),
+        // circle area formula for comparison
+        10mm * 10mm * std::math::PI,
+    ],
+);

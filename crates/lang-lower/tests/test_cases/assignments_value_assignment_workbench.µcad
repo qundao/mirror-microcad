@@ -1,0 +1,9 @@
+// Extracted from: assignments/value.md
+// [![test](.test/assignment_workbench.svg)](.test/assignment_workbench.log)
+
+sketch MySketch() {
+    a = 1; // error
+    init(_x: Scalar) {}
+}
+
+MySketch();

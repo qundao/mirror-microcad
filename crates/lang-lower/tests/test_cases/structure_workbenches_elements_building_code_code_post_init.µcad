@@ -1,0 +1,15 @@
+// Extracted from: structure/workbenches/elements/building_code.md
+// [![test](.test/code_post_init.svg)](.test/code_post_init.log)
+
+sketch Wheel(radius: Length, thickness = 5mm) {
+    // initializer code
+    use std::geo2d::Circle;
+    // initializer
+    init(diameter: Length) {
+        radius = diameter / 2;
+    }
+
+    // building code starts here
+    std::geo2d::Circle(radius);
+}
+Wheel(radius = 1cm);

@@ -1,0 +1,11 @@
+// Extracted from: structure/workbenches/elements/properties.md
+// [![test](.test/property_no_prop_in_init_code.svg)](.test/property_no_prop_in_init_code.log)
+
+sketch Wheel(outer: Length) {
+    prop max = 100; // error: do not use prop here
+
+    init(inner: Length) {
+        outer = inner * 2;
+    }
+}
+Wheel(inner = 0.5cm);

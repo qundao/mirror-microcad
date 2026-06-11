@@ -1,0 +1,8 @@
+// Extracted from: doc/comments.md
+// [![test](.test/inner_doc_comment.svg)](.test/inner_doc_comment.log)
+
+//! This inner doc comment documents the whole source file.
+
+fn f(n: Integer) -> Integer { n }
+
+f(1);

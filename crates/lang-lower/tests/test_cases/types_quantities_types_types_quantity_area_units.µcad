@@ -1,0 +1,9 @@
+// Extracted from: types/quantities/types.md
+// [![test](.test/types_quantity_area_units.svg)](.test/types_quantity_area_units.log)
+
+square_millimeter = 100000mm²;
+square_centimeter = 1000cm2;
+square_meter = 0.1m²;
+square_inch = 155in²;
+
+std::debug::assert_eq([square_millimeter, square_centimeter]);

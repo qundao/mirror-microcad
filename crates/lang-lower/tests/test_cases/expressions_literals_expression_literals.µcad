@@ -1,0 +1,6 @@
+// Extracted from: expressions/literals.md
+// [![test](.test/expression_literals.svg)](.test/expression_literals.log)
+
+5; // Scalar literal
+4.0mm; // Quantity literal
+"Hello"; // String literal

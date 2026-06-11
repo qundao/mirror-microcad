@@ -1,0 +1,5 @@
+// Extracted from: expressions/README.md
+// [![test](.test/expression_model.svg)](.test/expression_model.log)
+
+// Using logical operators between models too
+std::debug::assert_eq([std::geo2d::Circle(1cm) == std::geo2d::Circle(10mm), true]);

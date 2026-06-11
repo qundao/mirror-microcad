@@ -1,0 +1,8 @@
+// Extracted from: assignments/property.md
+// [![test](.test/prop_assignment_fn.svg)](.test/prop_assignment_fn.log)
+
+fn f() {
+    prop diameter = radius * 2; // error: not in functions
+}
+
+f();

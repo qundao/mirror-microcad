@@ -1,0 +1,27 @@
+// Extracted from: structure/workbenches/elements/init_code.md
+// [![test](.test/pre_init_code.svg)](.test/pre_init_code.log)
+
+sketch Wheel(radius: Length) {
+    // init code
+    const FACTOR = 2.0;
+
+    // initializer
+    init(diameter: Length) {
+        radius = into_radius(diameter);
+    }
+
+    // function
+    fn into_radius(diameter: Length) {
+        // use constant FACTOR from init code
+        diameter / FACTOR
+    }
+
+    // set property diameter and use FACTOR from init code
+    prop diameter = radius * FACTOR;
+
+    // code body
+    std::geo2d::Circle(radius);
+}
+
+std::debug::assert_eq([Wheel(radius = 5cm).radius, 5cm]);
+std::debug::assert_eq([Wheel(radius = 5cm).diameter, 10cm]);

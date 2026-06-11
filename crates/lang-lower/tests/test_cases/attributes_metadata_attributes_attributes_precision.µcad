@@ -1,0 +1,7 @@
+// Extracted from: attributes/metadata_attributes.md
+// [![test](.test/attributes_precision.svg)](.test/attributes_precision.log)
+
+#[resolution = 200%]
+c = std::geo2d::Circle(r = 42.0mm);
+
+std::debug::assert_eq([c#resolution, 200%]);

@@ -1,0 +1,6 @@
+// Extracted from: structure/use.md
+// [![test](.test/use_module.svg)](.test/use_module.log)
+
+use std::geo3d;
+
+geo3d::Sphere(radius = 40mm); // Drops the `std::` prefix.

@@ -1,0 +1,7 @@
+// Extracted from: assignments/const.md
+// [![test](.test/const_assignment_uppercase.svg)](.test/const_assignment_uppercase.log)
+
+const A = 1; // ok
+const a = 1; // warning
+const MyValue = 1; // warning
+const MY_VALUE = 1; // ok

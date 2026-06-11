@@ -1,0 +1,9 @@
+// Extracted from: attributes/README.md
+// [![test](.test/inner_attributes.svg)](.test/inner_attributes.log)
+
+{
+    #![color = "#FF0000"]
+
+    std::geo2d::Circle(r = 20mm);
+    std::geo2d::Rect(size = 20mm).std::ops::translate(x = 20mm);
+}

@@ -1,0 +1,18 @@
+// Extracted from: flow/conditions.md
+// [![test](.test/if_statement_sketch.svg)](.test/if_statement_sketch.log)
+
+use std::ops::*;
+use std::math::*;
+use std::geo2d::*;
+
+sketch MySketch(x: Integer) {
+    if x > 0 {
+        Circle(radius = 5mm)
+    } else if x < 0 {
+        Rect(10mm)
+    } else {
+        Hexagon(5mm)
+    }
+}
+
+MySketch([-1, 0, 2]).align(X, 5mm);

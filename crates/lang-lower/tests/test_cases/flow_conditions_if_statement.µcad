@@ -1,0 +1,14 @@
+// Extracted from: flow/conditions.md
+// [![test](.test/if_statement.svg)](.test/if_statement.log)
+
+use std::geo2d::*;
+
+x = 0; // output changes if you change that value
+
+if x > 0 {
+    Circle(radius = 5mm);
+} else if x < 0 {
+    Rect(10mm);
+} else {
+    Hexagon(5mm);
+}

@@ -1,0 +1,8 @@
+// Extracted from: types/primitives.md
+// [![test](.test/types_primitive_string.svg)](.test/types_primitive_string.log)
+
+text = "Hello µcad!";
+std::debug::assert_eq([std::string::len(text), 11]);
+
+// logging
+std::print(text);

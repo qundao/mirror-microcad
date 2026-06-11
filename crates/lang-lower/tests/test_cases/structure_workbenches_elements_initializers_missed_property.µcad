@@ -1,0 +1,11 @@
+// Extracted from: structure/workbenches/elements/initializers.md
+// [![test](.test/missed_property.svg)](.test/missed_property.log)
+
+sketch Wheel(radius: Length, thickness = 5mm) {
+    use std::geo2d::Circle;
+
+    init(thickness: Length) {} // error: misses to set radius from building plan
+
+    Circle(radius = radius + thickness) - Circle(radius); // error: radius is missing
+}
+Wheel(thickness = 1cm);

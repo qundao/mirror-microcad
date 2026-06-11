@@ -1,0 +1,15 @@
+// Extracted from: structure/workbenches/elements/initializers.md
+// [![test](.test/no_building_plan_same_name_different_type.svg)](.test/no_building_plan_same_name_different_type.log)
+
+sketch Wheel(radius: Length, thickness: Length) {
+    use std::geo2d::Circle;
+
+    init(radius: Scalar, outer: Length) {
+        // error: radius is already a Length in building plan
+        thickness = outer - (radius * 1mm);
+    }
+
+    Circle(radius = radius + thickness) - Circle(radius);
+}
+// Use initializer
+Wheel(radius = 1.0, outer = 1cm);
