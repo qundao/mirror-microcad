@@ -69,7 +69,7 @@ fn main() -> miette::Result<()> {
 
             let content = format!(
                 "// Extracted from: {input}\n// {}\n\n{}\n",
-                code_block.header,
+                md::CodeBlockHeader::test_banner_string(name),
                 code_block.code()
             );
             std::fs::write(&output_path, content).into_diagnostic()?;
