@@ -77,8 +77,7 @@ impl Source {
     ///
     /// - `line`: line number beginning at `0`
     pub fn get_code(&self, src_ref: &SrcRef) -> &str {
-        let range = &src_ref.range;
-        &self.source[range.start..range.end]
+        &self.source[src_ref.start..src_ref.end]
     }
 
     /// Set file name.
