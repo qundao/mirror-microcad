@@ -6,9 +6,11 @@
 use crate::ir;
 
 use microcad_lang_base::{Identifier, SrcRef};
+use serde::Serialize;
 
 /// A local assignment specifying an identifier, type and value
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
+#[serde(bound(serialize = "EXPR: Serialize"))]
 pub struct LocalAssignment<EXPR> {
     /// Assignee
     pub(crate) id: Identifier,

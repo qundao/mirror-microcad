@@ -20,8 +20,8 @@ use serde::Serialize;
     Eq,
     Ord,
     PartialOrd,
-    DerefMut,
     Deref,
+    DerefMut,
     SrcReferrer,
     Serialize,
 )]

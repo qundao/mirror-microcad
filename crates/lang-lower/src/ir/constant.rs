@@ -3,11 +3,12 @@
 
 use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
+use serde::Serialize;
 
 use crate::ir;
 
 /// A constant definition: `const FOO: Length = 32mm`.
-#[derive(Debug, SrcReferrer)]
+#[derive(Debug, SrcReferrer, Serialize)]
 pub struct Constant {
     pub src_ref: SrcRef,
     pub attr: ir::Attributes,
@@ -40,5 +41,5 @@ impl std::fmt::Display for Constant {
 }
 
 /// A list of constants
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Constants(pub Box<[Constant]>);
