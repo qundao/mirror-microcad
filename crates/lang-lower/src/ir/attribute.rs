@@ -7,9 +7,10 @@ use crate::ir::{self, ConstantExpression};
 use microcad_lang_base::{Refer, SrcRef};
 
 use microcad_lang_proc_macros::SrcReferrer;
+use serde::Serialize;
 
 /// Block of documentation comments, starting with `/// `.
-#[derive(Clone, Debug, Default, SrcReferrer)]
+#[derive(Clone, Debug, Default, SrcReferrer, Serialize)]
 pub struct DocBlock(pub Refer<Box<[String]>>);
 
 impl DocBlock {
@@ -64,26 +65,26 @@ impl std::fmt::Display for DocBlock {
 }
 
 /// Metadata for a [`Model`]
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 
 pub struct Meta {
     pub name: ir::QualifiedName,
     pub expr: ConstantExpression,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Command {
     pub name: ir::QualifiedName,
     pub argument_list: ir::ArgumentList<ConstantExpression>,
     pub src_ref: SrcRef,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Tag {
     pub name: ir::Identifier,
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Serialize)]
 pub struct Attributes {
     /// Documentation
     pub doc: ir::DocBlock,

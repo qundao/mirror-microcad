@@ -3,69 +3,60 @@
 
 //! Syntax elements related to calls.
 
-use crate::{LowerContext, LowerResult, ir};
-use derive_more::{Deref, DerefMut};
-use microcad_lang_base::{Identifier, OrdMap, OrdMapValue, PushDiag, Refer, SrcRef};
+use crate::ir;
+use microcad_lang_base::{Identifier, SrcRef};
+use serde::Serialize;
 
-/// Argument in a [`Call`].
-#[derive(Debug, PartialEq)]
-pub struct Argument<EXPR> {
+/// NamedArgument in a [`Call`].
+#[derive(Debug, PartialEq, Serialize)]
+#[serde(bound(serialize = "EXPR: Serialize"))]
+pub struct NamedArgument<EXPR> {
     /// Name of the argument
-    pub id: Option<Identifier>,
+    pub id: Identifier,
     /// Value of the argument
     pub expression: EXPR,
     /// Source code reference
     pub src_ref: SrcRef,
 }
 
-impl<EXPR> OrdMapValue<Identifier> for Argument<EXPR> {
-    fn key(&self) -> Option<Identifier> {
-        self.id.clone()
-    }
-}
-
-impl<EXPR> std::fmt::Display for Argument<EXPR>
+impl<EXPR> std::fmt::Display for NamedArgument<EXPR>
 where
     EXPR: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self.id {
-            Some(ref id) => write!(f, "{id} = {}", self.expression),
-            None => write!(f, "{}", self.expression),
-        }
+        write!(f, "{} = {}", self.id, self.expression)
+    }
+}
+
+/// Unnamed argument in a [`Call`].
+#[derive(Debug, PartialEq, Serialize)]
+#[serde(bound(serialize = "EXPR: Serialize"))]
+pub struct UnnamedArgument<EXPR> {
+    /// Value of the argument
+    pub expression: EXPR,
+    /// Source code reference
+    pub src_ref: SrcRef,
+}
+
+impl<EXPR> std::fmt::Display for UnnamedArgument<EXPR>
+where
+    EXPR: std::fmt::Display,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{}", self.expression)
     }
 }
 
 /// *Ordered map* of arguments in a [`Call`].
-#[derive(Debug, Deref, DerefMut, PartialEq)]
-pub struct ArgumentList<EXPR>(pub Refer<OrdMap<Identifier, ir::Argument<EXPR>>>);
-
-impl<EXPR> ArgumentList<EXPR> {
-    pub(crate) fn new() -> Self {
-        Self(Refer::none(microcad_lang_base::OrdMap::<
-            ir::Identifier,
-            ir::Argument<EXPR>,
-        >::default()))
-    }
-
-    pub fn try_push(
-        &mut self,
-        arg: ir::Argument<EXPR>,
-        context: &mut LowerContext,
-    ) -> LowerResult<()> {
-        let src_ref = arg.src_ref.clone();
-        match self.0.value.push(arg) {
-            Some(_) => {
-                context
-                    .diagnostics
-                    .error(&src_ref, miette::miette!("Duplicated argument"))
-                    .ok(); // TODO Better error handling
-            }
-            None => {}
-        }
-
-        Ok(())
-    }
+#[derive(Debug, PartialEq, Serialize)]
+#[serde(bound(serialize = "EXPR: Serialize"))]
+pub struct ArgumentList<EXPR> {
+    /// Source code reference
+    pub src_ref: SrcRef,
+    /// The unnamed arguments.
+    pub unnamed_args: Box<[ir::UnnamedArgument<EXPR>]>,
+    /// Named arguments, sorted by name.
+    pub named_args: Box<[ir::NamedArgument<EXPR>]>,
 }
 
 impl<EXPR> std::fmt::Display for ArgumentList<EXPR>
@@ -74,42 +65,19 @@ where
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", {
-            let mut v = self
-                .0
-                .value
+            self.unnamed_args
                 .iter()
                 .map(|p| p.to_string())
-                .collect::<Vec<_>>();
-            v.sort();
-            v.join(", ")
+                .chain(self.named_args.iter().map(|p| p.to_string()))
+                .collect::<Vec<_>>()
+                .join(", ")
         })
     }
 }
 
-impl<EXPR> Default for ArgumentList<EXPR> {
-    fn default() -> Self {
-        Self(Refer::none(OrdMap::default()))
-    }
-}
-
-impl<EXPR> std::ops::Index<&Identifier> for ArgumentList<EXPR> {
-    type Output = ir::Argument<EXPR>;
-
-    fn index(&self, name: &Identifier) -> &Self::Output {
-        self.0.get(name).expect("key not found")
-    }
-}
-
-impl<EXPR> std::ops::Index<usize> for ArgumentList<EXPR> {
-    type Output = ir::Argument<EXPR>;
-
-    fn index(&self, idx: usize) -> &Self::Output {
-        &self.0.value[idx]
-    }
-}
-
 /// Call of a *workbench* or *function*.
-#[derive(Debug, Default)]
+#[derive(Debug, Serialize)]
+#[serde(bound(serialize = "EXPR: Serialize"))]
 pub struct Call<EXPR> {
     /// Qualified name of the call.
     pub name: ir::QualifiedName,

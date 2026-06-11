@@ -19,6 +19,7 @@ pub use format_string::*;
 pub use literal::*;
 pub use qualified_name::*;
 pub use range_expression::*;
+use serde::Serialize;
 pub use tuple_expression::*;
 
 use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer};
@@ -65,7 +66,8 @@ where
 }
 
 /// A binary operation: `a + b`
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
+#[serde(bound(serialize = "EXPR: Serialize"))]
 pub struct BinaryOp<EXPR> {
     /// Left-hand side
     pub lhs: Box<EXPR>,
@@ -119,7 +121,8 @@ where
 }
 
 /// A unary operation: !a
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
+#[serde(bound(serialize = "EXPR: Serialize"))]
 pub struct UnaryOp<EXPR> {
     /// Operator ('+', '-', '!')
     pub op: Refer<String>,
@@ -153,7 +156,8 @@ where
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
+#[serde(bound(serialize = "EXPR: Serialize, ELEMENT: Serialize"))]
 pub struct ElementAccess<EXPR, ELEMENT> {
     pub lhs: Box<EXPR>,
     pub element: ELEMENT,
@@ -164,7 +168,7 @@ pub struct ElementAccess<EXPR, ELEMENT> {
 ///
 /// Use for `Constant` and default values for `Parameter`.
 /// TODO: ElementAccess are missing.
-#[derive(Debug, derive_more::From)]
+#[derive(Debug, derive_more::From, Serialize)]
 pub enum ConstantExpression {
     Invalid,
     Literal(ir::Literal),

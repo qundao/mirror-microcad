@@ -179,25 +179,8 @@ where
     EXPR: Lower<ast::Expression>,
 {
     fn lower(node: &ast::TupleExpression, context: &mut LowerContext) -> LowerResult<Self> {
-        let mut args = ir::ArgumentList::new();
-
-        node.values.iter().try_for_each(|value| {
-            args.try_push(
-                ir::Argument {
-                    id: value
-                        .name
-                        .as_ref()
-                        .map(|name| Identifier::lower(name, context))
-                        .transpose()?,
-                    expression: EXPR::lower(&value.value, context)?,
-                    src_ref: context.src_ref(&value.span),
-                },
-                context,
-            )
-        })?;
-
         Ok(Self {
-            args,
+            args: ir::ArgumentList::lower(&node.values, context)?,
             src_ref: context.src_ref(&node.span),
         })
     }
@@ -237,10 +220,13 @@ impl Lower<ast::Expression> for ir::ConstantExpression {
                 Self::UnaryOp(ir::UnaryOp::lower(unop, context)?)
             }
             expr => {
-                context.diagnostics.error(
-                    &context.src_ref(&expr.span()),
-                    miette::miette!("This is not a constant expression"),
-                );
+                context
+                    .diagnostics
+                    .error(
+                        &context.src_ref(&expr.span()),
+                        miette::miette!("This is not a constant expression"),
+                    )
+                    .ok();
                 Self::Invalid
             }
         })

@@ -30,6 +30,7 @@ pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Ty, Type,
 
 use microcad_lang_base::{Refer, SrcRef};
 use microcad_lang_proc_macros::SrcReferrer;
+use serde::Serialize;
 
 use crate::ir;
 
@@ -37,7 +38,7 @@ use crate::ir;
 ///
 /// This is used to determine if an entity is public or private.
 /// By default, entities are private.
-#[derive(Clone, Debug, Default, PartialEq)]
+#[derive(Clone, Debug, Default, PartialEq, Serialize)]
 pub enum Visibility {
     /// Private visibility
     #[default]
@@ -56,7 +57,7 @@ impl std::fmt::Display for Visibility {
 }
 
 /// Type within source code.
-#[derive(Clone, Debug, PartialEq, SrcReferrer)]
+#[derive(Clone, Debug, PartialEq, SrcReferrer, Serialize)]
 pub struct TypeAnnotation(pub Refer<Type>);
 
 impl std::fmt::Display for TypeAnnotation {
@@ -73,7 +74,7 @@ impl Ty for TypeAnnotation {
 
 /// `use std::geo2d::Circle as C` => (path = "std::geo2d::Circle", id = "C")
 /// `use std::geo2d::Circle` => (path = "std::geo2d::Circle", id = "Circle")
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct ExplicitAlias {
     pub attr: ir::Attributes,
     pub visibility: ir::Visibility,
@@ -83,7 +84,7 @@ pub struct ExplicitAlias {
 }
 
 /// `use std::geo2d::*`
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct WildcardAlias {
     pub attr: ir::Attributes,
     pub visibility: ir::Visibility,
@@ -92,7 +93,7 @@ pub struct WildcardAlias {
 }
 
 /// Aliases lowered from `use` statements.
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Aliases {
     pub explicit_aliases: Box<[ExplicitAlias]>,
     pub wildcards: Box<[WildcardAlias]>,
