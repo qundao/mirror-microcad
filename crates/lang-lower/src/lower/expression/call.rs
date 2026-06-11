@@ -1,9 +1,9 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Lower, LowerContext, LowerError, LowerResult, ir};
+use crate::{Lower, LowerContext, LowerResult, ir, lower::sort_and_check};
 
-use microcad_lang_base::{PushDiag, SrcRef};
+use microcad_lang_base::SrcRef;
 use microcad_lang_parse::ast;
 
 impl<EXPR> Lower<ast::Call> for ir::Call<EXPR>
@@ -17,37 +17,6 @@ where
             argument_list: ir::ArgumentList::lower(&node.arguments, context)?,
         })
     }
-}
-
-/// Named arguments and check for duplicates
-fn sort_and_check<EXPR>(
-    named: &mut Vec<ir::NamedArgument<EXPR>>,
-    context: &mut LowerContext,
-) -> LowerResult<()> {
-    named.sort_by(|lhs, rhs| lhs.id.cmp(&rhs.id));
-
-    named
-        .windows(2)
-        .filter_map(|pair| {
-            if pair[0].id == pair[1].id {
-                Some((&pair[0], &pair[1]))
-            } else {
-                None
-            }
-        })
-        .try_for_each(|(prev_arg, arg)| -> LowerResult<()> {
-            context
-                .diagnostics
-                .error(
-                    &arg.src_ref,
-                    LowerError::DuplicateArgument {
-                        id: arg.id.clone(),
-                        previous: prev_arg.id.clone(),
-                    },
-                )
-                .ok();
-            Ok(())
-        })
 }
 
 impl<EXPR> Lower<Vec<ast::TupleItem>> for ir::ArgumentList<EXPR>
@@ -76,12 +45,10 @@ where
             Ok(())
         })?;
 
-        sort_and_check(&mut named, context)?;
-
         Ok(Self {
             src_ref: SrcRef::none(),
             unnamed_args: unnamed.into_boxed_slice(),
-            named_args: named.into_boxed_slice(),
+            named_args: sort_and_check(named, context)?,
         })
     }
 }
@@ -111,12 +78,10 @@ where
                 Ok(())
             })?;
 
-        sort_and_check(&mut named, context)?;
-
         Ok(Self {
             src_ref: context.src_ref(&node.span),
             unnamed_args: unnamed.into_boxed_slice(),
-            named_args: named.into_boxed_slice(),
+            named_args: sort_and_check(named, context)?,
         })
     }
 }
