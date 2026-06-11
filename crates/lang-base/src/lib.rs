@@ -69,7 +69,10 @@ pub trait ResourceLocation {
 }
 
 /// List of valid µcad extensions.
-pub const MICROCAD_EXTENSIONS: &[&str] = &["µcad", "mcad", "ucad"];
+pub const MICROCAD_EXTENSIONS: &[&str] = &["mu", "µcad", "mcad", "ucad"];
+
+/// Default extension for µcad files.
+pub const MICROCAD_EXTENSION: &str = "µcad";
 
 pub use code_display::*;
 pub use diag::{
