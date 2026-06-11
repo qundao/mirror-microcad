@@ -10,7 +10,7 @@ mod paragraph;
 mod parser;
 mod section;
 
-pub use code_block::CodeBlock;
+pub use code_block::{CodeBlock, CodeBlockHeader};
 pub use markdown::{Markdown, MarkdownError};
 pub use mdbook::{MdBook, MdBookError};
 pub use paragraph::Paragraph;
