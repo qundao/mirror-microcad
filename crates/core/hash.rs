@@ -11,6 +11,7 @@ pub type HashId = u64;
 pub use rustc_hash::FxHashMap as HashMap;
 pub use rustc_hash::FxHashSet as HashSet;
 pub use rustc_hash::FxHasher as Hasher;
+use serde::Serialize;
 
 /// Trait to implement for typed that contain a pre-computed hash value.
 pub trait ComputedHash {
@@ -19,7 +20,8 @@ pub trait ComputedHash {
 }
 
 /// Generic wrapper that contains the hashed value.
-#[derive(Deref, Debug, Clone)]
+#[derive(Deref, Debug, Clone, Serialize)]
+#[serde(bound(serialize = "T: Serialize"))]
 pub struct Hashed<T: std::hash::Hash> {
     #[deref]
     inner: T,
