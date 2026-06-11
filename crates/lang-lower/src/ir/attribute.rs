@@ -74,7 +74,6 @@ impl std::fmt::Display for DocBlock {
 
 /// Metadata for a [`Model`]
 #[derive(Debug, Serialize)]
-
 pub struct Meta {
     pub name: ir::QualifiedName,
     pub expr: ConstantExpression,
