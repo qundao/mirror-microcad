@@ -21,8 +21,7 @@ impl ToLsp for mu::SrcRef {
         match self.is_some() {
             true => {
                 let start = lsp::Position::new(self.at.line, self.at.col - 1);
-                let end =
-                    lsp::Position::new(self.at.line, (self.at.col + self.range.len() as u32) - 1);
+                let end = lsp::Position::new(self.at.line, (self.at.col + self.len() as u32) - 1);
 
                 Some(lsp::Range::new(start, end))
             }
