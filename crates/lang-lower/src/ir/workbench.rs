@@ -26,10 +26,7 @@ pub struct WorkbenchStatement {
 pub struct WorkbenchStatements(pub Box<[WorkbenchStatement]>);
 
 #[derive(Debug)]
-pub struct Group(pub Refer<Box<[WorkbenchStatement]>>);
-
-#[derive(Debug)]
-pub struct InitBody(pub Box<[ir::LocalAssignment<ir::WorkbenchExpression>]>);
+pub struct Group(pub Refer<WorkbenchStatements>);
 
 #[derive(Debug)]
 pub struct Init {
@@ -40,7 +37,7 @@ pub struct Init {
     /// Parameter list for this init definition
     pub parameters: ir::ParameterList,
     /// Body if the init definition
-    pub body: InitBody,
+    pub statements: WorkbenchStatements,
     /// Source reference
     pub src_ref: SrcRef,
 }
