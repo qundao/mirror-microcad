@@ -21,7 +21,7 @@ pub struct FileModule {
 }
 
 #[derive(Debug, Default)]
-pub struct FileModules(pub Vec<FileModule>);
+pub struct FileModules(pub Box<[FileModule]>);
 
 /// Module definition.
 #[derive(Debug, Identifiable)]
