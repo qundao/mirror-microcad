@@ -6,14 +6,14 @@ use microcad_lang_proc_macros::SrcReferrer;
 use serde::Serialize;
 use serde_with::skip_serializing_none;
 
-use crate::{IsDefault, ir};
+use crate::{IsDefault, ir, is_default};
 
 /// A constant definition: `const FOO: Length = 32mm`.
 #[skip_serializing_none]
 #[derive(Debug, SrcReferrer, Serialize)]
 pub struct Constant {
     pub src_ref: SrcRef,
-    #[serde(skip_serializing_if = "ir::OuterAttributes::is_empty", default)]
+    #[serde(skip_serializing_if = "is_default", default)]
     pub attr: ir::OuterAttributes,
     pub visibility: ir::Visibility,
     #[serde(skip_serializing_if = "SrcRef::is_none", default)]

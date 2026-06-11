@@ -52,8 +52,7 @@ impl Source {
     ///
     /// - `line`: line number beginning at `0`
     pub fn get_code(&self, src_ref: &SrcRef) -> &str {
-        let range = &src_ref.range;
-        &self.source.code[range.start..range.end]
+        &self.source.code[src_ref.start..src_ref.end]
     }
 
     /// Get a miette source adapter for the SourceFile

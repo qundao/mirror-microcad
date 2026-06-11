@@ -125,9 +125,7 @@ impl IsDefault for Attributes {
 
 /// Inner attributes (`//!`, `#![...]`), usually lowered from a `ast::StatementList`.
 #[derive(Debug, Default, Deref, DerefMut, Serialize)]
-pub struct InnerAttributes(
-    #[serde(skip_serializing_if = "Attributes::is_empty", default)] pub Attributes,
-);
+pub struct InnerAttributes(#[serde(skip_serializing_if = "is_default", default)] pub Attributes);
 
 impl InnerAttributes {
     /// Check if inner attributes are empty
@@ -144,9 +142,7 @@ impl IsDefault for InnerAttributes {
 
 /// Inner attributes (`///`, `#[...]`), usually lowered from definitions.
 #[derive(Debug, Default, Deref, DerefMut, Serialize)]
-pub struct OuterAttributes(
-    #[serde(skip_serializing_if = "Attributes::is_empty", default)] pub Attributes,
-);
+pub struct OuterAttributes(#[serde(skip_serializing_if = "is_default", default)] pub Attributes);
 
 impl OuterAttributes {
     /// Check if outer attributes are empty
