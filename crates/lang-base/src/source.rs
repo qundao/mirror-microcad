@@ -5,24 +5,35 @@ use crate::{GetSourceLocInfoByHash, HashId, Hashed, ResourceLocation, SourceLocI
 use microcad_core::hash::ComputedHash;
 use url::Url;
 
-/// An unparsed source code with a location
+/// Unparsed source code with a location.
+///
+/// The unique location of µcad file is specified via:
+/// * `url: Url`: A URL pointing to a source code
+/// * `line_offset: u32`: A line offset inside file
+///
+/// Additionally, a unique hash of the source code computed.
 #[derive(Debug, Clone)]
 pub struct Source {
     /// The source url
     pub url: Url,
     /// Line offset
     pub line_offset: u32,
-    /// The original code
+    /// The original hashed code
     pub code: Hashed<String>,
 }
 
 impl Source {
+    /// Create a new source.
     pub fn new(url: Url, line_offset: u32, code: String) -> Self {
         Self {
             url,
             line_offset,
             code: Hashed::new(code),
         }
+    }
+
+    pub fn code(&self) -> &str {
+        &self.code.value()
     }
 }
 
