@@ -24,7 +24,7 @@ fn test(name: &str) {
     let mut context = lower::LowerContext::new(&ast.code);
     let ir = lower::ir::Source::lower(&ast, &mut context).expect("No lower errors");
 
-    insta::assert_debug_snapshot!(name, ir);
+    insta::assert_snapshot!(name, lower::to_ron(&ir).expect("No error"));
 }
 
 macro_rules! test_case {

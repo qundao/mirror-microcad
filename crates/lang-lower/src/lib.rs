@@ -87,3 +87,18 @@ impl<'source> LowerContext<'source> {
 pub trait Lower<AstNode>: Sized {
     fn lower(node: &AstNode, context: &mut LowerContext) -> LowerResult<Self>;
 }
+
+/// Convert IR to Rusty Object Notation (ron)
+pub fn to_ron<T>(item: &T) -> miette::Result<String>
+where
+    T: serde::Serialize,
+{
+    // Configure indentation, spacing, and multi-line breaks
+    let config = ron::ser::PrettyConfig::default()
+        .depth_limit(6)
+        .indentor("    ".to_string()) // Beautiful 4-space indent
+        .new_line("\n".to_string());
+
+    ron::ser::to_string_pretty(item, config)
+        .map_err(|e| miette::miette!("Failed to generate pretty RON: {}", e))
+}
