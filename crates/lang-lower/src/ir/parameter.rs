@@ -8,7 +8,7 @@ use crate::ir;
 use microcad_lang_base::{Identifier, OrdMap, OrdMapValue, Refer, SrcRef};
 use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
 
-use derive_more::{Deref, DerefMut};
+use derive_more::Deref;
 
 /// A parameter of a parameter list.
 #[derive(Debug, Default, SrcReferrer, Identifiable)]
@@ -43,7 +43,7 @@ impl std::fmt::Display for Parameter {
 }
 
 /// Parameter list
-#[derive(Debug, Default, Deref, DerefMut, SrcReferrer)]
+#[derive(Debug, Default, Deref, SrcReferrer)]
 pub struct ParameterList(pub Refer<OrdMap<Identifier, ir::Parameter>>);
 
 impl ParameterList {

@@ -2,8 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    Lower, LowerContext, LowerError, LowerResult,
-    ir::{self, WorkbenchExpression},
+    Lower, LowerContext, LowerError, LowerResult, ir,
     lower::{attribute::outer_with_doc, extract_statements},
 };
 

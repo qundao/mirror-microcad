@@ -7,9 +7,10 @@ use crate::ir;
 
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;
+use serde::Serialize;
 
 /// Format string item.
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub enum FormatStringInner {
     /// String literal.
     String(Refer<String>),
@@ -27,7 +28,7 @@ impl SrcReferrer for FormatStringInner {
 }
 
 /// Format string.
-#[derive(Default, Debug, SrcReferrer)]
+#[derive(Default, Debug, SrcReferrer, Serialize)]
 pub struct FormatString(pub Refer<Vec<FormatStringInner>>);
 
 impl FormatString {
@@ -73,7 +74,7 @@ impl std::fmt::Display for FormatString {
 }
 
 /// Format expression including format specification.
-#[derive(Debug, SrcReferrer)]
+#[derive(Debug, SrcReferrer, Serialize)]
 pub struct FormatExpression {
     /// Format specifier
     pub spec: Option<ir::FormatSpec>,
@@ -109,7 +110,7 @@ impl std::fmt::Display for FormatExpression {
 }
 
 /// Format specification.
-#[derive(Debug, Default, PartialEq, SrcReferrer)]
+#[derive(Debug, Default, PartialEq, SrcReferrer, Serialize)]
 pub struct FormatSpec {
     /// Precision for number formatting.
     pub precision: Option<u32>,

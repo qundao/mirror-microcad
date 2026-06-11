@@ -6,9 +6,11 @@
 use crate::ir;
 
 use microcad_lang_base::SrcRef;
+use serde::Serialize;
 
 /// Tuple expression, e.g. `(x=1+2,4,z=9)`.
-#[derive(Debug, Default, PartialEq)]
+#[derive(Debug, PartialEq, Serialize)]
+#[serde(bound(serialize = "EXPR: Serialize"))]
 pub struct TupleExpression<EXPR> {
     /// List of tuple members.
     pub args: ir::ArgumentList<EXPR>,
@@ -21,19 +23,7 @@ where
     EXPR: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(
-            f,
-            "({})",
-            self.args
-                .iter()
-                .map(|arg| if let Some(name) = &arg.id {
-                    format!("{} = {}", &name, arg.expression)
-                } else {
-                    arg.to_string()
-                })
-                .collect::<Vec<String>>()
-                .join(", ")
-        )?;
+        write!(f, "({})", self.args)?;
         Ok(())
     }
 }

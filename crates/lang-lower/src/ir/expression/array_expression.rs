@@ -6,9 +6,11 @@
 use crate::ir;
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{SrcRef, SrcReferrer};
+use serde::Serialize;
 
 /// Inner of an [`ArrayExpression`].
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
+#[serde(bound(serialize = "EXPR: Serialize"))]
 pub enum ArrayExpressionInner<EXPR> {
     /// List: `a,b,c`.
     List(ir::ListExpression<EXPR>),
@@ -58,7 +60,8 @@ where
 }
 
 /// Array of expressions with common result unit, e.g. `[1+2,4,9]mm`.
-#[derive(Clone, Debug, Deref, DerefMut, PartialEq)]
+#[derive(Clone, Debug, Deref, DerefMut, PartialEq, Serialize)]
+#[serde(bound(serialize = "EXPR: Serialize"))]
 pub struct ArrayExpression<EXPR> {
     /// Expression list.
     #[deref]
