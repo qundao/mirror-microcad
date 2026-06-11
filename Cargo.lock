@@ -2354,6 +2354,7 @@ dependencies = [
  "itoa",
  "rustversion",
  "ryu",
+ "serde",
  "static_assertions",
 ]
 
@@ -5333,8 +5334,6 @@ dependencies = [
  "miette",
  "num-format",
  "rust-embed",
- "serde",
- "serde_derive",
  "toml 1.1.2+spec-1.1.0",
  "walkdir",
 ]
@@ -5382,6 +5381,7 @@ dependencies = [
  "manifold-rs",
  "miette",
  "rustc-hash 2.1.2",
+ "serde",
  "strum",
  "thiserror 2.0.18",
  "toml 1.1.2+spec-1.1.0",
@@ -5506,6 +5506,7 @@ dependencies = [
 name = "microcad-lang-base"
 version = "0.5.0"
 dependencies = [
+ "bytemuck",
  "color-print",
  "compact_str",
  "derive_more",
@@ -5513,6 +5514,7 @@ dependencies = [
  "microcad-core",
  "miette",
  "pathdiff",
+ "serde",
  "thiserror 2.0.18",
  "url",
 ]
@@ -5532,9 +5534,11 @@ dependencies = [
 name = "microcad-lang-markdown"
 version = "0.5.0"
 dependencies = [
+ "clap",
  "derive_more",
  "insta",
  "microcad-lang-base",
+ "miette",
  "thiserror 2.0.18",
 ]
 
