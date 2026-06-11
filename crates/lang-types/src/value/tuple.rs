@@ -13,7 +13,7 @@ use crate::{ty::*, value::*};
 /// Tuple with named values
 ///
 /// Names are optional, which means Identifiers can be empty.
-#[derive(Clone, Debug, Default, PartialEq, SrcReferrer)]
+#[derive(Clone, Debug, Default, PartialEq, SrcReferrer, Serialize)]
 pub struct Tuple {
     pub(crate) named: HashMap<Identifier, Value>,
     pub(crate) unnamed: HashMap<Type, Value>,

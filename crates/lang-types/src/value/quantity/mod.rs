@@ -9,11 +9,12 @@ pub mod ops;
 use crate::ty::*;
 
 pub use error::*;
+use serde::Serialize;
 
 const OUTPUT_PRECISION: i32 = 14;
 
 /// A numeric value
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
 pub struct Quantity {
     /// The numeric value of the quantity.
     pub value: Scalar,

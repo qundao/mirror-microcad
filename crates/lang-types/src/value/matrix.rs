@@ -4,11 +4,12 @@
 //! Matrix value type
 
 use microcad_core::Scalar;
+use serde::Serialize;
 
 use crate::ty::*;
 
 /// Matrix type
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize)]
 pub enum Matrix {
     /// 2x2 matrix.
     Matrix2(microcad_core::Mat2),

@@ -3,8 +3,10 @@
 
 //! Matrix type
 
+use serde::Serialize;
+
 /// M x N Matrix Type.
-#[derive(Clone, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Clone, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize)]
 pub struct MatrixType {
     /// Number of rows.
     pub rows: usize,
