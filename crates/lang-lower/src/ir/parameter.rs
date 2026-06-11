@@ -8,13 +8,17 @@ use crate::ir;
 use microcad_lang_base::{Identifier, Refer, SrcRef};
 use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
 
+use crate::is_default;
 use derive_more::Deref;
 use serde::Serialize;
+use serde_with::skip_serializing_none;
 
 /// A parameter of a parameter list.
+#[skip_serializing_none]
 #[derive(Debug, Default, SrcReferrer, Identifiable, Serialize)]
 pub struct Parameter {
     /// Parameter attributes
+    #[serde(skip_serializing_if = "is_default", default)]
     pub attr: ir::OuterAttributes,
     /// Name of the parameter
     pub(crate) id: Identifier,
