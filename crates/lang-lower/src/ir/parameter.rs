@@ -15,7 +15,7 @@ use serde::Serialize;
 #[derive(Debug, Default, SrcReferrer, Identifiable, Serialize)]
 pub struct Parameter {
     /// Parameter attributes
-    pub attr: ir::Attributes,
+    pub attr: ir::OuterAttributes,
     /// Name of the parameter
     pub(crate) id: Identifier,
     /// Type of the parameter or `None`

@@ -3,7 +3,7 @@
 
 //! Syntax elements related to calls.
 
-use crate::{Identifiable, ir};
+use crate::{Identifiable, ir, is_default};
 use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
 use serde::Serialize;
 
@@ -65,9 +65,12 @@ where
 pub struct ArgumentList<EXPR> {
     /// Source code reference
     pub src_ref: SrcRef,
+
     /// The unnamed arguments.
+    #[serde(skip_serializing_if = "is_default", default)]
     pub unnamed_args: Box<[ir::UnnamedArgument<EXPR>]>,
     /// Named arguments, sorted by name.
+    #[serde(skip_serializing_if = "is_default", default)]
     pub named_args: Box<[ir::NamedArgument<EXPR>]>,
 }
 

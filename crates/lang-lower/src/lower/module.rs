@@ -45,7 +45,7 @@ impl Lower<ast::InlineModule> for ir::InlineModule {
             visibility: ir::Visibility::lower(&node.visibility, context)?,
             keyword_ref: context.src_ref(&node.keyword_span),
             id: ir::Identifier::lower(&node.name, context)?,
-            inner_attr: ir::Attributes::lower(&node.body.statements, context)?,
+            inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
             modules: ir::InlineModules::lower(&node.body.statements, context)?,
             aliases: ir::Aliases::lower(&node.body.statements, context)?,
             constants: ir::Constants::lower(&node.body.statements, context)?,

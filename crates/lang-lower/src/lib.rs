@@ -14,6 +14,21 @@ use microcad_lang_base::{
 
 pub use lower::{LowerError, LowerErrorsWithSource, LowerResult};
 
+pub(crate) trait IsDefault {
+    fn is_default(&self) -> bool;
+}
+
+// The single function you point Serde to
+pub(crate) fn is_default<T: IsDefault>(t: &T) -> bool {
+    t.is_default()
+}
+
+impl<T> IsDefault for Box<[T]> {
+    fn is_default(&self) -> bool {
+        self.is_empty() // No PartialEq bound required!
+    }
+}
+
 /// Check if the element only includes one identifier
 pub trait SingleIdentifier {
     /// If the element only includes one identifier, return it

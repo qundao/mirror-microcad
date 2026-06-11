@@ -8,6 +8,7 @@ use crate::ir;
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;
 use serde::Serialize;
+use serde_with::skip_serializing_none;
 
 /// Format string item.
 #[derive(Debug, Serialize)]
@@ -74,6 +75,7 @@ impl std::fmt::Display for FormatString {
 }
 
 /// Format expression including format specification.
+#[skip_serializing_none]
 #[derive(Debug, SrcReferrer, Serialize)]
 pub struct FormatExpression {
     /// Format specifier

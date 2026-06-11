@@ -26,6 +26,7 @@ strum = { version = "0.28", features = ["derive"] }
 thiserror = "2.0.17"
 ron = "0.12"
 serde = { version = "1.0", features = ["derive"] }
+serde_with = { version = "3.21", features = ["macros"] }
 
 microcad-lang-base = { workspace = true }
 microcad-lang-proc-macros = { workspace = true }
