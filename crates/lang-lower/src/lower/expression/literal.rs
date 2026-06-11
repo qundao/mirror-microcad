@@ -56,3 +56,13 @@ impl Lower<ast::Unit> for ir::Unit {
         })
     }
 }
+
+impl Lower<Option<ast::Unit>> for ir::Unit {
+    fn lower(node: &Option<ast::Unit>, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(node
+            .as_ref()
+            .map(|unit| Self::lower(unit, context))
+            .transpose()?
+            .unwrap_or_default())
+    }
+}

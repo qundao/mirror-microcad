@@ -312,15 +312,8 @@ impl Lower<ast::Expression> for ir::ConstantExpression {
             ast::Expression::Bracketed(expr, _) => Self::lower(expr, context)?,
             ast::Expression::Literal(ast::Literal {
                 literal: ast::LiteralKind::String(s),
-                span,
                 ..
-            }) => Self::FormatString(ir::FormatString(Refer::new(
-                vec![ir::FormatStringInner::String(Refer::new(
-                    s.content.clone(),
-                    context.src_ref(&s.span),
-                ))],
-                context.src_ref(span),
-            ))),
+            }) => Self::FormatString(ir::FormatString::lower(s, context)?),
             ast::Expression::Literal(expr) => Self::Literal(ir::Literal::lower(expr, context)?),
             ast::Expression::String(s) => Self::FormatString(ir::FormatString::lower(s, context)?),
             ast::Expression::Tuple(t) => {
@@ -328,22 +321,12 @@ impl Lower<ast::Expression> for ir::ConstantExpression {
             }
             ast::Expression::ArrayRange(a) => Self::ArrayExpression(ir::ArrayExpression {
                 inner: ir::ArrayExpressionInner::Range(ir::RangeExpression::lower(a, context)?),
-                unit: a
-                    .unit
-                    .as_ref()
-                    .map(|unit| ir::Unit::lower(unit, context))
-                    .transpose()?
-                    .unwrap_or_default(),
+                unit: ir::Unit::lower(&a.unit, context)?,
                 src_ref: context.src_ref(&a.span),
             }),
             ast::Expression::ArrayList(a) => Self::ArrayExpression(ir::ArrayExpression {
                 inner: ir::ArrayExpressionInner::List(ir::ListExpression::lower(a, context)?),
-                unit: a
-                    .unit
-                    .as_ref()
-                    .map(|ty| ir::Unit::lower(ty, context))
-                    .transpose()?
-                    .unwrap_or_default(),
+                unit: ir::Unit::lower(&a.unit, context)?,
                 src_ref: context.src_ref(&a.span),
             }),
             ast::Expression::QualifiedName(n) => {
