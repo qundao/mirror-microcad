@@ -34,10 +34,15 @@ pub type Span = std::ops::Range<usize>;
 /// Reference into a source file.
 ///
 /// *Hint*: Source file is not part of `SrcRef` and must be provided from outside
-#[derive(Clone, Default, Serialize)]
+#[derive(Clone, Copy, Default)]
+#[repr(C)]
 pub struct SrcRef {
-    /// Range in bytes
-    pub range: Span,
+    /// Start position in bytes
+    pub start: usize,
+
+    /// End position in bytes
+    pub end: usize,
+
     /// Line and column
     pub at: LineCol,
     /// Hash of the source code file to map `SrcRef` -> `SourceFile`
@@ -53,7 +58,8 @@ impl SrcRef {
     /// - `col`: Column number within file
     pub fn new(range: std::ops::Range<usize>, at: LineCol, source_hash: HashId) -> Self {
         Self {
-            range,
+            start: range.start,
+            end: range.end,
             at,
             source_hash,
         }
@@ -66,7 +72,7 @@ impl SrcRef {
     /// Return a span for the source reference as expected by miette
     pub fn as_miette_span(&self) -> Option<SourceSpan> {
         if self.is_some() {
-            Some(SourceSpan::new(self.range.start.into(), self.range.len()))
+            Some(SourceSpan::new(self.start.into(), self.len()))
         } else {
             None
         }
@@ -84,10 +90,7 @@ impl SrcRef {
     ///
     /// This means they must have the same non-zero source file hash and its ranges must overlap.
     pub fn is_overlapping(&self, other: &Self) -> bool {
-        self.is_some()
-            && other.is_some()
-            && (self.range.start < other.range.end)
-            && (other.range.start < self.range.end)
+        self.is_some() && other.is_some() && (self.start < other.end) && (other.start < self.end)
     }
 
     /// Return a reference with a given line offset.
@@ -97,9 +100,14 @@ impl SrcRef {
         s
     }
 
+    /// Return range between `start..end`
+    pub fn range(&self) -> std::ops::Range<usize> {
+        self.start..self.end
+    }
+
     /// return length of `SrcRef`
     pub fn len(&self) -> usize {
-        self.range.len()
+        self.range().len()
     }
 
     /// return true if code base is empty
@@ -120,7 +128,7 @@ impl SrcRef {
     /// Return slice to code base.
     pub fn source_slice<'a>(&self, src: &'a str) -> &'a str {
         assert!(self.is_some());
-        &src[self.range.to_owned()]
+        &src[self.range().to_owned()]
     }
 
     /// Merge two `SrcRef` into a single one.
@@ -138,9 +146,9 @@ impl SrcRef {
                 if lhs.source_hash == rhs.source_hash {
                     let source_hash = lhs.source_hash;
 
-                    if lhs.range == rhs.range {
+                    if lhs.range() == rhs.range() {
                         lhs
-                    } else if lhs.range.end > rhs.range.start || lhs.range.start > rhs.range.end {
+                    } else if lhs.end > rhs.start || lhs.start > rhs.end {
                         log::warn!(
                             "ranges not in correct order: {lhs} vs {rhs} @ {source_hash}",
                             lhs = lhs.at,
@@ -148,14 +156,12 @@ impl SrcRef {
                         );
                         SrcRef::none()
                     } else {
-                        SrcRef {
-                            range: {
-                                // paranoia check
-                                assert!(lhs.range.end <= rhs.range.end);
-                                assert!(lhs.range.start <= rhs.range.start);
+                        assert!(lhs.end <= rhs.end);
+                        assert!(lhs.start <= rhs.start);
 
-                                lhs.range.start..rhs.range.end
-                            },
+                        SrcRef {
+                            start: lhs.start,
+                            end: rhs.end,
                             at: lhs.at,
                             source_hash,
                         }
@@ -183,11 +189,11 @@ impl SrcRef {
                     if result.source_hash != src_ref.source_hash {
                         panic!("can only merge source references of the same file");
                     }
-                    if src_ref.range.start < result.range.start {
-                        result.range.start = src_ref.range.start;
+                    if src_ref.start < result.start {
+                        result.start = src_ref.start;
                         result.at = src_ref.at;
                     }
-                    result.range.end = std::cmp::max(src_ref.range.end, result.range.end);
+                    result.end = std::cmp::max(src_ref.end, result.end);
                 } else {
                     result = src_ref;
                 }
@@ -247,7 +253,7 @@ impl std::fmt::Debug for SrcRef {
             true => write!(
                 f,
                 "{} ({}..{}) in {:#x}",
-                self.at, self.range.start, self.range.end, self.source_hash
+                self.at, self.start, self.end, self.source_hash
             ),
             false => write!(f, "<NO REF>"),
         }
@@ -271,6 +277,36 @@ impl Eq for SrcRef {}
 impl Ord for SrcRef {
     fn cmp(&self, _: &Self) -> std::cmp::Ordering {
         std::cmp::Ordering::Equal
+    }
+}
+
+unsafe impl bytemuck::Zeroable for SrcRef {}
+unsafe impl bytemuck::Pod for SrcRef {}
+
+impl Serialize for SrcRef {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        if serializer.is_human_readable() {
+            // Text formats (RON, JSON) get the ultra-compact string
+            let compact = match self.is_some() {
+                true => format!(
+                    "{}:{} @ {:x} ({}..{})",
+                    self.line().unwrap(),
+                    self.col().unwrap(),
+                    self.source_hash,
+                    self.start,
+                    self.end
+                ),
+                false => String::from("None"),
+            };
+            serializer.serialize_str(&compact)
+        } else {
+            // Binary formats get zero-copy raw bytes via bytemuck
+            let bytes: &[u8] = bytemuck::bytes_of(self);
+            serializer.serialize_bytes(bytes)
+        }
     }
 }
 
