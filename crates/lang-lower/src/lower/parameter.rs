@@ -1,9 +1,9 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Lower, LowerContext, LowerResult, ir};
+use crate::{Lower, LowerContext, LowerResult, ir, lower::sort_and_check};
 
-use microcad_lang_base::{OrdMap, PushDiag, Refer, SrcReferrer};
+use microcad_lang_base::Refer;
 use microcad_lang_parse::ast;
 
 impl Lower<ast::Parameter> for ir::Parameter {
@@ -28,23 +28,14 @@ impl Lower<ast::Parameter> for ir::Parameter {
 
 impl Lower<ast::ParameterList> for ir::ParameterList {
     fn lower(node: &ast::ParameterList, context: &mut LowerContext) -> LowerResult<Self> {
-        let mut parameters: OrdMap<_, _> = Default::default();
+        let mut parameters = Vec::new();
 
         for param in &node.parameters {
-            let param = ir::Parameter::lower(param, context)?;
-            match parameters.push(param) {
-                Some(param) => {
-                    context
-                        .diagnostics
-                        .error(&param.src_ref(), miette::miette!("Duplicated parameter"))
-                        .ok();
-                }
-                None => {} // Ok
-            }
+            parameters.push(ir::Parameter::lower(param, context)?);
         }
 
         Ok(ir::ParameterList(Refer::new(
-            parameters,
+            sort_and_check(parameters, context)?,
             context.src_ref(&node.span),
         )))
     }

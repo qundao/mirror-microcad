@@ -21,6 +21,7 @@ use microcad_lang_types::ty::TypeError;
 use miette::{Diagnostic, SourceCode};
 use thiserror::Error;
 
+use crate::Identifiable;
 use crate::{Lower, LowerContext, ir};
 
 /// Parsing errors
@@ -255,6 +256,40 @@ where
         })?;
 
     Ok(mapped.into_boxed_slice())
+}
+
+/// Named and check for duplicates
+pub fn sort_and_check<T>(mut named: Vec<T>, context: &mut LowerContext) -> LowerResult<Box<[T]>>
+where
+    T: Identifiable + SrcReferrer,
+{
+    use microcad_lang_base::PushDiag;
+    named.sort_by(|lhs, rhs| lhs.id().cmp(&rhs.id()));
+
+    named
+        .windows(2)
+        .filter_map(|pair| {
+            if pair[0].id() == pair[1].id() {
+                Some((&pair[0], &pair[1]))
+            } else {
+                None
+            }
+        })
+        .try_for_each(|(prev_arg, arg)| -> LowerResult<()> {
+            context
+                .diagnostics
+                .error(
+                    &arg.src_ref(),
+                    LowerError::DuplicateArgument {
+                        id: arg.id().clone(),
+                        previous: prev_arg.id().clone(),
+                    },
+                )
+                .ok();
+            Ok(())
+        })?;
+
+    Ok(named.into_boxed_slice())
 }
 
 impl Lower<Option<ast::Visibility>> for ir::Visibility {
