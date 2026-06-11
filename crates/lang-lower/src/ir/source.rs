@@ -8,9 +8,10 @@ use crate::ir;
 use microcad_lang_base::{
     ComputedHash, LineCol, ResourceLocation, SourceLocInfo, SrcRef, SrcReferrer,
 };
+use serde::Serialize;
 
 /// µcad source file
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Source {
     /// Inner attributes.
     pub attr: ir::Attributes,

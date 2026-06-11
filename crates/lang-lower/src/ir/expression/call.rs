@@ -3,8 +3,8 @@
 
 //! Syntax elements related to calls.
 
-use crate::ir;
-use microcad_lang_base::{Identifier, SrcRef};
+use crate::{Identifiable, ir};
+use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
 use serde::Serialize;
 
 /// NamedArgument in a [`Call`].
@@ -25,6 +25,18 @@ where
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{} = {}", self.id, self.expression)
+    }
+}
+
+impl<EXPR> Identifiable for NamedArgument<EXPR> {
+    fn id_ref(&self) -> &Identifier {
+        &self.id
+    }
+}
+
+impl<EXPR> SrcReferrer for NamedArgument<EXPR> {
+    fn src_ref(&self) -> SrcRef {
+        self.src_ref.clone()
     }
 }
 

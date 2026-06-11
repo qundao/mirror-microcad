@@ -5,10 +5,11 @@
 
 use microcad_lang_base::{SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Identifiable;
+use serde::Serialize;
 
 use crate::ir;
 
-#[derive(Debug, Identifiable)]
+#[derive(Debug, Identifiable, Serialize)]
 pub struct FileModule {
     pub src_ref: SrcRef,
     pub attr: ir::Attributes,
@@ -20,11 +21,11 @@ pub struct FileModule {
     pub id: ir::Identifier,
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Serialize)]
 pub struct FileModules(pub Box<[FileModule]>);
 
 /// Module definition.
-#[derive(Debug, Identifiable)]
+#[derive(Debug, Identifiable, Serialize)]
 pub struct InlineModule {
     pub src_ref: SrcRef,
 
@@ -67,5 +68,5 @@ impl std::fmt::Display for InlineModule {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Serialize)]
 pub struct InlineModules(pub Box<[InlineModule]>);

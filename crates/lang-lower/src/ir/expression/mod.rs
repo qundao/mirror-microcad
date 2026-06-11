@@ -28,7 +28,8 @@ use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer};
 pub type ListExpression<EXPR> = Vec<EXPR>;
 
 /// If statement.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
+#[serde(bound(serialize = "EXPR: Serialize, BODY: Serialize"))]
 pub struct If<EXPR, BODY> {
     /// SrcRef of the `if` keyword.
     pub if_ref: SrcRef,

@@ -6,9 +6,10 @@
 use crate::ir;
 
 use microcad_lang_base::{Refer, SrcRef};
+use serde::Serialize;
 
 /// Parameters and return type of a function
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct FunctionSignature {
     /// Function's parameters
     pub parameters: ir::ParameterList,
@@ -36,7 +37,7 @@ impl std::fmt::Display for FunctionSignature {
 type Access<ELEMENT> = ir::ElementAccess<FunctionExpression, ELEMENT>;
 type MethodCall = ir::Call<FunctionExpression>;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub enum FunctionExpression {
     Invalid,
     Literal(ir::Literal),
@@ -57,14 +58,14 @@ pub enum FunctionExpression {
     MethodCall(Access<MethodCall>),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct ReturnStatement {
     pub value: Option<FunctionExpression>,
     pub keyword_src_ref: SrcRef,
     pub src_ref: SrcRef,
 }
 
-#[derive(Debug, derive_more::From)]
+#[derive(Debug, derive_more::From, Serialize)]
 pub enum FunctionStatement {
     Local(ir::LocalAssignment<FunctionExpression>),
     Scope(ir::Scope),
@@ -72,13 +73,13 @@ pub enum FunctionStatement {
     Return(ReturnStatement),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct FunctionStatements(pub Box<[FunctionStatement]>);
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Scope(pub Refer<FunctionStatements>);
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Function {
     /// Source ref for the whole definition
     pub src_ref: SrcRef,
@@ -102,5 +103,5 @@ pub struct Function {
     pub statements: ir::FunctionStatements,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Functions(pub Box<[Function]>);

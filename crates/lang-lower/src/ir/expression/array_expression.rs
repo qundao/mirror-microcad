@@ -4,7 +4,7 @@
 //! Array expressions
 
 use crate::ir;
-use derive_more::{Deref, DerefMut};
+use derive_more::Deref;
 use microcad_lang_base::{SrcRef, SrcReferrer};
 use serde::Serialize;
 
@@ -60,12 +60,11 @@ where
 }
 
 /// Array of expressions with common result unit, e.g. `[1+2,4,9]mm`.
-#[derive(Clone, Debug, Deref, DerefMut, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deref, PartialEq, Serialize)]
 #[serde(bound(serialize = "EXPR: Serialize"))]
 pub struct ArrayExpression<EXPR> {
     /// Expression list.
     #[deref]
-    #[deref_mut]
     pub inner: ArrayExpressionInner<EXPR>,
     /// Unit.
     pub unit: ir::Unit,

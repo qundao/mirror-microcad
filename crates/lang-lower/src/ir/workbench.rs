@@ -9,9 +9,10 @@ use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Identifiable;
 
 pub use microcad_lang_base::element::WorkbenchKind;
+use serde::Serialize;
 
 /// Each WorkbenchStatement eventually evals into a [`Models`]
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct WorkbenchStatement {
     pub attr: ir::Attributes,
     pub src_ref: SrcRef,
@@ -22,13 +23,13 @@ pub struct WorkbenchStatement {
     pub expression: WorkbenchExpression,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct WorkbenchStatements(pub Box<[WorkbenchStatement]>);
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Group(pub Refer<WorkbenchStatements>);
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Init {
     /// SrcRef of the `init` keyword
     pub keyword_ref: SrcRef,
@@ -42,11 +43,11 @@ pub struct Init {
     pub src_ref: SrcRef,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Inits(pub Box<[Init]>);
 
 /// Node marker, e.g. `@input`.
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Marker {
     /// Marker name, e.g. `input`
     pub id: ir::Identifier,
@@ -70,7 +71,7 @@ impl std::fmt::Display for Marker {
 type Access<ELEMENT> = ir::ElementAccess<WorkbenchExpression, ELEMENT>;
 type MethodCall = ir::Call<WorkbenchExpression>;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub enum WorkbenchExpression {
     Invalid,
     Literal(ir::Literal),
@@ -91,7 +92,7 @@ pub enum WorkbenchExpression {
 }
 
 /// Workbench definition, e.g `sketch`, `part` or `op`.
-#[derive(Debug, Identifiable)]
+#[derive(Debug, Identifiable, Serialize)]
 pub struct Workbench {
     /// SrcRef of the `sketch`/`part`/`op` keyword
     pub keyword_ref: SrcRef,
@@ -145,5 +146,5 @@ impl std::fmt::Display for Workbench {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Serialize)]
 pub struct Workbenches(pub Box<[Workbench]>);

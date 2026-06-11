@@ -5,13 +5,14 @@
 
 use crate::ir;
 
-use microcad_lang_base::{Identifier, OrdMap, OrdMapValue, Refer, SrcRef};
+use microcad_lang_base::{Identifier, Refer, SrcRef};
 use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
 
 use derive_more::Deref;
+use serde::Serialize;
 
 /// A parameter of a parameter list.
-#[derive(Debug, Default, SrcReferrer, Identifiable)]
+#[derive(Debug, Default, SrcReferrer, Identifiable, Serialize)]
 pub struct Parameter {
     /// Parameter attributes
     pub attr: ir::Attributes,
@@ -25,12 +26,6 @@ pub struct Parameter {
     pub src_ref: SrcRef,
 }
 
-impl OrdMapValue<Identifier> for Parameter {
-    fn key(&self) -> Option<Identifier> {
-        Some(self.id.clone())
-    }
-}
-
 impl std::fmt::Display for Parameter {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match (&self.specified_type, &self.default_value) {
@@ -42,19 +37,19 @@ impl std::fmt::Display for Parameter {
     }
 }
 
-/// Parameter list
-#[derive(Debug, Default, Deref, SrcReferrer)]
-pub struct ParameterList(pub Refer<OrdMap<Identifier, ir::Parameter>>);
+/// Parameter list, sorted by id.
+#[derive(Debug, Default, Deref, SrcReferrer, Serialize)]
+pub struct ParameterList(pub Refer<Box<[ir::Parameter]>>);
 
 impl ParameterList {
     /// Return ids of all parameters
     pub fn ids(&self) -> impl Iterator<Item = Identifier> {
-        self.keys().cloned()
+        self.iter().map(|param| param.id.clone())
     }
 
     /// Return if given identifier is in parameter list
     pub fn contains_key(&self, id: &Identifier) -> bool {
-        self.iter().any(|p| *id == p.id)
+        self.ids().any(|p_id| *id == p_id)
     }
 }
 
