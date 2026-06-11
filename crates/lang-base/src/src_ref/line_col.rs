@@ -1,8 +1,10 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use serde::Serialize;
+
 /// Line and column within a source code file
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, Serialize)]
 pub struct LineCol {
     /// Line number (0..)
     pub line: u32,
