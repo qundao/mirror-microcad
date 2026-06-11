@@ -26,6 +26,7 @@ pub use src_referrer::*;
 use crate::HashId;
 
 use miette::SourceSpan;
+use serde::Serialize;
 
 /// Span for tokens or AST nodes, a range of byte offsets from the start of the source
 pub type Span = std::ops::Range<usize>;
@@ -33,7 +34,7 @@ pub type Span = std::ops::Range<usize>;
 /// Reference into a source file.
 ///
 /// *Hint*: Source file is not part of `SrcRef` and must be provided from outside
-#[derive(Clone, Default)]
+#[derive(Clone, Default, Serialize)]
 pub struct SrcRef {
     /// Range in bytes
     pub range: Span,

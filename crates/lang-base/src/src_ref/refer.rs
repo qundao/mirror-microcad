@@ -4,8 +4,11 @@
 use crate::src_ref::*;
 use derive_more::{Deref, DerefMut};
 
+use serde::Serialize;
+
 /// Packs any value together with a source reference
-#[derive(Clone, Default, Ord, PartialEq, PartialOrd, Deref, DerefMut)]
+#[derive(Clone, Default, Ord, PartialEq, PartialOrd, Deref, DerefMut, Serialize)]
+#[serde(bound(serialize = "T: Serialize"))]
 pub struct Refer<T> {
     /// Value
     #[deref]
