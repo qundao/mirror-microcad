@@ -48,7 +48,7 @@ impl<EXPR> ArgumentList<EXPR> {
         >::default()))
     }
 
-    pub(crate) fn try_push(
+    pub fn try_push(
         &mut self,
         arg: ir::Argument<EXPR>,
         context: &mut LowerContext,
