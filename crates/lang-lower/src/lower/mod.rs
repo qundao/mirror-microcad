@@ -16,7 +16,6 @@ mod workbench;
 
 use microcad_lang_base::{Hashed, Identifier, Refer, SrcRef, SrcReferrer};
 use microcad_lang_parse::ast;
-use microcad_lang_parse::parse;
 use microcad_lang_types::ty::TypeError;
 use miette::{Diagnostic, SourceCode};
 use thiserror::Error;
@@ -171,31 +170,6 @@ impl SrcReferrer for LowerErrorsWithSource {
     }
 }
 
-pub(crate) fn build_ast(
-    source: &str,
-    lower_context: &mut LowerContext,
-) -> Result<ast::Program, LowerErrorsWithSource> {
-    parse(source).map_err(|errors| {
-        let errors = errors
-            .0
-            .into_iter()
-            .map(|error| {
-                let src_ref = lower_context.src_ref(&error.span);
-                LowerError::AstParser(Refer::new(error, src_ref))
-            })
-            .collect::<Vec<_>>();
-        LowerErrorsWithSource {
-            errors,
-            source_code: Some(
-                lower_context
-                    .source
-                    .clone()
-                    .map(|source| source.to_string()),
-            ),
-        }
-    })
-}
-
 /// Extracts and maps specific variants out of a statement collection tuple list.
 ///
 /// Does not check if the statements are actually valid in this context.
@@ -347,7 +321,7 @@ impl Lower<ast::StatementList> for ir::Aliases {
             explicit_aliases: extract_statements(node, |stmt| match stmt {
                 ast::Statement::Use(use_statement) => match use_statement.name.parts.last() {
                     Some(ast::UseStatementPart::Identifier(id)) => Ok(Some(ir::ExplicitAlias {
-                        attr: ir::Attributes::lower(&use_statement.attributes, context)?,
+                        attr: ir::OuterAttributes::lower(&use_statement.attributes, context)?,
                         keyword_src_ref: context.src_ref(&use_statement.keyword_span),
                         visibility: ir::Visibility::lower(&use_statement.visibility, context)?,
                         path: ir::QualifiedName::lower(&use_statement.name, context)?,
@@ -369,7 +343,7 @@ impl Lower<ast::StatementList> for ir::Aliases {
             wildcards: extract_statements(node, |stmt| match stmt {
                 ast::Statement::Use(use_statement) => match use_statement.name.parts.last() {
                     Some(ast::UseStatementPart::Glob(_)) => Ok(Some(ir::WildcardAlias {
-                        attr: ir::Attributes::lower(&use_statement.attributes, context)?,
+                        attr: ir::OuterAttributes::lower(&use_statement.attributes, context)?,
                         keyword_src_ref: context.src_ref(&use_statement.keyword_span),
                         visibility: ir::Visibility::lower(&use_statement.visibility, context)?,
                         path: ir::QualifiedName::lower(&use_statement.name, context)?,

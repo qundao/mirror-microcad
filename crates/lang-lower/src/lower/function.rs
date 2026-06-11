@@ -10,7 +10,7 @@ use crate::{
 use microcad_lang_base::{Identifier, Refer, SrcRef};
 use microcad_lang_parse::ast;
 
-impl Lower<ast::FunctionDefinition> for ir::Attributes {
+impl Lower<ast::FunctionDefinition> for ir::OuterAttributes {
     fn lower(node: &ast::FunctionDefinition, context: &mut LowerContext) -> LowerResult<Self> {
         crate::lower::attribute::outer_with_doc(&node.doc, &node.attributes, context)
     }
@@ -182,12 +182,12 @@ impl Lower<ast::FunctionDefinition> for ir::Function {
     fn lower(node: &ast::FunctionDefinition, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             src_ref: context.src_ref(&node.span),
-            outer_attr: ir::Attributes::lower(node, context)?,
+            outer_attr: ir::OuterAttributes::lower(node, context)?,
             visibility: ir::Visibility::lower(&node.visibility, context)?,
             keyword_ref: context.src_ref(&node.keyword_span),
             id: Identifier::lower(&node.name, context)?,
             signature: ir::FunctionSignature::lower(&node, context)?,
-            inner_attr: ir::Attributes::lower(&node.body.statements, context)?,
+            inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
             aliases: ir::Aliases::lower(&node.body.statements, context)?,
             constants: ir::Constants::lower(&node.body.statements, context)?,
             statements: ir::FunctionStatements::lower(&node.body.statements, context)?,

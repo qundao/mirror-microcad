@@ -7,14 +7,17 @@ use crate::ir;
 
 use microcad_lang_base::{Identifier, SrcRef};
 use serde::Serialize;
+use serde_with::skip_serializing_none;
 
 /// A local assignment specifying an identifier, type and value
+#[skip_serializing_none]
 #[derive(Clone, Debug, Serialize)]
 #[serde(bound(serialize = "EXPR: Serialize"))]
 pub struct LocalAssignment<EXPR> {
     /// Assignee
     pub(crate) id: Identifier,
     /// Type of the assignee
+    #[serde(skip_serializing_if = "Option::is_none", default)]
     pub specified_type: Option<ir::TypeAnnotation>,
     /// Value to assign
     pub expression: EXPR,

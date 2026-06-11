@@ -4,15 +4,19 @@
 use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 use serde::Serialize;
+use serde_with::skip_serializing_none;
 
-use crate::ir;
+use crate::{IsDefault, ir};
 
 /// A constant definition: `const FOO: Length = 32mm`.
+#[skip_serializing_none]
 #[derive(Debug, SrcReferrer, Serialize)]
 pub struct Constant {
     pub src_ref: SrcRef,
-    pub attr: ir::Attributes,
+    #[serde(skip_serializing_if = "ir::OuterAttributes::is_empty", default)]
+    pub attr: ir::OuterAttributes,
     pub visibility: ir::Visibility,
+    #[serde(skip_serializing_if = "SrcRef::is_none", default)]
     pub keyword_src_ref: SrcRef,
     pub id: ir::Identifier,
     pub ty: Option<ir::TypeAnnotation>,
@@ -41,5 +45,11 @@ impl std::fmt::Display for Constant {
 }
 
 /// A list of constants
-#[derive(Debug, Serialize)]
+#[derive(Debug, Default, Serialize)]
 pub struct Constants(pub Box<[Constant]>);
+
+impl IsDefault for Constants {
+    fn is_default(&self) -> bool {
+        self.0.is_default()
+    }
+}

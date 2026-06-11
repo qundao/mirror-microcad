@@ -20,6 +20,7 @@ pub use literal::*;
 pub use qualified_name::*;
 pub use range_expression::*;
 use serde::Serialize;
+use serde_with::skip_serializing_none;
 pub use tuple_expression::*;
 
 use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer};
@@ -28,6 +29,7 @@ use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer};
 pub type ListExpression<EXPR> = Vec<EXPR>;
 
 /// If statement.
+#[skip_serializing_none]
 #[derive(Clone, Debug, Serialize)]
 #[serde(bound(serialize = "EXPR: Serialize, BODY: Serialize"))]
 pub struct If<EXPR, BODY> {

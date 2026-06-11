@@ -3,7 +3,7 @@
 
 //! Function definition syntax element
 
-use crate::ir;
+use crate::{IsDefault, ir, is_default};
 
 use microcad_lang_base::{Refer, SrcRef};
 use serde::Serialize;
@@ -79,6 +79,12 @@ pub enum FunctionStatement {
 #[derive(Debug, Serialize)]
 pub struct FunctionStatements(pub Box<[FunctionStatement]>);
 
+impl IsDefault for FunctionStatements {
+    fn is_default(&self) -> bool {
+        self.0.is_default()
+    }
+}
+
 #[derive(Debug, Serialize)]
 pub struct Scope(pub Refer<FunctionStatements>);
 
@@ -87,24 +93,36 @@ pub struct Function {
     /// Source ref for the whole definition
     pub src_ref: SrcRef,
     /// Outer attributes
-    pub outer_attr: ir::Attributes,
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub outer_attr: ir::OuterAttributes,
     /// public / private
     pub visibility: ir::Visibility,
     /// SrcRef of the `fn` keyword
+    #[serde(skip_serializing_if = "SrcRef::is_none", default)]
     pub keyword_ref: SrcRef,
     /// Name of the function
     pub id: ir::Identifier,
     /// Function signature
     pub signature: ir::FunctionSignature,
     /// #![...]
-    pub inner_attr: ir::Attributes,
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub inner_attr: ir::InnerAttributes,
     /// use ...
+    #[serde(skip_serializing_if = "is_default", default)]
     pub aliases: ir::Aliases,
     /// const FOO =
+    #[serde(skip_serializing_if = "is_default", default)]
     pub constants: ir::Constants,
     /// Function statements
+    #[serde(skip_serializing_if = "is_default", default)]
     pub statements: ir::FunctionStatements,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Default, Serialize)]
 pub struct Functions(pub Box<[Function]>);
+
+impl IsDefault for Functions {
+    fn is_default(&self) -> bool {
+        self.0.is_default()
+    }
+}

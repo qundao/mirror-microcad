@@ -12,8 +12,8 @@ pub fn outer_with_doc(
     doc: &ast::DocBlock,
     attr: &Vec<ast::Attribute>,
     context: &mut LowerContext,
-) -> LowerResult<ir::Attributes> {
-    let mut attr = ir::Attributes::lower(attr, context)?;
+) -> LowerResult<ir::OuterAttributes> {
+    let mut attr = ir::OuterAttributes::lower(attr, context)?;
     attr.doc = ir::DocBlock::lower(doc, context)?;
     Ok(attr)
 }
@@ -37,16 +37,15 @@ where
     Ok(items.into_boxed_slice())
 }
 
-impl Lower<Vec<ast::Attribute>> for ir::Attributes {
+impl Lower<Vec<ast::Attribute>> for ir::OuterAttributes {
     fn lower(node: &Vec<ast::Attribute>, context: &mut LowerContext) -> LowerResult<Self> {
         // Generate outer attributes without doc
-        Ok(Self {
+        Ok(Self(ir::Attributes {
             doc: ir::DocBlock::default(),
             meta: Box::<[ir::Meta]>::lower(node, context)?,
             commands: Box::<[ir::Command]>::lower(node, context)?,
             tags: Box::<[ir::Tag]>::lower(node, context)?,
-            is_inner: false,
-        })
+        }))
     }
 }
 
@@ -192,21 +191,20 @@ impl Lower<ast::StatementList> for Box<[ir::Tag]> {
     }
 }
 
-impl Lower<ast::WorkbenchDefinition> for ir::Attributes {
+impl Lower<ast::WorkbenchDefinition> for ir::OuterAttributes {
     fn lower(node: &ast::WorkbenchDefinition, context: &mut LowerContext) -> LowerResult<Self> {
         outer_with_doc(&node.doc, &node.attributes, context)
     }
 }
 
 /// Lower inner attributes
-impl Lower<ast::StatementList> for ir::Attributes {
+impl Lower<ast::StatementList> for ir::InnerAttributes {
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self {
+        Ok(Self(ir::Attributes {
             doc: ir::DocBlock::lower(node, context)?,
             meta: Box::<[ir::Meta]>::lower(node, context)?,
             commands: Box::<[ir::Command]>::lower(node, context)?,
             tags: Box::<[ir::Tag]>::lower(node, context)?,
-            is_inner: true,
-        })
+        }))
     }
 }

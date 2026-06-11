@@ -3,20 +3,24 @@
 
 //! Workbench definition syntax element
 
-use crate::ir::{self, ConstantExpression};
+use crate::{IsDefault, ir, is_default};
 
 use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Identifiable;
 
 pub use microcad_lang_base::element::WorkbenchKind;
 use serde::Serialize;
+use serde_with::skip_serializing_none;
 
 /// Each WorkbenchStatement eventually evals into a [`Models`]
+#[skip_serializing_none]
 #[derive(Debug, Serialize)]
 pub struct WorkbenchStatement {
-    pub attr: ir::Attributes,
+    pub attr: ir::OuterAttributes,
+    #[serde(skip_serializing_if = "SrcRef::is_none", default)]
     pub src_ref: SrcRef,
     pub visibility: ir::Visibility, // public = property
+    #[serde(skip_serializing_if = "SrcRef::is_none", default)]
     pub keyword_src_ref: SrcRef,
     pub id: Option<ir::Identifier>,
     pub ty: Option<ir::TypeAnnotation>,
@@ -26,6 +30,12 @@ pub struct WorkbenchStatement {
 #[derive(Debug, Serialize)]
 pub struct WorkbenchStatements(pub Box<[WorkbenchStatement]>);
 
+impl IsDefault for WorkbenchStatements {
+    fn is_default(&self) -> bool {
+        self.0.is_default()
+    }
+}
+
 #[derive(Debug, Serialize)]
 pub struct Group(pub Refer<WorkbenchStatements>);
 
@@ -34,17 +44,25 @@ pub struct Init {
     /// SrcRef of the `init` keyword
     pub keyword_ref: SrcRef,
     /// Outer attributes.
-    pub attr: ir::Attributes,
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub attr: ir::OuterAttributes,
     /// Parameter list for this init definition
     pub parameters: ir::ParameterList,
     /// Body if the init definition
+    #[serde(skip_serializing_if = "is_default", default)]
     pub statements: WorkbenchStatements,
     /// Source reference
     pub src_ref: SrcRef,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Default)]
 pub struct Inits(pub Box<[Init]>);
+
+impl IsDefault for Inits {
+    fn is_default(&self) -> bool {
+        self.0.is_default()
+    }
+}
 
 /// Node marker, e.g. `@input`.
 #[derive(Debug, Serialize)]
@@ -86,7 +104,7 @@ pub enum WorkbenchExpression {
     BinaryOp(ir::BinaryOp<WorkbenchExpression>),
     UnaryOp(ir::UnaryOp<WorkbenchExpression>),
     MetaAccess(Access<Identifier>),
-    ArrayAccess(Access<Box<ConstantExpression>>),
+    ArrayAccess(Access<Box<ir::ConstantExpression>>),
     PropertyAccess(Access<Identifier>),
     MethodCall(Access<MethodCall>),
 }
@@ -97,7 +115,8 @@ pub struct Workbench {
     /// SrcRef of the `sketch`/`part`/`op` keyword
     pub keyword_ref: SrcRef,
     /// Workbench outer attributes.
-    pub outer_attr: ir::Attributes,
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub outer_attr: ir::OuterAttributes,
     /// Visibility from outside modules.
     pub visibility: ir::Visibility,
     /// Workbench kind.
@@ -107,24 +126,20 @@ pub struct Workbench {
     /// Workbench's building plan.
     pub parameters: ir::ParameterList,
     /// Workbench inner attributes
-    pub inner_attr: ir::Attributes,
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub inner_attr: ir::InnerAttributes,
     /// `use`
+    #[serde(skip_serializing_if = "is_default", default)]
     pub aliases: ir::Aliases,
     /// `const`
+    #[serde(skip_serializing_if = "is_default", default)]
     pub constants: ir::Constants,
     /// `init`
+    #[serde(skip_serializing_if = "is_default", default)]
     pub inits: ir::Inits,
     /// The actual statements building the model
+    #[serde(skip_serializing_if = "is_default", default)]
     pub statements: ir::WorkbenchStatements,
-}
-
-impl Workbench {
-    pub(crate) fn possible_params(&self) -> Vec<String> {
-        std::iter::once(&self.parameters)
-            .chain(self.inits.0.iter().map(|init| &init.parameters))
-            .map(|params| format!("{}( {})", self.id, params))
-            .collect()
-    }
 }
 
 impl SrcReferrer for Workbench {
@@ -148,3 +163,9 @@ impl std::fmt::Display for Workbench {
 
 #[derive(Debug, Default, Serialize)]
 pub struct Workbenches(pub Box<[Workbench]>);
+
+impl IsDefault for Workbenches {
+    fn is_default(&self) -> bool {
+        self.0.is_default()
+    }
+}

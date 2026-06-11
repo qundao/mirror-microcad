@@ -3,7 +3,7 @@
 
 //! µcad source file representation
 
-use crate::ir;
+use crate::{ir, is_default};
 
 use microcad_lang_base::{
     ComputedHash, LineCol, ResourceLocation, SourceLocInfo, SrcRef, SrcReferrer,
@@ -14,22 +14,28 @@ use serde::Serialize;
 #[derive(Debug, Serialize)]
 pub struct Source {
     /// Inner attributes.
-    pub attr: ir::Attributes,
-
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub attr: ir::InnerAttributes,
     /// List of file modules: `mod foo;`.
+    #[serde(skip_serializing_if = "is_default", default)]
     pub file_modules: ir::FileModules,
     /// Inline modules: `mod bar {...}`.
+    #[serde(skip_serializing_if = "is_default", default)]
     pub inline_modules: ir::InlineModules,
     /// Use statements: `use ...`.
+    #[serde(skip_serializing_if = "is_default", default)]
     pub aliases: ir::Aliases,
     /// Constants: `const FOO = 42;`.
+    #[serde(skip_serializing_if = "is_default", default)]
     pub constants: ir::Constants,
     /// Functions: `fn foo(...) {...}`.
+    #[serde(skip_serializing_if = "is_default", default)]
     pub functions: ir::Functions,
     /// Workbenches: `part Bar(...) {...}`.
+    #[serde(skip_serializing_if = "is_default", default)]
     pub workbenches: ir::Workbenches,
-
-    /// Root code body.
+    /// Workbench statements
+    #[serde(skip_serializing_if = "is_default", default)]
     pub statements: ir::WorkbenchStatements,
     /// Original source
     pub source: microcad_lang_base::Source,

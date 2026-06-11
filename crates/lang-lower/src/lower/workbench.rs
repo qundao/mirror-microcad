@@ -135,7 +135,7 @@ impl Lower<ast::WorkbenchDefinition> for ir::Workbench {
             id: ir::Identifier::lower(&node.name, context)?,
 
             parameters: ir::ParameterList::lower(&node.plan, context)?,
-            inner_attr: ir::Attributes::lower(&node.body.statements, context)?,
+            inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
             aliases: ir::Aliases::lower(&node.body.statements, context)?,
             constants: ir::Constants::lower(&node.body.statements, context)?,
             inits: ir::Inits::lower(&node.body.statements, context)?,
@@ -147,7 +147,7 @@ impl Lower<ast::WorkbenchDefinition> for ir::Workbench {
 impl Lower<ast::LocalAssignment> for ir::WorkbenchStatement {
     fn lower(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            attr: ir::Attributes::lower(&node.attributes, context)?,
+            attr: ir::OuterAttributes::lower(&node.attributes, context)?,
             src_ref: context.src_ref(&node.span),
             visibility: ir::Visibility::Private,
             keyword_src_ref: SrcRef::none(),
@@ -175,7 +175,7 @@ impl Lower<ast::PropertyAssignment> for ir::WorkbenchStatement {
 impl Lower<ast::ExpressionStatement> for ir::WorkbenchStatement {
     fn lower(node: &ast::ExpressionStatement, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            attr: ir::Attributes::lower(&node.attributes, context)?,
+            attr: ir::OuterAttributes::lower(&node.attributes, context)?,
             src_ref: context.src_ref(&node.span),
             visibility: ir::Visibility::Public,
             keyword_src_ref: SrcRef::none(),

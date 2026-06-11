@@ -32,7 +32,9 @@ use microcad_lang_base::{Refer, SrcRef};
 use microcad_lang_proc_macros::SrcReferrer;
 use serde::Serialize;
 
+use crate::IsDefault;
 use crate::ir;
+use crate::is_default;
 
 /// Visibility of an entity.
 ///
@@ -76,8 +78,9 @@ impl Ty for TypeAnnotation {
 /// `use std::geo2d::Circle` => (path = "std::geo2d::Circle", id = "Circle")
 #[derive(Debug, Serialize)]
 pub struct ExplicitAlias {
-    pub attr: ir::Attributes,
+    pub attr: ir::OuterAttributes,
     pub visibility: ir::Visibility,
+    #[serde(skip_serializing_if = "SrcRef::is_none", default)]
     pub keyword_src_ref: SrcRef,
     pub path: QualifiedName,
     pub id: Identifier,
@@ -86,8 +89,10 @@ pub struct ExplicitAlias {
 /// `use std::geo2d::*`
 #[derive(Debug, Serialize)]
 pub struct WildcardAlias {
-    pub attr: ir::Attributes,
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub attr: ir::OuterAttributes,
     pub visibility: ir::Visibility,
+    #[serde(skip_serializing_if = "SrcRef::is_none", default)]
     pub keyword_src_ref: SrcRef,
     pub path: QualifiedName,
 }
@@ -95,6 +100,14 @@ pub struct WildcardAlias {
 /// Aliases lowered from `use` statements.
 #[derive(Debug, Serialize)]
 pub struct Aliases {
+    #[serde(skip_serializing_if = "is_default", default)]
     pub explicit_aliases: Box<[ExplicitAlias]>,
+    #[serde(skip_serializing_if = "is_default", default)]
     pub wildcards: Box<[WildcardAlias]>,
+}
+
+impl IsDefault for Aliases {
+    fn is_default(&self) -> bool {
+        self.explicit_aliases.is_default() && self.wildcards.is_default()
+    }
 }
