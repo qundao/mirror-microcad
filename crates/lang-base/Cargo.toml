@@ -27,6 +27,7 @@ url = { version = "2.5", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
 
 microcad-core = { workspace = true }
+bytemuck = "1.25.0"
 
 [features]
 default = ["ansi-color"]
