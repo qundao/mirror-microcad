@@ -14,11 +14,25 @@ rust-version.workspace = true
 license.workspace = true
 keywords.workspace = true
 
+[[bin]]
+name = "microcad-lang-markdown-extract"
+path = "extract.rs"
+required-features = ["bin_extract"]
+
+
 [dependencies]
 derive_more = { version = "2", features = ["deref", "deref_mut"] }
 thiserror = "2.0"
+miette = "7.3.0"
+
+# Uses for md-extractor
+clap = { version = "4", features = ["derive"], optional = true }
 
 microcad-lang-base = { workspace = true }
 
 [dev-dependencies]
 insta = "1.45.0"
+
+[features]
+# Dependencies for md extractor
+bin_extract = ["dep:clap"]
