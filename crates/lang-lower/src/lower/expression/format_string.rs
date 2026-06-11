@@ -77,3 +77,15 @@ impl Lower<ast::StringPart> for ir::FormatStringInner {
         })
     }
 }
+
+impl Lower<ast::StringLiteral> for ir::FormatString {
+    fn lower(node: &ast::StringLiteral, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self(Refer::new(
+            vec![ir::FormatStringInner::String(Refer::new(
+                node.content.clone(),
+                context.src_ref(&node.span),
+            ))],
+            context.src_ref(&node.span),
+        )))
+    }
+}
