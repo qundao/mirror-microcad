@@ -75,7 +75,7 @@ type MethodCall = ir::Call<WorkbenchExpression>;
 pub enum WorkbenchExpression {
     Invalid,
     Literal(ir::Literal),
-    QualifiedName(ir::QualifiedName),
+    Name(ir::QualifiedName),
     FormatString(ir::FormatString),
     ArrayExpression(ir::ArrayExpression<WorkbenchExpression>),
     TupleExpression(ir::TupleExpression<WorkbenchExpression>),

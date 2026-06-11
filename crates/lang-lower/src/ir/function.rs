@@ -67,9 +67,12 @@ pub struct ReturnStatement {
 
 #[derive(Debug, derive_more::From, Serialize)]
 pub enum FunctionStatement {
+    /// `a = 42`
     Local(ir::LocalAssignment<FunctionExpression>),
-    Scope(ir::Scope),
-    If(ir::If<FunctionExpression, Scope>),
+    /// `{ a = 23; }`
+    Expression(ir::FunctionExpression),
+    /// `return 42;`
+    /// Possibly lowered from the tail expression of an `ast::StatementList`
     Return(ReturnStatement),
 }
 
