@@ -3,6 +3,7 @@
 
 use crate::{GetSourceLocInfoByHash, HashId, Hashed, ResourceLocation, SourceLocInfo};
 use microcad_core::hash::ComputedHash;
+use serde::Serialize;
 use url::Url;
 
 /// Unparsed source code with a location.
@@ -12,7 +13,7 @@ use url::Url;
 /// * `line_offset: u32`: A line offset inside file
 ///
 /// Additionally, a unique hash of the source code computed.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct Source {
     /// The source url
     pub url: Url,

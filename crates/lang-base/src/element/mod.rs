@@ -4,12 +4,13 @@
 mod identifier;
 
 pub use identifier::{Identifier, IdentifierList, ShortId};
+use serde::Serialize;
 use strum::EnumString;
 
 use crate::{Refer, SrcRef};
 
 /// The possible type of workbenches
-#[derive(Debug, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialEq, Copy, Clone, Serialize)]
 pub enum WorkbenchKind {
     /// `sketch`
     Sketch,
