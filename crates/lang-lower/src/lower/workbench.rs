@@ -136,6 +136,32 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
 
 impl Lower<ast::StatementList> for ir::Inits {
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+        fn is_init(stmt: &ast::Statement) -> bool {
+            matches!(stmt, ast::Statement::Init(_))
+        }
+
+        // 1. Find the FIRST occurrence of an Initializer
+        let statements = &node.statements;
+        let first_idx = statements.iter().map(|(stmt, _)| stmt).position(is_init);
+
+        // 2. Find the LAST occurrence of an Initializer
+        let last_idx = statements.iter().map(|(stmt, _)| stmt).rposition(is_init);
+
+        // 3. Output an error on any none initializer statement.
+        if let (Some(first), Some(last)) = (first_idx, last_idx) {
+            statements[first..=last]
+                .iter()
+                .try_for_each(|(stmt, _)| -> LowerResult<()> {
+                    if !is_init(stmt) {
+                        let src_ref = context.src_ref(&stmt.span());
+                        context
+                            .diagnostics
+                            .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?;
+                    }
+                    Ok(())
+                })?;
+        }
+
         Ok(Self(extract_statements(node, |stmt| {
             Ok(match stmt {
                 ast::Statement::Init(init) => Some(ir::Init::lower(init, context)?),
@@ -206,6 +232,14 @@ impl Lower<ast::Statement> for Option<ir::WorkbenchStatement> {
 
 impl Lower<ast::StatementList> for ir::WorkbenchStatements {
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+        if let Some(tail) = node.tail.as_ref() {
+            context
+                .warning(LowerError::ImplicitWorkbenchReturn {
+                    src_ref: context.src_ref(&tail.span),
+                })
+                .ok();
+        }
+
         Ok(Self(extract_statements_with_tail(
             node,
             context,
@@ -243,14 +277,6 @@ impl Lower<ast::StatementList> for ir::WorkbenchItems {
 
 impl Lower<ast::WorkbenchDefinition> for ir::Workbench {
     fn lower(node: &ast::WorkbenchDefinition, context: &mut LowerContext) -> LowerResult<Self> {
-        if let Some(tail) = node.body.statements.tail.as_ref() {
-            context
-                .warning(LowerError::ImplicitWorkbenchReturn {
-                    src_ref: context.src_ref(&tail.span),
-                })
-                .ok();
-        }
-
         Ok(Self {
             keyword_ref: context.src_ref(&node.keyword_span),
             outer_attr: crate::lower::attribute::outer_with_doc(
