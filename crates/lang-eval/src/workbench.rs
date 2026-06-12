@@ -227,7 +227,7 @@ impl ir::WorkbenchDefinition {
                 // evaluate models for all multiplicity matches
                 for arguments in matched.1.args.iter() {
                     models.push(self.eval_to_model(
-                        call_src_ref.clone(),
+                        call_src_ref,
                         Creator::new(symbol.clone(), arguments.clone()),
                         matched.0,
                         context,
