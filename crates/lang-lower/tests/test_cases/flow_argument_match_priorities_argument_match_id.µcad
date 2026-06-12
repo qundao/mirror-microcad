@@ -1,8 +1,0 @@
-// Extracted from: flow/argument_match/priorities.md
-// [![test](.test/argument_match_id.svg)](.test/argument_match_id.log)
-
-fn f(width: Length, height: Length) -> Area { width * height }
-
-x = f(height = 2cm, width = 1cm); // call f() with parameters in arbitrary order
-
-std::debug::assert_eq([x, 2cm²]);

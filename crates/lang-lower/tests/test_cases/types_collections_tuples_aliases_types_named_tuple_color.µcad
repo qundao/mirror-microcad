@@ -1,6 +1,0 @@
-// Extracted from: types/collections/tuples/aliases.md
-// [![test](.test/types_named_tuple_color.svg)](.test/types_named_tuple_color.log)
-
-color: Color = (r = 100%, g = 50%, b = 25%, a = 100%);
-
-std::debug::assert(color.r == 100%);

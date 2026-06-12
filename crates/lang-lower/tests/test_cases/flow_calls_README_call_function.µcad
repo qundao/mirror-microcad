@@ -1,8 +1,0 @@
-// Extracted from: flow/calls/README.md
-// [![test](.test/call_function.svg)](.test/call_function.log)
-
-// call function -2 and store result in x
-x = std::math::abs(-2);
-
-// check value
-std::debug::assert_eq([x, 2]);

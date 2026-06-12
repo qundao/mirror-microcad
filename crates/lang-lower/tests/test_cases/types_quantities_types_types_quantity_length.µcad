@@ -1,9 +1,0 @@
-// Extracted from: types/quantities/types.md
-// [![test](.test/types_quantity_length.svg)](.test/types_quantity_length.log)
-
-millimeters = 1000mm;
-centimeters = 100cm;
-meters = 1m;
-inches = 39.37007874015748in;
-
-std::debug::assert_eq([millimeters, centimeters, meters, inches]);

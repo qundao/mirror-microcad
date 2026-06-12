@@ -1,7 +1,0 @@
-// Extracted from: types/quantities/types.md
-// [![test](.test/types_quantity_area.svg)](.test/types_quantity_area.log)
-
-a = 3cm;
-b = 2cm;
-area = a * b;
-std::debug::assert(area == 6cm²);

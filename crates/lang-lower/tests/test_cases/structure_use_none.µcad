@@ -1,5 +1,0 @@
-// Extracted from: structure/use.md
-// [![test](.test/none.svg)](.test/none.log)
-
-std::geo3d::Sphere(radius = 40mm);
-std::geo3d::Cube(size = 40mm);

@@ -1,5 +1,0 @@
-// Extracted from: structure/source_file.md
-// [![test](.test/source_file_2D.svg)](.test/source_file_2D.log)
-
-// simply draw a circle
-std::geo2d::Circle(radius = 1cm);

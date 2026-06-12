@@ -1,5 +1,0 @@
-// Extracted from: structure/source_file.md
-// [![test](.test/source_file_3D.svg)](.test/source_file_3D.log)
-
-// simply draw a sphere
-std::geo3d::Sphere(radius = 1cm);

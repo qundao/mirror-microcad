@@ -1,4 +1,0 @@
-// Extracted from: types/primitives.md
-// [![test](.test/types_primitive_integer.svg)](.test/types_primitive_integer.log)
-
-i = 3;

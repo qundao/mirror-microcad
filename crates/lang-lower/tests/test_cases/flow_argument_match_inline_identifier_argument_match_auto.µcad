@@ -1,6 +1,0 @@
-// Extracted from: flow/argument_match/inline_identifier.md
-// [![test](.test/argument_match_auto.svg)](.test/argument_match_auto.log)
-
-fn f(x: Integer, y: Integer) -> Integer { x * y }
-x = 1;
-f(x, y = 2); // matches because argument `x` matches the name of parameter `x`

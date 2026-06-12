@@ -1,5 +1,0 @@
-// Extracted from: structure/modules/file_modules.md
-// [![test](.test/file_modules_main.svg)](.test/file_modules_main.log)
-
-mod second;
-second::f();

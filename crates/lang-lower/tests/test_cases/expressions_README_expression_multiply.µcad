@@ -1,6 +1,0 @@
-// Extracted from: expressions/README.md
-// [![test](.test/expression_multiply.svg)](.test/expression_multiply.log)
-
-v = 5 * 4.0mm;
-
-std::debug::assert_eq([v, 20mm]);

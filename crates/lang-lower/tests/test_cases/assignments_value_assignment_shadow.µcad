@@ -1,5 +1,0 @@
-// Extracted from: assignments/value.md
-// [![test](.test/assignment_shadow.svg)](.test/assignment_shadow.log)
-
-a = 5;
-a = a * 2; // error: a already defined in this scope

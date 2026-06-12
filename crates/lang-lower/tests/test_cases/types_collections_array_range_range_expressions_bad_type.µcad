@@ -1,4 +1,0 @@
-// Extracted from: types/collections/array/range.md
-// [![test](.test/range_expressions_bad_type.svg)](.test/range_expressions_bad_type.log)
-
-[1.0..2.0]; // parse_error

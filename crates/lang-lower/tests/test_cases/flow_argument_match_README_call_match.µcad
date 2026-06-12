@@ -1,6 +1,0 @@
-// Extracted from: flow/argument_match/README.md
-// [![test](.test/call_match.svg)](.test/call_match.log)
-
-fn f(x: Length) -> Length { x * 2 }
-
-std::debug::assert_eq([f(x = 10m), 20m]);

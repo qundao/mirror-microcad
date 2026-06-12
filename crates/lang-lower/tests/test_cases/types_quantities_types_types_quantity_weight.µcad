@@ -1,8 +1,0 @@
-// Extracted from: types/quantities/types.md
-// [![test](.test/types_quantity_weight.svg)](.test/types_quantity_weight.log)
-
-gram = 1000.0g;
-kilogram = 1.0kg;
-pound = 2.204623lb;
-
-std::debug::assert_eq([gram, kilogram]);

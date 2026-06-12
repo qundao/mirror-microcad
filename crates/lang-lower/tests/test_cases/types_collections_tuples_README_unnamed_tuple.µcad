@@ -1,4 +1,0 @@
-// Extracted from: types/collections/tuples/README.md
-// [![test](.test/unnamed_tuple.svg)](.test/unnamed_tuple.log)
-
-(10cm, 10cm², 1l);

@@ -1,4 +1,0 @@
-// Extracted from: types/format_string.md
-// [![test](.test/format_string.svg)](.test/format_string.log)
-
-std::debug::assert_eq(["{2 + 5}", "7"]);

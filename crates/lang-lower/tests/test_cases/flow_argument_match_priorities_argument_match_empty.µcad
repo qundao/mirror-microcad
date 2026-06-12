@@ -1,6 +1,0 @@
-// Extracted from: flow/argument_match/priorities.md
-// [![test](.test/argument_match_empty.svg)](.test/argument_match_empty.log)
-
-fn f() {} // no parameters
-
-f(); // no arguments

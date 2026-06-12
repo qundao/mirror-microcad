@@ -1,8 +1,0 @@
-// Extracted from: structure/workbenches/types/parts.md
-// [![test](.test/part_2d.svg)](.test/part_2d.log)
-
-part MyPart(radius: Length) {
-    std::geo2d::Circle(radius); // error: Circle is not a 3D primitive
-}
-
-MyPart(1cm);

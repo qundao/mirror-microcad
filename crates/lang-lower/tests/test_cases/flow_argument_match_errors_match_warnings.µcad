@@ -1,5 +1,0 @@
-// Extracted from: flow/argument_match/errors.md
-// [![test](.test/match_warnings.svg)](.test/match_warnings.log)
-
-fn f(x: Length, y: Length, z: Length) {}
-f(x = 1cm, y = 2cm, v = 5cm, z = 3cm); // error: Unexpected argument v

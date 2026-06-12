@@ -1,5 +1,0 @@
-// Extracted from: types/collections/array/range.md
-// [![test](.test/range_expressions_bad_order.svg)](.test/range_expressions_bad_order.log)
-
-[6..1]; // error
-[2..-2]; // error

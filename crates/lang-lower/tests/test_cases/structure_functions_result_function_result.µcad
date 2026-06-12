@@ -1,8 +1,0 @@
-// Extracted from: structure/functions/result.md
-// [![test](.test/function_result.svg)](.test/function_result.log)
-
-fn square(x: Scalar) -> Scalar {
-    x * x
-}
-
-std::debug::assert_eq([square(8.0), 64.0]);

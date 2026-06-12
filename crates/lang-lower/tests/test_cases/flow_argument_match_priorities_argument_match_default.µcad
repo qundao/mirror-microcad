@@ -1,6 +1,0 @@
-// Extracted from: flow/argument_match/priorities.md
-// [![test](.test/argument_match_default.svg)](.test/argument_match_default.log)
-
-fn f(a = 1mm) {} // warning: unused a
-// a has default
-f();

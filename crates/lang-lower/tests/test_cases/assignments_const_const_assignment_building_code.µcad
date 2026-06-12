@@ -1,8 +1,0 @@
-// Extracted from: assignments/const.md
-// [![test](.test/const_assignment_building_code.svg)](.test/const_assignment_building_code.log)
-
-sketch MySketch() {
-    init(_: Integer) {}
-    const MY_CONST = 1; // error: not allowed in building code
-}
-MySketch();

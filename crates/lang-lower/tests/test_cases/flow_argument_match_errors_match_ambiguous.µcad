@@ -1,5 +1,0 @@
-// Extracted from: flow/argument_match/errors.md
-// [![test](.test/match_ambiguous.svg)](.test/match_ambiguous.log)
-
-fn f(x: Length, y: Length, z: Length) {}
-f(x = 1cm, 5cm, 3cm); // error: Missing arguments y and z

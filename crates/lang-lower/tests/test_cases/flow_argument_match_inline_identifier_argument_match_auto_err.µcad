@@ -1,7 +1,0 @@
-// Extracted from: flow/argument_match/inline_identifier.md
-// [![test](.test/argument_match_auto_err.svg)](.test/argument_match_auto_err.log)
-
-fn f(x: Integer, y: Integer) -> Integer { x * y }
-x = 1;
-y = 2;
-f(x * y, y * x); // error: cannot be matched because arguments are not unique.

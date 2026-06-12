@@ -1,8 +1,0 @@
-// Extracted from: types/format_string.md
-// [![test](.test/format_string_value.svg)](.test/format_string_value.log)
-
-fn print_length(length: Length) {
-    std::print("{length}");
-}
-
-print_length(7mm);

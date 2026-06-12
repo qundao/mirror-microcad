@@ -1,6 +1,0 @@
-// Extracted from: structure/use.md
-// [![test](.test/use_as_module.svg)](.test/use_as_module.log)
-
-use std::geo3d as space;
-
-space::Sphere(radius = 4mm);

@@ -1,4 +1,0 @@
-// Extracted from: types/README.md
-// [![test](.test/types_no_declaration.svg)](.test/types_no_declaration.log)
-
-x: Length;         // parse_error

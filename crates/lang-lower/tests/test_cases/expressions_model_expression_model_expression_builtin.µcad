@@ -1,9 +1,0 @@
-// Extracted from: expressions/model_expression.md
-// [![test](.test/model_expression_builtin.svg)](.test/model_expression_builtin.log)
-
-use __builtin::ops::subtract;
-
-{
-    std::geo2d::Rect(1cm);
-    std::geo2d::Circle(radius = 3mm);
-}.subtract();

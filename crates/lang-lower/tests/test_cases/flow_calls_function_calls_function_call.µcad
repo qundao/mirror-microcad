@@ -1,8 +1,0 @@
-// Extracted from: flow/calls/function_calls.md
-// [![test](.test/function_call.svg)](.test/function_call.log)
-
-// function definition
-fn f() {}
-
-// function call
-f();

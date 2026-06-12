@@ -1,4 +1,0 @@
-// Extracted from: types/collections/tuples/README.md
-// [![test](.test/unnamed_tuple_ambiguous.svg)](.test/unnamed_tuple_ambiguous.log)
-
-(10cm, 10mm, 1m); // error: ambiguous type Length
