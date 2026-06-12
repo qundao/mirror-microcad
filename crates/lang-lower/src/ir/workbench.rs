@@ -17,10 +17,10 @@ use serde_with::skip_serializing_none;
 #[derive(Debug, Serialize)]
 pub struct WorkbenchStatement {
     pub attr: ir::OuterAttributes,
-    #[serde(skip_serializing_if = "SrcRef::is_none", default)]
+    #[serde(skip_serializing_if = "is_default", default)]
     pub src_ref: SrcRef,
     pub visibility: ir::Visibility, // public = property
-    #[serde(skip_serializing_if = "SrcRef::is_none", default)]
+    #[serde(skip_serializing_if = "is_default", default)]
     pub keyword_src_ref: SrcRef,
     pub id: Option<ir::Identifier>,
     pub ty: Option<ir::TypeAnnotation>,
@@ -86,25 +86,26 @@ impl std::fmt::Display for Marker {
     }
 }
 
-type Access<ELEMENT> = ir::ElementAccess<WorkbenchExpression, ELEMENT>;
-type MethodCall = ir::Call<WorkbenchExpression>;
+type Access<ELEMENT, NAME = ir::QualifiedName> =
+    ir::ElementAccess<WorkbenchExpression<NAME>, ELEMENT>;
+type MethodCall<NAME = ir::QualifiedName> = ir::Call<WorkbenchExpression, NAME>;
 
 #[derive(Debug, Serialize)]
-pub enum WorkbenchExpression {
+pub enum WorkbenchExpression<NAME = ir::QualifiedName> {
     Invalid,
     Literal(ir::Literal),
-    Name(ir::QualifiedName),
+    Name(NAME),
     FormatString(ir::FormatString),
-    ArrayExpression(ir::ArrayExpression<WorkbenchExpression>),
-    TupleExpression(ir::TupleExpression<WorkbenchExpression>),
+    ArrayExpression(ir::ArrayExpression<WorkbenchExpression<NAME>>),
+    TupleExpression(ir::TupleExpression<WorkbenchExpression<NAME>>),
     Group(ir::Group),
-    If(ir::If<WorkbenchExpression, ir::Group>),
-    Call(ir::Call<WorkbenchExpression>),
+    If(ir::If<WorkbenchExpression<NAME>, ir::Group>),
+    Call(ir::Call<WorkbenchExpression<NAME>>),
     Marker(Marker),
-    BinaryOp(ir::BinaryOp<WorkbenchExpression>),
-    UnaryOp(ir::UnaryOp<WorkbenchExpression>),
+    BinaryOp(ir::BinaryOp<WorkbenchExpression<NAME>>),
+    UnaryOp(ir::UnaryOp<WorkbenchExpression<NAME>>),
     MetaAccess(Access<Identifier>),
-    ArrayAccess(Access<Box<ir::ConstantExpression>>),
+    ArrayAccess(Access<Box<ir::ConstantExpression<NAME>>>),
     PropertyAccess(Access<Identifier>),
     MethodCall(Access<MethodCall>),
 }

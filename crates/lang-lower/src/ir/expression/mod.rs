@@ -171,17 +171,18 @@ pub struct ElementAccess<EXPR, ELEMENT> {
 ///
 /// Use for `Constant` and default values for `Parameter`.
 /// TODO: ElementAccess are missing.
-#[derive(Debug, derive_more::From, Serialize)]
-pub enum ConstantExpression {
+#[derive(Debug, Serialize)]
+#[serde(bound(serialize = "NAME: Serialize"))]
+pub enum ConstantExpression<NAME = ir::QualifiedName> {
     Invalid,
     Literal(ir::Literal),
-    Call(ir::Call<ConstantExpression>),
-    QualifiedName(ir::QualifiedName),
+    Call(ir::Call<ConstantExpression, NAME>),
+    Name(NAME),
     FormatString(ir::FormatString),
-    ArrayExpression(ir::ArrayExpression<ConstantExpression>),
-    TupleExpression(ir::TupleExpression<ConstantExpression>),
-    BinaryOp(ir::BinaryOp<ConstantExpression>),
-    UnaryOp(ir::UnaryOp<ConstantExpression>),
+    ArrayExpression(ir::ArrayExpression<ConstantExpression<NAME>>),
+    TupleExpression(ir::TupleExpression<ConstantExpression<NAME>>),
+    BinaryOp(ir::BinaryOp<ConstantExpression<NAME>>),
+    UnaryOp(ir::UnaryOp<ConstantExpression<NAME>>),
 }
 
 impl std::fmt::Display for ConstantExpression {
@@ -189,7 +190,7 @@ impl std::fmt::Display for ConstantExpression {
         match &self {
             ConstantExpression::Literal(literal) => write!(f, "{literal}"),
             ConstantExpression::Call(call) => write!(f, "{call}"),
-            ConstantExpression::QualifiedName(qualified_name) => write!(f, "{qualified_name}"),
+            ConstantExpression::Name(qualified_name) => write!(f, "{qualified_name}"),
             ConstantExpression::FormatString(format_string) => write!(f, "{format_string}"),
             ConstantExpression::ArrayExpression(array_expression) => {
                 write!(f, "{array_expression}")

@@ -35,27 +35,27 @@ impl std::fmt::Display for FunctionSignature {
 }
 
 type Access<ELEMENT> = ir::ElementAccess<FunctionExpression, ELEMENT>;
-type MethodCall = ir::Call<FunctionExpression>;
+type MethodCall<NAME = ir::QualifiedName> = ir::Call<FunctionExpression, NAME>;
 
 #[derive(Debug, Serialize)]
-pub enum FunctionExpression {
+#[serde(bound(serialize = "NAME: Serialize"))]
+pub enum FunctionExpression<NAME = ir::QualifiedName> {
     Invalid,
     Literal(ir::Literal),
-    Name(ir::QualifiedName),
+    Name(NAME),
     FormatString(ir::FormatString),
-    ArrayExpression(ir::ArrayExpression<FunctionExpression>),
-    TupleExpression(ir::TupleExpression<FunctionExpression>),
+    ArrayExpression(ir::ArrayExpression<FunctionExpression<NAME>>),
+    TupleExpression(ir::TupleExpression<FunctionExpression<NAME>>),
     Scope(Scope),
-    If(ir::If<FunctionExpression, Scope>),
-    Call(ir::Call<FunctionExpression>),
-    BinaryOp(ir::BinaryOp<FunctionExpression>),
-    UnaryOp(ir::UnaryOp<FunctionExpression>),
+    If(ir::If<FunctionExpression<NAME>, Scope>),
+    Call(ir::Call<FunctionExpression<NAME>>),
+    BinaryOp(ir::BinaryOp<FunctionExpression<NAME>>),
+    UnaryOp(ir::UnaryOp<FunctionExpression<NAME>>),
     /// Access an element of an array (`a[0]`)
-    ArrayAccess(Access<Box<FunctionExpression>>),
+    ArrayAccess(Access<Box<FunctionExpression<NAME>>>),
     TupleAccess(Access<ir::Identifier>),
     /// Call to a method: `[2,3].len()`
-    /// First expression must evaluate to a value
-    MethodCall(Access<MethodCall>),
+    MethodCall(Access<MethodCall<NAME>>),
 }
 
 #[derive(Debug, Serialize)]

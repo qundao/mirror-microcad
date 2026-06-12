@@ -92,10 +92,10 @@ where
 
 /// Call of a *workbench* or *function*.
 #[derive(Debug, Serialize)]
-#[serde(bound(serialize = "EXPR: Serialize"))]
-pub struct Call<EXPR> {
+#[serde(bound(serialize = "EXPR: Serialize, NAME: Serialize"))]
+pub struct Call<EXPR, NAME = ir::QualifiedName> {
     /// Qualified name of the call.
-    pub name: ir::QualifiedName,
+    pub name: NAME,
     /// Argument list of the call.
     pub argument_list: ir::ArgumentList<EXPR>,
     /// Source code reference.
