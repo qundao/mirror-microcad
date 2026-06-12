@@ -14,7 +14,7 @@ pub struct Identifier(pub Refer<Id>);
 
 impl SrcReferrer for Identifier {
     fn src_ref(&self) -> SrcRef {
-        self.0.src_ref.clone()
+        self.0.src_ref
     }
 }
 
