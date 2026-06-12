@@ -258,7 +258,6 @@ impl Lower<ast::StatementList> for ir::WorkbenchItems {
             Ok(match stmt {
                 ast::Statement::FileModule(_)
                 | ast::Statement::InlineModule(_)
-                | ast::Statement::Function(_)
                 | ast::Statement::Workbench(_)
                 | ast::Statement::Return(_)
                 | ast::Statement::Error(_) => context
@@ -271,6 +270,7 @@ impl Lower<ast::StatementList> for ir::WorkbenchItems {
         Ok(Self {
             aliases: ir::Aliases::lower(statements, context)?,
             constants: ir::Constants::lower(statements, context)?,
+            functions: ir::Functions::lower(statements, context)?,
         })
     }
 }

@@ -122,6 +122,9 @@ pub struct WorkbenchItems {
     /// `const`
     #[serde(skip_serializing_if = "is_default", default)]
     pub constants: ir::Constants,
+    /// `fn`
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub functions: ir::Functions,
 }
 
 impl IsDefault for WorkbenchItems {
