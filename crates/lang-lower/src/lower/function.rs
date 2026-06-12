@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    Lower, LowerContext, LowerResult,
+    Lower, LowerContext, LowerError, LowerResult,
     ir::{self, FunctionExpression},
-    lower::{extract_statements, extract_statements_with_tail},
+    lower::{extract_statements, extract_statements_with_tail, for_each_statement},
 };
 
-use microcad_lang_base::{Identifier, Refer, SrcRef};
+use microcad_lang_base::{Identifier, PushDiag, Refer, SrcRef};
 use microcad_lang_parse::ast;
 use serde::Serialize;
 
@@ -45,8 +45,18 @@ where
     NAME: Lower<ast::QualifiedName>,
 {
     fn lower(node: &ast::Body, context: &mut LowerContext) -> LowerResult<Self> {
-        // TODO: Check for not-allowed statements here
         let statements = &node.statements;
+        for_each_statement(statements, context, |stmt, context| {
+            let src_ref = context.src_ref(&stmt.span());
+            use ast::Statement::*;
+            Ok(match stmt {
+                FileModule(_) | Const(_) | Use(_) | InlineModule(_) | Init(_) | Workbench(_)
+                | Function(_) | Property(_) | InnerAttribute(_) | InnerDocComment(_) | Error(_) => context
+                    .diagnostics
+                    .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?,
+                _ => {}
+            })
+        })?;
 
         Ok(Self(Refer::new(
             ir::FunctionStatements::lower(statements, context)?,
@@ -202,6 +212,18 @@ where
 
 impl Lower<ast::StatementList> for ir::FunctionItems {
     fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+        for_each_statement(statements, context, |stmt, context| {
+            let src_ref = context.src_ref(&stmt.span());
+            use ast::Statement::*;
+            Ok(match stmt {
+                Init(_) | Workbench(_) | InlineModule(_) | FileModule(_) | Property(_)
+                | Error(_) => context
+                    .diagnostics
+                    .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?,
+                _ => {}
+            })
+        })?;
+
         Ok(Self {
             aliases: ir::Aliases::lower(statements, context)?,
             constants: ir::Constants::lower(statements, context)?,

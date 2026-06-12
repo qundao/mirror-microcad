@@ -2,15 +2,32 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    Lower, LowerContext, LowerError, LowerResult, ir,
-    lower::{attribute::outer_with_doc, extract_statements},
+    Lower, LowerContext, LowerError, LowerResult,
+    ir::{self, WorkbenchStatement},
+    lower::{
+        attribute::outer_with_doc, extract_statements, extract_statements_with_tail,
+        for_each_statement,
+    },
 };
 
-use microcad_lang_base::{Refer, SrcRef};
+use microcad_lang_base::{PushDiag, Refer, SrcRef};
 use microcad_lang_parse::ast;
 
 impl Lower<ast::InitDefinition> for ir::Init {
     fn lower(node: &ast::InitDefinition, context: &mut LowerContext) -> LowerResult<Self> {
+        for_each_statement(&node.body.statements, context, |stmt, context| {
+            let src_ref = context.src_ref(&stmt.span());
+            use ast::Statement::*;
+            Ok(match stmt {
+                FileModule(_) | InlineModule(_) | Function(_) | Workbench(_) | Return(_)
+                | Use(_) | Property(_) | Const(_) | InnerDocComment(_) | InnerAttribute(_)
+                | Error(_) => context
+                    .diagnostics
+                    .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?,
+                _ => {}
+            })
+        })?;
+
         Ok(Self {
             attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attributes, context)?,
             keyword_ref: context.src_ref(&node.keyword_span),
@@ -23,8 +40,23 @@ impl Lower<ast::InitDefinition> for ir::Init {
 
 impl Lower<ast::Body> for ir::Group {
     fn lower(node: &ast::Body, context: &mut LowerContext) -> LowerResult<Self> {
+        let statements = &node.statements;
+        for_each_statement(statements, context, |stmt, context| {
+            let src_ref = context.src_ref(&stmt.span());
+            use ast::Statement::*;
+            Ok(match stmt {
+                FileModule(_) | Const(_) | Use(_) | InlineModule(_) | Init(_) | Workbench(_)
+                | Function(_) | Return(_) | InnerAttribute(_) | InnerDocComment(_) | Error(_) => {
+                    context
+                        .diagnostics
+                        .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?
+                }
+                _ => {}
+            })
+        })?;
+
         Ok(Self(Refer::new(
-            ir::WorkbenchStatements::lower(&node.statements, context)?,
+            ir::WorkbenchStatements::lower(statements, context)?,
             context.src_ref(&node.span),
         )))
     }
@@ -174,14 +206,34 @@ impl Lower<ast::Statement> for Option<ir::WorkbenchStatement> {
 
 impl Lower<ast::StatementList> for ir::WorkbenchStatements {
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self(extract_statements(node, |stmt| {
-            Option::<ir::WorkbenchStatement>::lower(stmt, context)
-        })?))
+        Ok(Self(extract_statements_with_tail(
+            node,
+            context,
+            // Extract statements
+            |stmt, context| Option::<ir::WorkbenchStatement>::lower(stmt, context),
+            // Extract tail expression
+            |expr, context| WorkbenchStatement::lower(expr, context),
+        )?))
     }
 }
 
 impl Lower<ast::StatementList> for ir::WorkbenchItems {
     fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+        for_each_statement(statements, context, |stmt, context| {
+            let src_ref = context.src_ref(&stmt.span());
+            Ok(match stmt {
+                ast::Statement::FileModule(_)
+                | ast::Statement::InlineModule(_)
+                | ast::Statement::Function(_)
+                | ast::Statement::Workbench(_)
+                | ast::Statement::Return(_)
+                | ast::Statement::Error(_) => context
+                    .diagnostics
+                    .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?,
+                _ => {}
+            })
+        })?;
+
         Ok(Self {
             aliases: ir::Aliases::lower(statements, context)?,
             constants: ir::Constants::lower(statements, context)?,

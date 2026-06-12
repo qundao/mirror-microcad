@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    Lower, LowerContext, LowerResult, ir,
-    lower::{attribute::outer_with_doc, extract_statements},
+    Lower, LowerContext, LowerError, LowerResult, ir,
+    lower::{attribute::outer_with_doc, extract_statements, for_each_statement},
 };
 
+use microcad_lang_base::PushDiag;
 use microcad_lang_parse::ast;
 
 impl Lower<ast::FileModule> for ir::FileModule {
@@ -35,6 +36,18 @@ impl Lower<ast::StatementList> for ir::FileModules {
 
 impl Lower<ast::StatementList> for ir::InlineModuleItems {
     fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+        for_each_statement(statements, context, |stmt, context| {
+            let src_ref = context.src_ref(&stmt.span());
+            use ast::Statement::*;
+            Ok(match stmt {
+                FileModule(_) | Return(_) | Expression(_) | LocalAssignment(_) | Property(_)
+                | Error(_) => context
+                    .diagnostics
+                    .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?,
+                _ => {}
+            })
+        })?;
+
         Ok(Self {
             modules: ir::InlineModules::lower(statements, context)?,
             aliases: ir::Aliases::lower(statements, context)?,

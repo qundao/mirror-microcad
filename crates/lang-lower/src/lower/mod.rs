@@ -14,7 +14,7 @@ mod source;
 mod r#type;
 mod workbench;
 
-use microcad_lang_base::{Hashed, Identifier, Refer, SrcRef, SrcReferrer};
+use microcad_lang_base::{DiagError, Hashed, Identifier, Refer, SrcRef, SrcReferrer};
 use microcad_lang_parse::ast;
 use microcad_lang_types::ty::TypeError;
 use miette::{Diagnostic, SourceCode};
@@ -27,6 +27,10 @@ use crate::{Lower, LowerContext, ir};
 #[derive(Debug, Error, Diagnostic)]
 #[allow(missing_docs)]
 pub enum LowerError {
+    /// Error that occurred during handling diagnostics
+    #[error("{0}")]
+    DiagError(#[from] DiagError),
+
     #[error("Error parsing integer literal: {0}")]
     ParseIntError(#[label("{0}")] Refer<std::num::ParseIntError>),
 
@@ -41,8 +45,12 @@ pub enum LowerError {
         previous: Identifier,
     },
 
-    #[error("Loading of source file {1:?} failed: {2}")]
-    LoadSource(SrcRef, std::path::PathBuf, std::io::Error),
+    /// Statement not allowed.
+    #[error("Statement of type not allowed in this context")]
+    StatementNotAllowed {
+        #[label("Invalid statement")]
+        src_ref: SrcRef,
+    },
 
     /// Grammar rule error
     #[error("Invalid id '{0}'")]
@@ -103,8 +111,9 @@ pub type LowerResult<T> = Result<T, LowerError>;
 impl SrcReferrer for LowerError {
     fn src_ref(&self) -> SrcRef {
         match self {
+            LowerError::DiagError(_) => SrcRef::none(),
             LowerError::DuplicateArgument { id, .. } => id.src_ref(),
-            LowerError::LoadSource(src_ref, ..)
+            LowerError::StatementNotAllowed { src_ref }
             | LowerError::InvalidGlobPattern(src_ref)
             | LowerError::UseGlobAlias(src_ref)
             | LowerError::InvalidLiteral { src_ref, .. }
@@ -219,7 +228,7 @@ where
         .statements
         .iter()
         .map(|(stmt, _)| stmt)
-        .try_for_each(|stmt| -> Result<(), LowerError> {
+        .try_for_each(|stmt| -> LowerResult<()> {
             match extractor(stmt)? {
                 Some(m) => mapped.push(m),
                 None => {}
@@ -228,6 +237,21 @@ where
         })?;
 
     Ok(mapped.into_boxed_slice())
+}
+
+pub fn for_each_statement<F>(
+    statements: &ast::StatementList,
+    context: &mut LowerContext,
+    mut check: F,
+) -> LowerResult<()>
+where
+    F: FnMut(&ast::Statement, &mut LowerContext) -> LowerResult<()>,
+{
+    statements
+        .statements
+        .iter()
+        .map(|(stmt, _)| stmt)
+        .try_for_each(|stmt| check(stmt, context))
 }
 
 /// Named and check for duplicates

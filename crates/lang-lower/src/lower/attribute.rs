@@ -1,10 +1,10 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::lower::extract_statements;
-use crate::{Lower, LowerContext, LowerResult, ir};
+use crate::lower::{extract_statements, for_each_statement};
+use crate::{Lower, LowerContext, LowerError, LowerResult, ir};
 
-use microcad_lang_base::Refer;
+use microcad_lang_base::{PushDiag, Refer};
 use microcad_lang_parse::ast;
 
 /// Helper function to get outer attributes
@@ -199,12 +199,47 @@ impl Lower<ast::WorkbenchDefinition> for ir::OuterAttributes {
 
 /// Lower inner attributes
 impl Lower<ast::StatementList> for ir::InnerAttributes {
-    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+    fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+        #[derive(PartialEq)]
+        enum State {
+            /// Try to read doc comments first
+            InitDoc,
+            /// Inner attribute must come after inner doc comments
+            Attributes,
+            /// Only statements afterwards.
+            Statements,
+        }
+
+        // Check order of inner attribute statements.
+        let mut state = State::InitDoc;
+        for_each_statement(statements, context, |stmt, context| {
+            let src_ref = context.src_ref(&stmt.span());
+            Ok(match stmt {
+                ast::Statement::InnerDocComment(_) => {
+                    if state != State::InitDoc {
+                        context
+                            .diagnostics
+                            .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?;
+                    }
+                }
+                ast::Statement::InnerAttribute(_) => {
+                    if state == State::Statements {
+                        context
+                            .diagnostics
+                            .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?;
+                    } else {
+                        state = State::Attributes;
+                    }
+                }
+                _ => state = State::Statements,
+            })
+        })?;
+
         Ok(Self(ir::Attributes {
-            doc: ir::DocBlock::lower(node, context)?,
-            meta: Box::<[ir::Meta]>::lower(node, context)?,
-            commands: Box::<[ir::Command]>::lower(node, context)?,
-            tags: Box::<[ir::Tag]>::lower(node, context)?,
+            doc: ir::DocBlock::lower(statements, context)?,
+            meta: Box::<[ir::Meta]>::lower(statements, context)?,
+            commands: Box::<[ir::Command]>::lower(statements, context)?,
+            tags: Box::<[ir::Tag]>::lower(statements, context)?,
         }))
     }
 }
