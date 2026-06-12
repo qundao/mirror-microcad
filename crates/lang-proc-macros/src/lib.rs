@@ -32,7 +32,7 @@ pub fn derive_src_referrer(input: TokenStream) -> TokenStream {
                 quote! {
                     impl microcad_lang_base::SrcReferrer for #name {
                         fn src_ref(&self) -> microcad_lang_base::SrcRef  {
-                            self.src_ref.clone()
+                            self.src_ref
                         }
                     }
                 }
