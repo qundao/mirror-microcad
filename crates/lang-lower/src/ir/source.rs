@@ -3,19 +3,15 @@
 
 //! µcad source file representation
 
-use crate::{ir, is_default};
+use crate::{IsDefault, ir, is_default};
 
 use microcad_lang_base::{
     ComputedHash, LineCol, ResourceLocation, SourceLocInfo, SrcRef, SrcReferrer,
 };
 use serde::Serialize;
 
-/// µcad source file
 #[derive(Debug, Serialize)]
-pub struct Source {
-    /// Inner attributes.
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub attr: ir::InnerAttributes,
+pub struct SourceItems {
     /// List of file modules: `mod foo;`.
     #[serde(skip_serializing_if = "is_default", default)]
     pub file_modules: ir::FileModules,
@@ -34,6 +30,28 @@ pub struct Source {
     /// Workbenches: `part Bar(...) {...}`.
     #[serde(skip_serializing_if = "is_default", default)]
     pub workbenches: ir::Workbenches,
+}
+
+impl IsDefault for SourceItems {
+    fn is_default(&self) -> bool {
+        self.file_modules.is_default()
+            && self.inline_modules.is_default()
+            && self.aliases.is_default()
+            && self.constants.is_default()
+            && self.functions.is_default()
+            && self.workbenches.is_default()
+    }
+}
+
+/// IR of a µcad source file
+#[derive(Debug, Serialize)]
+pub struct Source {
+    /// Inner attributes.
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub attr: ir::InnerAttributes,
+    /// Items that will become Symbols
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub items: ir::SourceItems,
     /// Workbench statements
     #[serde(skip_serializing_if = "is_default", default)]
     pub statements: ir::WorkbenchStatements,

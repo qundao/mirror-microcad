@@ -33,6 +33,18 @@ impl Lower<ast::StatementList> for ir::FileModules {
     }
 }
 
+impl Lower<ast::StatementList> for ir::InlineModuleItems {
+    fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
+            modules: ir::InlineModules::lower(statements, context)?,
+            aliases: ir::Aliases::lower(statements, context)?,
+            constants: ir::Constants::lower(statements, context)?,
+            functions: ir::Functions::lower(statements, context)?,
+            workbenches: ir::Workbenches::lower(statements, context)?,
+        })
+    }
+}
+
 impl Lower<ast::InlineModule> for ir::InlineModule {
     fn lower(node: &ast::InlineModule, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
@@ -46,11 +58,7 @@ impl Lower<ast::InlineModule> for ir::InlineModule {
             keyword_ref: context.src_ref(&node.keyword_span),
             id: ir::Identifier::lower(&node.name, context)?,
             inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
-            modules: ir::InlineModules::lower(&node.body.statements, context)?,
-            aliases: ir::Aliases::lower(&node.body.statements, context)?,
-            constants: ir::Constants::lower(&node.body.statements, context)?,
-            functions: ir::Functions::lower(&node.body.statements, context)?,
-            workbenches: ir::Workbenches::lower(&node.body.statements, context)?,
+            items: ir::InlineModuleItems::lower(&node.body.statements, context)?,
         })
     }
 }

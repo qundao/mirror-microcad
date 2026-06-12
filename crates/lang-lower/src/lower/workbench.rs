@@ -113,37 +113,6 @@ impl Lower<ast::StatementList> for ir::Inits {
     }
 }
 
-impl Lower<ast::WorkbenchDefinition> for ir::Workbench {
-    fn lower(node: &ast::WorkbenchDefinition, context: &mut LowerContext) -> LowerResult<Self> {
-        if let Some(tail) = node.body.statements.tail.as_ref() {
-            context
-                .warning(LowerError::ImplicitWorkbenchReturn {
-                    src_ref: context.src_ref(&tail.span),
-                })
-                .ok();
-        }
-
-        Ok(Self {
-            keyword_ref: context.src_ref(&node.keyword_span),
-            outer_attr: crate::lower::attribute::outer_with_doc(
-                &node.doc,
-                &node.attributes,
-                context,
-            )?,
-            visibility: ir::Visibility::lower(&node.visibility, context)?,
-            kind: Refer::new(node.kind.into(), context.src_ref(&node.span)),
-            id: ir::Identifier::lower(&node.name, context)?,
-
-            parameters: ir::ParameterList::lower(&node.plan, context)?,
-            inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
-            aliases: ir::Aliases::lower(&node.body.statements, context)?,
-            constants: ir::Constants::lower(&node.body.statements, context)?,
-            inits: ir::Inits::lower(&node.body.statements, context)?,
-            statements: ir::WorkbenchStatements::lower(&node.body.statements, context)?,
-        })
-    }
-}
-
 impl Lower<ast::LocalAssignment> for ir::WorkbenchStatement {
     fn lower(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
@@ -208,6 +177,44 @@ impl Lower<ast::StatementList> for ir::WorkbenchStatements {
         Ok(Self(extract_statements(node, |stmt| {
             Option::<ir::WorkbenchStatement>::lower(stmt, context)
         })?))
+    }
+}
+
+impl Lower<ast::StatementList> for ir::WorkbenchItems {
+    fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
+            aliases: ir::Aliases::lower(statements, context)?,
+            constants: ir::Constants::lower(statements, context)?,
+        })
+    }
+}
+
+impl Lower<ast::WorkbenchDefinition> for ir::Workbench {
+    fn lower(node: &ast::WorkbenchDefinition, context: &mut LowerContext) -> LowerResult<Self> {
+        if let Some(tail) = node.body.statements.tail.as_ref() {
+            context
+                .warning(LowerError::ImplicitWorkbenchReturn {
+                    src_ref: context.src_ref(&tail.span),
+                })
+                .ok();
+        }
+
+        Ok(Self {
+            keyword_ref: context.src_ref(&node.keyword_span),
+            outer_attr: crate::lower::attribute::outer_with_doc(
+                &node.doc,
+                &node.attributes,
+                context,
+            )?,
+            visibility: ir::Visibility::lower(&node.visibility, context)?,
+            kind: Refer::new(node.kind.into(), context.src_ref(&node.span)),
+            id: ir::Identifier::lower(&node.name, context)?,
+            parameters: ir::ParameterList::lower(&node.plan, context)?,
+            inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
+            inits: ir::Inits::lower(&node.body.statements, context)?,
+            items: ir::WorkbenchItems::lower(&node.body.statements, context)?,
+            statements: ir::WorkbenchStatements::lower(&node.body.statements, context)?,
+        })
     }
 }
 

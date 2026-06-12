@@ -32,7 +32,36 @@ impl IsDefault for FileModules {
     }
 }
 
-/// Module definition.
+/// Items inside an inline module that will be resolved into Symbols.
+#[derive(Debug, Serialize)]
+pub struct InlineModuleItems {
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub modules: ir::InlineModules,
+
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub aliases: ir::Aliases,
+
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub constants: ir::Constants,
+
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub functions: ir::Functions,
+
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub workbenches: ir::Workbenches,
+}
+
+impl IsDefault for InlineModuleItems {
+    fn is_default(&self) -> bool {
+        self.modules.is_default()
+            && self.aliases.is_default()
+            && self.constants.is_default()
+            && self.functions.is_default()
+            && self.workbenches.is_default()
+    }
+}
+
+/// Inline module definition.
 #[derive(Debug, Identifiable, Serialize)]
 pub struct InlineModule {
     pub src_ref: SrcRef,
@@ -51,19 +80,7 @@ pub struct InlineModule {
     pub inner_attr: ir::InnerAttributes,
 
     #[serde(skip_serializing_if = "is_default", default)]
-    pub modules: ir::InlineModules,
-
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub aliases: ir::Aliases,
-
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub constants: ir::Constants,
-
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub functions: ir::Functions,
-
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub workbenches: ir::Workbenches,
+    pub items: ir::InlineModuleItems,
 }
 
 impl SrcReferrer for InlineModule {

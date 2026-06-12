@@ -113,6 +113,23 @@ impl<NAME: Serialize> ir::ExpressionKind for WorkbenchExpression<NAME> {
     type Name = NAME;
 }
 
+/// Workbench items that will be resolved into Symbols
+#[derive(Debug, Serialize)]
+pub struct WorkbenchItems {
+    /// `use`
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub aliases: ir::Aliases,
+    /// `const`
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub constants: ir::Constants,
+}
+
+impl IsDefault for WorkbenchItems {
+    fn is_default(&self) -> bool {
+        self.aliases.is_default() && self.constants.is_default()
+    }
+}
+
 /// Workbench definition, e.g `sketch`, `part` or `op`.
 #[derive(Debug, Identifiable, Serialize)]
 pub struct Workbench {
@@ -132,16 +149,13 @@ pub struct Workbench {
     /// Workbench inner attributes
     #[serde(skip_serializing_if = "is_default", default)]
     pub inner_attr: ir::InnerAttributes,
-    /// `use`
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub aliases: ir::Aliases,
-    /// `const`
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub constants: ir::Constants,
     /// `init`
     #[serde(skip_serializing_if = "is_default", default)]
     pub inits: ir::Inits,
-    /// The actual statements building the model
+    /// Items that will be resolved into Symbols
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub items: ir::WorkbenchItems,
+    /// The actual statements to build the Model
     #[serde(skip_serializing_if = "is_default", default)]
     pub statements: ir::WorkbenchStatements,
 }
