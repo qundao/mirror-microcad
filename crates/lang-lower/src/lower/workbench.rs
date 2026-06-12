@@ -55,10 +55,11 @@ impl Lower<ast::Body> for ir::Group {
             })
         })?;
 
-        Ok(Self(Refer::new(
-            ir::WorkbenchStatements::lower(statements, context)?,
-            context.src_ref(&node.span),
-        )))
+        Ok(Self {
+            src_ref: context.src_ref(&node.span),
+            attr: ir::InnerAttributes::lower(statements, context)?,
+            statements: ir::WorkbenchStatements::lower(statements, context)?,
+        })
     }
 }
 
@@ -147,8 +148,35 @@ impl Lower<ast::StatementList> for ir::Inits {
         // 2. Find the LAST occurrence of an Initializer
         let last_idx = statements.iter().map(|(stmt, _)| stmt).rposition(is_init);
 
-        // 3. Output an error on any none initializer statement.
         if let (Some(first), Some(last)) = (first_idx, last_idx) {
+            // 3. Output an error on any WorkbenchStatement before an initializer
+            statements[0..first]
+                .iter()
+                .try_for_each(|(stmt, _)| -> LowerResult<()> {
+                    let src_ref = match stmt {
+                        ast::Statement::LocalAssignment(local_assignment) => {
+                            context.src_ref(&local_assignment.span)
+                        }
+                        ast::Statement::Property(property_assignment) => {
+                            context.src_ref(&property_assignment.span)
+                        }
+                        ast::Statement::Expression(expression_statement) => {
+                            context.src_ref(&expression_statement.span)
+                        }
+                        ast::Statement::Error(span) => context.src_ref(&span),
+                        _ => SrcRef::none(),
+                    };
+
+                    if src_ref.is_some() {
+                        let src_ref = context.src_ref(&stmt.span());
+                        context
+                            .diagnostics
+                            .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?;
+                    }
+                    Ok(())
+                })?;
+
+            // 4. Output an error on any none initializer statement in between the range
             statements[first..=last]
                 .iter()
                 .try_for_each(|(stmt, _)| -> LowerResult<()> {

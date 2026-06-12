@@ -37,7 +37,11 @@ impl IsDefault for WorkbenchStatements {
 }
 
 #[derive(Debug, Serialize)]
-pub struct Group(pub Refer<WorkbenchStatements>);
+pub struct Group {
+    pub src_ref: SrcRef,
+    pub attr: ir::InnerAttributes,
+    pub statements: WorkbenchStatements,
+}
 
 #[derive(Debug, Serialize)]
 pub struct Init {
