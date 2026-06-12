@@ -160,7 +160,7 @@ impl Symbol {
                     false
                 }
             })
-            .map(|symbol| symbol.clone_with(visibility.clone(), src_ref.clone()))
+            .map(|symbol| symbol.clone_with(visibility.clone(), src_ref))
             .map(|symbol| (symbol.id(), symbol))
             .collect()
     }
@@ -277,7 +277,7 @@ impl SrcReferrer for Symbol {
         if self.src_ref.is_none() {
             self.inner.borrow().src_ref()
         } else {
-            self.src_ref.clone()
+            self.src_ref
         }
     }
 }
