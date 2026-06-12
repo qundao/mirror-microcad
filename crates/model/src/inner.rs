@@ -107,6 +107,6 @@ impl PropertiesAccess for ModelInner {
 
 impl SrcReferrer for ModelInner {
     fn src_ref(&self) -> SrcRef {
-        self.element.src_ref.clone()
+        self.element.src_ref
     }
 }
