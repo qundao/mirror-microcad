@@ -7,7 +7,7 @@ use crate::{
     lower::{extract_statements, extract_statements_with_tail, for_each_statement},
 };
 
-use microcad_lang_base::{Identifier, PushDiag, Refer, SrcRef};
+use microcad_lang_base::{Identifier, PushDiag, Refer, SrcRef, SrcReferrer};
 use microcad_lang_parse::ast;
 use serde::Serialize;
 
@@ -42,7 +42,7 @@ impl Lower<ast::FunctionDefinition> for ir::Constants {
 
 impl<NAME: Serialize> Lower<ast::Body> for ir::Scope<NAME>
 where
-    NAME: Lower<ast::QualifiedName>,
+    NAME: SrcReferrer + Lower<ast::QualifiedName>,
 {
     fn lower(node: &ast::Body, context: &mut LowerContext) -> LowerResult<Self> {
         let statements = &node.statements;
@@ -51,9 +51,11 @@ where
             use ast::Statement::*;
             Ok(match stmt {
                 FileModule(_) | Const(_) | Use(_) | InlineModule(_) | Init(_) | Workbench(_)
-                | Function(_) | Property(_) | InnerAttribute(_) | InnerDocComment(_) | Error(_) => context
-                    .diagnostics
-                    .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?,
+                | Function(_) | Property(_) | InnerAttribute(_) | InnerDocComment(_) | Error(_) => {
+                    context
+                        .diagnostics
+                        .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?
+                }
                 _ => {}
             })
         })?;
@@ -67,7 +69,7 @@ where
 
 impl<NAME: Serialize> Lower<ast::Expression> for ir::FunctionExpression<NAME>
 where
-    NAME: Lower<ast::QualifiedName>,
+    NAME: SrcReferrer + Lower<ast::QualifiedName>,
 {
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
@@ -138,7 +140,7 @@ where
 
 impl<NAME: Serialize> Lower<Option<ast::Expression>> for Option<ir::FunctionExpression<NAME>>
 where
-    NAME: Lower<ast::QualifiedName>,
+    NAME: SrcReferrer + Lower<ast::QualifiedName>,
 {
     fn lower(node: &Option<ast::Expression>, context: &mut LowerContext) -> LowerResult<Self> {
         node.as_ref()
@@ -149,7 +151,7 @@ where
 
 impl<NAME: Serialize> Lower<ast::Return> for ir::ReturnStatement<NAME>
 where
-    NAME: Lower<ast::QualifiedName>,
+    NAME: SrcReferrer + Lower<ast::QualifiedName>,
 {
     fn lower(node: &ast::Return, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
@@ -162,7 +164,7 @@ where
 
 impl<NAME: Serialize> Lower<ast::Statement> for Option<ir::FunctionStatement<NAME>>
 where
-    NAME: Lower<ast::QualifiedName>,
+    NAME: SrcReferrer + Lower<ast::QualifiedName>,
 {
     fn lower(stmt: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match stmt {
@@ -191,10 +193,10 @@ where
 
 impl<NAME> Lower<ast::StatementList> for ir::FunctionStatements<NAME>
 where
-    NAME: Serialize + Lower<ast::QualifiedName>,
+    NAME: SrcReferrer + Serialize + Lower<ast::QualifiedName>,
 {
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self(extract_statements_with_tail(
+        let statements = extract_statements_with_tail(
             node,
             context,
             |stmt, context| Option::<ir::FunctionStatement<NAME>>::lower(stmt, context),
@@ -206,7 +208,28 @@ where
                     src_ref: context.src_ref(&tail.span),
                 }))
             },
-        )?))
+        )?;
+
+        let mut return_src_ref = SrcRef::none();
+
+        for stmt in statements.iter() {
+            let src_ref = stmt.src_ref();
+            if return_src_ref.is_some() {
+                // We've already hit a return, so everything after it is unreachable dead code.
+                context.diagnostics.warning(
+                    &src_ref,
+                    LowerError::Unreachable {
+                        src_ref,
+                        last_ref: return_src_ref,
+                    },
+                )?;
+            } else if let ir::FunctionStatement::Return(ret) = stmt {
+                // Found the first return statement!
+                return_src_ref = ret.src_ref;
+            }
+        }
+
+        Ok(Self(statements))
     }
 }
 

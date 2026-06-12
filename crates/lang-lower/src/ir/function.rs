@@ -5,7 +5,7 @@
 
 use crate::{IsDefault, ir, is_default};
 
-use microcad_lang_base::{Refer, SrcRef};
+use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 use serde::Serialize;
 
 /// Parameters and return type of a function
@@ -70,6 +70,30 @@ impl<NAME: Serialize> ir::ExpressionKind for FunctionExpression<NAME> {
     type Name = NAME;
 }
 
+impl<NAME: Serialize> SrcReferrer for FunctionExpression<NAME>
+where
+    NAME: SrcReferrer,
+{
+    fn src_ref(&self) -> SrcRef {
+        match &self {
+            FunctionExpression::Invalid => SrcRef::none(),
+            FunctionExpression::Literal(literal) => literal.src_ref(),
+            FunctionExpression::Name(name) => name.src_ref(),
+            FunctionExpression::FormatString(format_string) => format_string.src_ref(),
+            FunctionExpression::ArrayExpression(array_expression) => array_expression.src_ref(),
+            FunctionExpression::TupleExpression(tuple_expression) => tuple_expression.src_ref,
+            FunctionExpression::Scope(scope) => scope.0.src_ref(),
+            FunctionExpression::If(if_expr) => if_expr.src_ref,
+            FunctionExpression::Call(call) => call.src_ref,
+            FunctionExpression::BinaryOp(binary_op) => binary_op.src_ref,
+            FunctionExpression::UnaryOp(unary_op) => unary_op.src_ref,
+            FunctionExpression::ArrayAccess(element_access) => element_access.src_ref,
+            FunctionExpression::TupleAccess(element_access) => element_access.src_ref,
+            FunctionExpression::MethodCall(element_access) => element_access.src_ref,
+        }
+    }
+}
+
 #[derive(Debug, Serialize)]
 #[serde(bound(serialize = "NAME: Serialize"))]
 pub struct ReturnStatement<NAME: Serialize> {
@@ -88,6 +112,16 @@ pub enum FunctionStatement<NAME: Serialize> {
     /// `return 42;`
     /// Possibly lowered from the tail expression of an `ast::StatementList`
     Return(ReturnStatement<NAME>),
+}
+
+impl<NAME: Serialize + SrcReferrer> SrcReferrer for FunctionStatement<NAME> {
+    fn src_ref(&self) -> SrcRef {
+        match &self {
+            FunctionStatement::Local(local_assignment) => local_assignment.src_ref,
+            FunctionStatement::Expression(function_expression) => function_expression.src_ref(),
+            FunctionStatement::Return(return_statement) => return_statement.src_ref,
+        }
+    }
 }
 
 #[derive(Debug, Serialize)]

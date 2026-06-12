@@ -103,6 +103,15 @@ pub enum LowerError {
         #[label("Workbenches don't return any value")]
         src_ref: SrcRef,
     },
+
+    #[error("Statement is unreachable")]
+    #[diagnostic(help("Remove this statement {src_ref}"))]
+    Unreachable {
+        #[label("Last statement to be evaluated")]
+        last_ref: SrcRef,
+        #[label("Statement")]
+        src_ref: SrcRef,
+    },
 }
 
 /// Result with parse error
@@ -127,6 +136,7 @@ impl SrcReferrer for LowerError {
             LowerError::UnknownType(ty) => ty.src_ref(),
             LowerError::TypeError(ty) => ty.src_ref(),
             LowerError::AstParser(err) => err.src_ref(),
+            LowerError::Unreachable { src_ref, .. } => *src_ref,
         }
     }
 }
