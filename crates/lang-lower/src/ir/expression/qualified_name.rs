@@ -72,14 +72,14 @@ impl QualifiedName {
 
     /// remove the first name from path
     pub fn remove_first(&self) -> Self {
-        Self(Refer::new(self.0[1..].to_vec(), self.0.src_ref.clone()))
+        Self(Refer::new(self.0[1..].to_vec(), self.0.src_ref))
     }
 
     /// remove the first name from path
     pub fn remove_last(self) -> Self {
         Self(Refer::new(
             self.0[..self.0.len() - 1].to_vec(),
-            self.0.src_ref.clone(),
+            self.0.src_ref,
         ))
     }
 

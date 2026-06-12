@@ -9,6 +9,7 @@ use crate::{
 
 use microcad_lang_base::{Identifier, Refer, SrcRef};
 use microcad_lang_parse::ast;
+use serde::Serialize;
 
 impl Lower<ast::FunctionDefinition> for ir::OuterAttributes {
     fn lower(node: &ast::FunctionDefinition, context: &mut LowerContext) -> LowerResult<Self> {
@@ -39,7 +40,10 @@ impl Lower<ast::FunctionDefinition> for ir::Constants {
     }
 }
 
-impl Lower<ast::Body> for ir::Scope {
+impl<NAME: Serialize> Lower<ast::Body> for ir::Scope<NAME>
+where
+    NAME: Lower<ast::QualifiedName>,
+{
     fn lower(node: &ast::Body, context: &mut LowerContext) -> LowerResult<Self> {
         // TODO: Check for not-allowed statements here
         let statements = &node.statements;
@@ -51,7 +55,10 @@ impl Lower<ast::Body> for ir::Scope {
     }
 }
 
-impl Lower<ast::Expression> for ir::FunctionExpression {
+impl<NAME: Serialize> Lower<ast::Expression> for ir::FunctionExpression<NAME>
+where
+    NAME: Lower<ast::QualifiedName>,
+{
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
             ast::Expression::Call(expr) => Self::Call(ir::Call::lower(expr, context)?),
@@ -75,7 +82,7 @@ impl Lower<ast::Expression> for ir::FunctionExpression {
                 unit: ir::Unit::lower(&a.unit, context)?,
                 src_ref: context.src_ref(&a.span),
             }),
-            ast::Expression::QualifiedName(n) => Self::Name(ir::QualifiedName::lower(n, context)?),
+            ast::Expression::QualifiedName(n) => Self::Name(NAME::lower(n, context)?),
             ast::Expression::BinaryOperation(binop) => {
                 Self::BinaryOp(ir::BinaryOp::lower(binop, context)?)
             }
@@ -119,7 +126,10 @@ impl Lower<ast::Expression> for ir::FunctionExpression {
     }
 }
 
-impl Lower<Option<ast::Expression>> for Option<ir::FunctionExpression> {
+impl<NAME: Serialize> Lower<Option<ast::Expression>> for Option<ir::FunctionExpression<NAME>>
+where
+    NAME: Lower<ast::QualifiedName>,
+{
     fn lower(node: &Option<ast::Expression>, context: &mut LowerContext) -> LowerResult<Self> {
         node.as_ref()
             .map(|expr| ir::FunctionExpression::lower(expr, context))
@@ -127,17 +137,23 @@ impl Lower<Option<ast::Expression>> for Option<ir::FunctionExpression> {
     }
 }
 
-impl Lower<ast::Return> for ir::ReturnStatement {
+impl<NAME: Serialize> Lower<ast::Return> for ir::ReturnStatement<NAME>
+where
+    NAME: Lower<ast::QualifiedName>,
+{
     fn lower(node: &ast::Return, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            value: Option::<ir::FunctionExpression>::lower(&node.value, context)?,
+            value: Option::<ir::FunctionExpression<NAME>>::lower(&node.value, context)?,
             keyword_src_ref: context.src_ref(&node.keyword_span),
             src_ref: context.src_ref(&node.span),
         })
     }
 }
 
-impl Lower<ast::Statement> for Option<ir::FunctionStatement> {
+impl<NAME: Serialize> Lower<ast::Statement> for Option<ir::FunctionStatement<NAME>>
+where
+    NAME: Lower<ast::QualifiedName>,
+{
     fn lower(stmt: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match stmt {
             ast::Statement::Return(ret) => Some(ir::FunctionStatement::Return(
@@ -145,27 +161,33 @@ impl Lower<ast::Statement> for Option<ir::FunctionStatement> {
             )),
             ast::Statement::LocalAssignment(local_assignment) => {
                 Some(ir::FunctionStatement::Local(ir::LocalAssignment::<
-                    FunctionExpression,
+                    FunctionExpression<NAME>,
                 >::lower(
                     local_assignment, context
                 )?))
             }
             ast::Statement::Expression(expression_statement) => {
-                Some(ir::FunctionStatement::Expression(
-                    ir::FunctionExpression::lower(&expression_statement.expression, context)?,
-                ))
+                Some(ir::FunctionStatement::Expression(ir::FunctionExpression::<
+                    NAME,
+                >::lower(
+                    &expression_statement.expression,
+                    context,
+                )?))
             }
             _ => None,
         })
     }
 }
 
-impl Lower<ast::StatementList> for ir::FunctionStatements {
+impl<NAME> Lower<ast::StatementList> for ir::FunctionStatements<NAME>
+where
+    NAME: Serialize + Lower<ast::QualifiedName>,
+{
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self(extract_statements_with_tail(
             node,
             context,
-            |stmt, context| Option::<ir::FunctionStatement>::lower(stmt, context),
+            |stmt, context| Option::<ir::FunctionStatement<NAME>>::lower(stmt, context),
             // Lower Tail expression to Return statements.
             |tail, context| {
                 Ok(ir::FunctionStatement::Return(ir::ReturnStatement {
@@ -175,6 +197,15 @@ impl Lower<ast::StatementList> for ir::FunctionStatements {
                 }))
             },
         )?))
+    }
+}
+
+impl Lower<ast::StatementList> for ir::FunctionItems {
+    fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
+            aliases: ir::Aliases::lower(statements, context)?,
+            constants: ir::Constants::lower(statements, context)?,
+        })
     }
 }
 
@@ -188,8 +219,7 @@ impl Lower<ast::FunctionDefinition> for ir::Function {
             id: Identifier::lower(&node.name, context)?,
             signature: ir::FunctionSignature::lower(&node, context)?,
             inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
-            aliases: ir::Aliases::lower(&node.body.statements, context)?,
-            constants: ir::Constants::lower(&node.body.statements, context)?,
+            items: ir::FunctionItems::lower(&node.body.statements, context)?,
             statements: ir::FunctionStatements::lower(&node.body.statements, context)?,
         })
     }

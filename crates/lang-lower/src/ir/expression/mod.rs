@@ -84,7 +84,7 @@ pub struct BinaryOp<EXPR> {
 
 impl<EXPR> SrcReferrer for BinaryOp<EXPR> {
     fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
+        self.src_ref
     }
 }
 
@@ -137,7 +137,7 @@ pub struct UnaryOp<EXPR> {
 
 impl<EXPR> SrcReferrer for UnaryOp<EXPR> {
     fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
+        self.src_ref
     }
 }
 
@@ -167,16 +167,20 @@ pub struct ElementAccess<EXPR, ELEMENT> {
     pub src_ref: SrcRef,
 }
 
+pub trait ExpressionKind: Serialize {
+    type Name;
+}
+
 /// An expression that can be evaluated during `resolve` phase.
 ///
 /// Use for `Constant` and default values for `Parameter`.
 /// TODO: ElementAccess are missing.
 #[derive(Debug, Serialize)]
 #[serde(bound(serialize = "NAME: Serialize"))]
-pub enum ConstantExpression<NAME = ir::QualifiedName> {
+pub enum ConstantExpression<NAME: Serialize = ir::QualifiedName> {
     Invalid,
     Literal(ir::Literal),
-    Call(ir::Call<ConstantExpression, NAME>),
+    Call(ir::Call<ConstantExpression<NAME>>),
     Name(NAME),
     FormatString(ir::FormatString),
     ArrayExpression(ir::ArrayExpression<ConstantExpression<NAME>>),
@@ -185,7 +189,14 @@ pub enum ConstantExpression<NAME = ir::QualifiedName> {
     UnaryOp(ir::UnaryOp<ConstantExpression<NAME>>),
 }
 
-impl std::fmt::Display for ConstantExpression {
+impl<NAME: Serialize> ExpressionKind for ConstantExpression<NAME> {
+    type Name = NAME;
+}
+
+impl<NAME: Serialize> std::fmt::Display for ConstantExpression<NAME>
+where
+    NAME: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {
             ConstantExpression::Literal(literal) => write!(f, "{literal}"),

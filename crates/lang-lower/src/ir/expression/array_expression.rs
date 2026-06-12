@@ -54,7 +54,7 @@ where
                     .map(|end| end.src_ref())
                     .unwrap_or_default(),
             ),
-            ArrayExpressionInner::Range(range_expression) => range_expression.src_ref.clone(),
+            ArrayExpressionInner::Range(range_expression) => range_expression.src_ref,
         }
     }
 }

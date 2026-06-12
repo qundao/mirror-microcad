@@ -9,6 +9,7 @@ mod literal;
 
 use microcad_lang_base::{Identifier, PushDiag, Refer};
 use microcad_lang_parse::ast;
+use serde::Serialize;
 
 impl<EXPR> Lower<ast::BinaryOperation> for ir::BinaryOp<EXPR>
 where
@@ -186,7 +187,10 @@ where
     }
 }
 
-impl Lower<ast::Expression> for ir::ConstantExpression {
+impl<NAME: Serialize> Lower<ast::Expression> for ir::ConstantExpression<NAME>
+where
+    NAME: Lower<ast::QualifiedName>,
+{
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
             ast::Expression::Call(expr) => Self::Call(ir::Call::lower(expr, context)?),
@@ -210,7 +214,7 @@ impl Lower<ast::Expression> for ir::ConstantExpression {
                 unit: ir::Unit::lower(&a.unit, context)?,
                 src_ref: context.src_ref(&a.span),
             }),
-            ast::Expression::QualifiedName(n) => Self::Name(ir::QualifiedName::lower(n, context)?),
+            ast::Expression::QualifiedName(n) => Self::Name(NAME::lower(n, context)?),
             ast::Expression::BinaryOperation(binop) => {
                 Self::BinaryOp(ir::BinaryOp::lower(binop, context)?)
             }

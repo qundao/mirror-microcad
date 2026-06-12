@@ -8,12 +8,13 @@ use microcad_lang_parse::ast;
 
 impl<EXPR> Lower<ast::Call> for ir::Call<EXPR>
 where
-    EXPR: Lower<ast::Expression>,
+    EXPR: ir::ExpressionKind + Lower<ast::Expression>,
+    EXPR::Name: Lower<ast::QualifiedName>,
 {
     fn lower(node: &ast::Call, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::Call {
             src_ref: context.src_ref(&node.span),
-            name: ir::QualifiedName::lower(&node.name, context)?,
+            name: EXPR::Name::lower(&node.name, context)?,
             argument_list: ir::ArgumentList::lower(&node.arguments, context)?,
         })
     }

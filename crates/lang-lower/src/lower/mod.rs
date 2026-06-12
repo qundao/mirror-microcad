@@ -111,7 +111,7 @@ impl SrcReferrer for LowerError {
             | LowerError::InvalidExpression { src_ref }
             | LowerError::InvalidStatement { src_ref }
             | LowerError::InvalidRangeType { src_ref }
-            | LowerError::ImplicitWorkbenchReturn { src_ref } => src_ref.clone(),
+            | LowerError::ImplicitWorkbenchReturn { src_ref } => *src_ref,
             LowerError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
             LowerError::InvalidIdentifier(id) => id.src_ref(),
             LowerError::UnknownUnit(unit) => unit.src_ref(),

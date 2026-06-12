@@ -86,12 +86,11 @@ impl std::fmt::Display for Marker {
     }
 }
 
-type Access<ELEMENT, NAME = ir::QualifiedName> =
-    ir::ElementAccess<WorkbenchExpression<NAME>, ELEMENT>;
-type MethodCall<NAME = ir::QualifiedName> = ir::Call<WorkbenchExpression, NAME>;
+type Access<ELEMENT, NAME> = ir::ElementAccess<WorkbenchExpression<NAME>, ELEMENT>;
+type MethodCall<NAME> = Access<ir::Call<WorkbenchExpression<NAME>>, NAME>;
 
 #[derive(Debug, Serialize)]
-pub enum WorkbenchExpression<NAME = ir::QualifiedName> {
+pub enum WorkbenchExpression<NAME: Serialize = ir::QualifiedName> {
     Invalid,
     Literal(ir::Literal),
     Name(NAME),
@@ -104,10 +103,14 @@ pub enum WorkbenchExpression<NAME = ir::QualifiedName> {
     Marker(Marker),
     BinaryOp(ir::BinaryOp<WorkbenchExpression<NAME>>),
     UnaryOp(ir::UnaryOp<WorkbenchExpression<NAME>>),
-    MetaAccess(Access<Identifier>),
-    ArrayAccess(Access<Box<ir::ConstantExpression<NAME>>>),
-    PropertyAccess(Access<Identifier>),
-    MethodCall(Access<MethodCall>),
+    MetaAccess(Access<Identifier, NAME>),
+    ArrayAccess(Access<Box<ir::ConstantExpression<NAME>>, NAME>),
+    PropertyAccess(Access<Identifier, NAME>),
+    MethodCall(MethodCall<NAME>),
+}
+
+impl<NAME: Serialize> ir::ExpressionKind for WorkbenchExpression<NAME> {
+    type Name = NAME;
 }
 
 /// Workbench definition, e.g `sketch`, `part` or `op`.

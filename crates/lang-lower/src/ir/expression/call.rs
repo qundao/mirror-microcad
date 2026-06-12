@@ -36,7 +36,7 @@ impl<EXPR> Identifiable for NamedArgument<EXPR> {
 
 impl<EXPR> SrcReferrer for NamedArgument<EXPR> {
     fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
+        self.src_ref
     }
 }
 
@@ -92,10 +92,10 @@ where
 
 /// Call of a *workbench* or *function*.
 #[derive(Debug, Serialize)]
-#[serde(bound(serialize = "EXPR: Serialize, NAME: Serialize"))]
-pub struct Call<EXPR, NAME = ir::QualifiedName> {
+#[serde(bound(serialize = "EXPR: Serialize, EXPR::Name: Serialize"))]
+pub struct Call<EXPR: ir::ExpressionKind> {
     /// Qualified name of the call.
-    pub name: NAME,
+    pub name: EXPR::Name,
     /// Argument list of the call.
     pub argument_list: ir::ArgumentList<EXPR>,
     /// Source code reference.
@@ -104,7 +104,8 @@ pub struct Call<EXPR, NAME = ir::QualifiedName> {
 
 impl<EXPR> std::fmt::Display for Call<EXPR>
 where
-    EXPR: std::fmt::Display,
+    EXPR: ir::ExpressionKind + std::fmt::Display,
+    EXPR::Name: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{}({})", self.name, self.argument_list)

@@ -29,8 +29,14 @@ impl SrcReferrer for FormatStringInner {
 }
 
 /// Format string.
-#[derive(Default, Debug, SrcReferrer, Serialize)]
+#[derive(Default, Debug, Serialize)]
 pub struct FormatString(pub Refer<Vec<FormatStringInner>>);
+
+impl SrcReferrer for FormatString {
+    fn src_ref(&self) -> SrcRef {
+        self.0.src_ref
+    }
+}
 
 impl FormatString {
     /// Insert a string.
@@ -54,7 +60,7 @@ impl FormatString {
 impl From<Refer<String>> for FormatString {
     fn from(value: Refer<String>) -> Self {
         FormatString(Refer {
-            src_ref: value.src_ref.clone(),
+            src_ref: value.src_ref,
             value: vec![FormatStringInner::String(value)],
         })
     }
@@ -76,7 +82,7 @@ impl std::fmt::Display for FormatString {
 
 /// Format expression including format specification.
 #[skip_serializing_none]
-#[derive(Debug, SrcReferrer, Serialize)]
+#[derive(Debug, Serialize)]
 pub struct FormatExpression {
     /// Format specifier
     pub spec: Option<ir::FormatSpec>,
@@ -98,6 +104,12 @@ impl FormatExpression {
             spec,
             expression,
         }
+    }
+}
+
+impl SrcReferrer for FormatExpression {
+    fn src_ref(&self) -> SrcRef {
+        self.src_ref
     }
 }
 

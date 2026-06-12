@@ -20,7 +20,7 @@ impl Literal {
 
 impl SrcReferrer for Literal {
     fn src_ref(&self) -> SrcRef {
-        self.0.src_ref.clone()
+        self.0.src_ref
     }
 }
 

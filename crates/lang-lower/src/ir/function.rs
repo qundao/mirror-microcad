@@ -34,59 +34,87 @@ impl std::fmt::Display for FunctionSignature {
     }
 }
 
-type Access<ELEMENT> = ir::ElementAccess<FunctionExpression, ELEMENT>;
-type MethodCall<NAME = ir::QualifiedName> = ir::Call<FunctionExpression, NAME>;
+/// A function scope `{}`
+#[derive(Debug, Serialize)]
+#[serde(bound(serialize = "NAME: Serialize"))]
+pub struct Scope<NAME: Serialize>(pub Refer<FunctionStatements<NAME>>);
+
+/// Generic Access
+type Access<ELEMENT, NAME> = ir::ElementAccess<FunctionExpression<NAME>, ELEMENT>;
+
+/// A method call
+type MethodCall<NAME> = Access<ir::Call<FunctionExpression<NAME>>, NAME>;
 
 #[derive(Debug, Serialize)]
 #[serde(bound(serialize = "NAME: Serialize"))]
-pub enum FunctionExpression<NAME = ir::QualifiedName> {
+pub enum FunctionExpression<NAME: Serialize = ir::QualifiedName> {
     Invalid,
     Literal(ir::Literal),
     Name(NAME),
     FormatString(ir::FormatString),
     ArrayExpression(ir::ArrayExpression<FunctionExpression<NAME>>),
     TupleExpression(ir::TupleExpression<FunctionExpression<NAME>>),
-    Scope(Scope),
-    If(ir::If<FunctionExpression<NAME>, Scope>),
+    Scope(Scope<NAME>),
+    If(ir::If<FunctionExpression<NAME>, Scope<NAME>>),
     Call(ir::Call<FunctionExpression<NAME>>),
     BinaryOp(ir::BinaryOp<FunctionExpression<NAME>>),
     UnaryOp(ir::UnaryOp<FunctionExpression<NAME>>),
     /// Access an element of an array (`a[0]`)
-    ArrayAccess(Access<Box<FunctionExpression<NAME>>>),
-    TupleAccess(Access<ir::Identifier>),
+    ArrayAccess(Access<Box<FunctionExpression<NAME>>, NAME>),
+    TupleAccess(Access<ir::Identifier, NAME>),
     /// Call to a method: `[2,3].len()`
-    MethodCall(Access<MethodCall<NAME>>),
+    MethodCall(MethodCall<NAME>),
+}
+
+impl<NAME: Serialize> ir::ExpressionKind for FunctionExpression<NAME> {
+    type Name = NAME;
 }
 
 #[derive(Debug, Serialize)]
-pub struct ReturnStatement {
-    pub value: Option<FunctionExpression>,
+#[serde(bound(serialize = "NAME: Serialize"))]
+pub struct ReturnStatement<NAME: Serialize> {
+    pub value: Option<FunctionExpression<NAME>>,
     pub keyword_src_ref: SrcRef,
     pub src_ref: SrcRef,
 }
 
 #[derive(Debug, derive_more::From, Serialize)]
-pub enum FunctionStatement {
+#[serde(bound(serialize = "NAME: Serialize"))]
+pub enum FunctionStatement<NAME: Serialize> {
     /// `a = 42`
-    Local(ir::LocalAssignment<FunctionExpression>),
+    Local(ir::LocalAssignment<FunctionExpression<NAME>>),
     /// `{ a = 23; }`
-    Expression(ir::FunctionExpression),
+    Expression(ir::FunctionExpression<NAME>),
     /// `return 42;`
     /// Possibly lowered from the tail expression of an `ast::StatementList`
-    Return(ReturnStatement),
+    Return(ReturnStatement<NAME>),
 }
 
 #[derive(Debug, Serialize)]
-pub struct FunctionStatements(pub Box<[FunctionStatement]>);
+#[serde(bound(serialize = "NAME: Serialize"))]
+pub struct FunctionStatements<NAME: Serialize>(pub Box<[FunctionStatement<NAME>]>);
 
-impl IsDefault for FunctionStatements {
+impl<NAME: Serialize> IsDefault for FunctionStatements<NAME> {
     fn is_default(&self) -> bool {
         self.0.is_default()
     }
 }
 
 #[derive(Debug, Serialize)]
-pub struct Scope(pub Refer<FunctionStatements>);
+pub struct FunctionItems {
+    /// use ...
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub aliases: ir::Aliases,
+    /// const FOO =
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub constants: ir::Constants,
+}
+
+impl IsDefault for FunctionItems {
+    fn is_default(&self) -> bool {
+        self.aliases.is_default() && self.constants.is_default()
+    }
+}
 
 #[derive(Debug, Serialize)]
 pub struct Function {
@@ -107,15 +135,13 @@ pub struct Function {
     /// #![...]
     #[serde(skip_serializing_if = "is_default", default)]
     pub inner_attr: ir::InnerAttributes,
-    /// use ...
+
     #[serde(skip_serializing_if = "is_default", default)]
-    pub aliases: ir::Aliases,
-    /// const FOO =
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub constants: ir::Constants,
+    pub items: ir::FunctionItems,
+
     /// Function statements
     #[serde(skip_serializing_if = "is_default", default)]
-    pub statements: ir::FunctionStatements,
+    pub statements: ir::FunctionStatements<ir::QualifiedName>,
 }
 
 #[derive(Debug, Default, Serialize)]
