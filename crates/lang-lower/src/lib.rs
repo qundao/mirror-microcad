@@ -29,6 +29,12 @@ impl<T> IsDefault for Box<[T]> {
     }
 }
 
+impl IsDefault for SrcRef {
+    fn is_default(&self) -> bool {
+        self.is_none()
+    }
+}
+
 /// Check if the element only includes one identifier
 pub trait SingleIdentifier {
     /// If the element only includes one identifier, return it
