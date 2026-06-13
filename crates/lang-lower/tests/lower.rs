@@ -5,6 +5,8 @@ use microcad_lang_base::{self as base, Diagnostics};
 use microcad_lang_lower::{self as lower, ir};
 use microcad_lang_parse as parse;
 
+use test_that::prelude::*;
+
 /// Get intermediate representation and diagnostics.
 fn ir_from_test_file(name: &str) -> lower::LowerResult<(lower::ir::Source, Diagnostics)> {
     let path_string = format!("tests/test_cases/{name}.{}", base::MICROCAD_EXTENSION);
@@ -31,7 +33,7 @@ fn ir_from_test_file(name: &str) -> lower::LowerResult<(lower::ir::Source, Diagn
 
 macro_rules! unit_test {
     ($name:ident => |$ir:ident, $diag:ident| $body:block) => {
-        #[test]
+        #[test_that::test]
         fn $name() {
             match ir_from_test_file(stringify!($name)) {
                 Ok(($ir, $diag)) => $body,
@@ -44,7 +46,7 @@ macro_rules! unit_test {
 macro_rules! snapshot_test {
     // A successful snapshot test without errors and warnings.
     ($name:ident => ok) => {
-        #[test]
+        #[test_that::test]
         fn $name() {
             let name = stringify!($name);
             match ir_from_test_file(name) {
@@ -76,9 +78,10 @@ macro_rules! snapshot_test {
 }
 
 unit_test!(assignments_const_const_assignment_init => |ir, diag| {
-    assert_eq!(ir.items.workbenches.len(), 1);
-    assert_eq!(ir.statements.len(), 1);
-    assert_eq!(diag.error_count(), 1);
+    assert_that!(*ir.items.workbenches.0, len(eq(1)));
+    assert_that!(*ir.statements, len(eq(1)));
+
+    assert!(diag.error_count() == 1);
 });
 
 unit_test!(assignments_const_const_assignment_mod => |ir, diag| {
