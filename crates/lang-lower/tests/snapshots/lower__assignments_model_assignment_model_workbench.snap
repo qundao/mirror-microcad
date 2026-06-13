@@ -1,0 +1,69 @@
+---
+source: crates/lang-lower/tests/lower.rs
+expression: "lower :: to_ron(& ir).expect(\"No error\")"
+---
+(
+    items: (
+        workbenches: ([
+            (
+                keyword_ref: "3:1 @ 7b73633109dfae9b (130..136)",
+                visibility: Private,
+                kind: (
+                    value: Sketch,
+                    src_ref: "3:1 @ 7b73633109dfae9b (130..228)",
+                ),
+                id: ((
+                    value: "MySketch",
+                    src_ref: "3:8 @ 7b73633109dfae9b (137..145)",
+                )),
+                parameters: ((
+                    value: [],
+                    src_ref: "3:17 @ 7b73633109dfae9b (146..146)",
+                )),
+                inits: ([
+                    (
+                        keyword_ref: "5:5 @ 7b73633109dfae9b (205..209)",
+                        parameters: ((value: [(id: ((value: "_x", src_ref: "5:10 @ 7b73633109dfae9b (210..212)")), specified_type: Some(((value: Quantity(Scalar), src_ref: "5:14 @ 7b73633109dfae9b (214..220)"))), src_ref: "5:10 @ 7b73633109dfae9b (210..220)")], src_ref: "5:10 @ 7b73633109dfae9b (210..220)")),
+                        src_ref: "5:5 @ 7b73633109dfae9b (205..225)",
+                    ),
+                ]),
+                statements: ([
+                    (
+                        attr: (()),
+                        src_ref: "4:5 @ 7b73633109dfae9b (154..190)",
+                        visibility: Private,
+                        id: Some(((value: "a", src_ref: "4:5 @ 7b73633109dfae9b (154..155)"))),
+                        expression: Call((name: ((value: [((value: "std", src_ref: "4:9 @ 7b73633109dfae9b (158..161)")), ((value: "geo2d", src_ref: "4:14 @ 7b73633109dfae9b (163..168)")), ((value: "Circle", src_ref: "4:21 @ 7b73633109dfae9b (170..176)"))], src_ref: "4:9 @ 7b73633109dfae9b (158..176)")), argument_list: (src_ref: "4:28 @ 7b73633109dfae9b (177..189)", named_args: [(id: ((value: "radius", src_ref: "4:28 @ 7b73633109dfae9b (177..183)")), expression: Literal(((value: Quantity((value: 1.0, quantity_type: Length, unit: Millimeter)), src_ref: "4:37 @ 7b73633109dfae9b (186..189)"))), src_ref: "4:28 @ 7b73633109dfae9b (177..189)")]), src_ref: "4:9 @ 7b73633109dfae9b (158..190)")),
+                    ),
+                ]),
+            ),
+        ]),
+    ),
+    statements: ([
+        (
+            attr: (()),
+            src_ref: "8:1 @ 7b73633109dfae9b (228..238)",
+            visibility: Public,
+            expression: Call((
+                name: ((
+                    value: [
+                        ((value: "MySketch", src_ref: "8:1 @ 7b73633109dfae9b (228..236)")),
+                    ],
+                    src_ref: "8:1 @ 7b73633109dfae9b (228..236)",
+                )),
+                argument_list: (
+                    src_ref: "8:10 @ 7b73633109dfae9b (237..237)",
+                ),
+                src_ref: "8:1 @ 7b73633109dfae9b (228..238)",
+            )),
+        ),
+    ]),
+    source: (
+        url: "virtual://virtual",
+        line_offset: 0,
+        code: (
+            inner: "// Extracted from: assignments/model.md\n// [![test](.test/assignment_model_workbench.svg)](.test/assignment_model_workbench.log)\n\nsketch MySketch() {\n    a = std::geo2d::Circle(radius = 1mm); // error\n    init(_x: Scalar) {}\n}\n\nMySketch();\n",
+            hash: 8895562751257063067,
+        ),
+    ),
+)

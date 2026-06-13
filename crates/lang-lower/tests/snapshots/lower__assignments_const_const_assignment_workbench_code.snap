@@ -1,0 +1,58 @@
+---
+source: crates/lang-lower/tests/lower.rs
+expression: "lower :: to_ron(& ir).expect(\"No error\")"
+---
+(
+    items: (
+        workbenches: ([
+            (
+                keyword_ref: "3:1 @ b1756c380a01b7a6 (140..146)",
+                visibility: Private,
+                kind: (
+                    value: Sketch,
+                    src_ref: "3:1 @ b1756c380a01b7a6 (140..216)",
+                ),
+                id: ((
+                    value: "MySketch",
+                    src_ref: "3:8 @ b1756c380a01b7a6 (147..155)",
+                )),
+                parameters: ((
+                    value: [],
+                    src_ref: "3:17 @ b1756c380a01b7a6 (156..156)",
+                )),
+                items: (
+                    constants: ([
+                        (src_ref: "4:5 @ b1756c380a01b7a6 (164..182)", visibility: Private, keyword_src_ref: "4:5 @ b1756c380a01b7a6 (164..169)", id: ((value: "MY_CONST", src_ref: "4:11 @ b1756c380a01b7a6 (170..178)")), expr: Literal(((value: Integer(1), src_ref: "4:22 @ b1756c380a01b7a6 (181..182)")))),
+                    ]),
+                ),
+            ),
+        ]),
+    ),
+    statements: ([
+        (
+            attr: (()),
+            src_ref: "6:1 @ b1756c380a01b7a6 (216..226)",
+            visibility: Public,
+            expression: Call((
+                name: ((
+                    value: [
+                        ((value: "MySketch", src_ref: "6:1 @ b1756c380a01b7a6 (216..224)")),
+                    ],
+                    src_ref: "6:1 @ b1756c380a01b7a6 (216..224)",
+                )),
+                argument_list: (
+                    src_ref: "6:10 @ b1756c380a01b7a6 (225..225)",
+                ),
+                src_ref: "6:1 @ b1756c380a01b7a6 (216..226)",
+            )),
+        ),
+    ]),
+    source: (
+        url: "virtual://virtual",
+        line_offset: 0,
+        code: (
+            inner: "// Extracted from: assignments/const.md\n// [![test](.test/const_assignment_workbench_code.svg)](.test/const_assignment_workbench_code.log)\n\nsketch MySketch() {\n    const MY_CONST = 1; // allowed if no initializers\n}\nMySketch();\n",
+            hash: 12787245704930244518,
+        ),
+    ),
+)

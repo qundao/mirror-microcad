@@ -1,0 +1,27 @@
+---
+source: crates/lang-lower/tests/lower.rs
+expression: "lower :: to_ron(& ir).expect(\"No error\")"
+---
+(
+    items: (
+        inline_modules: ([
+            (
+                src_ref: "3:1 @ 8db2b4a6974e7a37 (124..193)",
+                visibility: Private,
+                keyword_ref: "3:1 @ 8db2b4a6974e7a37 (124..127)",
+                id: ((
+                    value: "my_module",
+                    src_ref: "3:5 @ 8db2b4a6974e7a37 (128..137)",
+                )),
+            ),
+        ]),
+    ),
+    source: (
+        url: "virtual://virtual",
+        line_offset: 0,
+        code: (
+            inner: "// Extracted from: assignments/model.md\n// [![test](.test/assignment_model_module.svg)](.test/assignment_model_module.log)\n\nmod my_module {\n    a = std::geo2d::Circle(radius = 1mm); // error\n}\n",
+            hash: 10210421932798409271,
+        ),
+    ),
+)

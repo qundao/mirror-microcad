@@ -1,0 +1,27 @@
+---
+source: crates/lang-lower/tests/lower.rs
+expression: "lower :: to_ron(& ir).expect(\"No error\")"
+---
+(
+    items: (
+        inline_modules: ([
+            (
+                src_ref: "3:1 @ 21bba1dab2645b65 (112..150)",
+                visibility: Private,
+                keyword_ref: "3:1 @ 21bba1dab2645b65 (112..115)",
+                id: ((
+                    value: "my_module",
+                    src_ref: "3:5 @ 21bba1dab2645b65 (116..125)",
+                )),
+            ),
+        ]),
+    ),
+    source: (
+        url: "virtual://virtual",
+        line_offset: 0,
+        code: (
+            inner: "// Extracted from: assignments/value.md\n// [![test](.test/assignment_module.svg)](.test/assignment_module.log)\n\nmod my_module {\n    a = 1; // error\n}\n",
+            hash: 2430714384564378469,
+        ),
+    ),
+)

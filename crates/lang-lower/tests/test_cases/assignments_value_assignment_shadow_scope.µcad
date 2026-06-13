@@ -1,8 +1,0 @@
-// Extracted from: assignments/value.md
-// [![test](.test/assignment_shadow_scope.svg)](.test/assignment_shadow_scope.log)
-
-a = 5;
-{
-    a = a * 2;
-    std::debug::assert_eq([a, 10]);
-}
