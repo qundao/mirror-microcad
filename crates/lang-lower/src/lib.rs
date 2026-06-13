@@ -66,7 +66,7 @@ pub struct LowerContext<'source> {
     pub source: Hashed<&'source str>,
     line_index: LineIndex,
     line_offset: u32,
-    diagnostics: Diagnostics,
+    pub diagnostics: Diagnostics,
 }
 
 impl<'source> LowerContext<'source> {
