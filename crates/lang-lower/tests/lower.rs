@@ -5,7 +5,7 @@ use microcad_lang_base::{self as base, Diagnostics};
 use microcad_lang_lower::{self as lower, ir};
 use microcad_lang_parse as parse;
 
-use test_that::{matcher::Describable, prelude::*};
+use test_that::prelude::*;
 
 /// Get intermediate representation and diagnostics.
 fn ir_from_test_file(name: &str) -> lower::LowerResult<(lower::ir::Source, Diagnostics)> {
@@ -85,8 +85,14 @@ unit_test!(assignments_const_const_assignment_init => |ir, diag| {
 });
 
 unit_test!(assignments_const_const_assignment_mod => |ir, diag| {
-    assert_eq!(ir.items.constants.len(), 1);
-    assert_eq!(ir.items.inline_modules.len(), 1);
+    assert_that!(ir, matches_pattern!(ir::Source {
+        *statements: len(eq(3)),
+        items: matches_pattern!(ir::SourceItems {
+            constants: len(eq(1)),
+            inline_modules: len(eq(1)),
+         })
+    }));
+
 
     let my_module = ir.items.inline_modules.first().expect("A module");
     assert_that!(*my_module, matches_pattern!(ir::InlineModule {
@@ -100,15 +106,15 @@ unit_test!(assignments_const_const_assignment_mod => |ir, diag| {
         )
     }));
 
-
     let f = my_module.items.functions.first().expect("Expect a function");
-    assert_eq!(f.visibility, ir::Visibility::Public);
+    assert_that!(*f, matches_pattern!(ir::Function {
+        visibility: eq(ir::Visibility::Public),
+    }));
 
-    assert_eq!(my_module.items.workbenches.len(), 1);
     let my_sketch = my_module.items.workbenches.first().expect("Expect a workbench");
-    assert_eq!(my_sketch.visibility, ir::Visibility::Public);
-
-    assert_eq!(ir.statements.len(), 3);
+    assert_that!(*my_sketch, matches_pattern!(ir::Workbench {
+        visibility: eq(ir::Visibility::Public),
+    }));
 
     assert!(!diag.has_errors())
 });
