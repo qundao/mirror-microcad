@@ -4,7 +4,7 @@ expression: "lower :: to_ron(& ir).expect(\"No error\")"
 ---
 (
     items: (
-        workbenches: ([
+        workbenches: [
             (
                 keyword_ref: "3:1 @ c0664ef29f987657 (111..117)",
                 visibility: Private,
@@ -39,7 +39,7 @@ expression: "lower :: to_ron(& ir).expect(\"No error\")"
                     ),
                 ]),
             ),
-        ]),
+        ],
     ),
     statements: ([
         (

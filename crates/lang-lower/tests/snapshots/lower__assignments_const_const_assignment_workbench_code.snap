@@ -4,7 +4,7 @@ expression: "lower :: to_ron(& ir).expect(\"No error\")"
 ---
 (
     items: (
-        workbenches: ([
+        workbenches: [
             (
                 keyword_ref: "3:1 @ b1756c380a01b7a6 (140..146)",
                 visibility: Private,
@@ -21,12 +21,12 @@ expression: "lower :: to_ron(& ir).expect(\"No error\")"
                     src_ref: "3:17 @ b1756c380a01b7a6 (156..156)",
                 )),
                 items: (
-                    constants: ([
+                    constants: [
                         (src_ref: "4:5 @ b1756c380a01b7a6 (164..182)", visibility: Private, keyword_src_ref: "4:5 @ b1756c380a01b7a6 (164..169)", id: ((value: "MY_CONST", src_ref: "4:11 @ b1756c380a01b7a6 (170..178)")), expr: Literal(((value: Integer(1), src_ref: "4:22 @ b1756c380a01b7a6 (181..182)")))),
-                    ]),
+                    ],
                 ),
             ),
-        ]),
+        ],
     ),
     statements: ([
         (

@@ -4,7 +4,7 @@ expression: "lower :: to_ron(& ir).expect(\"No error\")"
 ---
 (
     items: (
-        inline_modules: ([
+        inline_modules: [
             (
                 src_ref: "3:1 @ 8db2b4a6974e7a37 (124..193)",
                 visibility: Private,
@@ -14,7 +14,7 @@ expression: "lower :: to_ron(& ir).expect(\"No error\")"
                     src_ref: "3:5 @ 8db2b4a6974e7a37 (128..137)",
                 )),
             ),
-        ]),
+        ],
     ),
     source: (
         url: "virtual://virtual",

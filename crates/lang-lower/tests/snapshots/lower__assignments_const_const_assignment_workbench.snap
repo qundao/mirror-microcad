@@ -4,7 +4,7 @@ expression: "lower :: to_ron(& ir).expect(\"No error\")"
 ---
 (
     items: (
-        workbenches: ([
+        workbenches: [
             (
                 keyword_ref: "3:1 @ 6d8073256c5d59ea (130..136)",
                 visibility: Private,
@@ -31,9 +31,9 @@ expression: "lower :: to_ron(& ir).expect(\"No error\")"
                     ),
                 ]),
                 items: (
-                    constants: ([
+                    constants: [
                         (src_ref: "5:5 @ 6d8073256c5d59ea (216..236)", visibility: Private, keyword_src_ref: "5:5 @ 6d8073256c5d59ea (216..221)", id: ((value: "TEXT", src_ref: "5:11 @ 6d8073256c5d59ea (222..226)")), expr: FormatString(((value: [String((value: "Hello", src_ref: "5:18 @ 6d8073256c5d59ea (229..236)"))], src_ref: "5:18 @ 6d8073256c5d59ea (229..236)")))),
-                    ]),
+                    ],
                 ),
                 statements: ([
                     (
@@ -44,7 +44,7 @@ expression: "lower :: to_ron(& ir).expect(\"No error\")"
                     ),
                 ]),
             ),
-        ]),
+        ],
     ),
     statements: ([
         (
