@@ -4,7 +4,7 @@
 use crate::{
     Lower, LowerContext, LowerError, LowerResult,
     ir::{self, FunctionExpression},
-    lower::{extract_statements, extract_statements_with_tail, for_each_statement},
+    lower::{extract_statements_with_tail, for_each_statement},
 };
 
 use microcad_lang_base::{Identifier, PushDiag, Refer, SrcRef, SrcReferrer};
@@ -24,19 +24,6 @@ impl Lower<ast::FunctionDefinition> for ir::FunctionSignature {
             parameters: ir::ParameterList::lower(&node.parameters, context)?,
             return_type: Option::<ir::TypeAnnotation>::lower(&node.return_type, context)?,
         })
-    }
-}
-
-impl Lower<ast::FunctionDefinition> for ir::Constants {
-    fn lower(node: &ast::FunctionDefinition, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self(extract_statements(&node.body.statements, |stmt| {
-            Ok(match stmt {
-                ast::Statement::Const(const_assignment) => {
-                    Some(ir::Constant::lower(&const_assignment, context)?)
-                }
-                _ => None,
-            })
-        })?))
     }
 }
 
@@ -249,7 +236,7 @@ impl Lower<ast::StatementList> for ir::FunctionItems {
 
         Ok(Self {
             aliases: ir::Aliases::lower(statements, context)?,
-            constants: ir::Constants::lower(statements, context)?,
+            constants: Box::lower(statements, context)?,
         })
     }
 }
@@ -270,15 +257,11 @@ impl Lower<ast::FunctionDefinition> for ir::Function {
     }
 }
 
-impl Lower<ast::StatementList> for ir::Functions {
-    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self(extract_statements(node, |stmt| {
-            Ok(match stmt {
-                ast::Statement::Function(function_definition) => {
-                    Some(ir::Function::lower(function_definition, context)?)
-                }
-                _ => None,
-            })
-        })?))
+impl Lower<ast::Statement> for Option<ir::Function> {
+    fn lower(node: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(match node {
+            ast::Statement::Function(f) => Some(ir::Function::lower(f, context)?),
+            _ => None,
+        })
     }
 }

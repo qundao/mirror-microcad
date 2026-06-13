@@ -126,10 +126,10 @@ pub struct WorkbenchItems {
     pub aliases: ir::Aliases,
     /// `const`
     #[serde(skip_serializing_if = "is_default", default)]
-    pub constants: ir::Constants,
+    pub constants: Box<[ir::Constant]>,
     /// `fn`
     #[serde(skip_serializing_if = "is_default", default)]
-    pub functions: ir::Functions,
+    pub functions: Box<[ir::Function]>,
 }
 
 impl IsDefault for WorkbenchItems {
@@ -184,14 +184,5 @@ impl std::fmt::Display for Workbench {
             id = self.id,
             parameters = self.parameters,
         )
-    }
-}
-
-#[derive(Debug, Deref, Default, Serialize)]
-pub struct Workbenches(pub Box<[Workbench]>);
-
-impl IsDefault for Workbenches {
-    fn is_default(&self) -> bool {
-        self.0.is_default()
     }
 }

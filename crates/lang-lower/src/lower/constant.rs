@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Lower, LowerContext, LowerResult, ir, lower::extract_statements};
+use crate::{Lower, LowerContext, LowerResult, ir};
 
 use microcad_lang_parse::ast;
 
@@ -19,15 +19,13 @@ impl Lower<ast::ConstAssignment> for ir::Constant {
     }
 }
 
-impl Lower<ast::StatementList> for ir::Constants {
-    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self(extract_statements(node, |stmt| {
-            Ok(match stmt {
-                ast::Statement::Const(const_assignment) => {
-                    Some(ir::Constant::lower(const_assignment, context)?)
-                }
-                _ => None,
-            })
-        })?))
+impl Lower<ast::Statement> for Option<ir::Constant> {
+    fn lower(stmt: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(match stmt {
+            ast::Statement::Const(const_assignment) => {
+                Some(ir::Constant::lower(const_assignment, context)?)
+            }
+            _ => None,
+        })
     }
 }

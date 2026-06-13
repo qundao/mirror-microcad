@@ -3,7 +3,7 @@
 
 use crate::{
     Lower, LowerContext, LowerError, LowerResult, ir,
-    lower::{attribute::outer_with_doc, extract_statements, for_each_statement},
+    lower::{attribute::outer_with_doc, for_each_statement},
 };
 
 use microcad_lang_base::PushDiag;
@@ -21,16 +21,14 @@ impl Lower<ast::FileModule> for ir::FileModule {
     }
 }
 
-impl Lower<ast::StatementList> for ir::FileModules {
-    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self(extract_statements(node, |stmt| {
-            Ok(match stmt {
-                ast::Statement::FileModule(file_module) => {
-                    Some(ir::FileModule::lower(file_module, context)?)
-                }
-                _ => None,
-            })
-        })?))
+impl Lower<ast::Statement> for Option<ir::FileModule> {
+    fn lower(stmt: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(match stmt {
+            ast::Statement::FileModule(file_module) => {
+                Some(ir::FileModule::lower(file_module, context)?)
+            }
+            _ => None,
+        })
     }
 }
 
@@ -49,11 +47,11 @@ impl Lower<ast::StatementList> for ir::InlineModuleItems {
         })?;
 
         Ok(Self {
-            modules: ir::InlineModules::lower(statements, context)?,
+            modules: Box::lower(statements, context)?,
             aliases: ir::Aliases::lower(statements, context)?,
-            constants: ir::Constants::lower(statements, context)?,
-            functions: ir::Functions::lower(statements, context)?,
-            workbenches: ir::Workbenches::lower(statements, context)?,
+            constants: Box::lower(statements, context)?,
+            functions: Box::lower(statements, context)?,
+            workbenches: Box::lower(statements, context)?,
         })
     }
 }
@@ -76,15 +74,13 @@ impl Lower<ast::InlineModule> for ir::InlineModule {
     }
 }
 
-impl Lower<ast::StatementList> for ir::InlineModules {
-    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self(extract_statements(node, |stmt| {
-            Ok(match stmt {
-                ast::Statement::InlineModule(inline_module) => {
-                    Some(ir::InlineModule::lower(inline_module, context)?)
-                }
-                _ => None,
-            })
-        })?))
+impl Lower<ast::Statement> for Option<ir::InlineModule> {
+    fn lower(stmt: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(match stmt {
+            ast::Statement::InlineModule(inline_module) => {
+                Some(ir::InlineModule::lower(inline_module, context)?)
+            }
+            _ => None,
+        })
     }
 }

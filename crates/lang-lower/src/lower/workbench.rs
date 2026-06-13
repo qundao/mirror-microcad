@@ -289,8 +289,8 @@ impl Lower<ast::StatementList> for ir::WorkbenchItems {
 
         Ok(Self {
             aliases: ir::Aliases::lower(statements, context)?,
-            constants: ir::Constants::lower(statements, context)?,
-            functions: ir::Functions::lower(statements, context)?,
+            constants: Box::lower(statements, context)?,
+            functions: Box::lower(statements, context)?,
         })
     }
 }
@@ -316,13 +316,11 @@ impl Lower<ast::WorkbenchDefinition> for ir::Workbench {
     }
 }
 
-impl Lower<ast::StatementList> for ir::Workbenches {
-    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self(extract_statements(node, |stmt| {
-            Ok(match stmt {
-                ast::Statement::Workbench(w) => Some(ir::Workbench::lower(w, context)?),
-                _ => None,
-            })
-        })?))
+impl Lower<ast::Statement> for Option<ir::Workbench> {
+    fn lower(node: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(match node {
+            ast::Statement::Workbench(w) => Some(ir::Workbench::lower(w, context)?),
+            _ => None,
+        })
     }
 }

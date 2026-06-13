@@ -1,13 +1,12 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use derive_more::Deref;
 use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 use serde::Serialize;
 use serde_with::skip_serializing_none;
 
-use crate::{IsDefault, ir, is_default};
+use crate::{ir, is_default};
 
 /// A constant definition: `const FOO: Length = 32mm`.
 #[skip_serializing_none]
@@ -42,15 +41,5 @@ impl std::fmt::Display for Constant {
                 expr = self.expr
             ),
         }
-    }
-}
-
-/// A list of constants
-#[derive(Debug, Deref, Default, Serialize)]
-pub struct Constants(pub Box<[Constant]>);
-
-impl IsDefault for Constants {
-    fn is_default(&self) -> bool {
-        self.0.is_default()
     }
 }

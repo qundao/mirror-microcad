@@ -14,22 +14,22 @@ use serde::Serialize;
 pub struct SourceItems {
     /// List of file modules: `mod foo;`.
     #[serde(skip_serializing_if = "is_default", default)]
-    pub file_modules: ir::FileModules,
+    pub file_modules: Box<[ir::FileModule]>,
     /// Inline modules: `mod bar {...}`.
     #[serde(skip_serializing_if = "is_default", default)]
-    pub inline_modules: ir::InlineModules,
+    pub inline_modules: Box<[ir::InlineModule]>,
     /// Use statements: `use ...`.
     #[serde(skip_serializing_if = "is_default", default)]
     pub aliases: ir::Aliases,
     /// Constants: `const FOO = 42;`.
     #[serde(skip_serializing_if = "is_default", default)]
-    pub constants: ir::Constants,
+    pub constants: Box<[ir::Constant]>,
     /// Functions: `fn foo(...) {...}`.
     #[serde(skip_serializing_if = "is_default", default)]
-    pub functions: ir::Functions,
+    pub functions: Box<[ir::Function]>,
     /// Workbenches: `part Bar(...) {...}`.
     #[serde(skip_serializing_if = "is_default", default)]
-    pub workbenches: ir::Workbenches,
+    pub workbenches: Box<[ir::Workbench]>,
 }
 
 impl IsDefault for SourceItems {

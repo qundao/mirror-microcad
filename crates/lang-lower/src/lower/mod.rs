@@ -298,6 +298,17 @@ where
     Ok(named.into_boxed_slice())
 }
 
+impl<T> Lower<ast::StatementList> for Box<[T]>
+where
+    Option<T>: Lower<ast::Statement>,
+{
+    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(extract_statements(node, |stmt| {
+            Option::lower(stmt, context)
+        })?)
+    }
+}
+
 impl Lower<Option<ast::Visibility>> for ir::Visibility {
     fn lower(node: &Option<ast::Visibility>, _context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {

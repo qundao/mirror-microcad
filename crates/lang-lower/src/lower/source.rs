@@ -22,12 +22,12 @@ impl Lower<ast::StatementList> for ir::SourceItems {
         })?;
 
         Ok(Self {
-            file_modules: ir::FileModules::lower(statements, context)?,
-            inline_modules: ir::InlineModules::lower(statements, context)?,
+            file_modules: Box::lower(statements, context)?,
+            inline_modules: Box::lower(statements, context)?,
             aliases: ir::Aliases::lower(statements, context)?,
-            constants: ir::Constants::lower(statements, context)?,
-            functions: ir::Functions::lower(statements, context)?,
-            workbenches: ir::Workbenches::lower(statements, context)?,
+            constants: Box::lower(statements, context)?,
+            functions: Box::lower(statements, context)?,
+            workbenches: Box::lower(statements, context)?,
         })
     }
 }
