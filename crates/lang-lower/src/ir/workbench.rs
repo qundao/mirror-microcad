@@ -5,6 +5,7 @@
 
 use crate::{IsDefault, ir, is_default};
 
+use derive_more::Deref;
 use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Identifiable;
 
@@ -27,7 +28,7 @@ pub struct WorkbenchStatement {
     pub expression: WorkbenchExpression,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Deref, Serialize)]
 pub struct WorkbenchStatements(pub Box<[WorkbenchStatement]>);
 
 impl IsDefault for WorkbenchStatements {
@@ -59,7 +60,7 @@ pub struct Init {
     pub src_ref: SrcRef,
 }
 
-#[derive(Debug, Serialize, Default)]
+#[derive(Debug, Deref, Serialize, Default)]
 pub struct Inits(pub Box<[Init]>);
 
 impl IsDefault for Inits {
@@ -186,7 +187,7 @@ impl std::fmt::Display for Workbench {
     }
 }
 
-#[derive(Debug, Default, Serialize)]
+#[derive(Debug, Deref, Default, Serialize)]
 pub struct Workbenches(pub Box<[Workbench]>);
 
 impl IsDefault for Workbenches {

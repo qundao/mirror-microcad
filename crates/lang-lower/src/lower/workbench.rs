@@ -260,14 +260,6 @@ impl Lower<ast::Statement> for Option<ir::WorkbenchStatement> {
 
 impl Lower<ast::StatementList> for ir::WorkbenchStatements {
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
-        if let Some(tail) = node.tail.as_ref() {
-            context
-                .warning(LowerError::ImplicitWorkbenchReturn {
-                    src_ref: context.src_ref(&tail.span),
-                })
-                .ok();
-        }
-
         Ok(Self(extract_statements_with_tail(
             node,
             context,

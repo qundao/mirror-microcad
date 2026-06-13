@@ -1,6 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use derive_more::Deref;
 use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
 use serde::Serialize;
@@ -45,7 +46,7 @@ impl std::fmt::Display for Constant {
 }
 
 /// A list of constants
-#[derive(Debug, Default, Serialize)]
+#[derive(Debug, Deref, Default, Serialize)]
 pub struct Constants(pub Box<[Constant]>);
 
 impl IsDefault for Constants {

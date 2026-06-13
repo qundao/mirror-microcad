@@ -3,6 +3,7 @@
 
 //! Module definition syntax element.
 
+use derive_more::Deref;
 use microcad_lang_base::{SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Identifiable;
 use serde::Serialize;
@@ -23,7 +24,7 @@ pub struct FileModule {
     pub id: ir::Identifier,
 }
 
-#[derive(Debug, Default, Serialize)]
+#[derive(Debug, Deref, Default, Serialize)]
 pub struct FileModules(pub Box<[FileModule]>);
 
 impl IsDefault for FileModules {
@@ -100,7 +101,7 @@ impl std::fmt::Display for InlineModule {
     }
 }
 
-#[derive(Debug, Default, Serialize)]
+#[derive(Debug, Deref, Default, Serialize)]
 pub struct InlineModules(pub Box<[InlineModule]>);
 
 impl IsDefault for InlineModules {

@@ -5,6 +5,7 @@
 
 use crate::{IsDefault, ir, is_default};
 
+use derive_more::Deref;
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 use serde::Serialize;
 
@@ -178,7 +179,7 @@ pub struct Function {
     pub statements: ir::FunctionStatements<ir::QualifiedName>,
 }
 
-#[derive(Debug, Default, Serialize)]
+#[derive(Debug, Deref, Default, Serialize)]
 pub struct Functions(pub Box<[Function]>);
 
 impl IsDefault for Functions {
