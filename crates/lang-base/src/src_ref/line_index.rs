@@ -38,6 +38,6 @@ impl LineIndex {
     }
 
     pub fn src_ref(&self, text: &str, span: &Span, hash: HashId) -> SrcRef {
-        SrcRef::new(span.clone(), self.line_col(text, span.start), hash)
+        SrcRef::new(span, self.line_col(text, span.start), hash)
     }
 }

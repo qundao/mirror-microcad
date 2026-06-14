@@ -7,7 +7,7 @@ use derive_more::{Deref, DerefMut};
 use serde::Serialize;
 
 /// Packs any value together with a source reference
-#[derive(Clone, Default, Ord, PartialEq, PartialOrd, Deref, DerefMut, Serialize)]
+#[derive(Clone, Debug, Default, Ord, PartialEq, PartialOrd, Deref, DerefMut, Serialize)]
 #[serde(bound(serialize = "T: Serialize"))]
 pub struct Refer<T> {
     /// Value
@@ -30,21 +30,6 @@ impl<T> Refer<T> {
     pub fn new(value: T, src_ref: SrcRef) -> Self {
         Self { value, src_ref }
     }
-    /// Create a `Refer` instance with two source code references
-    #[cfg(test)]
-    pub fn merge<U, V>(left: Refer<U>, right: Refer<V>, f: fn(U, V) -> T) -> Self {
-        Self {
-            value: f(left.value, right.value),
-            src_ref: SrcRef::merge(&left.src_ref, &right.src_ref),
-        }
-    }
-    /// Map a `Refer` instance to a new one
-    pub fn map<U>(self, f: fn(T) -> U) -> Refer<U> {
-        Refer::<U> {
-            value: f(self.value),
-            src_ref: self.src_ref,
-        }
-    }
 }
 
 impl<T> SrcReferrer for Refer<T> {
@@ -58,11 +43,6 @@ impl<T: Eq> Eq for Refer<T> {}
 impl<T: std::fmt::Display> std::fmt::Display for Refer<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         self.value.fmt(f)
-    }
-}
-impl<T: std::fmt::Debug> std::fmt::Debug for Refer<T> {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{:?}, Refer: {:?}", self.value, self.src_ref)
     }
 }
 
