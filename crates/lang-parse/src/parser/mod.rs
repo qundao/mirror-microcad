@@ -12,10 +12,10 @@ pub use parse_context::ParseContext;
 use crate::ast;
 use crate::parser::{error::Rich, helpers::*};
 use crate::tokens::*;
-
 use chumsky::{
     Parser, extra,
     input::{Input, MappedInput},
+    inspector::Inspector,
     prelude::*,
     select_ref,
 };
@@ -37,6 +37,46 @@ pub type ParserInput<'input, 'token> = MappedInput<
     &'input [SpannedToken<Token<'token>>],
     InputMap<'input, 'token>,
 >;
+
+/// Alias for parser input type
+pub type PInput<'a> = ParserInput<'a, 'a>;
+
+/// Alias for parser error type
+pub type PError<'a, S, Ctx> = extra::Full<RichError<'a>, S, Ctx>;
+
+/// Alias for Inspector type (as a trait bound shorthand)
+pub trait PInspector<'a>: Inspector<'a, PInput<'a>> + Default + Clone + 'static {}
+
+impl<'a, T> PInspector<'a> for T where T: Inspector<'a, PInput<'a>> + Default + Clone + 'static {}
+
+pub trait ParserDefinition: Sized {
+    fn parser<'tokens, S, Ctx>()
+    -> impl Parser<'tokens, PInput<'tokens>, Self, PError<'tokens, S, Ctx>>
+    where
+        S: PInspector<'tokens>,
+        Ctx: 'tokens;
+}
+
+/// implement a parser for a specific AST node type.
+#[macro_export]
+macro_rules! impl_parser {
+    ($target_struct:ty => $body:expr) => {
+        impl $crate::parser::parsers::ParserDefinition for $target_struct {
+            fn parser<'tokens, S, Ctx>() -> impl ::chumsky::Parser<
+                'tokens,
+                $crate::parser::parsers::PInput<'tokens>,
+                Self,
+                $crate::parser::parsers::PError<'tokens, S, Ctx>,
+            >
+            where
+                S: $crate::parser::parsers::PInspector<'tokens>,
+                Ctx: 'tokens,
+            {
+                $body
+            }
+        }
+    };
+}
 
 /// Get parser input from tokens
 pub fn input<'input, 'tokens>(
@@ -84,6 +124,8 @@ fn parser<'tokens>()
     let mut if_inner = Recursive::declare();
 
     let semi_recovery = none_of(Token::SigilSemiColon).repeated().ignored();
+
+    let ws = ast::Whitespace::parser().boxed();
 
     let reserved_keyword = select_ref! {
         token @ (
@@ -136,7 +178,7 @@ fn parser<'tokens>()
             .or_not()
             .boxed();
 
-        parsers::whitespace()
+        ws.clone()
             .or_not()
             .ignore_then(statement_parser.clone())
             .then(parsers::trailing_extras())
@@ -156,7 +198,8 @@ fn parser<'tokens>()
     let block_recovery =
         ignore_till_matched_curly().map_with(|_, e| ast::StatementList::dummy(e.span()));
 
-    let body = parsers::whitespace()
+    let body = ws
+        .clone()
         .or_not()
         .ignore_then(statement_list_parser.clone().delimited_with_spanned_error(
             just(Token::SigilOpenCurlyBracket),
@@ -226,7 +269,7 @@ fn parser<'tokens>()
         .labelled("qualified name")
         .boxed();
 
-    let unit = parsers::unit().boxed();
+    let unit = ast::Unit::parser().boxed();
 
     type_parser.define({
         let single = select_ref! {
@@ -239,7 +282,8 @@ fn parser<'tokens>()
         .labelled("single type")
         .boxed();
 
-        let array = parsers::whitespace()
+        let array = ws
+            .clone()
             .or_not()
             .ignore_then(type_parser.clone())
             .then_maybe_whitespace()
@@ -256,7 +300,8 @@ fn parser<'tokens>()
             .labelled("array type")
             .boxed();
 
-        let tuple = parsers::whitespace()
+        let tuple = ws
+            .clone()
             .or_not()
             .ignore_then(identifier_parser.clone())
             .then_ignore(just(Token::SigilColon))
@@ -672,7 +717,8 @@ fn parser<'tokens>()
                 .boxed()
         });
 
-        let parameter_list_inner = parsers::whitespace()
+        let parameter_list_inner = ws
+            .clone()
             .or_not()
             .ignore_then(doc_block.clone())
             .then(outer_attribute_parser.clone())
@@ -1043,7 +1089,8 @@ fn parser<'tokens>()
             .map(ast::Statement::InnerAttribute)
             .boxed();
 
-        let not_assignment = parsers::whitespace()
+        let not_assignment = ws
+            .clone()
             .or_not()
             .then(none_of([
                 Token::OperatorAssignment,
@@ -1137,7 +1184,7 @@ fn parser<'tokens>()
         .labelled("unclosed string")
         .boxed();
 
-        let literal = parsers::literal()
+        let literal = ast::Literal::parser()
             .map(ast::Expression::Literal)
             .labelled("literal")
             .boxed()
@@ -1219,7 +1266,8 @@ fn parser<'tokens>()
             .map(ast::Expression::String)
             .boxed();
 
-        let tuple = parsers::whitespace()
+        let tuple = ws
+            .clone()
             .or_not()
             .ignore_then(tuple_body.clone())
             .with_extras()
@@ -1537,7 +1585,7 @@ impl crate::Parse for ast::Literal {
         fn literal<'tokens>()
         -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Literal, Extra<'tokens>>
         {
-            crate::parsers::literal()
+            ast::Literal::parser()
         }
 
         match context {

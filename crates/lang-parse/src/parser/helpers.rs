@@ -4,7 +4,7 @@
 use crate::{ast, parsers};
 use microcad_lang_base::Span;
 
-use crate::parser::{Extra, ParserInput, RichError};
+use crate::parser::{Extra, ParserDefinition, ParserInput, RichError};
 use crate::tokens::Token;
 use chumsky::extra::{Full, ParserExtra, SimpleState};
 use chumsky::input::Input;
@@ -81,7 +81,7 @@ where
     params
         .clone()
         .foldl_with(
-            parsers::whitespace()
+            ast::Whitespace::parser()
                 .or_not()
                 .ignore_then(one_of(tokens).map_with(|op, e| ast::BinaryOperator {
                     span: e.span(),
@@ -152,7 +152,7 @@ where
         .or(one_of(Token::SigilSemiColon)
             .ignored()
             .or(one_of(except).ignored())
-            .or(parsers::whitespace().ignored())
+            .or(ast::Whitespace::parser().boxed().ignored())
             .rewind())
 }
 
@@ -210,14 +210,14 @@ where
         self,
     ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<RichError<'tokens>, S, Ctx>>
     {
-        self.then_ignore(parsers::whitespace())
+        self.then_ignore(ast::Whitespace::parser())
     }
 
     fn then_maybe_whitespace(
         self,
     ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<RichError<'tokens>, S, Ctx>>
     {
-        self.then_ignore(parsers::whitespace().or_not())
+        self.then_ignore(ast::Whitespace::parser().or_not())
     }
 
     fn delimited_with_spanned_error<B, C, U, V, F>(
