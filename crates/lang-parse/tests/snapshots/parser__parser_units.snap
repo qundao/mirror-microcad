@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -53,7 +53,9 @@ Ok(
                                                                         trailing: TrailingExtras(
                                                                             [
                                                                                 Whitespace(
-                                                                                    " ",
+                                                                                    Whitespace(
+                                                                                        " ",
+                                                                                    ),
                                                                                 ),
                                                                             ],
                                                                         ),
@@ -85,7 +87,9 @@ Ok(
                                                                         trailing: TrailingExtras(
                                                                             [
                                                                                 Whitespace(
-                                                                                    " ",
+                                                                                    Whitespace(
+                                                                                        " ",
+                                                                                    ),
                                                                                 ),
                                                                             ],
                                                                         ),
@@ -122,7 +126,9 @@ Ok(
                                                                         trailing: TrailingExtras(
                                                                             [
                                                                                 Whitespace(
-                                                                                    " ",
+                                                                                    Whitespace(
+                                                                                        " ",
+                                                                                    ),
                                                                                 ),
                                                                             ],
                                                                         ),
@@ -154,7 +160,9 @@ Ok(
                                                                         trailing: TrailingExtras(
                                                                             [
                                                                                 Whitespace(
-                                                                                    " ",
+                                                                                    Whitespace(
+                                                                                        " ",
+                                                                                    ),
                                                                                 ),
                                                                             ],
                                                                         ),
@@ -193,7 +201,9 @@ Ok(
                                                                 trailing: TrailingExtras(
                                                                     [
                                                                         Whitespace(
-                                                                            " ",
+                                                                            Whitespace(
+                                                                                " ",
+                                                                            ),
                                                                         ),
                                                                     ],
                                                                 ),
@@ -225,7 +235,9 @@ Ok(
                                                                 trailing: TrailingExtras(
                                                                     [
                                                                         Whitespace(
-                                                                            " ",
+                                                                            Whitespace(
+                                                                                " ",
+                                                                            ),
                                                                         ),
                                                                     ],
                                                                 ),
@@ -261,7 +273,9 @@ Ok(
                                                 trailing: TrailingExtras(
                                                     [
                                                         Whitespace(
-                                                            " ",
+                                                            Whitespace(
+                                                                " ",
+                                                            ),
                                                         ),
                                                     ],
                                                 ),

@@ -136,7 +136,9 @@ Ok(
                                                                 trailing: TrailingExtras(
                                                                     [
                                                                         Whitespace(
-                                                                            " ",
+                                                                            Whitespace(
+                                                                                " ",
+                                                                            ),
                                                                         ),
                                                                     ],
                                                                 ),

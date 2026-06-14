@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -62,7 +62,9 @@ Ok(
                                         leading: LeadingExtras(
                                             [
                                                 Whitespace(
-                                                    "\n        ",
+                                                    Whitespace(
+                                                        "\n        ",
+                                                    ),
                                                 ),
                                             ],
                                         ),
@@ -214,7 +216,9 @@ Ok(
                                             TrailingExtras(
                                                 [
                                                     Whitespace(
-                                                        "\n    ",
+                                                        Whitespace(
+                                                            "\n    ",
+                                                        ),
                                                     ),
                                                 ],
                                             ),

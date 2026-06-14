@@ -90,7 +90,9 @@ Ok(
                                         leading: LeadingExtras(
                                             [
                                                 Whitespace(
-                                                    "\n    ",
+                                                    Whitespace(
+                                                        "\n    ",
+                                                    ),
                                                 ),
                                             ],
                                         ),
@@ -111,7 +113,9 @@ Ok(
                                                         trailing: TrailingExtras(
                                                             [
                                                                 Whitespace(
-                                                                    "\n    ",
+                                                                    Whitespace(
+                                                                        "\n    ",
+                                                                    ),
                                                                 ),
                                                             ],
                                                         ),
@@ -171,7 +175,9 @@ Ok(
                                                                 leading: LeadingExtras(
                                                                     [
                                                                         Whitespace(
-                                                                            "\n        ",
+                                                                            Whitespace(
+                                                                                "\n        ",
+                                                                            ),
                                                                         ),
                                                                     ],
                                                                 ),
@@ -211,7 +217,9 @@ Ok(
                                                                                                 trailing: TrailingExtras(
                                                                                                     [
                                                                                                         Whitespace(
-                                                                                                            " ",
+                                                                                                            Whitespace(
+                                                                                                                " ",
+                                                                                                            ),
                                                                                                         ),
                                                                                                     ],
                                                                                                 ),
@@ -255,7 +263,9 @@ Ok(
                                                                     TrailingExtras(
                                                                         [
                                                                             Whitespace(
-                                                                                "\n    ",
+                                                                                Whitespace(
+                                                                                    "\n    ",
+                                                                                ),
                                                                             ),
                                                                         ],
                                                                     ),
@@ -371,7 +381,9 @@ Ok(
                                             TrailingExtras(
                                                 [
                                                     Whitespace(
-                                                        "\n",
+                                                        Whitespace(
+                                                            "\n",
+                                                        ),
                                                     ),
                                                 ],
                                             ),
