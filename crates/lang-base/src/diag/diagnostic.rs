@@ -9,15 +9,19 @@ type RcReport = std::rc::Rc<Refer<Report>>;
 
 /// Diagnostic message with source code reference attached.
 #[derive(Clone)]
-pub enum Diagnostic {
+pub enum Diagnostic<ERROR = RcReport, MESSAGE = RcReport>
+where
+    ERROR: Clone,
+    MESSAGE: Clone,
+{
     /// Trace message.
-    Trace(RcReport),
+    Trace(MESSAGE),
     /// Informative message.
-    Info(RcReport),
+    Info(MESSAGE),
     /// Warning.
-    Warning(RcReport),
+    Warning(ERROR),
     /// Error.
-    Error(RcReport),
+    Error(ERROR),
 }
 
 impl Diagnostic {
@@ -77,7 +81,7 @@ impl Diagnostic {
         let src_ref = self.src_ref();
         let hash = src_ref.source_hash();
 
-        match &src_ref.is_none() {
+        match src_ref.is_none() {
             true => writeln!(f, "{}: {}", self.level(), self.message())?,
             false => {
                 let source = match source_by_hash.get_source_loc_info_by_hash(hash) {
