@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{self as base, Diagnostics};
+use microcad_lang_base::{self as base, Diagnostics, Identifier};
 use microcad_lang_lower::{self as lower, ir};
 use microcad_lang_parse as parse;
 
@@ -84,36 +84,31 @@ unit_test!(assignments_const_const_assignment_init => |ir, diag| {
     assert!(diag.error_count() == 1);
 });
 
+macro_rules! pat {
+    ($($any_tokens:tt)*) => {
+        contains_exactly![matches_pattern!($($any_tokens)*)]
+    };
+}
+
 unit_test!(assignments_const_const_assignment_mod => |ir, diag| {
     assert_that!(ir, matches_pattern!(ir::Source {
         *statements: len(eq(3)),
         items: matches_pattern!(ir::SourceItems {
             constants: len(eq(1)),
-            inline_modules: len(eq(1)),
-         })
-    }));
-
-
-    let my_module = ir.items.inline_modules.first().expect("A module");
-    assert_that!(*my_module, matches_pattern!(ir::InlineModule {
-        visibility: eq(ir::Visibility::Private),
-        items: matches_pattern!(
-            ir::InlineModuleItems {
-                constants: len(eq(1)),
-                functions: len(eq(1)),
-                workbenches: len(eq(1)),
-            }
-        )
-    }));
-
-    let f = my_module.items.functions.first().expect("Expect a function");
-    assert_that!(*f, matches_pattern!(ir::Function {
-        visibility: eq(ir::Visibility::Public),
-    }));
-
-    let my_sketch = my_module.items.workbenches.first().expect("Expect a workbench");
-    assert_that!(*my_sketch, matches_pattern!(ir::Workbench {
-        visibility: eq(ir::Visibility::Public),
+            *inline_modules: pat!(ir::InlineModule {
+                visibility: eq(ir::Visibility::Private),
+                items: matches_pattern!(ir::InlineModuleItems {
+                    constants: len(eq(1)),
+                    functions: pat!(ir::Function {
+                        visibility: eq(ir::Visibility::Public),
+                    }),
+                    workbenches: pat!(ir::Workbench {
+                        id: eq(Identifier::from("MySketch")),
+                        visibility: eq(ir::Visibility::Public),
+                    })
+                })
+            })
+        })
     }));
 
     assert!(!diag.has_errors())
