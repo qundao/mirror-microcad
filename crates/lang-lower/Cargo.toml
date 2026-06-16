@@ -36,4 +36,4 @@ microcad-lang-types = { workspace = true }
 [dev-dependencies]
 pretty_assertions = "1.4"
 insta = "1.45.0"
-test-that = { git = "https://github.com/hovinen/test-that.git#8a30ec6" }
+test-that = { git = "https://github.com/hovinen/test-that.git", rev = "42d3e8dd" }

@@ -24,7 +24,7 @@ fn ir_from_test_file(name: &str) -> lower::LowerResult<(lower::ir::Source, Diagn
         .expect("No parse errors");
 
     use microcad_lang_lower::Lower;
-    let mut context = lower::LowerContext::new(&ast.code);
+    let mut context = lower::LowerContext::new(&ast.code.value());
     Ok((
         lower::ir::Source::lower(&ast, &mut context)?,
         context.diagnostics.clone(),
@@ -84,30 +84,24 @@ unit_test!(assignments_const_const_assignment_init => |ir, diag| {
     assert!(diag.error_count() == 1);
 });
 
-macro_rules! pat {
-    ($($any_tokens:tt)*) => {
-        contains_exactly![matches_pattern!($($any_tokens)*)]
-    };
-}
-
 unit_test!(assignments_const_const_assignment_mod => |ir, diag| {
     assert_that!(ir, matches_pattern!(ir::Source {
         *statements: len(eq(3)),
         items: matches_pattern!(ir::SourceItems {
             constants: len(eq(1)),
-            *inline_modules: pat!(ir::InlineModule {
+            inline_modules: [matches_pattern!(ir::InlineModule {
                 visibility: eq(ir::Visibility::Private),
                 items: matches_pattern!(ir::InlineModuleItems {
                     constants: len(eq(1)),
-                    functions: pat!(ir::Function {
+                    functions: [matches_pattern!(ir::Function {
                         visibility: eq(ir::Visibility::Public),
-                    }),
-                    workbenches: pat!(ir::Workbench {
+                    })],
+                    workbenches: [matches_pattern!(ir::Workbench {
                         id: eq(Identifier::from("MySketch")),
                         visibility: eq(ir::Visibility::Public),
-                    })
+                    })]
                 })
-            })
+            })]
         })
     }));
 
