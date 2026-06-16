@@ -8477,7 +8477,7 @@ dependencies = [
 [[package]]
 name = "test-that"
 version = "0.2.0"
-source = "git+https://github.com/hovinen/test-that.git#8a30ec6#0f703c5e0f710c8921acb97535ec82072852b5bb"
+source = "git+https://github.com/hovinen/test-that.git?rev=42d3e8dd#42d3e8ddfcc0ccebc45802ff5b8727ee7cec4891"
 dependencies = [
  "num-traits",
  "regex",
@@ -8498,7 +8498,7 @@ dependencies = [
 [[package]]
 name = "test-that-macro"
 version = "0.2.0"
-source = "git+https://github.com/hovinen/test-that.git#8a30ec6#0f703c5e0f710c8921acb97535ec82072852b5bb"
+source = "git+https://github.com/hovinen/test-that.git?rev=42d3e8dd#42d3e8ddfcc0ccebc45802ff5b8727ee7cec4891"
 dependencies = [
  "quote",
  "syn",
