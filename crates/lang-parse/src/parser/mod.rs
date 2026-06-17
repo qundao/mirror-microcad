@@ -970,7 +970,7 @@ fn parser<'tokens>()
                     (
                         (
                             ((((doc, attributes), visibility), (kind, keyword_span)), name),
-                            arguments,
+                            parameters,
                         ),
                         body,
                     ),
@@ -986,7 +986,7 @@ fn parser<'tokens>()
                         attributes,
                         visibility,
                         name,
-                        plan: arguments,
+                        parameters,
                         body,
                     })
                 },

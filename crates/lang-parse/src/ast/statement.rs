@@ -130,7 +130,7 @@ pub struct WorkbenchDefinition {
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
     pub name: ast::Identifier,
-    pub plan: ParameterList,
+    pub parameters: ParameterList,
     pub body: ast::Body,
 }
 
