@@ -18,10 +18,10 @@ impl Format for ast::Parameter {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, leading_extras_without_newline(&self.extras) =>
             match (&self.ty, &self.default) {
-                (None, None) => self.name.format(f),
-                (None, Some(def)) => node!(f => self.name " = " def),
-                (Some(ty), None) => node!(f => self.name ": " ty),
-                (Some(ty), Some(def)) => node!(f => self.name ": " ty " = " def),
+                (None, None) => self.id.format(f),
+                (None, Some(def)) => node!(f => self.id " = " def),
+                (Some(ty), None) => node!(f => self.id ": " ty),
+                (Some(ty), Some(def)) => node!(f => self.id ": " ty " = " def),
             }
         )
     }
@@ -49,7 +49,7 @@ impl Format for ast::WorkbenchDefinition {
         node!(f, self.extras =>
             self.doc
             self.attributes
-            self.visibility self.kind ' ' self.name
+            self.visibility self.kind ' ' self.id
             self.parameters ' '
             self.body
         )
@@ -61,7 +61,7 @@ impl Format for ast::InlineModule {
         node!(f, self.extras =>
             self.doc
             self.attributes
-            self.visibility "mod " self.name ' '
+            self.visibility "mod " self.id ' '
             self.body
         )
     }
@@ -72,7 +72,7 @@ impl Format for ast::FileModule {
         node!(f, self.extras =>
             self.doc
             self.attributes
-            self.visibility "mod " self.name
+            self.visibility "mod " self.id
         )
     }
 }
@@ -87,7 +87,7 @@ impl Format for ast::FunctionDefinition {
         node!(f, self.extras =>
             self.doc
             self.attributes
-            self.visibility "fn " self.name self.parameters " " return_type
+            self.visibility "fn " self.id self.parameters " " return_type
             self.body
         )
     }
@@ -126,7 +126,7 @@ impl Format for ast::ConstAssignment {
         node!(f, self.extras =>
             self.doc
             self.attributes
-            self.visibility "const " self.name " = " self.value
+            self.visibility "const " self.id " = " self.value
         )
     }
 }
@@ -156,7 +156,7 @@ impl Format for ast::Return {
 impl Format for ast::LocalAssignment {
     fn format(&self, f: &FormatConfig) -> Node {
         let assignment = node!(f =>
-            self.name
+            self.id
             match &self.ty {
                 Some(ty) => node!(f => ':' Node::Softline ty),
                 None => Node::Nil,
@@ -176,7 +176,7 @@ impl Format for ast::PropertyAssignment {
         node!(f, self.extras =>
             self.doc
             self.attributes
-            "prop" Node::Softline self.name
+            "prop" Node::Softline self.id
             self.ty.as_ref().map(|ty| node!(f => ':' Node::Softline ty))
             " = " self.value
         )

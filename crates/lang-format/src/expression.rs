@@ -213,7 +213,7 @@ impl Format for ast::UnnamedArgument {
 
 impl Format for ast::NamedArgument {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f, self.extras => self.name " = " self.value)
+        node!(f, self.extras => self.id " = " self.value)
     }
 }
 
