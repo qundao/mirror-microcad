@@ -30,7 +30,7 @@ impl Lower for std::rc::Rc<ir::WorkbenchDefinition> {
         Ok(std::rc::Rc::new(ir::WorkbenchDefinition {
             keyword_ref: context.src_ref(&node.keyword_span),
             doc: ir::DocBlock::lower(&node.doc, context)?,
-            attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
+            attribute_list: ir::AttributeList::lower(&node.attr, context)?,
             visibility: node
                 .visibility
                 .as_ref()

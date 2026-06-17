@@ -76,7 +76,7 @@ impl ir::AssignmentStatement {
         context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         Ok(Self {
-            attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
+            attribute_list: ir::AttributeList::lower(&node.attr, context)?,
             assignment: std::rc::Rc::new(ir::Assignment::from_ast_local(node, context)?),
             src_ref: context.src_ref(&node.span),
         })
@@ -87,7 +87,7 @@ impl ir::AssignmentStatement {
         context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         Ok(Self {
-            attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
+            attribute_list: ir::AttributeList::lower(&node.attr, context)?,
             assignment: std::rc::Rc::new(ir::Assignment::from_ast_prop(node, context)?),
             src_ref: context.src_ref(&node.span),
         })
@@ -98,7 +98,7 @@ impl ir::AssignmentStatement {
         context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         Ok(Self {
-            attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
+            attribute_list: ir::AttributeList::lower(&node.attr, context)?,
             assignment: std::rc::Rc::new(ir::Assignment::from_ast_const(node, context)?),
             src_ref: context.src_ref(&node.span),
         })
@@ -137,7 +137,7 @@ impl Lower for ir::ExpressionStatement {
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(ir::ExpressionStatement {
             src_ref: context.src_ref(&node.span),
-            attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
+            attribute_list: ir::AttributeList::lower(&node.attr, context)?,
             expression: ir::Expression::lower(&node.expr, context)?,
         })
     }
