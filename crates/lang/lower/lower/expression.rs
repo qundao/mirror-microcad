@@ -213,7 +213,7 @@ impl Lower for ir::TupleExpression {
             args.value
                 .try_push(ir::Argument {
                     id: value
-                        .name
+                        .id
                         .as_ref()
                         .map(|name| Identifier::lower(name, context))
                         .transpose()?,
