@@ -82,7 +82,7 @@ Ok(
                                                 span: 4..5,
                                                 name: "a",
                                             },
-                                            value: Literal(
+                                            expr: Literal(
                                                 Literal {
                                                     span: 8..9,
                                                     extras: ItemExtras {
@@ -119,7 +119,7 @@ Ok(
                                                 span: 11..12,
                                                 name: "b",
                                             },
-                                            value: Literal(
+                                            expr: Literal(
                                                 Literal {
                                                     span: 15..16,
                                                     extras: ItemExtras {

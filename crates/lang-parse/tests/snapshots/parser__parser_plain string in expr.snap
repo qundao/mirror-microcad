@@ -34,7 +34,7 @@ Ok(
                                 name: "a",
                             },
                             ty: None,
-                            value: BinaryOperation(
+                            expr: BinaryOperation(
                                 BinaryOperation {
                                     span: 4..37,
                                     lhs: Literal(

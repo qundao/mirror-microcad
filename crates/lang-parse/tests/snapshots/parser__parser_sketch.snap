@@ -166,7 +166,7 @@ Ok(
                                                                                     [],
                                                                                 ),
                                                                             },
-                                                                            value: QualifiedName(
+                                                                            expr: QualifiedName(
                                                                                 QualifiedName {
                                                                                     span: 49..55,
                                                                                     extras: ItemExtras {

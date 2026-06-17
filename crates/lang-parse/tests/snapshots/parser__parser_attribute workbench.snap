@@ -64,7 +64,7 @@ Ok(
                                                     name: "color",
                                                 },
                                                 ty: None,
-                                                value: Literal(
+                                                expr: Literal(
                                                     Literal {
                                                         span: 10..19,
                                                         extras: ItemExtras {
@@ -191,7 +191,7 @@ Ok(
                                                                                 span: 55..61,
                                                                                 name: "height",
                                                                             },
-                                                                            value: Literal(
+                                                                            expr: Literal(
                                                                                 Literal {
                                                                                     span: 64..68,
                                                                                     extras: ItemExtras {
@@ -232,7 +232,7 @@ Ok(
                                                                                 span: 70..76,
                                                                                 name: "radius",
                                                                             },
-                                                                            value: Literal(
+                                                                            expr: Literal(
                                                                                 Literal {
                                                                                     span: 79..82,
                                                                                     extras: ItemExtras {

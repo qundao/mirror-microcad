@@ -56,7 +56,7 @@ Ok(
                                             name: "length",
                                         },
                                     ),
-                                    value: Literal(
+                                    expr: Literal(
                                         Literal {
                                             span: 10..11,
                                             extras: ItemExtras {
@@ -93,7 +93,7 @@ Ok(
                                             name: "width",
                                         },
                                     ),
-                                    value: BinaryOperation(
+                                    expr: BinaryOperation(
                                         BinaryOperation {
                                             span: 21..26,
                                             lhs: Literal(

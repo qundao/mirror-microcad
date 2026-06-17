@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -51,7 +51,7 @@ Ok(
                                         ),
                                     },
                                     name: None,
-                                    value: Literal(
+                                    expr: Literal(
                                         Literal {
                                             span: 1..4,
                                             extras: ItemExtras {
@@ -87,7 +87,7 @@ Ok(
                                             name: "length",
                                         },
                                     ),
-                                    value: Literal(
+                                    expr: Literal(
                                         Literal {
                                             span: 15..16,
                                             extras: ItemExtras {

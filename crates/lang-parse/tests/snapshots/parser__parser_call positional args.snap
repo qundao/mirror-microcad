@@ -84,7 +84,7 @@ Ok(
                                                     [],
                                                 ),
                                             },
-                                            value: Literal(
+                                            expr: Literal(
                                                 Literal {
                                                     span: 13..14,
                                                     extras: ItemExtras {
@@ -131,7 +131,7 @@ Ok(
                                                     [],
                                                 ),
                                             },
-                                            value: Literal(
+                                            expr: Literal(
                                                 Literal {
                                                     span: 31..37,
                                                     extras: ItemExtras {

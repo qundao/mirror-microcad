@@ -95,7 +95,7 @@ Ok(
                                                                     span: 6..11,
                                                                     name: "style",
                                                                 },
-                                                                value: Literal(
+                                                                expr: Literal(
                                                                     Literal {
                                                                         span: 14..25,
                                                                         extras: ItemExtras {
@@ -128,7 +128,7 @@ Ok(
                                 name: "a",
                             },
                             ty: None,
-                            value: Literal(
+                            expr: Literal(
                                 Literal {
                                     span: 36..37,
                                     extras: ItemExtras {

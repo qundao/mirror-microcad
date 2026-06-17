@@ -89,7 +89,7 @@ Ok(
                                                     expression: ElementAccess(
                                                         ElementAccess {
                                                             span: 23..61,
-                                                            value: Body(
+                                                            expr: Body(
                                                                 Body {
                                                                     span: 23..52,
                                                                     statements: StatementList {
@@ -172,7 +172,7 @@ Ok(
                                                                                                                         [],
                                                                                                                     ),
                                                                                                                 },
-                                                                                                                value: QualifiedName(
+                                                                                                                expr: QualifiedName(
                                                                                                                     QualifiedName {
                                                                                                                         span: 39..40,
                                                                                                                         extras: ItemExtras {
@@ -275,7 +275,7 @@ Ok(
                                                                                                     [],
                                                                                                 ),
                                                                                             },
-                                                                                            value: QualifiedName(
+                                                                                            expr: QualifiedName(
                                                                                                 QualifiedName {
                                                                                                     span: 59..60,
                                                                                                     extras: ItemExtras {

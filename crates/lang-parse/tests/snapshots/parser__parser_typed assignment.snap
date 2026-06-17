@@ -41,7 +41,7 @@ Ok(
                                     },
                                 ),
                             ),
-                            value: BinaryOperation(
+                            expr: BinaryOperation(
                                 BinaryOperation {
                                     span: 12..19,
                                     lhs: QualifiedName(

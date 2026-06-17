@@ -140,7 +140,7 @@ Ok(
                                                                                 span: 50..56,
                                                                                 name: "height",
                                                                             },
-                                                                            value: Literal(
+                                                                            expr: Literal(
                                                                                 Literal {
                                                                                     span: 59..63,
                                                                                     extras: ItemExtras {
@@ -181,7 +181,7 @@ Ok(
                                                                                 span: 65..71,
                                                                                 name: "radius",
                                                                             },
-                                                                            value: Literal(
+                                                                            expr: Literal(
                                                                                 Literal {
                                                                                     span: 74..77,
                                                                                     extras: ItemExtras {

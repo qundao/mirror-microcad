@@ -34,7 +34,7 @@ Ok(
                                 name: "a",
                             },
                             ty: None,
-                            value: ArrayRange(
+                            expr: ArrayRange(
                                 ArrayRangeExpression {
                                     span: 4..12,
                                     extras: ItemExtras {

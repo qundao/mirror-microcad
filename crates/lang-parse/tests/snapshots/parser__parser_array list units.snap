@@ -34,7 +34,7 @@ Ok(
                                 name: "a",
                             },
                             ty: None,
-                            value: ArrayList(
+                            expr: ArrayList(
                                 ArrayListExpression {
                                     span: 4..12,
                                     extras: ItemExtras {

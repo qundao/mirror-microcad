@@ -42,7 +42,7 @@ Ok(
                                 name: "A",
                             },
                             ty: None,
-                            value: Literal(
+                            expr: Literal(
                                 Literal {
                                     span: 30..31,
                                     extras: ItemExtras {

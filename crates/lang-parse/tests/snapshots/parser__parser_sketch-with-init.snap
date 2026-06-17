@@ -204,7 +204,7 @@ Ok(
                                                                                 name: "radius",
                                                                             },
                                                                             ty: None,
-                                                                            value: BinaryOperation(
+                                                                            expr: BinaryOperation(
                                                                                 BinaryOperation {
                                                                                     span: 77..89,
                                                                                     lhs: QualifiedName(
@@ -351,7 +351,7 @@ Ok(
                                                                                     [],
                                                                                 ),
                                                                             },
-                                                                            value: QualifiedName(
+                                                                            expr: QualifiedName(
                                                                                 QualifiedName {
                                                                                     span: 120..126,
                                                                                     extras: ItemExtras {

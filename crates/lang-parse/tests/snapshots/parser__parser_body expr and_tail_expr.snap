@@ -69,7 +69,7 @@ Ok(
                             expression: ElementAccess(
                                 ElementAccess {
                                     span: 2..11,
-                                    value: QualifiedName(
+                                    expr: QualifiedName(
                                         QualifiedName {
                                             span: 2..5,
                                             extras: ItemExtras {

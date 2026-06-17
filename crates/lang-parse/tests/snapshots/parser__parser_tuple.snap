@@ -51,7 +51,7 @@ Ok(
                                         ),
                                     },
                                     name: None,
-                                    value: Literal(
+                                    expr: Literal(
                                         Literal {
                                             span: 1..2,
                                             extras: ItemExtras {
@@ -83,7 +83,7 @@ Ok(
                                         ),
                                     },
                                     name: None,
-                                    value: BinaryOperation(
+                                    expr: BinaryOperation(
                                         BinaryOperation {
                                             span: 4..9,
                                             lhs: Literal(

@@ -58,7 +58,7 @@ Ok(
                                                     name: "color",
                                                 },
                                                 ty: None,
-                                                value: Literal(
+                                                expr: Literal(
                                                     Literal {
                                                         span: 10..19,
                                                         extras: ItemExtras {

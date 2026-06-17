@@ -78,7 +78,7 @@ Ok(
                                                     [],
                                                 ),
                                             },
-                                            value: QualifiedName(
+                                            expr: QualifiedName(
                                                 QualifiedName {
                                                     span: 4..5,
                                                     extras: ItemExtras {
@@ -114,7 +114,7 @@ Ok(
                                                 span: 7..8,
                                                 name: "b",
                                             },
-                                            value: Literal(
+                                            expr: Literal(
                                                 Literal {
                                                     span: 11..12,
                                                     extras: ItemExtras {
@@ -147,7 +147,7 @@ Ok(
                                                     [],
                                                 ),
                                             },
-                                            value: Literal(
+                                            expr: Literal(
                                                 Literal {
                                                     span: 14..15,
                                                     extras: ItemExtras {
