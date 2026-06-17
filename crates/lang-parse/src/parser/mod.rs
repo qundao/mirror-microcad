@@ -386,10 +386,10 @@ fn parser<'tokens>()
         .or_not()
         .then(expression_parser.clone())
         .with_extras()
-        .map_with(|((name, expr), extras), e| ast::TupleItem {
+        .map_with(|((id, expr), extras), e| ast::TupleItem {
             span: e.span(),
             extras,
-            name,
+            id,
             expr,
         })
         .then_maybe_whitespace()
@@ -409,11 +409,11 @@ fn parser<'tokens>()
                     extras,
                     arguments: arguments
                         .into_iter()
-                        .map(|item| match item.name {
-                            Some(name) => ast::Argument::Named(ast::NamedArgument {
+                        .map(|item| match item.id {
+                            Some(id) => ast::Argument::Named(ast::NamedArgument {
                                 span: item.span,
                                 extras: item.extras,
-                                id: name,
+                                id,
                                 expr: item.expr,
                             }),
                             None => ast::Argument::Unnamed(ast::UnnamedArgument {
@@ -520,11 +520,11 @@ fn parser<'tokens>()
             )
             .with_extras()
             .map_with(
-                |((((attributes, name), ty), value), extras), e| ast::LocalAssignment {
+                |((((attributes, id), ty), value), extras), e| ast::LocalAssignment {
                     span: e.span(),
                     extras,
                     attr: attributes,
-                    id: name,
+                    id,
                     expr: Box::new(value),
                     ty,
                 },
@@ -562,7 +562,7 @@ fn parser<'tokens>()
             )
             .with_extras()
             .map_with(
-                |(((((((doc, attributes), vis), keyword_span), name), ty), value), extras), e| {
+                |(((((((doc, attributes), vis), keyword_span), id), ty), value), extras), e| {
                     ast::ConstAssignment {
                         span: e.span(),
                         keyword_span,
@@ -570,7 +570,7 @@ fn parser<'tokens>()
                         doc,
                         attr: attributes,
                         vis,
-                        id: name,
+                        id,
                         expr: Box::new(value),
                         ty,
                     }
@@ -1024,10 +1024,7 @@ fn parser<'tokens>()
             .map_with(
                 |(
                     (
-                        (
-                            (((((doc, attributes), vis), keyword_span), name), arguments),
-                            return_type,
-                        ),
+                        ((((((doc, attributes), vis), keyword_span), id), arguments), return_type),
                         body,
                     ),
                     extras,
@@ -1040,7 +1037,7 @@ fn parser<'tokens>()
                         doc,
                         attr: attributes,
                         vis,
-                        id: name,
+                        id,
                         parameters: arguments,
                         return_type,
                         body,

@@ -214,7 +214,7 @@ impl StringFormatSpecification {
 pub struct TupleItem {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub name: Option<ast::Identifier>,
+    pub id: Option<ast::Identifier>,
     pub expr: Expression,
 }
 
@@ -223,7 +223,7 @@ impl ast::Dummy for TupleItem {
         Self {
             span: span.clone(),
             extras: ast::ItemExtras::default(),
-            name: None,
+            id: None,
             expr: Expression::Error(span),
         }
     }
