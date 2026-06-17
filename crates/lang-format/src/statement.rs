@@ -187,7 +187,7 @@ impl Format for ast::ExpressionStatement {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             self.attributes
-            self.expression
+            self.expr
         )
     }
 }

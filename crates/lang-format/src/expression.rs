@@ -102,7 +102,7 @@ impl Format for ast::StringCharacter {
 impl Format for ast::StringExpression {
     fn format<'a>(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
-            '{' self.specification self.expression '}'
+            '{' self.specification self.expr '}'
         )
     }
 }
@@ -154,7 +154,7 @@ impl Format for ast::TupleExpression {
 
 impl Format for ast::ArrayItem {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f, self.extras => self.expression)
+        node!(f, self.extras => self.expr)
     }
 }
 
