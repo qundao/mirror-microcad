@@ -51,9 +51,9 @@ Ok(
                                     ),
                                 },
                             ),
-                            operation: BinaryOperator {
+                            op: Spanned {
                                 span: 1..2,
-                                operation: Add,
+                                value: Add,
                             },
                             rhs: Literal(
                                 Literal {

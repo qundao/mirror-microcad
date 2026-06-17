@@ -48,9 +48,9 @@ Ok(
                                             ],
                                         ),
                                     },
-                                    operation: UnaryOperator {
+                                    op: Spanned {
                                         span: 0..1,
-                                        operation: Minus,
+                                        value: Minus,
                                     },
                                     rhs: ArrayList(
                                         ArrayListExpression {
@@ -101,9 +101,9 @@ Ok(
                                     ),
                                 },
                             ),
-                            operation: BinaryOperator {
+                            op: Spanned {
                                 span: 5..7,
-                                operation: NotEqual,
+                                value: NotEqual,
                             },
                             rhs: ArrayList(
                                 ArrayListExpression {

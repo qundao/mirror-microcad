@@ -114,9 +114,9 @@ Ok(
                                     ),
                                 },
                             ),
-                            operation: BinaryOperator {
+                            op: Spanned {
                                 span: 7..9,
-                                operation: Equal,
+                                value: Equal,
                             },
                             rhs: ArrayList(
                                 ArrayListExpression {

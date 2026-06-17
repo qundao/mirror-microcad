@@ -39,9 +39,9 @@ Ok(
                                     [],
                                 ),
                             },
-                            operation: UnaryOperator {
+                            op: Spanned {
                                 span: 0..1,
-                                operation: Not,
+                                value: Not,
                             },
                             rhs: QualifiedName(
                                 QualifiedName {

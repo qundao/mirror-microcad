@@ -232,9 +232,9 @@ Ok(
                                                                                             ],
                                                                                         },
                                                                                     ),
-                                                                                    operation: BinaryOperator {
+                                                                                    op: Spanned {
                                                                                         span: 86..87,
-                                                                                        operation: Divide,
+                                                                                        value: Divide,
                                                                                     },
                                                                                     rhs: Literal(
                                                                                         Literal {

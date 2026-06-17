@@ -53,9 +53,9 @@ Ok(
                                             ],
                                         },
                                     ),
-                                    operation: BinaryOperator {
+                                    op: Spanned {
                                         span: 1..2,
-                                        operation: PowerXor,
+                                        value: PowerXor,
                                     },
                                     rhs: Literal(
                                         Literal {
@@ -85,9 +85,9 @@ Ok(
                                     ),
                                 },
                             ),
-                            operation: BinaryOperator {
+                            op: Spanned {
                                 span: 4..5,
-                                operation: Add,
+                                value: Add,
                             },
                             rhs: BinaryOperation(
                                 BinaryOperation {
@@ -111,9 +111,9 @@ Ok(
                                             ],
                                         },
                                     ),
-                                    operation: BinaryOperator {
+                                    op: Spanned {
                                         span: 7..8,
-                                        operation: PowerXor,
+                                        value: PowerXor,
                                     },
                                     rhs: Literal(
                                         Literal {

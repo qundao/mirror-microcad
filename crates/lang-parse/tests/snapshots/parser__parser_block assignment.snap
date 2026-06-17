@@ -95,9 +95,9 @@ Ok(
                                                                         ),
                                                                     },
                                                                 ),
-                                                                operation: BinaryOperator {
+                                                                op: Spanned {
                                                                     span: 11..12,
-                                                                    operation: Add,
+                                                                    value: Add,
                                                                 },
                                                                 rhs: Literal(
                                                                     Literal {
@@ -174,9 +174,9 @@ Ok(
                                                                 ],
                                                             },
                                                         ),
-                                                        operation: BinaryOperator {
+                                                        op: Spanned {
                                                             span: 18..19,
-                                                            operation: Multiply,
+                                                            value: Multiply,
                                                         },
                                                         rhs: Literal(
                                                             Literal {

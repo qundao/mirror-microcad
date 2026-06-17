@@ -188,9 +188,9 @@ Ok(
                                                             ],
                                                         },
                                                     ),
-                                                    operation: BinaryOperator {
+                                                    op: Spanned {
                                                         span: 30..31,
-                                                        operation: Divide,
+                                                        value: Divide,
                                                     },
                                                     rhs: QualifiedName(
                                                         QualifiedName {

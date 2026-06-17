@@ -69,9 +69,9 @@ Ok(
                                                     ],
                                                 },
                                             ),
-                                            operation: BinaryOperator {
+                                            op: Spanned {
                                                 span: 5..6,
-                                                operation: GreaterThan,
+                                                value: GreaterThan,
                                             },
                                             rhs: Literal(
                                                 Literal {

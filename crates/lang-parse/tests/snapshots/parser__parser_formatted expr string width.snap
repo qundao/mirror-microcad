@@ -85,9 +85,9 @@ Ok(
                                                         ],
                                                     },
                                                 ),
-                                                operation: BinaryOperator {
+                                                op: Spanned {
                                                     span: 19..20,
-                                                    operation: Subtract,
+                                                    value: Subtract,
                                                 },
                                                 rhs: QualifiedName(
                                                     QualifiedName {

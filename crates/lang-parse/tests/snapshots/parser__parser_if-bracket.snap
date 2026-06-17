@@ -70,9 +70,9 @@ Ok(
                                                         ],
                                                     },
                                                 ),
-                                                operation: BinaryOperator {
+                                                op: Spanned {
                                                     span: 6..7,
-                                                    operation: GreaterThan,
+                                                    value: GreaterThan,
                                                 },
                                                 rhs: Literal(
                                                     Literal {

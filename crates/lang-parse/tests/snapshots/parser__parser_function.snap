@@ -151,9 +151,9 @@ Ok(
                                                             ],
                                                         },
                                                     ),
-                                                    operation: BinaryOperator {
+                                                    op: Spanned {
                                                         span: 42..43,
-                                                        operation: Multiply,
+                                                        value: Multiply,
                                                     },
                                                     rhs: Literal(
                                                         Literal {
