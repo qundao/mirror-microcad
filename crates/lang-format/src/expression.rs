@@ -7,8 +7,8 @@ use microcad_lang_parse::ast;
 
 impl Format for ast::BinaryOperator {
     fn format(&self, _: &FormatConfig) -> Node {
-        use ast::BinaryOperatorType::*;
-        match &self.operation {
+        use ast::BinaryOperator::*;
+        match &self {
             GreaterEqual => ">=",
             LessEqual => "<=",
             And => "and",
@@ -21,7 +21,7 @@ impl Format for ast::BinaryOperator {
 
 impl Format for ast::UnaryOperator {
     fn format(&self, _: &FormatConfig) -> Node {
-        self.operation.as_str().into()
+        self.as_str().into()
     }
 }
 
@@ -186,13 +186,13 @@ impl Format for ast::QualifiedName {
 
 impl Format for ast::BinaryOperation {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f => self.lhs Node::Softline self.operation Node::Softline self.rhs)
+        node!(f => self.lhs Node::Softline self.op Node::Softline self.rhs)
     }
 }
 
 impl Format for ast::UnaryOperation {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f => self.operation self.rhs)
+        node!(f => self.op self.rhs)
     }
 }
 
