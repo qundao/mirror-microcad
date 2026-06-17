@@ -70,7 +70,7 @@ impl_tokens!(ast::WorkbenchDefinition => |self_, ctx| {
     // TODO: self_.visibility.as_ref().map(|vis| vis.semantic_tokens(ctx));
     ctx.push_token(&self_.keyword_span, TokenType::KEYWORD, &[]);
     ctx.push_token(&self_.name.span, TokenType::FUNCTION, &[]);
-    self_.plan.semantic_tokens(ctx);
+    self_.parameters.semantic_tokens(ctx);
     self_.body.semantic_tokens(ctx);
 });
 
