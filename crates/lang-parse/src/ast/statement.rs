@@ -126,7 +126,7 @@ pub struct WorkbenchDefinition {
     pub extras: ast::ItemExtras,
     pub doc: DocBlock,
     pub kind: WorkbenchKind,
-    pub attributes: Vec<Attribute>,
+    pub attr: Vec<Attribute>,
     pub visibility: Option<Visibility>,
     pub id: ast::Identifier,
     pub parameters: ParameterList,
@@ -141,7 +141,7 @@ pub struct InlineModule {
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
     pub doc: DocBlock,
-    pub attributes: Vec<Attribute>,
+    pub attr: Vec<Attribute>,
     pub visibility: Option<Visibility>,
     pub id: ast::Identifier,
     pub body: ast::Body,
@@ -155,7 +155,7 @@ pub struct FileModule {
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
     pub doc: DocBlock,
-    pub attributes: Vec<Attribute>,
+    pub attr: Vec<Attribute>,
     pub visibility: Option<Visibility>,
     pub id: ast::Identifier,
 }
@@ -168,7 +168,7 @@ pub struct FunctionDefinition {
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
     pub doc: DocBlock,
-    pub attributes: Vec<Attribute>,
+    pub attr: Vec<Attribute>,
     pub visibility: Option<Visibility>,
     pub id: ast::Identifier,
     pub parameters: ParameterList,
@@ -184,7 +184,7 @@ pub struct InitDefinition {
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
     pub doc: DocBlock,
-    pub attributes: Vec<Attribute>,
+    pub attr: Vec<Attribute>,
     pub parameters: ParameterList,
     pub body: ast::Body,
 }
@@ -194,7 +194,7 @@ pub struct InitDefinition {
 #[allow(missing_docs)]
 pub struct UseStatement {
     pub span: Span,
-    pub attributes: Vec<Attribute>,
+    pub attr: Vec<Attribute>,
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
     pub visibility: Option<Visibility>,
@@ -256,7 +256,7 @@ pub struct Parameter {
     pub span: Span,
     pub extras: ast::ItemExtras,
     pub doc: ast::DocBlock,
-    pub attributes: Vec<Attribute>,
+    pub attr: Vec<Attribute>,
     pub id: ast::Identifier,
     pub ty: Option<ast::Type>,
     pub default: Option<ast::Expression>,
@@ -289,7 +289,7 @@ pub enum AttributeCommand {
 pub struct LocalAssignment {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub attributes: Vec<Attribute>,
+    pub attr: Vec<Attribute>,
     pub id: ast::Identifier,
     pub ty: Option<ast::Type>,
     pub expr: Box<ast::Expression>,
@@ -303,7 +303,7 @@ pub struct ConstAssignment {
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
     pub doc: DocBlock,
-    pub attributes: Vec<Attribute>,
+    pub attr: Vec<Attribute>,
     pub visibility: Option<Visibility>,
     pub id: ast::Identifier,
     pub ty: Option<ast::Type>,
@@ -318,7 +318,7 @@ pub struct PropertyAssignment {
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
     pub doc: DocBlock,
-    pub attributes: Vec<Attribute>,
+    pub attr: Vec<Attribute>,
     pub id: ast::Identifier,
     pub ty: Option<ast::Type>,
     pub value: Box<ast::Expression>,
@@ -364,7 +364,7 @@ pub enum Visibility {
 pub struct ExpressionStatement {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub attributes: Vec<Attribute>,
+    pub attr: Vec<Attribute>,
     pub expr: ast::Expression,
 }
 

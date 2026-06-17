@@ -169,7 +169,7 @@ fn parser<'tokens>()
             .map_with(|((attributes, expr), extras), e| ast::ExpressionStatement {
                 span: e.span(),
                 extras,
-                attributes,
+                attr: attributes,
                 expr,
             })
             .map(Box::new)
@@ -468,7 +468,7 @@ fn parser<'tokens>()
             .map_with(|((attributes, expr), extras), e| ast::ExpressionStatement {
                 span: e.span(), // FIXME: This should only return the span of attributes and expression
                 extras,
-                attributes,
+                attr: attributes,
                 expr,
             })
             .map(ast::Statement::Expression)
@@ -491,7 +491,7 @@ fn parser<'tokens>()
                 |((attributes, expression), extras), e| ast::ExpressionStatement {
                     span: e.span(), // FIXME: This should only return the span of attributes and expression
                     extras,
-                    attributes,
+                    attr: attributes,
                     expr: expression,
                 },
             )
@@ -523,7 +523,7 @@ fn parser<'tokens>()
                 |((((attributes, name), ty), value), extras), e| ast::LocalAssignment {
                     span: e.span(),
                     extras,
-                    attributes,
+                    attr: attributes,
                     id: name,
                     expr: Box::new(value),
                     ty,
@@ -572,7 +572,7 @@ fn parser<'tokens>()
                         keyword_span,
                         extras,
                         doc,
-                        attributes,
+                        attr: attributes,
                         visibility,
                         id: name,
                         expr: Box::new(value),
@@ -619,7 +619,7 @@ fn parser<'tokens>()
                         keyword_span,
                         extras,
                         doc,
-                        attributes,
+                        attr: attributes,
                         visibility: Some(ast::Visibility::Public),
                         id,
                         expr: Box::new(value),
@@ -665,7 +665,7 @@ fn parser<'tokens>()
                         keyword_span,
                         extras,
                         doc,
-                        attributes,
+                        attr: attributes,
                         id,
                         value: Box::new(value),
                         ty,
@@ -756,7 +756,7 @@ fn parser<'tokens>()
                 |(((((doc, attributes), id), ty), default), extras), e| ast::Parameter {
                     span: e.span(),
                     doc,
-                    attributes,
+                    attr: attributes,
                     extras,
                     id,
                     ty,
@@ -820,7 +820,7 @@ fn parser<'tokens>()
                         keyword_span,
                         extras,
                         doc,
-                        attributes,
+                        attr: attributes,
                         visibility,
                         id,
                         body,
@@ -849,7 +849,7 @@ fn parser<'tokens>()
                         keyword_span,
                         extras,
                         doc,
-                        attributes,
+                        attr: attributes,
                         visibility,
                         id,
                     })
@@ -901,7 +901,7 @@ fn parser<'tokens>()
                 |(((((attributes, visibility), keyword_span), name), use_as), extras), e| {
                     ast::Statement::Use(ast::UseStatement {
                         span: e.span(),
-                        attributes,
+                        attr: attributes,
                         visibility,
                         keyword_span,
                         extras,
@@ -934,7 +934,7 @@ fn parser<'tokens>()
                         keyword_span,
                         extras,
                         doc,
-                        attributes,
+                        attr: attributes,
                         parameters: arguments,
                         body,
                     })
@@ -976,7 +976,7 @@ fn parser<'tokens>()
                         extras,
                         kind,
                         doc,
-                        attributes,
+                        attr: attributes,
                         visibility,
                         id,
                         parameters,
@@ -1045,7 +1045,7 @@ fn parser<'tokens>()
                         keyword_span,
                         extras,
                         doc,
-                        attributes,
+                        attr: attributes,
                         visibility,
                         id: name,
                         parameters: arguments,
