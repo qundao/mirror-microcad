@@ -78,10 +78,10 @@ impl<'ast> SemanticTokens<'ast> for ast::QualifiedName {
     }
 }
 
-impl_tokens!(ast::BinaryOperator => TokenType::OPERATOR);
-impl_tokens!(ast::BinaryOperation => lhs, operation, rhs);
-impl_tokens!(ast::UnaryOperator => TokenType::OPERATOR);
-impl_tokens!(ast::UnaryOperation => extras, operation, rhs);
+impl_tokens!(mu::base::Spanned<ast::BinaryOperator> => TokenType::OPERATOR);
+impl_tokens!(ast::BinaryOperation => lhs, op, rhs);
+impl_tokens!(mu::base::Spanned<ast::UnaryOperator> => TokenType::OPERATOR);
+impl_tokens!(ast::UnaryOperation => extras, op, rhs);
 
 impl_tokens!(ast::NamedArgument => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
