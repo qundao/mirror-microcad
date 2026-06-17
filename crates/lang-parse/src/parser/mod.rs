@@ -166,10 +166,10 @@ fn parser<'tokens>()
             .clone()
             .then(expression_parser.clone())
             .with_extras()
-            .map_with(|((attributes, expr), extras), e| ast::ExpressionStatement {
+            .map_with(|((attr, expr), extras), e| ast::ExpressionStatement {
                 span: e.span(),
                 extras,
-                attr: attributes,
+                attr,
                 expr,
             })
             .map(Box::new)
@@ -465,10 +465,10 @@ fn parser<'tokens>()
             .clone()
             .then(expression_parser.clone())
             .with_extras()
-            .map_with(|((attributes, expr), extras), e| ast::ExpressionStatement {
+            .map_with(|((attr, expr), extras), e| ast::ExpressionStatement {
                 span: e.span(), // FIXME: This should only return the span of attributes and expression
                 extras,
-                attr: attributes,
+                attr,
                 expr,
             })
             .map(ast::Statement::Expression)
@@ -487,14 +487,12 @@ fn parser<'tokens>()
                 }
             }))
             .with_extras()
-            .map_with(
-                |((attributes, expression), extras), e| ast::ExpressionStatement {
-                    span: e.span(), // FIXME: This should only return the span of attributes and expression
-                    extras,
-                    attr: attributes,
-                    expr: expression,
-                },
-            )
+            .map_with(|((attr, expr), extras), e| ast::ExpressionStatement {
+                span: e.span(), // FIXME: This should only return the span of attributes and expression
+                extras,
+                attr,
+                expr,
+            })
             .map(ast::Statement::Expression)
             .boxed();
 
@@ -520,12 +518,12 @@ fn parser<'tokens>()
             )
             .with_extras()
             .map_with(
-                |((((attributes, id), ty), value), extras), e| ast::LocalAssignment {
+                |((((attr, id), ty), expr), extras), e| ast::LocalAssignment {
                     span: e.span(),
                     extras,
-                    attr: attributes,
+                    attr,
                     id,
-                    expr: Box::new(value),
+                    expr: Box::new(expr),
                     ty,
                 },
             )
@@ -562,13 +560,13 @@ fn parser<'tokens>()
             )
             .with_extras()
             .map_with(
-                |(((((((doc, attributes), vis), keyword_span), id), ty), value), extras), e| {
+                |(((((((doc, attr), vis), keyword_span), id), ty), value), extras), e| {
                     ast::ConstAssignment {
                         span: e.span(),
                         keyword_span,
                         extras,
                         doc,
-                        attr: attributes,
+                        attr,
                         vis,
                         id,
                         expr: Box::new(value),
@@ -609,16 +607,16 @@ fn parser<'tokens>()
             )
             .with_extras()
             .map_with(
-                |((((((doc, attributes), keyword_span), id), ty), value), extras), e| {
+                |((((((doc, attr), keyword_span), id), ty), expr), extras), e| {
                     ast::ConstAssignment {
                         span: e.span(),
                         keyword_span,
                         extras,
                         doc,
-                        attr: attributes,
+                        attr,
                         vis: Some(ast::Visibility::Public),
                         id,
-                        expr: Box::new(value),
+                        expr: Box::new(expr),
                         ty,
                     }
                 },
@@ -655,13 +653,13 @@ fn parser<'tokens>()
             )
             .with_extras()
             .map_with(
-                |((((((doc, attributes), keyword_span), id), ty), value), extras), e| {
+                |((((((doc, attr), keyword_span), id), ty), value), extras), e| {
                     ast::PropertyAssignment {
                         span: e.span(),
                         keyword_span,
                         extras,
                         doc,
-                        attr: attributes,
+                        attr,
                         id,
                         value: Box::new(value),
                         ty,
@@ -749,10 +747,10 @@ fn parser<'tokens>()
             )
             .with_extras()
             .map_with(
-                |(((((doc, attributes), id), ty), default), extras), e| ast::Parameter {
+                |(((((doc, attr), id), ty), default), extras), e| ast::Parameter {
                     span: e.span(),
                     doc,
-                    attr: attributes,
+                    attr,
                     extras,
                     id,
                     ty,
@@ -810,13 +808,13 @@ fn parser<'tokens>()
             .then(body.clone())
             .with_extras()
             .map_with(
-                |((((((doc, attributes), vis), keyword_span), id), body), extras), e| {
+                |((((((doc, attr), vis), keyword_span), id), body), extras), e| {
                     ast::Statement::InlineModule(ast::InlineModule {
                         span: e.span(),
                         keyword_span,
                         extras,
                         doc,
-                        attr: attributes,
+                        attr,
                         vis,
                         id,
                         body,
@@ -838,19 +836,17 @@ fn parser<'tokens>()
                 )),
             )
             .with_extras()
-            .map_with(
-                |(((((doc, attributes), visibility), keyword_span), id), extras), e| {
-                    ast::Statement::FileModule(ast::FileModule {
-                        span: e.span(),
-                        keyword_span,
-                        extras,
-                        doc,
-                        attr: attributes,
-                        vis: visibility,
-                        id,
-                    })
-                },
-            )
+            .map_with(|(((((doc, attr), vis), keyword_span), id), extras), e| {
+                ast::Statement::FileModule(ast::FileModule {
+                    span: e.span(),
+                    keyword_span,
+                    extras,
+                    doc,
+                    attr,
+                    vis,
+                    id,
+                })
+            })
             .boxed();
 
         let use_part = identifier_parser
@@ -894,10 +890,10 @@ fn parser<'tokens>()
             )
             .with_extras()
             .map_with(
-                |(((((attributes, vis), keyword_span), name), use_as), extras), e| {
+                |(((((attr, vis), keyword_span), name), use_as), extras), e| {
                     ast::Statement::Use(ast::UseStatement {
                         span: e.span(),
-                        attr: attributes,
+                        attr,
                         vis,
                         keyword_span,
                         extras,
@@ -924,14 +920,14 @@ fn parser<'tokens>()
             .then(body.clone())
             .with_extras()
             .map_with(
-                |(((((doc, attributes), keyword_span), arguments), body), extras), e| {
+                |(((((doc, attr), keyword_span), parameters), body), extras), e| {
                     ast::Statement::Init(ast::InitDefinition {
                         span: e.span(),
                         keyword_span,
                         extras,
                         doc,
-                        attr: attributes,
-                        parameters: arguments,
+                        attr,
+                        parameters,
                         body,
                     })
                 },
@@ -959,7 +955,7 @@ fn parser<'tokens>()
             .with_extras()
             .map_with(
                 |(
-                    ((((((doc, attributes), vis), (kind, keyword_span)), id), parameters), body),
+                    ((((((doc, attr), vis), (kind, keyword_span)), id), parameters), body),
                     extras,
                 ),
                  e| {
@@ -969,7 +965,7 @@ fn parser<'tokens>()
                         extras,
                         kind,
                         doc,
-                        attr: attributes,
+                        attr,
                         vis,
                         id,
                         parameters,
@@ -1023,10 +1019,7 @@ fn parser<'tokens>()
             .with_extras()
             .map_with(
                 |(
-                    (
-                        ((((((doc, attributes), vis), keyword_span), id), arguments), return_type),
-                        body,
-                    ),
+                    (((((((doc, attr), vis), keyword_span), id), parameters), return_type), body),
                     extras,
                 ),
                  e| {
@@ -1035,10 +1028,10 @@ fn parser<'tokens>()
                         keyword_span,
                         extras,
                         doc,
-                        attr: attributes,
+                        attr,
                         vis,
                         id,
-                        parameters: arguments,
+                        parameters,
                         return_type,
                         body,
                     })
