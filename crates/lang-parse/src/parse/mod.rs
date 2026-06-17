@@ -10,8 +10,8 @@ pub use error::{ParseError, ParseErrorKind, ParseErrors, RichError};
 pub use parse_context::ParseContext;
 
 use crate::ast;
+use crate::lex::*;
 use crate::parse::{error::Rich, helpers::*};
-use crate::tokens::*;
 use chumsky::{
     Parser, extra,
     input::{Input, MappedInput},
@@ -1565,7 +1565,7 @@ impl crate::Parse for ast::Literal {
         match context {
             ParseContext::Element(source) => {
                 use chumsky::Parser;
-                let tokens = crate::tokens::lex(source.value()).collect::<Vec<_>>();
+                let tokens = crate::lex::lex(source.value()).collect::<Vec<_>>();
                 literal()
                     .parse(crate::parse::input(&tokens))
                     .into_result()

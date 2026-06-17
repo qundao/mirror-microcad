@@ -4,8 +4,8 @@
 use crate::{ast, parsers};
 use microcad_lang_base::Span;
 
+use crate::lex::Token;
 use crate::parse::{Extra, ParserDefinition, ParserInput, RichError};
-use crate::tokens::Token;
 use chumsky::extra::{Full, ParserExtra, SimpleState};
 use chumsky::input::Input;
 use chumsky::inspector::Inspector;

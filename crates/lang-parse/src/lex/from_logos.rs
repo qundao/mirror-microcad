@@ -1,10 +1,10 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::tokens::logos::{
+use crate::lex::logos::{
     LogosToken, NormalToken, QuoteVariant, StringFormatToken, StringToken, get_literal_string,
 };
-use crate::tokens::{SpannedToken, Token};
+use crate::lex::{SpannedToken, Token};
 use either::Either;
 use logos::SpannedIter;
 use std::borrow::Cow;

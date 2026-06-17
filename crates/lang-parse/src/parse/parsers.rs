@@ -7,7 +7,7 @@ use crate::ast;
 
 use crate::impl_parser;
 use crate::parse::*;
-use crate::tokens::Token;
+use crate::lex::Token;
 
 use chumsky::{IterParser, Parser, select_ref};
 

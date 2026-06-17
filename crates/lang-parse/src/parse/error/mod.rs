@@ -5,7 +5,7 @@ mod rich;
 
 use crate::ParseContext;
 use crate::parse::error::rich::RichPattern;
-use crate::tokens::Token;
+use crate::lex::Token;
 use microcad_lang_base::{Diagnostics, Refer, Span};
 use miette::{Diagnostic, LabeledSpan};
 pub use rich::{Rich, RichReason};

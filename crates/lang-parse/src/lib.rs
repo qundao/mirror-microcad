@@ -13,7 +13,7 @@ pub mod ast;
 mod parse;
 
 /// Source tokens for µcad files
-pub mod tokens;
+pub mod lex;
 
 use microcad_lang_base::virtual_url;
 pub use parse::{ParseContext, ParseError, ParseErrors, parsers};
@@ -62,5 +62,5 @@ impl Parse for ast::Source {
 
 /// API to parse directly from a string
 pub fn parse(source: &str) -> Result<ast::Program, ParseErrors> {
-    parse::parse(&tokens::lex(source).collect::<Vec<_>>())
+    parse::parse(&lex::lex(source).collect::<Vec<_>>())
 }
