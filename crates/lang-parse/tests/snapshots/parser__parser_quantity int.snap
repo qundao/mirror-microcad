@@ -27,7 +27,7 @@ Ok(
                             [],
                         ),
                     },
-                    attributes: [],
+                    attr: [],
                     expr: Literal(
                         Literal {
                             span: 0..3,

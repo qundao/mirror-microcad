@@ -27,7 +27,7 @@ Ok(
                             [],
                         ),
                     },
-                    attributes: [],
+                    attr: [],
                     expr: ArrayRange(
                         ArrayRangeExpression {
                             span: 0..7,

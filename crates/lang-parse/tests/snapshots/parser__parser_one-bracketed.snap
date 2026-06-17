@@ -27,7 +27,7 @@ Ok(
                             [],
                         ),
                     },
-                    attributes: [],
+                    attr: [],
                     expr: Bracketed(
                         Literal(
                             Literal {

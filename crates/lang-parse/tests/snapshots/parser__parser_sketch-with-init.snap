@@ -34,7 +34,7 @@ Ok(
                                 lines: [],
                             },
                             kind: Sketch,
-                            attributes: [],
+                            attr: [],
                             visibility: None,
                             id: Identifier {
                                 span: 7..12,
@@ -65,7 +65,7 @@ Ok(
                                             span: 13..13,
                                             lines: [],
                                         },
-                                        attributes: [],
+                                        attr: [],
                                         id: Identifier {
                                             span: 13..19,
                                             name: "radius",
@@ -124,7 +124,7 @@ Ok(
                                                         span: 35..35,
                                                         lines: [],
                                                     },
-                                                    attributes: [],
+                                                    attr: [],
                                                     parameters: ParameterList {
                                                         span: 40..56,
                                                         extras: ItemExtras {
@@ -150,7 +150,7 @@ Ok(
                                                                     span: 40..40,
                                                                     lines: [],
                                                                 },
-                                                                attributes: [],
+                                                                attr: [],
                                                                 id: Identifier {
                                                                     span: 40..48,
                                                                     name: "diameter",
@@ -198,7 +198,7 @@ Ok(
                                                                                     [],
                                                                                 ),
                                                                             },
-                                                                            attributes: [],
+                                                                            attr: [],
                                                                             id: Identifier {
                                                                                 span: 68..74,
                                                                                 name: "radius",
@@ -292,7 +292,7 @@ Ok(
                                                             [],
                                                         ),
                                                     },
-                                                    attributes: [],
+                                                    attr: [],
                                                     expr: Call(
                                                         Call {
                                                             span: 101..127,

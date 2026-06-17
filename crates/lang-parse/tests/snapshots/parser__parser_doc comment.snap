@@ -36,7 +36,7 @@ Ok(
                                 ],
                             },
                             kind: Part,
-                            attributes: [],
+                            attr: [],
                             visibility: None,
                             id: Identifier {
                                 span: 25..28,
@@ -85,7 +85,7 @@ Ok(
                                                             [],
                                                         ),
                                                     },
-                                                    attributes: [],
+                                                    attr: [],
                                                     expr: Call(
                                                         Call {
                                                             span: 41..78,

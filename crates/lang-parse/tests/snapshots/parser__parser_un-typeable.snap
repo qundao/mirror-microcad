@@ -28,7 +28,7 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [],
+                            attr: [],
                             id: Identifier {
                                 span: 0..1,
                                 name: "b",

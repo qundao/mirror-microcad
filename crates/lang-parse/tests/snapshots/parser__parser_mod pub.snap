@@ -33,7 +33,7 @@ Ok(
                                 span: 0..26,
                                 lines: [],
                             },
-                            attributes: [],
+                            attr: [],
                             visibility: Some(
                                 Public,
                             ),
@@ -83,7 +83,7 @@ Ok(
                                                         span: 14..14,
                                                         lines: [],
                                                     },
-                                                    attributes: [],
+                                                    attr: [],
                                                     visibility: None,
                                                     id: Identifier {
                                                         span: 17..20,

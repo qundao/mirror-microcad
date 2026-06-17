@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -35,7 +35,7 @@ Ok(
                                     "/// Doc comment",
                                 ],
                             },
-                            attributes: [],
+                            attr: [],
                             parameters: ParameterList {
                                 span: 25..25,
                                 extras: ItemExtras {

@@ -33,7 +33,7 @@ Ok(
                                 span: 0..46,
                                 lines: [],
                             },
-                            attributes: [],
+                            attr: [],
                             visibility: None,
                             id: Identifier {
                                 span: 3..6,
@@ -73,7 +73,7 @@ Ok(
                                             span: 7..7,
                                             lines: [],
                                         },
-                                        attributes: [],
+                                        attr: [],
                                         id: Identifier {
                                             span: 7..8,
                                             name: "a",
@@ -122,7 +122,7 @@ Ok(
                                                     [],
                                                 ),
                                             },
-                                            attributes: [],
+                                            attr: [],
                                             expr: BinaryOperation(
                                                 BinaryOperation {
                                                     span: 40..45,

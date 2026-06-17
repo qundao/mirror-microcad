@@ -20,7 +20,7 @@ Ok(
                     Use(
                         UseStatement {
                             span: 0..26,
-                            attributes: [],
+                            attr: [],
                             keyword_span: 4..7,
                             extras: ItemExtras {
                                 leading: LeadingExtras(

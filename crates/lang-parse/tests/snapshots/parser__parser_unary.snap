@@ -27,7 +27,7 @@ Ok(
                             [],
                         ),
                     },
-                    attributes: [],
+                    attr: [],
                     expr: UnaryOperation(
                         UnaryOperation {
                             span: 0..6,

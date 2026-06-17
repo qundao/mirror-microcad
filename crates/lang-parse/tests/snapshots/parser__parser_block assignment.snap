@@ -28,7 +28,7 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [],
+                            attr: [],
                             id: Identifier {
                                 span: 0..1,
                                 name: "a",
@@ -60,7 +60,7 @@ Ok(
                                                                 [],
                                                             ),
                                                         },
-                                                        attributes: [],
+                                                        attr: [],
                                                         id: Identifier {
                                                             span: 5..6,
                                                             name: "a",
@@ -145,7 +145,7 @@ Ok(
                                                         [],
                                                     ),
                                                 },
-                                                attributes: [],
+                                                attr: [],
                                                 expr: BinaryOperation(
                                                     BinaryOperation {
                                                         span: 16..21,

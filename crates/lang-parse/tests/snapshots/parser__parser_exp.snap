@@ -28,7 +28,7 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [],
+                            attr: [],
                             expr: Literal(
                                 Literal {
                                     span: 0..5,
@@ -73,7 +73,7 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [],
+                            attr: [],
                             expr: Literal(
                                 Literal {
                                     span: 7..12,
@@ -118,7 +118,7 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [],
+                            attr: [],
                             expr: Literal(
                                 Literal {
                                     span: 14..18,
@@ -163,7 +163,7 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [],
+                            attr: [],
                             expr: Literal(
                                 Literal {
                                     span: 20..24,
@@ -208,7 +208,7 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [],
+                            attr: [],
                             expr: Literal(
                                 Literal {
                                     span: 26..31,
@@ -253,7 +253,7 @@ Ok(
                             [],
                         ),
                     },
-                    attributes: [],
+                    attr: [],
                     expr: Literal(
                         Literal {
                             span: 33..36,

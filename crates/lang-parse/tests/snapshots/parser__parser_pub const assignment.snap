@@ -33,7 +33,7 @@ Ok(
                                 span: 0..18,
                                 lines: [],
                             },
-                            attributes: [],
+                            attr: [],
                             visibility: Some(
                                 Public,
                             ),

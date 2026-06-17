@@ -33,7 +33,7 @@ Ok(
                                 span: 0..22,
                                 lines: [],
                             },
-                            attributes: [],
+                            attr: [],
                             visibility: None,
                             id: Identifier {
                                 span: 3..6,
@@ -85,7 +85,7 @@ Ok(
                                                     [],
                                                 ),
                                             },
-                                            attributes: [],
+                                            attr: [],
                                             expr: Literal(
                                                 Literal {
                                                     span: 20..21,

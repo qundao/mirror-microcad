@@ -33,7 +33,7 @@ Ok(
                                 span: 0..8,
                                 lines: [],
                             },
-                            attributes: [],
+                            attr: [],
                             visibility: None,
                             id: Identifier {
                                 span: 4..7,

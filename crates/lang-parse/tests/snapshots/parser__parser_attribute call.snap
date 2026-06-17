@@ -28,7 +28,7 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [
+                            attr: [
                                 Attribute {
                                     span: 0..32,
                                     is_inner: false,

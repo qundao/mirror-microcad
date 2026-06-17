@@ -28,7 +28,7 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [],
+                            attr: [],
                             expr: If(
                                 If {
                                     span: 0..19,
@@ -132,7 +132,7 @@ Ok(
                                                                     [],
                                                                 ),
                                                             },
-                                                            attributes: [],
+                                                            attr: [],
                                                             expr: Call(
                                                                 Call {
                                                                     span: 11..16,

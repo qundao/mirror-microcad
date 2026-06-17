@@ -27,7 +27,7 @@ Ok(
                             [],
                         ),
                     },
-                    attributes: [],
+                    attr: [],
                     expr: QualifiedName(
                         QualifiedName {
                             span: 0..8,

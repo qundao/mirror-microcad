@@ -34,7 +34,7 @@ Ok(
                                 lines: [],
                             },
                             kind: Part,
-                            attributes: [],
+                            attr: [],
                             visibility: Some(
                                 Public,
                             ),
@@ -67,7 +67,7 @@ Ok(
                                             span: 15..15,
                                             lines: [],
                                         },
-                                        attributes: [],
+                                        attr: [],
                                         id: Identifier {
                                             span: 15..21,
                                             name: "radius",
@@ -102,7 +102,7 @@ Ok(
                                             span: 31..31,
                                             lines: [],
                                         },
-                                        attributes: [],
+                                        attr: [],
                                         id: Identifier {
                                             span: 31..37,
                                             name: "height",
@@ -162,7 +162,7 @@ Ok(
                                                             [],
                                                         ),
                                                     },
-                                                    attributes: [],
+                                                    attr: [],
                                                     expr: Call(
                                                         Call {
                                                             span: 46..82,

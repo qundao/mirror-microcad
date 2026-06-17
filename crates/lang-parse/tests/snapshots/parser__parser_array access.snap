@@ -27,7 +27,7 @@ Ok(
                             [],
                         ),
                     },
-                    attributes: [],
+                    attr: [],
                     expr: ElementAccess(
                         ElementAccess {
                             span: 0..6,

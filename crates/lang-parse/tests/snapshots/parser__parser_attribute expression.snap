@@ -28,7 +28,7 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [
+                            attr: [
                                 Attribute {
                                     span: 0..25,
                                     is_inner: false,
@@ -52,7 +52,7 @@ Ok(
                                                         [],
                                                     ),
                                                 },
-                                                attributes: [],
+                                                attr: [],
                                                 id: Identifier {
                                                     span: 2..7,
                                                     name: "color",

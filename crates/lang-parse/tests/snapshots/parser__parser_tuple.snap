@@ -27,7 +27,7 @@ Ok(
                             [],
                         ),
                     },
-                    attributes: [],
+                    attr: [],
                     expr: Tuple(
                         TupleExpression {
                             span: 0..10,

@@ -34,7 +34,7 @@ Ok(
                                 lines: [],
                             },
                             kind: Part,
-                            attributes: [],
+                            attr: [],
                             visibility: Some(
                                 Public,
                             ),
@@ -85,7 +85,7 @@ Ok(
                                                             [],
                                                         ),
                                                     },
-                                                    attributes: [],
+                                                    attr: [],
                                                     expr: ElementAccess(
                                                         ElementAccess {
                                                             span: 23..61,
@@ -121,7 +121,7 @@ Ok(
                                                                                                 [],
                                                                                             ),
                                                                                         },
-                                                                                        attributes: [],
+                                                                                        attr: [],
                                                                                         expr: Call(
                                                                                             Call {
                                                                                                 span: 37..41,

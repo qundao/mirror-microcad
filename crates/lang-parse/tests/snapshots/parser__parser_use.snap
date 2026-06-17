@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -20,7 +20,7 @@ Ok(
                     Use(
                         UseStatement {
                             span: 0..7,
-                            attributes: [],
+                            attr: [],
                             keyword_span: 0..3,
                             extras: ItemExtras {
                                 leading: LeadingExtras(
