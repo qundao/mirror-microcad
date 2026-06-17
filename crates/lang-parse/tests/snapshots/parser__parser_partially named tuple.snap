@@ -50,7 +50,7 @@ Ok(
                                             [],
                                         ),
                                     },
-                                    name: None,
+                                    id: None,
                                     expr: Literal(
                                         Literal {
                                             span: 1..4,
@@ -81,7 +81,7 @@ Ok(
                                             [],
                                         ),
                                     },
-                                    name: Some(
+                                    id: Some(
                                         Identifier {
                                             span: 6..12,
                                             name: "length",
