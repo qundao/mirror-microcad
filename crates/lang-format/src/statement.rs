@@ -38,13 +38,13 @@ impl Format for ast::ParameterList {
     }
 }
 
-impl Format for ast::WorkbenchKind {
+impl Format for ast::def::WorkbenchKind {
     fn format(&self, _: &FormatConfig) -> Node {
         self.to_string().into()
     }
 }
 
-impl Format for ast::WorkbenchDefinition {
+impl Format for ast::def::Workbench {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             self.doc
@@ -56,7 +56,7 @@ impl Format for ast::WorkbenchDefinition {
     }
 }
 
-impl Format for ast::InlineModule {
+impl Format for ast::def::InlineModule {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             self.doc
@@ -67,7 +67,7 @@ impl Format for ast::InlineModule {
     }
 }
 
-impl Format for ast::FileModule {
+impl Format for ast::def::FileModule {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             self.doc
@@ -77,7 +77,7 @@ impl Format for ast::FileModule {
     }
 }
 
-impl Format for ast::FunctionDefinition {
+impl Format for ast::def::Function {
     fn format(&self, f: &FormatConfig) -> Node {
         let return_type = match &self.return_type {
             Some(ty) => node!(f => "-> " ty " "),
@@ -93,17 +93,17 @@ impl Format for ast::FunctionDefinition {
     }
 }
 
-impl Format for ast::UseStatementPart {
+impl Format for ast::def::UseStatementPart {
     fn format(&self, f: &FormatConfig) -> Node {
         match &self {
-            ast::UseStatementPart::Identifier(identifier) => identifier.format(f),
-            ast::UseStatementPart::Glob(_) => '*'.into(),
-            ast::UseStatementPart::Error(_) => Node::Nil,
+            Self::Identifier(identifier) => identifier.format(f),
+            Self::Glob(_) => '*'.into(),
+            Self::Error(_) => Node::Nil,
         }
     }
 }
 
-impl Format for ast::UseName {
+impl Format for ast::def::UseName {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             Node::hlist(self.parts.iter().map(|part| part.format(f)), "::")
@@ -111,7 +111,7 @@ impl Format for ast::UseName {
     }
 }
 
-impl Format for ast::UseStatement {
+impl Format for ast::def::Use {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             self.attr
@@ -121,7 +121,7 @@ impl Format for ast::UseStatement {
     }
 }
 
-impl Format for ast::ConstAssignment {
+impl Format for ast::def::Constant {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             self.doc
@@ -131,7 +131,7 @@ impl Format for ast::ConstAssignment {
     }
 }
 
-impl Format for ast::InitDefinition {
+impl Format for ast::Init {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             self.doc
@@ -244,20 +244,20 @@ impl Format for Vec<ast::Attribute> {
 impl Format for ast::Statement {
     fn format(&self, f: &FormatConfig) -> Node {
         match &self {
-            ast::Statement::Workbench(workbench_definition) => workbench_definition.format(f),
-            ast::Statement::InlineModule(inline_module) => inline_module.format(f),
-            ast::Statement::FileModule(file_module) => file_module.format(f),
-            ast::Statement::Function(function_definition) => function_definition.format(f),
-            ast::Statement::InnerDocComment(comment) => comment.format(f),
-            ast::Statement::Use(use_statement) => use_statement.format(f),
-            ast::Statement::Const(const_assignment) => const_assignment.format(f),
-            ast::Statement::Init(init_definition) => init_definition.format(f),
-            ast::Statement::Return(r) => r.format(f),
-            ast::Statement::InnerAttribute(attribute) => attribute.format(f),
-            ast::Statement::LocalAssignment(local_assignment) => local_assignment.format(f),
-            ast::Statement::Property(property_assignment) => property_assignment.format(f),
-            ast::Statement::Expression(expression_statement) => expression_statement.format(f),
-            ast::Statement::Error(_) => Node::Nil,
+            Self::Workbench(workbench_definition) => workbench_definition.format(f),
+            Self::InlineModule(inline_module) => inline_module.format(f),
+            Self::FileModule(file_module) => file_module.format(f),
+            Self::Function(function_definition) => function_definition.format(f),
+            Self::InnerDocComment(comment) => comment.format(f),
+            Self::Use(use_statement) => use_statement.format(f),
+            Self::Const(const_assignment) => const_assignment.format(f),
+            Self::Init(init_definition) => init_definition.format(f),
+            Self::Return(r) => r.format(f),
+            Self::InnerAttribute(attribute) => attribute.format(f),
+            Self::LocalAssignment(local_assignment) => local_assignment.format(f),
+            Self::Property(property_assignment) => property_assignment.format(f),
+            Self::Expression(expression_statement) => expression_statement.format(f),
+            Self::Error(_) => Node::Nil,
         }
     }
 }
