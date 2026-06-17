@@ -16,7 +16,7 @@ impl Lower for ir::AttributeCommand {
             }
             ast::AttributeCommand::Assignment(a) => ir::AttributeCommand::Assignment {
                 name: Identifier::lower(&a.id, context)?,
-                value: ir::Expression::lower(&a.value, context)?,
+                value: ir::Expression::lower(&a.expr, context)?,
                 src_ref: context.src_ref(&a.span),
             },
             ast::AttributeCommand::Call(c) => {

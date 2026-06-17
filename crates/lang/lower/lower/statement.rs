@@ -20,7 +20,7 @@ impl ir::Assignment {
                 .as_ref()
                 .map(|ty| ir::TypeAnnotation::lower(ty, context))
                 .transpose()?,
-            expression: ir::Expression::lower(&node.value, context)?,
+            expression: ir::Expression::lower(&node.expr, context)?,
             src_ref: context.src_ref(&node.span),
         })
     }
@@ -63,7 +63,7 @@ impl ir::Assignment {
                 .as_ref()
                 .map(|ty| ir::TypeAnnotation::lower(ty, context))
                 .transpose()?,
-            expression: ir::Expression::lower(&node.value, context)?,
+            expression: ir::Expression::lower(&node.expr, context)?,
             src_ref: context.src_ref(&node.span),
         })
     }

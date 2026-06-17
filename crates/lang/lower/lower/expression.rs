@@ -168,7 +168,7 @@ impl Lower for ir::Expression {
             }),
             ast::Expression::Body(b) => ir::Expression::Body(ir::Body::lower(b, context)?),
             ast::Expression::ElementAccess(access) => access.element_chain.iter().try_fold(
-                ir::Expression::lower(&access.value, context)?,
+                ir::Expression::lower(&access.expr, context)?,
                 |acc, element| {
                     use ast::ElementInner::*;
 
@@ -219,7 +219,7 @@ impl Lower for ir::TupleExpression {
                         .as_ref()
                         .map(|name| Identifier::lower(name, context))
                         .transpose()?,
-                    expression: ir::Expression::lower(&value.value, context)?,
+                    expression: ir::Expression::lower(&value.expr, context)?,
                     src_ref: context.src_ref(&value.span),
                 })
                 .map_err(|(previous, id)| LowerError::DuplicateArgument { previous, id })?;
