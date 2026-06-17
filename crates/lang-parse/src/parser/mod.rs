@@ -415,7 +415,7 @@ fn parser<'tokens>()
                             Some(name) => ast::Argument::Named(ast::NamedArgument {
                                 span: item.span,
                                 extras: item.extras,
-                                name,
+                                id: name,
                                 value: item.value,
                             }),
                             None => ast::Argument::Unnamed(ast::UnnamedArgument {
@@ -528,7 +528,7 @@ fn parser<'tokens>()
                     span: e.span(),
                     extras,
                     attributes,
-                    name,
+                    id: name,
                     value: Box::new(value),
                     ty,
                 },
@@ -578,7 +578,7 @@ fn parser<'tokens>()
                         doc,
                         attributes,
                         visibility,
-                        name,
+                        id: name,
                         value: Box::new(value),
                         ty,
                     }
@@ -617,7 +617,7 @@ fn parser<'tokens>()
             )
             .with_extras()
             .map_with(
-                |((((((doc, attributes), keyword_span), name), ty), value), extras), e| {
+                |((((((doc, attributes), keyword_span), id), ty), value), extras), e| {
                     ast::ConstAssignment {
                         span: e.span(),
                         keyword_span,
@@ -625,7 +625,7 @@ fn parser<'tokens>()
                         doc,
                         attributes,
                         visibility: Some(ast::Visibility::Public),
-                        name,
+                        id,
                         value: Box::new(value),
                         ty,
                     }
@@ -663,14 +663,14 @@ fn parser<'tokens>()
             )
             .with_extras()
             .map_with(
-                |((((((doc, attributes), keyword_span), name), ty), value), extras), e| {
+                |((((((doc, attributes), keyword_span), id), ty), value), extras), e| {
                     ast::PropertyAssignment {
                         span: e.span(),
                         keyword_span,
                         extras,
                         doc,
                         attributes,
-                        name,
+                        id,
                         value: Box::new(value),
                         ty,
                     }
@@ -757,12 +757,12 @@ fn parser<'tokens>()
             )
             .with_extras()
             .map_with(
-                |(((((doc, attributes), name), ty), default), extras), e| ast::Parameter {
+                |(((((doc, attributes), id), ty), default), extras), e| ast::Parameter {
                     span: e.span(),
                     doc,
                     attributes,
                     extras,
-                    name,
+                    id,
                     ty,
                     default,
                 },
@@ -818,7 +818,7 @@ fn parser<'tokens>()
             .then(body.clone())
             .with_extras()
             .map_with(
-                |((((((doc, attributes), visibility), keyword_span), name), body), extras), e| {
+                |((((((doc, attributes), visibility), keyword_span), id), body), extras), e| {
                     ast::Statement::InlineModule(ast::InlineModule {
                         span: e.span(),
                         keyword_span,
@@ -826,7 +826,7 @@ fn parser<'tokens>()
                         doc,
                         attributes,
                         visibility,
-                        name,
+                        id,
                         body,
                     })
                 },
@@ -847,7 +847,7 @@ fn parser<'tokens>()
             )
             .with_extras()
             .map_with(
-                |(((((doc, attributes), visibility), keyword_span), name), extras), e| {
+                |(((((doc, attributes), visibility), keyword_span), id), extras), e| {
                     ast::Statement::FileModule(ast::FileModule {
                         span: e.span(),
                         keyword_span,
@@ -855,7 +855,7 @@ fn parser<'tokens>()
                         doc,
                         attributes,
                         visibility,
-                        name,
+                        id,
                     })
                 },
             )
@@ -968,10 +968,7 @@ fn parser<'tokens>()
             .map_with(
                 |(
                     (
-                        (
-                            ((((doc, attributes), visibility), (kind, keyword_span)), name),
-                            parameters,
-                        ),
+                        (((((doc, attributes), visibility), (kind, keyword_span)), id), parameters),
                         body,
                     ),
                     extras,
@@ -985,7 +982,7 @@ fn parser<'tokens>()
                         doc,
                         attributes,
                         visibility,
-                        name,
+                        id,
                         parameters,
                         body,
                     })
@@ -1054,7 +1051,7 @@ fn parser<'tokens>()
                         doc,
                         attributes,
                         visibility,
-                        name,
+                        id: name,
                         parameters: arguments,
                         return_type,
                         body,

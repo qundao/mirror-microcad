@@ -129,7 +129,7 @@ pub struct WorkbenchDefinition {
     pub kind: WorkbenchKind,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
-    pub name: ast::Identifier,
+    pub id: ast::Identifier,
     pub parameters: ParameterList,
     pub body: ast::Body,
 }
@@ -144,7 +144,7 @@ pub struct InlineModule {
     pub doc: DocBlock,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
-    pub name: ast::Identifier,
+    pub id: ast::Identifier,
     pub body: ast::Body,
 }
 
@@ -158,7 +158,7 @@ pub struct FileModule {
     pub doc: DocBlock,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
-    pub name: ast::Identifier,
+    pub id: ast::Identifier,
 }
 
 /// A definition of a function
@@ -171,7 +171,7 @@ pub struct FunctionDefinition {
     pub doc: DocBlock,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
-    pub name: ast::Identifier,
+    pub id: ast::Identifier,
     pub parameters: ParameterList,
     pub return_type: Option<ast::Type>,
     pub body: ast::Body,
@@ -258,7 +258,7 @@ pub struct Parameter {
     pub extras: ast::ItemExtras,
     pub doc: ast::DocBlock,
     pub attributes: Vec<Attribute>,
-    pub name: ast::Identifier,
+    pub id: ast::Identifier,
     pub ty: Option<ast::Type>,
     pub default: Option<ast::Expression>,
 }
@@ -291,7 +291,7 @@ pub struct LocalAssignment {
     pub span: Span,
     pub extras: ast::ItemExtras,
     pub attributes: Vec<Attribute>,
-    pub name: ast::Identifier,
+    pub id: ast::Identifier,
     pub ty: Option<ast::Type>,
     pub value: Box<ast::Expression>,
 }
@@ -306,7 +306,7 @@ pub struct ConstAssignment {
     pub doc: DocBlock,
     pub attributes: Vec<Attribute>,
     pub visibility: Option<Visibility>,
-    pub name: ast::Identifier,
+    pub id: ast::Identifier,
     pub ty: Option<ast::Type>,
     pub value: Box<ast::Expression>,
 }
@@ -320,7 +320,7 @@ pub struct PropertyAssignment {
     pub extras: ast::ItemExtras,
     pub doc: DocBlock,
     pub attributes: Vec<Attribute>,
-    pub name: ast::Identifier,
+    pub id: ast::Identifier,
     pub ty: Option<ast::Type>,
     pub value: Box<ast::Expression>,
 }

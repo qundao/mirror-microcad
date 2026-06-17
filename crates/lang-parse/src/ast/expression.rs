@@ -390,7 +390,7 @@ impl Argument {
     pub fn name(&self) -> Option<&ast::Identifier> {
         match self {
             Argument::Unnamed(_) => None,
-            Argument::Named(arg) => Some(&arg.name),
+            Argument::Named(arg) => Some(&arg.id),
         }
     }
 
@@ -426,6 +426,6 @@ pub struct UnnamedArgument {
 pub struct NamedArgument {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub name: ast::Identifier,
+    pub id: ast::Identifier,
     pub value: Expression,
 }
