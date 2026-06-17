@@ -28,7 +28,7 @@ impl_tokens!(ast::Literal => |self_, ctx| {
 
 impl_tokens!(ast::TupleItem => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
-    if let Some(name) = self_.name.as_ref() { ctx.push_token(&name.span, TokenType::PROPERTY, &[]) };
+    if let Some(id) = self_.id.as_ref() { ctx.push_token(&id.span, TokenType::PROPERTY, &[]) };
     self_.expr.semantic_tokens(ctx);
 });
 
