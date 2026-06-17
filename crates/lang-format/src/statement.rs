@@ -5,10 +5,10 @@ use crate::{BreakMode, Format, FormatConfig, Node, extras::leading_extras_withou
 
 use microcad_lang_parse::ast;
 
-impl Format for Option<ast::Visibility> {
+impl Format for Option<ast::def::Visibility> {
     fn format(&self, _: &FormatConfig) -> Node {
         match &self {
-            Some(ast::Visibility::Public) => "pub ".into(),
+            Some(ast::def::Visibility::Public) => "pub ".into(),
             _ => Node::Nil,
         }
     }
