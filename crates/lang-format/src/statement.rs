@@ -145,7 +145,7 @@ impl Format for ast::Return {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             "return"
-            match &self.value {
+            match &self.expr {
                 Some(value) => node!(f => Node::Softline value),
                 None => Node::Nil
             }
