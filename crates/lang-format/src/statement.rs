@@ -126,7 +126,7 @@ impl Format for ast::ConstAssignment {
         node!(f, self.extras =>
             self.doc
             self.attributes
-            self.visibility "const " self.id " = " self.value
+            self.visibility "const " self.id " = " self.expr
         )
     }
 }
@@ -166,7 +166,7 @@ impl Format for ast::LocalAssignment {
 
         node!(f, self.extras =>
             self.attributes
-            assignment Node::AdditionalIndent(assignment.estimate_width()) self.value
+            assignment Node::AdditionalIndent(assignment.estimate_width()) self.expr
         )
     }
 }

@@ -135,8 +135,8 @@ impl Format for ast::TupleItem {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, leading_extras_without_newline(&self.extras) =>
             match &self.name {
-                Some(name) => node!(f => name " = " self.value),
-                None => node!(f => self.value)
+                Some(name) => node!(f => name " = " self.expr),
+                None => node!(f => self.expr)
             }
         )
     }
@@ -207,13 +207,13 @@ impl Format for ast::Argument {
 
 impl Format for ast::UnnamedArgument {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f, self.extras => self.value)
+        node!(f, self.extras => self.expr)
     }
 }
 
 impl Format for ast::NamedArgument {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f, self.extras => self.id " = " self.value)
+        node!(f, self.extras => self.id " = " self.expr)
     }
 }
 
@@ -253,7 +253,7 @@ impl Format for ast::Element {
 impl Format for ast::ElementAccess {
     fn format(&self, f: &FormatConfig) -> Node {
         // If this is true, we place an indent on the next line
-        let mut indent = match &self.value.as_ref() {
+        let mut indent = match &self.expr.as_ref() {
             ast::Expression::Literal(_) => false,
             ast::Expression::Bracketed(_, _) => true,
             ast::Expression::Tuple(_) => true,
@@ -291,7 +291,7 @@ impl Format for ast::ElementAccess {
             }
         };
 
-        node!(f => self.value element_chain_node)
+        node!(f => self.expr element_chain_node)
     }
 }
 
