@@ -29,7 +29,7 @@ Ok(
                                 ),
                             },
                             attributes: [],
-                            name: Identifier {
+                            id: Identifier {
                                 span: 0..1,
                                 name: "a",
                             },

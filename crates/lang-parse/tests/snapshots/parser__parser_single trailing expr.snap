@@ -38,11 +38,11 @@ Ok(
                             visibility: Some(
                                 Public,
                             ),
-                            name: Identifier {
+                            id: Identifier {
                                 span: 9..10,
                                 name: "A",
                             },
-                            plan: ParameterList {
+                            parameters: ParameterList {
                                 span: 11..11,
                                 extras: ItemExtras {
                                     leading: LeadingExtras(

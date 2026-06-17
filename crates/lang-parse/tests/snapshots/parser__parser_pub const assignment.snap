@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -37,7 +37,7 @@ Ok(
                             visibility: Some(
                                 Public,
                             ),
-                            name: Identifier {
+                            id: Identifier {
                                 span: 10..13,
                                 name: "FOO",
                             },

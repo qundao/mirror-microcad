@@ -38,11 +38,11 @@ Ok(
                             visibility: Some(
                                 Public,
                             ),
-                            name: Identifier {
+                            id: Identifier {
                                 span: 9..14,
                                 name: "Wheel",
                             },
-                            plan: ParameterList {
+                            parameters: ParameterList {
                                 span: 15..43,
                                 extras: ItemExtras {
                                     leading: LeadingExtras(
@@ -68,7 +68,7 @@ Ok(
                                             lines: [],
                                         },
                                         attributes: [],
-                                        name: Identifier {
+                                        id: Identifier {
                                             span: 15..21,
                                             name: "radius",
                                         },
@@ -103,7 +103,7 @@ Ok(
                                             lines: [],
                                         },
                                         attributes: [],
-                                        name: Identifier {
+                                        id: Identifier {
                                             span: 31..37,
                                             name: "height",
                                         },

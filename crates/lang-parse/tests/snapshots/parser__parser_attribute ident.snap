@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -50,7 +50,7 @@ Ok(
                                     ],
                                 },
                             ],
-                            name: Identifier {
+                            id: Identifier {
                                 span: 14..15,
                                 name: "a",
                             },

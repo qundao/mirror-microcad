@@ -38,11 +38,11 @@ Ok(
                             kind: Part,
                             attributes: [],
                             visibility: None,
-                            name: Identifier {
+                            id: Identifier {
                                 span: 25..28,
                                 name: "Foo",
                             },
-                            plan: ParameterList {
+                            parameters: ParameterList {
                                 span: 29..29,
                                 extras: ItemExtras {
                                     leading: LeadingExtras(
@@ -136,7 +136,7 @@ Ok(
                                                                                     [],
                                                                                 ),
                                                                             },
-                                                                            name: Identifier {
+                                                                            id: Identifier {
                                                                                 span: 50..56,
                                                                                 name: "height",
                                                                             },
@@ -177,7 +177,7 @@ Ok(
                                                                                     [],
                                                                                 ),
                                                                             },
-                                                                            name: Identifier {
+                                                                            id: Identifier {
                                                                                 span: 65..71,
                                                                                 name: "radius",
                                                                             },

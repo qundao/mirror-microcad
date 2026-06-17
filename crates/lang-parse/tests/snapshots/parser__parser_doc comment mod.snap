@@ -37,7 +37,7 @@ Ok(
                             },
                             attributes: [],
                             visibility: None,
-                            name: Identifier {
+                            id: Identifier {
                                 span: 24..27,
                                 name: "foo",
                             },
@@ -73,7 +73,7 @@ Ok(
                                                         ),
                                                     },
                                                     attributes: [],
-                                                    name: Identifier {
+                                                    id: Identifier {
                                                         span: 38..39,
                                                         name: "a",
                                                     },

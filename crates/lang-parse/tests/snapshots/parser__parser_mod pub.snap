@@ -37,7 +37,7 @@ Ok(
                             visibility: Some(
                                 Public,
                             ),
-                            name: Identifier {
+                            id: Identifier {
                                 span: 8..11,
                                 name: "foo",
                             },
@@ -85,7 +85,7 @@ Ok(
                                                     },
                                                     attributes: [],
                                                     visibility: None,
-                                                    name: Identifier {
+                                                    id: Identifier {
                                                         span: 17..20,
                                                         name: "bar",
                                                     },
