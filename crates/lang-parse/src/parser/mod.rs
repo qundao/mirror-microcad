@@ -1025,7 +1025,7 @@ fn parser<'tokens>()
                 |(
                     (
                         (
-                            (((((doc, attributes), visibility), keyword_span), name), arguments),
+                            (((((doc, attributes), vis), keyword_span), name), arguments),
                             return_type,
                         ),
                         body,
@@ -1039,7 +1039,7 @@ fn parser<'tokens>()
                         extras,
                         doc,
                         attr: attributes,
-                        vis: visibility,
+                        vis,
                         id: name,
                         parameters: arguments,
                         return_type,
