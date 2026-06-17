@@ -89,6 +89,31 @@ pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 pub use microcad_core::hash::{ComputedHash, HashId, HashMap, HashSet, Hashed, Hasher};
 pub use source::Source;
 
+/// The possible type of workbenches
+#[derive(Debug, PartialEq, Copy, Clone)]
+pub enum WorkbenchKind {
+    /// `sketch`
+    Sketch,
+    /// `part`
+    Part,
+    /// `op`
+    Op,
+}
+
+impl std::fmt::Display for WorkbenchKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match &self {
+                WorkbenchKind::Sketch => "sketch",
+                WorkbenchKind::Part => "part",
+                WorkbenchKind::Op => "op",
+            }
+        )
+    }
+}
+
 /// A compatibility layer for using SourceFile with miette
 pub struct SourceLocInfo<'a> {
     /// The source text.
