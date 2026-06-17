@@ -1,0 +1,22 @@
+---
+source: crates/lang-parse/tests/lexer.rs
+expression: "lex(input).collect::<Vec<_>>()"
+---
+[
+    Spanned {
+        span: 0..3,
+        value: Identifier(
+            "foo",
+        ),
+    },
+    Spanned {
+        span: 3..4,
+        value: SigilDot,
+    },
+    Spanned {
+        span: 4..7,
+        value: Identifier(
+            "bar",
+        ),
+    },
+]

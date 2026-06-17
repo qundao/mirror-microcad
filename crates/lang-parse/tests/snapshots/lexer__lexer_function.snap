@@ -1,0 +1,104 @@
+---
+source: crates/lang-parse/tests/lexer.rs
+expression: "lex(input).collect::<Vec<_>>()"
+---
+[
+    Spanned {
+        span: 0..2,
+        value: KeywordFn,
+    },
+    Spanned {
+        span: 2..3,
+        value: SigilOpenBracket,
+    },
+    Spanned {
+        span: 3..4,
+        value: Identifier(
+            "a",
+        ),
+    },
+    Spanned {
+        span: 4..5,
+        value: SigilColon,
+    },
+    Spanned {
+        span: 5..6,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 6..12,
+        value: Identifier(
+            "Length",
+        ),
+    },
+    Spanned {
+        span: 12..13,
+        value: SigilCloseBracket,
+    },
+    Spanned {
+        span: 13..14,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 14..16,
+        value: SigilSingleArrow,
+    },
+    Spanned {
+        span: 16..17,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 17..23,
+        value: Identifier(
+            "Length",
+        ),
+    },
+    Spanned {
+        span: 23..24,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 24..25,
+        value: SigilOpenCurlyBracket,
+    },
+    Spanned {
+        span: 25..26,
+        value: Identifier(
+            "a",
+        ),
+    },
+    Spanned {
+        span: 26..27,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 27..28,
+        value: OperatorMultiply,
+    },
+    Spanned {
+        span: 28..29,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 29..30,
+        value: LiteralInt(
+            "2",
+        ),
+    },
+    Spanned {
+        span: 30..31,
+        value: SigilCloseCurlyBracket,
+    },
+]

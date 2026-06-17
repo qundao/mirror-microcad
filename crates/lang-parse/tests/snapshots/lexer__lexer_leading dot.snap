@@ -1,0 +1,12 @@
+---
+source: crates/lang-parse/tests/lexer.rs
+expression: "lex(input).collect::<Vec<_>>()"
+---
+[
+    Spanned {
+        span: 0..2,
+        value: LiteralFloat(
+            ".1",
+        ),
+    },
+]

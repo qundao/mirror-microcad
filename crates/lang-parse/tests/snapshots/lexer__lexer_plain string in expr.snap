@@ -1,0 +1,56 @@
+---
+source: crates/lang-parse/tests/lexer.rs
+expression: "lex(input).collect::<Vec<_>>()"
+---
+[
+    Spanned {
+        span: 0..1,
+        value: Identifier(
+            "a",
+        ),
+    },
+    Spanned {
+        span: 1..2,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 2..3,
+        value: OperatorAssignment,
+    },
+    Spanned {
+        span: 3..4,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 4..33,
+        value: LiteralString(
+            "plain string int expression",
+        ),
+    },
+    Spanned {
+        span: 33..34,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 34..35,
+        value: OperatorAdd,
+    },
+    Spanned {
+        span: 35..36,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 36..37,
+        value: LiteralInt(
+            "1",
+        ),
+    },
+]

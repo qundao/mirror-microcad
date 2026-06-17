@@ -1,0 +1,164 @@
+---
+source: crates/lang-parse/tests/lexer.rs
+expression: "lex(input).collect::<Vec<_>>()"
+---
+[
+    Spanned {
+        span: 0..15,
+        value: DocComment(
+            "/// Doc comment",
+        ),
+    },
+    Spanned {
+        span: 15..20,
+        value: Whitespace(
+            "\n    ",
+        ),
+    },
+    Spanned {
+        span: 20..24,
+        value: KeywordPart,
+    },
+    Spanned {
+        span: 24..25,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 25..28,
+        value: Identifier(
+            "Foo",
+        ),
+    },
+    Spanned {
+        span: 28..29,
+        value: SigilOpenBracket,
+    },
+    Spanned {
+        span: 29..30,
+        value: SigilCloseBracket,
+    },
+    Spanned {
+        span: 30..31,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 31..32,
+        value: SigilOpenCurlyBracket,
+    },
+    Spanned {
+        span: 32..41,
+        value: Whitespace(
+            "\n        ",
+        ),
+    },
+    Spanned {
+        span: 41..49,
+        value: Identifier(
+            "Cylinder",
+        ),
+    },
+    Spanned {
+        span: 49..50,
+        value: SigilOpenBracket,
+    },
+    Spanned {
+        span: 50..56,
+        value: Identifier(
+            "height",
+        ),
+    },
+    Spanned {
+        span: 56..57,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 57..58,
+        value: OperatorAssignment,
+    },
+    Spanned {
+        span: 58..59,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 59..61,
+        value: LiteralInt(
+            "10",
+        ),
+    },
+    Spanned {
+        span: 61..63,
+        value: Identifier(
+            "mm",
+        ),
+    },
+    Spanned {
+        span: 63..64,
+        value: SigilComma,
+    },
+    Spanned {
+        span: 64..65,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 65..71,
+        value: Identifier(
+            "radius",
+        ),
+    },
+    Spanned {
+        span: 71..72,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 72..73,
+        value: OperatorAssignment,
+    },
+    Spanned {
+        span: 73..74,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 74..75,
+        value: LiteralInt(
+            "5",
+        ),
+    },
+    Spanned {
+        span: 75..77,
+        value: Identifier(
+            "mm",
+        ),
+    },
+    Spanned {
+        span: 77..78,
+        value: SigilCloseBracket,
+    },
+    Spanned {
+        span: 78..79,
+        value: SigilSemiColon,
+    },
+    Spanned {
+        span: 79..84,
+        value: Whitespace(
+            "\n    ",
+        ),
+    },
+    Spanned {
+        span: 84..85,
+        value: SigilCloseCurlyBracket,
+    },
+]
