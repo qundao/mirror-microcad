@@ -186,7 +186,7 @@ pub struct StringCharacter {
 pub struct StringExpression {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub expression: Box<Expression>,
+    pub expr: Box<Expression>,
     pub specification: Box<StringFormatSpecification>,
 }
 
@@ -265,7 +265,7 @@ pub struct ArrayListExpression {
 pub struct ArrayItem {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub expression: Expression,
+    pub expr: Expression,
 }
 
 /// A qualified name, containing one or more [`Identifier`]s separated by `::`

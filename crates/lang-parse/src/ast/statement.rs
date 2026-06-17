@@ -85,10 +85,9 @@ impl Statement {
             Statement::FileModule(_) => true,
             Statement::LocalAssignment(_) => true,
             Statement::Property(_) => true,
-            Statement::Expression(e) => !matches!(
-                &e.expression,
-                ast::Expression::Body(_) | ast::Expression::If(_)
-            ),
+            Statement::Expression(e) => {
+                !matches!(&e.expr, ast::Expression::Body(_) | ast::Expression::If(_))
+            }
         }
     }
 }
@@ -366,7 +365,7 @@ pub struct ExpressionStatement {
     pub span: Span,
     pub extras: ast::ItemExtras,
     pub attributes: Vec<Attribute>,
-    pub expression: ast::Expression,
+    pub expr: ast::Expression,
 }
 
 /// A list of statements, with optional trailing whitespace kept and an optional "tail" expression

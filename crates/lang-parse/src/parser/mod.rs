@@ -166,14 +166,12 @@ fn parser<'tokens>()
             .clone()
             .then(expression_parser.clone())
             .with_extras()
-            .map_with(
-                |((attributes, expression), extras), e| ast::ExpressionStatement {
-                    span: e.span(),
-                    extras,
-                    attributes,
-                    expression,
-                },
-            )
+            .map_with(|((attributes, expr), extras), e| ast::ExpressionStatement {
+                span: e.span(),
+                extras,
+                attributes,
+                expr,
+            })
             .map(Box::new)
             .or_not()
             .boxed();
@@ -467,14 +465,12 @@ fn parser<'tokens>()
             .clone()
             .then(expression_parser.clone())
             .with_extras()
-            .map_with(
-                |((attributes, expression), extras), e| ast::ExpressionStatement {
-                    span: e.span(), // FIXME: This should only return the span of attributes and expression
-                    extras,
-                    attributes,
-                    expression,
-                },
-            )
+            .map_with(|((attributes, expr), extras), e| ast::ExpressionStatement {
+                span: e.span(), // FIXME: This should only return the span of attributes and expression
+                extras,
+                attributes,
+                expr,
+            })
             .map(ast::Statement::Expression)
             .boxed();
 
@@ -496,7 +492,7 @@ fn parser<'tokens>()
                     span: e.span(), // FIXME: This should only return the span of attributes and expression
                     extras,
                     attributes,
-                    expression,
+                    expr: expression,
                 },
             )
             .map(ast::Statement::Expression)
@@ -1239,7 +1235,7 @@ fn parser<'tokens>()
                 |((expression, specification), extras), e| ast::StringExpression {
                     span: e.span(),
                     extras,
-                    expression: Box::new(expression),
+                    expr: Box::new(expression),
                     specification: Box::new(specification),
                 },
             )
@@ -1310,16 +1306,16 @@ fn parser<'tokens>()
                     )
                 },
             )
-            .map_with(|expression, e| ast::Expression::Bracketed(Box::new(expression), e.span()))
+            .map_with(|expr, e| ast::Expression::Bracketed(Box::new(expr), e.span()))
             .boxed();
 
         let array_item = expression_parser
             .clone()
             .with_extras()
-            .map_with(|(expression, extras), e| ast::ArrayItem {
+            .map_with(|(expr, extras), e| ast::ArrayItem {
                 span: e.span(),
                 extras,
-                expression,
+                expr,
             })
             .boxed();
 
