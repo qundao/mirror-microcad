@@ -134,7 +134,7 @@ impl Format for ast::FormatString {
 impl Format for ast::TupleItem {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, leading_extras_without_newline(&self.extras) =>
-            match &self.name {
+            match &self.id {
                 Some(name) => node!(f => name " = " self.expr),
                 None => node!(f => self.expr)
             }
