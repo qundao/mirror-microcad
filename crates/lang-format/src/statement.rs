@@ -49,7 +49,7 @@ impl Format for ast::WorkbenchDefinition {
         node!(f, self.extras =>
             self.doc
             self.attr
-            self.visibility self.kind ' ' self.id
+            self.vis self.kind ' ' self.id
             self.parameters ' '
             self.body
         )
@@ -61,7 +61,7 @@ impl Format for ast::InlineModule {
         node!(f, self.extras =>
             self.doc
             self.attr
-            self.visibility "mod " self.id ' '
+            self.vis "mod " self.id ' '
             self.body
         )
     }
@@ -72,7 +72,7 @@ impl Format for ast::FileModule {
         node!(f, self.extras =>
             self.doc
             self.attr
-            self.visibility "mod " self.id
+            self.vis "mod " self.id
         )
     }
 }
@@ -87,7 +87,7 @@ impl Format for ast::FunctionDefinition {
         node!(f, self.extras =>
             self.doc
             self.attr
-            self.visibility "fn " self.id self.parameters " " return_type
+            self.vis "fn " self.id self.parameters " " return_type
             self.body
         )
     }
@@ -115,7 +115,7 @@ impl Format for ast::UseStatement {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             self.attr
-            self.visibility "use " self.name
+            self.vis "use " self.name
             self.use_as.as_ref().map(|ident| node!(f => " as " ident))
         )
     }
@@ -126,7 +126,7 @@ impl Format for ast::ConstAssignment {
         node!(f, self.extras =>
             self.doc
             self.attr
-            self.visibility "const " self.id " = " self.expr
+            self.vis "const " self.id " = " self.expr
         )
     }
 }
