@@ -51,7 +51,7 @@ impl ir::Assignment {
         Ok(ir::Assignment {
             doc: ir::DocBlock::lower(&node.doc, context)?,
             visibility: node
-                .visibility
+                .vis
                 .as_ref()
                 .map(|v| ir::Visibility::lower(v, context))
                 .transpose()?

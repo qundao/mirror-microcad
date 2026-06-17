@@ -16,7 +16,7 @@ impl ir::ModuleDefinition {
             keyword_ref: context.src_ref(&node.keyword_span),
             doc: ir::DocBlock::lower(&node.doc, context)?,
             visibility: node
-                .visibility
+                .vis
                 .as_ref()
                 .map(|visibility| ir::Visibility::lower(visibility, context))
                 .transpose()?
@@ -36,7 +36,7 @@ impl ir::ModuleDefinition {
             keyword_ref: context.src_ref(&node.keyword_span),
             doc: ir::DocBlock::lower(&node.doc, context)?,
             visibility: node
-                .visibility
+                .vis
                 .as_ref()
                 .map(|visibility| ir::Visibility::lower(visibility, context))
                 .transpose()?

@@ -32,7 +32,7 @@ impl Lower for std::rc::Rc<ir::WorkbenchDefinition> {
             doc: ir::DocBlock::lower(&node.doc, context)?,
             attribute_list: ir::AttributeList::lower(&node.attr, context)?,
             visibility: node
-                .visibility
+                .vis
                 .as_ref()
                 .map(|v| ir::Visibility::lower(v, context))
                 .transpose()?

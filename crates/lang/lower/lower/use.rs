@@ -48,7 +48,7 @@ impl Lower for ir::UseStatement {
             }
         };
         let visibility = node
-            .visibility
+            .vis
             .as_ref()
             .map(|visibility| ir::Visibility::lower(visibility, context))
             .transpose()?;

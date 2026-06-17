@@ -14,7 +14,7 @@ impl Lower for ir::FunctionDefinition {
             keyword_ref: context.src_ref(&node.keyword_span),
             doc: ir::DocBlock::lower(&node.doc, context)?,
             visibility: node
-                .visibility
+                .vis
                 .as_ref()
                 .map(|vis| ir::Visibility::lower(vis, context))
                 .transpose()?
