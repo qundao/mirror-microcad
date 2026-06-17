@@ -458,7 +458,7 @@ fn parser<'tokens>()
 
     statement_parser.define({
         let visibility = select_ref! {
-            Token::KeywordPub => ast::Visibility::Public,
+            Token::KeywordPub => ast::def::Visibility::Public,
         }
         .labelled("visibility");
 
@@ -614,7 +614,7 @@ fn parser<'tokens>()
                     extras,
                     doc,
                     attr,
-                    vis: Some(ast::Visibility::Public),
+                    vis: Some(ast::def::Visibility::Public),
                     id,
                     expr: Box::new(expr),
                     ty,

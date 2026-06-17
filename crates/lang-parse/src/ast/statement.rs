@@ -219,15 +219,6 @@ pub struct DocBlock {
     pub lines: Vec<String>,
 }
 
-/// An optional visibility modifier
-///
-/// it can be part of constant, module, function or workbench definitions.
-#[derive(Debug, PartialEq)]
-pub enum Visibility {
-    /// `pub`
-    Public,
-}
-
 /// A statement containing of a bare expression
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]

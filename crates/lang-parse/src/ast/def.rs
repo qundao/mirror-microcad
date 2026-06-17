@@ -1,39 +1,32 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! These definitions in the AST will eventually become symbols
+//! Definition nodes in the AST that will eventually be resolved into Symbols.
+//!
+//! Each definition must have syntax elements in that order:
+//! * A span
+//! * Optional Item extras like comments
+//! * Optional Doc block
+//! * Attributes
+//! * An optional visibility
+//! * A keyword (with span)
+//! * An `id` (except Use definitions)
 
 use crate::ast::{
     Attribute, Body, DocBlock, Expression, Identifier, ItemExtras, ParameterList, Span, Type,
-    Visibility,
 };
 
-/// The possible type of workbenches
-#[derive(Debug, PartialEq, Copy, Clone)]
-pub enum WorkbenchKind {
-    /// `sketch`
-    Sketch,
-    /// `part`
-    Part,
-    /// `op`
-    Op,
+pub use microcad_lang_base::WorkbenchKind;
+
+/// An optional visibility modifier
+///
+/// it can be part of constant, module, function or workbench definitions.
+#[derive(Debug, PartialEq)]
+pub enum Visibility {
+    /// `pub`
+    Public,
 }
 
-impl std::fmt::Display for WorkbenchKind {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            match &self {
-                WorkbenchKind::Sketch => "sketch",
-                WorkbenchKind::Part => "part",
-                WorkbenchKind::Op => "op",
-            }
-        )
-    }
-}
-
-/// A definition of a workbench
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
 pub struct Workbench {
