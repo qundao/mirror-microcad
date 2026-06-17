@@ -34,7 +34,7 @@ Ok(
                                 lines: [],
                             },
                             attr: [],
-                            visibility: Some(
+                            vis: Some(
                                 Public,
                             ),
                             id: Identifier {
@@ -84,7 +84,7 @@ Ok(
                                                         lines: [],
                                                     },
                                                     attr: [],
-                                                    visibility: None,
+                                                    vis: None,
                                                     id: Identifier {
                                                         span: 17..20,
                                                         name: "bar",

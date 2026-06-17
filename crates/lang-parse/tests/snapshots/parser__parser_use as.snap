@@ -30,7 +30,7 @@ Ok(
                                     [],
                                 ),
                             },
-                            visibility: Some(
+                            vis: Some(
                                 Public,
                             ),
                             name: UseName {

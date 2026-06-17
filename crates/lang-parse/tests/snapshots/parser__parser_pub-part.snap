@@ -35,7 +35,7 @@ Ok(
                             },
                             kind: Part,
                             attr: [],
-                            visibility: Some(
+                            vis: Some(
                                 Public,
                             ),
                             id: Identifier {

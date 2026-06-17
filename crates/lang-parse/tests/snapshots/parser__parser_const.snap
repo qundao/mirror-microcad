@@ -34,7 +34,7 @@ Ok(
                                 lines: [],
                             },
                             attr: [],
-                            visibility: None,
+                            vis: None,
                             id: Identifier {
                                 span: 6..9,
                                 name: "FOO",

@@ -35,7 +35,7 @@ Ok(
                             },
                             kind: Sketch,
                             attr: [],
-                            visibility: None,
+                            vis: None,
                             id: Identifier {
                                 span: 7..12,
                                 name: "Wheel",

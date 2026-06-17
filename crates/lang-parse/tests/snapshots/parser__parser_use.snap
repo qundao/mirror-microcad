@@ -30,7 +30,7 @@ Ok(
                                     [],
                                 ),
                             },
-                            visibility: None,
+                            vis: None,
                             name: UseName {
                                 span: 4..7,
                                 extras: ItemExtras {

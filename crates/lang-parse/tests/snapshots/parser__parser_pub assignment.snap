@@ -34,7 +34,7 @@ Ok(
                                 lines: [],
                             },
                             attr: [],
-                            visibility: Some(
+                            vis: Some(
                                 Public,
                             ),
                             id: Identifier {

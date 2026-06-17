@@ -36,7 +36,7 @@ Ok(
                                 ],
                             },
                             attr: [],
-                            visibility: None,
+                            vis: None,
                             id: Identifier {
                                 span: 24..27,
                                 name: "foo",
