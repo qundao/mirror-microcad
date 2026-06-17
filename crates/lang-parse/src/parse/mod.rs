@@ -12,6 +12,7 @@ pub use parse_context::ParseContext;
 use crate::ast;
 use crate::lex::*;
 use crate::parse::{error::Rich, helpers::*};
+use crate::token::Token;
 use chumsky::{
     Parser, extra,
     input::{Input, MappedInput},

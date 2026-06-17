@@ -10,10 +10,15 @@
 
 /// Abstract syntax tree for µcad files
 pub mod ast;
+
+/// Tokens
+pub mod token;
+
+/// Contains the parser.
 mod parse;
 
-/// Source tokens for µcad files
-pub mod lex;
+/// Contains the lexer (aka tokenizer).
+mod lex;
 
 use microcad_lang_base::virtual_url;
 pub use parse::{ParseContext, ParseError, ParseErrors, parsers};
@@ -60,7 +65,9 @@ impl Parse for ast::Source {
     }
 }
 
+pub use lex::lex;
+
 /// API to parse directly from a string
 pub fn parse(source: &str) -> Result<ast::Program, ParseErrors> {
-    parse::parse(&lex::lex(source).collect::<Vec<_>>())
+    parse::parse(&lex(source).collect::<Vec<_>>())
 }
