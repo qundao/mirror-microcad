@@ -45,7 +45,7 @@ impl ir::Assignment {
     }
 
     fn from_ast_const(
-        node: &ast::ConstAssignment,
+        node: &ast::def::Constant,
         context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         Ok(ir::Assignment {
@@ -94,7 +94,7 @@ impl ir::AssignmentStatement {
     }
 
     fn from_ast_const(
-        node: &ast::ConstAssignment,
+        node: &ast::def::Constant,
         context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         Ok(Self {

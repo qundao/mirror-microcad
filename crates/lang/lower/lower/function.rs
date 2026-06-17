@@ -7,7 +7,7 @@ use microcad_lang_base::Identifier;
 use microcad_lang_parse::ast;
 
 impl Lower for ir::FunctionDefinition {
-    type AstNode = ast::FunctionDefinition;
+    type AstNode = ast::def::Function;
 
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(ir::FunctionDefinition {

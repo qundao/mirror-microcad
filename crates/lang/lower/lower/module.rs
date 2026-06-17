@@ -8,7 +8,7 @@ use microcad_lang_parse::ast;
 impl ir::ModuleDefinition {
     /// Get inline module
     pub fn from_ast_inline(
-        node: &ast::InlineModule,
+        node: &ast::def::InlineModule,
         context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         use crate::lower::Lower;
@@ -28,7 +28,7 @@ impl ir::ModuleDefinition {
 
     /// Get file module
     pub fn from_ast_file(
-        node: &ast::FileModule,
+        node: &ast::def::FileModule,
         context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         use crate::lower::Lower;
