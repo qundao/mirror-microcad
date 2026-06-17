@@ -39,7 +39,7 @@ impl Lower for std::rc::Rc<ir::WorkbenchDefinition> {
                 .unwrap_or_default(),
             kind: Refer::new(node.kind.into(), context.src_ref(&node.span)),
             id: ir::Identifier::lower(&node.name, context)?,
-            plan: ir::ParameterList::lower(&node.plan, context)?,
+            plan: ir::ParameterList::lower(&node.parameters, context)?,
             body: ir::Body::lower(&node.body, context)?,
         }))
     }

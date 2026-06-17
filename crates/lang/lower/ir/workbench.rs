@@ -48,7 +48,7 @@ pub struct WorkbenchDefinition {
     /// Workbench name.
     pub(crate) id: ir::Identifier,
     /// Workbench's building plan.
-    pub plan: ir::ParameterList,
+    pub parameters: ir::ParameterList,
     /// Workbench body
     pub body: ir::Body,
 }
@@ -56,7 +56,7 @@ pub struct WorkbenchDefinition {
 impl WorkbenchDefinition {
     pub(crate) fn possible_params(&self) -> Vec<String> {
         use crate::lower::Initialized;
-        std::iter::once(&self.plan)
+        std::iter::once(&self.parameters)
             .chain(self.inits().map(|init| &init.parameters))
             .map(|params| format!("{}( {})", self.id, params))
             .collect()
@@ -83,7 +83,7 @@ impl std::fmt::Display for WorkbenchDefinition {
             visibility = self.visibility,
             kind = self.kind,
             id = self.id,
-            plan = self.plan,
+            plan = self.parameters,
             body = self.body
         )
     }
