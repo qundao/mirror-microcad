@@ -10,7 +10,7 @@ pub use error::{ParseError, ParseErrorKind, ParseErrors, RichError};
 pub use parse_context::ParseContext;
 
 use crate::ast;
-use crate::parser::{error::Rich, helpers::*};
+use crate::parse::{error::Rich, helpers::*};
 use crate::tokens::*;
 use chumsky::{
     Parser, extra,
@@ -61,15 +61,15 @@ pub trait ParserDefinition: Sized {
 #[macro_export]
 macro_rules! impl_parser {
     ($target_struct:ty => $body:expr) => {
-        impl $crate::parser::parsers::ParserDefinition for $target_struct {
+        impl $crate::parse::parsers::ParserDefinition for $target_struct {
             fn parser<'tokens, S, Ctx>() -> impl ::chumsky::Parser<
                 'tokens,
-                $crate::parser::parsers::PInput<'tokens>,
+                $crate::parse::parsers::PInput<'tokens>,
                 Self,
-                $crate::parser::parsers::PError<'tokens, S, Ctx>,
+                $crate::parse::parsers::PError<'tokens, S, Ctx>,
             >
             where
-                S: $crate::parser::parsers::PInspector<'tokens>,
+                S: $crate::parse::parsers::PInspector<'tokens>,
                 Ctx: 'tokens,
             {
                 $body
@@ -1567,7 +1567,7 @@ impl crate::Parse for ast::Literal {
                 use chumsky::Parser;
                 let tokens = crate::tokens::lex(source.value()).collect::<Vec<_>>();
                 literal()
-                    .parse(crate::parser::input(&tokens))
+                    .parse(crate::parse::input(&tokens))
                     .into_result()
                     .map_err(|errors| errors.into())
             }

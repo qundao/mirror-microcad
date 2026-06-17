@@ -10,13 +10,13 @@
 
 /// Abstract syntax tree for µcad files
 pub mod ast;
-mod parser;
+mod parse;
 
 /// Source tokens for µcad files
 pub mod tokens;
 
 use microcad_lang_base::virtual_url;
-pub use parser::{ParseContext, ParseError, ParseErrors, parsers};
+pub use parse::{ParseContext, ParseError, ParseErrors, parsers};
 
 /// Parse trait.
 pub trait Parse: Sized {
@@ -62,5 +62,5 @@ impl Parse for ast::Source {
 
 /// API to parse directly from a string
 pub fn parse(source: &str) -> Result<ast::Program, ParseErrors> {
-    parser::parse(&tokens::lex(source).collect::<Vec<_>>())
+    parse::parse(&tokens::lex(source).collect::<Vec<_>>())
 }
