@@ -150,18 +150,12 @@ impl Lower for ir::Expression {
             ast::Expression::BinaryOperation(binop) => ir::Expression::BinaryOp(ir::BinaryOp {
                 lhs: Box::new(ir::Expression::lower(&binop.lhs, context)?),
                 rhs: Box::new(ir::Expression::lower(&binop.rhs, context)?),
-                op: Refer::new(
-                    binop.operation.operation.as_str().into(),
-                    context.src_ref(&binop.operation.span),
-                ),
+                op: Refer::new(binop.op.as_str().into(), context.src_ref(&binop.op.span)),
                 src_ref: context.src_ref(&binop.span),
             }),
             ast::Expression::UnaryOperation(unop) => ir::Expression::UnaryOp(ir::UnaryOp {
                 rhs: Box::new(ir::Expression::lower(&unop.rhs, context)?),
-                op: Refer::new(
-                    unop.operation.operation.as_str().into(),
-                    context.src_ref(&unop.operation.span),
-                ),
+                op: Refer::new(unop.op.as_str().into(), context.src_ref(&unop.op.span)),
                 src_ref: context.src_ref(&unop.span),
             }),
             ast::Expression::Body(b) => ir::Expression::Body(ir::Body::lower(b, context)?),
