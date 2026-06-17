@@ -7,17 +7,10 @@ use logos::{Lexer, Logos, internal::LexerInternal};
 use microcad_lang_base::{Span, Spanned};
 use std::borrow::Cow;
 
-#[derive(Debug, PartialEq, Clone)]
-#[allow(missing_docs)]
-pub enum LogosToken<'a> {
-    Normal(NormalToken<'a>),
-    Error(LexerError),
-}
-
 #[derive(Logos, Debug, PartialEq, Clone)]
 #[allow(missing_docs)]
 #[logos(error(LexerError))]
-pub enum NormalToken<'a> {
+pub enum LogosToken<'a> {
     #[regex(r"[ \t\n\f]", callback = whitespace_callback)]
     Whitespace(Cow<'a, str>),
 
@@ -167,6 +160,7 @@ pub enum NormalToken<'a> {
     OperatorNot,
     #[token("=")]
     OperatorAssignment,
+    Error(LexerError),
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -178,7 +172,7 @@ pub enum QuoteVariant<'a> {
     Unit,
 }
 
-fn multi_line_comment_callback<'a>(lex: &mut Lexer<'a, NormalToken<'a>>) -> Option<Cow<'a, str>> {
+fn multi_line_comment_callback<'a>(lex: &mut Lexer<'a, LogosToken<'a>>) -> Option<Cow<'a, str>> {
     let text = &lex.source()[lex.span().start..];
     let end = text.find("*/")?;
     let comment = text[2..end].trim_start_matches('*').trim();
@@ -186,7 +180,7 @@ fn multi_line_comment_callback<'a>(lex: &mut Lexer<'a, NormalToken<'a>>) -> Opti
     Some(comment.into())
 }
 
-fn whitespace_callback<'a>(lex: &mut Lexer<'a, NormalToken<'a>>) -> Option<Cow<'a, str>> {
+fn whitespace_callback<'a>(lex: &mut Lexer<'a, LogosToken<'a>>) -> Option<Cow<'a, str>> {
     let text = &lex.source()[lex.span().start..];
     let end = text
         .find(|c: char| !c.is_ascii_whitespace())
@@ -196,12 +190,12 @@ fn whitespace_callback<'a>(lex: &mut Lexer<'a, NormalToken<'a>>) -> Option<Cow<'
     Some(whitespace.into())
 }
 
-fn single_line_comment_callback<'a>(lex: &mut Lexer<'a, NormalToken<'a>>) -> Option<Cow<'a, str>> {
+fn single_line_comment_callback<'a>(lex: &mut Lexer<'a, LogosToken<'a>>) -> Option<Cow<'a, str>> {
     Some(lex.slice().trim().into())
 }
 
 fn string_token_callback<'a>(
-    lex: &mut Lexer<'a, NormalToken<'a>>,
+    lex: &mut Lexer<'a, LogosToken<'a>>,
 ) -> Result<QuoteVariant<'a>, LexerError> {
     // if we have a quote that follow then end of a number (digit or '.') or array, the token is an inch unit
     // this is a massive hack, but the best I can think of to distinguish '"
@@ -265,7 +259,7 @@ pub enum StringToken<'a> {
     #[token("{", format_token_callback)]
     FormatStart(
         (
-            Vec<Spanned<NormalToken<'a>>>,
+            Vec<Spanned<LogosToken<'a>>>,
             Vec<Spanned<StringFormatToken<'a>>>,
         ),
     ),
@@ -295,24 +289,24 @@ fn format_token_callback<'a>(
     lex: &mut Lexer<'a, StringToken<'a>>,
 ) -> Result<
     (
-        Vec<Spanned<NormalToken<'a>>>,
+        Vec<Spanned<LogosToken<'a>>>,
         Vec<Spanned<StringFormatToken<'a>>>,
     ),
     LexerError,
 > {
-    let mut expression_lexer = lex.clone().morph::<NormalToken>();
+    let mut expression_lexer = lex.clone().morph::<LogosToken>();
     let mut expression_tokens = Vec::new();
     let mut format_tokens = Vec::new();
 
     let mut with_format = false;
     while let Some(token) = expression_lexer.next() {
         match token {
-            Ok(NormalToken::SigilCloseCurlyBracket) => break,
-            Ok(NormalToken::SigilColon) => {
+            Ok(LogosToken::SigilCloseCurlyBracket) => break,
+            Ok(LogosToken::SigilColon) => {
                 with_format = true;
                 break;
             }
-            Ok(NormalToken::Quote(QuoteVariant::String { contents, .. })) => {
+            Ok(LogosToken::Quote(QuoteVariant::String { contents, .. })) => {
                 let start = lex.span().start;
                 let end = contents
                     .first()

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::lex::logos::{
-    LogosToken, NormalToken, QuoteVariant, StringFormatToken, StringToken, get_literal_string,
+    LogosToken, QuoteVariant, StringFormatToken, StringToken, get_literal_string,
 };
 use crate::token::Token;
 use either::Either;
@@ -13,112 +13,82 @@ use std::iter::once;
 
 /// map the lexed tokens from logos into the output tokens, allowing for some post-processing to help the ast building
 pub(crate) fn from_logos<'source>(
-    tokens: SpannedIter<'source, NormalToken<'source>>,
+    tokens: SpannedIter<'source, LogosToken<'source>>,
 ) -> impl Iterator<Item = Spanned<Token<'source>>> {
     tokens
         .map(|(token, span)| match token {
-            Ok(token) => Spanned {
-                span,
-                value: LogosToken::Normal(token),
-            },
-            Err(error) => Spanned {
-                span: error.span().unwrap_or(span),
-                value: LogosToken::Error(error),
-            },
+            Ok(token) => Spanned::new(span, token),
+            Err(error) => Spanned::new(error.span().unwrap_or(span), LogosToken::Error(error)),
         })
         .flat_map(map_token)
 }
 
 fn map_token(token: Spanned<LogosToken>) -> impl Iterator<Item = Spanned<Token>> {
     match token.value {
-        LogosToken::Normal(t) => Either::Left(map_normal_token(Spanned::new(token.span, t))),
-        LogosToken::Error(e) => Either::Right(once(Spanned {
-            span: token.span,
-            value: Token::Error(e),
-        })),
-    }
-}
-
-fn map_normal_token(token: Spanned<NormalToken>) -> impl Iterator<Item = Spanned<Token>> {
-    match token.value {
-        NormalToken::Whitespace(c) => {
+        LogosToken::Whitespace(c) => {
             Either::Left(once(Spanned::new(token.span, Token::Whitespace(c))))
         }
-        NormalToken::SingleLineComment(c) => {
+        LogosToken::SingleLineComment(c) => {
             Either::Left(once(Spanned::new(token.span, Token::SingleLineComment(c))))
         }
-        NormalToken::MultiLineComment(c) => {
+        LogosToken::MultiLineComment(c) => {
             Either::Left(once(Spanned::new(token.span, Token::MultiLineComment(c))))
         }
-        NormalToken::DocComment(c) => {
+        LogosToken::DocComment(c) => {
             Either::Left(once(Spanned::new(token.span, Token::DocComment(c))))
         }
-        NormalToken::InnerDocComment(c) => {
+        LogosToken::InnerDocComment(c) => {
             Either::Left(once(Spanned::new(token.span, Token::InnerDocComment(c))))
         }
-        NormalToken::KeywordMod => Either::Left(once(Spanned::new(token.span, Token::KeywordMod))),
-        NormalToken::KeywordPart => {
-            Either::Left(once(Spanned::new(token.span, Token::KeywordPart)))
-        }
-        NormalToken::KeywordSketch => {
+        LogosToken::KeywordMod => Either::Left(once(Spanned::new(token.span, Token::KeywordMod))),
+        LogosToken::KeywordPart => Either::Left(once(Spanned::new(token.span, Token::KeywordPart))),
+        LogosToken::KeywordSketch => {
             Either::Left(once(Spanned::new(token.span, Token::KeywordSketch)))
         }
-        NormalToken::KeywordOp => Either::Left(once(Spanned::new(token.span, Token::KeywordOp))),
-        NormalToken::KeywordFn => Either::Left(once(Spanned::new(token.span, Token::KeywordFn))),
-        NormalToken::KeywordIf => Either::Left(once(Spanned::new(token.span, Token::KeywordIf))),
-        NormalToken::KeywordElse => {
-            Either::Left(once(Spanned::new(token.span, Token::KeywordElse)))
-        }
-        NormalToken::KeywordUse => Either::Left(once(Spanned::new(token.span, Token::KeywordUse))),
-        NormalToken::KeywordAs => Either::Left(once(Spanned::new(token.span, Token::KeywordAs))),
-        NormalToken::KeywordReturn => {
+        LogosToken::KeywordOp => Either::Left(once(Spanned::new(token.span, Token::KeywordOp))),
+        LogosToken::KeywordFn => Either::Left(once(Spanned::new(token.span, Token::KeywordFn))),
+        LogosToken::KeywordIf => Either::Left(once(Spanned::new(token.span, Token::KeywordIf))),
+        LogosToken::KeywordElse => Either::Left(once(Spanned::new(token.span, Token::KeywordElse))),
+        LogosToken::KeywordUse => Either::Left(once(Spanned::new(token.span, Token::KeywordUse))),
+        LogosToken::KeywordAs => Either::Left(once(Spanned::new(token.span, Token::KeywordAs))),
+        LogosToken::KeywordReturn => {
             Either::Left(once(Spanned::new(token.span, Token::KeywordReturn)))
         }
-        NormalToken::KeywordPub => Either::Left(once(Spanned::new(token.span, Token::KeywordPub))),
-        NormalToken::KeywordConst => {
+        LogosToken::KeywordPub => Either::Left(once(Spanned::new(token.span, Token::KeywordPub))),
+        LogosToken::KeywordConst => {
             Either::Left(once(Spanned::new(token.span, Token::KeywordConst)))
         }
-        NormalToken::KeywordProp => {
-            Either::Left(once(Spanned::new(token.span, Token::KeywordProp)))
-        }
-        NormalToken::KeywordInit => {
-            Either::Left(once(Spanned::new(token.span, Token::KeywordInit)))
-        }
-        NormalToken::KeywordPlugin => {
+        LogosToken::KeywordProp => Either::Left(once(Spanned::new(token.span, Token::KeywordProp))),
+        LogosToken::KeywordInit => Either::Left(once(Spanned::new(token.span, Token::KeywordInit))),
+        LogosToken::KeywordPlugin => {
             Either::Left(once(Spanned::new(token.span, Token::KeywordPlugin)))
         }
-        NormalToken::KeywordAssembly => {
+        LogosToken::KeywordAssembly => {
             Either::Left(once(Spanned::new(token.span, Token::KeywordAssembly)))
         }
-        NormalToken::KeywordMaterial => {
+        LogosToken::KeywordMaterial => {
             Either::Left(once(Spanned::new(token.span, Token::KeywordMaterial)))
         }
-        NormalToken::KeywordUnit => {
-            Either::Left(once(Spanned::new(token.span, Token::KeywordUnit)))
-        }
-        NormalToken::KeywordEnum => {
-            Either::Left(once(Spanned::new(token.span, Token::KeywordEnum)))
-        }
-        NormalToken::KeywordStruct => {
+        LogosToken::KeywordUnit => Either::Left(once(Spanned::new(token.span, Token::KeywordUnit))),
+        LogosToken::KeywordEnum => Either::Left(once(Spanned::new(token.span, Token::KeywordEnum))),
+        LogosToken::KeywordStruct => {
             Either::Left(once(Spanned::new(token.span, Token::KeywordStruct)))
         }
-        NormalToken::KeywordMatch => {
+        LogosToken::KeywordMatch => {
             Either::Left(once(Spanned::new(token.span, Token::KeywordMatch)))
         }
-        NormalToken::KeywordType => {
-            Either::Left(once(Spanned::new(token.span, Token::KeywordType)))
-        }
-        NormalToken::KeywordExtern => {
+        LogosToken::KeywordType => Either::Left(once(Spanned::new(token.span, Token::KeywordType))),
+        LogosToken::KeywordExtern => {
             Either::Left(once(Spanned::new(token.span, Token::KeywordExtern)))
         }
-        NormalToken::Identifier(i) => {
+        LogosToken::Identifier(i) => {
             Either::Left(once(Spanned::new(token.span, Token::Identifier(i))))
         }
-        NormalToken::Unit(u) => Either::Left(once(Spanned::new(token.span, Token::Unit(u)))),
-        NormalToken::LiteralInt(l) => {
+        LogosToken::Unit(u) => Either::Left(once(Spanned::new(token.span, Token::Unit(u)))),
+        LogosToken::LiteralInt(l) => {
             Either::Left(once(Spanned::new(token.span, Token::LiteralInt(l))))
         }
-        NormalToken::LiteralIntWithRange(l) => Either::Right(Box::new(
+        LogosToken::LiteralIntWithRange(l) => Either::Right(Box::new(
             once(Spanned::new(
                 token.span.start..(token.span.end - 2),
                 Token::LiteralInt(match l {
@@ -135,13 +105,13 @@ fn map_normal_token(token: Spanned<NormalToken>) -> impl Iterator<Item = Spanned
             ))),
         )
             as Box<dyn Iterator<Item = Spanned<Token>>>),
-        NormalToken::LiteralFloat(l) => {
+        LogosToken::LiteralFloat(l) => {
             Either::Left(once(Spanned::new(token.span, Token::LiteralFloat(l))))
         }
-        NormalToken::Quote(QuoteVariant::Unit) => {
+        LogosToken::Quote(QuoteVariant::Unit) => {
             Either::Left(once(Spanned::new(token.span, Token::SigilQuote)))
         }
-        NormalToken::Quote(QuoteVariant::String { span, contents }) => {
+        LogosToken::Quote(QuoteVariant::String { span, contents }) => {
             Either::Right(match get_literal_string(&contents) {
                 Some(literal) => Box::new(once(Spanned::new(
                     span,
@@ -160,104 +130,100 @@ fn map_normal_token(token: Spanned<NormalToken>) -> impl Iterator<Item = Spanned
                 ) as Box<dyn Iterator<Item = Spanned<Token>>>,
             })
         }
-        NormalToken::LiteralBoolTrue => {
+        LogosToken::LiteralBoolTrue => {
             Either::Left(once(Spanned::new(token.span, Token::LiteralBool(true))))
         }
-        NormalToken::LiteralBoolFalse => {
+        LogosToken::LiteralBoolFalse => {
             Either::Left(once(Spanned::new(token.span, Token::LiteralBool(false))))
         }
-        NormalToken::SigilColon => Either::Left(once(Spanned::new(token.span, Token::SigilColon))),
-        NormalToken::SigilSemiColon => {
+        LogosToken::SigilColon => Either::Left(once(Spanned::new(token.span, Token::SigilColon))),
+        LogosToken::SigilSemiColon => {
             Either::Left(once(Spanned::new(token.span, Token::SigilSemiColon)))
         }
-        NormalToken::SigilDoubleColon => {
+        LogosToken::SigilDoubleColon => {
             Either::Left(once(Spanned::new(token.span, Token::SigilDoubleColon)))
         }
-        NormalToken::SigilOpenBracket => {
+        LogosToken::SigilOpenBracket => {
             Either::Left(once(Spanned::new(token.span, Token::SigilOpenBracket)))
         }
-        NormalToken::SigilCloseBracket => {
+        LogosToken::SigilCloseBracket => {
             Either::Left(once(Spanned::new(token.span, Token::SigilCloseBracket)))
         }
-        NormalToken::SigilOpenSquareBracket => Either::Left(once(Spanned::new(
+        LogosToken::SigilOpenSquareBracket => Either::Left(once(Spanned::new(
             token.span,
             Token::SigilOpenSquareBracket,
         ))),
-        NormalToken::SigilCloseSquareBracket => Either::Left(once(Spanned::new(
+        LogosToken::SigilCloseSquareBracket => Either::Left(once(Spanned::new(
             token.span,
             Token::SigilCloseSquareBracket,
         ))),
-        NormalToken::SigilOpenCurlyBracket => {
+        LogosToken::SigilOpenCurlyBracket => {
             Either::Left(once(Spanned::new(token.span, Token::SigilOpenCurlyBracket)))
         }
-        NormalToken::SigilCloseCurlyBracket => Either::Left(once(Spanned::new(
+        LogosToken::SigilCloseCurlyBracket => Either::Left(once(Spanned::new(
             token.span,
             Token::SigilCloseCurlyBracket,
         ))),
-        NormalToken::SigilHash => Either::Left(once(Spanned::new(token.span, Token::SigilHash))),
-        NormalToken::SigilDot => Either::Left(once(Spanned::new(token.span, Token::SigilDot))),
-        NormalToken::SigilComma => Either::Left(once(Spanned::new(token.span, Token::SigilComma))),
-        NormalToken::SigilDoubleDot => {
+        LogosToken::SigilHash => Either::Left(once(Spanned::new(token.span, Token::SigilHash))),
+        LogosToken::SigilDot => Either::Left(once(Spanned::new(token.span, Token::SigilDot))),
+        LogosToken::SigilComma => Either::Left(once(Spanned::new(token.span, Token::SigilComma))),
+        LogosToken::SigilDoubleDot => {
             Either::Left(once(Spanned::new(token.span, Token::SigilDoubleDot)))
         }
-        NormalToken::SigilAt => Either::Left(once(Spanned::new(token.span, Token::SigilAt))),
-        NormalToken::SigilSingleArrow => {
+        LogosToken::SigilAt => Either::Left(once(Spanned::new(token.span, Token::SigilAt))),
+        LogosToken::SigilSingleArrow => {
             Either::Left(once(Spanned::new(token.span, Token::SigilSingleArrow)))
         }
-        NormalToken::OperatorAdd => {
-            Either::Left(once(Spanned::new(token.span, Token::OperatorAdd)))
-        }
-        NormalToken::OperatorSubtract => {
+        LogosToken::OperatorAdd => Either::Left(once(Spanned::new(token.span, Token::OperatorAdd))),
+        LogosToken::OperatorSubtract => {
             Either::Left(once(Spanned::new(token.span, Token::OperatorSubtract)))
         }
-        NormalToken::OperatorMultiply => {
+        LogosToken::OperatorMultiply => {
             Either::Left(once(Spanned::new(token.span, Token::OperatorMultiply)))
         }
-        NormalToken::OperatorDivide => {
+        LogosToken::OperatorDivide => {
             Either::Left(once(Spanned::new(token.span, Token::OperatorDivide)))
         }
-        NormalToken::OperatorUnion => {
+        LogosToken::OperatorUnion => {
             Either::Left(once(Spanned::new(token.span, Token::OperatorUnion)))
         }
-        NormalToken::OperatorIntersect => {
+        LogosToken::OperatorIntersect => {
             Either::Left(once(Spanned::new(token.span, Token::OperatorIntersect)))
         }
-        NormalToken::OperatorPowerXor => {
+        LogosToken::OperatorPowerXor => {
             Either::Left(once(Spanned::new(token.span, Token::OperatorPowerXor)))
         }
-        NormalToken::OperatorGreaterThan => {
+        LogosToken::OperatorGreaterThan => {
             Either::Left(once(Spanned::new(token.span, Token::OperatorGreaterThan)))
         }
-        NormalToken::OperatorLessThan => {
+        LogosToken::OperatorLessThan => {
             Either::Left(once(Spanned::new(token.span, Token::OperatorLessThan)))
         }
-        NormalToken::OperatorGreaterEqual => {
+        LogosToken::OperatorGreaterEqual => {
             Either::Left(once(Spanned::new(token.span, Token::OperatorGreaterEqual)))
         }
-        NormalToken::OperatorLessEqual => {
+        LogosToken::OperatorLessEqual => {
             Either::Left(once(Spanned::new(token.span, Token::OperatorLessEqual)))
         }
-        NormalToken::OperatorNear => {
+        LogosToken::OperatorNear => {
             Either::Left(once(Spanned::new(token.span, Token::OperatorNear)))
         }
-        NormalToken::OperatorEqual => {
+        LogosToken::OperatorEqual => {
             Either::Left(once(Spanned::new(token.span, Token::OperatorEqual)))
         }
-        NormalToken::OperatorNotEqual => {
+        LogosToken::OperatorNotEqual => {
             Either::Left(once(Spanned::new(token.span, Token::OperatorNotEqual)))
         }
-        NormalToken::OperatorAnd => {
-            Either::Left(once(Spanned::new(token.span, Token::OperatorAnd)))
-        }
-        NormalToken::OperatorOr => Either::Left(once(Spanned::new(token.span, Token::OperatorOr))),
-        NormalToken::OperatorXor => {
-            Either::Left(once(Spanned::new(token.span, Token::OperatorXor)))
-        }
-        NormalToken::OperatorNot => {
-            Either::Left(once(Spanned::new(token.span, Token::OperatorNot)))
-        }
-        NormalToken::OperatorAssignment => {
+        LogosToken::OperatorAnd => Either::Left(once(Spanned::new(token.span, Token::OperatorAnd))),
+        LogosToken::OperatorOr => Either::Left(once(Spanned::new(token.span, Token::OperatorOr))),
+        LogosToken::OperatorXor => Either::Left(once(Spanned::new(token.span, Token::OperatorXor))),
+        LogosToken::OperatorNot => Either::Left(once(Spanned::new(token.span, Token::OperatorNot))),
+        LogosToken::OperatorAssignment => {
             Either::Left(once(Spanned::new(token.span, Token::OperatorAssignment)))
+        }
+        LogosToken::Error(e) => {
+            Either::Right(Box::new(once(Spanned::new(token.span, Token::Error(e))))
+                as Box<dyn Iterator<Item = Spanned<Token>>>)
         }
     }
 }
@@ -284,7 +250,7 @@ fn map_string_token(token: Spanned<StringToken>) -> impl Iterator<Item = Spanned
                 token.span.start..(token.span.start + 1),
                 Token::StringFormatOpen,
             ))
-            .chain(expr.into_iter().flat_map(map_normal_token))
+            .chain(expr.into_iter().flat_map(map_token))
             .chain(format.into_iter().flat_map(map_string_format_token))
             .chain(once(Spanned::new(
                 (token.span.end - 1)..token.span.end,

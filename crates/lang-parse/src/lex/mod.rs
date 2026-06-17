@@ -1,10 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{
-    lex::{from_logos::from_logos, logos::NormalToken},
-    token::Token,
-};
+use crate::{lex::from_logos::from_logos, token::Token};
 
 use ::logos::Lexer;
 use microcad_lang_base::{Span, Spanned};
@@ -52,5 +49,5 @@ impl LexerError {
 
 /// Tokenize a µcad source string into an iterator of tokens.
 pub fn lex<'a>(input: &'a str) -> impl Iterator<Item = Spanned<Token<'a>>> {
-    from_logos(Lexer::<NormalToken>::new(input).spanned())
+    from_logos(Lexer::<logos::LogosToken>::new(input).spanned())
 }
