@@ -215,7 +215,7 @@ pub struct TupleItem {
     pub span: Span,
     pub extras: ast::ItemExtras,
     pub name: Option<ast::Identifier>,
-    pub value: Expression,
+    pub expr: Expression,
 }
 
 impl ast::Dummy for TupleItem {
@@ -224,7 +224,7 @@ impl ast::Dummy for TupleItem {
             span: span.clone(),
             extras: ast::ItemExtras::default(),
             name: None,
-            value: Expression::Error(span),
+            expr: Expression::Error(span),
         }
     }
 }
@@ -314,7 +314,7 @@ pub struct Call {
 #[allow(missing_docs)]
 pub struct ElementAccess {
     pub span: Span,
-    pub value: Box<Expression>,
+    pub expr: Box<Expression>,
     pub element_chain: Vec<Element>,
 }
 
@@ -397,8 +397,8 @@ impl Argument {
     /// The value of the argument
     pub fn value(&self) -> &Expression {
         match self {
-            Argument::Unnamed(arg) => &arg.value,
-            Argument::Named(arg) => &arg.value,
+            Argument::Unnamed(arg) => &arg.expr,
+            Argument::Named(arg) => &arg.expr,
         }
     }
 
@@ -417,7 +417,7 @@ impl Argument {
 pub struct UnnamedArgument {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub value: Expression,
+    pub expr: Expression,
 }
 
 /// An argument with a specified name
@@ -427,5 +427,5 @@ pub struct NamedArgument {
     pub span: Span,
     pub extras: ast::ItemExtras,
     pub id: ast::Identifier,
-    pub value: Expression,
+    pub expr: Expression,
 }

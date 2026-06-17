@@ -293,7 +293,7 @@ pub struct LocalAssignment {
     pub attributes: Vec<Attribute>,
     pub id: ast::Identifier,
     pub ty: Option<ast::Type>,
-    pub value: Box<ast::Expression>,
+    pub expr: Box<ast::Expression>,
 }
 
 /// A const assignment: `const A = 42` / `pub A = 32`
@@ -308,7 +308,7 @@ pub struct ConstAssignment {
     pub visibility: Option<Visibility>,
     pub id: ast::Identifier,
     pub ty: Option<ast::Type>,
-    pub value: Box<ast::Expression>,
+    pub expr: Box<ast::Expression>,
 }
 
 /// A property assignment: `prop a = 42`

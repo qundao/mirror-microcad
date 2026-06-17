@@ -388,11 +388,11 @@ fn parser<'tokens>()
         .or_not()
         .then(expression_parser.clone())
         .with_extras()
-        .map_with(|((name, value), extras), e| ast::TupleItem {
+        .map_with(|((name, expr), extras), e| ast::TupleItem {
             span: e.span(),
             extras,
             name,
-            value,
+            expr,
         })
         .then_maybe_whitespace()
         .separated_by(just(Token::SigilComma).then_maybe_whitespace())
@@ -416,12 +416,12 @@ fn parser<'tokens>()
                                 span: item.span,
                                 extras: item.extras,
                                 id: name,
-                                value: item.value,
+                                expr: item.expr,
                             }),
                             None => ast::Argument::Unnamed(ast::UnnamedArgument {
                                 span: item.span,
                                 extras: item.extras,
-                                value: item.value,
+                                expr: item.expr,
                             }),
                         })
                         .collect::<Vec<_>>(),
@@ -529,7 +529,7 @@ fn parser<'tokens>()
                     extras,
                     attributes,
                     id: name,
-                    value: Box::new(value),
+                    expr: Box::new(value),
                     ty,
                 },
             )
@@ -579,7 +579,7 @@ fn parser<'tokens>()
                         attributes,
                         visibility,
                         id: name,
-                        value: Box::new(value),
+                        expr: Box::new(value),
                         ty,
                     }
                 },
@@ -626,7 +626,7 @@ fn parser<'tokens>()
                         attributes,
                         visibility: Some(ast::Visibility::Public),
                         id,
-                        value: Box::new(value),
+                        expr: Box::new(value),
                         ty,
                     }
                 },
@@ -1521,7 +1521,7 @@ fn parser<'tokens>()
             .foldl_with(access_item.repeated(), |value, element_chain, e| {
                 ast::Expression::ElementAccess(ast::ElementAccess {
                     span: e.span(),
-                    value: value.into(),
+                    expr: value.into(),
                     element_chain,
                 })
             })
