@@ -18,7 +18,7 @@ Ok(
             statements: [
                 (
                     Init(
-                        InitDefinition {
+                        Init {
                             span: 0..28,
                             keyword_span: 20..24,
                             extras: ItemExtras {

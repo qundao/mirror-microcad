@@ -18,7 +18,7 @@ Ok(
             statements: [
                 (
                     Use(
-                        UseStatement {
+                        Use {
                             span: 0..15,
                             attr: [],
                             keyword_span: 0..3,

@@ -18,7 +18,7 @@ Ok(
             statements: [
                 (
                     Const(
-                        ConstAssignment {
+                        Constant {
                             span: 0..11,
                             keyword_span: 0..3,
                             extras: ItemExtras {

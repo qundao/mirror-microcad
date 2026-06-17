@@ -62,7 +62,7 @@ Ok(
                                     statements: [
                                         (
                                             Function(
-                                                FunctionDefinition {
+                                                Function {
                                                     span: 14..25,
                                                     keyword_span: 14..16,
                                                     extras: ItemExtras {

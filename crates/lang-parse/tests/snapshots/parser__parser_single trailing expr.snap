@@ -18,7 +18,7 @@ Ok(
             statements: [
                 (
                     Workbench(
-                        WorkbenchDefinition {
+                        Workbench {
                             span: 0..68,
                             keyword_span: 4..8,
                             extras: ItemExtras {

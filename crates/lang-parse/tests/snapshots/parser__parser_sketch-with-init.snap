@@ -18,7 +18,7 @@ Ok(
             statements: [
                 (
                     Workbench(
-                        WorkbenchDefinition {
+                        Workbench {
                             span: 0..130,
                             keyword_span: 0..6,
                             extras: ItemExtras {
@@ -103,7 +103,7 @@ Ok(
                                     statements: [
                                         (
                                             Init(
-                                                InitDefinition {
+                                                Init {
                                                     span: 35..101,
                                                     keyword_span: 35..39,
                                                     extras: ItemExtras {
