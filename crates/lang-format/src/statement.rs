@@ -48,7 +48,7 @@ impl Format for ast::WorkbenchDefinition {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             self.doc
-            self.attributes
+            self.attr
             self.visibility self.kind ' ' self.id
             self.parameters ' '
             self.body
@@ -60,7 +60,7 @@ impl Format for ast::InlineModule {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             self.doc
-            self.attributes
+            self.attr
             self.visibility "mod " self.id ' '
             self.body
         )
@@ -71,7 +71,7 @@ impl Format for ast::FileModule {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             self.doc
-            self.attributes
+            self.attr
             self.visibility "mod " self.id
         )
     }
@@ -86,7 +86,7 @@ impl Format for ast::FunctionDefinition {
 
         node!(f, self.extras =>
             self.doc
-            self.attributes
+            self.attr
             self.visibility "fn " self.id self.parameters " " return_type
             self.body
         )
@@ -114,7 +114,7 @@ impl Format for ast::UseName {
 impl Format for ast::UseStatement {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
-            self.attributes
+            self.attr
             self.visibility "use " self.name
             self.use_as.as_ref().map(|ident| node!(f => " as " ident))
         )
@@ -125,7 +125,7 @@ impl Format for ast::ConstAssignment {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             self.doc
-            self.attributes
+            self.attr
             self.visibility "const " self.id " = " self.expr
         )
     }
@@ -135,7 +135,7 @@ impl Format for ast::InitDefinition {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             self.doc
-            self.attributes
+            self.attr
             "init" self.parameters Node::Softline self.body
         )
     }
@@ -165,7 +165,7 @@ impl Format for ast::LocalAssignment {
         );
 
         node!(f, self.extras =>
-            self.attributes
+            self.attr
             assignment Node::AdditionalIndent(assignment.estimate_width()) self.expr
         )
     }
@@ -175,7 +175,7 @@ impl Format for ast::PropertyAssignment {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             self.doc
-            self.attributes
+            self.attr
             "prop" Node::Softline self.id
             self.ty.as_ref().map(|ty| node!(f => ':' Node::Softline ty))
             " = " self.value
@@ -186,7 +186,7 @@ impl Format for ast::PropertyAssignment {
 impl Format for ast::ExpressionStatement {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
-            self.attributes
+            self.attr
             self.expr
         )
     }
