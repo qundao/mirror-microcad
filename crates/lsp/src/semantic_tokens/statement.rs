@@ -158,7 +158,7 @@ impl_tokens!(ast::InnerDocComment => |self_, ctx| {
 impl_tokens!(ast::ExpressionStatement => |self_, ctx | {
     self_.extras.semantic_tokens(ctx);
     self_.attributes.iter().for_each(|attr| attr.semantic_tokens(ctx));
-    self_.expression.semantic_tokens(ctx);
+    self_.expr.semantic_tokens(ctx);
 });
 
 impl_tokens!(ast::Statement => |self_, ctx| {

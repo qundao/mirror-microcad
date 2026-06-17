@@ -39,7 +39,7 @@ impl_tokens!(ast::TupleExpression => |self_, ctx| {
         .for_each(|item| item.semantic_tokens(ctx));
 });
 
-impl_tokens!(ast::ArrayItem => extras, expression);
+impl_tokens!(ast::ArrayItem => extras, expr);
 
 impl_tokens!(ast::ArrayRangeExpression => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
@@ -57,7 +57,7 @@ impl_tokens!(ast::ArrayListExpression => |self_, ctx| {
 });
 
 impl_tokens!(ast::StringCharacter => TokenType::STRING);
-impl_tokens!(ast::StringExpression => extras, expression);
+impl_tokens!(ast::StringExpression => extras, expr);
 
 impl_tokens!(ast::StringPart => [Char, Content, Expression]);
 
