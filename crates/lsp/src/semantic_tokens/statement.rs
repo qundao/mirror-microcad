@@ -139,7 +139,7 @@ impl_tokens!(ast::ConstAssignment => |self_, ctx| {
     ctx.push_token(&self_.keyword_span, TokenType::KEYWORD, &[]);
     ctx.push_token(&self_.id.span, TokenType::PROPERTY, &[]);
     if let Some(ty) = self_.ty.as_ref() { ty.semantic_tokens(ctx) }
-    self_.value.semantic_tokens(ctx);
+    self_.expr.semantic_tokens(ctx);
 });
 
 impl_tokens!(ast::PropertyAssignment => |self_, ctx| {
