@@ -13,7 +13,7 @@ impl ir::Assignment {
         Ok(ir::Assignment {
             doc: ir::DocBlock::default(),
             visibility: ir::Visibility::Private,
-            id: ir::Identifier::lower(&node.name, context)?,
+            id: ir::Identifier::lower(&node.id, context)?,
             qualifier: ir::Qualifier::Value,
             specified_type: node
                 .ty
@@ -32,7 +32,7 @@ impl ir::Assignment {
         Ok(ir::Assignment {
             doc: ir::DocBlock::lower(&node.doc, context)?,
             visibility: ir::Visibility::Private,
-            id: ir::Identifier::lower(&node.name, context)?,
+            id: ir::Identifier::lower(&node.id, context)?,
             qualifier: ir::Qualifier::Prop,
             specified_type: node
                 .ty
@@ -56,7 +56,7 @@ impl ir::Assignment {
                 .map(|v| ir::Visibility::lower(v, context))
                 .transpose()?
                 .unwrap_or_default(),
-            id: ir::Identifier::lower(&node.name, context)?,
+            id: ir::Identifier::lower(&node.id, context)?,
             qualifier: ir::Qualifier::Const,
             specified_type: node
                 .ty

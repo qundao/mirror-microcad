@@ -21,7 +21,7 @@ impl ir::ModuleDefinition {
                 .map(|visibility| ir::Visibility::lower(visibility, context))
                 .transpose()?
                 .unwrap_or_default(),
-            id: ir::Identifier::lower(&node.name, context)?,
+            id: ir::Identifier::lower(&node.id, context)?,
             body: Some(ir::Body::lower(&node.body, context)?),
         })
     }
@@ -41,7 +41,7 @@ impl ir::ModuleDefinition {
                 .map(|visibility| ir::Visibility::lower(visibility, context))
                 .transpose()?
                 .unwrap_or_default(),
-            id: ir::Identifier::lower(&node.name, context)?,
+            id: ir::Identifier::lower(&node.id, context)?,
             body: None,
         })
     }

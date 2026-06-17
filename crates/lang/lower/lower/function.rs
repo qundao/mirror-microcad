@@ -19,7 +19,7 @@ impl Lower for ir::FunctionDefinition {
                 .map(|vis| ir::Visibility::lower(vis, context))
                 .transpose()?
                 .unwrap_or_default(),
-            id: Identifier::lower(&node.name, context)?,
+            id: Identifier::lower(&node.id, context)?,
             body: ir::Body::lower(&node.body, context)?,
             signature: ir::FunctionSignature {
                 src_ref: context.src_ref(&node.span),
