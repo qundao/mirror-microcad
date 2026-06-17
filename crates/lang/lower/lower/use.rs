@@ -62,11 +62,11 @@ impl Lower for ir::UseStatement {
 }
 
 impl Lower for ir::Visibility {
-    type AstNode = ast::Visibility;
+    type AstNode = ast::def::Visibility;
 
     fn lower(node: &Self::AstNode, _context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(match node {
-            ast::Visibility::Public => Self::Public,
+            ast::def::Visibility::Public => Self::Public,
         })
     }
 }
