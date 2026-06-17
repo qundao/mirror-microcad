@@ -1,10 +1,10 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::lex::{LexerError, SpannedToken};
+use crate::lex::LexerError;
 
 use logos::{Lexer, Logos, internal::LexerInternal};
-use microcad_lang_base::Span;
+use microcad_lang_base::{Span, Spanned};
 use std::borrow::Cow;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -173,7 +173,7 @@ pub enum NormalToken<'a> {
 pub enum QuoteVariant<'a> {
     String {
         span: Span,
-        contents: Vec<SpannedToken<StringToken<'a>>>,
+        contents: Vec<Spanned<StringToken<'a>>>,
     },
     Unit,
 }
@@ -238,9 +238,9 @@ fn string_token_callback<'a>(
                     e => e,
                 });
             }
-            Ok(tok) => tokens.push(SpannedToken {
+            Ok(value) => tokens.push(Spanned {
                 span: string_lexer.span(),
-                token: tok,
+                value,
             }),
         }
     }
@@ -265,8 +265,8 @@ pub enum StringToken<'a> {
     #[token("{", format_token_callback)]
     FormatStart(
         (
-            Vec<SpannedToken<NormalToken<'a>>>,
-            Vec<SpannedToken<StringFormatToken<'a>>>,
+            Vec<Spanned<NormalToken<'a>>>,
+            Vec<Spanned<StringFormatToken<'a>>>,
         ),
     ),
     #[token(r#"""#)]
@@ -274,10 +274,10 @@ pub enum StringToken<'a> {
 }
 
 /// Get the literal value of string tokens, if the string is a literal
-pub fn get_literal_string(string_tokens: &[SpannedToken<StringToken>]) -> Option<String> {
+pub fn get_literal_string(string_tokens: &[Spanned<StringToken>]) -> Option<String> {
     let mut result = String::new();
     for token in string_tokens {
-        match &token.token {
+        match &token.value {
             StringToken::Content(s) => result.push_str(s.as_ref()),
             StringToken::Escaped(c) => result.push(*c),
             StringToken::BackSlash => result.push('\\'),
@@ -295,8 +295,8 @@ fn format_token_callback<'a>(
     lex: &mut Lexer<'a, StringToken<'a>>,
 ) -> Result<
     (
-        Vec<SpannedToken<NormalToken<'a>>>,
-        Vec<SpannedToken<StringFormatToken<'a>>>,
+        Vec<Spanned<NormalToken<'a>>>,
+        Vec<Spanned<StringFormatToken<'a>>>,
     ),
     LexerError,
 > {
@@ -328,9 +328,9 @@ fn format_token_callback<'a>(
                 return Err(LexerError::UnclosedStringFormat(start..end));
             }
             Err(e) => return Err(e),
-            Ok(token) => expression_tokens.push(SpannedToken {
+            Ok(value) => expression_tokens.push(Spanned {
                 span: expression_lexer.span(),
-                token,
+                value,
             }),
         }
     }
@@ -352,9 +352,9 @@ fn format_token_callback<'a>(
                     lex.end(end);
                     return Err(LexerError::UnclosedStringFormat(start..end));
                 }
-                Ok(token) => format_tokens.push(SpannedToken {
+                Ok(value) => format_tokens.push(Spanned {
                     span: format_lexer.span(),
-                    token,
+                    value,
                 }),
             }
         }

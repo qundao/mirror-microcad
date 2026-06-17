@@ -22,19 +22,19 @@ use chumsky::{
 
 use std::str::FromStr;
 
-use microcad_lang_base::Span;
+use microcad_lang_base::{Span, Spanned};
 
 /// Extra error.
 pub type Extra<'tokens> = extra::Err<RichError<'tokens>>;
 
 pub type InputMap<'input, 'token> =
-    fn(&'input SpannedToken<Token<'token>>) -> (&'input Token<'token>, &'input Span);
+    fn(&'input Spanned<Token<'token>>) -> (&'input Token<'token>, &'input Span);
 
 pub type ParserInput<'input, 'token> = MappedInput<
     'input,
     Token<'token>,
     Span,
-    &'input [SpannedToken<Token<'token>>],
+    &'input [Spanned<Token<'token>>],
     InputMap<'input, 'token>,
 >;
 
@@ -80,12 +80,12 @@ macro_rules! impl_parser {
 
 /// Get parser input from tokens
 pub fn input<'input, 'tokens>(
-    input: &'input [SpannedToken<Token<'tokens>>],
+    input: &'input [Spanned<Token<'tokens>>],
 ) -> ParserInput<'input, 'tokens> {
     fn map_token_input<'a, 'token>(
-        spanned: &'a SpannedToken<Token<'token>>,
+        spanned: &'a Spanned<Token<'token>>,
     ) -> (&'a Token<'token>, &'a Span) {
-        (&spanned.token, &spanned.span)
+        (&spanned.value, &spanned.span)
     }
 
     let end = input.last().map(|t| t.span.end).unwrap_or_default();
@@ -94,7 +94,7 @@ pub fn input<'input, 'tokens>(
 
 /// Build an abstract syntax tree from a list of tokens
 pub fn parse<'tokens>(
-    tokens: &'tokens [SpannedToken<Token<'tokens>>],
+    tokens: &'tokens [Spanned<Token<'tokens>>],
 ) -> Result<ast::Program, ParseErrors> {
     parser()
         .parse(input(tokens))

@@ -4,7 +4,7 @@
 use crate::lex::{from_logos::from_logos, logos::NormalToken};
 
 use ::logos::Lexer;
-use microcad_lang_base::Span;
+use microcad_lang_base::{Span, Spanned};
 use std::{
     borrow::Cow,
     fmt::{Display, Formatter},
@@ -13,38 +13,6 @@ use thiserror::Error;
 
 mod from_logos;
 mod logos;
-
-/// A source token with attached span
-#[derive(Debug, PartialEq, Clone)]
-pub struct SpannedToken<T> {
-    /// the span of the token
-    pub span: Span,
-    /// the token
-    pub token: T,
-}
-
-impl SpannedToken<Token<'_>> {
-    /// Create an owned version of the token
-    pub fn into_owned(self) -> SpannedToken<Token<'static>> {
-        SpannedToken {
-            span: self.span,
-            token: self.token.into_owned(),
-        }
-    }
-}
-
-impl<T> SpannedToken<T> {
-    /// Create a [`SpannedToken`] from [`Span`] and token
-    pub fn new(span: Span, token: T) -> Self {
-        SpannedToken { span, token }
-    }
-}
-
-impl<T: PartialEq> PartialEq<T> for SpannedToken<T> {
-    fn eq(&self, other: &T) -> bool {
-        self.token.eq(other)
-    }
-}
 
 /// Possible errors encountered while tokenizing
 #[derive(Debug, Default, Clone, PartialEq, Error)]
@@ -84,7 +52,7 @@ impl LexerError {
 }
 
 /// Tokenize a µcad source string into an iterator of tokens.
-pub fn lex<'a>(input: &'a str) -> impl Iterator<Item = SpannedToken<Token<'a>>> {
+pub fn lex<'a>(input: &'a str) -> impl Iterator<Item = Spanned<Token<'a>>> {
     from_logos(Lexer::<NormalToken>::new(input).spanned())
 }
 
