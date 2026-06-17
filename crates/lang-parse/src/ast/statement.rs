@@ -127,7 +127,7 @@ pub struct WorkbenchDefinition {
     pub doc: DocBlock,
     pub kind: WorkbenchKind,
     pub attr: Vec<Attribute>,
-    pub visibility: Option<Visibility>,
+    pub vis: Option<Visibility>,
     pub id: ast::Identifier,
     pub parameters: ParameterList,
     pub body: ast::Body,
@@ -142,7 +142,7 @@ pub struct InlineModule {
     pub extras: ast::ItemExtras,
     pub doc: DocBlock,
     pub attr: Vec<Attribute>,
-    pub visibility: Option<Visibility>,
+    pub vis: Option<Visibility>,
     pub id: ast::Identifier,
     pub body: ast::Body,
 }
@@ -156,7 +156,7 @@ pub struct FileModule {
     pub extras: ast::ItemExtras,
     pub doc: DocBlock,
     pub attr: Vec<Attribute>,
-    pub visibility: Option<Visibility>,
+    pub vis: Option<Visibility>,
     pub id: ast::Identifier,
 }
 
@@ -169,7 +169,7 @@ pub struct FunctionDefinition {
     pub extras: ast::ItemExtras,
     pub doc: DocBlock,
     pub attr: Vec<Attribute>,
-    pub visibility: Option<Visibility>,
+    pub vis: Option<Visibility>,
     pub id: ast::Identifier,
     pub parameters: ParameterList,
     pub return_type: Option<ast::Type>,
@@ -197,7 +197,7 @@ pub struct UseStatement {
     pub attr: Vec<Attribute>,
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
-    pub visibility: Option<Visibility>,
+    pub vis: Option<Visibility>,
     pub name: UseName,
     pub use_as: Option<ast::Identifier>,
 }
@@ -304,7 +304,7 @@ pub struct ConstAssignment {
     pub extras: ast::ItemExtras,
     pub doc: DocBlock,
     pub attr: Vec<Attribute>,
-    pub visibility: Option<Visibility>,
+    pub vis: Option<Visibility>,
     pub id: ast::Identifier,
     pub ty: Option<ast::Type>,
     pub expr: Box<ast::Expression>,
