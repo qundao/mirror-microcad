@@ -76,7 +76,7 @@ impl_tokens!(ast::WorkbenchDefinition => |self_, ctx| {
 
 impl_tokens!(ast::Return => |self_, ctx| {
     ctx.push_token(&self_.keyword_span, TokenType::KEYWORD, &[]);
-    if let Some(expr) = self_.value.as_ref() { expr.semantic_tokens(ctx) }
+    if let Some(expr) = self_.expr.as_ref() { expr.semantic_tokens(ctx) }
 });
 
 impl_tokens!(ast::InlineModule => |self_, ctx| {
