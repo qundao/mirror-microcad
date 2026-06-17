@@ -25,11 +25,35 @@ pub use src_referrer::*;
 
 use crate::HashId;
 
+use derive_more::Deref;
 use miette::SourceSpan;
 use serde::Serialize;
 
 /// Span for tokens or AST nodes, a range of byte offsets from the start of the source
 pub type Span = std::ops::Range<usize>;
+
+/// Something that has a span attached.
+#[derive(Debug, PartialEq, Deref, Clone)]
+pub struct Spanned<T> {
+    /// the span of the token
+    pub span: Span,
+    /// the token
+    #[deref]
+    pub value: T,
+}
+
+impl<T> Spanned<T> {
+    /// Create a [`SpannedToken`] from [`Span`] and token
+    pub fn new(span: Span, value: T) -> Self {
+        Self { span, value }
+    }
+}
+
+impl<T: PartialEq> PartialEq<T> for Spanned<T> {
+    fn eq(&self, other: &T) -> bool {
+        self.value.eq(other)
+    }
+}
 
 /// Reference into a source file.
 ///
@@ -52,12 +76,19 @@ pub struct SrcRef {
 }
 
 pub trait SrcRefIndex {
-    fn span_to_src_ref(&self, span: &Span) -> SrcRef;
+    fn span_to_src_ref(&self, span: Span) -> SrcRef;
+
+    fn spanned_to_refer<T>(&self, spanned: Spanned<T>) -> Refer<T> {
+        Refer {
+            value: spanned.value,
+            src_ref: self.span_to_src_ref(spanned.span),
+        }
+    }
 }
 
 impl SrcRef {
-    pub fn from_span(span: &Span, src_ref_index: &impl SrcRefIndex) -> Self {
-        src_ref_index.span_to_src_ref(&span)
+    pub fn from_span(span: Span, src_ref_index: impl SrcRefIndex) -> Self {
+        src_ref_index.span_to_src_ref(span)
     }
 
     /// Create new `SrcRef`
