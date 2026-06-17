@@ -82,7 +82,7 @@ Ok(
                                     ],
                                 },
                             ],
-                            expression: Literal(
+                            expr: Literal(
                                 Literal {
                                     span: 25..26,
                                     extras: ItemExtras {

@@ -28,7 +28,7 @@ Ok(
                         ),
                     },
                     attributes: [],
-                    expression: String(
+                    expr: String(
                         FormatString {
                             span: 0..36,
                             extras: ItemExtras {
@@ -57,7 +57,7 @@ Ok(
                                                 [],
                                             ),
                                         },
-                                        expression: BinaryOperation(
+                                        expr: BinaryOperation(
                                             BinaryOperation {
                                                 span: 9..23,
                                                 lhs: QualifiedName(

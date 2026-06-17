@@ -160,7 +160,7 @@ Ok(
                                                 ),
                                             },
                                             attributes: [],
-                                            expression: BinaryOperation(
+                                            expr: BinaryOperation(
                                                 BinaryOperation {
                                                     span: 28..33,
                                                     lhs: QualifiedName(

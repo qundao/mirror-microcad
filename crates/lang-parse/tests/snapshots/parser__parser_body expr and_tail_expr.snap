@@ -29,7 +29,7 @@ Ok(
                                 ),
                             },
                             attributes: [],
-                            expression: Body(
+                            expr: Body(
                                 Body {
                                     span: 0..2,
                                     statements: StatementList {
@@ -66,7 +66,7 @@ Ok(
                                 ),
                             },
                             attributes: [],
-                            expression: ElementAccess(
+                            expr: ElementAccess(
                                 ElementAccess {
                                     span: 2..11,
                                     expr: QualifiedName(

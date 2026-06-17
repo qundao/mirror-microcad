@@ -293,7 +293,7 @@ Ok(
                                                         ),
                                                     },
                                                     attributes: [],
-                                                    expression: Call(
+                                                    expr: Call(
                                                         Call {
                                                             span: 101..127,
                                                             extras: ItemExtras {

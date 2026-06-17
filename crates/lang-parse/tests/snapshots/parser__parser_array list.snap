@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -28,7 +28,7 @@ Ok(
                         ),
                     },
                     attributes: [],
-                    expression: ArrayList(
+                    expr: ArrayList(
                         ArrayListExpression {
                             span: 0..9,
                             extras: ItemExtras {
@@ -50,7 +50,7 @@ Ok(
                                             [],
                                         ),
                                     },
-                                    expression: Literal(
+                                    expr: Literal(
                                         Literal {
                                             span: 1..2,
                                             extras: ItemExtras {
@@ -81,7 +81,7 @@ Ok(
                                             [],
                                         ),
                                     },
-                                    expression: Literal(
+                                    expr: Literal(
                                         Literal {
                                             span: 3..4,
                                             extras: ItemExtras {
@@ -112,7 +112,7 @@ Ok(
                                             [],
                                         ),
                                     },
-                                    expression: Literal(
+                                    expr: Literal(
                                         Literal {
                                             span: 5..6,
                                             extras: ItemExtras {
@@ -143,7 +143,7 @@ Ok(
                                             [],
                                         ),
                                     },
-                                    expression: Literal(
+                                    expr: Literal(
                                         Literal {
                                             span: 7..8,
                                             extras: ItemExtras {

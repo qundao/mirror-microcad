@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -28,7 +28,7 @@ Ok(
                         ),
                     },
                     attributes: [],
-                    expression: BinaryOperation(
+                    expr: BinaryOperation(
                         BinaryOperation {
                             span: 0..17,
                             lhs: ArrayList(
@@ -53,7 +53,7 @@ Ok(
                                                     [],
                                                 ),
                                             },
-                                            expression: Literal(
+                                            expr: Literal(
                                                 Literal {
                                                     span: 1..2,
                                                     extras: ItemExtras {
@@ -84,7 +84,7 @@ Ok(
                                                     [],
                                                 ),
                                             },
-                                            expression: Literal(
+                                            expr: Literal(
                                                 Literal {
                                                     span: 3..4,
                                                     extras: ItemExtras {
@@ -140,7 +140,7 @@ Ok(
                                                     [],
                                                 ),
                                             },
-                                            expression: Literal(
+                                            expr: Literal(
                                                 Literal {
                                                     span: 11..12,
                                                     extras: ItemExtras {
@@ -171,7 +171,7 @@ Ok(
                                                     [],
                                                 ),
                                             },
-                                            expression: Literal(
+                                            expr: Literal(
                                                 Literal {
                                                     span: 13..14,
                                                     extras: ItemExtras {

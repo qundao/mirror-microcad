@@ -29,7 +29,7 @@ Ok(
                                 ),
                             },
                             attributes: [],
-                            expression: If(
+                            expr: If(
                                 If {
                                     span: 0..35,
                                     if_span: 0..2,
@@ -132,7 +132,7 @@ Ok(
                                                         ),
                                                     },
                                                     attributes: [],
-                                                    expression: Literal(
+                                                    expr: Literal(
                                                         Literal {
                                                             span: 11..13,
                                                             extras: ItemExtras {
@@ -285,7 +285,7 @@ Ok(
                                                                 ),
                                                             },
                                                             attributes: [],
-                                                            expression: Literal(
+                                                            expr: Literal(
                                                                 Literal {
                                                                     span: 32..34,
                                                                     extras: ItemExtras {

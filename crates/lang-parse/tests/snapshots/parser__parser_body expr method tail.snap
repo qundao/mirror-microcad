@@ -28,7 +28,7 @@ Ok(
                         ),
                     },
                     attributes: [],
-                    expression: ElementAccess(
+                    expr: ElementAccess(
                         ElementAccess {
                             span: 0..8,
                             expr: Body(

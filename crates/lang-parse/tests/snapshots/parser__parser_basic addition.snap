@@ -28,7 +28,7 @@ Ok(
                         ),
                     },
                     attributes: [],
-                    expression: BinaryOperation(
+                    expr: BinaryOperation(
                         BinaryOperation {
                             span: 0..5,
                             lhs: Literal(

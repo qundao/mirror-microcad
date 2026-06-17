@@ -146,7 +146,7 @@ Ok(
                                                     ),
                                                 },
                                                 attributes: [],
-                                                expression: BinaryOperation(
+                                                expr: BinaryOperation(
                                                     BinaryOperation {
                                                         span: 16..21,
                                                         lhs: QualifiedName(

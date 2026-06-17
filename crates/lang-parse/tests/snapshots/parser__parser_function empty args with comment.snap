@@ -86,7 +86,7 @@ Ok(
                                                 ),
                                             },
                                             attributes: [],
-                                            expression: Literal(
+                                            expr: Literal(
                                                 Literal {
                                                     span: 20..21,
                                                     extras: ItemExtras {
