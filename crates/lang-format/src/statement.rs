@@ -50,7 +50,7 @@ impl Format for ast::WorkbenchDefinition {
             self.doc
             self.attributes
             self.visibility self.kind ' ' self.name
-            self.plan ' '
+            self.parameters ' '
             self.body
         )
     }
