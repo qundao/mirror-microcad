@@ -28,8 +28,8 @@
    ·                   ╰── unexpected mod
  7 │   1=; // error inside an if statement with broken params
    ╰────
-  × error: 7:4: Expected unit, something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=',
-  │ 'or', 'and' or semicolon
+  × error: 7:4: Expected unit, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and' or
+  │ semicolon
    ╭─[../books/tests/src/parser_recovery.md:7:4]
  6 │ fn bar (a: 1, b: mod) { // error, invalid params
  7 │   1=; // error inside an if statement with broken params
