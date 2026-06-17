@@ -227,7 +227,7 @@ pub struct Return {
     pub span: Span,
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
-    pub value: Option<ast::Expression>,
+    pub expr: Option<ast::Expression>,
 }
 
 /// A parameter list of a workbench definition or function definition

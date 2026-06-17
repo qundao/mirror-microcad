@@ -980,12 +980,12 @@ fn parser<'tokens>()
             .then_maybe_whitespace()
             .then(expression_parser.clone().or_not())
             .with_extras()
-            .map_with(|((keyword_span, value), extras), e| {
+            .map_with(|((keyword_span, expr), extras), e| {
                 ast::Statement::Return(ast::Return {
                     span: e.span(),
                     keyword_span,
                     extras,
-                    value,
+                    expr,
                 })
             })
             .boxed();
