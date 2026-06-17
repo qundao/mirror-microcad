@@ -49,7 +49,7 @@ impl_tokens!(ast::ParameterList => |self_, ctx| {
     self_.parameters.iter().for_each(|param| param.semantic_tokens(ctx));
 });
 
-impl_tokens!(ast::InitDefinition => |self_, ctx| {
+impl_tokens!(ast::Init => |self_, ctx| {
         self_.extras.semantic_tokens(ctx);
         self_.doc.semantic_tokens(ctx);
         self_.attr
@@ -63,7 +63,7 @@ impl_tokens!(ast::InitDefinition => |self_, ctx| {
 impl_tokens!(ast::Body => statements);
 //impl_tokens!(ast::Visibility => TokenType::KEYWORD);
 
-impl_tokens!(ast::WorkbenchDefinition => |self_, ctx| {
+impl_tokens!(ast::def::Workbench => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
     self_.doc.semantic_tokens(ctx);
     self_.attr.iter().for_each(|attr| attr.semantic_tokens(ctx));
@@ -79,7 +79,7 @@ impl_tokens!(ast::Return => |self_, ctx| {
     if let Some(expr) = self_.expr.as_ref() { expr.semantic_tokens(ctx) }
 });
 
-impl_tokens!(ast::InlineModule => |self_, ctx| {
+impl_tokens!(ast::def::InlineModule => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
     self_.doc.semantic_tokens(ctx);
     self_.attr.iter().for_each(|attr| attr.semantic_tokens(ctx));
@@ -89,7 +89,7 @@ impl_tokens!(ast::InlineModule => |self_, ctx| {
     self_.body.semantic_tokens(ctx);
 });
 
-impl_tokens!(ast::FileModule => |self_, ctx| {
+impl_tokens!(ast::def::FileModule => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
     self_.doc.semantic_tokens(ctx);
     self_.attr.iter().for_each(|attr| attr.semantic_tokens(ctx));
@@ -98,7 +98,7 @@ impl_tokens!(ast::FileModule => |self_, ctx| {
     ctx.push_token(&self_.id.span, TokenType::NAMESPACE, &[]);
 });
 
-impl_tokens!(ast::FunctionDefinition => |self_, ctx| {
+impl_tokens!(ast::def::Function => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
     self_.doc.semantic_tokens(ctx);
     self_.attr.iter().for_each(|attr| attr.semantic_tokens(ctx));
@@ -109,20 +109,20 @@ impl_tokens!(ast::FunctionDefinition => |self_, ctx| {
     self_.body.semantic_tokens(ctx);
 });
 
-impl_tokens!(ast::UseStatementPart => |self_, ctx| {
+impl_tokens!(ast::def::UseStatementPart => |self_, ctx| {
     match &self_ {
-        ast::UseStatementPart::Identifier(id) => ctx.push_token(&id.span, TokenType::NAMESPACE, &[]),
-        ast::UseStatementPart::Glob(span) => ctx.push_token(span, TokenType::OPERATOR, &[]),
+        ast::def::UseStatementPart::Identifier(id) => ctx.push_token(&id.span, TokenType::NAMESPACE, &[]),
+        ast::def::UseStatementPart::Glob(span) => ctx.push_token(span, TokenType::OPERATOR, &[]),
         _ => {}
     }
 });
 
-impl_tokens!(ast::UseName => |self_, ctx| {
+impl_tokens!(ast::def::UseName => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
     self_.parts.iter().for_each(|part| part.semantic_tokens(ctx));
 });
 
-impl_tokens!(ast::UseStatement => |self_, ctx| {
+impl_tokens!(ast::def::Use => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
     self_.attr.iter().for_each(|attr| attr.semantic_tokens(ctx));
     // TODO: self_.visibility.as_ref().map(|vis| vis.semantic_tokens(ctx));
@@ -131,7 +131,7 @@ impl_tokens!(ast::UseStatement => |self_, ctx| {
     if let Some(as_) = self_.use_as.as_ref() { ctx.push_token(&as_.span, TokenType::NAMESPACE, &[]) }
 });
 
-impl_tokens!(ast::ConstAssignment => |self_, ctx| {
+impl_tokens!(ast::def::Constant => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
     self_.doc.semantic_tokens(ctx);
     self_.attr.iter().for_each(|attr| attr.semantic_tokens(ctx));
@@ -163,20 +163,20 @@ impl_tokens!(ast::ExpressionStatement => |self_, ctx | {
 
 impl_tokens!(ast::Statement => |self_, ctx| {
     match &self_ {
-        ast::Statement::Workbench(workbench_definition) => workbench_definition.semantic_tokens(ctx),
-        ast::Statement::InlineModule(inline_module) => inline_module.semantic_tokens(ctx),
-        ast::Statement::FileModule(file_module) => file_module.semantic_tokens(ctx),
-        ast::Statement::Function(function_definition) => function_definition.semantic_tokens(ctx),
-        ast::Statement::Use(use_statement) => use_statement.semantic_tokens(ctx),
-        ast::Statement::Const(const_assignment) => const_assignment.semantic_tokens(ctx),
-        ast::Statement::Init(init_definition) => init_definition.semantic_tokens(ctx),
-        ast::Statement::Return(ret) => ret.semantic_tokens(ctx),
-        ast::Statement::InnerAttribute(attribute) => attribute.semantic_tokens(ctx),
-        ast::Statement::InnerDocComment(inner_doc_comment) => inner_doc_comment.semantic_tokens(ctx),
-        ast::Statement::LocalAssignment(local_assignment) => local_assignment.semantic_tokens(ctx),
-        ast::Statement::Property(property_assignment) => property_assignment.semantic_tokens(ctx),
-        ast::Statement::Expression(expression_statement) => expression_statement.semantic_tokens(ctx),
-        ast::Statement::Error(_) => {}
+        Self::Workbench(workbench_definition) => workbench_definition.semantic_tokens(ctx),
+        Self::InlineModule(inline_module) => inline_module.semantic_tokens(ctx),
+        Self::FileModule(file_module) => file_module.semantic_tokens(ctx),
+        Self::Function(function_definition) => function_definition.semantic_tokens(ctx),
+        Self::Use(use_statement) => use_statement.semantic_tokens(ctx),
+        Self::Const(const_assignment) => const_assignment.semantic_tokens(ctx),
+        Self::Init(init_definition) => init_definition.semantic_tokens(ctx),
+        Self::Return(ret) => ret.semantic_tokens(ctx),
+        Self::InnerAttribute(attribute) => attribute.semantic_tokens(ctx),
+        Self::InnerDocComment(inner_doc_comment) => inner_doc_comment.semantic_tokens(ctx),
+        Self::LocalAssignment(local_assignment) => local_assignment.semantic_tokens(ctx),
+        Self::Property(property_assignment) => property_assignment.semantic_tokens(ctx),
+        Self::Expression(expression_statement) => expression_statement.semantic_tokens(ctx),
+        Self::Error(_) => {}
     }
 });
 
