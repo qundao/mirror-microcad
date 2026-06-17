@@ -1,23 +1,16 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_lang_base::Spanned;
+
 use crate::ast;
 use crate::ast::Span;
 use std::num::ParseIntError;
 
-/// An operator for binary operators, together with a span
-#[derive(Debug, PartialEq)]
-pub struct BinaryOperator {
-    /// The source span for the operator
-    pub span: Span,
-    /// The type of the operator
-    pub operation: BinaryOperatorType,
-}
-
 /// The type of the operator for binary operations
 #[derive(Debug, PartialEq, Clone)]
 #[allow(missing_docs)]
-pub enum BinaryOperatorType {
+pub enum BinaryOperator {
     Add,
     Subtract,
     Multiply,
@@ -37,7 +30,7 @@ pub enum BinaryOperatorType {
     Xor,
 }
 
-impl BinaryOperatorType {
+impl BinaryOperator {
     /// Get the symbolic representation for the operator
     pub fn as_str(&self) -> &'static str {
         match self {
@@ -62,31 +55,22 @@ impl BinaryOperatorType {
     }
 }
 
-/// An operator for unary operators, together with a span
-#[derive(Debug, PartialEq)]
-pub struct UnaryOperator {
-    /// The source span for the unary operator
-    pub span: Span,
-    /// The type of the unary operator
-    pub operation: UnaryOperatorType,
-}
-
 /// The type of the operator for unary operations
 #[derive(Debug, PartialEq, Clone)]
 #[allow(missing_docs)]
-pub enum UnaryOperatorType {
+pub enum UnaryOperator {
     Minus,
     Plus,
     Not,
 }
 
-impl UnaryOperatorType {
+impl UnaryOperator {
     /// Get the symbolic representation for the operator
     pub fn as_str(&self) -> &'static str {
         match self {
-            UnaryOperatorType::Minus => "-",
-            UnaryOperatorType::Plus => "+",
-            UnaryOperatorType::Not => "!",
+            Self::Minus => "-",
+            Self::Plus => "+",
+            Self::Not => "!",
         }
     }
 }
@@ -283,7 +267,7 @@ pub struct QualifiedName {
 pub struct BinaryOperation {
     pub span: Span,
     pub lhs: Box<Expression>,
-    pub operation: BinaryOperator,
+    pub op: Spanned<BinaryOperator>,
     pub rhs: Box<Expression>,
 }
 
@@ -293,7 +277,7 @@ pub struct BinaryOperation {
 pub struct UnaryOperation {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub operation: UnaryOperator,
+    pub op: Spanned<UnaryOperator>,
     pub rhs: Box<Expression>,
 }
 

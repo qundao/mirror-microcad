@@ -340,9 +340,9 @@ fn parser<'tokens>()
     });
 
     let unary_operator_parser = select_ref! {
-        Token::OperatorSubtract = e => ast::UnaryOperator { span: e.span(), operation: ast::UnaryOperatorType::Minus },
-        Token::OperatorAdd = e => ast::UnaryOperator { span: e.span(), operation: ast::UnaryOperatorType::Plus },
-        Token::OperatorNot = e => ast::UnaryOperator { span: e.span(), operation: ast::UnaryOperatorType::Not },
+        Token::OperatorSubtract = e => Spanned { span: e.span(), value: ast::UnaryOperator::Minus },
+        Token::OperatorAdd = e => Spanned { span: e.span(), value: ast::UnaryOperator::Plus },
+        Token::OperatorNot = e => Spanned { span: e.span(), value: ast::UnaryOperator::Not },
     }
     .labelled("unary operator")
     .boxed();
@@ -1514,7 +1514,7 @@ fn parser<'tokens>()
                 ast::Expression::UnaryOperation(ast::UnaryOperation {
                     span: e.span(),
                     extras,
-                    operation: op,
+                    op,
                     rhs: rhs.into(),
                 })
             })

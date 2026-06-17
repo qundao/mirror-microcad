@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{ast, parsers};
-use microcad_lang_base::Span;
+use microcad_lang_base::{Span, Spanned};
 
 use crate::parse::{Extra, ParserDefinition, ParserInput, RichError};
 use crate::token::Token;
@@ -76,16 +76,16 @@ where
         + Clone
         + 'tokens,
 {
-    use ast::BinaryOperatorType::*;
+    use ast::BinaryOperator::*;
 
     params
         .clone()
         .foldl_with(
             ast::Whitespace::parser()
                 .or_not()
-                .ignore_then(one_of(tokens).map_with(|op, e| ast::BinaryOperator {
+                .ignore_then(one_of(tokens).map_with(|token, e| Spanned {
                     span: e.span(),
-                    operation: match op {
+                    value: match token {
                         Token::OperatorAdd => Add,
                         Token::OperatorSubtract => Subtract,
                         Token::OperatorMultiply => Multiply,
@@ -113,7 +113,7 @@ where
                 ast::Expression::BinaryOperation(ast::BinaryOperation {
                     span: e.span(),
                     lhs: lhs.into(),
-                    operation,
+                    op: operation,
                     rhs: rhs.into(),
                 })
             },
