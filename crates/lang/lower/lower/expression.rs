@@ -11,7 +11,7 @@ impl Lower for ir::RangeFirst {
 
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         if matches!(
-            node.expression,
+            node.expr,
             ast::Expression::Literal(
                 ast::Literal {
                     literal: ast::LiteralKind::Float(_)
@@ -24,12 +24,11 @@ impl Lower for ir::RangeFirst {
             )
         ) {
             return Err(LowerError::InvalidRangeType {
-                src_ref: context.src_ref(&node.expression.span()),
+                src_ref: context.src_ref(&node.expr.span()),
             });
         }
         Ok(ir::RangeFirst(Box::new(ir::Expression::lower(
-            &node.expression,
-            context,
+            &node.expr, context,
         )?)))
     }
 }
@@ -39,7 +38,7 @@ impl Lower for ir::RangeLast {
 
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         if matches!(
-            node.expression,
+            node.expr,
             ast::Expression::Literal(
                 ast::Literal {
                     literal: ast::LiteralKind::Float(_)
@@ -52,12 +51,11 @@ impl Lower for ir::RangeLast {
             )
         ) {
             return Err(LowerError::InvalidRangeType {
-                src_ref: context.src_ref(&node.expression.span()),
+                src_ref: context.src_ref(&node.expr.span()),
             });
         }
         Ok(ir::RangeLast(Box::new(ir::Expression::lower(
-            &node.expression,
-            context,
+            &node.expr, context,
         )?)))
     }
 }
@@ -80,7 +78,7 @@ impl Lower for ir::ListExpression {
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         node.items
             .iter()
-            .map(|item| ir::Expression::lower(&item.expression, context))
+            .map(|item| ir::Expression::lower(&item.expr, context))
             .collect::<Result<ir::ListExpression, _>>()
     }
 }

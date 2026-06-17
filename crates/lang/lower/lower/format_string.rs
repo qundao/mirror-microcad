@@ -14,7 +14,7 @@ impl Lower for ir::FormatExpression {
                 .is_some()
                 .then(|| ir::FormatSpec::lower(&node.specification, context))
                 .transpose()?,
-            ir::Expression::lower(&node.expression, context)?,
+            ir::Expression::lower(&node.expr, context)?,
             context.src_ref(&node.span),
         ))
     }

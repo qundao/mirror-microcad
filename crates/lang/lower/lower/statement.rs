@@ -138,7 +138,7 @@ impl Lower for ir::ExpressionStatement {
         Ok(ir::ExpressionStatement {
             src_ref: context.src_ref(&node.span),
             attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
-            expression: ir::Expression::lower(&node.expression, context)?,
+            expression: ir::Expression::lower(&node.expr, context)?,
         })
     }
 }
@@ -158,7 +158,7 @@ impl Lower for ir::Statement {
                 ir::Statement::Use(ir::UseStatement::lower(statement, context)?)
             }
             ast::Statement::Expression(ast::ExpressionStatement {
-                expression: ast::Expression::If(if_statement),
+                expr: ast::Expression::If(if_statement),
                 ..
             }) => ir::Statement::If(ir::If::lower(if_statement, context)?),
             ast::Statement::Expression(statement) => {
