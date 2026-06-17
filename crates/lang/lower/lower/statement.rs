@@ -207,7 +207,7 @@ impl Lower for ir::ReturnStatement {
         Ok(ir::ReturnStatement {
             keyword_ref: context.src_ref(&node.keyword_span),
             result: node
-                .value
+                .expr
                 .as_ref()
                 .map(|res| ir::Expression::lower(res, context))
                 .transpose()?,
