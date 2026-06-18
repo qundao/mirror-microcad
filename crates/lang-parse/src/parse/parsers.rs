@@ -143,13 +143,7 @@ impl_parser!(ast::Whitespace => {
     .boxed()
 });
 
-/// Leading extras parser.
-pub fn leading_extras<'tokens, S, Ctx>()
--> impl Parser<'tokens, PInput<'tokens>, ast::LeadingExtras, PError<'tokens, S, Ctx>>
-where
-    S: PInspector<'tokens>,
-    Ctx: 'tokens,
-{
+impl_parser!(ast::LeadingExtras => {
     let whitespace = ast::Whitespace::parser().map(ast::ItemExtra::Whitespace);
     let comment = ast::Comment::parser().map(ast::ItemExtra::Comment);
 
@@ -159,15 +153,9 @@ where
         .collect::<Vec<_>>()
         .boxed()
         .map(ast::LeadingExtras)
-}
+});
 
-/// Trailing extras parser.
-pub fn trailing_extras<'tokens, S, Ctx>()
--> impl Parser<'tokens, PInput<'tokens>, ast::TrailingExtras, PError<'tokens, S, Ctx>>
-where
-    S: PInspector<'tokens>,
-    Ctx: 'tokens,
-{
+impl_parser!(ast::TrailingExtras => {
     let whitespace = ast::Whitespace::parser().map(ast::ItemExtra::Whitespace);
     let comment = ast::Comment::parser().map(ast::ItemExtra::Comment);
 
@@ -177,4 +165,4 @@ where
         .collect::<Vec<_>>()
         .map(ast::TrailingExtras)
         .boxed()
-}
+});

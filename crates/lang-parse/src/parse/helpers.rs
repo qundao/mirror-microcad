@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{ast, parsers};
+use crate::ast;
 use microcad_lang_base::{Span, Spanned};
 
 use crate::parse::{Extra, ParserDefinition, ParserInput, RichError};
@@ -199,9 +199,9 @@ where
         (O, ast::ItemExtras),
         Full<RichError<'tokens>, S, Ctx>,
     > {
-        parsers::leading_extras()
+        ast::LeadingExtras::parser()
             .then(self)
-            .then(parsers::trailing_extras())
+            .then(ast::TrailingExtras::parser())
             .map(|((leading, res), trailing)| (res, ast::ItemExtras { leading, trailing }))
             .boxed()
     }
