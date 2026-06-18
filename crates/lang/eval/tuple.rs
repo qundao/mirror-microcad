@@ -21,7 +21,7 @@ impl Eval for ir::TupleExpression {
                 } else {
                     Err(Box::new(EvalError::AmbiguousType {
                         ty,
-                        src_ref: self.src_ref.clone(),
+                        src_ref: self.src_ref,
                     }))
                 }
             })?;
@@ -30,7 +30,7 @@ impl Eval for ir::TupleExpression {
             Tuple {
                 named: named.into_iter().collect(),
                 unnamed: unnamed.into_iter().map(|(_, v)| (v.ty(), v)).collect(),
-                src_ref: self.src_ref.clone(),
+                src_ref: self.src_ref,
             }
             .into(),
         ))

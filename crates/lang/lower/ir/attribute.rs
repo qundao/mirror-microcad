@@ -56,7 +56,7 @@ impl SrcReferrer for AttributeCommand {
         match &self {
             AttributeCommand::Ident(name) => name.src_ref(),
             AttributeCommand::Call(call) => call.src_ref(),
-            AttributeCommand::Assignment { src_ref, .. } => src_ref.clone(),
+            AttributeCommand::Assignment { src_ref, .. } => *src_ref,
         }
     }
 }

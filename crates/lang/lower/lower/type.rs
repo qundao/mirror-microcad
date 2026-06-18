@@ -17,12 +17,10 @@ impl Type {
             let (x, y) = dimensions
                 .split_once('x')
                 .unwrap_or((dimensions, dimensions));
-            let x = usize::from_str(x).map_err(|_| {
-                LowerError::InvalidMatrixType(Refer::new(ty.to_string(), src_ref.clone()))
-            })?;
-            let y = usize::from_str(y).map_err(|_| {
-                LowerError::InvalidMatrixType(Refer::new(ty.to_string(), src_ref.clone()))
-            })?;
+            let x = usize::from_str(x)
+                .map_err(|_| LowerError::InvalidMatrixType(Refer::new(ty.to_string(), src_ref)))?;
+            let y = usize::from_str(y)
+                .map_err(|_| LowerError::InvalidMatrixType(Refer::new(ty.to_string(), src_ref)))?;
             return Ok(Type::Matrix(MatrixType::new(x, y)));
         }
 

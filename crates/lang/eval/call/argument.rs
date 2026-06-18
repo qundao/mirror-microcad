@@ -21,7 +21,7 @@ impl Eval<ArgumentValue> for ir::Argument {
                 }
             },
             self.expression.single_identifier().cloned(),
-            self.src_ref.clone(),
+            self.src_ref,
         ))
     }
 }

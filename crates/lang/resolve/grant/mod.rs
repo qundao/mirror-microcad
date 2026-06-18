@@ -31,7 +31,7 @@ impl Grant for ir::Source {
 impl Grant for ir::ModuleDefinition {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
-        let scope = Scope(Module, self.keyword_ref.clone());
+        let scope = Scope(Module, self.keyword_ref);
         let parent = &context.parent();
         match parent.ty() {
             Source | Module => Ok(()),
@@ -82,7 +82,7 @@ impl Grant for ir::Statement {
 impl Grant for ir::WorkbenchDefinition {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
-        let scope = Scope(Workbench, self.keyword_ref.clone());
+        let scope = Scope(Workbench, self.keyword_ref);
         let parent = &context.parent();
         match parent.ty() {
             Source | Module => Ok(()),
@@ -95,7 +95,7 @@ impl Grant for ir::WorkbenchDefinition {
 impl Grant for ir::FunctionDefinition {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
-        let scope = Scope(Function, self.keyword_ref.clone());
+        let scope = Scope(Function, self.keyword_ref);
         let parent = &context.parent();
         match parent.ty() {
             Source | Module => Ok(()),
@@ -117,7 +117,7 @@ impl Grant for ir::FunctionDefinition {
 impl Grant for ir::InitDefinition {
     fn grant(&self, context: &mut GrantContext) -> DiagResult<()> {
         use ScopeType::*;
-        let scope = Scope(Init, self.keyword_ref.clone());
+        let scope = Scope(Init, self.keyword_ref);
         let parent = &context.parent();
         match parent.ty() {
             Workbench => Ok(()),
@@ -244,7 +244,7 @@ impl ir::Body {
         ) {
             use ResolveError::*;
             let code_before_err = |stmt: &ir::Statement| StatementNotAllowedPriorInitializers {
-                initializer: first_init.keyword_ref.clone(),
+                initializer: first_init.keyword_ref,
                 statement: stmt.src_ref(),
                 workbench: parent.src_ref(),
                 scope: parent.to_str(),
