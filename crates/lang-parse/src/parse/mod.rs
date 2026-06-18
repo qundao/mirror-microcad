@@ -460,6 +460,7 @@ fn parser<'tokens>()
         let visibility = select_ref! {
             Token::KeywordPub => ast::def::Visibility::Public,
         }
+        .map_with(|vis, e| Spanned::new(e.span(), vis))
         .labelled("visibility");
 
         let expression = outer_attribute_parser
@@ -610,11 +611,14 @@ fn parser<'tokens>()
             .map_with(
                 |((((((doc, attr), keyword_span), id), ty), expr), extras), e| ast::def::Constant {
                     span: e.span(),
+                    vis: Some(Spanned::new(
+                        keyword_span.clone(),
+                        ast::def::Visibility::Public,
+                    )),
                     keyword_span,
                     extras,
                     doc,
                     attr,
-                    vis: Some(ast::def::Visibility::Public),
                     id,
                     expr: Box::new(expr),
                     ty,

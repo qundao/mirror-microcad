@@ -16,12 +16,13 @@ use crate::ast::{
     Attribute, Body, DocBlock, Expression, Identifier, ItemExtras, ParameterList, Span, Type,
 };
 
+use microcad_lang_base::Spanned;
 pub use microcad_lang_base::WorkbenchKind;
 
 /// An optional visibility modifier
 ///
 /// it can be part of constant, module, function or workbench definitions.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Visibility {
     /// `pub`
     Public,
@@ -36,7 +37,7 @@ pub struct Workbench {
     pub doc: DocBlock,
     pub kind: WorkbenchKind,
     pub attr: Vec<Attribute>,
-    pub vis: Option<Visibility>,
+    pub vis: Option<Spanned<Visibility>>,
     pub id: Identifier,
     pub parameters: ParameterList,
     pub body: Body,
@@ -51,7 +52,7 @@ pub struct InlineModule {
     pub extras: ItemExtras,
     pub doc: DocBlock,
     pub attr: Vec<Attribute>,
-    pub vis: Option<Visibility>,
+    pub vis: Option<Spanned<Visibility>>,
     pub id: Identifier,
     pub body: Body,
 }
@@ -65,7 +66,7 @@ pub struct FileModule {
     pub extras: ItemExtras,
     pub doc: DocBlock,
     pub attr: Vec<Attribute>,
-    pub vis: Option<Visibility>,
+    pub vis: Option<Spanned<Visibility>>,
     pub id: Identifier,
 }
 
@@ -78,7 +79,7 @@ pub struct Function {
     pub extras: ItemExtras,
     pub doc: DocBlock,
     pub attr: Vec<Attribute>,
-    pub vis: Option<Visibility>,
+    pub vis: Option<Spanned<Visibility>>,
     pub id: Identifier,
     pub parameters: ParameterList,
     pub return_type: Option<Type>,
@@ -93,7 +94,7 @@ pub struct Use {
     pub attr: Vec<Attribute>,
     pub keyword_span: Span,
     pub extras: ItemExtras,
-    pub vis: Option<Visibility>,
+    pub vis: Option<Spanned<Visibility>>,
     pub name: UseName,
     pub use_as: Option<Identifier>,
 }
@@ -125,7 +126,7 @@ pub struct Constant {
     pub extras: ItemExtras,
     pub doc: DocBlock,
     pub attr: Vec<Attribute>,
-    pub vis: Option<Visibility>,
+    pub vis: Option<Spanned<Visibility>>,
     pub id: Identifier,
     pub ty: Option<Type>,
     pub expr: Box<Expression>,
