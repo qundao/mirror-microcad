@@ -19,7 +19,7 @@ pub trait SrcReferrer {
 /// We want to be able to use SrcRef directly in functions with `impl SrcReferrer` argument
 impl SrcReferrer for SrcRef {
     fn src_ref(&self) -> SrcRef {
-        self.clone()
+        *self
     }
 }
 

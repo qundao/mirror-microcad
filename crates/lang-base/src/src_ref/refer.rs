@@ -34,7 +34,7 @@ impl<T> Refer<T> {
 
 impl<T> SrcReferrer for Refer<T> {
     fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
+        self.src_ref
     }
 }
 

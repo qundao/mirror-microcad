@@ -34,7 +34,7 @@ impl Source {
     }
 
     pub fn code(&self) -> &str {
-        &self.code.value()
+        self.code.value()
     }
 }
 

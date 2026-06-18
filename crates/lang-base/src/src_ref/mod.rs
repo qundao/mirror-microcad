@@ -134,7 +134,7 @@ impl SrcRef {
 
     /// Return a reference with a given line offset.
     pub fn with_line_offset(&self, line_offset: u32) -> Self {
-        let mut s = self.clone();
+        let mut s = *self;
         s.at.line += line_offset;
         s
     }
@@ -209,8 +209,8 @@ impl SrcRef {
                     SrcRef::none()
                 }
             }
-            (true, false) => lhs.clone(),
-            (false, true) => rhs.clone(),
+            (true, false) => lhs,
+            (false, true) => rhs,
             (false, false) => SrcRef::none(),
         }
     }
@@ -242,11 +242,7 @@ impl SrcRef {
 
     /// Return line and column in source code or `None` if not available.
     pub fn at(&self) -> Option<LineCol> {
-        if self.is_some() {
-            Some(self.at.clone())
-        } else {
-            None
-        }
+        if self.is_some() { Some(self.at) } else { None }
     }
 
     /// Get the line of the start of the referenced source, if any
