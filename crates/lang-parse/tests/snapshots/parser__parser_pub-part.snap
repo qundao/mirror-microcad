@@ -36,7 +36,10 @@ Ok(
                             kind: Part,
                             attr: [],
                             vis: Some(
-                                Public,
+                                Spanned {
+                                    span: 0..3,
+                                    value: Public,
+                                },
                             ),
                             id: Identifier {
                                 span: 9..14,

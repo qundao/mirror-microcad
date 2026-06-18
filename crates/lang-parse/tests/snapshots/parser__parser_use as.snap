@@ -31,7 +31,10 @@ Ok(
                                 ),
                             },
                             vis: Some(
-                                Public,
+                                Spanned {
+                                    span: 0..3,
+                                    value: Public,
+                                },
                             ),
                             name: UseName {
                                 span: 8..17,

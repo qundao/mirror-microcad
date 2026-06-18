@@ -35,7 +35,10 @@ Ok(
                             },
                             attr: [],
                             vis: Some(
-                                Public,
+                                Spanned {
+                                    span: 0..3,
+                                    value: Public,
+                                },
                             ),
                             id: Identifier {
                                 span: 8..11,
