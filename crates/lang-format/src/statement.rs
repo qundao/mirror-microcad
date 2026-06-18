@@ -46,10 +46,11 @@ impl Format for ast::def::WorkbenchKind {
 
 impl Format for ast::def::Workbench {
     fn format(&self, f: &FormatConfig) -> Node {
+        let vis = self.vis.as_ref().map(|vis| vis.value.clone());
         node!(f, self.extras =>
             self.doc
             self.attr
-            self.vis self.kind ' ' self.id
+            vis self.kind ' ' self.id
             self.parameters ' '
             self.body
         )
@@ -58,10 +59,11 @@ impl Format for ast::def::Workbench {
 
 impl Format for ast::def::InlineModule {
     fn format(&self, f: &FormatConfig) -> Node {
+        let vis = self.vis.as_ref().map(|vis| vis.value.clone());
         node!(f, self.extras =>
             self.doc
             self.attr
-            self.vis "mod " self.id ' '
+            vis "mod " self.id ' '
             self.body
         )
     }
@@ -69,10 +71,11 @@ impl Format for ast::def::InlineModule {
 
 impl Format for ast::def::FileModule {
     fn format(&self, f: &FormatConfig) -> Node {
+        let vis = self.vis.as_ref().map(|vis| vis.value.clone());
         node!(f, self.extras =>
             self.doc
             self.attr
-            self.vis "mod " self.id
+            vis "mod " self.id
         )
     }
 }
@@ -83,11 +86,12 @@ impl Format for ast::def::Function {
             Some(ty) => node!(f => "-> " ty " "),
             None => Node::Nil,
         };
+        let vis = self.vis.as_ref().map(|vis| vis.value.clone());
 
         node!(f, self.extras =>
             self.doc
             self.attr
-            self.vis "fn " self.id self.parameters " " return_type
+            vis "fn " self.id self.parameters " " return_type
             self.body
         )
     }
@@ -113,9 +117,11 @@ impl Format for ast::def::UseName {
 
 impl Format for ast::def::Use {
     fn format(&self, f: &FormatConfig) -> Node {
+        let vis = self.vis.as_ref().map(|vis| vis.value.clone());
+
         node!(f, self.extras =>
             self.attr
-            self.vis "use " self.name
+            vis "use " self.name
             self.use_as.as_ref().map(|ident| node!(f => " as " ident))
         )
     }
@@ -123,10 +129,11 @@ impl Format for ast::def::Use {
 
 impl Format for ast::def::Constant {
     fn format(&self, f: &FormatConfig) -> Node {
+        let vis = self.vis.as_ref().map(|vis| vis.value.clone());
         node!(f, self.extras =>
             self.doc
             self.attr
-            self.vis "const " self.id " = " self.expr
+            vis "const " self.id " = " self.expr
         )
     }
 }
