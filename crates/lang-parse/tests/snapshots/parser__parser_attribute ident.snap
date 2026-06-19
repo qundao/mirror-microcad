@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -28,7 +28,7 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [
+                            attr: [
                                 Attribute {
                                     span: 0..14,
                                     is_inner: false,
@@ -50,12 +50,12 @@ Ok(
                                     ],
                                 },
                             ],
-                            name: Identifier {
+                            id: Identifier {
                                 span: 14..15,
                                 name: "a",
                             },
                             ty: None,
-                            value: Literal(
+                            expr: Literal(
                                 Literal {
                                     span: 18..19,
                                     extras: ItemExtras {

@@ -7,19 +7,19 @@ use microcad_lang_base::Identifier;
 use microcad_lang_parse::ast;
 
 impl Lower for ir::FunctionDefinition {
-    type AstNode = ast::FunctionDefinition;
+    type AstNode = ast::def::Function;
 
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(ir::FunctionDefinition {
             keyword_ref: context.src_ref(&node.keyword_span),
             doc: ir::DocBlock::lower(&node.doc, context)?,
             visibility: node
-                .visibility
+                .vis
                 .as_ref()
                 .map(|vis| ir::Visibility::lower(vis, context))
                 .transpose()?
                 .unwrap_or_default(),
-            id: Identifier::lower(&node.name, context)?,
+            id: Identifier::lower(&node.id, context)?,
             body: ir::Body::lower(&node.body, context)?,
             signature: ir::FunctionSignature {
                 src_ref: context.src_ref(&node.span),

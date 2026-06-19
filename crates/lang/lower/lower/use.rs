@@ -6,7 +6,7 @@ use crate::lower::{Lower, LowerContext, LowerError, ir};
 use microcad_lang_parse::ast;
 
 impl Lower for ir::UseStatement {
-    type AstNode = ast::UseStatement;
+    type AstNode = ast::def::Use;
 
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         let glob_index = node
@@ -14,7 +14,7 @@ impl Lower for ir::UseStatement {
             .parts
             .iter()
             .enumerate()
-            .find(|(_, part)| matches!(part, ast::UseStatementPart::Glob(_)))
+            .find(|(_, part)| matches!(part, ast::def::UseStatementPart::Glob(_)))
             .map(|(i, _)| i);
         if let Some(i) = glob_index {
             if i < node.name.parts.len() - 1 {
@@ -28,11 +28,11 @@ impl Lower for ir::UseStatement {
             .parts
             .iter()
             .filter_map(|part| match part {
-                ast::UseStatementPart::Identifier(ident) => {
+                ast::def::UseStatementPart::Identifier(ident) => {
                     Some(ir::Identifier::lower(ident, context))
                 }
-                ast::UseStatementPart::Glob(_) => None,
-                ast::UseStatementPart::Error(_) => None,
+                ast::def::UseStatementPart::Glob(_) => None,
+                ast::def::UseStatementPart::Error(_) => None,
             })
             .collect::<Result<Vec<_>, _>>()?;
         let name = ir::QualifiedName::new(name, context.src_ref(&node.name.span));
@@ -48,7 +48,7 @@ impl Lower for ir::UseStatement {
             }
         };
         let visibility = node
-            .visibility
+            .vis
             .as_ref()
             .map(|visibility| ir::Visibility::lower(visibility, context))
             .transpose()?;
@@ -62,11 +62,11 @@ impl Lower for ir::UseStatement {
 }
 
 impl Lower for ir::Visibility {
-    type AstNode = ast::Visibility;
+    type AstNode = ast::def::Visibility;
 
     fn lower(node: &Self::AstNode, _context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(match node {
-            ast::Visibility::Public => Self::Public,
+            ast::def::Visibility::Public => Self::Public,
         })
     }
 }

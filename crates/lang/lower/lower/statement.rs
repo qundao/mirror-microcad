@@ -13,14 +13,14 @@ impl ir::Assignment {
         Ok(ir::Assignment {
             doc: ir::DocBlock::default(),
             visibility: ir::Visibility::Private,
-            id: ir::Identifier::lower(&node.name, context)?,
+            id: ir::Identifier::lower(&node.id, context)?,
             qualifier: ir::Qualifier::Value,
             specified_type: node
                 .ty
                 .as_ref()
                 .map(|ty| ir::TypeAnnotation::lower(ty, context))
                 .transpose()?,
-            expression: ir::Expression::lower(&node.value, context)?,
+            expression: ir::Expression::lower(&node.expr, context)?,
             src_ref: context.src_ref(&node.span),
         })
     }
@@ -32,7 +32,7 @@ impl ir::Assignment {
         Ok(ir::Assignment {
             doc: ir::DocBlock::lower(&node.doc, context)?,
             visibility: ir::Visibility::Private,
-            id: ir::Identifier::lower(&node.name, context)?,
+            id: ir::Identifier::lower(&node.id, context)?,
             qualifier: ir::Qualifier::Prop,
             specified_type: node
                 .ty
@@ -45,25 +45,25 @@ impl ir::Assignment {
     }
 
     fn from_ast_const(
-        node: &ast::ConstAssignment,
+        node: &ast::def::Constant,
         context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         Ok(ir::Assignment {
             doc: ir::DocBlock::lower(&node.doc, context)?,
             visibility: node
-                .visibility
+                .vis
                 .as_ref()
                 .map(|v| ir::Visibility::lower(v, context))
                 .transpose()?
                 .unwrap_or_default(),
-            id: ir::Identifier::lower(&node.name, context)?,
+            id: ir::Identifier::lower(&node.id, context)?,
             qualifier: ir::Qualifier::Const,
             specified_type: node
                 .ty
                 .as_ref()
                 .map(|ty| ir::TypeAnnotation::lower(ty, context))
                 .transpose()?,
-            expression: ir::Expression::lower(&node.value, context)?,
+            expression: ir::Expression::lower(&node.expr, context)?,
             src_ref: context.src_ref(&node.span),
         })
     }
@@ -76,7 +76,7 @@ impl ir::AssignmentStatement {
         context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         Ok(Self {
-            attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
+            attribute_list: ir::AttributeList::lower(&node.attr, context)?,
             assignment: std::rc::Rc::new(ir::Assignment::from_ast_local(node, context)?),
             src_ref: context.src_ref(&node.span),
         })
@@ -87,18 +87,18 @@ impl ir::AssignmentStatement {
         context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         Ok(Self {
-            attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
+            attribute_list: ir::AttributeList::lower(&node.attr, context)?,
             assignment: std::rc::Rc::new(ir::Assignment::from_ast_prop(node, context)?),
             src_ref: context.src_ref(&node.span),
         })
     }
 
     fn from_ast_const(
-        node: &ast::ConstAssignment,
+        node: &ast::def::Constant,
         context: &mut LowerContext,
     ) -> Result<Self, LowerError> {
         Ok(Self {
-            attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
+            attribute_list: ir::AttributeList::lower(&node.attr, context)?,
             assignment: std::rc::Rc::new(ir::Assignment::from_ast_const(node, context)?),
             src_ref: context.src_ref(&node.span),
         })
@@ -137,8 +137,8 @@ impl Lower for ir::ExpressionStatement {
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(ir::ExpressionStatement {
             src_ref: context.src_ref(&node.span),
-            attribute_list: ir::AttributeList::lower(&node.attributes, context)?,
-            expression: ir::Expression::lower(&node.expression, context)?,
+            attribute_list: ir::AttributeList::lower(&node.attr, context)?,
+            expression: ir::Expression::lower(&node.expr, context)?,
         })
     }
 }
@@ -158,7 +158,7 @@ impl Lower for ir::Statement {
                 ir::Statement::Use(ir::UseStatement::lower(statement, context)?)
             }
             ast::Statement::Expression(ast::ExpressionStatement {
-                expression: ast::Expression::If(if_statement),
+                expr: ast::Expression::If(if_statement),
                 ..
             }) => ir::Statement::If(ir::If::lower(if_statement, context)?),
             ast::Statement::Expression(statement) => {
@@ -207,7 +207,7 @@ impl Lower for ir::ReturnStatement {
         Ok(ir::ReturnStatement {
             keyword_ref: context.src_ref(&node.keyword_span),
             result: node
-                .value
+                .expr
                 .as_ref()
                 .map(|res| ir::Expression::lower(res, context))
                 .transpose()?,

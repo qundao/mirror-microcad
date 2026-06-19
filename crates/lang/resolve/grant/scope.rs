@@ -77,7 +77,7 @@ pub(crate) struct Scope(pub ScopeType, pub SrcRef);
 
 impl SrcReferrer for Scope {
     fn src_ref(&self) -> SrcRef {
-        self.1.clone()
+        self.1
     }
 }
 

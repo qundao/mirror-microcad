@@ -1,0 +1,24 @@
+---
+source: crates/lang-parse/tests/lexer.rs
+expression: "lex(input).collect::<Vec<_>>()"
+---
+[
+    Spanned {
+        span: 0..11,
+        value: SingleLineComment(
+            "// comment1",
+        ),
+    },
+    Spanned {
+        span: 11..16,
+        value: Whitespace(
+            "\n    ",
+        ),
+    },
+    Spanned {
+        span: 16..27,
+        value: SingleLineComment(
+            "// comment2",
+        ),
+    },
+]

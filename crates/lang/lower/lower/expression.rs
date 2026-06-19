@@ -11,7 +11,7 @@ impl Lower for ir::RangeFirst {
 
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         if matches!(
-            node.expression,
+            node.expr,
             ast::Expression::Literal(
                 ast::Literal {
                     literal: ast::LiteralKind::Float(_)
@@ -24,12 +24,11 @@ impl Lower for ir::RangeFirst {
             )
         ) {
             return Err(LowerError::InvalidRangeType {
-                src_ref: context.src_ref(&node.expression.span()),
+                src_ref: context.src_ref(&node.expr.span()),
             });
         }
         Ok(ir::RangeFirst(Box::new(ir::Expression::lower(
-            &node.expression,
-            context,
+            &node.expr, context,
         )?)))
     }
 }
@@ -39,7 +38,7 @@ impl Lower for ir::RangeLast {
 
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         if matches!(
-            node.expression,
+            node.expr,
             ast::Expression::Literal(
                 ast::Literal {
                     literal: ast::LiteralKind::Float(_)
@@ -52,12 +51,11 @@ impl Lower for ir::RangeLast {
             )
         ) {
             return Err(LowerError::InvalidRangeType {
-                src_ref: context.src_ref(&node.expression.span()),
+                src_ref: context.src_ref(&node.expr.span()),
             });
         }
         Ok(ir::RangeLast(Box::new(ir::Expression::lower(
-            &node.expression,
-            context,
+            &node.expr, context,
         )?)))
     }
 }
@@ -80,7 +78,7 @@ impl Lower for ir::ListExpression {
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         node.items
             .iter()
-            .map(|item| ir::Expression::lower(&item.expression, context))
+            .map(|item| ir::Expression::lower(&item.expr, context))
             .collect::<Result<ir::ListExpression, _>>()
     }
 }
@@ -152,23 +150,17 @@ impl Lower for ir::Expression {
             ast::Expression::BinaryOperation(binop) => ir::Expression::BinaryOp(ir::BinaryOp {
                 lhs: Box::new(ir::Expression::lower(&binop.lhs, context)?),
                 rhs: Box::new(ir::Expression::lower(&binop.rhs, context)?),
-                op: Refer::new(
-                    binop.operation.operation.as_str().into(),
-                    context.src_ref(&binop.operation.span),
-                ),
+                op: Refer::new(binop.op.as_str().into(), context.src_ref(&binop.op.span)),
                 src_ref: context.src_ref(&binop.span),
             }),
             ast::Expression::UnaryOperation(unop) => ir::Expression::UnaryOp(ir::UnaryOp {
                 rhs: Box::new(ir::Expression::lower(&unop.rhs, context)?),
-                op: Refer::new(
-                    unop.operation.operation.as_str().into(),
-                    context.src_ref(&unop.operation.span),
-                ),
+                op: Refer::new(unop.op.as_str().into(), context.src_ref(&unop.op.span)),
                 src_ref: context.src_ref(&unop.span),
             }),
             ast::Expression::Body(b) => ir::Expression::Body(ir::Body::lower(b, context)?),
             ast::Expression::ElementAccess(access) => access.element_chain.iter().try_fold(
-                ir::Expression::lower(&access.value, context)?,
+                ir::Expression::lower(&access.expr, context)?,
                 |acc, element| {
                     use ast::ElementInner::*;
 
@@ -215,11 +207,11 @@ impl Lower for ir::TupleExpression {
             args.value
                 .try_push(ir::Argument {
                     id: value
-                        .name
+                        .id
                         .as_ref()
                         .map(|name| Identifier::lower(name, context))
                         .transpose()?,
-                    expression: ir::Expression::lower(&value.value, context)?,
+                    expression: ir::Expression::lower(&value.expr, context)?,
                     src_ref: context.src_ref(&value.span),
                 })
                 .map_err(|(previous, id)| LowerError::DuplicateArgument { previous, id })?;

@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -18,9 +18,9 @@ Ok(
             statements: [
                 (
                     Use(
-                        UseStatement {
+                        Use {
                             span: 0..26,
-                            attributes: [],
+                            attr: [],
                             keyword_span: 4..7,
                             extras: ItemExtras {
                                 leading: LeadingExtras(
@@ -30,8 +30,11 @@ Ok(
                                     [],
                                 ),
                             },
-                            visibility: Some(
-                                Public,
+                            vis: Some(
+                                Spanned {
+                                    span: 0..3,
+                                    value: Public,
+                                },
                             ),
                             name: UseName {
                                 span: 8..17,
@@ -42,7 +45,9 @@ Ok(
                                     trailing: TrailingExtras(
                                         [
                                             Whitespace(
-                                                " ",
+                                                Whitespace(
+                                                    " ",
+                                                ),
                                             ),
                                         ],
                                     ),

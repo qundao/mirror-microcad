@@ -18,7 +18,7 @@ Ok(
             statements: [
                 (
                     Function(
-                        FunctionDefinition {
+                        Function {
                             span: 0..43,
                             keyword_span: 0..2,
                             extras: ItemExtras {
@@ -33,9 +33,9 @@ Ok(
                                 span: 0..43,
                                 lines: [],
                             },
-                            attributes: [],
-                            visibility: None,
-                            name: Identifier {
+                            attr: [],
+                            vis: None,
+                            id: Identifier {
                                 span: 3..6,
                                 name: "foo",
                             },
@@ -64,8 +64,8 @@ Ok(
                                             span: 7..7,
                                             lines: [],
                                         },
-                                        attributes: [],
-                                        name: Identifier {
+                                        attr: [],
+                                        id: Identifier {
                                             span: 7..8,
                                             name: "a",
                                         },
@@ -115,7 +115,7 @@ Ok(
                                                             [],
                                                         ),
                                                     },
-                                                    value: Some(
+                                                    expr: Some(
                                                         BinaryOperation(
                                                             BinaryOperation {
                                                                 span: 36..41,
@@ -129,7 +129,9 @@ Ok(
                                                                             trailing: TrailingExtras(
                                                                                 [
                                                                                     Whitespace(
-                                                                                        " ",
+                                                                                        Whitespace(
+                                                                                            " ",
+                                                                                        ),
                                                                                     ),
                                                                                 ],
                                                                             ),
@@ -142,9 +144,9 @@ Ok(
                                                                         ],
                                                                     },
                                                                 ),
-                                                                operation: BinaryOperator {
+                                                                op: Spanned {
                                                                     span: 38..39,
-                                                                    operation: Multiply,
+                                                                    value: Multiply,
                                                                 },
                                                                 rhs: Literal(
                                                                     Literal {

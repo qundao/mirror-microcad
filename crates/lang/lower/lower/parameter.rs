@@ -12,7 +12,7 @@ impl Lower for ir::Parameter {
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(ir::Parameter {
             src_ref: context.src_ref(&node.span),
-            id: ir::Identifier::lower(&node.name, context)?,
+            id: ir::Identifier::lower(&node.id, context)?,
             specified_type: node
                 .ty
                 .as_ref()

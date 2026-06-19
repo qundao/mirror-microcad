@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -27,8 +27,8 @@ Ok(
                             [],
                         ),
                     },
-                    attributes: [],
-                    expression: ArrayRange(
+                    attr: [],
+                    expr: ArrayRange(
                         ArrayRangeExpression {
                             span: 0..7,
                             extras: ItemExtras {
@@ -49,7 +49,7 @@ Ok(
                                         [],
                                     ),
                                 },
-                                expression: Literal(
+                                expr: Literal(
                                     Literal {
                                         span: 1..2,
                                         extras: ItemExtras {
@@ -80,7 +80,7 @@ Ok(
                                         [],
                                     ),
                                 },
-                                expression: Literal(
+                                expr: Literal(
                                     Literal {
                                         span: 4..6,
                                         extras: ItemExtras {

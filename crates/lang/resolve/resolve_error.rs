@@ -230,7 +230,7 @@ impl SrcReferrer for ResolveError {
         match self {
             ResolveError::SourceFileNotFound(identifier, _) => identifier.src_ref(),
             ResolveError::LowerError(parse_error) => parse_error.src_ref(),
-            ResolveError::ResolveCheckFailed(src_ref) => src_ref.clone(),
+            ResolveError::ResolveCheckFailed(src_ref) => *src_ref,
             _ => SrcRef::none(),
         }
     }

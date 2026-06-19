@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -27,8 +27,8 @@ Ok(
                             [],
                         ),
                     },
-                    attributes: [],
-                    expression: Call(
+                    attr: [],
+                    expr: Call(
                         Call {
                             span: 0..38,
                             extras: ItemExtras {
@@ -62,7 +62,9 @@ Ok(
                                     leading: LeadingExtras(
                                         [
                                             Whitespace(
-                                                "\n        ",
+                                                Whitespace(
+                                                    "\n        ",
+                                                ),
                                             ),
                                         ],
                                     ),
@@ -82,7 +84,7 @@ Ok(
                                                     [],
                                                 ),
                                             },
-                                            value: Literal(
+                                            expr: Literal(
                                                 Literal {
                                                     span: 13..14,
                                                     extras: ItemExtras {
@@ -119,7 +121,9 @@ Ok(
                                                             },
                                                         ),
                                                         Whitespace(
-                                                            "\n        ",
+                                                            Whitespace(
+                                                                "\n        ",
+                                                            ),
                                                         ),
                                                     ],
                                                 ),
@@ -127,7 +131,7 @@ Ok(
                                                     [],
                                                 ),
                                             },
-                                            value: Literal(
+                                            expr: Literal(
                                                 Literal {
                                                     span: 31..37,
                                                     extras: ItemExtras {
@@ -137,7 +141,9 @@ Ok(
                                                         trailing: TrailingExtras(
                                                             [
                                                                 Whitespace(
-                                                                    "\n    ",
+                                                                    Whitespace(
+                                                                        "\n    ",
+                                                                    ),
                                                                 ),
                                                             ],
                                                         ),

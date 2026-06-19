@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -27,8 +27,8 @@ Ok(
                             [],
                         ),
                     },
-                    attributes: [],
-                    expression: Call(
+                    attr: [],
+                    expr: Call(
                         Call {
                             span: 0..16,
                             extras: ItemExtras {
@@ -78,7 +78,7 @@ Ok(
                                                     [],
                                                 ),
                                             },
-                                            value: QualifiedName(
+                                            expr: QualifiedName(
                                                 QualifiedName {
                                                     span: 4..5,
                                                     extras: ItemExtras {
@@ -110,11 +110,11 @@ Ok(
                                                     [],
                                                 ),
                                             },
-                                            name: Identifier {
+                                            id: Identifier {
                                                 span: 7..8,
                                                 name: "b",
                                             },
-                                            value: Literal(
+                                            expr: Literal(
                                                 Literal {
                                                     span: 11..12,
                                                     extras: ItemExtras {
@@ -147,7 +147,7 @@ Ok(
                                                     [],
                                                 ),
                                             },
-                                            value: Literal(
+                                            expr: Literal(
                                                 Literal {
                                                     span: 14..15,
                                                     extras: ItemExtras {

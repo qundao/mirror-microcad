@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -27,8 +27,8 @@ Ok(
                             [],
                         ),
                     },
-                    attributes: [],
-                    expression: String(
+                    attr: [],
+                    expr: String(
                         FormatString {
                             span: 0..49,
                             extras: ItemExtras {
@@ -57,7 +57,7 @@ Ok(
                                                 [],
                                             ),
                                         },
-                                        expression: BinaryOperation(
+                                        expr: BinaryOperation(
                                             BinaryOperation {
                                                 span: 9..31,
                                                 lhs: QualifiedName(
@@ -70,7 +70,9 @@ Ok(
                                                             trailing: TrailingExtras(
                                                                 [
                                                                     Whitespace(
-                                                                        " ",
+                                                                        Whitespace(
+                                                                            " ",
+                                                                        ),
                                                                     ),
                                                                 ],
                                                             ),
@@ -83,9 +85,9 @@ Ok(
                                                         ],
                                                     },
                                                 ),
-                                                operation: BinaryOperator {
+                                                op: Spanned {
                                                     span: 19..20,
-                                                    operation: Subtract,
+                                                    value: Subtract,
                                                 },
                                                 rhs: QualifiedName(
                                                     QualifiedName {

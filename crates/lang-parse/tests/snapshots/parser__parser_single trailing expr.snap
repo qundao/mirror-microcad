@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -18,7 +18,7 @@ Ok(
             statements: [
                 (
                     Workbench(
-                        WorkbenchDefinition {
+                        Workbench {
                             span: 0..68,
                             keyword_span: 4..8,
                             extras: ItemExtras {
@@ -34,15 +34,18 @@ Ok(
                                 lines: [],
                             },
                             kind: Part,
-                            attributes: [],
-                            visibility: Some(
-                                Public,
+                            attr: [],
+                            vis: Some(
+                                Spanned {
+                                    span: 0..3,
+                                    value: Public,
+                                },
                             ),
-                            name: Identifier {
+                            id: Identifier {
                                 span: 9..10,
                                 name: "A",
                             },
-                            plan: ParameterList {
+                            parameters: ParameterList {
                                 span: 11..11,
                                 extras: ItemExtras {
                                     leading: LeadingExtras(
@@ -62,7 +65,9 @@ Ok(
                                         leading: LeadingExtras(
                                             [
                                                 Whitespace(
-                                                    "\n        ",
+                                                    Whitespace(
+                                                        "\n        ",
+                                                    ),
                                                 ),
                                             ],
                                         ),
@@ -83,11 +88,11 @@ Ok(
                                                             [],
                                                         ),
                                                     },
-                                                    attributes: [],
-                                                    expression: ElementAccess(
+                                                    attr: [],
+                                                    expr: ElementAccess(
                                                         ElementAccess {
                                                             span: 23..61,
-                                                            value: Body(
+                                                            expr: Body(
                                                                 Body {
                                                                     span: 23..52,
                                                                     statements: StatementList {
@@ -96,7 +101,9 @@ Ok(
                                                                             leading: LeadingExtras(
                                                                                 [
                                                                                     Whitespace(
-                                                                                        "\n            ",
+                                                                                        Whitespace(
+                                                                                            "\n            ",
+                                                                                        ),
                                                                                     ),
                                                                                 ],
                                                                             ),
@@ -117,8 +124,8 @@ Ok(
                                                                                                 [],
                                                                                             ),
                                                                                         },
-                                                                                        attributes: [],
-                                                                                        expression: Call(
+                                                                                        attr: [],
+                                                                                        expr: Call(
                                                                                             Call {
                                                                                                 span: 37..41,
                                                                                                 extras: ItemExtras {
@@ -168,7 +175,7 @@ Ok(
                                                                                                                         [],
                                                                                                                     ),
                                                                                                                 },
-                                                                                                                value: QualifiedName(
+                                                                                                                expr: QualifiedName(
                                                                                                                     QualifiedName {
                                                                                                                         span: 39..40,
                                                                                                                         extras: ItemExtras {
@@ -198,7 +205,9 @@ Ok(
                                                                                 TrailingExtras(
                                                                                     [
                                                                                         Whitespace(
-                                                                                            "\n        ",
+                                                                                            Whitespace(
+                                                                                                "\n        ",
+                                                                                            ),
                                                                                         ),
                                                                                     ],
                                                                                 ),
@@ -269,7 +278,7 @@ Ok(
                                                                                                     [],
                                                                                                 ),
                                                                                             },
-                                                                                            value: QualifiedName(
+                                                                                            expr: QualifiedName(
                                                                                                 QualifiedName {
                                                                                                     span: 59..60,
                                                                                                     extras: ItemExtras {
@@ -303,7 +312,9 @@ Ok(
                                             TrailingExtras(
                                                 [
                                                     Whitespace(
-                                                        "\n    ",
+                                                        Whitespace(
+                                                            "\n    ",
+                                                        ),
                                                     ),
                                                 ],
                                             ),

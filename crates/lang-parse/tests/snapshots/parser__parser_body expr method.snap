@@ -28,11 +28,11 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [],
-                            expression: ElementAccess(
+                            attr: [],
+                            expr: ElementAccess(
                                 ElementAccess {
                                     span: 0..8,
-                                    value: Body(
+                                    expr: Body(
                                         Body {
                                             span: 0..2,
                                             statements: StatementList {

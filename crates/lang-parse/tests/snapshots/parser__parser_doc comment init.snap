@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -18,7 +18,7 @@ Ok(
             statements: [
                 (
                     Init(
-                        InitDefinition {
+                        Init {
                             span: 0..28,
                             keyword_span: 20..24,
                             extras: ItemExtras {
@@ -35,7 +35,7 @@ Ok(
                                     "/// Doc comment",
                                 ],
                             },
-                            attributes: [],
+                            attr: [],
                             parameters: ParameterList {
                                 span: 25..25,
                                 extras: ItemExtras {

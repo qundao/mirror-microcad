@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -27,11 +27,11 @@ Ok(
                             [],
                         ),
                     },
-                    attributes: [],
-                    expression: ElementAccess(
+                    attr: [],
+                    expr: ElementAccess(
                         ElementAccess {
                             span: 0..6,
-                            value: QualifiedName(
+                            expr: QualifiedName(
                                 QualifiedName {
                                     span: 0..3,
                                     extras: ItemExtras {

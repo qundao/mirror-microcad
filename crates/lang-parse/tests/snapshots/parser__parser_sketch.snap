@@ -18,7 +18,7 @@ Ok(
             statements: [
                 (
                     Workbench(
-                        WorkbenchDefinition {
+                        Workbench {
                             span: 0..58,
                             keyword_span: 0..6,
                             extras: ItemExtras {
@@ -34,13 +34,13 @@ Ok(
                                 lines: [],
                             },
                             kind: Sketch,
-                            attributes: [],
-                            visibility: None,
-                            name: Identifier {
+                            attr: [],
+                            vis: None,
+                            id: Identifier {
                                 span: 7..12,
                                 name: "Wheel",
                             },
-                            plan: ParameterList {
+                            parameters: ParameterList {
                                 span: 13..27,
                                 extras: ItemExtras {
                                     leading: LeadingExtras(
@@ -65,8 +65,8 @@ Ok(
                                             span: 13..13,
                                             lines: [],
                                         },
-                                        attributes: [],
-                                        name: Identifier {
+                                        attr: [],
+                                        id: Identifier {
                                             span: 13..19,
                                             name: "radius",
                                         },
@@ -107,8 +107,8 @@ Ok(
                                                             [],
                                                         ),
                                                     },
-                                                    attributes: [],
-                                                    expression: Call(
+                                                    attr: [],
+                                                    expr: Call(
                                                         Call {
                                                             span: 30..56,
                                                             extras: ItemExtras {
@@ -166,7 +166,7 @@ Ok(
                                                                                     [],
                                                                                 ),
                                                                             },
-                                                                            value: QualifiedName(
+                                                                            expr: QualifiedName(
                                                                                 QualifiedName {
                                                                                     span: 49..55,
                                                                                     extras: ItemExtras {

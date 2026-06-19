@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -28,8 +28,8 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [],
-                            expression: If(
+                            attr: [],
+                            expr: If(
                                 If {
                                     span: 0..19,
                                     if_span: 0..2,
@@ -54,7 +54,9 @@ Ok(
                                                         trailing: TrailingExtras(
                                                             [
                                                                 Whitespace(
-                                                                    " ",
+                                                                    Whitespace(
+                                                                        " ",
+                                                                    ),
                                                                 ),
                                                             ],
                                                         ),
@@ -67,9 +69,9 @@ Ok(
                                                     ],
                                                 },
                                             ),
-                                            operation: BinaryOperator {
+                                            op: Spanned {
                                                 span: 5..6,
-                                                operation: GreaterThan,
+                                                value: GreaterThan,
                                             },
                                             rhs: Literal(
                                                 Literal {
@@ -81,7 +83,9 @@ Ok(
                                                         trailing: TrailingExtras(
                                                             [
                                                                 Whitespace(
-                                                                    " ",
+                                                                    Whitespace(
+                                                                        " ",
+                                                                    ),
                                                                 ),
                                                             ],
                                                         ),
@@ -105,7 +109,9 @@ Ok(
                                                 leading: LeadingExtras(
                                                     [
                                                         Whitespace(
-                                                            " ",
+                                                            Whitespace(
+                                                                " ",
+                                                            ),
                                                         ),
                                                     ],
                                                 ),
@@ -126,8 +132,8 @@ Ok(
                                                                     [],
                                                                 ),
                                                             },
-                                                            attributes: [],
-                                                            expression: Call(
+                                                            attr: [],
+                                                            expr: Call(
                                                                 Call {
                                                                     span: 11..16,
                                                                     extras: ItemExtras {
@@ -174,7 +180,9 @@ Ok(
                                                     TrailingExtras(
                                                         [
                                                             Whitespace(
-                                                                " ",
+                                                                Whitespace(
+                                                                    " ",
+                                                                ),
                                                             ),
                                                         ],
                                                     ),

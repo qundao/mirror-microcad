@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -18,7 +18,7 @@ Ok(
             statements: [
                 (
                     Function(
-                        FunctionDefinition {
+                        Function {
                             span: 0..46,
                             keyword_span: 20..22,
                             extras: ItemExtras {
@@ -35,9 +35,9 @@ Ok(
                                     "/// Doc comment",
                                 ],
                             },
-                            attributes: [],
-                            visibility: None,
-                            name: Identifier {
+                            attr: [],
+                            vis: None,
+                            id: Identifier {
                                 span: 23..26,
                                 name: "Foo",
                             },
@@ -62,7 +62,9 @@ Ok(
                                         leading: LeadingExtras(
                                             [
                                                 Whitespace(
-                                                    "\n        ",
+                                                    Whitespace(
+                                                        "\n        ",
+                                                    ),
                                                 ),
                                             ],
                                         ),
@@ -82,8 +84,8 @@ Ok(
                                                     [],
                                                 ),
                                             },
-                                            attributes: [],
-                                            expression: Literal(
+                                            attr: [],
+                                            expr: Literal(
                                                 Literal {
                                                     span: 39..45,
                                                     extras: ItemExtras {
@@ -93,7 +95,9 @@ Ok(
                                                         trailing: TrailingExtras(
                                                             [
                                                                 Whitespace(
-                                                                    "\n    ",
+                                                                    Whitespace(
+                                                                        "\n    ",
+                                                                    ),
                                                                 ),
                                                             ],
                                                         ),

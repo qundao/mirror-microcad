@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -33,9 +33,9 @@ Ok(
                                 span: 0..22,
                                 lines: [],
                             },
-                            attributes: [],
-                            visibility: None,
-                            name: Identifier {
+                            attr: [],
+                            vis: None,
+                            id: Identifier {
                                 span: 4..7,
                                 name: "foo",
                             },
@@ -47,7 +47,9 @@ Ok(
                                         leading: LeadingExtras(
                                             [
                                                 Whitespace(
-                                                    " ",
+                                                    Whitespace(
+                                                        " ",
+                                                    ),
                                                 ),
                                             ],
                                         ),
@@ -58,7 +60,7 @@ Ok(
                                     statements: [
                                         (
                                             Function(
-                                                FunctionDefinition {
+                                                Function {
                                                     span: 10..21,
                                                     keyword_span: 10..12,
                                                     extras: ItemExtras {
@@ -68,7 +70,9 @@ Ok(
                                                         trailing: TrailingExtras(
                                                             [
                                                                 Whitespace(
-                                                                    " ",
+                                                                    Whitespace(
+                                                                        " ",
+                                                                    ),
                                                                 ),
                                                             ],
                                                         ),
@@ -77,9 +81,9 @@ Ok(
                                                         span: 10..10,
                                                         lines: [],
                                                     },
-                                                    attributes: [],
-                                                    visibility: None,
-                                                    name: Identifier {
+                                                    attr: [],
+                                                    vis: None,
+                                                    id: Identifier {
                                                         span: 13..16,
                                                         name: "bar",
                                                     },

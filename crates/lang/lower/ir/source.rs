@@ -110,7 +110,7 @@ impl std::fmt::Display for Source {
 impl SrcReferrer for Source {
     fn src_ref(&self) -> SrcRef {
         SrcRef::new(
-            0..self.source.len(),
+            &(0..self.source.len()),
             LineCol::default(),
             self.source.computed_hash(),
         )

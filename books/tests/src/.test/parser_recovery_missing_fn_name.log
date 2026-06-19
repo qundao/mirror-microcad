@@ -14,16 +14,16 @@
   30:   a =; // error after a function with no name
 
 -- Errors --
-  × error: 26:7: Expected something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or',
-  │ 'and' or semicolon
+  × error: 26:7: Expected comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and' or
+  │ semicolon
     ╭─[../books/tests/src/parser_recovery.md:26:7]
  26 │ fn () { // error, no name
     ·       ┬
     ·       ╰── unexpected {
  27 │   1=; // error inside an if statement with missing params
     ╰────
-  × error: 27:4: Expected unit, something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=',
-  │ 'or', 'and' or semicolon
+  × error: 27:4: Expected unit, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and' or
+  │ semicolon
     ╭─[../books/tests/src/parser_recovery.md:27:4]
  26 │ fn () { // error, no name
  27 │   1=; // error inside an if statement with missing params

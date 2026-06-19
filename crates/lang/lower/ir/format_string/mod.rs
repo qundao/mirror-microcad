@@ -56,7 +56,7 @@ impl FormatString {
 impl From<Refer<String>> for FormatString {
     fn from(value: Refer<String>) -> Self {
         FormatString(Refer {
-            src_ref: value.src_ref.clone(),
+            src_ref: value.src_ref,
             value: vec![FormatStringInner::String(value)],
         })
     }

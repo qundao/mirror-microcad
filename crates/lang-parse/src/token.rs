@@ -1,92 +1,9 @@
-// Copyright © 2026 The µcad authors <info@microcad.xyz>
+// Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::tokens::{from_logos::from_logos, logos::NormalToken};
+use std::borrow::Cow;
 
-use ::logos::Lexer;
-use microcad_lang_base::Span;
-use std::{
-    borrow::Cow,
-    fmt::{Display, Formatter},
-};
-use thiserror::Error;
-
-mod from_logos;
-mod logos;
-
-/// A source token with attached span
-#[derive(Debug, PartialEq, Clone)]
-pub struct SpannedToken<T> {
-    /// the span of the token
-    pub span: Span,
-    /// the token
-    pub token: T,
-}
-
-impl SpannedToken<Token<'_>> {
-    /// Create an owned version of the token
-    pub fn into_owned(self) -> SpannedToken<Token<'static>> {
-        SpannedToken {
-            span: self.span,
-            token: self.token.into_owned(),
-        }
-    }
-}
-
-impl<T> SpannedToken<T> {
-    /// Create a [`SpannedToken`] from [`Span`] and token
-    pub fn new(span: Span, token: T) -> Self {
-        SpannedToken { span, token }
-    }
-}
-
-impl<T: PartialEq> PartialEq<T> for SpannedToken<T> {
-    fn eq(&self, other: &T) -> bool {
-        self.token.eq(other)
-    }
-}
-
-/// Possible errors encountered while tokenizing
-#[derive(Debug, Default, Clone, PartialEq, Error)]
-pub enum LexerError {
-    /// No valid token was found for the character
-    #[default]
-    #[error("No valid token")]
-    NoValidToken,
-    /// A format string was encountered that wasn't closed correctly
-    #[error("Unclosed format string")]
-    UnclosedStringFormat(Span),
-    /// A string was encountered that wasn't closed correctly
-    #[error("Unclosed string")]
-    UnclosedString(Span),
-}
-
-impl LexerError {
-    /// Get a descriptive name of the error type
-    pub fn kind(&self) -> &'static str {
-        match self {
-            LexerError::NoValidToken => "no valid token",
-            LexerError::UnclosedStringFormat(_) => "unclosed format string",
-            LexerError::UnclosedString(_) => "unclosed string",
-        }
-    }
-}
-
-impl LexerError {
-    /// Get the span of the error
-    pub fn span(&self) -> Option<Span> {
-        match self {
-            LexerError::UnclosedStringFormat(span) => Some(span.clone()),
-            LexerError::UnclosedString(span) => Some(span.clone()),
-            _ => None,
-        }
-    }
-}
-
-/// Tokenize a µcad source string into an iterator of tokens.
-pub fn lex<'a>(input: &'a str) -> impl Iterator<Item = SpannedToken<Token<'a>>> {
-    from_logos(Lexer::<NormalToken>::new(input).spanned())
-}
+pub use crate::lex::LexerError;
 
 /// Source token for µcad files
 #[derive(Debug, PartialEq, Clone)]
@@ -259,8 +176,8 @@ pub enum Token<'a> {
     Error(LexerError),
 }
 
-impl Display for Token<'_> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+impl std::fmt::Display for Token<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.kind())
     }
 }

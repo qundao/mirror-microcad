@@ -111,7 +111,7 @@ pub struct BinaryOp<EXPR = ir::Expression> {
 
 impl<EXPR> SrcReferrer for BinaryOp<EXPR> {
     fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
+        self.src_ref
     }
 }
 
@@ -160,7 +160,7 @@ pub struct UnaryOp<EXPR = ir::Expression> {
 
 impl<EXPR> SrcReferrer for UnaryOp<EXPR> {
     fn src_ref(&self) -> SrcRef {
-        self.src_ref.clone()
+        self.src_ref
     }
 }
 
@@ -236,10 +236,10 @@ impl SrcReferrer for Expression {
             Self::Marker(m) => m.src_ref(),
             Self::BinaryOp(binary_op) => binary_op.src_ref(),
             Self::UnaryOp(unary_op) => unary_op.src_ref(),
-            Self::ArrayElementAccess(_, _, src_ref) => src_ref.clone(),
-            Self::PropertyAccess(_, _, src_ref) => src_ref.clone(),
-            Self::AttributeAccess(_, _, src_ref) => src_ref.clone(),
-            Self::MethodCall(_, _, src_ref) => src_ref.clone(),
+            Self::ArrayElementAccess(_, _, src_ref) => *src_ref,
+            Self::PropertyAccess(_, _, src_ref) => *src_ref,
+            Self::AttributeAccess(_, _, src_ref) => *src_ref,
+            Self::MethodCall(_, _, src_ref) => *src_ref,
         }
     }
 }

@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -27,8 +27,8 @@ Ok(
                             [],
                         ),
                     },
-                    attributes: [],
-                    expression: BinaryOperation(
+                    attr: [],
+                    expr: BinaryOperation(
                         BinaryOperation {
                             span: 0..9,
                             lhs: BinaryOperation(
@@ -53,9 +53,9 @@ Ok(
                                             ],
                                         },
                                     ),
-                                    operation: BinaryOperator {
+                                    op: Spanned {
                                         span: 1..2,
-                                        operation: PowerXor,
+                                        value: PowerXor,
                                     },
                                     rhs: Literal(
                                         Literal {
@@ -67,7 +67,9 @@ Ok(
                                                 trailing: TrailingExtras(
                                                     [
                                                         Whitespace(
-                                                            " ",
+                                                            Whitespace(
+                                                                " ",
+                                                            ),
                                                         ),
                                                     ],
                                                 ),
@@ -83,9 +85,9 @@ Ok(
                                     ),
                                 },
                             ),
-                            operation: BinaryOperator {
+                            op: Spanned {
                                 span: 4..5,
-                                operation: Add,
+                                value: Add,
                             },
                             rhs: BinaryOperation(
                                 BinaryOperation {
@@ -109,9 +111,9 @@ Ok(
                                             ],
                                         },
                                     ),
-                                    operation: BinaryOperator {
+                                    op: Spanned {
                                         span: 7..8,
-                                        operation: PowerXor,
+                                        value: PowerXor,
                                     },
                                     rhs: Literal(
                                         Literal {

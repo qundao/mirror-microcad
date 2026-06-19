@@ -237,7 +237,7 @@ impl Symbol {
                     false
                 }
             })
-            .map(|symbol| symbol.clone_with(visibility.clone(), src_ref.clone()))
+            .map(|symbol| symbol.clone_with(visibility.clone(), src_ref))
             .map(|symbol| (symbol.id(), symbol))
             .collect()
     }
@@ -454,7 +454,7 @@ impl Symbol {
                     let symbol = context
                         .root
                         .lookup_within_opt(name, &inner.parent, LookupTarget::Any)?
-                        .clone_with(visibility.clone(), name.src_ref.clone());
+                        .clone_with(visibility.clone(), name.src_ref);
                     self.delete();
                     [(id.clone(), symbol)].into_iter().collect()
                 }
@@ -468,7 +468,7 @@ impl Symbol {
                     let symbols = context
                         .root
                         .lookup_within_opt(name, &inner.parent, LookupTarget::Any)?
-                        .public_children(visibility.clone(), name.src_ref.clone());
+                        .public_children(visibility.clone(), name.src_ref);
                     if !symbols.is_empty() {
                         self.delete();
                     }
@@ -598,7 +598,7 @@ impl SrcReferrer for Symbol {
         if self.src_ref.is_none() {
             self.inner.borrow().src_ref()
         } else {
-            self.src_ref.clone()
+            self.src_ref
         }
     }
 }

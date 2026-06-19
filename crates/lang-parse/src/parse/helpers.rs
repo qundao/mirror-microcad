@@ -1,11 +1,11 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{ast, parsers};
-use microcad_lang_base::Span;
+use crate::ast;
+use microcad_lang_base::{Span, Spanned};
 
-use crate::parser::{Extra, ParserInput, RichError};
-use crate::tokens::Token;
+use crate::parse::{Extra, ParserDefinition, ParserInput, RichError};
+use crate::token::Token;
 use chumsky::extra::{Full, ParserExtra, SimpleState};
 use chumsky::input::Input;
 use chumsky::inspector::Inspector;
@@ -76,16 +76,16 @@ where
         + Clone
         + 'tokens,
 {
-    use ast::BinaryOperatorType::*;
+    use ast::BinaryOperator::*;
 
     params
         .clone()
         .foldl_with(
-            parsers::whitespace()
+            ast::Whitespace::parser()
                 .or_not()
-                .ignore_then(one_of(tokens).map_with(|op, e| ast::BinaryOperator {
+                .ignore_then(one_of(tokens).map_with(|token, e| Spanned {
                     span: e.span(),
-                    operation: match op {
+                    value: match token {
                         Token::OperatorAdd => Add,
                         Token::OperatorSubtract => Subtract,
                         Token::OperatorMultiply => Multiply,
@@ -113,7 +113,7 @@ where
                 ast::Expression::BinaryOperation(ast::BinaryOperation {
                     span: e.span(),
                     lhs: lhs.into(),
-                    operation,
+                    op: operation,
                     rhs: rhs.into(),
                 })
             },
@@ -152,7 +152,7 @@ where
         .or(one_of(Token::SigilSemiColon)
             .ignored()
             .or(one_of(except).ignored())
-            .or(parsers::whitespace().ignored())
+            .or(ast::Whitespace::parser().boxed().ignored())
             .rewind())
 }
 
@@ -199,9 +199,9 @@ where
         (O, ast::ItemExtras),
         Full<RichError<'tokens>, S, Ctx>,
     > {
-        parsers::leading_extras()
+        ast::LeadingExtras::parser()
             .then(self)
-            .then(parsers::trailing_extras())
+            .then(ast::TrailingExtras::parser())
             .map(|((leading, res), trailing)| (res, ast::ItemExtras { leading, trailing }))
             .boxed()
     }
@@ -210,14 +210,14 @@ where
         self,
     ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<RichError<'tokens>, S, Ctx>>
     {
-        self.then_ignore(parsers::whitespace())
+        self.then_ignore(ast::Whitespace::parser())
     }
 
     fn then_maybe_whitespace(
         self,
     ) -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, O, Full<RichError<'tokens>, S, Ctx>>
     {
-        self.then_ignore(parsers::whitespace().or_not())
+        self.then_ignore(ast::Whitespace::parser().or_not())
     }
 
     fn delimited_with_spanned_error<B, C, U, V, F>(

@@ -28,8 +28,8 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [],
-                            expression: Body(
+                            attr: [],
+                            expr: Body(
                                 Body {
                                     span: 0..2,
                                     statements: StatementList {
@@ -65,11 +65,11 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [],
-                            expression: ElementAccess(
+                            attr: [],
+                            expr: ElementAccess(
                                 ElementAccess {
                                     span: 2..11,
-                                    value: QualifiedName(
+                                    expr: QualifiedName(
                                         QualifiedName {
                                             span: 2..5,
                                             extras: ItemExtras {

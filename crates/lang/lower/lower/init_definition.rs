@@ -5,7 +5,7 @@ use crate::lower::{Lower, LowerContext, LowerError, ir};
 use microcad_lang_parse::ast;
 
 impl Lower for ir::InitDefinition {
-    type AstNode = ast::InitDefinition;
+    type AstNode = ast::Init;
 
     fn lower(node: &Self::AstNode, context: &mut LowerContext) -> Result<Self, LowerError> {
         Ok(ir::InitDefinition {

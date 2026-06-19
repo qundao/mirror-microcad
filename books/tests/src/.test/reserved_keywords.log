@@ -65,8 +65,8 @@
     ·           ╰── 'enum' is a reserved keyword and can't be used as an identifier
  17 │ 
     ╰────
-  × error: 18:8: Expected something else, comment, '(', attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=',
-  │ 'or', 'and', ':', '=' or semicolon
+  × error: 18:8: Expected comment, '(', attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and', ':',
+  │ '=' or semicolon
     ╭─[../books/tests/src/reserved_keywords.md:18:8]
  17 │ 
  18 │ struct asd { // error
@@ -82,8 +82,8 @@
     ·   ╰── 'unit' is a reserved keyword and can't be used as an identifier
  25 │ 
     ╰────
-  × error: 24:6: Expected something else, comment, '(', attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=',
-  │ 'or', 'and', ':', '=' or semicolon
+  × error: 24:6: Expected comment, '(', attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and', ':',
+  │ '=' or semicolon
     ╭─[../books/tests/src/reserved_keywords.md:24:6]
  23 │ 
  24 │ unit foo; // error
@@ -106,8 +106,8 @@
     · ──┬─
     ·   ╰── 'type' is a reserved keyword and can't be used as an identifier
     ╰────
-  × error: 30:6: Expected something else, comment, '(', attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=',
-  │ 'or', 'and', ':', '=' or semicolon
+  × error: 30:6: Expected comment, '(', attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and', ':',
+  │ '=' or semicolon
     ╭─[../books/tests/src/reserved_keywords.md:30:6]
  29 │ 
  30 │ type A = Integer; // error

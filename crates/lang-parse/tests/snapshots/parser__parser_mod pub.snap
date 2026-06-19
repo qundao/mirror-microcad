@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -33,11 +33,14 @@ Ok(
                                 span: 0..26,
                                 lines: [],
                             },
-                            attributes: [],
-                            visibility: Some(
-                                Public,
+                            attr: [],
+                            vis: Some(
+                                Spanned {
+                                    span: 0..3,
+                                    value: Public,
+                                },
                             ),
-                            name: Identifier {
+                            id: Identifier {
                                 span: 8..11,
                                 name: "foo",
                             },
@@ -49,7 +52,9 @@ Ok(
                                         leading: LeadingExtras(
                                             [
                                                 Whitespace(
-                                                    " ",
+                                                    Whitespace(
+                                                        " ",
+                                                    ),
                                                 ),
                                             ],
                                         ),
@@ -60,7 +65,7 @@ Ok(
                                     statements: [
                                         (
                                             Function(
-                                                FunctionDefinition {
+                                                Function {
                                                     span: 14..25,
                                                     keyword_span: 14..16,
                                                     extras: ItemExtras {
@@ -70,7 +75,9 @@ Ok(
                                                         trailing: TrailingExtras(
                                                             [
                                                                 Whitespace(
-                                                                    " ",
+                                                                    Whitespace(
+                                                                        " ",
+                                                                    ),
                                                                 ),
                                                             ],
                                                         ),
@@ -79,9 +86,9 @@ Ok(
                                                         span: 14..14,
                                                         lines: [],
                                                     },
-                                                    attributes: [],
-                                                    visibility: None,
-                                                    name: Identifier {
+                                                    attr: [],
+                                                    vis: None,
+                                                    id: Identifier {
                                                         span: 17..20,
                                                         name: "bar",
                                                     },

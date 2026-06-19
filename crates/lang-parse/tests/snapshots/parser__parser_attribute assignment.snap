@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -28,7 +28,7 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [
+                            attr: [
                                 Attribute {
                                     span: 0..25,
                                     is_inner: false,
@@ -52,13 +52,13 @@ Ok(
                                                         [],
                                                     ),
                                                 },
-                                                attributes: [],
-                                                name: Identifier {
+                                                attr: [],
+                                                id: Identifier {
                                                     span: 2..7,
                                                     name: "color",
                                                 },
                                                 ty: None,
-                                                value: Literal(
+                                                expr: Literal(
                                                     Literal {
                                                         span: 10..19,
                                                         extras: ItemExtras {
@@ -82,12 +82,12 @@ Ok(
                                     ],
                                 },
                             ],
-                            name: Identifier {
+                            id: Identifier {
                                 span: 25..26,
                                 name: "a",
                             },
                             ty: None,
-                            value: Literal(
+                            expr: Literal(
                                 Literal {
                                     span: 29..30,
                                     extras: ItemExtras {

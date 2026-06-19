@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -28,13 +28,13 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [],
-                            name: Identifier {
+                            attr: [],
+                            id: Identifier {
                                 span: 0..1,
                                 name: "a",
                             },
                             ty: None,
-                            value: BinaryOperation(
+                            expr: BinaryOperation(
                                 BinaryOperation {
                                     span: 4..37,
                                     lhs: Literal(
@@ -47,7 +47,9 @@ Ok(
                                                 trailing: TrailingExtras(
                                                     [
                                                         Whitespace(
-                                                            " ",
+                                                            Whitespace(
+                                                                " ",
+                                                            ),
                                                         ),
                                                     ],
                                                 ),
@@ -60,9 +62,9 @@ Ok(
                                             ),
                                         },
                                     ),
-                                    operation: BinaryOperator {
+                                    op: Spanned {
                                         span: 34..35,
-                                        operation: Add,
+                                        value: Add,
                                     },
                                     rhs: Literal(
                                         Literal {
