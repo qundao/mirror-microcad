@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -27,8 +27,8 @@ Ok(
                             [],
                         ),
                     },
-                    attributes: [],
-                    expression: Tuple(
+                    attr: [],
+                    expr: Tuple(
                         TupleExpression {
                             span: 0..12,
                             extras: ItemExtras {
@@ -50,13 +50,13 @@ Ok(
                                             [],
                                         ),
                                     },
-                                    name: Some(
+                                    id: Some(
                                         Identifier {
                                             span: 1..7,
                                             name: "length",
                                         },
                                     ),
-                                    value: Literal(
+                                    expr: Literal(
                                         Literal {
                                             span: 10..11,
                                             extras: ItemExtras {

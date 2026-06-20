@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -27,8 +27,8 @@ Ok(
                             [],
                         ),
                     },
-                    attributes: [],
-                    expression: BinaryOperation(
+                    attr: [],
+                    expr: BinaryOperation(
                         BinaryOperation {
                             span: 0..3,
                             lhs: Literal(
@@ -51,9 +51,9 @@ Ok(
                                     ),
                                 },
                             ),
-                            operation: BinaryOperator {
+                            op: Spanned {
                                 span: 1..2,
-                                operation: Add,
+                                value: Add,
                             },
                             rhs: Literal(
                                 Literal {

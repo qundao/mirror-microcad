@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -18,7 +18,7 @@ Ok(
             statements: [
                 (
                     Workbench(
-                        WorkbenchDefinition {
+                        Workbench {
                             span: 0..85,
                             keyword_span: 20..24,
                             extras: ItemExtras {
@@ -36,13 +36,13 @@ Ok(
                                 ],
                             },
                             kind: Part,
-                            attributes: [],
-                            visibility: None,
-                            name: Identifier {
+                            attr: [],
+                            vis: None,
+                            id: Identifier {
                                 span: 25..28,
                                 name: "Foo",
                             },
-                            plan: ParameterList {
+                            parameters: ParameterList {
                                 span: 29..29,
                                 extras: ItemExtras {
                                     leading: LeadingExtras(
@@ -62,7 +62,9 @@ Ok(
                                         leading: LeadingExtras(
                                             [
                                                 Whitespace(
-                                                    "\n        ",
+                                                    Whitespace(
+                                                        "\n        ",
+                                                    ),
                                                 ),
                                             ],
                                         ),
@@ -83,8 +85,8 @@ Ok(
                                                             [],
                                                         ),
                                                     },
-                                                    attributes: [],
-                                                    expression: Call(
+                                                    attr: [],
+                                                    expr: Call(
                                                         Call {
                                                             span: 41..78,
                                                             extras: ItemExtras {
@@ -134,11 +136,11 @@ Ok(
                                                                                     [],
                                                                                 ),
                                                                             },
-                                                                            name: Identifier {
+                                                                            id: Identifier {
                                                                                 span: 50..56,
                                                                                 name: "height",
                                                                             },
-                                                                            value: Literal(
+                                                                            expr: Literal(
                                                                                 Literal {
                                                                                     span: 59..63,
                                                                                     extras: ItemExtras {
@@ -175,11 +177,11 @@ Ok(
                                                                                     [],
                                                                                 ),
                                                                             },
-                                                                            name: Identifier {
+                                                                            id: Identifier {
                                                                                 span: 65..71,
                                                                                 name: "radius",
                                                                             },
-                                                                            value: Literal(
+                                                                            expr: Literal(
                                                                                 Literal {
                                                                                     span: 74..77,
                                                                                     extras: ItemExtras {
@@ -214,7 +216,9 @@ Ok(
                                             TrailingExtras(
                                                 [
                                                     Whitespace(
-                                                        "\n    ",
+                                                        Whitespace(
+                                                            "\n    ",
+                                                        ),
                                                     ),
                                                 ],
                                             ),

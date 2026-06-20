@@ -38,11 +38,11 @@ impl ir::WorkbenchDefinition {
         let (mut properties, non_properties): (Vec<_>, Vec<_>) = arguments
             .named_iter()
             .map(|(id, value)| (id.clone(), value.clone()))
-            .partition(|(id, _)| self.plan.contains_key(id));
+            .partition(|(id, _)| self.parameters.contains_key(id));
 
         // create uninitialized values for all missing building plan properties
         let missing: Vec<_> = self
-            .plan
+            .parameters
             .iter()
             .filter(|param| !properties.iter().any(|(id, _)| param.id_ref() == id))
             .map(|param| param.id())
@@ -126,7 +126,7 @@ impl ir::WorkbenchDefinition {
         // match all initializations starting with the building plan
         let matches: Vec<_> = std::iter::once((
             None,
-            self.plan
+            self.parameters
                 .eval(context)
                 .and_then(|params| ArgumentMatch::find_multi_match(arguments, &params)),
         ))
@@ -152,7 +152,7 @@ impl ir::WorkbenchDefinition {
             if let Some(i) = i {
                 log::debug!("{result} {}::init({})", symbol.full_name(), i.parameters)
             } else {
-                log::debug!("{result} {}({})", symbol.full_name(), self.plan)
+                log::debug!("{result} {}({})", symbol.full_name(), self.parameters)
             }
         })
         // filter out non-matching
@@ -187,7 +187,7 @@ impl ir::WorkbenchDefinition {
                         None => format!(
                             "{name}({params})",
                             name = symbol.full_name(),
-                            params = self.plan
+                            params = self.parameters
                         ),
                     })
                     .collect::<Vec<_>>();

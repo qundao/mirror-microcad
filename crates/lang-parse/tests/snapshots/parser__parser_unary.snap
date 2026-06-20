@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -27,8 +27,8 @@ Ok(
                             [],
                         ),
                     },
-                    attributes: [],
-                    expression: UnaryOperation(
+                    attr: [],
+                    expr: UnaryOperation(
                         UnaryOperation {
                             span: 0..6,
                             extras: ItemExtras {
@@ -39,9 +39,9 @@ Ok(
                                     [],
                                 ),
                             },
-                            operation: UnaryOperator {
+                            op: Spanned {
                                 span: 0..1,
-                                operation: Not,
+                                value: Not,
                             },
                             rhs: QualifiedName(
                                 QualifiedName {

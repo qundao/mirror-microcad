@@ -27,9 +27,9 @@ pub(super) struct SymbolInner {
 impl SymbolInner {
     pub fn kind_ref(&self) -> Option<SrcRef> {
         match &self.def {
-            SymbolDef::Module(m) => Some(m.keyword_ref.clone()),
-            SymbolDef::Workbench(wb) => Some(wb.keyword_ref.clone()),
-            SymbolDef::Function(f) => Some(f.keyword_ref.clone()),
+            SymbolDef::Module(m) => Some(m.keyword_ref),
+            SymbolDef::Workbench(wb) => Some(wb.keyword_ref),
+            SymbolDef::Function(f) => Some(f.keyword_ref),
             _ => None,
         }
     }

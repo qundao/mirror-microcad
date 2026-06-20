@@ -4,7 +4,7 @@
 #![allow(missing_docs)]
 
 use insta::assert_debug_snapshot;
-use microcad_lang_parse::tokens::lex;
+use microcad_lang_parse::lex;
 use test_case::test_case;
 
 #[test_case("single int", "1")]

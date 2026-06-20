@@ -86,9 +86,7 @@ impl<'source> ParseContext<'source> {
             } => line_index
                 .src_ref(source.value(), span, source.computed_hash())
                 .with_line_offset(*line_offset),
-            Self::Element(source) => {
-                SrcRef::new(span.clone(), Default::default(), source.computed_hash())
-            }
+            Self::Element(source) => SrcRef::new(span, Default::default(), source.computed_hash()),
         }
     }
 }

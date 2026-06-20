@@ -92,7 +92,7 @@ impl ToMd for ParameterList {
 impl ToMd for WorkbenchDefinition {
     fn to_md(&self) -> Markdown {
         let mut md = parse(format!("# {}\n{}", self.id(), fetch_doc(self)));
-        md.nest(self.plan.to_md(), 1);
+        md.nest(self.parameters.to_md(), 1);
         self.inits().for_each(|init| {
             md.nest(init.to_md(), 1);
         });

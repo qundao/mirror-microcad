@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::ast;
-use crate::ast::Span;
+use crate::ast::{Span, def};
 
 /// An inner doc block
 #[derive(Debug, PartialEq)]
@@ -16,19 +16,19 @@ pub struct InnerDocComment {
 #[derive(Debug, PartialEq)]
 pub enum Statement {
     /// Workbench statement: `part Foo() { ... }`
-    Workbench(WorkbenchDefinition),
+    Workbench(def::Workbench),
     /// Inline Module: `mod foo { ... }`
-    InlineModule(InlineModule),
+    InlineModule(def::InlineModule),
     /// File Module: `mod foo;`
-    FileModule(FileModule),
+    FileModule(def::FileModule),
     /// Function statement: `fn bar() { ... }`
-    Function(FunctionDefinition),
+    Function(def::Function),
     /// Use statement: `use foo::bar;`
-    Use(UseStatement),
-    /// Const definition: `const FOO = 42mm`
-    Const(ConstAssignment),
+    Use(def::Use),
+    /// Constant definition: `const FOO = 42mm`
+    Const(def::Constant),
     /// Init definition: `init() { ... }`
-    Init(InitDefinition),
+    Init(Init),
     /// Return statement: `return 23mm;`
     Return(Return),
     /// Inner attribute: `#![...]`
@@ -85,117 +85,24 @@ impl Statement {
             Statement::FileModule(_) => true,
             Statement::LocalAssignment(_) => true,
             Statement::Property(_) => true,
-            Statement::Expression(e) => !matches!(
-                &e.expression,
-                ast::Expression::Body(_) | ast::Expression::If(_)
-            ),
+            Statement::Expression(e) => {
+                !matches!(&e.expr, ast::Expression::Body(_) | ast::Expression::If(_))
+            }
         }
     }
-}
-
-pub use microcad_lang_base::element::WorkbenchKind;
-
-/// A definition of a workbench
-#[derive(Debug, PartialEq)]
-#[allow(missing_docs)]
-pub struct WorkbenchDefinition {
-    pub span: Span,
-    pub keyword_span: Span,
-    pub extras: ast::ItemExtras,
-    pub doc: DocBlock,
-    pub kind: WorkbenchKind,
-    pub attributes: Vec<Attribute>,
-    pub visibility: Option<Visibility>,
-    pub name: ast::Identifier,
-    pub plan: ParameterList,
-    pub body: ast::Body,
-}
-
-/// A definition of a module
-#[derive(Debug, PartialEq)]
-#[allow(missing_docs)]
-pub struct InlineModule {
-    pub span: Span,
-    pub keyword_span: Span,
-    pub extras: ast::ItemExtras,
-    pub doc: DocBlock,
-    pub attributes: Vec<Attribute>,
-    pub visibility: Option<Visibility>,
-    pub name: ast::Identifier,
-    pub body: ast::Body,
-}
-
-/// A definition of a module
-#[derive(Debug, PartialEq)]
-#[allow(missing_docs)]
-pub struct FileModule {
-    pub span: Span,
-    pub keyword_span: Span,
-    pub extras: ast::ItemExtras,
-    pub doc: DocBlock,
-    pub attributes: Vec<Attribute>,
-    pub visibility: Option<Visibility>,
-    pub name: ast::Identifier,
-}
-
-/// A definition of a function
-#[derive(Debug, PartialEq)]
-#[allow(missing_docs)]
-pub struct FunctionDefinition {
-    pub span: Span,
-    pub keyword_span: Span,
-    pub extras: ast::ItemExtras,
-    pub doc: DocBlock,
-    pub attributes: Vec<Attribute>,
-    pub visibility: Option<Visibility>,
-    pub name: ast::Identifier,
-    pub parameters: ParameterList,
-    pub return_type: Option<ast::Type>,
-    pub body: ast::Body,
 }
 
 /// An init definition for a workbench
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
-pub struct InitDefinition {
+pub struct Init {
     pub span: Span,
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
     pub doc: DocBlock,
-    pub attributes: Vec<Attribute>,
+    pub attr: Vec<Attribute>,
     pub parameters: ParameterList,
     pub body: ast::Body,
-}
-
-/// A use statement that imports an item from an external library
-#[derive(Debug, PartialEq)]
-#[allow(missing_docs)]
-pub struct UseStatement {
-    pub span: Span,
-    pub attributes: Vec<Attribute>,
-    pub keyword_span: Span,
-    pub extras: ast::ItemExtras,
-    pub visibility: Option<Visibility>,
-    pub name: UseName,
-    pub use_as: Option<ast::Identifier>,
-}
-
-/// The name of the item being imported
-#[derive(Debug, PartialEq)]
-#[allow(missing_docs)]
-pub struct UseName {
-    pub span: Span,
-    pub extras: ast::ItemExtras,
-    pub parts: Vec<UseStatementPart>,
-}
-
-/// The parts a [`UseName`] consists of, separated by `::`
-#[derive(Debug, PartialEq)]
-#[allow(missing_docs)]
-pub enum UseStatementPart {
-    Identifier(ast::Identifier),
-    Glob(Span),
-    Error(Span),
 }
 
 /// A return statement
@@ -205,7 +112,7 @@ pub struct Return {
     pub span: Span,
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
-    pub value: Option<ast::Expression>,
+    pub expr: Option<ast::Expression>,
 }
 
 /// A parameter list of a workbench definition or function definition
@@ -234,8 +141,8 @@ pub struct Parameter {
     pub span: Span,
     pub extras: ast::ItemExtras,
     pub doc: ast::DocBlock,
-    pub attributes: Vec<Attribute>,
-    pub name: ast::Identifier,
+    pub attr: Vec<Attribute>,
+    pub id: ast::Identifier,
     pub ty: Option<ast::Type>,
     pub default: Option<ast::Expression>,
 }
@@ -267,25 +174,10 @@ pub enum AttributeCommand {
 pub struct LocalAssignment {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub attributes: Vec<Attribute>,
-    pub name: ast::Identifier,
+    pub attr: Vec<Attribute>,
+    pub id: ast::Identifier,
     pub ty: Option<ast::Type>,
-    pub value: Box<ast::Expression>,
-}
-
-/// A const assignment: `const A = 42` / `pub A = 32`
-#[derive(Debug, PartialEq)]
-#[allow(missing_docs)]
-pub struct ConstAssignment {
-    pub span: Span,
-    pub keyword_span: Span,
-    pub extras: ast::ItemExtras,
-    pub doc: DocBlock,
-    pub attributes: Vec<Attribute>,
-    pub visibility: Option<Visibility>,
-    pub name: ast::Identifier,
-    pub ty: Option<ast::Type>,
-    pub value: Box<ast::Expression>,
+    pub expr: Box<ast::Expression>,
 }
 
 /// A property assignment: `prop a = 42`
@@ -296,8 +188,8 @@ pub struct PropertyAssignment {
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
     pub doc: DocBlock,
-    pub attributes: Vec<Attribute>,
-    pub name: ast::Identifier,
+    pub attr: Vec<Attribute>,
+    pub id: ast::Identifier,
     pub ty: Option<ast::Type>,
     pub value: Box<ast::Expression>,
 }
@@ -327,23 +219,14 @@ pub struct DocBlock {
     pub lines: Vec<String>,
 }
 
-/// An optional visibility modifier
-///
-/// it can be part of constant, module, function or workbench definitions.
-#[derive(Debug, PartialEq)]
-pub enum Visibility {
-    /// `pub`
-    Public,
-}
-
 /// A statement containing of a bare expression
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
 pub struct ExpressionStatement {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub attributes: Vec<Attribute>,
-    pub expression: ast::Expression,
+    pub attr: Vec<Attribute>,
+    pub expr: ast::Expression,
 }
 
 /// A list of statements, with optional trailing whitespace kept and an optional "tail" expression

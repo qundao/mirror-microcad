@@ -18,7 +18,7 @@ Ok(
             statements: [
                 (
                     Workbench(
-                        WorkbenchDefinition {
+                        Workbench {
                             span: 0..84,
                             keyword_span: 4..8,
                             extras: ItemExtras {
@@ -34,15 +34,18 @@ Ok(
                                 lines: [],
                             },
                             kind: Part,
-                            attributes: [],
-                            visibility: Some(
-                                Public,
+                            attr: [],
+                            vis: Some(
+                                Spanned {
+                                    span: 0..3,
+                                    value: Public,
+                                },
                             ),
-                            name: Identifier {
+                            id: Identifier {
                                 span: 9..14,
                                 name: "Wheel",
                             },
-                            plan: ParameterList {
+                            parameters: ParameterList {
                                 span: 15..43,
                                 extras: ItemExtras {
                                     leading: LeadingExtras(
@@ -67,8 +70,8 @@ Ok(
                                             span: 15..15,
                                             lines: [],
                                         },
-                                        attributes: [],
-                                        name: Identifier {
+                                        attr: [],
+                                        id: Identifier {
                                             span: 15..21,
                                             name: "radius",
                                         },
@@ -88,7 +91,9 @@ Ok(
                                             leading: LeadingExtras(
                                                 [
                                                     Whitespace(
-                                                        " ",
+                                                        Whitespace(
+                                                            " ",
+                                                        ),
                                                     ),
                                                 ],
                                             ),
@@ -100,8 +105,8 @@ Ok(
                                             span: 31..31,
                                             lines: [],
                                         },
-                                        attributes: [],
-                                        name: Identifier {
+                                        attr: [],
+                                        id: Identifier {
                                             span: 31..37,
                                             name: "height",
                                         },
@@ -160,8 +165,8 @@ Ok(
                                                             [],
                                                         ),
                                                     },
-                                                    attributes: [],
-                                                    expression: Call(
+                                                    attr: [],
+                                                    expr: Call(
                                                         Call {
                                                             span: 46..82,
                                                             extras: ItemExtras {
@@ -219,7 +224,7 @@ Ok(
                                                                                     [],
                                                                                 ),
                                                                             },
-                                                                            value: QualifiedName(
+                                                                            expr: QualifiedName(
                                                                                 QualifiedName {
                                                                                     span: 67..73,
                                                                                     extras: ItemExtras {
@@ -251,7 +256,7 @@ Ok(
                                                                                     [],
                                                                                 ),
                                                                             },
-                                                                            value: QualifiedName(
+                                                                            expr: QualifiedName(
                                                                                 QualifiedName {
                                                                                     span: 75..81,
                                                                                     extras: ItemExtras {

@@ -249,7 +249,7 @@ fn identifier_comparison() {
     let id1 = Identifier::no_ref("x");
     let id2 = Identifier(Refer::new(
         "x".into(),
-        SrcRef::new(0..5, LineCol { line: 0, col: 1 }, 1),
+        SrcRef::new(&(0..5), LineCol { line: 0, col: 1 }, 1),
     ));
 
     // shall be equal
@@ -265,7 +265,7 @@ fn identifier_hash() {
     let id1 = Identifier(Refer::none("x".into()));
     let id2 = Identifier(Refer::new(
         "x".into(),
-        SrcRef::new(0..5, LineCol { line: 0, col: 1 }, 1),
+        SrcRef::new(&(0..5), LineCol { line: 0, col: 1 }, 1),
     ));
 
     let mut hasher = std::hash::DefaultHasher::new();

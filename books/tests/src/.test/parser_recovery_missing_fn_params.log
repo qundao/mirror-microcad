@@ -21,8 +21,8 @@
     ·        ╰── unexpected {
  17 │   1=; // error inside an if statement with missing params
     ╰────
-  × error: 17:4: Expected unit, something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=',
-  │ 'or', 'and' or semicolon
+  × error: 17:4: Expected unit, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and' or
+  │ semicolon
     ╭─[../books/tests/src/parser_recovery.md:17:4]
  16 │ fn bar { // error, no params
  17 │   1=; // error inside an if statement with missing params

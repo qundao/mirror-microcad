@@ -1,0 +1,74 @@
+---
+source: crates/lang-parse/tests/lexer.rs
+expression: "lex(input).collect::<Vec<_>>()"
+---
+[
+    Spanned {
+        span: 0..1,
+        value: FormatStringStart,
+    },
+    Spanned {
+        span: 1..8,
+        value: StringContent(
+            "string ",
+        ),
+    },
+    Spanned {
+        span: 35..36,
+        value: StringFormatOpen,
+    },
+    Spanned {
+        span: 9..17,
+        value: Identifier(
+            "formated",
+        ),
+    },
+    Spanned {
+        span: 17..18,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 18..19,
+        value: OperatorSubtract,
+    },
+    Spanned {
+        span: 19..20,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 20..30,
+        value: Identifier(
+            "expression",
+        ),
+    },
+    Spanned {
+        span: 31..33,
+        value: StringFormatWidth(
+            "03",
+        ),
+    },
+    Spanned {
+        span: 33..35,
+        value: StringFormatPrecision(
+            ".5",
+        ),
+    },
+    Spanned {
+        span: 35..36,
+        value: StringFormatClose,
+    },
+    Spanned {
+        span: 36..47,
+        value: StringContent(
+            " expression",
+        ),
+    },
+    Spanned {
+        span: 47..48,
+        value: FormatStringEnd,
+    },
+]

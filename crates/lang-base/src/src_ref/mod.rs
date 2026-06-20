@@ -25,11 +25,35 @@ pub use src_referrer::*;
 
 use crate::HashId;
 
+use derive_more::Deref;
 use miette::SourceSpan;
 use serde::Serialize;
 
 /// Span for tokens or AST nodes, a range of byte offsets from the start of the source
 pub type Span = std::ops::Range<usize>;
+
+/// Something that has a span attached.
+#[derive(Debug, PartialEq, Deref, Clone)]
+pub struct Spanned<T> {
+    /// the span of the token
+    pub span: Span,
+    /// the token
+    #[deref]
+    pub value: T,
+}
+
+impl<T> Spanned<T> {
+    /// Create a [`SpannedToken`] from [`Span`] and token
+    pub fn new(span: Span, value: T) -> Self {
+        Self { span, value }
+    }
+}
+
+impl<T: PartialEq> PartialEq<T> for Spanned<T> {
+    fn eq(&self, other: &T) -> bool {
+        self.value.eq(other)
+    }
+}
 
 /// Reference into a source file.
 ///
@@ -51,15 +75,30 @@ pub struct SrcRef {
     pub source_hash: HashId,
 }
 
+pub trait SrcRefIndex {
+    fn span_to_src_ref(&self, span: Span) -> SrcRef;
+
+    fn spanned_to_refer<T>(&self, spanned: Spanned<T>) -> Refer<T> {
+        Refer {
+            value: spanned.value,
+            src_ref: self.span_to_src_ref(spanned.span),
+        }
+    }
+}
+
 impl SrcRef {
+    pub fn from_span(span: Span, src_ref_index: impl SrcRefIndex) -> Self {
+        src_ref_index.span_to_src_ref(span)
+    }
+
     /// Create new `SrcRef`
     /// - `range`: Position in file
     /// - `line`: Line number within file
     /// - `col`: Column number within file
-    pub fn new(range: std::ops::Range<usize>, at: LineCol, source_hash: HashId) -> Self {
+    pub fn new(span: &Span, at: LineCol, source_hash: HashId) -> Self {
         Self {
-            start: range.start,
-            end: range.end,
+            start: span.start,
+            end: span.end,
             at,
             source_hash,
         }
@@ -95,19 +134,18 @@ impl SrcRef {
 
     /// Return a reference with a given line offset.
     pub fn with_line_offset(&self, line_offset: u32) -> Self {
-        let mut s = self.clone();
+        let mut s = *self;
         s.at.line += line_offset;
         s
     }
 
-    /// Return range between `start..end`
-    pub fn range(&self) -> std::ops::Range<usize> {
+    pub fn span(&self) -> Span {
         self.start..self.end
     }
 
     /// return length of `SrcRef`
     pub fn len(&self) -> usize {
-        self.range().len()
+        self.span().len()
     }
 
     /// return true if code base is empty
@@ -128,7 +166,7 @@ impl SrcRef {
     /// Return slice to code base.
     pub fn source_slice<'a>(&self, src: &'a str) -> &'a str {
         assert!(self.is_some());
-        &src[self.range().to_owned()]
+        &src[self.span().to_owned()]
     }
 
     /// Merge two `SrcRef` into a single one.
@@ -146,7 +184,7 @@ impl SrcRef {
                 if lhs.source_hash == rhs.source_hash {
                     let source_hash = lhs.source_hash;
 
-                    if lhs.range() == rhs.range() {
+                    if lhs.span() == rhs.span() {
                         lhs
                     } else if lhs.end > rhs.start || lhs.start > rhs.end {
                         log::warn!(
@@ -171,8 +209,8 @@ impl SrcRef {
                     SrcRef::none()
                 }
             }
-            (true, false) => lhs.clone(),
-            (false, true) => rhs.clone(),
+            (true, false) => lhs,
+            (false, true) => rhs,
             (false, false) => SrcRef::none(),
         }
     }
@@ -204,29 +242,17 @@ impl SrcRef {
 
     /// Return line and column in source code or `None` if not available.
     pub fn at(&self) -> Option<LineCol> {
-        if self.is_some() {
-            Some(self.at.clone())
-        } else {
-            None
-        }
+        if self.is_some() { Some(self.at) } else { None }
     }
 
     /// Get the line of the start of the referenced source, if any
     pub fn line(&self) -> Option<u32> {
-        if self.is_some() {
-            Some(self.at.line)
-        } else {
-            None
-        }
+        self.at().map(|at| at.line)
     }
 
     /// Get the column of the start of the referenced source, if any
     pub fn col(&self) -> Option<u32> {
-        if self.is_some() {
-            Some(self.at.col)
-        } else {
-            None
-        }
+        self.at().map(|at| at.col)
     }
 }
 
@@ -312,23 +338,22 @@ impl Serialize for SrcRef {
 
 #[test]
 fn merge_all() {
-    use std::ops::Range;
     assert_eq!(
         SrcRef::merge_all(
             [
-                SrcRef::new(Range { start: 5, end: 8 }, LineCol { line: 1, col: 6 }, 123),
+                SrcRef::new(&Span { start: 5, end: 8 }, LineCol { line: 1, col: 6 }, 123),
                 SrcRef::new(
-                    Range { start: 8, end: 10 },
+                    &Span { start: 8, end: 10 },
                     LineCol { line: 2, col: 1 },
                     123
                 ),
                 SrcRef::new(
-                    Range { start: 12, end: 16 },
+                    &Span { start: 12, end: 16 },
                     LineCol { line: 3, col: 1 },
                     123
                 ),
                 SrcRef::new(
-                    Range { start: 0, end: 10 },
+                    &Span { start: 0, end: 10 },
                     LineCol { line: 1, col: 1 },
                     123
                 ),
@@ -336,7 +361,7 @@ fn merge_all() {
             .iter(),
         ),
         SrcRef::new(
-            Range { start: 0, end: 16 },
+            &Span { start: 0, end: 16 },
             LineCol { line: 1, col: 1 },
             123
         ),
@@ -350,8 +375,8 @@ fn test_src_ref() {
 
     let cube = 7..11;
     let size_y = 26..32;
-    let cube = SrcRef::new(cube, LineCol { line: 1, col: 0 }, input.computed_hash());
-    let size_y = SrcRef::new(size_y, LineCol { line: 1, col: 0 }, input.computed_hash());
+    let cube = SrcRef::new(&cube, LineCol { line: 1, col: 0 }, input.computed_hash());
+    let size_y = SrcRef::new(&size_y, LineCol { line: 1, col: 0 }, input.computed_hash());
 
     assert_eq!(cube.source_slice(input.value()), "Cube");
     assert_eq!(size_y.source_slice(input.value()), "size_y");

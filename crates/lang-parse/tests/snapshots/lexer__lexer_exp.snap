@@ -1,0 +1,72 @@
+---
+source: crates/lang-parse/tests/lexer.rs
+expression: "lex(input).collect::<Vec<_>>()"
+---
+[
+    Spanned {
+        span: 0..5,
+        value: LiteralFloat(
+            ".1e-3",
+        ),
+    },
+    Spanned {
+        span: 5..6,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 6..11,
+        value: LiteralFloat(
+            ".1e+3",
+        ),
+    },
+    Spanned {
+        span: 11..12,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 12..16,
+        value: LiteralFloat(
+            ".1e3",
+        ),
+    },
+    Spanned {
+        span: 16..17,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 17..21,
+        value: LiteralFloat(
+            "1.e3",
+        ),
+    },
+    Spanned {
+        span: 21..22,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 22..27,
+        value: LiteralFloat(
+            "1.2e3",
+        ),
+    },
+    Spanned {
+        span: 27..28,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 28..31,
+        value: LiteralFloat(
+            "1e3",
+        ),
+    },
+]

@@ -1,23 +1,16 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_lang_base::Spanned;
+
 use crate::ast;
 use crate::ast::Span;
 use std::num::ParseIntError;
 
-/// An operator for binary operators, together with a span
-#[derive(Debug, PartialEq)]
-pub struct BinaryOperator {
-    /// The source span for the operator
-    pub span: Span,
-    /// The type of the operator
-    pub operation: BinaryOperatorType,
-}
-
 /// The type of the operator for binary operations
 #[derive(Debug, PartialEq, Clone)]
 #[allow(missing_docs)]
-pub enum BinaryOperatorType {
+pub enum BinaryOperator {
     Add,
     Subtract,
     Multiply,
@@ -37,7 +30,7 @@ pub enum BinaryOperatorType {
     Xor,
 }
 
-impl BinaryOperatorType {
+impl BinaryOperator {
     /// Get the symbolic representation for the operator
     pub fn as_str(&self) -> &'static str {
         match self {
@@ -62,31 +55,22 @@ impl BinaryOperatorType {
     }
 }
 
-/// An operator for unary operators, together with a span
-#[derive(Debug, PartialEq)]
-pub struct UnaryOperator {
-    /// The source span for the unary operator
-    pub span: Span,
-    /// The type of the unary operator
-    pub operation: UnaryOperatorType,
-}
-
 /// The type of the operator for unary operations
 #[derive(Debug, PartialEq, Clone)]
 #[allow(missing_docs)]
-pub enum UnaryOperatorType {
+pub enum UnaryOperator {
     Minus,
     Plus,
     Not,
 }
 
-impl UnaryOperatorType {
+impl UnaryOperator {
     /// Get the symbolic representation for the operator
     pub fn as_str(&self) -> &'static str {
         match self {
-            UnaryOperatorType::Minus => "-",
-            UnaryOperatorType::Plus => "+",
-            UnaryOperatorType::Not => "!",
+            Self::Minus => "-",
+            Self::Plus => "+",
+            Self::Not => "!",
         }
     }
 }
@@ -186,7 +170,7 @@ pub struct StringCharacter {
 pub struct StringExpression {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub expression: Box<Expression>,
+    pub expr: Box<Expression>,
     pub specification: Box<StringFormatSpecification>,
 }
 
@@ -214,8 +198,8 @@ impl StringFormatSpecification {
 pub struct TupleItem {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub name: Option<ast::Identifier>,
-    pub value: Expression,
+    pub id: Option<ast::Identifier>,
+    pub expr: Expression,
 }
 
 impl ast::Dummy for TupleItem {
@@ -223,8 +207,8 @@ impl ast::Dummy for TupleItem {
         Self {
             span: span.clone(),
             extras: ast::ItemExtras::default(),
-            name: None,
-            value: Expression::Error(span),
+            id: None,
+            expr: Expression::Error(span),
         }
     }
 }
@@ -265,7 +249,7 @@ pub struct ArrayListExpression {
 pub struct ArrayItem {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub expression: Expression,
+    pub expr: Expression,
 }
 
 /// A qualified name, containing one or more [`Identifier`]s separated by `::`
@@ -283,7 +267,7 @@ pub struct QualifiedName {
 pub struct BinaryOperation {
     pub span: Span,
     pub lhs: Box<Expression>,
-    pub operation: BinaryOperator,
+    pub op: Spanned<BinaryOperator>,
     pub rhs: Box<Expression>,
 }
 
@@ -293,7 +277,7 @@ pub struct BinaryOperation {
 pub struct UnaryOperation {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub operation: UnaryOperator,
+    pub op: Spanned<UnaryOperator>,
     pub rhs: Box<Expression>,
 }
 
@@ -314,7 +298,7 @@ pub struct Call {
 #[allow(missing_docs)]
 pub struct ElementAccess {
     pub span: Span,
-    pub value: Box<Expression>,
+    pub expr: Box<Expression>,
     pub element_chain: Vec<Element>,
 }
 
@@ -390,15 +374,15 @@ impl Argument {
     pub fn name(&self) -> Option<&ast::Identifier> {
         match self {
             Argument::Unnamed(_) => None,
-            Argument::Named(arg) => Some(&arg.name),
+            Argument::Named(arg) => Some(&arg.id),
         }
     }
 
     /// The value of the argument
     pub fn value(&self) -> &Expression {
         match self {
-            Argument::Unnamed(arg) => &arg.value,
-            Argument::Named(arg) => &arg.value,
+            Argument::Unnamed(arg) => &arg.expr,
+            Argument::Named(arg) => &arg.expr,
         }
     }
 
@@ -417,7 +401,7 @@ impl Argument {
 pub struct UnnamedArgument {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub value: Expression,
+    pub expr: Expression,
 }
 
 /// An argument with a specified name
@@ -426,6 +410,6 @@ pub struct UnnamedArgument {
 pub struct NamedArgument {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub name: ast::Identifier,
-    pub value: Expression,
+    pub id: ast::Identifier,
+    pub expr: Expression,
 }

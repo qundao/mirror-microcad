@@ -21,8 +21,8 @@
     ·     ╰── unexpected {
  47 │   1=; // error inside a mod statements with no name
     ╰────
-  × error: 47:4: Expected unit, something else, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=',
-  │ 'or', 'and' or semicolon
+  × error: 47:4: Expected unit, comment, attribute access, method call, tuple access, array access, '!', '^', 'xor', '|', '&', '*', '/', '+', '-', '<=', '>=', '<', '>', '==', '!=', 'or', 'and' or
+  │ semicolon
     ╭─[../books/tests/src/parser_recovery.md:47:4]
  46 │ mod { // error, no name
  47 │   1=; // error inside a mod statements with no name

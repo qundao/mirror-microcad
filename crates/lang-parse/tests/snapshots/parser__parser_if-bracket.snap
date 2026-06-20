@@ -28,8 +28,8 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [],
-                            expression: If(
+                            attr: [],
+                            expr: If(
                                 If {
                                     span: 0..21,
                                     if_span: 0..2,
@@ -55,7 +55,9 @@ Ok(
                                                             trailing: TrailingExtras(
                                                                 [
                                                                     Whitespace(
-                                                                        " ",
+                                                                        Whitespace(
+                                                                            " ",
+                                                                        ),
                                                                     ),
                                                                 ],
                                                             ),
@@ -68,9 +70,9 @@ Ok(
                                                         ],
                                                     },
                                                 ),
-                                                operation: BinaryOperator {
+                                                op: Spanned {
                                                     span: 6..7,
-                                                    operation: GreaterThan,
+                                                    value: GreaterThan,
                                                 },
                                                 rhs: Literal(
                                                     Literal {
@@ -104,7 +106,9 @@ Ok(
                                                 leading: LeadingExtras(
                                                     [
                                                         Whitespace(
-                                                            " ",
+                                                            Whitespace(
+                                                                " ",
+                                                            ),
                                                         ),
                                                     ],
                                                 ),
@@ -125,8 +129,8 @@ Ok(
                                                                     [],
                                                                 ),
                                                             },
-                                                            attributes: [],
-                                                            expression: Call(
+                                                            attr: [],
+                                                            expr: Call(
                                                                 Call {
                                                                     span: 13..18,
                                                                     extras: ItemExtras {
@@ -173,7 +177,9 @@ Ok(
                                                     TrailingExtras(
                                                         [
                                                             Whitespace(
-                                                                " ",
+                                                                Whitespace(
+                                                                    " ",
+                                                                ),
                                                             ),
                                                         ],
                                                     ),

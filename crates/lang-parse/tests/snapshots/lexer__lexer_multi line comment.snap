@@ -1,0 +1,88 @@
+---
+source: crates/lang-parse/tests/lexer.rs
+expression: "lex(input).collect::<Vec<_>>()"
+---
+[
+    Spanned {
+        span: 0..1,
+        value: Identifier(
+            "a",
+        ),
+    },
+    Spanned {
+        span: 1..2,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 2..3,
+        value: OperatorAssignment,
+    },
+    Spanned {
+        span: 3..4,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 4..5,
+        value: LiteralInt(
+            "1",
+        ),
+    },
+    Spanned {
+        span: 5..6,
+        value: SigilSemiColon,
+    },
+    Spanned {
+        span: 6..7,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 7..44,
+        value: MultiLineComment(
+            "multi\n    line\n    comment",
+        ),
+    },
+    Spanned {
+        span: 44..49,
+        value: Whitespace(
+            "\n    ",
+        ),
+    },
+    Spanned {
+        span: 49..50,
+        value: Identifier(
+            "b",
+        ),
+    },
+    Spanned {
+        span: 50..51,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 51..52,
+        value: OperatorAssignment,
+    },
+    Spanned {
+        span: 52..53,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 53..54,
+        value: LiteralInt(
+            "2",
+        ),
+    },
+    Spanned {
+        span: 54..55,
+        value: SigilSemiColon,
+    },
+]

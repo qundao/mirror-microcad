@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -28,13 +28,13 @@ Ok(
                                     [],
                                 ),
                             },
-                            attributes: [],
-                            name: Identifier {
+                            attr: [],
+                            id: Identifier {
                                 span: 0..1,
                                 name: "a",
                             },
                             ty: None,
-                            value: Literal(
+                            expr: Literal(
                                 Literal {
                                     span: 4..5,
                                     extras: ItemExtras {
@@ -59,7 +59,9 @@ Ok(
                     TrailingExtras(
                         [
                             Whitespace(
-                                " ",
+                                Whitespace(
+                                    " ",
+                                ),
                             ),
                             Comment(
                                 Comment {

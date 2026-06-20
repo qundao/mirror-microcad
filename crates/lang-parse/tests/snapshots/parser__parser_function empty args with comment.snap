@@ -1,5 +1,5 @@
 ---
-source: crates/syntax/tests/parser.rs
+source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
@@ -18,7 +18,7 @@ Ok(
             statements: [
                 (
                     Function(
-                        FunctionDefinition {
+                        Function {
                             span: 0..22,
                             keyword_span: 0..2,
                             extras: ItemExtras {
@@ -33,9 +33,9 @@ Ok(
                                 span: 0..22,
                                 lines: [],
                             },
-                            attributes: [],
-                            visibility: None,
-                            name: Identifier {
+                            attr: [],
+                            vis: None,
+                            id: Identifier {
                                 span: 3..6,
                                 name: "foo",
                             },
@@ -85,8 +85,8 @@ Ok(
                                                     [],
                                                 ),
                                             },
-                                            attributes: [],
-                                            expression: Literal(
+                                            attr: [],
+                                            expr: Literal(
                                                 Literal {
                                                     span: 20..21,
                                                     extras: ItemExtras {

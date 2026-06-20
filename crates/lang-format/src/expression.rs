@@ -7,8 +7,8 @@ use microcad_lang_parse::ast;
 
 impl Format for ast::BinaryOperator {
     fn format(&self, _: &FormatConfig) -> Node {
-        use ast::BinaryOperatorType::*;
-        match &self.operation {
+        use ast::BinaryOperator::*;
+        match &self {
             GreaterEqual => ">=",
             LessEqual => "<=",
             And => "and",
@@ -21,7 +21,7 @@ impl Format for ast::BinaryOperator {
 
 impl Format for ast::UnaryOperator {
     fn format(&self, _: &FormatConfig) -> Node {
-        self.operation.as_str().into()
+        self.as_str().into()
     }
 }
 
@@ -102,7 +102,7 @@ impl Format for ast::StringCharacter {
 impl Format for ast::StringExpression {
     fn format<'a>(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
-            '{' self.specification self.expression '}'
+            '{' self.specification self.expr '}'
         )
     }
 }
@@ -134,9 +134,9 @@ impl Format for ast::FormatString {
 impl Format for ast::TupleItem {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, leading_extras_without_newline(&self.extras) =>
-            match &self.name {
-                Some(name) => node!(f => name " = " self.value),
-                None => node!(f => self.value)
+            match &self.id {
+                Some(name) => node!(f => name " = " self.expr),
+                None => node!(f => self.expr)
             }
         )
     }
@@ -154,7 +154,7 @@ impl Format for ast::TupleExpression {
 
 impl Format for ast::ArrayItem {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f, self.extras => self.expression)
+        node!(f, self.extras => self.expr)
     }
 }
 
@@ -186,13 +186,13 @@ impl Format for ast::QualifiedName {
 
 impl Format for ast::BinaryOperation {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f => self.lhs Node::Softline self.operation Node::Softline self.rhs)
+        node!(f => self.lhs Node::Softline self.op Node::Softline self.rhs)
     }
 }
 
 impl Format for ast::UnaryOperation {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f => self.operation self.rhs)
+        node!(f => self.op self.rhs)
     }
 }
 
@@ -207,13 +207,13 @@ impl Format for ast::Argument {
 
 impl Format for ast::UnnamedArgument {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f, self.extras => self.value)
+        node!(f, self.extras => self.expr)
     }
 }
 
 impl Format for ast::NamedArgument {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f, self.extras => self.name " = " self.value)
+        node!(f, self.extras => self.id " = " self.expr)
     }
 }
 
@@ -253,7 +253,7 @@ impl Format for ast::Element {
 impl Format for ast::ElementAccess {
     fn format(&self, f: &FormatConfig) -> Node {
         // If this is true, we place an indent on the next line
-        let mut indent = match &self.value.as_ref() {
+        let mut indent = match &self.expr.as_ref() {
             ast::Expression::Literal(_) => false,
             ast::Expression::Bracketed(_, _) => true,
             ast::Expression::Tuple(_) => true,
@@ -291,7 +291,7 @@ impl Format for ast::ElementAccess {
             }
         };
 
-        node!(f => self.value element_chain_node)
+        node!(f => self.expr element_chain_node)
     }
 }
 

@@ -1,6 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+pub mod def;
 mod expression;
 mod literal;
 mod source;
@@ -40,6 +41,18 @@ pub struct Program {
     pub statements: StatementList,
 }
 
+/// Whitespace
+#[derive(Debug, Clone, PartialEq)]
+pub struct Whitespace(pub String);
+
+#[derive(Debug, Clone, PartialEq)]
+#[allow(missing_docs)]
+#[non_exhaustive]
+pub enum ItemExtra {
+    Comment(Comment),
+    Whitespace(Whitespace),
+}
+
 /// Non-syntactic extras that can be attached to many ast nodes
 #[derive(Clone, Debug, PartialEq, Default)]
 #[allow(missing_docs)]
@@ -57,14 +70,6 @@ pub struct TrailingExtras(pub Vec<ItemExtra>);
 #[derive(Debug, Clone, PartialEq, Default)]
 #[allow(missing_docs)]
 pub struct LeadingExtras(pub Vec<ItemExtra>);
-
-#[derive(Debug, Clone, PartialEq)]
-#[allow(missing_docs)]
-#[non_exhaustive]
-pub enum ItemExtra {
-    Comment(Comment),
-    Whitespace(String),
-}
 
 /// Return a dummy of this syntax element.
 ///

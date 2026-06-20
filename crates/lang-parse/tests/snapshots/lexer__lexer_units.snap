@@ -1,0 +1,184 @@
+---
+source: crates/lang-parse/tests/lexer.rs
+expression: "lex(input).collect::<Vec<_>>()"
+---
+[
+    Spanned {
+        span: 0..1,
+        value: LiteralInt(
+            "1",
+        ),
+    },
+    Spanned {
+        span: 1..2,
+        value: Unit(
+            "%",
+        ),
+    },
+    Spanned {
+        span: 2..3,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 3..4,
+        value: OperatorAdd,
+    },
+    Spanned {
+        span: 4..5,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 5..6,
+        value: LiteralInt(
+            "2",
+        ),
+    },
+    Spanned {
+        span: 6..8,
+        value: Identifier(
+            "mm",
+        ),
+    },
+    Spanned {
+        span: 8..9,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 9..10,
+        value: OperatorDivide,
+    },
+    Spanned {
+        span: 10..11,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 11..12,
+        value: LiteralInt(
+            "3",
+        ),
+    },
+    Spanned {
+        span: 12..15,
+        value: Identifier(
+            "mm2",
+        ),
+    },
+    Spanned {
+        span: 15..16,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 16..17,
+        value: OperatorSubtract,
+    },
+    Spanned {
+        span: 17..18,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 18..19,
+        value: LiteralInt(
+            "4",
+        ),
+    },
+    Spanned {
+        span: 19..23,
+        value: Unit(
+            "mm³",
+        ),
+    },
+    Spanned {
+        span: 23..24,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 24..25,
+        value: OperatorMultiply,
+    },
+    Spanned {
+        span: 25..26,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 26..27,
+        value: LiteralInt(
+            "1",
+        ),
+    },
+    Spanned {
+        span: 27..29,
+        value: Unit(
+            "°",
+        ),
+    },
+    Spanned {
+        span: 29..30,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 30..31,
+        value: OperatorAdd,
+    },
+    Spanned {
+        span: 31..32,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 32..33,
+        value: LiteralInt(
+            "1",
+        ),
+    },
+    Spanned {
+        span: 33..34,
+        value: SigilQuote,
+    },
+    Spanned {
+        span: 34..35,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 35..36,
+        value: OperatorSubtract,
+    },
+    Spanned {
+        span: 36..37,
+        value: Whitespace(
+            " ",
+        ),
+    },
+    Spanned {
+        span: 37..38,
+        value: LiteralInt(
+            "2",
+        ),
+    },
+    Spanned {
+        span: 38..39,
+        value: Unit(
+            "'",
+        ),
+    },
+]

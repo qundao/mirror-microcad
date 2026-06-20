@@ -28,8 +28,8 @@ impl_tokens!(ast::Literal => |self_, ctx| {
 
 impl_tokens!(ast::TupleItem => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
-    if let Some(name) = self_.name.as_ref() { ctx.push_token(&name.span, TokenType::PROPERTY, &[]) };
-    self_.value.semantic_tokens(ctx);
+    if let Some(id) = self_.id.as_ref() { ctx.push_token(&id.span, TokenType::PROPERTY, &[]) };
+    self_.expr.semantic_tokens(ctx);
 });
 
 impl_tokens!(ast::TupleExpression => |self_, ctx| {
@@ -39,7 +39,7 @@ impl_tokens!(ast::TupleExpression => |self_, ctx| {
         .for_each(|item| item.semantic_tokens(ctx));
 });
 
-impl_tokens!(ast::ArrayItem => extras, expression);
+impl_tokens!(ast::ArrayItem => extras, expr);
 
 impl_tokens!(ast::ArrayRangeExpression => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
@@ -57,7 +57,7 @@ impl_tokens!(ast::ArrayListExpression => |self_, ctx| {
 });
 
 impl_tokens!(ast::StringCharacter => TokenType::STRING);
-impl_tokens!(ast::StringExpression => extras, expression);
+impl_tokens!(ast::StringExpression => extras, expr);
 
 impl_tokens!(ast::StringPart => [Char, Content, Expression]);
 
@@ -78,18 +78,18 @@ impl<'ast> SemanticTokens<'ast> for ast::QualifiedName {
     }
 }
 
-impl_tokens!(ast::BinaryOperator => TokenType::OPERATOR);
-impl_tokens!(ast::BinaryOperation => lhs, operation, rhs);
-impl_tokens!(ast::UnaryOperator => TokenType::OPERATOR);
-impl_tokens!(ast::UnaryOperation => extras, operation, rhs);
+impl_tokens!(mu::base::Spanned<ast::BinaryOperator> => TokenType::OPERATOR);
+impl_tokens!(ast::BinaryOperation => lhs, op, rhs);
+impl_tokens!(mu::base::Spanned<ast::UnaryOperator> => TokenType::OPERATOR);
+impl_tokens!(ast::UnaryOperation => extras, op, rhs);
 
 impl_tokens!(ast::NamedArgument => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
-    ctx.push_token(&self_.name.span, TokenType::PARAMETER, &[]);
-    self_.value.semantic_tokens(ctx);
+    ctx.push_token(&self_.id.span, TokenType::PARAMETER, &[]);
+    self_.expr.semantic_tokens(ctx);
 });
 
-impl_tokens!(ast::UnnamedArgument => extras, value);
+impl_tokens!(ast::UnnamedArgument => extras, expr);
 impl_tokens!(ast::Argument => [Unnamed, Named]);
 
 impl_tokens!(ast::ArgumentList => |self_, ctx| {
@@ -117,7 +117,7 @@ impl_tokens!(ast::ElementInner => |self_, ctx| {
 });
 
 impl_tokens!(ast::ElementAccess => |self_, ctx| {
-    self_.value.semantic_tokens(ctx);
+    self_.expr.semantic_tokens(ctx);
     self_.element_chain.iter().for_each(|element| element.semantic_tokens(ctx));
 });
 
