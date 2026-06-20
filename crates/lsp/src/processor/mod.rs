@@ -81,79 +81,13 @@ impl Processor {
     pub fn handle_request(&mut self, request: ProcessorRequest) -> ProcessorResult {
         match request {
             ProcessorRequest::SetCursorPosition { .. } => todo!(),
-            ProcessorRequest::AddDocument(url) => self.add_document(url),
-            ProcessorRequest::RemoveDocument(url) => self.remove_document(&url),
-            ProcessorRequest::UpdateDocument(url) => self.update_document(&url),
+            ProcessorRequest::AddDocument(url) => self.session.add_document(url),
+            ProcessorRequest::RemoveDocument(url) => self.session.remove_document(&url),
+            ProcessorRequest::UpdateDocument(url) => self.session.update_document(&url),
             ProcessorRequest::UpdateDocumentCode(url, doc) => self.update_document_code(&url, doc),
             ProcessorRequest::GetDocumentDiagnostics(url) => self.get_document_diagnostics(&url),
             ProcessorRequest::GetFullSemanticTokens(url) => self.get_full_semantic_tokens(&url),
             ProcessorRequest::FormatDocument(url) => self.format_document(&url),
-        }
-    }
-
-    /// Update (re-evaluate) a document.
-    pub fn update_document(&mut self, url: &Url) -> ProcessorResult {
-        match self.documents.get_mut(url) {
-            Some(document) => {
-                document.load_from_file()?;
-                Self::compile_document(document)
-            }
-            None => {
-                log::error!("Document does not exist!");
-                Ok(vec![])
-            }
-        }
-    }
-
-    /// Update document code.
-    pub fn update_document_code(&mut self, url: &Url, code: String) -> ProcessorResult {
-        let document =
-            self.documents
-                .entry(url.clone())
-                .or_insert(mu::document::SourceFile::from_source(mu::base::Source {
-                    url: url.clone(),
-                    line_offset: 0,
-                    code: mu::Hashed::new(code),
-                }));
-
-        Self::compile_document(document)
-    }
-
-    /// Format document code.
-    pub fn format_document(&mut self, url: &Url) -> ProcessorResult {
-        match self.documents.get_mut(url) {
-            Some(document) => {
-                let old = document
-                    .get_code()
-                    .map(|s| s.to_string())
-                    .unwrap_or_default();
-
-                match Self::compile_document(document)
-                    .and(document.format(&mu::FormatParameters::default()))
-                {
-                    Ok(formatted) => {
-                        if formatted {
-                            Self::compile_document(document)?;
-                        }
-                        Ok(vec![ProcessorResponse::UpdatedDocumentCode {
-                            url: url.clone(),
-                            old,
-                            new: document
-                                .get_code()
-                                .map(|s| s.to_string())
-                                .unwrap_or_default(),
-                        }])
-                    }
-                    Err(err) => {
-                        log::error!("Error formatting document `{url}`: {err}");
-                        Ok(vec![])
-                    }
-                }
-            }
-            None => {
-                log::error!("Document does not exist!");
-                Ok(vec![])
-            }
         }
     }
 
@@ -179,16 +113,6 @@ impl Processor {
             None => Ok(vec![]),
         }
     }
-
-    fn get_document_diagnostics(&self, url: &Url) -> ProcessorResult {
-        Ok(match self.documents.get(url) {
-            Some(document) => vec![ProcessorResponse::diagnostics(
-                url.clone(),
-                document.diags(),
-            )],
-            None => vec![],
-        })
-    }
 }
 
 /// Send request to the µcad processor and recv requests.
@@ -212,7 +136,7 @@ impl ProcessorController {
     }
 
     /// Run the processing thread and create interface.
-    pub fn run() -> Self {
+    pub fn run(config: mu::DriverConfig) -> Self {
         let (request_sender, request_receiver) = crossbeam::channel::unbounded();
         let (response_sender, response_receiver) = crossbeam::channel::unbounded();
 
@@ -220,7 +144,7 @@ impl ProcessorController {
             let mut processor = Processor {
                 request_handler: request_receiver,
                 response_sender,
-                documents: mu::HashMap::default(),
+                session: mu::Session::new(config),
             };
 
             loop {
