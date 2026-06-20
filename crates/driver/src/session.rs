@@ -4,21 +4,21 @@
 use crate::{commands::Compile, prelude::*};
 
 /// A session with a VFS for documents.
-#[derive(Default)]
 pub struct Session {
     /// The cache of documents (virtual FS)
     pub documents: HashMap<Url, Document>,
     /// Render cache
-    pub render_cache: Option<RcMut<RenderCache>>,
+    pub render_cache: RcMut<RenderCache>,
     /// Configuration
     pub config: DriverConfig,
 }
 
 impl Session {
+    /// Create new session.
     pub fn new(config: DriverConfig) -> Self {
         Self {
             documents: HashMap::default(),
-            render_cache: Some(RcMut::new(RenderCache::new())),
+            render_cache: RcMut::new(RenderCache::new()),
             config,
         }
     }
