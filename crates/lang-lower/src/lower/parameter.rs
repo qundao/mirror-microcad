@@ -9,9 +9,9 @@ use microcad_lang_parse::ast;
 impl Lower<ast::Parameter> for ir::Parameter {
     fn lower(node: &ast::Parameter, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attributes, context)?,
+            attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
             src_ref: context.src_ref(&node.span),
-            id: ir::Identifier::lower(&node.name, context)?,
+            id: ir::Identifier::lower(&node.id, context)?,
             specified_type: node
                 .ty
                 .as_ref()

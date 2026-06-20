@@ -17,7 +17,7 @@ use crate::ast::{
 };
 
 use microcad_lang_base::Spanned;
-pub use microcad_lang_base::WorkbenchKind;
+pub use microcad_lang_base::element::WorkbenchKind;
 
 /// An optional visibility modifier
 ///

@@ -13,8 +13,8 @@ use crate::{
 use microcad_lang_base::{PushDiag, Refer, SrcRef};
 use microcad_lang_parse::ast;
 
-impl Lower<ast::InitDefinition> for ir::Init {
-    fn lower(node: &ast::InitDefinition, context: &mut LowerContext) -> LowerResult<Self> {
+impl Lower<ast::Init> for ir::Init {
+    fn lower(node: &ast::Init, context: &mut LowerContext) -> LowerResult<Self> {
         for_each_statement(&node.body.statements, context, |stmt, context| {
             let src_ref = context.src_ref(&stmt.span());
             use ast::Statement::*;
@@ -29,7 +29,7 @@ impl Lower<ast::InitDefinition> for ir::Init {
         })?;
 
         Ok(Self {
-            attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attributes, context)?,
+            attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
             keyword_ref: context.src_ref(&node.keyword_span),
             parameters: ir::ParameterList::lower(&node.parameters, context)?,
             statements: ir::WorkbenchStatements::lower(&node.body.statements, context)?,
@@ -99,7 +99,7 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
             }
             ast::Expression::Body(body) => Self::Group(ir::Group::lower(body, context)?),
             ast::Expression::ElementAccess(access) => access.element_chain.iter().try_fold(
-                Self::lower(&access.value, context)?,
+                Self::lower(&access.expr, context)?,
                 |acc, element| -> LowerResult<Self> {
                     use ast::ElementInner::*;
                     let src_ref = context.src_ref(&access.span);
@@ -202,13 +202,13 @@ impl Lower<ast::StatementList> for ir::Inits {
 impl Lower<ast::LocalAssignment> for ir::WorkbenchStatement {
     fn lower(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            attr: ir::OuterAttributes::lower(&node.attributes, context)?,
+            attr: ir::OuterAttributes::lower(&node.attr, context)?,
             src_ref: context.src_ref(&node.span),
             visibility: ir::Visibility::Private,
             keyword_src_ref: SrcRef::none(),
-            id: Some(ir::Identifier::lower(&node.name, context)?),
+            id: Some(ir::Identifier::lower(&node.id, context)?),
             ty: Option::<ir::TypeAnnotation>::lower(&node.ty, context)?,
-            expression: ir::WorkbenchExpression::lower(node.value.as_ref(), context)?,
+            expression: ir::WorkbenchExpression::lower(&node.expr.as_ref(), context)?,
         })
     }
 }
@@ -216,11 +216,11 @@ impl Lower<ast::LocalAssignment> for ir::WorkbenchStatement {
 impl Lower<ast::PropertyAssignment> for ir::WorkbenchStatement {
     fn lower(node: &ast::PropertyAssignment, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            attr: outer_with_doc(&node.doc, &node.attributes, context)?,
+            attr: outer_with_doc(&node.doc, &node.attr, context)?,
             src_ref: context.src_ref(&node.span),
             visibility: ir::Visibility::Public,
             keyword_src_ref: context.src_ref(&node.keyword_span),
-            id: Some(ir::Identifier::lower(&node.name, context)?),
+            id: Some(ir::Identifier::lower(&node.id, context)?),
             ty: Option::<ir::TypeAnnotation>::lower(&node.ty, context)?,
             expression: ir::WorkbenchExpression::lower(node.value.as_ref(), context)?,
         })
@@ -230,13 +230,13 @@ impl Lower<ast::PropertyAssignment> for ir::WorkbenchStatement {
 impl Lower<ast::ExpressionStatement> for ir::WorkbenchStatement {
     fn lower(node: &ast::ExpressionStatement, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            attr: ir::OuterAttributes::lower(&node.attributes, context)?,
+            attr: ir::OuterAttributes::lower(&node.attr, context)?,
             src_ref: context.src_ref(&node.span),
             visibility: ir::Visibility::Public,
             keyword_src_ref: SrcRef::none(),
             id: None,
             ty: None,
-            expression: ir::WorkbenchExpression::lower(&node.expression, context)?,
+            expression: ir::WorkbenchExpression::lower(&node.expr, context)?,
         })
     }
 }
@@ -295,19 +295,15 @@ impl Lower<ast::StatementList> for ir::WorkbenchItems {
     }
 }
 
-impl Lower<ast::WorkbenchDefinition> for ir::Workbench {
-    fn lower(node: &ast::WorkbenchDefinition, context: &mut LowerContext) -> LowerResult<Self> {
+impl Lower<ast::def::Workbench> for ir::Workbench {
+    fn lower(node: &ast::def::Workbench, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             keyword_ref: context.src_ref(&node.keyword_span),
-            outer_attr: crate::lower::attribute::outer_with_doc(
-                &node.doc,
-                &node.attributes,
-                context,
-            )?,
-            visibility: ir::Visibility::lower(&node.visibility, context)?,
-            kind: Refer::new(node.kind.into(), context.src_ref(&node.span)),
-            id: ir::Identifier::lower(&node.name, context)?,
-            parameters: ir::ParameterList::lower(&node.plan, context)?,
+            outer_attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
+            visibility: ir::Visibility::lower(&node.vis, context)?,
+            kind: Refer::new(node.kind, context.src_ref(&node.span)),
+            id: ir::Identifier::lower(&node.id, context)?,
+            parameters: ir::ParameterList::lower(&node.parameters, context)?,
             inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
             inits: ir::Inits::lower(&node.body.statements, context)?,
             items: ir::WorkbenchItems::lower(&node.body.statements, context)?,

@@ -19,10 +19,7 @@ where
         Ok(Self {
             lhs: Box::new(EXPR::lower(node.lhs.as_ref(), context)?),
             rhs: Box::new(EXPR::lower(node.rhs.as_ref(), context)?),
-            op: Refer::new(
-                node.operation.operation.as_str().into(),
-                context.src_ref(&node.operation.span),
-            ),
+            op: Refer::new(node.op.as_str().into(), context.src_ref(&node.op.span)),
             src_ref: context.src_ref(&node.span),
         })
     }
@@ -35,10 +32,7 @@ where
     fn lower(node: &ast::UnaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::UnaryOp {
             rhs: Box::new(EXPR::lower(&node.rhs, context)?),
-            op: Refer::new(
-                node.operation.operation.as_str().into(),
-                context.src_ref(&node.operation.span),
-            ),
+            op: Refer::new(node.op.as_str().into(), context.src_ref(&node.op.span)),
             src_ref: context.src_ref(&node.span),
         })
     }
@@ -50,7 +44,7 @@ where
 {
     fn lower(node: &ast::ArrayItem, context: &mut LowerContext) -> LowerResult<Self> {
         if matches!(
-            node.expression,
+            node.expr,
             ast::Expression::Literal(
                 ast::Literal {
                     literal: ast::LiteralKind::Float(_)
@@ -63,13 +57,10 @@ where
             )
         ) {
             return Err(LowerError::InvalidRangeType {
-                src_ref: context.src_ref(&node.expression.span()),
+                src_ref: context.src_ref(&node.expr.span()),
             });
         }
-        Ok(ir::RangeFirst(Box::new(EXPR::lower(
-            &node.expression,
-            context,
-        )?)))
+        Ok(ir::RangeFirst(Box::new(EXPR::lower(&node.expr, context)?)))
     }
 }
 
@@ -79,7 +70,7 @@ where
 {
     fn lower(node: &ast::ArrayItem, context: &mut LowerContext) -> LowerResult<Self> {
         if matches!(
-            node.expression,
+            node.expr,
             ast::Expression::Literal(
                 ast::Literal {
                     literal: ast::LiteralKind::Float(_)
@@ -92,13 +83,10 @@ where
             )
         ) {
             return Err(LowerError::InvalidRangeType {
-                src_ref: context.src_ref(&node.expression.span()),
+                src_ref: context.src_ref(&node.expr.span()),
             });
         }
-        Ok(ir::RangeLast(Box::new(EXPR::lower(
-            &node.expression,
-            context,
-        )?)))
+        Ok(ir::RangeLast(Box::new(EXPR::lower(&node.expr, context)?)))
     }
 }
 
@@ -122,7 +110,7 @@ where
     fn lower(node: &ast::ArrayListExpression, context: &mut LowerContext) -> LowerResult<Self> {
         node.items
             .iter()
-            .map(|item| EXPR::lower(&item.expression, context))
+            .map(|item| EXPR::lower(&item.expr, context))
             .collect::<Result<Vec<EXPR>, _>>()
     }
 }

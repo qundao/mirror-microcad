@@ -29,10 +29,10 @@ where
         let mut named = Vec::new();
 
         node.iter().try_for_each(|arg| -> LowerResult<()> {
-            let expression = EXPR::lower(&arg.value, context)?;
+            let expression = EXPR::lower(&arg.expr, context)?;
             let src_ref = context.src_ref(&arg.span);
 
-            match &arg.name {
+            match &arg.id {
                 Some(name) => named.push(ir::NamedArgument {
                     id: ir::Identifier::lower(name, context)?,
                     expression,

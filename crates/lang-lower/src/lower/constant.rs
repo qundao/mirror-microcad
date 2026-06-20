@@ -5,16 +5,16 @@ use crate::{Lower, LowerContext, LowerResult, ir};
 
 use microcad_lang_parse::ast;
 
-impl Lower<ast::ConstAssignment> for ir::Constant {
-    fn lower(node: &ast::ConstAssignment, context: &mut LowerContext) -> LowerResult<Self> {
+impl Lower<ast::def::Constant> for ir::Constant {
+    fn lower(node: &ast::def::Constant, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             src_ref: context.src_ref(&node.span),
-            attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attributes, context)?,
-            visibility: ir::Visibility::lower(&node.visibility, context)?,
+            attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
+            visibility: ir::Visibility::lower(&node.vis, context)?,
             keyword_src_ref: context.src_ref(&node.keyword_span),
-            id: ir::Identifier::lower(&node.name, context)?,
+            id: ir::Identifier::lower(&node.id, context)?,
             ty: Option::<ir::TypeAnnotation>::lower(&node.ty, context)?,
-            expr: ir::ConstantExpression::lower(node.value.as_ref(), context)?,
+            expr: ir::ConstantExpression::lower(node.expr.as_ref(), context)?,
         })
     }
 }

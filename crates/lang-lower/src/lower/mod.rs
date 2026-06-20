@@ -14,7 +14,7 @@ mod source;
 mod r#type;
 mod workbench;
 
-use microcad_lang_base::{DiagError, Hashed, Identifier, Refer, SrcRef, SrcReferrer};
+use microcad_lang_base::{DiagError, Hashed, Identifier, Refer, Spanned, SrcRef, SrcReferrer};
 use microcad_lang_parse::ast;
 use microcad_lang_types::ty::TypeError;
 use miette::{Diagnostic, SourceCode};
@@ -309,10 +309,13 @@ where
     }
 }
 
-impl Lower<Option<ast::Visibility>> for ir::Visibility {
-    fn lower(node: &Option<ast::Visibility>, _context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(match node {
-            Some(ast::Visibility::Public) => Self::Public,
+impl Lower<Option<Spanned<ast::def::Visibility>>> for ir::Visibility {
+    fn lower(
+        node: &Option<Spanned<ast::def::Visibility>>,
+        _context: &mut LowerContext,
+    ) -> LowerResult<Self> {
+        Ok(match node.as_ref().map(|v| &v.value) {
+            Some(ast::def::Visibility::Public) => Self::Public,
             None => Self::Private,
         })
     }
@@ -327,17 +330,17 @@ impl Lower<ast::Identifier> for ir::Identifier {
     }
 }
 
-impl Lower<ast::UseName> for ir::QualifiedName {
-    fn lower(node: &ast::UseName, context: &mut LowerContext) -> LowerResult<Self> {
+impl Lower<ast::def::UseName> for ir::QualifiedName {
+    fn lower(node: &ast::def::UseName, context: &mut LowerContext) -> LowerResult<Self> {
         let name = node
             .parts
             .iter()
             .filter_map(|part| match part {
-                ast::UseStatementPart::Identifier(ident) => {
+                ast::def::UseStatementPart::Identifier(ident) => {
                     Some(ir::Identifier::lower(ident, context))
                 }
-                ast::UseStatementPart::Glob(_) => None,
-                ast::UseStatementPart::Error(_) => None,
+                ast::def::UseStatementPart::Glob(_) => None,
+                ast::def::UseStatementPart::Error(_) => None,
             })
             .collect::<Result<Vec<_>, _>>()?;
 
@@ -352,9 +355,9 @@ where
 {
     fn lower(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            id: ir::Identifier::lower(&node.name, context)?,
+            id: ir::Identifier::lower(&node.id, context)?,
             specified_type: Option::<ir::TypeAnnotation>::lower(&node.ty, context)?,
-            expression: EXPR::lower(node.value.as_ref(), context)?,
+            expression: EXPR::lower(node.expr.as_ref(), context)?,
             src_ref: context.src_ref(&node.span),
         })
     }
@@ -365,21 +368,23 @@ impl Lower<ast::StatementList> for ir::Aliases {
         Ok(Self {
             explicit_aliases: extract_statements(node, |stmt| match stmt {
                 ast::Statement::Use(use_statement) => match use_statement.name.parts.last() {
-                    Some(ast::UseStatementPart::Identifier(id)) => Ok(Some(ir::ExplicitAlias {
-                        attr: ir::OuterAttributes::lower(&use_statement.attributes, context)?,
-                        keyword_src_ref: context.src_ref(&use_statement.keyword_span),
-                        visibility: ir::Visibility::lower(&use_statement.visibility, context)?,
-                        path: ir::QualifiedName::lower(&use_statement.name, context)?,
-                        id: ir::Identifier::lower(
-                            match &use_statement.use_as {
-                                // Use id `C` from `as C`
-                                Some(id) => id,
-                                // Use id `Circle` from last part of path `std::geo2d::Circle`
-                                None => id,
-                            },
-                            context,
-                        )?,
-                    })),
+                    Some(ast::def::UseStatementPart::Identifier(id)) => {
+                        Ok(Some(ir::ExplicitAlias {
+                            attr: ir::OuterAttributes::lower(&use_statement.attr, context)?,
+                            keyword_src_ref: context.src_ref(&use_statement.keyword_span),
+                            visibility: ir::Visibility::lower(&use_statement.vis, context)?,
+                            path: ir::QualifiedName::lower(&use_statement.name, context)?,
+                            id: ir::Identifier::lower(
+                                match &use_statement.use_as {
+                                    // Use id `C` from `as C`
+                                    Some(id) => id,
+                                    // Use id `Circle` from last part of path `std::geo2d::Circle`
+                                    None => id,
+                                },
+                                context,
+                            )?,
+                        }))
+                    }
                     None => unreachable!(),
                     Some(_) => Ok(None),
                 },
@@ -387,10 +392,10 @@ impl Lower<ast::StatementList> for ir::Aliases {
             })?,
             wildcards: extract_statements(node, |stmt| match stmt {
                 ast::Statement::Use(use_statement) => match use_statement.name.parts.last() {
-                    Some(ast::UseStatementPart::Glob(_)) => Ok(Some(ir::WildcardAlias {
-                        attr: ir::OuterAttributes::lower(&use_statement.attributes, context)?,
+                    Some(ast::def::UseStatementPart::Glob(_)) => Ok(Some(ir::WildcardAlias {
+                        attr: ir::OuterAttributes::lower(&use_statement.attr, context)?,
                         keyword_src_ref: context.src_ref(&use_statement.keyword_span),
-                        visibility: ir::Visibility::lower(&use_statement.visibility, context)?,
+                        visibility: ir::Visibility::lower(&use_statement.vis, context)?,
                         path: ir::QualifiedName::lower(&use_statement.name, context)?,
                     })),
                     None => unreachable!(),

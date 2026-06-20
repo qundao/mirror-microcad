@@ -90,10 +90,10 @@ impl Lower<Vec<ast::Attribute>> for Box<[ir::Meta]> {
 
 impl Lower<ast::LocalAssignment> for ir::Meta {
     fn lower(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
-        let identifier = ir::Identifier::lower(&node.name, context)?;
+        let identifier = ir::Identifier::lower(&node.id, context)?;
         Ok(ir::Meta {
-            name: ir::QualifiedName::new(vec![identifier], context.src_ref(&node.name.span)),
-            expr: ir::ConstantExpression::lower(&node.value, context)?,
+            name: ir::QualifiedName::new(vec![identifier], context.src_ref(&node.id.span)),
+            expr: ir::ConstantExpression::lower(&node.expr, context)?,
         })
     }
 }
@@ -191,9 +191,9 @@ impl Lower<ast::StatementList> for Box<[ir::Tag]> {
     }
 }
 
-impl Lower<ast::WorkbenchDefinition> for ir::OuterAttributes {
-    fn lower(node: &ast::WorkbenchDefinition, context: &mut LowerContext) -> LowerResult<Self> {
-        outer_with_doc(&node.doc, &node.attributes, context)
+impl Lower<ast::def::Workbench> for ir::OuterAttributes {
+    fn lower(node: &ast::def::Workbench, context: &mut LowerContext) -> LowerResult<Self> {
+        outer_with_doc(&node.doc, &node.attr, context)
     }
 }
 

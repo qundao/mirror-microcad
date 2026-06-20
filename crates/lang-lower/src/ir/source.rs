@@ -92,7 +92,7 @@ impl ResourceLocation for Source {
 impl SrcReferrer for Source {
     fn src_ref(&self) -> SrcRef {
         SrcRef::new(
-            0..self.source.code.len(),
+            &(0..self.source.code.len()),
             LineCol::default(),
             self.source.code.computed_hash(),
         )

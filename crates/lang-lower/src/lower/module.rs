@@ -9,14 +9,14 @@ use crate::{
 use microcad_lang_base::PushDiag;
 use microcad_lang_parse::ast;
 
-impl Lower<ast::FileModule> for ir::FileModule {
-    fn lower(node: &ast::FileModule, context: &mut LowerContext) -> LowerResult<Self> {
+impl Lower<ast::def::FileModule> for ir::FileModule {
+    fn lower(node: &ast::def::FileModule, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             src_ref: context.src_ref(&node.span),
-            attr: outer_with_doc(&node.doc, &node.attributes, context)?,
-            visibility: ir::Visibility::lower(&node.visibility, context)?,
+            attr: outer_with_doc(&node.doc, &node.attr, context)?,
+            visibility: ir::Visibility::lower(&node.vis, context)?,
             keyword_ref: context.src_ref(&node.keyword_span),
-            id: ir::Identifier::lower(&node.name, context)?,
+            id: ir::Identifier::lower(&node.id, context)?,
         })
     }
 }
@@ -56,18 +56,14 @@ impl Lower<ast::StatementList> for ir::InlineModuleItems {
     }
 }
 
-impl Lower<ast::InlineModule> for ir::InlineModule {
-    fn lower(node: &ast::InlineModule, context: &mut LowerContext) -> LowerResult<Self> {
+impl Lower<ast::def::InlineModule> for ir::InlineModule {
+    fn lower(node: &ast::def::InlineModule, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             src_ref: context.src_ref(&node.span),
-            outer_attr: crate::lower::attribute::outer_with_doc(
-                &node.doc,
-                &node.attributes,
-                context,
-            )?,
-            visibility: ir::Visibility::lower(&node.visibility, context)?,
+            outer_attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
+            visibility: ir::Visibility::lower(&node.vis, context)?,
             keyword_ref: context.src_ref(&node.keyword_span),
-            id: ir::Identifier::lower(&node.name, context)?,
+            id: ir::Identifier::lower(&node.id, context)?,
             inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
             items: ir::InlineModuleItems::lower(&node.body.statements, context)?,
         })

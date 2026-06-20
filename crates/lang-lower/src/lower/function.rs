@@ -11,14 +11,14 @@ use microcad_lang_base::{Identifier, PushDiag, Refer, SrcRef, SrcReferrer};
 use microcad_lang_parse::ast;
 use serde::Serialize;
 
-impl Lower<ast::FunctionDefinition> for ir::OuterAttributes {
-    fn lower(node: &ast::FunctionDefinition, context: &mut LowerContext) -> LowerResult<Self> {
-        crate::lower::attribute::outer_with_doc(&node.doc, &node.attributes, context)
+impl Lower<ast::def::Function> for ir::OuterAttributes {
+    fn lower(node: &ast::def::Function, context: &mut LowerContext) -> LowerResult<Self> {
+        crate::lower::attribute::outer_with_doc(&node.doc, &node.attr, context)
     }
 }
 
-impl Lower<ast::FunctionDefinition> for ir::FunctionSignature {
-    fn lower(node: &ast::FunctionDefinition, context: &mut LowerContext) -> LowerResult<Self> {
+impl Lower<ast::def::Function> for ir::FunctionSignature {
+    fn lower(node: &ast::def::Function, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             src_ref: context.src_ref(&node.span),
             parameters: ir::ParameterList::lower(&node.parameters, context)?,
@@ -93,7 +93,7 @@ where
             }
             ast::Expression::Body(body) => Self::Scope(ir::Scope::lower(body, context)?),
             ast::Expression::ElementAccess(access) => access.element_chain.iter().try_fold(
-                Self::lower(&access.value, context)?,
+                Self::lower(&access.expr, context)?,
                 |acc, element| -> LowerResult<Self> {
                     use ast::ElementInner::*;
                     let src_ref = context.src_ref(&access.span);
@@ -142,7 +142,7 @@ where
 {
     fn lower(node: &ast::Return, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            value: Option::<ir::FunctionExpression<NAME>>::lower(&node.value, context)?,
+            value: Option::<ir::FunctionExpression<NAME>>::lower(&node.expr, context)?,
             keyword_src_ref: context.src_ref(&node.keyword_span),
             src_ref: context.src_ref(&node.span),
         })
@@ -169,7 +169,7 @@ where
                 Some(ir::FunctionStatement::Expression(ir::FunctionExpression::<
                     NAME,
                 >::lower(
-                    &expression_statement.expression,
+                    &expression_statement.expr,
                     context,
                 )?))
             }
@@ -190,7 +190,7 @@ where
             // Lower Tail expression to Return statements.
             |tail, context| {
                 Ok(ir::FunctionStatement::Return(ir::ReturnStatement {
-                    value: Some(ir::FunctionExpression::lower(&tail.expression, context)?),
+                    value: Some(ir::FunctionExpression::lower(&tail.expr, context)?),
                     keyword_src_ref: SrcRef::none(),
                     src_ref: context.src_ref(&tail.span),
                 }))
@@ -241,14 +241,14 @@ impl Lower<ast::StatementList> for ir::FunctionItems {
     }
 }
 
-impl Lower<ast::FunctionDefinition> for ir::Function {
-    fn lower(node: &ast::FunctionDefinition, context: &mut LowerContext) -> LowerResult<Self> {
+impl Lower<ast::def::Function> for ir::Function {
+    fn lower(node: &ast::def::Function, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             src_ref: context.src_ref(&node.span),
             outer_attr: ir::OuterAttributes::lower(node, context)?,
-            visibility: ir::Visibility::lower(&node.visibility, context)?,
+            visibility: ir::Visibility::lower(&node.vis, context)?,
             keyword_ref: context.src_ref(&node.keyword_span),
-            id: Identifier::lower(&node.name, context)?,
+            id: Identifier::lower(&node.id, context)?,
             signature: ir::FunctionSignature::lower(&node, context)?,
             inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
             items: ir::FunctionItems::lower(&node.body.statements, context)?,
