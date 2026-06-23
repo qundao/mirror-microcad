@@ -40,6 +40,10 @@ impl Source {
     pub fn set_code(&mut self, code: String) {
         self.code = Hashed::new(code);
     }
+
+    pub fn compare(&self, other: &Self) -> Vec<TextEdit> {
+        
+    }
 }
 
 impl GetSourceLocInfoByHash for Source {

@@ -35,7 +35,6 @@ pub enum SourceError {
 
 /// A µcad source file document.
 pub struct SourceFile {
-    /// Each source item keeps its [`Diagnostics`]
     pub url: Url,
     diagnostics: Diagnostics,
     base_source: Option<base::Source>,
@@ -117,7 +116,7 @@ impl CaptureDiags for SourceFile {
 }
 
 impl commands::Format for SourceFile {
-    fn format(&mut self, params: &commands::FormatParameters) -> Result<bool> {
+    fn format(&mut self, params: &commands::FormatParameters) -> Result<Vec<TextEdit>> {
         if self.base_source.is_none() {
             return Err(SourceError::InvalidState(self.url.clone()).into());
         }

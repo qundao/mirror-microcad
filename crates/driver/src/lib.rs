@@ -32,10 +32,10 @@ pub fn value_from_str(s: &str) -> Result<Value> {
     use mu::parse::Parse;
     use prelude as mu;
 
-    let parse_context = prelude::parse::ParseContext::new(s);
+    let parse_context = mu::ParseContext::new(s);
     mu::ir::Literal::lower(
         &mu::ast::Literal::parse(&parse_context)?,
-        &mut mu::lower::LowerContext::new(s),
+        &mut mu::LowerContext::new(s),
     )
     .map_err(|err| err.into())
     .map(|lit| lit.value().clone())

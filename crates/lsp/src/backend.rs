@@ -303,26 +303,6 @@ impl LanguageServer for Backend {
         let url = &params.text_document.uri;
         self.send_lsp(mu_processor::ProcessorRequest::FormatDocument(url.clone()));
 
-        // Wait for response
-        if let Ok(mu_processor::ProcessorResponse::UpdatedDocumentCode { url, code }) =
-            self.processor.recv_response()
-        {
-            log::error!("Formatted code received {url}");
-            Ok(Some(vec![TextEdit {
-                range: Range {
-                    start: Position {
-                        line: 0,
-                        character: 0,
-                    },
-                    end: Position {
-                        line: u32::MAX,
-                        character: u32::MAX,
-                    },
-                },
-                new_text: code,
-            }]))
-        } else {
-            Ok(None)
-        }
+        todo!("Send text editr")
     }
 }
