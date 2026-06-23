@@ -54,6 +54,7 @@ impl Cli {
         mu::CompileParameters {
             resolve: mu::ResolveParameters {
                 search_paths: self.config.search_paths.clone(),
+                no_builtin: false,
             },
         }
     }

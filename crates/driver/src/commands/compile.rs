@@ -17,12 +17,14 @@ pub trait Lower {
 #[derive(Clone)]
 pub struct ResolveParameters {
     pub search_paths: Vec<std::path::PathBuf>,
+    pub no_builtin: bool,
 }
 
 impl Default for ResolveParameters {
     fn default() -> Self {
         Self {
             search_paths: microcad_builtin::dirs::default_search_paths(),
+            no_builtin: false,
         }
     }
 }

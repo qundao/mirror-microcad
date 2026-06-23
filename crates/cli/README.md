@@ -86,7 +86,7 @@ microcad doc -g mdbook 'crates/std/lib/std/mod.µcad' --output books/std`
 
 ## Resources
 
-* Documentation: <https://docs.microcad.xyz/language/book/index.html>
+* Documentation: <https://docs.microcad.xyz/latest/language/>
 * µcad Viewer: <https://crates.io/crates/microcad-viewer/>
 *
 
