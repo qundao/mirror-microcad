@@ -36,7 +36,7 @@ if [ -z "$FTP_HOST" ] || [ -z "$FTP_USER" ] || [ -z "$FTP_PW" ]; then
 fi
 
 # Set default values
-FTP_PORT="${FTP_PORT:-21}"
+FTP_PORT="${FTP_PORT:-22}"
 FTP_REMOTE_PATH="${FTP_REMOTE_PATH:-.}"
 
 
@@ -55,13 +55,13 @@ LFTP_COMMANDS="$LFTP_COMMANDS quit"
 # Only show the command
 if [ -n "$SHOW_ONLY" ]; then
     echo "LFTP command:"
-    echo "lftp -e \"$LFTP_COMMANDS\" ftp://\$FTP_USER:\$FTP_PW@$FTP_HOST:$FTP_PORT"
+    echo "lftp -e \"$LFTP_COMMANDS\" sftp://\$FTP_USER:\$FTP_PW@$FTP_HOST:$FTP_PORT"
     exit 0
 fi
 
 # Upload via lftp
 echo "Starting upload..."
-lftp -e "$LFTP_COMMANDS" ftp://$FTP_USER:$FTP_PW@$FTP_HOST:$FTP_PORT
+lftp -e "$LFTP_COMMANDS" sftp://$FTP_USER:$FTP_PW@$FTP_HOST:$FTP_PORT
 
 if [ $? -eq 0 ]; then
     if [ -n "$DRY_RUN" ]; then
