@@ -20,6 +20,12 @@ pub struct Doc {
     /// Output path for markdown book
     #[arg(short = 'o', long)]
     output: Option<std::path::PathBuf>,
+
+    /// Do not add any external search paths.
+    /// This only used for building docs for standard library.
+    /// *NOTE: This CLI argument is supposed to be removed*
+    #[arg(long)]
+    no_std: bool,
 }
 
 impl RunCommand<()> for Doc {
@@ -31,7 +37,13 @@ impl RunCommand<()> for Doc {
         let params = mu::DocGenParameters {
             generator_id: self.generator.clone(),
             output_path: self.output.clone(),
-            resolve_parameters: mu::ResolveParameters::default(),
+            resolve_parameters: match self.no_std {
+                true => mu::ResolveParameters {
+                    search_paths: vec![],
+                    no_builtin: true,
+                },
+                false => mu::ResolveParameters::default(),
+            },
         };
 
         match document.doc_gen(params) {
