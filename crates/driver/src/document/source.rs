@@ -225,7 +225,10 @@ impl commands::compile::Resolve for document::Source {
                 if let Ok(resolve_context) = ResolveContext::create(
                     ir_source.clone(),
                     parameters.search_paths,
-                    Some(microcad_builtin::builtin_module()),
+                    match parameters.no_builtin {
+                        true => None,
+                        false => Some(microcad_builtin::builtin_module()),
+                    },
                     DiagHandler::default(),
                 ) {
                     self.diagnostics
