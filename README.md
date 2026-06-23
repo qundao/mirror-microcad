@@ -120,7 +120,7 @@ microcad-viewer ./examples/bricks/brick
 
 ## Documentation
 
-- [Language reference](http://docs.microcad.xyz/language/book/)
+- [Language reference](http://docs.microcad.xyz/latest/language)
 - [Contribute Documentation](CONTRIBUTE.md)
 
 ## ❤️ Support the project
