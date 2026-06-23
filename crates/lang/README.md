@@ -7,7 +7,7 @@ This is the µcad language crate which includes resolving and evaluating µcad c
 
 In order to write programs in the µcad language, you need an interpreter like [microcad](https://crates.io/crates/microcad) which offers a command line interface.
 
-For more information about how to use language, please refer to the [µcad language book](http://docs.microcad.xyz/language/book).
+For more information about how to use language, please refer to the [µcad language book](http://docs.microcad.xyz/latest/language/).
 
 ## ❤️ Support the project
 
