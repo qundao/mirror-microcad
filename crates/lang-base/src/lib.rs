@@ -87,7 +87,7 @@ pub use src_ref::{LineCol, LineIndex, Refer, Span, Spanned, SrcRef, SrcReferrer}
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
 pub use microcad_core::hash::{ComputedHash, HashId, HashMap, HashSet, Hashed, Hasher};
-pub use source::Source;
+pub use source::{Source, TextEdit};
 
 /// The possible type of workbenches
 #[derive(Debug, PartialEq, Copy, Clone)]
