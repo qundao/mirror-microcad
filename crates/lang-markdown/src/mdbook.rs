@@ -5,11 +5,12 @@
 
 use std::collections::HashMap;
 
+use miette::Diagnostic;
 use thiserror::Error;
 
 use crate::{CodeBlock, Markdown, MarkdownError};
 
-#[derive(Debug, Error)]
+#[derive(Debug, Error, Diagnostic)]
 pub enum MdBookError {
     /// Io Error
     #[error("IO error: {0}")]
