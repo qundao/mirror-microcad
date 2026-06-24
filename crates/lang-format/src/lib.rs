@@ -132,10 +132,7 @@ pub fn format_str(source: &str, config: &FormatConfig) -> Result<String, Diagnos
 }
 
 /// Format a [`ast::Source`]
-pub fn format_source(
-    source: &ast::Source,
-    config: &FormatConfig,
-) -> Result<ast::Source, Diagnostics> {
+pub fn format_ast(source: &ast::Source, config: &FormatConfig) -> Result<ast::Source, Diagnostics> {
     let formatted = microcad_lang_base::Source::new(
         source.url.clone(),
         source.line_offset,
