@@ -5,9 +5,7 @@
 
 use crate::{IsDefault, ir, is_default};
 
-use microcad_lang_base::{
-    ComputedHash, LineCol, ResourceLocation, SourceLocInfo, SrcRef, SrcReferrer,
-};
+use microcad_lang_base::{ComputedHash, LineCol, SourceLocInfo, SrcRef, SrcReferrer};
 use serde::Serialize;
 
 #[derive(Debug, Serialize)]
@@ -80,12 +78,6 @@ impl Source {
             url: self.source.url.clone(),
             line_offset: self.source.line_offset,
         }
-    }
-}
-
-impl ResourceLocation for Source {
-    fn url(&self) -> &microcad_lang_base::Url {
-        &self.source.url
     }
 }
 
