@@ -7,20 +7,20 @@ use microcad_lang_base::{Diagnostics, Hashed, SrcReferrer, Url, virtual_url};
 use microcad_lang_parse::ast;
 
 impl ir::Source {
-    pub fn from_source(
+    pub fn from_ast(
         source: &ast::Source,
         diagnostics: &mut Diagnostics,
-    ) -> Result<std::rc::Rc<Self>, LowerError> {
+    ) -> Result<Self, LowerError> {
         let mut context =
             LowerContext::new(source.code.as_str()).with_line_offset(source.line_offset);
-        let source = std::rc::Rc::new(Self {
+        let source = Self {
             doc: None,
             statements: ir::StatementList::lower(&source.ast.statements, &mut context)?,
             source: source.code.clone(),
             name: ir::QualifiedName::default(),
             url: source.url.clone(),
             line_offset: source.line_offset,
-        });
+        };
         diagnostics.append(context.diagnostics);
         Ok(source)
     }

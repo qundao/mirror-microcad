@@ -6,8 +6,7 @@
 use crate::lower::ir;
 
 use microcad_lang_base::{
-    ComputedHash, Hashed, Identifier, LineCol, ResourceLocation, SourceLocInfo, SrcRef,
-    SrcReferrer, Url,
+    ComputedHash, Hashed, Identifier, LineCol, SourceKind, SourceLocInfo, SrcRef, SrcReferrer, Url,
 };
 
 /// µcad source file
@@ -62,6 +61,10 @@ impl Source {
             .unwrap_or(std::path::PathBuf::from("<NO FILE>"))
     }
 
+    pub fn to_file_path(&self) -> Option<std::path::PathBuf> {
+        SourceKind::from(self.url.clone()).path()
+    }
+
     /// Return filename of loaded file or `<NO FILE>`
     pub fn set_filename(&mut self, path: impl AsRef<std::path::Path>) {
         assert!(self.to_file_path().is_none());
@@ -92,12 +95,6 @@ impl Source {
             url: self.url.clone(),
             line_offset: self.line_offset,
         }
-    }
-}
-
-impl ResourceLocation for Source {
-    fn url(&self) -> &microcad_lang_base::Url {
-        &self.url
     }
 }
 
