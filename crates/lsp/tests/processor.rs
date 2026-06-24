@@ -10,7 +10,7 @@ use test_that::prelude::*;
 #[tokio::test]
 async fn initialize() -> Result<()> {
     let config = mu_lsp::Config::default();
-    let (service, _) = mu_lsp::build_lsp_service(config);
+    let (service, _) = mu_lsp::build_lsp_service(config).expect("No error");
     let params = lsp::InitializeParams::default();
 
     let backend = service.inner();
@@ -27,5 +27,3 @@ async fn initialize() -> Result<()> {
 
     Ok(())
 }
-
-fn processor() -> Result<()> {}

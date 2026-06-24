@@ -25,12 +25,17 @@ use crate::to_lsp::ToLsp;
 #[derive(Clone)]
 #[allow(unused, missing_docs)]
 pub enum ProcessorRequest {
-    SetCursorPosition { url: Url, line: u32, col: u32 },
     AddDocument(Url),
+    ChangeDocument {
+        url: Url,
+        new_code: String,
+    },
     RemoveDocument(Url),
-    UpdateDocument(Url),
-    UpdateDocumentCode(Url, String),
+    CompileDocument(Url),
+
+    /// Get diagnostics from a document and converts it to LSP diagnostics
     GetDocumentDiagnostics(Url),
+
     GetFullSemanticTokens(Url),
     FormatDocument(Url),
 }
@@ -41,6 +46,10 @@ pub enum ProcessorResponse {
     DocumentDiagnostics(Url, lsp::FullDocumentDiagnosticReport),
     /// Output semantic tokens.
     SemanticTokens(Url, lsp::SemanticTokensResult),
+
+    /// A list of edited text snippets, e.g. after a format request.
+    TextEdits(Url, Vec<lsp::TextEdit>),
+
     /// Update the code of the document (e.g. after linting or formatting)
     UpdatedDocumentCode {
         /// Document URL
@@ -50,12 +59,6 @@ pub enum ProcessorResponse {
         /// The new code of the document
         new: String,
     },
-}
-
-impl ProcessorResponse {
-    fn diagnostics(url: Url, diag: &mu::Diagnostics) -> Self {
-        Self::DocumentDiagnostics(url.clone(), diag.to_lsp())
-    }
 }
 
 /// The processor  responsible for generating view commands.
@@ -80,22 +83,58 @@ impl Processor {
     /// Handle processor request.
     pub fn handle_request(&mut self, request: ProcessorRequest) -> ProcessorResult {
         match request {
-            ProcessorRequest::SetCursorPosition { .. } => todo!(),
-            ProcessorRequest::AddDocument(url) => self.session.add_document(url),
-            ProcessorRequest::RemoveDocument(url) => self.session.remove_document(&url),
-            ProcessorRequest::UpdateDocument(url) => self.session.update_document(&url),
-            ProcessorRequest::UpdateDocumentCode(url, doc) => self.update_document_code(&url, doc),
+            ProcessorRequest::AddDocument(url) => self.add_document(&url),
+            ProcessorRequest::RemoveDocument(url) => self.remove_document(&url),
+            ProcessorRequest::CompileDocument(url) => self.compile_document(&url),
+            ProcessorRequest::ChangeDocument { url, new_code } => {
+                self.change_document(&url, new_code)
+            }
             ProcessorRequest::GetDocumentDiagnostics(url) => self.get_document_diagnostics(&url),
             ProcessorRequest::GetFullSemanticTokens(url) => self.get_full_semantic_tokens(&url),
             ProcessorRequest::FormatDocument(url) => self.format_document(&url),
         }
     }
+}
+
+/// Request handler implementation (must be private)
+impl Processor {
+    fn add_document(&mut self, url: &Url) -> ProcessorResult {
+        match self.session.load_document(url.clone()) {
+            Ok(_) => self.get_document_diagnostics(&url),
+            Err(err) => Err(err),
+        }
+    }
+
+    fn remove_document(&mut self, url: &Url) -> ProcessorResult {
+        self.session.remove_document(url);
+        Ok(vec![]) // Maybe: Return `ProcessorResponse::RemovedDocument` here?
+    }
+
+    fn compile_document(&mut self, url: &Url) -> ProcessorResult {
+        self.session.compile_document(url)?;
+        self.get_document_diagnostics(url)
+    }
+
+    fn change_document(&mut self, url: &Url, new_code: String) -> ProcessorResult {
+        self.session.change_document(url, new_code)?;
+        self.get_document_diagnostics(url)
+    }
+
+    fn get_document_diagnostics(&self, url: &Url) -> ProcessorResult {
+        Ok(self
+            .session
+            .get_document(&url)
+            .map(|doc| doc.diags().to_lsp())
+            .into_iter()
+            .map(|report| ProcessorResponse::DocumentDiagnostics(url.clone(), report))
+            .collect())
+    }
 
     fn get_full_semantic_tokens(&self, url: &Url) -> ProcessorResult {
         match self
-            .documents
-            .get(url)
-            .and_then(|doc| doc.ast_source.as_ref())
+            .session
+            .get_source_file(url)
+            .and_then(|doc| doc.ast.as_ref())
         {
             Some(ast) => {
                 use crate::semantic_tokens::SemanticTokens;
@@ -111,6 +150,24 @@ impl Processor {
                 )])
             }
             None => Ok(vec![]),
+        }
+    }
+
+    fn format_document(&mut self, url: &Url) -> ProcessorResult {
+        match self.session.get_source_file_mut(url) {
+            Some(source_file) => {
+                let old_source = source_file.source.0.clone();
+                source_file.format(&mu::FormatParameters::default())?;
+
+                let text_edits = old_source
+                    .compare(&source_file.source)
+                    .into_iter()
+                    .map(|text_edit| text_edit.to_lsp())
+                    .collect();
+
+                Ok(vec![ProcessorResponse::TextEdits(url.clone(), text_edits)])
+            }
+            None => Err(miette::miette!("No source file at {url}")),
         }
     }
 }
@@ -136,7 +193,8 @@ impl ProcessorController {
     }
 
     /// Run the processing thread and create interface.
-    pub fn run(config: mu::DriverConfig) -> Self {
+    pub fn run(config: mu::DriverConfig) -> mu::Result<Self> {
+        mu::install_std()?;
         let (request_sender, request_receiver) = crossbeam::channel::unbounded();
         let (response_sender, response_receiver) = crossbeam::channel::unbounded();
 
@@ -158,9 +216,9 @@ impl ProcessorController {
             }
         });
 
-        Self {
+        Ok(Self {
             request_sender,
             response_receiver,
-        }
+        })
     }
 }

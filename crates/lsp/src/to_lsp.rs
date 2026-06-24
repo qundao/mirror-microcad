@@ -48,7 +48,7 @@ impl ToLsp for mu::Diagnostics {
     type Output = lsp::FullDocumentDiagnosticReport;
 
     fn to_lsp(&self) -> Self::Output {
-        lsp::FullDocumentDiagnosticReport {
+        Self::Output {
             result_id: None,
             items: self
                 .iter()
@@ -71,62 +71,13 @@ impl ToLsp for mu::Diagnostics {
     }
 }
 
-/// Function to turn the comparison of two `&str` in a `Vec<lsp::TextEdit>` as `dissimilar`
-pub fn compare_strs_to_lsp_edits(old_str: &str, new_str: &str) -> Vec<lsp::TextEdit> {
-    use dissimilar::Chunk;
-    let chunks = dissimilar::diff(old_str, new_str);
-    let mut edits = Vec::new();
+impl ToLsp for mu::TextEdit {
+    type Output = lsp::TextEdit;
 
-    // Track the current position in the *old_str*
-    let mut current_line = 0;
-    let mut current_char = 0;
-
-    for chunk in chunks {
-        match chunk {
-            Chunk::Equal(text) => {
-                // Just move the cursor forward based on the matching text
-                for ch in text.chars() {
-                    if ch == '\n' {
-                        current_line += 1;
-                        current_char = 0;
-                    } else {
-                        current_char += 1;
-                    }
-                }
-            }
-            Chunk::Delete(text) => {
-                // Define the start position of the deletion
-                let start = lsp::Position::new(current_line, current_char);
-
-                // Calculate the end position by walking through the deleted text
-                for ch in text.chars() {
-                    if ch == '\n' {
-                        current_line += 1;
-                        current_char = 0;
-                    } else {
-                        current_char += 1;
-                    }
-                }
-                let end = lsp::Position::new(current_line, current_char);
-
-                // A deletion replaces the range with an empty string
-                edits.push(lsp::TextEdit {
-                    range: lsp::Range::new(start, end),
-                    new_text: String::new(),
-                });
-            }
-            Chunk::Insert(text) => {
-                // An insertion happens at the *current* position without moving the cursor forward
-                // (since the inserted text doesn't exist in the original document)
-                let pos = lsp::Position::new(current_line, current_char);
-
-                edits.push(lsp::TextEdit {
-                    range: lsp::Range::new(pos, pos),
-                    new_text: text.to_string(),
-                });
-            }
+    fn to_lsp(&self) -> Self::Output {
+        Self::Output {
+            range: self.src_ref.to_lsp().unwrap_or_default(),
+            new_text: self.new_text.clone(),
         }
     }
-
-    edits
 }

@@ -6,6 +6,7 @@
 use std::sync::OnceLock;
 
 use crate::{
+    config::ServiceConfig,
     processor::{self as mu_processor},
     semantic_tokens::{LEGEND_MODIFIERS, LEGEND_TYPES},
 };
@@ -19,7 +20,7 @@ use tower_lsp::{
         DidCloseTextDocumentParams, DidOpenTextDocumentParams, DidSaveTextDocumentParams,
         DocumentDiagnosticParams, DocumentDiagnosticReport, DocumentDiagnosticReportPartialResult,
         DocumentDiagnosticReportResult, DocumentFormattingParams, ExecuteCommandParams,
-        InitializeParams, InitializeResult, InitializedParams, MessageType, OneOf, Position, Range,
+        InitializeParams, InitializeResult, InitializedParams, MessageType, OneOf,
         RelatedFullDocumentDiagnosticReport, SemanticTokensFullOptions, SemanticTokensLegend,
         SemanticTokensOptions, SemanticTokensParams, SemanticTokensPartialResult,
         SemanticTokensResult, SemanticTokensServerCapabilities, ServerCapabilities,
@@ -27,23 +28,23 @@ use tower_lsp::{
     },
 };
 
-/// LSP backend
+/// LSP service
 #[derive(Debug)]
-pub struct Backend {
+pub struct Service {
     client: Client,
     processor: mu_processor::ProcessorController,
     viewer: OnceLock<ViewerProcessInterface>,
-    config: crate::Config,
+    config: ServiceConfig,
 }
 
-impl Backend {
-    /// New µcad LSP backend
+impl Service {
+    /// New µcad LSP service backend
     pub fn new(
         client: Client,
         processor: mu_processor::ProcessorController,
-        config: crate::Config,
+        config: ServiceConfig,
     ) -> Self {
-        Backend {
+        Service {
             client,
             processor,
             viewer: OnceLock::new(),
@@ -59,7 +60,7 @@ impl Backend {
     fn send_viewer(&self, req: ViewerRequest) -> miette::Result<()> {
         if self.config.use_viewer {
             self.viewer
-                .get_or_init(|| ViewerProcessInterface::run(&self.config.driver.search_paths, true))
+                .get_or_init(|| ViewerProcessInterface::run(true))
                 .send_request(req)
                 .inspect_err(|err| log::error!("Cannot send request to viewer: {err}"))
         } else {
@@ -71,7 +72,7 @@ impl Backend {
     pub async fn on_active_file_changed(&self, params: serde_json::Value) {
         log::info!("on_active_file_changed: {params:?}");
         if let Ok(Some(uri)) = read_uri("uri", &params) {
-            self.send_lsp(mu_processor::ProcessorRequest::UpdateDocument(uri.clone()));
+            self.send_lsp(mu_processor::ProcessorRequest::CompileDocument(uri.clone()));
             match uri.to_file_path() {
                 Ok(path) => {
                     log::info!("New active document: {:?}", path);
@@ -109,7 +110,7 @@ fn uri_obj_to_lsp_url(uri_obj: &serde_json::Value) -> std::result::Result<Url, S
 }
 
 #[async_trait]
-impl LanguageServer for Backend {
+impl LanguageServer for Service {
     async fn initialize(&self, _: InitializeParams) -> Result<InitializeResult> {
         log::info!("initialize");
         Ok(InitializeResult {
@@ -153,13 +154,13 @@ impl LanguageServer for Backend {
         Ok(())
     }
 
-    async fn did_change(&self, params: DidChangeTextDocumentParams) {
-        let uri = params.text_document.uri;
-        if let Some(last) = params.content_changes.last() {
-            self.send_lsp(mu_processor::ProcessorRequest::UpdateDocumentCode(
-                uri,
-                last.text.clone(),
-            ));
+    async fn did_change(&self, mut params: DidChangeTextDocumentParams) {
+        let url = params.text_document.uri;
+        if let Some(last) = params.content_changes.pop() {
+            self.send_lsp(mu_processor::ProcessorRequest::ChangeDocument {
+                url,
+                new_code: last.text,
+            });
         }
     }
 
@@ -176,7 +177,7 @@ impl LanguageServer for Backend {
             .log_message(MessageType::INFO, format!("did save: {uri:?}!"))
             .await;
         */
-        self.send_lsp(mu_processor::ProcessorRequest::UpdateDocument(uri.clone()));
+        self.send_lsp(mu_processor::ProcessorRequest::CompileDocument(uri.clone()));
         //let _ = self.send_viewer(ViewerRequest::ShowSourceCodeFromFile { path });
     }
 

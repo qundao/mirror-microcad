@@ -3,11 +3,18 @@
 
 use microcad_driver::prelude as mu;
 
-/// µcad lsp config
+/// Configuration of the LSP serve
+#[derive(Default, Debug)]
+pub struct ServiceConfig {
+    pub use_viewer: bool,
+}
+
+/// µcad LSP config with driver config and service config.
 #[derive(Default, Debug)]
 pub struct Config {
-    /// Use viewer
-    pub use_viewer: bool,
-    /// Driver configuration
+    /// µcad Driver configuration
     pub driver: mu::DriverConfig,
+
+    /// LSP service
+    pub service: ServiceConfig,
 }
