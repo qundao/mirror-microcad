@@ -194,7 +194,6 @@ impl ProcessorController {
 
     /// Run the processing thread and create interface.
     pub fn run(config: mu::DriverConfig) -> mu::Result<Self> {
-        mu::install_std()?;
         let (request_sender, request_receiver) = crossbeam::channel::unbounded();
         let (response_sender, response_receiver) = crossbeam::channel::unbounded();
 
