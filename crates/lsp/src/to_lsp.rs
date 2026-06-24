@@ -48,7 +48,7 @@ impl ToLsp for mu::Diagnostics {
     type Output = lsp::FullDocumentDiagnosticReport;
 
     fn to_lsp(&self) -> Self::Output {
-        lsp::FullDocumentDiagnosticReport {
+        Self::Output {
             result_id: None,
             items: self
                 .iter()
@@ -67,6 +67,17 @@ impl ToLsp for mu::Diagnostics {
                     })
                 })
                 .collect(),
+        }
+    }
+}
+
+impl ToLsp for mu::TextEdit {
+    type Output = lsp::TextEdit;
+
+    fn to_lsp(&self) -> Self::Output {
+        Self::Output {
+            range: self.src_ref.to_lsp().unwrap_or_default(),
+            new_text: self.new_text.clone(),
         }
     }
 }

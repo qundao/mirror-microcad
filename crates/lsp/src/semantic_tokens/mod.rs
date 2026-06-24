@@ -30,20 +30,6 @@ pub(crate) struct TokenContext<'ast> {
 /// Macro for token implementation
 #[macro_export]
 macro_rules! impl_tokens {
-    // 2. The Enum Delegation Arm
-    // Triggers when you pass a bracketed list of variants: Enum => [Variant1, Variant2]
-    ($t:ty => [$($variant:ident),+ $(,)?]) => {
-        impl<'ast> $crate::semantic_tokens::SemanticTokens<'ast> for $t {
-            fn semantic_tokens(&self, ctx: &'ast mut $crate::semantic_tokens::TokenContext) {
-                match self {
-                    $(
-                        Self::$variant(inner) => inner.semantic_tokens(ctx),
-                    )+
-                }
-            }
-        }
-    };
-
     // 3. Field List Arm: Triggers for a list of comma-separated structural fields
     ($t:ty => $($field:ident),+ $(,)?) => {
         impl<'ast> SemanticTokens<'ast> for $t {
@@ -155,10 +141,16 @@ impl_tokens!(ast::TupleType => |self_, ctx| {
 });
 
 impl_tokens!(ast::SingleType => TokenType::TYPE);
-impl_tokens!(ast::Type => [Array, Tuple, Single]);
+impl_tokens!(ast::Type => |self_, ctx| {
+    match self_ {
+        ast::Type::Array(a) => a.semantic_tokens(ctx),
+        ast::Type::Single(s) => s.semantic_tokens(ctx),
+        ast::Type::Tuple(t) => t.semantic_tokens(ctx),
+    }
+});
 
-impl_tokens!(ast::ItemExtra => |item, ctx| {
-    if let ast::ItemExtra::Comment(comment) = item {
+impl_tokens!(ast::ItemExtra => |self_, ctx| {
+    if let ast::ItemExtra::Comment(comment) = self_ {
         comment.semantic_tokens(ctx);
     }
 });

@@ -61,7 +61,7 @@ impl Args {
                         let url = Url::parse("stdin://").into_diagnostic()?;
                         Ok(Some(url))
                     }
-                    "file" => Ok(Some(microcad_driver::locate::to_url(&input)?)),
+                    "file" => Ok(Some(microcad_driver::locate::to_url(input)?)),
                     scheme => Err(miette::miette!("Unknown scheme: {scheme}")),
                 }
             }

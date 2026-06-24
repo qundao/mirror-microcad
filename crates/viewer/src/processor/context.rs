@@ -31,7 +31,7 @@ pub struct ProcessorContext {
     /// Search paths are set during initialization.
     pub(super) search_paths: Vec<std::path::PathBuf>,
 
-    pub(super) document: Option<microcad_driver::document::Source>,
+    pub(super) document: Option<microcad_driver::document::SourceFile>,
 
     /// The current render resolutions.
     pub(super) resolution: mu::core::RenderResolution,

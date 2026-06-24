@@ -10,5 +10,6 @@ pub type FormatParameters = microcad_lang_format::FormatConfig;
 
 /// Format a document.
 pub trait Format {
+    /// Returns true if the text has been formatted.
     fn format(&mut self, params: &FormatParameters) -> Result<bool>;
 }

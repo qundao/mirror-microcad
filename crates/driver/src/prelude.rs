@@ -17,8 +17,8 @@ pub mod base {
 }
 
 pub use base::{
-    Diagnostic, Diagnostics, HashId, HashMap, HashSet, Hashed, Identifier, RcMut, Refer, SrcRef,
-    Url,
+    Diagnostic, Diagnostics, HashId, HashMap, HashSet, Hashed, Identifier, RcMut, Refer, Source,
+    SourceKind, SourceLocation, SrcRef, TextEdit, Url,
 };
 
 pub mod builtin {
@@ -32,13 +32,13 @@ pub mod parse {
     pub use microcad_lang_parse::*;
 }
 
-pub use parse::{ParseContext, ast};
+pub use parse::{ParseContext, ast, ast::Source as Ast};
 
 pub mod lower {
     pub use microcad_lang::lower::*;
 }
 
-pub use lower::{LowerContext, ir};
+pub use lower::{LowerContext, ir, ir::Source as Ir};
 
 pub mod export {
     pub use microcad_export::*;
@@ -63,7 +63,7 @@ pub use crate::document::Document;
 pub use crate::session::Session;
 pub use crate::watcher::Watcher;
 
-pub use crate::{Report, Result, report};
+pub use crate::{Cached, Report, Result, report};
 
 pub use crate::commands;
 pub use crate::document;
@@ -78,14 +78,14 @@ pub use crate::commands::{
 };
 
 pub mod traits {
-    pub use super::base::{ComputedHash, ResourceLocation, SrcReferrer};
+    pub use super::base::{ComputedHash, SrcReferrer};
     pub use super::core::{CalcBounds2D, CalcBounds3D};
     pub use super::lower::Identifiable;
     pub use microcad_lang::{doc::Doc, ty::Ty};
 
     pub use super::commands::{
-        Compile, DocGen, Export, Format, LoadFromFile, PrintDiagnostics, Render, Sync,
+        Compile, DocGen, Export, Format, GetCode, PrintDiagnostics, Render, SetCode, Sync,
         compile::Eval, compile::Lower, compile::Parse, compile::Resolve,
     };
-    pub use super::document::{CaptureDiags, GetCode, GetSymbol};
+    pub use super::document::{CaptureDiags, GetSymbol};
 }

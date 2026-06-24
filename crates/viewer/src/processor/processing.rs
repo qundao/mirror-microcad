@@ -37,7 +37,7 @@ impl Processor {
 
     pub(crate) fn compile(
         &mut self,
-        mut document: mu::document::Source,
+        mut document: mu::document::SourceFile,
     ) -> miette::Result<Vec<ProcessorResponse>> {
         use microcad_driver::commands::{Compile, *};
 
@@ -58,6 +58,7 @@ impl Processor {
         let compiler_params = CompileParameters {
             resolve: compile::ResolveParameters {
                 search_paths: self.context.search_paths.clone(),
+                no_builtin: false,
             },
         };
         let render_params = RenderParameters {
@@ -111,18 +112,20 @@ impl Processor {
                 self.context.state = ProcessingState::Idle;
                 Ok(vec![])
             }
-            ProcessorRequest::ParseFile(path) => {
-                self.compile(mu::document::Source::from_file(path)?)
+            ProcessorRequest::CompileFile(path) => {
+                self.compile(mu::document::SourceFile::from_file(path)?)
             }
-            ProcessorRequest::ParseSource {
+            ProcessorRequest::CompileSource {
                 path,
                 name: _name,
                 source,
-            } => self.compile(mu::document::Source::from_source(mu::base::Source {
-                url: mu::locate::to_url(path.as_ref().unwrap().to_str().unwrap())?,
-                line_offset: 0,
-                code: mu::Hashed::new(source),
-            })),
+            } => self.compile(mu::document::SourceFile::new(mu::Cached::new(
+                mu::base::Source {
+                    url: mu::locate::to_url(path.as_ref().unwrap().to_str().unwrap())?,
+                    line_offset: 0,
+                    code: mu::Hashed::new(source),
+                },
+            ))),
             ProcessorRequest::Export { .. } => todo!(),
             ProcessorRequest::SetLineNumber(line_number) => {
                 self.state_change(ProcessingState::Busy(0.0));

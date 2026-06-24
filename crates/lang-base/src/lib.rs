@@ -7,7 +7,6 @@ use std::str::FromStr;
 
 use miette::{MietteError, MietteSpanContents, SourceCode, SourceSpan, SpanContents};
 
-mod code_display;
 mod diag;
 pub mod element;
 mod ord_map;
@@ -29,52 +28,12 @@ pub fn virtual_url(name: &str) -> Url {
     Url::from_str(&format!("virtual://{name}")).unwrap()
 }
 
-pub trait ResourceLocation {
-    /// The canonical identity of the resource.
-    fn url(&self) -> &Url;
-
-    /// Attempts to convert the location to a physical filesystem path.
-    /// Returns None if the resource is virtual (e.g., ucad-std:// or snippet://).
-    fn to_file_path(&self) -> Option<std::path::PathBuf> {
-        if self.url().scheme() == "file" {
-            self.url().to_file_path().ok()
-        } else {
-            None
-        }
-    }
-
-    /// Helper to identify if the resource exists on disk.
-    fn is_local(&self) -> bool {
-        self.url().scheme() == "file"
-    }
-
-    /// Return the relative file path from current directory.
-    fn relative_path(&self) -> Option<std::path::PathBuf> {
-        self.to_file_path().map(|path| {
-            let current_dir = std::env::current_dir().expect("current dir");
-            if let Ok(path) = path.canonicalize() {
-                pathdiff::diff_paths(path, current_dir).unwrap_or_default()
-            } else {
-                path.to_path_buf()
-            }
-        })
-    }
-
-    /// The source name
-    fn source_name(&self) -> String {
-        self.relative_path()
-            .map(|s| s.to_string_lossy().to_string())
-            .unwrap_or(self.url().path().to_string())
-    }
-}
-
 /// List of valid µcad extensions.
 pub const MICROCAD_EXTENSIONS: &[&str] = &["mu", "µcad", "mcad", "ucad"];
 
 /// Default extension for µcad files.
 pub const MICROCAD_EXTENSION: &str = "µcad";
 
-pub use code_display::*;
 pub use diag::{
     Diag, DiagError, DiagHandler, DiagRenderOptions, DiagResult, Diagnostic, Diagnostics, Level,
     Level as DiagLevel, PushDiag,
@@ -87,7 +46,7 @@ pub use src_ref::{LineCol, LineIndex, Refer, Span, Spanned, SrcRef, SrcReferrer}
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
 pub use microcad_core::hash::{ComputedHash, HashId, HashMap, HashSet, Hashed, Hasher};
-pub use source::Source;
+pub use source::{Source, SourceKind, SourceLocation, TextEdit};
 
 /// A compatibility layer for using SourceFile with miette
 pub struct SourceLocInfo<'a> {
@@ -110,12 +69,6 @@ impl SourceLocInfo<'static> {
     }
 }
 
-impl<'a> ResourceLocation for SourceLocInfo<'a> {
-    fn url(&self) -> &Url {
-        &self.url
-    }
-}
-
 impl SourceCode for SourceLocInfo<'_> {
     fn read_span<'a>(
         &'a self,
@@ -127,7 +80,7 @@ impl SourceCode for SourceLocInfo<'_> {
             self.code
                 .read_span(span, context_lines_before, context_lines_after)?;
         let contents = MietteSpanContents::new_named(
-            self.source_name(),
+            SourceKind::from(self.url.clone()).source_name(),
             inner_contents.data(),
             *inner_contents.span(),
             inner_contents.line() + self.line_offset as usize,

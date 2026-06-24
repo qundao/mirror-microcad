@@ -1,10 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_driver::{
-    commands::Render,
-    prelude::{self as mu, RenderParameters},
-};
+use microcad_driver::{commands::Render, prelude as mu};
 
 use microcad_test_tools::test_env::*;
 use std::rc::Rc;
@@ -52,13 +49,14 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
         ..Default::default()
     };
 
-    let mut source = mu::document::Source::from_source(env.source.clone());
+    let mut source = mu::document::SourceFile::new(mu::Cached::new(env.source.clone()));
 
     use microcad_driver::commands::Compile;
 
     let model = source.compile(mu::CompileParameters {
         resolve: mu::ResolveParameters {
             search_paths: vec!["../crates/std/lib".into(), "../assets".into()],
+            no_builtin: false,
         },
     });
     let diag = source.diags();
@@ -144,7 +142,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
 fn report_model(
     env: &TestEnv,
     log: &mut dyn std::io::Write,
-    mut source: mu::document::Source,
+    mut source: mu::document::SourceFile,
     model: mu::Model,
 ) -> std::io::Result<()> {
     if model.has_no_output() {
@@ -154,7 +152,7 @@ fn report_model(
     use mu::OutputType::*;
     use mu::export::{stl::StlExporter, svg::SvgExporter};
 
-    let model = match source.render(RenderParameters {
+    let model = match source.render(mu::RenderParameters {
         resolution: if env.hires() {
             mu::RenderResolution::high()
         } else {

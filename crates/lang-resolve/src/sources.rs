@@ -4,9 +4,7 @@
 //! Source file cache
 
 use derive_more::Deref;
-use microcad_lang_base::{
-    Diagnostics, GetSourceLocInfoByHash, HashId, ResourceLocation, SourceLocInfo, SrcReferrer,
-};
+use microcad_lang_base::{Diagnostics, GetSourceLocInfoByHash, HashId, SourceLocInfo, SrcReferrer};
 
 use crate::{
     lower::{LowerErrorsWithSource, ir},

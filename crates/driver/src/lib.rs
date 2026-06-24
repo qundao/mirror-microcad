@@ -26,16 +26,25 @@ pub fn report(s: &str) -> Report {
 
 pub use config::DriverConfig;
 
+#[derive(Debug, Clone, derive_more::Deref)]
+pub struct Cached<T>(pub std::rc::Rc<T>);
+
+impl<T> Cached<T> {
+    pub fn new(item: T) -> Self {
+        Self(std::rc::Rc::new(item))
+    }
+}
+
 /// Parse a value from a string containing a literal.
 pub fn value_from_str(s: &str) -> Result<Value> {
     use mu::lower::Lower;
     use mu::parse::Parse;
     use prelude as mu;
 
-    let parse_context = prelude::parse::ParseContext::new(s);
+    let parse_context = mu::ParseContext::new(s);
     mu::ir::Literal::lower(
         &mu::ast::Literal::parse(&parse_context)?,
-        &mut mu::lower::LowerContext::new(s),
+        &mut mu::LowerContext::new(s),
     )
     .map_err(|err| err.into())
     .map(|lit| lit.value().clone())

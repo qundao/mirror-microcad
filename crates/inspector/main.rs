@@ -86,21 +86,24 @@ impl Inspector {
 
                 let search_paths = search_paths.clone();
 
-                let mut document = mu::document::Source::new(mu::locate::to_url(&self.args.input)?);
-
-                document.load_from_file().and_then(|_| {
-                    tx.send(ViewModelRequest::SetSourceCode {
-                        code: mu::Hashed::new(
-                            document.get_code().map(|code| code.to_string()).unwrap(),
-                        ),
-                    })
-                    .into_diagnostic()
-                })?;
+                let mut document = mu::document::SourceFile::load_from_file(
+                    mu::locate::to_url(&self.args.input)?,
+                    0,
+                )?;
+                tx.send(ViewModelRequest::SetSourceCode {
+                    code: mu::Hashed::new(
+                        document.get_code().map(|code| code.to_string()).unwrap(),
+                    ),
+                })
+                .into_diagnostic()?;
 
                 document
                     .parse()
                     .and(document.lower())
-                    .and(document.resolve(mu::ResolveParameters { search_paths }))
+                    .and(document.resolve(mu::ResolveParameters {
+                        search_paths,
+                        no_builtin: false,
+                    }))
                     .and_then(|symbol| {
                         tx.send(ViewModelRequest::SetSymbolTree({
                             symbol
@@ -159,7 +162,7 @@ impl Inspector {
         main_window.on_button_launch_viewer_clicked(move || {
             match viewer_process.write() {
                 Ok(mut process) => {
-                    *process = Some(ViewerProcessInterface::run(&self.args.search_paths, false));
+                    *process = Some(ViewerProcessInterface::run(false));
                     log::warn!("Already running!");
                 }
                 Err(err) => log::error!("{err}"),

@@ -6,7 +6,7 @@
 use microcad_core::hash::HashSet;
 use microcad_lang_base::{
     Diag, DiagHandler, DiagResult, Diagnostic, GetSourceLocInfoByHash, HashId, PushDiag,
-    ResourceLocation, SourceLocInfo, SrcReferrer, TreeDisplay, TreeState, WriteToFile,
+    SourceLocInfo, SrcReferrer, TreeDisplay, TreeState, WriteToFile,
 };
 
 use crate::{lower::ir, resolve::*, symbol::Symbol};

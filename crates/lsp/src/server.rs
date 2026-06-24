@@ -3,6 +3,7 @@
 
 //! µcad language server.
 
+use microcad_driver::prelude as mu;
 use microcad_lsp as mu_lsp;
 
 use clap::Parser;
@@ -30,10 +31,11 @@ async fn main() {
     } else {
         env_logger::try_init_from_env("MICROCAD_LSP_LOG").ok();
     }
+    mu::install_std().expect("Could not install standard library!");
 
     let config = mu_lsp::Config::default();
 
-    let (service, socket) = mu_lsp::build_lsp_service(config);
+    let (service, socket) = mu_lsp::build_lsp_service(config).expect("No error");
     log::info!("LSP service has been created");
 
     if args.stdio {

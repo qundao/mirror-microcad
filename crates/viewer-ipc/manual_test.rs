@@ -32,8 +32,7 @@ fn example_files() -> miette::Result<Vec<std::path::PathBuf>> {
 /// Test minimize/restoring window
 fn test_minimize_restore() -> miette::Result<()> {
     env_logger::init();
-    let search_paths = microcad_builtin::dirs::default_search_paths();
-    let viewer = ViewerProcessInterface::run(&search_paths, false); // Start hidden
+    let viewer = ViewerProcessInterface::run(false); // Start hidden
 
     let mut cycle = 0;
 
@@ -71,8 +70,7 @@ fn test_minimize_restore() -> miette::Result<()> {
 
 fn test_code_from_file() -> miette::Result<()> {
     env_logger::init();
-    let search_paths = microcad_builtin::dirs::default_search_paths();
-    let viewer = ViewerProcessInterface::run(&search_paths, false); // Start hidden
+    let viewer = ViewerProcessInterface::run(false); // Start hidden
 
     // List examples directory
     example_files()?.iter().try_for_each(|path| {
