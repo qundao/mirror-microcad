@@ -58,6 +58,7 @@ impl Processor {
         let compiler_params = CompileParameters {
             resolve: compile::ResolveParameters {
                 search_paths: self.context.search_paths.clone(),
+                no_builtin: false,
             },
         };
         let render_params = RenderParameters {
@@ -118,11 +119,13 @@ impl Processor {
                 path,
                 name: _name,
                 source,
-            } => self.compile(mu::document::SourceFile::from_source(mu::base::Source {
-                url: mu::locate::to_url(path.as_ref().unwrap().to_str().unwrap())?,
-                line_offset: 0,
-                code: mu::Hashed::new(source),
-            })),
+            } => self.compile(mu::document::SourceFile::new(mu::Cached::new(
+                mu::base::Source {
+                    url: mu::locate::to_url(path.as_ref().unwrap().to_str().unwrap())?,
+                    line_offset: 0,
+                    code: mu::Hashed::new(source),
+                },
+            ))),
             ProcessorRequest::Export { .. } => todo!(),
             ProcessorRequest::SetLineNumber(line_number) => {
                 self.state_change(ProcessingState::Busy(0.0));
