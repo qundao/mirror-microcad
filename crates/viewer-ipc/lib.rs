@@ -69,16 +69,8 @@ impl ViewerProcessInterface {
     }
 
     /// Run the viewer process.
-    pub fn run(search_paths: &[std::path::PathBuf], show_window: bool) -> Self {
-        let search_paths = search_paths
-            .iter()
-            .map(|p| p.display().to_string())
-            .collect::<Vec<String>>();
-
-        log::info!(
-            "Running viewer process with search path {}",
-            search_paths.join(", ")
-        );
+    pub fn run(show_window: bool) -> Self {
+        log::info!("Running viewer Process");
 
         use crossbeam::channel::*;
 
@@ -91,9 +83,6 @@ impl ViewerProcessInterface {
                 std::env::var("MICROCAD_VIEWER_BIN").unwrap_or("microcad-viewer".to_string()),
             );
             // handle multiple search paths
-            search_paths.iter().for_each(|search_path| {
-                command.arg("-P").arg(search_path);
-            });
             if !show_window {
                 command.arg("--hidden");
             }
@@ -124,17 +113,19 @@ impl ViewerProcessInterface {
             });
 
             // Thread to write requests
-            std::thread::spawn(move || loop {
-                for req in &rx {
-                    use std::io::Write;
-                    match serde_json::to_string(&req) {
-                        Ok(json) => {
-                            log::debug!("Write request as json: {json}");
-                            writeln!(stdin, "{}", json).expect("io error");
-                            stdin.flush().expect("io error");
-                        }
-                        Err(_) => todo!(),
-                    };
+            std::thread::spawn(move || {
+                loop {
+                    for req in &rx {
+                        use std::io::Write;
+                        match serde_json::to_string(&req) {
+                            Ok(json) => {
+                                log::debug!("Write request as json: {json}");
+                                writeln!(stdin, "{}", json).expect("io error");
+                                stdin.flush().expect("io error");
+                            }
+                            Err(_) => todo!(),
+                        };
+                    }
                 }
             });
 
