@@ -26,6 +26,15 @@ pub fn report(s: &str) -> Report {
 
 pub use config::DriverConfig;
 
+#[derive(Debug, Clone, derive_more::Deref)]
+pub struct Cached<T>(pub std::rc::Rc<T>);
+
+impl<T> Cached<T> {
+    pub fn new(item: T) -> Self {
+        Self(std::rc::Rc::new(item))
+    }
+}
+
 /// Parse a value from a string containing a literal.
 pub fn value_from_str(s: &str) -> Result<Value> {
     use mu::lower::Lower;
