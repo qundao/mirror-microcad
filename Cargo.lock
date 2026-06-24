@@ -5420,7 +5420,6 @@ name = "microcad-driver"
 version = "0.6.0"
 dependencies = [
  "derive_more",
- "dissimilar",
  "log",
  "microcad-builtin",
  "microcad-core",
@@ -5497,6 +5496,7 @@ dependencies = [
  "color-print",
  "compact_str",
  "derive_more",
+ "dissimilar",
  "log",
  "microcad-core",
  "miette",
