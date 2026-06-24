@@ -18,11 +18,6 @@ pub use format::*;
 pub use print_diagnostics::*;
 pub use render::*;
 
-/// Load something from a file
-pub trait LoadFromFile {
-    fn load_from_file(&mut self) -> Result;
-}
-
 /// Write document contents to file
 pub trait Sync {
     fn sync(&self) -> Result;

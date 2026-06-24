@@ -9,30 +9,18 @@ mod stdin;
 
 use derive_more::From;
 
-use microcad_lang_base::{DiagRenderOptions, Diagnostics, ResourceLocation, Url};
+use microcad_lang_base::{DiagRenderOptions, Diagnostics, SourceKind, Url};
 pub use source_file::SourceFile;
 pub use stdin::Stdin;
 
-use crate::Result;
-use crate::prelude::*;
-
-pub use dissimilar::Chunk;
+use crate::prelude as mu;
 
 /// Return the symbol for document
 pub trait GetSymbol {
     fn get_symbol(
         &mut self,
-        parameters: impl Into<commands::compile::ResolveParameters>,
-    ) -> Result<Symbol>;
-}
-
-pub trait TryFilePath: ResourceLocation {
-    fn try_file_path(&self) -> Result<std::path::PathBuf> {
-        match self.to_file_path() {
-            Some(path) => Ok(path),
-            None => Err(miette::miette!("No local path: {}", self.url())),
-        }
-    }
+        parameters: impl Into<mu::ResolveParameters>,
+    ) -> mu::Result<mu::Symbol>;
 }
 
 pub trait CaptureDiags {
@@ -82,36 +70,30 @@ impl Document {
     /// * `.µcad`/`.mcad`/`.ucad`: Create a source file
     /// * `.md`: Create a markdown
     /// * `book.toml`: Create an MdBook
-    pub fn new(url: Url) -> Result<Self> {
+    ///
+    /// If the URLs scheme is `builtin`, create a built-in document.
+    pub fn new(url: Url) -> mu::Result<Self> {
         let path = url.path();
         if path.ends_with("/book.toml") {
-            Ok(MdBook::new(url).into())
+            Ok(MdBook::new(url)?.into())
         } else if path.ends_with(".md") {
-            Ok(Markdown::new(url).into())
+            Ok(Markdown::new(SourceKind::from(url))?.into())
         } else if url.scheme() == "builtin" {
             Ok(Builtin::new().into())
         } else if url.scheme() == "file" {
-            Ok(Box::new(SourceFile::new(url)).into())
+            Ok(Box::new(SourceFile::load_from_file(url, 0)?).into())
         } else {
             Err(miette::miette!("Invalid document type: {}", url.path()))
         }
     }
 
-    /// Load a document from a url.
-    pub fn load(url: Url) -> Result<Self> {
-        use commands::LoadFromFile;
-        let mut document = Self::new(url)?;
-        document.load_from_file()?;
-        Ok(document)
-    }
-
     /// Open a document from a location str.
-    pub fn open(location: impl AsRef<str>) -> Result<Self> {
-        Self::load(crate::locate::to_url(location.as_ref())?)
+    pub fn open(location: impl AsRef<str>) -> mu::Result<Self> {
+        Self::new(crate::locate::to_url(location.as_ref())?)
     }
 }
 
-impl commands::GetCode for Document {
+impl mu::commands::GetCode for Document {
     fn get_code(&self) -> Option<&str> {
         match self {
             Self::SourceFile(source_file) => source_file.get_code(),
@@ -120,7 +102,7 @@ impl commands::GetCode for Document {
     }
 }
 
-impl commands::SetCode for Document {
+impl mu::commands::SetCode for Document {
     fn set_code(&mut self, new_code: String) -> Option<&str> {
         match self {
             Self::SourceFile(source_file) => source_file.set_code(new_code),
@@ -149,30 +131,8 @@ impl CaptureDiags for Document {
     }
 }
 
-impl ResourceLocation for Document {
-    fn url(&self) -> &Url {
-        match self {
-            Document::SourceFile(u) => u.url(),
-            Document::Markdown(u) => u.url(),
-            Document::MdBook(u) => u.url(),
-            Document::Builtin(u) => u.url(),
-        }
-    }
-}
-
-impl commands::LoadFromFile for Document {
-    fn load_from_file(&mut self) -> Result {
-        match self {
-            Document::SourceFile(item) => item.load_from_file(),
-            Document::Markdown(item) => item.load_from_file(),
-            Document::MdBook(item) => item.load_from_file(),
-            Document::Builtin(_) => Ok(()), // Builtin is already loaded.
-        }
-    }
-}
-
-impl commands::compile::Parse for Document {
-    fn parse(&mut self) -> Result {
+impl mu::commands::compile::Parse for Document {
+    fn parse(&mut self) -> mu::Result {
         match self {
             Document::SourceFile(source) => source.parse(),
             _ => unimplemented!(),
@@ -180,8 +140,8 @@ impl commands::compile::Parse for Document {
     }
 }
 
-impl commands::compile::Lower for Document {
-    fn lower(&mut self) -> Result {
+impl mu::commands::compile::Lower for Document {
+    fn lower(&mut self) -> mu::Result {
         match self {
             Document::SourceFile(source) => source.lower(),
             _ => unimplemented!(),
@@ -189,11 +149,11 @@ impl commands::compile::Lower for Document {
     }
 }
 
-impl commands::compile::Resolve for Document {
+impl mu::commands::compile::Resolve for Document {
     fn resolve(
         &mut self,
-        parameters: impl Into<commands::compile::ResolveParameters>,
-    ) -> Result<Symbol> {
+        parameters: impl Into<mu::commands::compile::ResolveParameters>,
+    ) -> mu::Result<mu::Symbol> {
         match self {
             Document::SourceFile(source) => source.resolve(parameters),
             _ => unimplemented!(),
@@ -201,8 +161,8 @@ impl commands::compile::Resolve for Document {
     }
 }
 
-impl commands::compile::Eval for Document {
-    fn eval(&mut self) -> Result<Model> {
+impl mu::commands::compile::Eval for Document {
+    fn eval(&mut self) -> mu::Result<mu::Model> {
         match self {
             Document::SourceFile(source) => source.eval(),
             _ => unimplemented!(),
@@ -210,8 +170,11 @@ impl commands::compile::Eval for Document {
     }
 }
 
-impl commands::Render for Document {
-    fn render(&mut self, params: impl Into<commands::RenderParameters>) -> Result<Model> {
+impl mu::commands::Render for Document {
+    fn render(
+        &mut self,
+        params: impl Into<mu::commands::RenderParameters>,
+    ) -> mu::Result<mu::Model> {
         match self {
             Document::SourceFile(source) => source.render(params),
             _ => unimplemented!(),
@@ -219,13 +182,13 @@ impl commands::Render for Document {
     }
 }
 
-impl commands::Compile for Document {}
+impl mu::commands::Compile for Document {}
 
-impl commands::Export for Document {
+impl mu::commands::Export for Document {
     fn get_export_targets(
         &self,
-        params: impl Into<commands::ExportParameters>,
-    ) -> Result<commands::ExportTargets> {
+        params: impl Into<mu::commands::ExportParameters>,
+    ) -> mu::Result<mu::commands::ExportTargets> {
         match self {
             Document::SourceFile(source) => source.get_export_targets(params),
             Document::Markdown(_) => todo!(),
@@ -235,8 +198,8 @@ impl commands::Export for Document {
     }
 }
 
-impl commands::Format for Document {
-    fn format(&mut self, params: &commands::FormatParameters) -> Result<bool> {
+impl mu::commands::Format for Document {
+    fn format(&mut self, params: &mu::commands::FormatParameters) -> mu::Result<bool> {
         match self {
             Document::SourceFile(item) => item.format(params),
             Document::Markdown(item) => item.format(params),
@@ -246,8 +209,8 @@ impl commands::Format for Document {
     }
 }
 
-impl commands::Sync for Document {
-    fn sync(&self) -> Result {
+impl mu::commands::Sync for Document {
+    fn sync(&self) -> mu::Result {
         match &self {
             Document::SourceFile(source) => source.sync(),
             Document::Markdown(markdown) => markdown.sync(),
@@ -260,8 +223,8 @@ impl commands::Sync for Document {
 impl GetSymbol for Document {
     fn get_symbol(
         &mut self,
-        params: impl Into<commands::compile::ResolveParameters>,
-    ) -> Result<Symbol> {
+        params: impl Into<mu::commands::compile::ResolveParameters>,
+    ) -> mu::Result<mu::Symbol> {
         match self {
             Document::SourceFile(asset) => asset.get_symbol(params),
             Document::Markdown(_) => todo!(),
@@ -271,8 +234,8 @@ impl GetSymbol for Document {
     }
 }
 
-impl commands::DocGen for Document {
-    fn doc_gen(&mut self, params: impl Into<commands::DocGenParameters>) -> Result {
+impl mu::commands::DocGen for Document {
+    fn doc_gen(&mut self, params: impl Into<mu::commands::DocGenParameters>) -> mu::Result {
         match self {
             Document::SourceFile(asset) => asset.doc_gen(params),
             Document::Markdown(_) => todo!(),
@@ -282,7 +245,7 @@ impl commands::DocGen for Document {
     }
 }
 
-impl commands::PrintDiagnostics for Document {
+impl mu::commands::PrintDiagnostics for Document {
     fn print_diagnostics(
         &self,
         f: &mut dyn std::fmt::Write,

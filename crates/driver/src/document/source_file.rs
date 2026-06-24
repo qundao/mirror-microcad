@@ -3,107 +3,111 @@
 
 use std::rc::Rc;
 
+use crate::Cached;
 use crate::Result;
-use crate::prelude::*;
+use crate::prelude as mu;
 
-use document::{CaptureDiags, TryFilePath, commands::LoadFromFile};
+use microcad_lang_base::SourceKind;
+use mu::document::CaptureDiags;
 
 use microcad_lang::{eval::EvalContext, resolve::ResolveContext};
-use microcad_lang_base::{DiagHandler, DiagRenderOptions, Diagnostics, ResourceLocation};
+use microcad_lang_base::{DiagHandler, DiagRenderOptions, Diagnostics};
 use microcad_lang_parse::Parse;
 use miette::{Diagnostic, IntoDiagnostic};
 use thiserror::Error;
 
 #[derive(Error, Debug, Diagnostic)]
 pub enum SourceError {
-    /// An error that occurs if the Url is not a file.
-    #[error("No file URL: {0}")]
-    NoFileUrl(Url),
-
     /// An IO error
     #[error("I/O Error: {0}")]
     IoError(#[from] std::io::Error),
 
     /// An that occured during lowering
     #[error("Lower error: {0}")]
-    LowerError(#[from] microcad_lang::lower::LowerError),
+    LowerError(#[from] mu::lower::LowerError),
 
     /// No source code available.
     #[error("No source code loaded for {0}")]
-    InvalidState(Url),
+    InvalidState(mu::Url),
 }
 
 /// A µcad source file document.
 pub struct SourceFile {
-    pub url: Url,
-    diagnostics: Diagnostics,
-    base_source: Option<base::Source>,
-    pub ast_source: Option<ast::Source>,
-    ir_source: Option<Rc<ir::Source>>,
+    pub source: mu::Cached<mu::Source>,
+    diagnostics: mu::Diagnostics,
+    pub ast: Option<mu::Ast>,
+    pub ir: Option<mu::Ir>,
     resolve_context: Option<ResolveContext>,
     eval_context: Option<EvalContext>,
-    model: Option<Model>,
+    model: Option<mu::Model>,
 }
 
 impl SourceFile {
-    pub fn new(url: Url) -> Self {
+    pub fn new(source: mu::Cached<mu::Source>) -> Self {
         Self {
-            url,
             diagnostics: Default::default(),
-            base_source: None,
-            ast_source: None,
-            ir_source: None,
+            source,
+            ast: None,
+            ir: None,
             resolve_context: None,
             eval_context: None,
             model: None,
         }
     }
 
-    /// Load a document from a url.
-    pub fn load(url: Url) -> Result<Self> {
-        use commands::LoadFromFile;
-        let mut document = Self::new(url);
-        document.load_from_file()?;
-        Ok(document)
+    /// Loads the code from the file specified in the `url`.
+    ///
+    /// # Errors
+    /// Returns an error if the URL is not a valid file path or if the file cannot be read.
+    pub fn load_from_file(url: mu::Url, line_offset: u32) -> mu::Result<Self> {
+        // 1. Convert the URL to a local file path
+        let path: std::path::PathBuf = url
+            .to_file_path()
+            .map_err(|_| {
+                std::io::Error::new(
+                    std::io::ErrorKind::InvalidInput,
+                    "The provided URL is not a valid local file path",
+                )
+            })
+            .into_diagnostic()?;
+
+        // 2. Read the file contents to a string
+        let raw_code = std::fs::read_to_string(path).into_diagnostic()?;
+
+        // 3. Construct and return the Source instance
+        Ok(Self::new(Cached::new(mu::Source::new(
+            url,
+            line_offset,
+            raw_code,
+        ))))
     }
 
-    pub fn from_source(source: base::Source) -> Self {
-        let mut self_ = Self::new(source.url.clone());
-        self_.base_source = Some(source);
-        self_
-    }
-
-    pub fn from_file(path: impl AsRef<std::path::Path>) -> Result<Self> {
-        let mut s = Self::new(crate::locate::to_url(
-            path.as_ref().as_os_str().to_str().unwrap(),
-        )?);
-        s.load_from_file()?;
-        Ok(s)
+    pub fn from_file(path: impl AsRef<std::path::Path>) -> mu::Result<Self> {
+        Ok(Self::load_from_file(
+            mu::locate::to_url(path.as_ref().as_os_str().to_str().unwrap())?,
+            0,
+        )?)
     }
 }
 
-impl commands::GetCode for SourceFile {
+impl mu::commands::GetCode for SourceFile {
     fn get_code(&self) -> Option<&str> {
-        self.base_source.as_ref().map(|s| s.code.value().as_str())
+        Some(self.source.code.as_str())
     }
 }
 
-impl commands::SetCode for SourceFile {
+impl mu::commands::SetCode for SourceFile {
     fn set_code(&mut self, code: String) -> Option<&str> {
-        self.base_source.as_mut().map(|s| {
-            s.set_code(code);
-            s.code.value().as_str()
-        })
+        self.source = mu::Cached::new(mu::Source {
+            url: self.source.url.clone(),
+            line_offset: self.source.line_offset,
+            code: mu::Hashed::new(code),
+        });
+        self.ast = None;
+        self.ir = None;
+        Some(self.source.code())
     }
 }
-
-impl ResourceLocation for SourceFile {
-    fn url(&self) -> &Url {
-        &self.url
-    }
-}
-
-impl TryFilePath for SourceFile {}
 
 impl CaptureDiags for SourceFile {
     fn diags(&self) -> &Diagnostics {
@@ -115,30 +119,25 @@ impl CaptureDiags for SourceFile {
     }
 }
 
-impl commands::Format for SourceFile {
-    fn format(&mut self, params: &commands::FormatParameters) -> Result<Vec<TextEdit>> {
-        if self.base_source.is_none() {
-            return Err(SourceError::InvalidState(self.url.clone()).into());
-        }
-
-        if let Some(ast_source) = &self.ast_source {
-            let new_source =
-                self.capture_diags(microcad_lang_format::format_source(ast_source, params));
-            self.ast_source = new_source;
-            self.ir_source = None;
+impl mu::commands::Format for SourceFile {
+    fn format(&mut self, params: &mu::commands::FormatParameters) -> Result<bool> {
+        if let Some(ast) = &self.ast {
+            let new_ast = self.capture_diags(microcad_lang_format::format_ast(ast, params));
+            self.ast = new_ast;
+            self.ir = None;
             self.resolve_context = None;
             self.eval_context = None;
             self.model = None;
         }
 
-        if let Some(ast_source) = &self.ast_source {
-            let old_code = self.base_source.as_ref().unwrap();
-            let formatted = ast_source.code.value() != old_code.code.value();
+        if let Some(ast) = &self.ast {
+            let old_code = self.source.as_ref();
+            let formatted = ast.code.value() != old_code.code.value();
             // Reset state
-            self.base_source = Some(base::Source {
-                url: self.url.clone(),
-                line_offset: ast_source.line_offset,
-                code: ast_source.code.clone(),
+            self.source = mu::Cached::new(mu::Source {
+                url: self.source.url.clone(),
+                line_offset: ast.line_offset,
+                code: ast.code.clone(),
             });
             Ok(formatted)
         } else {
@@ -149,64 +148,40 @@ impl commands::Format for SourceFile {
     }
 }
 
-impl commands::LoadFromFile for SourceFile {
-    fn load_from_file(&mut self) -> Result {
-        let path = self
-            .url
-            .to_file_path()
-            .map_err(|_| SourceError::NoFileUrl(self.url.clone()))?;
+impl mu::commands::Sync for SourceFile {
+    fn sync(&self) -> Result {
+        std::fs::write(
+            SourceKind::from(self.source.url.clone()).path().unwrap(),
+            self.source.code.value().as_bytes(),
+        )
+        .into_diagnostic()
+    }
+}
 
-        self.base_source = Some(base::Source::new(
-            self.url.clone(),
-            0,
-            std::fs::read_to_string(path).into_diagnostic()?,
-        ));
+impl mu::commands::compile::Parse for SourceFile {
+    fn parse(&mut self) -> Result {
+        let parse_context = mu::parse::ParseContext::from(self.source.as_ref());
+        self.ast = Some(
+            self.capture_diags(
+                mu::Ast::parse(&parse_context).map_err(|err| err.to_diagnostics(&parse_context)),
+            )
+            .ok_or_else(|| miette::miette!("Failed to parse"))?,
+        );
+        self.ir = None;
+        self.resolve_context = None;
+        self.eval_context = None;
+        self.model = None;
         Ok(())
     }
 }
 
-impl commands::Sync for SourceFile {
-    fn sync(&self) -> Result {
-        match &self.base_source {
-            Some(base_source) => {
-                std::fs::write(self.try_file_path()?, base_source.code.value().as_bytes())
-                    .into_diagnostic()
-            }
-            None => Err(SourceError::InvalidState(self.url.clone()).into()),
-        }
-    }
-}
-
-impl commands::compile::Parse for SourceFile {
-    fn parse(&mut self) -> Result {
-        match &self.base_source {
-            Some(base_source) => {
-                let parse_context = parse::ParseContext::from(base_source);
-                self.ast_source = Some(
-                    self.capture_diags(
-                        ast::Source::parse(&parse_context)
-                            .map_err(|err| err.to_diagnostics(&parse_context)),
-                    )
-                    .ok_or_else(|| miette::miette!("Failed to parse"))?,
-                );
-                self.ir_source = None;
-                self.resolve_context = None;
-                self.eval_context = None;
-                self.model = None;
-                Ok(())
-            }
-            None => Err(SourceError::InvalidState(self.url.clone()).into()),
-        }
-    }
-}
-
-impl commands::compile::Lower for SourceFile {
+impl mu::commands::compile::Lower for SourceFile {
     fn lower(&mut self) -> Result {
-        match &self.ast_source {
-            Some(ast_source) => {
-                let ir_source = ir::Source::from_source(ast_source, &mut self.diagnostics);
-                self.ir_source = Some(
-                    self.capture_diags(ir_source)
+        match &self.ast {
+            Some(ast) => {
+                let ir = mu::Ir::from_ast(ast, &mut self.diagnostics);
+                self.ir = Some(
+                    self.capture_diags(ir)
                         .ok_or_else(|| miette::miette!("Failed to lower"))?,
                 );
 
@@ -215,24 +190,24 @@ impl commands::compile::Lower for SourceFile {
                 self.model = None;
                 Ok(())
             }
-            None => Err(SourceError::InvalidState(self.url.clone()).into()),
+            None => Err(SourceError::InvalidState(self.source.url.clone()).into()),
         }
     }
 }
 
-impl commands::compile::Resolve for SourceFile {
+impl mu::commands::compile::Resolve for SourceFile {
     fn resolve(
         &mut self,
-        parameters: impl Into<commands::compile::ResolveParameters>,
-    ) -> Result<Symbol> {
+        parameters: impl Into<mu::commands::compile::ResolveParameters>,
+    ) -> Result<mu::Symbol> {
         let parameters = parameters.into();
-        match &self.ir_source {
-            Some(ir_source) => {
+        match &self.ir {
+            Some(ir) => {
                 self.eval_context = None;
                 self.model = None;
 
                 if let Ok(resolve_context) = ResolveContext::create(
-                    ir_source.clone(),
+                    Rc::new(ir.clone()),
                     parameters.search_paths,
                     match parameters.no_builtin {
                         true => None,
@@ -254,22 +229,22 @@ impl commands::compile::Resolve for SourceFile {
                     Err(miette::miette!("Failed to resolve"))
                 }
             }
-            None => Err(SourceError::InvalidState(self.url.clone()).into()),
+            None => Err(SourceError::InvalidState(self.source.url.clone()).into()),
         }
     }
 }
 
-impl commands::compile::Eval for SourceFile {
-    fn eval(&mut self) -> Result<Model> {
+impl mu::commands::compile::Eval for SourceFile {
+    fn eval(&mut self) -> Result<mu::Model> {
         if self.resolve_context.is_none() {
-            return Err(SourceError::InvalidState(self.url.clone()).into());
+            return Err(SourceError::InvalidState(self.source.url.clone()).into());
         }
 
         let resolve_context = self.resolve_context.take();
         let resolve_context = match resolve_context {
             Some(resolve_context) => resolve_context,
             None => {
-                return Err(SourceError::InvalidState(self.url.clone()).into());
+                return Err(SourceError::InvalidState(self.source.url.clone()).into());
             }
         };
 
@@ -300,13 +275,13 @@ impl commands::compile::Eval for SourceFile {
     }
 }
 
-impl commands::Render for SourceFile {
+impl mu::commands::Render for SourceFile {
     fn render(
         &mut self,
-        parameters: impl Into<commands::RenderParameters>,
-    ) -> document::Result<Model> {
+        parameters: impl Into<mu::commands::RenderParameters>,
+    ) -> mu::Result<mu::Model> {
         if self.model.is_none() {
-            return Err(SourceError::InvalidState(self.url.clone()).into());
+            return Err(SourceError::InvalidState(self.source.url.clone()).into());
         }
 
         let model = self.model.take();
@@ -314,11 +289,11 @@ impl commands::Render for SourceFile {
         let model = match model {
             Some(model) => model,
             None => {
-                return Err(SourceError::InvalidState(self.url.clone()).into());
+                return Err(SourceError::InvalidState(self.source.url.clone()).into());
             }
         };
 
-        if let Some(mut render_context) = self.capture_diags(RenderContext::new(
+        if let Some(mut render_context) = self.capture_diags(mu::RenderContext::new(
             &model,
             parameters.resolution,
             parameters.cache,
@@ -336,13 +311,13 @@ impl commands::Render for SourceFile {
     }
 }
 
-impl commands::Compile for SourceFile {}
+impl mu::commands::Compile for SourceFile {}
 
-impl document::GetSymbol for SourceFile {
+impl mu::document::GetSymbol for SourceFile {
     fn get_symbol(
         &mut self,
-        parameters: impl Into<commands::compile::ResolveParameters>,
-    ) -> document::Result<Symbol> {
+        parameters: impl Into<mu::commands::compile::ResolveParameters>,
+    ) -> mu::Result<mu::Symbol> {
         use crate::commands::compile::{Lower, Parse, Resolve};
         self.parse()?;
         self.lower()?;
@@ -350,9 +325,9 @@ impl document::GetSymbol for SourceFile {
     }
 }
 
-impl commands::DocGen for SourceFile {}
+impl mu::commands::DocGen for SourceFile {}
 
-impl commands::PrintDiagnostics for SourceFile {
+impl mu::commands::PrintDiagnostics for SourceFile {
     fn print_diagnostics(
         &self,
         f: &mut dyn std::fmt::Write,
@@ -363,21 +338,19 @@ impl commands::PrintDiagnostics for SourceFile {
             return diag.pretty_print(f, eval_context, options);
         } else if let Some(resolve_context) = &self.resolve_context {
             return diag.pretty_print(f, resolve_context, options);
-        } else if let Some(ast_source) = &self.ast_source {
-            return diag.pretty_print(f, ast_source, options);
-        } else if let Some(base_source) = &self.base_source {
-            return diag.pretty_print(f, base_source, options);
+        } else if let Some(ast) = &self.ast {
+            return diag.pretty_print(f, ast, options);
+        } else {
+            return diag.pretty_print(f, self.source.as_ref(), options);
         }
-
-        panic!("Missing error handling")
     }
 }
 
-impl commands::Export for SourceFile {
+impl mu::commands::Export for SourceFile {
     fn get_export_targets(
         &self,
-        params: impl Into<commands::ExportParameters>,
-    ) -> document::Result<commands::ExportTargets> {
+        params: impl Into<mu::commands::ExportParameters>,
+    ) -> mu::Result<mu::commands::ExportTargets> {
         let params = params.into();
         if let Some(model) = &self.model {
             let exporters = self.eval_context.as_ref().unwrap().exporters();
