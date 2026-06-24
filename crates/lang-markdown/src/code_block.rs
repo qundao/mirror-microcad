@@ -3,6 +3,8 @@
 
 //! A markdown code block.
 
+use microcad_lang_base::{Hashed, Source, Url};
+
 /// A code block header.
 #[derive(Debug, Clone, PartialEq)]
 pub struct CodeBlockHeader {
@@ -94,6 +96,16 @@ impl CodeBlock {
     /// A code block can be formatted if there is no `no_format` parameter given.
     pub fn can_format(&self) -> bool {
         !self.header.parameters.contains(&String::from("no_format"))
+    }
+
+    /// Get source for a code block
+    pub fn source(&self, mut url: Url) -> Source {
+        url.set_fragment(self.header.name.as_ref().map(|s| s.as_str()));
+        Source {
+            url,
+            line_offset: self.line_offset as u32,
+            code: Hashed::new(self.code.clone()),
+        }
     }
 }
 
