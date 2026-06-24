@@ -88,11 +88,12 @@ pub enum TestResult {
 
 impl std::fmt::Display for TestEnv {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        use mu::base::ResourceLocation;
         write!(
             f,
             r#"microcad_test_tools::test_env::TestEnv::new({path:?}, {orig_name:?}, {code:?}, {line_offset:?})"#,
-            path = self.source.to_file_path().unwrap(),
+            path = mu::SourceKind::from(self.source.url.clone())
+                .path()
+                .unwrap(),
             orig_name = self.orig_name,
             code = self.source.code.value(),
             line_offset = self.source.line_offset
@@ -229,12 +230,9 @@ impl TestEnv {
 
     /// Return path where to store any test output.
     pub fn source_path(&self) -> PathBuf {
-        use mu::traits::ResourceLocation;
-        pathdiff::diff_paths(
-            self.source.to_file_path().expect("A valid file path"),
-            std::env::current_dir().expect("Current dir"),
-        )
-        .unwrap()
+        mu::SourceKind::from(self.source.url.clone())
+            .relative_path()
+            .unwrap()
     }
 
     /// Return path where to store any test output.
