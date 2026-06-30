@@ -8,7 +8,7 @@ mod grant;
 mod lookup;
 mod resolve_context;
 mod resolve_error;
-mod sources;
+mod symbol;
 mod symbolize;
 
 pub use externals::*;
