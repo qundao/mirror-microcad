@@ -3,12 +3,8 @@
 
 //! Resolve the intermediate representation into a [`Symbol`].
 
-mod externals;
-mod grant;
-mod lookup;
 mod resolve_context;
 mod resolve_error;
-mod symbol;
 mod symbolize;
 
 pub use externals::*;

@@ -20,7 +20,7 @@ pub(super) trait Symbolize<T = Option<Symbol>> {
     }
 }
 
-impl ir::Source {
+impl Ir {
     /// Create symbol from definition.
     pub fn symbolize(
         &self,
