@@ -11,7 +11,7 @@ use microcad_lang_base::{Refer, SrcRef};
 use microcad_lang_proc_macros::SrcReferrer;
 use serde::Serialize;
 
-/// Block of documentation comments, starting with `/// `.
+/// Block of documentation comments, stripped of `/// `.
 #[derive(Clone, Debug, Default, SrcReferrer, Serialize)]
 pub struct DocBlock(pub Refer<Box<[String]>>);
 
@@ -19,7 +19,11 @@ impl DocBlock {
     /// Create new doc block for builtin.
     pub fn new_builtin(comment: &str) -> Self {
         Self(Refer::none(
-            comment.lines().map(|s| format!("/// {s}")).collect(),
+            comment
+                .lines()
+                .map(|s| s.to_string())
+                .collect::<Vec<String>>()
+                .into_boxed_slice(),
         ))
     }
 
@@ -48,15 +52,6 @@ impl DocBlock {
                 ))
             }
         }
-    }
-
-    /// Remove `///` comment marks and return each line as string.
-    pub fn fetch_lines(&self) -> Vec<String> {
-        self.0
-            .iter()
-            .filter_map(|s| s.strip_prefix("/// ").or(s.strip_prefix("///")))
-            .map(|s| s.trim_end().to_string())
-            .collect::<Vec<_>>()
     }
 }
 

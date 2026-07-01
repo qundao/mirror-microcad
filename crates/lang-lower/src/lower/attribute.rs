@@ -52,7 +52,12 @@ impl Lower<Vec<ast::Attribute>> for ir::OuterAttributes {
 impl Lower<ast::DocBlock> for ir::DocBlock {
     fn lower(node: &ast::DocBlock, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self(Refer::new(
-            node.lines.clone().into_boxed_slice(),
+            node.lines
+                .iter()
+                .filter_map(|s| s.strip_prefix("/// ").or(s.strip_prefix("///")))
+                .map(|s| s.trim_end().to_string())
+                .collect::<Vec<_>>()
+                .into_boxed_slice(),
             context.span_to_src_ref(&node.span),
         )))
     }
@@ -65,7 +70,9 @@ impl Lower<ast::StatementList> for ir::DocBlock {
             extract_statements(node, |stmt| {
                 Ok(match stmt {
                     ast::Statement::InnerDocComment(inner_doc_comment) => {
-                        Some(inner_doc_comment.line.clone())
+                        let s = inner_doc_comment.line.clone();
+                        let s = s.strip_prefix("//! ").or(s.strip_prefix("//!"));
+                        s.map(|s| s.trim_end().to_string())
                     }
                     _ => None,
                 })
