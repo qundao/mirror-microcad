@@ -16,12 +16,4 @@ expression: "lower :: to_ron(& ir).expect(\"No error\")"
             ),
         ],
     ),
-    source: (
-        url: "virtual://virtual",
-        line_offset: 0,
-        code: (
-            inner: "// Extracted from: assignments/model.md\n// [![test](.test/assignment_model_module.svg)](.test/assignment_model_module.log)\n\nmod my_module {\n    a = std::geo2d::Circle(radius = 1mm); // error\n}\n",
-            hash: 10210421932798409271,
-        ),
-    ),
 )

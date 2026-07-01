@@ -47,12 +47,4 @@ expression: "lower :: to_ron(& ir).expect(\"No error\")"
             )),
         ),
     ]),
-    source: (
-        url: "virtual://virtual",
-        line_offset: 0,
-        code: (
-            inner: "// Extracted from: assignments/const.md\n// [![test](.test/const_assignment_workbench_code.svg)](.test/const_assignment_workbench_code.log)\n\nsketch MySketch() {\n    const MY_CONST = 1; // allowed if no initializers\n}\nMySketch();\n",
-            hash: 12787245704930244518,
-        ),
-    ),
 )

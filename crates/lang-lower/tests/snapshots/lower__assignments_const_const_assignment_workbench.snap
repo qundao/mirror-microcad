@@ -65,12 +65,4 @@ expression: "lower :: to_ron(& ir).expect(\"No error\")"
             )),
         ),
     ]),
-    source: (
-        url: "virtual://virtual",
-        line_offset: 0,
-        code: (
-            inner: "// Extracted from: assignments/const.md\n// [![test](.test/const_assignment_workbench.svg)](.test/const_assignment_workbench.log)\n\nsketch MySketch(text: String) {\n    // constant assignment in initialization code\n    const TEXT = \"Hello\";\n\n    init() {\n        text = TEXT;\n    }\n\n    std::print(text);\n}\n\nMySketch();\n",
-            hash: 7890433151722150378,
-        ),
-    ),
 )
