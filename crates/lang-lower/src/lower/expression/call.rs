@@ -3,7 +3,7 @@
 
 use crate::{Lower, LowerContext, LowerResult, ir, lower::sort_and_check};
 
-use microcad_lang_base::SrcRef;
+use microcad_lang_base::{SpanToSrcRef, SrcRef};
 use microcad_lang_parse::ast;
 
 impl<EXPR> Lower<ast::Call> for ir::Call<EXPR>
@@ -13,7 +13,7 @@ where
 {
     fn lower(node: &ast::Call, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::Call {
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
             name: EXPR::Name::lower(&node.name, context)?,
             argument_list: ir::ArgumentList::lower(&node.arguments, context)?,
         })
@@ -30,7 +30,7 @@ where
 
         node.iter().try_for_each(|arg| -> LowerResult<()> {
             let expression = EXPR::lower(&arg.expr, context)?;
-            let src_ref = context.src_ref(&arg.span);
+            let src_ref = context.span_to_src_ref(&arg.span);
 
             match &arg.id {
                 Some(name) => named.push(ir::NamedArgument {
@@ -69,18 +69,18 @@ where
                     Some(name) => named.push(ir::NamedArgument {
                         id: ir::Identifier::lower(name, context)?,
                         expression: EXPR::lower(arg.value(), context)?,
-                        src_ref: context.src_ref(&arg.span()),
+                        src_ref: context.span_to_src_ref(&arg.span()),
                     }),
                     None => unnamed.push(ir::UnnamedArgument {
                         expression: EXPR::lower(arg.value(), context)?,
-                        src_ref: context.src_ref(&arg.span()),
+                        src_ref: context.span_to_src_ref(&arg.span()),
                     }),
                 }
                 Ok(())
             })?;
 
         Ok(Self {
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
             unnamed_args: unnamed.into_boxed_slice(),
             named_args: sort_and_check(named, context)?,
         })

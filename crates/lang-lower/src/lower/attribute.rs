@@ -4,7 +4,7 @@
 use crate::lower::{extract_statements, for_each_statement};
 use crate::{Lower, LowerContext, LowerError, LowerResult, ir};
 
-use microcad_lang_base::{PushDiag, Refer};
+use microcad_lang_base::{PushDiag, Refer, SpanToSrcRef};
 use microcad_lang_parse::ast;
 
 /// Helper function to get outer attributes
@@ -53,7 +53,7 @@ impl Lower<ast::DocBlock> for ir::DocBlock {
     fn lower(node: &ast::DocBlock, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self(Refer::new(
             node.lines.clone().into_boxed_slice(),
-            context.src_ref(&node.span),
+            context.span_to_src_ref(&node.span),
         )))
     }
 }
@@ -70,7 +70,7 @@ impl Lower<ast::StatementList> for ir::DocBlock {
                     _ => None,
                 })
             })?,
-            context.src_ref(&node.span),
+            context.span_to_src_ref(&node.span),
         )))
     }
 }
@@ -92,7 +92,7 @@ impl Lower<ast::LocalAssignment> for ir::Meta {
     fn lower(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
         let identifier = ir::Identifier::lower(&node.id, context)?;
         Ok(ir::Meta {
-            name: ir::QualifiedName::new(vec![identifier], context.src_ref(&node.id.span)),
+            name: ir::QualifiedName::new(vec![identifier], context.span_to_src_ref(&node.id.span)),
             expr: ir::ConstantExpression::lower(&node.expr, context)?,
         })
     }
@@ -122,7 +122,7 @@ impl Lower<ast::Call> for ir::Command {
         Ok(Self {
             name: ir::QualifiedName::lower(&node.name, context)?,
             argument_list: ir::ArgumentList::lower(&node.arguments, context)?,
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
@@ -213,7 +213,7 @@ impl Lower<ast::StatementList> for ir::InnerAttributes {
         // Check order of inner attribute statements.
         let mut state = State::InitDoc;
         for_each_statement(statements, context, |stmt, context| {
-            let src_ref = context.src_ref(&stmt.span());
+            let src_ref = context.span_to_src_ref(&stmt.span());
             Ok(match stmt {
                 ast::Statement::InnerDocComment(_) => {
                     if state != State::InitDoc {

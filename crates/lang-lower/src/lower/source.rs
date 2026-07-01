@@ -1,15 +1,15 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Lower, LowerContext, LowerError, LowerResult, ir, lower::for_each_statement};
+use crate::{Ir, Lower, LowerContext, LowerError, LowerResult, ir, lower::for_each_statement};
 
-use microcad_lang_base::PushDiag;
-use microcad_lang_parse::ast;
+use microcad_lang_base::{PushDiag, SpanToSrcRef};
+use microcad_lang_parse::{Ast, ast};
 
 impl Lower<ast::StatementList> for ir::SourceItems {
     fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         for_each_statement(statements, context, |stmt, context| {
-            let src_ref = context.src_ref(&stmt.span());
+            let src_ref = context.span_to_src_ref(&stmt.span());
             Ok(match stmt {
                 ast::Statement::Init(_)
                 | ast::Statement::Return(_)
@@ -32,19 +32,14 @@ impl Lower<ast::StatementList> for ir::SourceItems {
     }
 }
 
-impl Lower<ast::Source> for ir::Source {
-    fn lower(node: &ast::Source, context: &mut LowerContext) -> super::LowerResult<Self> {
-        let statements = &node.ast.value.statements;
+impl Lower<Ast> for Ir {
+    fn lower(node: &Ast, context: &mut LowerContext) -> LowerResult<Self> {
+        let statements = &node.statements;
 
         Ok(Self {
             attr: ir::InnerAttributes::lower(statements, context)?,
             items: ir::SourceItems::lower(statements, context)?,
             statements: ir::WorkbenchStatements::lower(statements, context)?,
-            source: microcad_lang_base::Source {
-                url: node.url.clone(),
-                line_offset: node.line_offset,
-                code: node.code.clone(),
-            },
         })
     }
 }

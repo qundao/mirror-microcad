@@ -10,13 +10,13 @@ use crate::{
     },
 };
 
-use microcad_lang_base::{PushDiag, Refer, SrcRef};
+use microcad_lang_base::{PushDiag, Refer, SpanToSrcRef, SrcRef};
 use microcad_lang_parse::ast;
 
 impl Lower<ast::Init> for ir::Init {
     fn lower(node: &ast::Init, context: &mut LowerContext) -> LowerResult<Self> {
         for_each_statement(&node.body.statements, context, |stmt, context| {
-            let src_ref = context.src_ref(&stmt.span());
+            let src_ref = context.span_to_src_ref(&stmt.span());
             use ast::Statement::*;
             Ok(match stmt {
                 FileModule(_) | InlineModule(_) | Function(_) | Workbench(_) | Return(_)
@@ -30,10 +30,10 @@ impl Lower<ast::Init> for ir::Init {
 
         Ok(Self {
             attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
-            keyword_ref: context.src_ref(&node.keyword_span),
+            keyword_ref: context.span_to_src_ref(&node.keyword_span),
             parameters: ir::ParameterList::lower(&node.parameters, context)?,
             statements: ir::WorkbenchStatements::lower(&node.body.statements, context)?,
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
@@ -42,7 +42,7 @@ impl Lower<ast::Body> for ir::Group {
     fn lower(node: &ast::Body, context: &mut LowerContext) -> LowerResult<Self> {
         let statements = &node.statements;
         for_each_statement(statements, context, |stmt, context| {
-            let src_ref = context.src_ref(&stmt.span());
+            let src_ref = context.span_to_src_ref(&stmt.span());
             use ast::Statement::*;
             Ok(match stmt {
                 FileModule(_) | Const(_) | Use(_) | InlineModule(_) | Init(_) | Workbench(_)
@@ -56,7 +56,7 @@ impl Lower<ast::Body> for ir::Group {
         })?;
 
         Ok(Self {
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
             attr: ir::InnerAttributes::lower(statements, context)?,
             statements: ir::WorkbenchStatements::lower(statements, context)?,
         })
@@ -80,12 +80,12 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
             ast::Expression::ArrayRange(a) => Self::ArrayExpression(ir::ArrayExpression {
                 inner: ir::ArrayExpressionInner::Range(ir::RangeExpression::lower(a, context)?),
                 unit: ir::Unit::lower(&a.unit, context)?,
-                src_ref: context.src_ref(&a.span),
+                src_ref: context.span_to_src_ref(&a.span),
             }),
             ast::Expression::ArrayList(a) => Self::ArrayExpression(ir::ArrayExpression {
                 inner: ir::ArrayExpressionInner::List(ir::ListExpression::lower(a, context)?),
                 unit: ir::Unit::lower(&a.unit, context)?,
-                src_ref: context.src_ref(&a.span),
+                src_ref: context.span_to_src_ref(&a.span),
             }),
             ast::Expression::QualifiedName(n) => Self::Name(ir::QualifiedName::lower(n, context)?),
             ast::Expression::BinaryOperation(binop) => {
@@ -102,7 +102,7 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
                 Self::lower(&access.expr, context)?,
                 |acc, element| -> LowerResult<Self> {
                     use ast::ElementInner::*;
-                    let src_ref = context.src_ref(&access.span);
+                    let src_ref = context.span_to_src_ref(&access.span);
                     let lhs = Box::new(acc);
 
                     Ok(match &element.inner {
@@ -155,20 +155,20 @@ impl Lower<ast::StatementList> for ir::Inits {
                 .try_for_each(|(stmt, _)| -> LowerResult<()> {
                     let src_ref = match stmt {
                         ast::Statement::LocalAssignment(local_assignment) => {
-                            context.src_ref(&local_assignment.span)
+                            context.span_to_src_ref(&local_assignment.span)
                         }
                         ast::Statement::Property(property_assignment) => {
-                            context.src_ref(&property_assignment.span)
+                            context.span_to_src_ref(&property_assignment.span)
                         }
                         ast::Statement::Expression(expression_statement) => {
-                            context.src_ref(&expression_statement.span)
+                            context.span_to_src_ref(&expression_statement.span)
                         }
-                        ast::Statement::Error(span) => context.src_ref(&span),
+                        ast::Statement::Error(span) => context.span_to_src_ref(&span),
                         _ => SrcRef::none(),
                     };
 
                     if src_ref.is_some() {
-                        let src_ref = context.src_ref(&stmt.span());
+                        let src_ref = context.span_to_src_ref(&stmt.span());
                         context
                             .diagnostics
                             .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?;
@@ -181,7 +181,7 @@ impl Lower<ast::StatementList> for ir::Inits {
                 .iter()
                 .try_for_each(|(stmt, _)| -> LowerResult<()> {
                     if !is_init(stmt) {
-                        let src_ref = context.src_ref(&stmt.span());
+                        let src_ref = context.span_to_src_ref(&stmt.span());
                         context
                             .diagnostics
                             .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?;
@@ -203,7 +203,7 @@ impl Lower<ast::LocalAssignment> for ir::WorkbenchStatement {
     fn lower(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             attr: ir::OuterAttributes::lower(&node.attr, context)?,
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
             visibility: ir::Visibility::Private,
             keyword_src_ref: SrcRef::none(),
             id: Some(ir::Identifier::lower(&node.id, context)?),
@@ -217,9 +217,9 @@ impl Lower<ast::PropertyAssignment> for ir::WorkbenchStatement {
     fn lower(node: &ast::PropertyAssignment, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             attr: outer_with_doc(&node.doc, &node.attr, context)?,
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
             visibility: ir::Visibility::Public,
-            keyword_src_ref: context.src_ref(&node.keyword_span),
+            keyword_src_ref: context.span_to_src_ref(&node.keyword_span),
             id: Some(ir::Identifier::lower(&node.id, context)?),
             ty: Option::<ir::TypeAnnotation>::lower(&node.ty, context)?,
             expression: ir::WorkbenchExpression::lower(node.value.as_ref(), context)?,
@@ -231,7 +231,7 @@ impl Lower<ast::ExpressionStatement> for ir::WorkbenchStatement {
     fn lower(node: &ast::ExpressionStatement, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             attr: ir::OuterAttributes::lower(&node.attr, context)?,
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
             visibility: ir::Visibility::Public,
             keyword_src_ref: SrcRef::none(),
             id: None,
@@ -274,7 +274,7 @@ impl Lower<ast::StatementList> for ir::WorkbenchStatements {
 impl Lower<ast::StatementList> for ir::WorkbenchItems {
     fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         for_each_statement(statements, context, |stmt, context| {
-            let src_ref = context.src_ref(&stmt.span());
+            let src_ref = context.span_to_src_ref(&stmt.span());
             Ok(match stmt {
                 ast::Statement::FileModule(_)
                 | ast::Statement::InlineModule(_)
@@ -298,10 +298,10 @@ impl Lower<ast::StatementList> for ir::WorkbenchItems {
 impl Lower<ast::def::Workbench> for ir::Workbench {
     fn lower(node: &ast::def::Workbench, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            keyword_ref: context.src_ref(&node.keyword_span),
+            keyword_ref: context.span_to_src_ref(&node.keyword_span),
             outer_attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
             visibility: ir::Visibility::lower(&node.vis, context)?,
-            kind: Refer::new(node.kind, context.src_ref(&node.span)),
+            kind: Refer::new(node.kind, context.span_to_src_ref(&node.span)),
             id: ir::Identifier::lower(&node.id, context)?,
             parameters: ir::ParameterList::lower(&node.parameters, context)?,
             inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,

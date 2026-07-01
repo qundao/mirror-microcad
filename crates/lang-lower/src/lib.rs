@@ -8,11 +8,14 @@ pub mod ir;
 mod lower;
 
 use microcad_lang_base::{
-    ComputedHash, DiagResult, Diagnostic, Diagnostics, Hashed, Identifier, LineIndex, PushDiag,
-    Refer, Span, SrcRef, SrcReferrer,
+    DiagResult, Diagnostic, Diagnostics, Identifier, LineIndex, PushDiag, Refer, Source, Span,
+    SpanToSrcRef, SrcRef, SrcReferrer,
 };
 
 pub use lower::{LowerError, LowerErrorsWithSource, LowerResult};
+
+/// Intermediate representation
+pub use ir::Source as Ir;
 
 pub(crate) trait IsDefault {
     fn is_default(&self) -> bool;
@@ -63,35 +66,18 @@ pub trait Identifiable {
 }
 
 pub struct LowerContext<'source> {
-    pub source: Hashed<&'source str>,
+    pub source: &'source Source,
     line_index: LineIndex,
-    line_offset: u32,
     pub diagnostics: Diagnostics,
 }
 
 impl<'source> LowerContext<'source> {
-    pub fn new(source: &'source str) -> Self {
+    pub fn new(source: &'source Source) -> Self {
         LowerContext {
-            source: Hashed::new(source),
-            line_index: LineIndex::new(source),
-            line_offset: 0,
+            source,
+            line_index: LineIndex::from(source),
             diagnostics: Diagnostics::default(),
         }
-    }
-
-    pub fn with_line_offset(self, line_offset: u32) -> Self {
-        Self {
-            source: self.source,
-            line_index: self.line_index,
-            line_offset,
-            diagnostics: Diagnostics::default(),
-        }
-    }
-
-    pub fn src_ref(&self, span: &Span) -> SrcRef {
-        self.line_index
-            .src_ref(self.source.value(), span, self.source.computed_hash())
-            .with_line_offset(self.line_offset)
     }
 
     // Use `impl PushDiag` here
@@ -102,6 +88,12 @@ impl<'source> LowerContext<'source> {
                 diagnostic.into(),
                 src_ref,
             ))))
+    }
+}
+
+impl<'source> SpanToSrcRef for LowerContext<'source> {
+    fn span_to_src_ref(&self, span: &Span) -> SrcRef {
+        self.line_index.src_ref(self.source.code.as_str(), &span)
     }
 }
 

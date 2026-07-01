@@ -3,14 +3,14 @@
 
 use crate::{Lower, LowerContext, LowerResult, ir, lower::sort_and_check};
 
-use microcad_lang_base::Refer;
+use microcad_lang_base::{Refer, SpanToSrcRef};
 use microcad_lang_parse::ast;
 
 impl Lower<ast::Parameter> for ir::Parameter {
     fn lower(node: &ast::Parameter, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
             id: ir::Identifier::lower(&node.id, context)?,
             specified_type: node
                 .ty
@@ -36,7 +36,7 @@ impl Lower<ast::ParameterList> for ir::ParameterList {
 
         Ok(ir::ParameterList(Refer::new(
             sort_and_check(parameters, context)?,
-            context.src_ref(&node.span),
+            context.span_to_src_ref(&node.span),
         )))
     }
 }

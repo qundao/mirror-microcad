@@ -9,22 +9,16 @@ use test_that::prelude::*;
 
 /// Get intermediate representation and diagnostics.
 fn ir_from_test_file(name: &str) -> lower::LowerResult<(lower::ir::Source, Diagnostics)> {
+    use microcad_lang_parse::Parse;
+
     let path_string = format!("tests/test_cases/{name}.{}", base::MICROCAD_EXTENSION);
     let path = std::path::PathBuf::from(path_string);
-    let abs_path = path.canonicalize().expect("No error");
-
-    let source = base::Source {
-        url: base::Url::from_file_path(abs_path).expect("No error"),
-        line_offset: 0,
-        code: base::Hashed::new(std::fs::read_to_string(path).expect("No error")),
-    };
-
-    use microcad_lang_parse::Parse;
-    let ast = parse::ast::Source::parse(&parse::ParseContext::new(source.code()))
-        .expect("No parse errors");
+    let code = std::fs::read_to_string(&path).expect("No error");
+    let source = base::Source::new(base::SourceKind::from(path), code);
+    let ast = parse::Ast::parse(&parse::ParseContext::from(&source)).expect("No parse errors");
 
     use microcad_lang_lower::Lower;
-    let mut context = lower::LowerContext::new(&ast.code.value());
+    let mut context = lower::LowerContext::new(&source);
     Ok((
         lower::ir::Source::lower(&ast, &mut context)?,
         context.diagnostics.clone(),

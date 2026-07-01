@@ -7,7 +7,7 @@ use crate::{
     lower::{extract_statements_with_tail, for_each_statement},
 };
 
-use microcad_lang_base::{Identifier, PushDiag, Refer, SrcRef, SrcReferrer};
+use microcad_lang_base::{Identifier, PushDiag, Refer, SpanToSrcRef, SrcRef, SrcReferrer};
 use microcad_lang_parse::ast;
 use serde::Serialize;
 
@@ -20,7 +20,7 @@ impl Lower<ast::def::Function> for ir::OuterAttributes {
 impl Lower<ast::def::Function> for ir::FunctionSignature {
     fn lower(node: &ast::def::Function, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
             parameters: ir::ParameterList::lower(&node.parameters, context)?,
             return_type: Option::<ir::TypeAnnotation>::lower(&node.return_type, context)?,
         })
@@ -34,7 +34,7 @@ where
     fn lower(node: &ast::Body, context: &mut LowerContext) -> LowerResult<Self> {
         let statements = &node.statements;
         for_each_statement(statements, context, |stmt, context| {
-            let src_ref = context.src_ref(&stmt.span());
+            let src_ref = context.span_to_src_ref(&stmt.span());
             use ast::Statement::*;
             Ok(match stmt {
                 FileModule(_) | Const(_) | Use(_) | InlineModule(_) | Init(_) | Workbench(_)
@@ -49,7 +49,7 @@ where
 
         Ok(Self(Refer::new(
             ir::FunctionStatements::lower(statements, context)?,
-            context.src_ref(&node.span),
+            context.span_to_src_ref(&node.span),
         )))
     }
 }
@@ -74,12 +74,12 @@ where
             ast::Expression::ArrayRange(a) => Self::ArrayExpression(ir::ArrayExpression {
                 inner: ir::ArrayExpressionInner::Range(ir::RangeExpression::lower(a, context)?),
                 unit: ir::Unit::lower(&a.unit, context)?,
-                src_ref: context.src_ref(&a.span),
+                src_ref: context.span_to_src_ref(&a.span),
             }),
             ast::Expression::ArrayList(a) => Self::ArrayExpression(ir::ArrayExpression {
                 inner: ir::ArrayExpressionInner::List(ir::ListExpression::lower(a, context)?),
                 unit: ir::Unit::lower(&a.unit, context)?,
-                src_ref: context.src_ref(&a.span),
+                src_ref: context.span_to_src_ref(&a.span),
             }),
             ast::Expression::QualifiedName(n) => Self::Name(NAME::lower(n, context)?),
             ast::Expression::BinaryOperation(binop) => {
@@ -96,7 +96,7 @@ where
                 Self::lower(&access.expr, context)?,
                 |acc, element| -> LowerResult<Self> {
                     use ast::ElementInner::*;
-                    let src_ref = context.src_ref(&access.span);
+                    let src_ref = context.span_to_src_ref(&access.span);
                     let lhs = Box::new(acc);
 
                     Ok(match &element.inner {
@@ -143,8 +143,8 @@ where
     fn lower(node: &ast::Return, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             value: Option::<ir::FunctionExpression<NAME>>::lower(&node.expr, context)?,
-            keyword_src_ref: context.src_ref(&node.keyword_span),
-            src_ref: context.src_ref(&node.span),
+            keyword_src_ref: context.span_to_src_ref(&node.keyword_span),
+            src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
@@ -192,7 +192,7 @@ where
                 Ok(ir::FunctionStatement::Return(ir::ReturnStatement {
                     value: Some(ir::FunctionExpression::lower(&tail.expr, context)?),
                     keyword_src_ref: SrcRef::none(),
-                    src_ref: context.src_ref(&tail.span),
+                    src_ref: context.span_to_src_ref(&tail.span),
                 }))
             },
         )?;
@@ -223,7 +223,7 @@ where
 impl Lower<ast::StatementList> for ir::FunctionItems {
     fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         for_each_statement(statements, context, |stmt, context| {
-            let src_ref = context.src_ref(&stmt.span());
+            let src_ref = context.span_to_src_ref(&stmt.span());
             use ast::Statement::*;
             Ok(match stmt {
                 Init(_) | Workbench(_) | InlineModule(_) | FileModule(_) | Property(_)
@@ -244,10 +244,10 @@ impl Lower<ast::StatementList> for ir::FunctionItems {
 impl Lower<ast::def::Function> for ir::Function {
     fn lower(node: &ast::def::Function, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
             outer_attr: ir::OuterAttributes::lower(node, context)?,
             visibility: ir::Visibility::lower(&node.vis, context)?,
-            keyword_ref: context.src_ref(&node.keyword_span),
+            keyword_ref: context.span_to_src_ref(&node.keyword_span),
             id: Identifier::lower(&node.id, context)?,
             signature: ir::FunctionSignature::lower(&node, context)?,
             inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,

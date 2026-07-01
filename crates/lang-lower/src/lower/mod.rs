@@ -14,7 +14,9 @@ mod source;
 mod r#type;
 mod workbench;
 
-use microcad_lang_base::{DiagError, Hashed, Identifier, Refer, Spanned, SrcRef, SrcReferrer};
+use microcad_lang_base::{
+    DiagError, Hashed, Identifier, Refer, SpanToSrcRef, Spanned, SrcRef, SrcReferrer,
+};
 use microcad_lang_parse::ast;
 use microcad_lang_types::ty::TypeError;
 use miette::{Diagnostic, SourceCode};
@@ -325,7 +327,7 @@ impl Lower<ast::Identifier> for ir::Identifier {
     fn lower(node: &ast::Identifier, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self(Refer::new(
             node.name.clone(),
-            context.src_ref(&node.span),
+            context.span_to_src_ref(&node.span),
         )))
     }
 }
@@ -344,8 +346,7 @@ impl Lower<ast::def::UseName> for ir::QualifiedName {
             })
             .collect::<Result<Vec<_>, _>>()?;
 
-        let name = ir::QualifiedName::new(name, context.src_ref(&node.span));
-        Ok(name)
+        Ok(Self::new(name, context.span_to_src_ref(&node.span)))
     }
 }
 
@@ -358,7 +359,7 @@ where
             id: ir::Identifier::lower(&node.id, context)?,
             specified_type: Option::<ir::TypeAnnotation>::lower(&node.ty, context)?,
             expression: EXPR::lower(node.expr.as_ref(), context)?,
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
@@ -371,7 +372,7 @@ impl Lower<ast::StatementList> for ir::Aliases {
                     Some(ast::def::UseStatementPart::Identifier(id)) => {
                         Ok(Some(ir::ExplicitAlias {
                             attr: ir::OuterAttributes::lower(&use_statement.attr, context)?,
-                            keyword_src_ref: context.src_ref(&use_statement.keyword_span),
+                            keyword_src_ref: context.span_to_src_ref(&use_statement.keyword_span),
                             visibility: ir::Visibility::lower(&use_statement.vis, context)?,
                             path: ir::QualifiedName::lower(&use_statement.name, context)?,
                             id: ir::Identifier::lower(
@@ -394,7 +395,7 @@ impl Lower<ast::StatementList> for ir::Aliases {
                 ast::Statement::Use(use_statement) => match use_statement.name.parts.last() {
                     Some(ast::def::UseStatementPart::Glob(_)) => Ok(Some(ir::WildcardAlias {
                         attr: ir::OuterAttributes::lower(&use_statement.attr, context)?,
-                        keyword_src_ref: context.src_ref(&use_statement.keyword_span),
+                        keyword_src_ref: context.span_to_src_ref(&use_statement.keyword_span),
                         visibility: ir::Visibility::lower(&use_statement.vis, context)?,
                         path: ir::QualifiedName::lower(&use_statement.name, context)?,
                     })),

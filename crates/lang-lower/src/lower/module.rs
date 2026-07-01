@@ -6,16 +6,16 @@ use crate::{
     lower::{attribute::outer_with_doc, for_each_statement},
 };
 
-use microcad_lang_base::PushDiag;
+use microcad_lang_base::{PushDiag, SpanToSrcRef};
 use microcad_lang_parse::ast;
 
 impl Lower<ast::def::FileModule> for ir::FileModule {
     fn lower(node: &ast::def::FileModule, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
             attr: outer_with_doc(&node.doc, &node.attr, context)?,
             visibility: ir::Visibility::lower(&node.vis, context)?,
-            keyword_ref: context.src_ref(&node.keyword_span),
+            keyword_ref: context.span_to_src_ref(&node.keyword_span),
             id: ir::Identifier::lower(&node.id, context)?,
         })
     }
@@ -35,7 +35,7 @@ impl Lower<ast::Statement> for Option<ir::FileModule> {
 impl Lower<ast::StatementList> for ir::InlineModuleItems {
     fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         for_each_statement(statements, context, |stmt, context| {
-            let src_ref = context.src_ref(&stmt.span());
+            let src_ref = context.span_to_src_ref(&stmt.span());
             use ast::Statement::*;
             Ok(match stmt {
                 FileModule(_) | Return(_) | Expression(_) | LocalAssignment(_) | Property(_)
@@ -59,10 +59,10 @@ impl Lower<ast::StatementList> for ir::InlineModuleItems {
 impl Lower<ast::def::InlineModule> for ir::InlineModule {
     fn lower(node: &ast::def::InlineModule, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
             outer_attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
             visibility: ir::Visibility::lower(&node.vis, context)?,
-            keyword_ref: context.src_ref(&node.keyword_span),
+            keyword_ref: context.span_to_src_ref(&node.keyword_span),
             id: ir::Identifier::lower(&node.id, context)?,
             inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
             items: ir::InlineModuleItems::lower(&node.body.statements, context)?,

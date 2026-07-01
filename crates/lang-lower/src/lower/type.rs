@@ -3,7 +3,7 @@
 
 use crate::{Lower, LowerContext, LowerResult, ir};
 
-use microcad_lang_base::Refer;
+use microcad_lang_base::{Refer, SpanToSrcRef};
 use microcad_lang_parse::ast;
 use microcad_lang_types::{Type, ty};
 
@@ -12,7 +12,7 @@ impl Lower<ast::Type> for Type {
         use std::str::FromStr;
         Ok(match node {
             ast::Type::Single(ty) => Type::from_str(ty.name.as_str())
-                .map_err(|err| Refer::new(err, context.src_ref(&node.span())))?,
+                .map_err(|err| Refer::new(err, context.span_to_src_ref(&node.span())))?,
             ast::Type::Array(ty) => Type::Array(Box::new(Type::lower(&ty.inner, context)?)),
             ast::Type::Tuple(ty) => Type::Tuple(Box::new(ty::TupleType::lower(ty, context)?)),
         })
@@ -23,7 +23,7 @@ impl Lower<ast::Type> for ir::TypeAnnotation {
     fn lower(node: &ast::Type, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::TypeAnnotation(Refer::new(
             Type::lower(node, context)?,
-            context.src_ref(&node.span()),
+            context.span_to_src_ref(&node.span()),
         )))
     }
 }

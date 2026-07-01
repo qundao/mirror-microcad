@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{Lower, LowerContext, LowerError, LowerResult, ir};
-use microcad_lang_base::Refer;
+use microcad_lang_base::{Refer, SpanToSrcRef};
 use microcad_lang_parse::ast;
 
 impl Lower<ast::StringExpression> for ir::FormatExpression {
@@ -13,7 +13,7 @@ impl Lower<ast::StringExpression> for ir::FormatExpression {
                 .then(|| ir::FormatSpec::lower(&node.specification, context))
                 .transpose()?,
             ir::ConstantExpression::lower(&node.expr, context)?,
-            context.src_ref(&node.span),
+            context.span_to_src_ref(&node.span),
         ))
     }
 }
@@ -33,15 +33,15 @@ impl Lower<ast::StringFormatSpecification> for ir::FormatSpec {
         Ok(ir::FormatSpec {
             width: transpose_ref(&node.width)
                 .map_err(|(e, span)| {
-                    LowerError::ParseIntError(Refer::new(e, context.src_ref(&span)))
+                    LowerError::ParseIntError(Refer::new(e, context.span_to_src_ref(&span)))
                 })?
                 .copied(),
             precision: transpose_ref(&node.precision)
                 .map_err(|(e, span)| {
-                    LowerError::ParseIntError(Refer::new(e, context.src_ref(&span)))
+                    LowerError::ParseIntError(Refer::new(e, context.span_to_src_ref(&span)))
                 })?
                 .copied(),
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
@@ -55,7 +55,7 @@ impl Lower<ast::FormatString> for ir::FormatString {
             .collect::<Result<Vec<_>, _>>()?;
         Ok(ir::FormatString(Refer::new(
             parts,
-            context.src_ref(&node.span),
+            context.span_to_src_ref(&node.span),
         )))
     }
 }
@@ -65,11 +65,11 @@ impl Lower<ast::StringPart> for ir::FormatStringInner {
         Ok(match node {
             ast::StringPart::Char(c) => ir::FormatStringInner::String(Refer::new(
                 c.character.into(),
-                context.src_ref(&c.span),
+                context.span_to_src_ref(&c.span),
             )),
             ast::StringPart::Content(s) => ir::FormatStringInner::String(Refer::new(
                 s.content.clone(),
-                context.src_ref(&s.span),
+                context.span_to_src_ref(&s.span),
             )),
             ast::StringPart::Expression(e) => ir::FormatStringInner::FormatExpression(Box::new(
                 ir::FormatExpression::lower(e, context)?,
@@ -83,9 +83,9 @@ impl Lower<ast::StringLiteral> for ir::FormatString {
         Ok(Self(Refer::new(
             vec![ir::FormatStringInner::String(Refer::new(
                 node.content.clone(),
-                context.src_ref(&node.span),
+                context.span_to_src_ref(&node.span),
             ))],
-            context.src_ref(&node.span),
+            context.span_to_src_ref(&node.span),
         )))
     }
 }

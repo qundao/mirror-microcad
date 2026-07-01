@@ -7,7 +7,7 @@ mod call;
 mod format_string;
 mod literal;
 
-use microcad_lang_base::{Identifier, PushDiag, Refer};
+use microcad_lang_base::{Identifier, PushDiag, Refer, SpanToSrcRef};
 use microcad_lang_parse::ast;
 use serde::Serialize;
 
@@ -19,8 +19,11 @@ where
         Ok(Self {
             lhs: Box::new(EXPR::lower(node.lhs.as_ref(), context)?),
             rhs: Box::new(EXPR::lower(node.rhs.as_ref(), context)?),
-            op: Refer::new(node.op.as_str().into(), context.src_ref(&node.op.span)),
-            src_ref: context.src_ref(&node.span),
+            op: Refer::new(
+                node.op.as_str().into(),
+                context.span_to_src_ref(&node.op.span),
+            ),
+            src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
@@ -32,8 +35,11 @@ where
     fn lower(node: &ast::UnaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::UnaryOp {
             rhs: Box::new(EXPR::lower(&node.rhs, context)?),
-            op: Refer::new(node.op.as_str().into(), context.src_ref(&node.op.span)),
-            src_ref: context.src_ref(&node.span),
+            op: Refer::new(
+                node.op.as_str().into(),
+                context.span_to_src_ref(&node.op.span),
+            ),
+            src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
@@ -57,7 +63,7 @@ where
             )
         ) {
             return Err(LowerError::InvalidRangeType {
-                src_ref: context.src_ref(&node.expr.span()),
+                src_ref: context.span_to_src_ref(&node.expr.span()),
             });
         }
         Ok(ir::RangeFirst(Box::new(EXPR::lower(&node.expr, context)?)))
@@ -83,7 +89,7 @@ where
             )
         ) {
             return Err(LowerError::InvalidRangeType {
-                src_ref: context.src_ref(&node.expr.span()),
+                src_ref: context.span_to_src_ref(&node.expr.span()),
             });
         }
         Ok(ir::RangeLast(Box::new(EXPR::lower(&node.expr, context)?)))
@@ -98,7 +104,7 @@ where
         Ok(Self {
             first: ir::RangeFirst::lower(&node.start, context)?,
             last: ir::RangeLast::lower(&node.end, context)?,
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
@@ -119,7 +125,7 @@ impl Lower<ast::Identifier> for ir::Marker {
     fn lower(node: &ast::Identifier, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             id: Identifier::lower(node, context)?,
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
@@ -131,23 +137,29 @@ where
 {
     fn lower(node: &ast::If, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::If {
-            if_ref: context.src_ref(&node.if_span),
+            if_ref: context.span_to_src_ref(&node.if_span),
             cond: Box::new(EXPR::lower(node.condition.as_ref(), context)?),
             body: BODY::lower(&node.body, context)?,
-            next_if_ref: node.next_if_span.as_ref().map(|span| context.src_ref(span)),
+            next_if_ref: node
+                .next_if_span
+                .as_ref()
+                .map(|span| context.span_to_src_ref(span)),
             next_if: node
                 .next_if
                 .as_ref()
                 .map(|next| ir::If::lower(next, context))
                 .transpose()?
                 .map(Box::new),
-            else_ref: node.else_span.as_ref().map(|span| context.src_ref(span)),
+            else_ref: node
+                .else_span
+                .as_ref()
+                .map(|span| context.span_to_src_ref(span)),
             body_else: node
                 .else_body
                 .as_ref()
                 .map(|body| BODY::lower(body, context))
                 .transpose()?,
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
@@ -159,7 +171,7 @@ impl Lower<ast::QualifiedName> for ir::QualifiedName {
             .iter()
             .map(|ident| ir::Identifier::lower(ident, context))
             .collect::<Result<Vec<_>, _>>()?;
-        Ok(Self::new(parts, context.src_ref(&node.span)))
+        Ok(Self::new(parts, context.span_to_src_ref(&node.span)))
     }
 }
 
@@ -170,7 +182,7 @@ where
     fn lower(node: &ast::TupleExpression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             args: ir::ArgumentList::lower(&node.values, context)?,
-            src_ref: context.src_ref(&node.span),
+            src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
@@ -195,12 +207,12 @@ where
             ast::Expression::ArrayRange(a) => Self::ArrayExpression(ir::ArrayExpression {
                 inner: ir::ArrayExpressionInner::Range(ir::RangeExpression::lower(a, context)?),
                 unit: ir::Unit::lower(&a.unit, context)?,
-                src_ref: context.src_ref(&a.span),
+                src_ref: context.span_to_src_ref(&a.span),
             }),
             ast::Expression::ArrayList(a) => Self::ArrayExpression(ir::ArrayExpression {
                 inner: ir::ArrayExpressionInner::List(ir::ListExpression::lower(a, context)?),
                 unit: ir::Unit::lower(&a.unit, context)?,
-                src_ref: context.src_ref(&a.span),
+                src_ref: context.span_to_src_ref(&a.span),
             }),
             ast::Expression::QualifiedName(n) => Self::Name(NAME::lower(n, context)?),
             ast::Expression::BinaryOperation(binop) => {
@@ -213,7 +225,7 @@ where
                 context
                     .diagnostics
                     .error(
-                        &context.src_ref(&expr.span()),
+                        &context.span_to_src_ref(&expr.span()),
                         miette::miette!("This is not a constant expression"),
                     )
                     .ok();
