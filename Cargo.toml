@@ -24,7 +24,6 @@ members = [
     "crates/model",
     "crates/render",
     "crates/std",
-    "crates/symbol",
     "crates/viewer",
     "crates/viewer-ipc",
     "crates/inspector",
@@ -73,6 +72,5 @@ microcad-lsp = { path = "crates/lsp", version = "0.6.0" }
 microcad-model = { path = "crates/model", version = "0.6.0" }
 microcad-render = { path = "crates/render", version = "0.6.0" }
 microcad-std = { path = "crates/std", version = "0.6.0" }
-microcad-symbol = { path = "crates/symbol", version = "0.6.0" }
 microcad-viewer-ipc = { path = "crates/viewer-ipc", version = "0.6.0" }
 microcad-viewer = { path = "crates/viewer", version = "0.6.0" }
