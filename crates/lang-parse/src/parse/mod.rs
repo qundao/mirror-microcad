@@ -9,10 +9,10 @@ pub mod parsers;
 pub use error::{ParseError, ParseErrorKind, ParseErrors, RichError};
 pub use parse_context::ParseContext;
 
-use crate::ast;
 use crate::lex::*;
 use crate::parse::{error::Rich, helpers::*};
 use crate::token::Token;
+use crate::{Ast, ast};
 use chumsky::{
     Parser, extra,
     input::{Input, MappedInput},
@@ -94,9 +94,7 @@ pub fn input<'input, 'tokens>(
 }
 
 /// Build an abstract syntax tree from a list of tokens
-pub fn parse<'tokens>(
-    tokens: &'tokens [Spanned<Token<'tokens>>],
-) -> Result<ast::Program, ParseErrors> {
+pub fn parse<'tokens>(tokens: &'tokens [Spanned<Token<'tokens>>]) -> Result<Ast, ParseErrors> {
     parser()
         .parse(input(tokens))
         .into_result()
@@ -113,8 +111,7 @@ const STRUCTURAL_TOKENS: &[Token] = &[
     Token::SigilSemiColon,
 ];
 
-fn parser<'tokens>()
--> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Program, Extra<'tokens>> {
+fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Ast, Extra<'tokens>> {
     use crate::ast::Dummy;
 
     let mut statement_list_parser = Recursive::declare();
@@ -1553,7 +1550,7 @@ fn parser<'tokens>()
 
     statement_list_parser
         .then_ignore(end())
-        .map_with(move |statements, ex| ast::Program {
+        .map_with(move |statements, ex| Ast {
             span: ex.span(),
             statements,
         })
@@ -1567,16 +1564,10 @@ impl crate::Parse for ast::Literal {
             ast::Literal::parser()
         }
 
-        match context {
-            ParseContext::Element(source) => {
-                use chumsky::Parser;
-                let tokens = crate::lex::lex(source.value()).collect::<Vec<_>>();
-                literal()
-                    .parse(crate::parse::input(&tokens))
-                    .into_result()
-                    .map_err(|errors| errors.into())
-            }
-            _ => panic!("Not possible"),
-        }
+        let tokens = crate::lex::lex(context.source.code()).collect::<Vec<_>>();
+        literal()
+            .parse(crate::parse::input(&tokens))
+            .into_result()
+            .map_err(|errors| errors.into())
     }
 }

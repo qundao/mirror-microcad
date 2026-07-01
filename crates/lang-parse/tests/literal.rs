@@ -11,6 +11,7 @@ use test_case::test_case;
 #[test_case("length", "42mm")]
 #[test_case("bool", "true")]
 fn test_literal(name: &str, input: &str) {
-    let context = ParseContext::new(input);
+    let source = microcad_lang_base::Source::from(input);
+    let context = ParseContext::from(&source);
     assert_debug_snapshot!(format!("literal_{name}"), ast::Literal::parse(&context));
 }

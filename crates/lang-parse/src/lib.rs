@@ -20,7 +20,7 @@ mod parse;
 /// Contains the lexer (aka tokenizer).
 mod lex;
 
-use microcad_lang_base::virtual_url;
+pub use ast::Ast;
 pub use parse::{ParseContext, ParseError, ParseErrors, parsers};
 
 /// Parse trait.
@@ -31,43 +31,15 @@ pub trait Parse: Sized {
     fn parse(context: &ParseContext) -> Result<Self, ParseErrors>;
 }
 
-impl Parse for ast::Source {
+impl Parse for Ast {
     fn parse(context: &ParseContext) -> Result<Self, ParseErrors> {
-        match context {
-            ParseContext::Element(code) => {
-                let ast = crate::parse(code)?;
-                let src_ref = context.src_ref(&ast.span);
-
-                Ok(Self {
-                    url: virtual_url("virtual"),
-                    ast: microcad_lang_base::Refer::new(ast, src_ref),
-                    line_offset: 0,
-                    code: code.clone().map(|s| s.to_string()),
-                })
-            }
-            ParseContext::Source {
-                url,
-                line_offset,
-                code,
-                ..
-            } => {
-                let ast = crate::parse(code.value())?;
-                let src_ref = context.src_ref(&ast.span);
-
-                Ok(Self {
-                    url: url.clone(),
-                    ast: microcad_lang_base::Refer::new(ast, src_ref),
-                    line_offset: *line_offset,
-                    code: code.clone().map(|s| s.to_string()),
-                })
-            }
-        }
+        Ok(crate::parse(context.source.code())?)
     }
 }
 
 pub use lex::lex;
 
 /// API to parse directly from a string
-pub fn parse(source: &str) -> Result<ast::Program, ParseErrors> {
+pub fn parse(source: &str) -> Result<Ast, ParseErrors> {
     parse::parse(&lex(source).collect::<Vec<_>>())
 }

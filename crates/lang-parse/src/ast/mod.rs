@@ -4,7 +4,6 @@
 pub mod def;
 mod expression;
 mod literal;
-mod source;
 mod statement;
 mod ty;
 
@@ -12,7 +11,6 @@ use microcad_lang_base::{Id, Span};
 
 pub use expression::*;
 pub use literal::*;
-pub use source::*;
 pub use statement::*;
 pub use ty::*;
 
@@ -32,15 +30,6 @@ impl Dummy for Identifier {
         }
     }
 }
-
-/// A µcad program
-#[derive(Debug)]
-#[allow(missing_docs)]
-pub struct Program {
-    pub span: Span,
-    pub statements: StatementList,
-}
-
 /// Whitespace
 #[derive(Debug, Clone, PartialEq)]
 pub struct Whitespace(pub String);
@@ -76,4 +65,12 @@ pub struct LeadingExtras(pub Vec<ItemExtra>);
 /// Used for recovery.
 pub(crate) trait Dummy {
     fn dummy(span: Span) -> Self;
+}
+
+/// A µcad abstract syntax tree
+#[derive(Debug)]
+#[allow(missing_docs)]
+pub struct Ast {
+    pub span: Span,
+    pub statements: StatementList,
 }

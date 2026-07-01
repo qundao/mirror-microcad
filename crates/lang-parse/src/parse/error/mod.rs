@@ -41,6 +41,7 @@ pub struct ParseErrors(#[related] pub Vec<ParseError>);
 impl ParseErrors {
     /// Convert parse errors to diagnostics
     pub fn to_diagnostics(self, context: &ParseContext) -> Diagnostics {
+        use microcad_lang_base::SpanToSrcRef;
         let mut diag_list = Diagnostics::default();
         use microcad_lang_base::{Diagnostic as D, PushDiag};
 
@@ -48,7 +49,7 @@ impl ParseErrors {
             let span = err.span.clone();
             diag_list
                 .push_diag(D::Error(
-                    Refer::<miette::Report>::new(err.into(), context.src_ref(&span)).into(),
+                    Refer::<miette::Report>::new(err.into(), context.span_to_src_ref(&span)).into(),
                 ))
                 .expect("Diag list must return no error");
         }
