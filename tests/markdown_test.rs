@@ -59,6 +59,7 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
     let model = source.compile(mu::CompileParameters {
         resolve: mu::ResolveParameters {
             search_paths: vec!["../crates/std/lib".into(), "../assets".into()],
+            no_builtin: false,
         },
     });
     let diag = source.diags();
