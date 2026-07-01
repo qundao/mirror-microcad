@@ -57,7 +57,7 @@ impl mu::commands::Format for mu::document::Markdown {
             .code_blocks_mut()
             .filter(|code_block| code_block.can_format())
             .for_each(|code_block| {
-                match microcad_lang_format::format_str(&code_block.code, config) {
+                match microcad_lang_format::format_code(&code_block.code, config) {
                     Ok(code) => {
                         formatted |= code_block.code != code;
                         code_block.code = code;

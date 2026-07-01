@@ -53,7 +53,7 @@ impl commands::Format for document::MdBook {
             .code_blocks_mut()
             .filter(|(_, code_block)| code_block.can_format())
             .for_each(|(_, code_block)| {
-                match microcad_lang_format::format_str(&code_block.code, config) {
+                match microcad_lang_format::format_code(&code_block.code, config) {
                     Ok(code) => {
                         formatted |= code_block.code != code;
                         code_block.code = code;
