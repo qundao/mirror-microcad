@@ -3,7 +3,7 @@ source: crates/lang-parse/tests/parser.rs
 expression: parse(input)
 ---
 Ok(
-    Program {
+    Ast {
         span: 0..25,
         statements: StatementList {
             span: 0..25,
