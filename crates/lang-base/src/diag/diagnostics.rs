@@ -66,8 +66,9 @@ impl Diagnostics {
     }
 
     /// return lines with errors
-    pub fn error_lines(&self) -> HashSet<u32> {
-        self.iter()
+    pub fn error_lines(&self) -> Vec<u32> {
+        let mut lines: Vec<u32> = self
+            .iter()
             .filter_map(|d| {
                 if d.level() == Level::Error {
                     d.src_ref().line()
@@ -75,12 +76,16 @@ impl Diagnostics {
                     None
                 }
             })
-            .collect()
+            .collect();
+        lines.sort();
+        lines.dedup();
+        lines
     }
 
     /// return lines with warnings
-    pub fn warning_lines(&self) -> HashSet<u32> {
-        self.iter()
+    pub fn warning_lines(&self) -> Vec<u32> {
+        let mut lines: Vec<u32> = self
+            .iter()
             .filter_map(|d| {
                 if d.level() == Level::Warning {
                     d.src_ref().line()
@@ -88,7 +93,10 @@ impl Diagnostics {
                     None
                 }
             })
-            .collect()
+            .collect();
+        lines.sort();
+        lines.dedup();
+        lines
     }
 }
 

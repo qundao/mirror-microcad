@@ -74,12 +74,12 @@ impl DiagHandler {
     }
 
     /// return lines with errors
-    pub fn error_lines(&self) -> HashSet<u32> {
+    pub fn error_lines(&self) -> Vec<u32> {
         self.diagnostics.error_lines()
     }
 
     /// return lines with warnings
-    pub fn warning_lines(&self) -> HashSet<u32> {
+    pub fn warning_lines(&self) -> Vec<u32> {
         self.diagnostics.warning_lines()
     }
 
