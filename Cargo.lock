@@ -5409,7 +5409,7 @@ dependencies = [
  "log",
  "microcad-builtin",
  "microcad-lang-markdown",
- "microcad-symbol",
+ "microcad-lang-resolve",
  "serde",
  "thiserror 2.0.18",
  "toml 1.1.2+spec-1.1.0",
@@ -5516,8 +5516,8 @@ dependencies = [
  "log",
  "microcad-lang-base",
  "microcad-lang-proc-macros",
+ "microcad-lang-resolve",
  "microcad-model",
- "microcad-symbol",
  "miette",
  "pretty_assertions",
  "rustc-hash 2.1.2",
@@ -5692,22 +5692,6 @@ dependencies = [
  "serde",
  "thiserror 2.0.18",
  "toml 1.1.2+spec-1.1.0",
-]
-
-[[package]]
-name = "microcad-symbol"
-version = "0.6.0"
-dependencies = [
- "derive_more",
- "insta",
- "log",
- "microcad-core",
- "microcad-lang-base",
- "microcad-lang-types",
- "miette",
- "pretty_assertions",
- "rustc-hash 2.1.2",
- "thiserror 2.0.18",
 ]
 
 [[package]]
