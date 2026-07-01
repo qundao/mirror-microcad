@@ -46,13 +46,6 @@ pub enum Visibility {
     Private,
 }
 
-/// Lines of inner or outer doc block including prefix `///`/`//!`.
-#[derive(Debug, Default, PartialEq)]
-pub struct DocBlock<REF = SrcRef> {
-    pub src_ref: REF,
-    pub lines: Vec<String>,
-}
-
 /// A binary operation
 #[derive(Debug, PartialEq)]
 #[allow(missing_docs)]
