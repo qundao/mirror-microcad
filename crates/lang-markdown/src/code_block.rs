@@ -3,7 +3,7 @@
 
 //! A markdown code block.
 
-use microcad_lang_base::{Hashed, Source, Url};
+use microcad_lang_base::{Source, SourceLocation, Url};
 
 /// A code block header.
 #[derive(Debug, Clone, PartialEq)]
@@ -87,10 +87,6 @@ impl CodeBlock {
         &self.code
     }
 
-    pub fn line_offset(&self) -> usize {
-        self.line_offset
-    }
-
     /// Returns true if this code block can be formatted.
     ///
     /// A code block can be formatted if there is no `no_format` parameter given.
@@ -101,11 +97,10 @@ impl CodeBlock {
     /// Get source for a code block
     pub fn source(&self, mut url: Url) -> Source {
         url.set_fragment(self.header.name.as_ref().map(|s| s.as_str()));
-        Source {
-            url,
-            line_offset: self.line_offset as u32,
-            code: Hashed::new(self.code.clone()),
-        }
+        Source::new(
+            SourceLocation::new(url).with_line_offset(self.line_offset as u32),
+            self.code.clone(),
+        )
     }
 }
 
