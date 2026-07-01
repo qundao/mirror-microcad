@@ -1,8 +1,8 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::Diagnostics;
-use microcad_lang_parse::{Parse, ParseContext, ast};
+use microcad_lang_base::{Diagnostics, Source};
+use microcad_lang_parse::{Ast, Parse, ParseContext, ast};
 
 mod expression;
 mod extras;
@@ -80,7 +80,7 @@ impl Format for ast::DocBlock {
     }
 }
 
-impl Format for ast::Program {
+impl Format for Ast {
     fn format(&self, f: &FormatConfig) -> Node {
         self.statements.format(f)
     }
@@ -119,25 +119,21 @@ macro_rules! node {
 }
 
 /// Format µcad program.
-pub fn format(program: &ast::Program, config: &FormatConfig) -> String {
-    program.format(config).to_string().trim().to_string()
+pub fn format(ast: &Ast, config: &FormatConfig) -> String {
+    ast.format(config).to_string().trim().to_string()
 }
 
 /// High-level API to format a &str containing µcad source code.
-pub fn format_str(source: &str, config: &FormatConfig) -> Result<String, Diagnostics> {
-    let parse_context = ParseContext::new(source);
-    let source =
-        ast::Source::parse(&parse_context).map_err(|err| err.to_diagnostics(&parse_context))?;
-    Ok(format(&source.ast, config))
+pub fn format_code(code: &str, config: &FormatConfig) -> Result<String, Diagnostics> {
+    let source = Source::from(code);
+    let parse_context = ParseContext::from(&source);
+    let ast = Ast::parse(&parse_context).map_err(|err| err.to_diagnostics(&parse_context))?;
+    Ok(format(&ast, config))
 }
 
 /// Format a [`ast::Source`]
-pub fn format_ast(source: &ast::Source, config: &FormatConfig) -> Result<ast::Source, Diagnostics> {
-    let formatted = microcad_lang_base::Source::new(
-        source.url.clone(),
-        source.line_offset,
-        format(&source.ast, config),
-    );
+pub fn format_ast(ast: &Ast, config: &FormatConfig) -> Result<Ast, Diagnostics> {
+    let formatted = Source::from(format(&ast, config).as_str());
     let parse_context = ParseContext::from(&formatted);
-    ast::Source::parse(&parse_context).map_err(|err| err.to_diagnostics(&parse_context))
+    Ast::parse(&parse_context).map_err(|err| err.to_diagnostics(&parse_context))
 }
