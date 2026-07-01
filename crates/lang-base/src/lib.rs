@@ -42,34 +42,13 @@ pub use element::{Identifier, IdentifierList};
 pub use ord_map::{OrdMap, OrdMapValue};
 pub use output::{Capture, Output, Stdout};
 pub use rc::{Rc, RcMut};
-pub use src_ref::{LineCol, LineIndex, Refer, Span, Spanned, SrcRef, SrcReferrer};
+pub use src_ref::{LineCol, LineIndex, Refer, Span, SpanToSrcRef, Spanned, SrcRef, SrcReferrer};
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
 pub use microcad_core::hash::{ComputedHash, HashId, HashMap, HashSet, Hashed, Hasher};
 pub use source::{Source, SourceKind, SourceLocation, TextEdit};
 
-/// A compatibility layer for using SourceFile with miette
-pub struct SourceLocInfo<'a> {
-    /// The source text.
-    pub code: &'a str,
-    /// Name of of file
-    pub url: Url,
-    /// Line offset (e.g. used when source comes from a markdown file).
-    pub line_offset: u32,
-}
-
-impl SourceLocInfo<'static> {
-    /// Create an invalid source file for when we can't load the source
-    pub fn invalid() -> Self {
-        SourceLocInfo {
-            code: "NO FILE",
-            url: virtual_url("invalid"),
-            line_offset: 0,
-        }
-    }
-}
-
-impl SourceCode for SourceLocInfo<'_> {
+impl SourceCode for Source {
     fn read_span<'a>(
         &'a self,
         span: &SourceSpan,
@@ -80,10 +59,10 @@ impl SourceCode for SourceLocInfo<'_> {
             self.code
                 .read_span(span, context_lines_before, context_lines_after)?;
         let contents = MietteSpanContents::new_named(
-            SourceKind::from(self.url.clone()).source_name(),
+            SourceKind::from(self.location.kind.clone()).source_name(),
             inner_contents.data(),
             *inner_contents.span(),
-            inner_contents.line() + self.line_offset as usize,
+            inner_contents.line() + self.location.line_offset.unwrap_or_default() as usize,
             inner_contents.column(),
             inner_contents.line_count(),
         )
@@ -93,9 +72,9 @@ impl SourceCode for SourceLocInfo<'_> {
 }
 
 /// Trait that can fetch for a file by it's hash value.
-pub trait GetSourceLocInfoByHash {
+pub trait GetSourceByHash {
     /// Get a source string by it's hash value.
-    fn get_source_loc_info_by_hash(&'_ self, hash: HashId) -> Option<SourceLocInfo<'_>>;
+    fn get_source_by_hash(&'_ self, hash: HashId) -> Option<&Source>;
 }
 
 /// Shortens given string to it's first line and to `max_chars` characters.

@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{HashId, Span, SrcRef, src_ref::LineCol};
+use crate::{ComputedHash, Hashed, LineCol, Source, Span, SrcRef};
 
 /// An index to retrieve the offsets in a line in O(log(n)).
 #[derive(Clone, Debug)]
@@ -12,10 +12,13 @@ pub struct LineIndex {
 
 impl LineIndex {
     /// Create a new line index from a &str.
-    pub fn new(s: &str) -> Self {
+    pub fn new(s: &str, line_offset: u32) -> Self {
         Self {
             line_offsets: std::iter::once(0)
-                .chain(s.match_indices('\n').map(|(i, _)| (i + 1) as u32))
+                .chain(
+                    s.match_indices('\n')
+                        .map(|(i, _)| (i + 1) as u32 + line_offset),
+                )
                 .collect(),
         }
     }
@@ -37,7 +40,20 @@ impl LineIndex {
         }
     }
 
-    pub fn src_ref(&self, text: &str, span: &Span, hash: HashId) -> SrcRef {
-        SrcRef::new(span, self.line_col(text, span.start), hash)
+    pub fn src_ref(&self, code: Hashed<&str>, span: &Span) -> SrcRef {
+        SrcRef::new(
+            span,
+            self.line_col(code.value(), span.start),
+            code.computed_hash(),
+        )
+    }
+}
+
+impl<'source> From<&'source Source> for LineIndex {
+    fn from(source: &'source Source) -> Self {
+        Self::new(
+            source.code(),
+            source.location.line_offset.unwrap_or_default(),
+        )
     }
 }

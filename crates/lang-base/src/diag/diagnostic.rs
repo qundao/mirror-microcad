@@ -1,7 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{GetSourceLocInfoByHash, SourceLocInfo};
+use crate::{GetSourceByHash, Source};
 use crate::{diag::*, src_ref::*};
 use miette::SourceCode;
 
@@ -75,7 +75,7 @@ impl Diagnostic {
     pub fn pretty_print(
         &self,
         mut f: &mut dyn std::fmt::Write,
-        source_by_hash: &impl GetSourceLocInfoByHash,
+        source_by_hash: &impl GetSourceByHash,
         options: &DiagRenderOptions,
     ) -> std::fmt::Result {
         let src_ref = self.src_ref();
@@ -84,20 +84,17 @@ impl Diagnostic {
         match src_ref.is_none() {
             true => writeln!(f, "{}: {}", self.level(), self.message())?,
             false => {
-                let source = match source_by_hash.get_source_loc_info_by_hash(hash) {
-                    Some(source) => SourceLocInfo {
-                        code: source.code,
-                        url: source.url,
-                        line_offset: source.line_offset,
-                    },
-                    None => SourceLocInfo::invalid(),
+                match source_by_hash.get_source_by_hash(hash) {
+                    Some(source) => {
+                        let wrapper = DiagnosticWrapper {
+                            diagnostic: self,
+                            source,
+                        };
+                        let handler = miette::GraphicalReportHandler::new_themed(options.theme());
+                        handler.render_report(&mut f, &wrapper)?
+                    }
+                    None => {}
                 };
-                let wrapper = DiagnosticWrapper {
-                    diagnostic: self,
-                    source,
-                };
-                let handler = miette::GraphicalReportHandler::new_themed(options.theme());
-                handler.render_report(&mut f, &wrapper)?
             }
         }
 
@@ -107,7 +104,7 @@ impl Diagnostic {
     /// Pretty print the diagnostics to a string, see `pretty_print` for more information
     pub fn to_pretty_string(
         &self,
-        source_by_hash: &impl GetSourceLocInfoByHash,
+        source_by_hash: &impl GetSourceByHash,
         options: &DiagRenderOptions,
     ) -> String {
         let mut buff = String::new();
@@ -152,7 +149,7 @@ impl std::fmt::Debug for Diagnostic {
 
 struct DiagnosticWrapper<'a> {
     diagnostic: &'a Diagnostic,
-    source: SourceLocInfo<'a>,
+    source: &'a Source,
 }
 
 impl std::fmt::Debug for DiagnosticWrapper<'_> {
@@ -198,7 +195,7 @@ impl miette::Diagnostic for DiagnosticWrapper<'_> {
     }
 
     fn source_code(&self) -> Option<&dyn SourceCode> {
-        Some(&self.source)
+        Some(self.source)
     }
 
     fn diagnostic_source(&self) -> Option<&dyn miette::Diagnostic> {

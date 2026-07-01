@@ -75,20 +75,20 @@ pub struct SrcRef {
     pub source_hash: HashId,
 }
 
-pub trait SrcRefIndex {
-    fn span_to_src_ref(&self, span: Span) -> SrcRef;
+pub trait SpanToSrcRef {
+    fn span_to_src_ref(&self, span: &Span) -> SrcRef;
 
     fn spanned_to_refer<T>(&self, spanned: Spanned<T>) -> Refer<T> {
         Refer {
             value: spanned.value,
-            src_ref: self.span_to_src_ref(spanned.span),
+            src_ref: self.span_to_src_ref(&spanned.span),
         }
     }
 }
 
 impl SrcRef {
-    pub fn from_span(span: Span, src_ref_index: impl SrcRefIndex) -> Self {
-        src_ref_index.span_to_src_ref(span)
+    pub fn from_span(span: &Span, src_ref_index: impl SpanToSrcRef) -> Self {
+        src_ref_index.span_to_src_ref(&span)
     }
 
     /// Create new `SrcRef`

@@ -2,8 +2,9 @@ use microcad_lang_base::{ComputedHash, Hashed, LineCol, SrcRef, TextEdit};
 
 fn source(text: &str) -> microcad_lang_base::Source {
     microcad_lang_base::Source {
-        url: microcad_lang_base::Url::parse("file:///test.mu").unwrap(),
-        line_offset: 0,
+        location: microcad_lang_base::SourceLocation::new(
+            microcad_lang_base::Url::parse("file:///test.mu").unwrap(),
+        ),
         code: Hashed::new(text.to_string()),
     }
 }

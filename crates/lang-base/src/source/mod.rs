@@ -1,139 +1,23 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{GetSourceLocInfoByHash, HashId, Hashed, LineCol, SourceLocInfo, SrcRef};
+use crate::{Hashed, LineCol, SrcRef};
 use microcad_core::hash::ComputedHash;
 use serde::Serialize;
-use url::Url;
 
-/// Kind of the source file
-#[derive(Debug, Clone, Serialize, PartialEq, Eq, derive_more::From)]
-pub enum SourceKind {
-    Url(Url),
-    Path(std::path::PathBuf),
-    Stdin,
-    Virtual(String),
-}
+mod location;
 
-impl SourceKind {
-    /// Returns a fallback or explicit URL representation of the source.
-    pub fn url(&self) -> Url {
-        match self {
-            SourceKind::Url(url) => url.clone(),
-            SourceKind::Path(path) => {
-                // Safely convert a local path to a file:// URL
-                Url::from_file_path(path)
-                    .unwrap_or_else(|_| Url::parse("file:///invalid-path").unwrap())
-            }
-            SourceKind::Stdin => Url::parse("stdin://-").unwrap(),
-            SourceKind::Virtual(name) => {
-                // URL-encode or format the virtual name into a schema
-                let scheme = format!("virtual://{}", name);
-                Url::parse(&scheme).unwrap_or_else(|_| Url::parse("virtual://unknown").unwrap())
-            }
-        }
-    }
-
-    /// Returns a reference to the underlying path if this source lives on disk.
-    pub fn path(&self) -> Option<std::path::PathBuf> {
-        match self {
-            SourceKind::Path(path) => Some(path.clone()),
-            SourceKind::Url(url) => {
-                // If it's a file:// URL, we can extract the path dynamically
-                if url.scheme() == "file" {
-                    url.to_file_path().ok()
-                } else {
-                    None
-                }
-            }
-            _ => None,
-        }
-    }
-
-    /// Return the relative file path from current directory.
-    pub fn relative_path(&self) -> Option<std::path::PathBuf> {
-        self.path().map(|path| {
-            let current_dir = std::env::current_dir().expect("current dir");
-            if let Ok(path) = path.canonicalize() {
-                pathdiff::diff_paths(path, current_dir).unwrap_or_default()
-            } else {
-                path.to_path_buf()
-            }
-        })
-    }
-
-    /// Helper to identify if the resource exists on disk.
-    pub fn is_local(&self) -> bool {
-        self.path().is_some()
-    }
-
-    /// The source name
-    pub fn source_name(&self) -> String {
-        self.relative_path()
-            .map(|s| s.to_string_lossy().to_string())
-            .unwrap_or(self.url().path().to_string())
-    }
-}
-
-/// Represents *where* the code came from.
-/// Stored once in the central SourceMap, indexed by SourceId.
-#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
-pub struct SourceLocation {
-    pub kind: SourceKind,
-    pub line_offset: Option<u32>,
-}
-
-impl SourceLocation {
-    /// New source location with specific source kind
-    pub fn new(kind: impl Into<SourceKind>) -> Self {
-        Self {
-            kind: kind.into(),
-            line_offset: None,
-        }
-    }
-
-    /// New source location with a line offset
-    pub fn with_line_offset(self, line_offset: u32) -> Self {
-        Self {
-            kind: self.kind,
-            line_offset: Some(line_offset),
-        }
-    }
-
-    /// Forwards to the underlying `SourceKind::url`
-    #[inline]
-    pub fn url(&self) -> Url {
-        self.kind.url()
-    }
-
-    /// Forwards to the underlying `SourceKind::path`
-    #[inline]
-    pub fn path(&self) -> Option<std::path::PathBuf> {
-        self.kind.path()
-    }
-}
-
-impl From<SourceKind> for SourceLocation {
-    fn from(kind: SourceKind) -> Self {
-        Self::new(kind)
-    }
-}
+pub use location::{SourceKind, SourceLocation};
 
 /// Unparsed source code with a location.
 ///
 /// A [`Source`] is a textual input for the compiler.
-///
-/// The unique location of µcad file is specified via:
-/// * `url: Url`: A URL pointing to a source code
-/// * `line_offset: u32`: A line offset inside file
-///
+//////
 /// Additionally, a unique hash of the source code computed.
 #[derive(Debug, Clone, Serialize)]
 pub struct Source {
-    /// The source url
-    pub url: Url,
-    /// Line offset
-    pub line_offset: u32,
+    /// The source location
+    pub location: SourceLocation,
     /// The original hashed code
     pub code: Hashed<String>,
 }
@@ -149,10 +33,9 @@ pub struct TextEdit {
 
 impl Source {
     /// Create a new source.
-    pub fn new(url: Url, line_offset: u32, code: String) -> Self {
+    pub fn new(location: impl Into<SourceLocation>, code: String) -> Self {
         Self {
-            url,
-            line_offset,
+            location: location.into(),
             code: Hashed::new(code),
         }
     }
@@ -229,16 +112,8 @@ impl Source {
     }
 }
 
-impl GetSourceLocInfoByHash for Source {
-    fn get_source_loc_info_by_hash(&'_ self, hash: HashId) -> Option<SourceLocInfo<'_>> {
-        if hash == self.code.computed_hash() {
-            Some(SourceLocInfo {
-                code: &self.code,
-                url: self.url.clone(),
-                line_offset: self.line_offset,
-            })
-        } else {
-            None
-        }
+impl<'a> From<&'a str> for Source {
+    fn from(s: &'a str) -> Self {
+        Source::new(SourceKind::Str, s.to_string())
     }
 }

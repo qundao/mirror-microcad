@@ -1,7 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{GetSourceLocInfoByHash, diag::*};
+use crate::{GetSourceByHash, diag::*};
 use microcad_core::hash::HashSet;
 use std::io::IsTerminal;
 
@@ -57,7 +57,7 @@ impl DiagHandler {
     pub fn pretty_print(
         &self,
         f: &mut dyn std::fmt::Write,
-        source_by_hash: &impl GetSourceLocInfoByHash,
+        source_by_hash: &impl GetSourceByHash,
     ) -> std::fmt::Result {
         self.diagnostics
             .pretty_print(f, source_by_hash, &self.render_options)
