@@ -8,7 +8,7 @@ use test_that::prelude::*;
 
 /// check `lsp::InitializeParams` -> `lsp::InitializeResult`
 #[tokio::test]
-async fn initialize() -> Result<()> {
+async fn initialize() -> std::io::Result<()> {
     let config = mu_lsp::Config::default();
     let (service, _) = mu_lsp::build_lsp_service(config);
     let params = lsp::InitializeParams::default();
