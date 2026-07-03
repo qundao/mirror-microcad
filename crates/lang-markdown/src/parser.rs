@@ -4,9 +4,10 @@
 //! µcad markdown parser.
 
 use crate::{CodeBlock, Markdown, Paragraph, Section, code_block::CodeBlockHeader};
+use miette::Diagnostic;
 use thiserror::Error;
 
-#[derive(Error, Debug)]
+#[derive(Error, Debug, Diagnostic)]
 pub enum ParseError {
     #[error("Missing code block fence")]
     MissingCodeBlockFence,
