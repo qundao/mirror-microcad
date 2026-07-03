@@ -58,7 +58,7 @@ impl SourceCode for Source {
             self.code
                 .read_span(span, context_lines_before, context_lines_after)?;
         let contents = MietteSpanContents::new_named(
-            SourceKind::from(self.location.kind.clone()).source_name(),
+            self.location.kind.source_name(),
             inner_contents.data(),
             *inner_contents.span(),
             inner_contents.line() + self.location.line_offset.unwrap_or_default() as usize,

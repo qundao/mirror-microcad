@@ -88,7 +88,7 @@ pub trait SpanToSrcRef {
 
 impl SrcRef {
     pub fn from_span(span: &Span, src_ref_index: impl SpanToSrcRef) -> Self {
-        src_ref_index.span_to_src_ref(&span)
+        src_ref_index.span_to_src_ref(span)
     }
 
     /// Create new `SrcRef`

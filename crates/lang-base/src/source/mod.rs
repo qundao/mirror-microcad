@@ -79,7 +79,7 @@ impl Source {
                 }
                 Chunk::Delete(text) => {
                     // Define the start position of the deletion
-                    let start = current.clone();
+                    let start = current;
                     let start_byte = byte_offset;
 
                     // Calculate the end position by walking through the deleted text

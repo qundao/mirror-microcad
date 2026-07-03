@@ -28,18 +28,15 @@ impl Diagnostic {
         match src_ref.is_none() {
             true => writeln!(f, "{}", self.report)?,
             false => {
-                match source_by_hash.get_source_by_hash(hash) {
-                    Some(source) => {
-                        let handler = miette::GraphicalReportHandler::new_themed(options.theme());
-                        handler.render_report(
-                            &mut f,
-                            &DiagnosticWrapper {
-                                diagnostic: self,
-                                source,
-                            },
-                        )?
-                    }
-                    None => {}
+                if let Some(source) = source_by_hash.get_source_by_hash(hash) {
+                    let handler = miette::GraphicalReportHandler::new_themed(options.theme());
+                    handler.render_report(
+                        &mut f,
+                        &DiagnosticWrapper {
+                            diagnostic: self,
+                            source,
+                        },
+                    )?
                 };
             }
         }
