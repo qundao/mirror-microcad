@@ -121,3 +121,13 @@ impl<'a> From<&'a str> for Source {
         Source::new(SourceKind::Str, s.to_string())
     }
 }
+
+impl<'a> GetSourceByHash for &'a Source {
+    fn get_source_by_hash(&self, hash: HashId) -> Option<&'a Source> {
+        if hash == self.hash() {
+            Some(self)
+        } else {
+            None
+        }
+    }
+}
