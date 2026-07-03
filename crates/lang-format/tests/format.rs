@@ -5,16 +5,12 @@ use microcad_lang_base::Source;
 
 fn _formatted_test_case(name: &str) {
     use microcad_lang_format::{FormatConfig, format};
-    let source = std::fs::read_to_string(format!("tests/test_cases/formatted/{name}.µcad"))
-        .expect("No errors")
-        .trim()
-        .to_string(); // Trim the whitespace
-    let ast = microcad_lang_parse::parse(&Source::from(source.as_str()))
-        .expect("No errors")
-        .0;
+    let source =
+        Source::load(format!("tests/test_cases/formatted/{name}.µcad")).expect("No errors");
+    let ast = microcad_lang_parse::parse(&source).expect("No errors").0;
 
     pretty_assertions::assert_eq!(
-        source,
+        source.code().trim(),
         format(&ast, &FormatConfig::default()),
         "Format error:\n{ast:#?}",
     );
@@ -22,11 +18,9 @@ fn _formatted_test_case(name: &str) {
 
 fn _unformatted_test_case(name: &str) {
     use microcad_lang_format::{FormatConfig, format};
-    let source = std::fs::read_to_string(format!("tests/test_cases/unformatted/{name}.µcad"))
-        .expect("No errors");
-    let ast = microcad_lang_parse::parse(&Source::from(source.as_str()))
-        .expect("No errors")
-        .0;
+    let source =
+        Source::load(format!("tests/test_cases/unformatted/{name}.µcad")).expect("no errors");
+    let ast = microcad_lang_parse::parse(&source).expect("No errors").0;
     insta::assert_snapshot!(name, format(&ast, &FormatConfig::default()))
 }
 
