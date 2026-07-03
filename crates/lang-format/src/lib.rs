@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang_base::{Diagnostics, Source};
-use microcad_lang_parse::{Ast, Parse, ParseContext, ast};
+use microcad_lang_parse::{Ast, ast, parse};
 
 mod expression;
 mod extras;
@@ -125,15 +125,11 @@ pub fn format(ast: &Ast, config: &FormatConfig) -> String {
 
 /// High-level API to format a &str containing µcad source code.
 pub fn format_code(code: &str, config: &FormatConfig) -> Result<String, Diagnostics> {
-    let source = Source::from(code);
-    let parse_context = ParseContext::from(&source);
-    let ast = Ast::parse(&parse_context).map_err(|err| err.to_diagnostics(&parse_context))?;
+    let ast = parse(&Source::from(code))?.0;
     Ok(format(&ast, config))
 }
 
 /// Format a [`ast::Source`]
 pub fn format_ast(ast: &Ast, config: &FormatConfig) -> Result<Ast, Diagnostics> {
-    let formatted = Source::from(format(&ast, config).as_str());
-    let parse_context = ParseContext::from(&formatted);
-    Ast::parse(&parse_context).map_err(|err| err.to_diagnostics(&parse_context))
+    Ok(parse(&Source::from(format(&ast, config).as_str()))?.0)
 }
