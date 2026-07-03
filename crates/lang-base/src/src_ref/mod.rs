@@ -111,7 +111,7 @@ impl SrcRef {
     /// Return a span for the source reference as expected by miette
     pub fn as_miette_span(&self) -> Option<SourceSpan> {
         if self.is_some() {
-            Some(SourceSpan::new(self.start.into(), self.len()))
+            Some(SourceSpan::from(self.span()))
         } else {
             None
         }
