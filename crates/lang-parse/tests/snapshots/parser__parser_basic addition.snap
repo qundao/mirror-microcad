@@ -1,90 +1,97 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: parse(input)
+expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
 ---
 Ok(
-    Ast {
-        span: 0..5,
-        statements: StatementList {
+    (
+        Ast {
             span: 0..5,
-            extras: ItemExtras {
-                leading: LeadingExtras(
-                    [],
-                ),
-                trailing: TrailingExtras(
-                    [],
-                ),
-            },
-            statements: [],
-            tail: Some(
-                ExpressionStatement {
-                    span: 0..5,
-                    extras: ItemExtras {
-                        leading: LeadingExtras(
-                            [],
-                        ),
-                        trailing: TrailingExtras(
-                            [],
-                        ),
-                    },
-                    attr: [],
-                    expr: BinaryOperation(
-                        BinaryOperation {
-                            span: 0..5,
-                            lhs: Literal(
-                                Literal {
-                                    span: 0..2,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [
-                                                Whitespace(
-                                                    Whitespace(
-                                                        " ",
-                                                    ),
-                                                ),
-                                            ],
-                                        ),
-                                    },
-                                    literal: Integer(
-                                        IntegerLiteral {
-                                            span: 0..1,
-                                            value: 1,
-                                            raw: "1",
-                                        },
-                                    ),
-                                },
-                            ),
-                            op: Spanned {
-                                span: 2..3,
-                                value: Add,
-                            },
-                            rhs: Literal(
-                                Literal {
-                                    span: 4..5,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    literal: Integer(
-                                        IntegerLiteral {
-                                            span: 4..5,
-                                            value: 1,
-                                            raw: "1",
-                                        },
-                                    ),
-                                },
-                            ),
-                        },
+            statements: StatementList {
+                span: 0..5,
+                extras: ItemExtras {
+                    leading: LeadingExtras(
+                        [],
+                    ),
+                    trailing: TrailingExtras(
+                        [],
                     ),
                 },
-            ),
+                statements: [],
+                tail: Some(
+                    ExpressionStatement {
+                        span: 0..5,
+                        extras: ItemExtras {
+                            leading: LeadingExtras(
+                                [],
+                            ),
+                            trailing: TrailingExtras(
+                                [],
+                            ),
+                        },
+                        attr: [],
+                        expr: BinaryOperation(
+                            BinaryOperation {
+                                span: 0..5,
+                                lhs: Literal(
+                                    Literal {
+                                        span: 0..2,
+                                        extras: ItemExtras {
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [
+                                                    Whitespace(
+                                                        Whitespace(
+                                                            " ",
+                                                        ),
+                                                    ),
+                                                ],
+                                            ),
+                                        },
+                                        literal: Integer(
+                                            IntegerLiteral {
+                                                span: 0..1,
+                                                value: 1,
+                                                raw: "1",
+                                            },
+                                        ),
+                                    },
+                                ),
+                                op: Spanned {
+                                    span: 2..3,
+                                    value: Add,
+                                },
+                                rhs: Literal(
+                                    Literal {
+                                        span: 4..5,
+                                        extras: ItemExtras {
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
+                                        },
+                                        literal: Integer(
+                                            IntegerLiteral {
+                                                span: 4..5,
+                                                value: 1,
+                                                raw: "1",
+                                            },
+                                        ),
+                                    },
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            },
         },
-    },
+        Diagnostics {
+            error_count: 0,
+            warning_count: 0,
+            diagnostics: [],
+        },
+    ),
 )

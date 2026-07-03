@@ -1,43 +1,27 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: parse(input)
+expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
 ---
 Ok(
-    Ast {
-        span: 0..28,
-        statements: StatementList {
+    (
+        Ast {
             span: 0..28,
-            extras: ItemExtras {
-                leading: LeadingExtras(
-                    [],
-                ),
-                trailing: TrailingExtras(
-                    [],
-                ),
-            },
-            statements: [
-                (
-                    Init(
-                        Init {
-                            span: 0..28,
-                            keyword_span: 20..24,
-                            extras: ItemExtras {
-                                leading: LeadingExtras(
-                                    [],
-                                ),
-                                trailing: TrailingExtras(
-                                    [],
-                                ),
-                            },
-                            doc: DocBlock {
-                                span: 0..20,
-                                lines: [
-                                    "/// Doc comment",
-                                ],
-                            },
-                            attr: [],
-                            parameters: ParameterList {
-                                span: 25..25,
+            statements: StatementList {
+                span: 0..28,
+                extras: ItemExtras {
+                    leading: LeadingExtras(
+                        [],
+                    ),
+                    trailing: TrailingExtras(
+                        [],
+                    ),
+                },
+                statements: [
+                    (
+                        Init(
+                            Init {
+                                span: 0..28,
+                                keyword_span: 20..24,
                                 extras: ItemExtras {
                                     leading: LeadingExtras(
                                         [],
@@ -46,12 +30,15 @@ Ok(
                                         [],
                                     ),
                                 },
-                                parameters: [],
-                            },
-                            body: Body {
-                                span: 26..28,
-                                statements: StatementList {
-                                    span: 27..27,
+                                doc: DocBlock {
+                                    span: 0..20,
+                                    lines: [
+                                        "/// Doc comment",
+                                    ],
+                                },
+                                attr: [],
+                                parameters: ParameterList {
+                                    span: 25..25,
                                     extras: ItemExtras {
                                         leading: LeadingExtras(
                                             [],
@@ -60,18 +47,38 @@ Ok(
                                             [],
                                         ),
                                     },
-                                    statements: [],
-                                    tail: None,
+                                    parameters: [],
+                                },
+                                body: Body {
+                                    span: 26..28,
+                                    statements: StatementList {
+                                        span: 27..27,
+                                        extras: ItemExtras {
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
+                                        },
+                                        statements: [],
+                                        tail: None,
+                                    },
                                 },
                             },
-                        },
+                        ),
+                        TrailingExtras(
+                            [],
+                        ),
                     ),
-                    TrailingExtras(
-                        [],
-                    ),
-                ),
-            ],
-            tail: None,
+                ],
+                tail: None,
+            },
         },
-    },
+        Diagnostics {
+            error_count: 0,
+            warning_count: 0,
+            diagnostics: [],
+        },
+    ),
 )

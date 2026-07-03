@@ -1,38 +1,28 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: parse(input)
+expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
 ---
 Ok(
-    Ast {
-        span: 0..8,
-        statements: StatementList {
+    (
+        Ast {
             span: 0..8,
-            extras: ItemExtras {
-                leading: LeadingExtras(
-                    [],
-                ),
-                trailing: TrailingExtras(
-                    [],
-                ),
-            },
-            statements: [
-                (
-                    Use(
-                        Use {
-                            span: 0..7,
-                            attr: [],
-                            keyword_span: 0..3,
-                            extras: ItemExtras {
-                                leading: LeadingExtras(
-                                    [],
-                                ),
-                                trailing: TrailingExtras(
-                                    [],
-                                ),
-                            },
-                            vis: None,
-                            name: UseName {
-                                span: 4..7,
+            statements: StatementList {
+                span: 0..8,
+                extras: ItemExtras {
+                    leading: LeadingExtras(
+                        [],
+                    ),
+                    trailing: TrailingExtras(
+                        [],
+                    ),
+                },
+                statements: [
+                    (
+                        Use(
+                            Use {
+                                span: 0..7,
+                                attr: [],
+                                keyword_span: 0..3,
                                 extras: ItemExtras {
                                     leading: LeadingExtras(
                                         [],
@@ -41,24 +31,41 @@ Ok(
                                         [],
                                     ),
                                 },
-                                parts: [
-                                    Identifier(
-                                        Identifier {
-                                            span: 4..7,
-                                            name: "foo",
-                                        },
-                                    ),
-                                ],
+                                vis: None,
+                                name: UseName {
+                                    span: 4..7,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    parts: [
+                                        Identifier(
+                                            Identifier {
+                                                span: 4..7,
+                                                name: "foo",
+                                            },
+                                        ),
+                                    ],
+                                },
+                                use_as: None,
                             },
-                            use_as: None,
-                        },
+                        ),
+                        TrailingExtras(
+                            [],
+                        ),
                     ),
-                    TrailingExtras(
-                        [],
-                    ),
-                ),
-            ],
-            tail: None,
+                ],
+                tail: None,
+            },
         },
-    },
+        Diagnostics {
+            error_count: 0,
+            warning_count: 0,
+            diagnostics: [],
+        },
+    ),
 )

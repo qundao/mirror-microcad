@@ -1,130 +1,137 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: parse(input)
+expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
 ---
 Ok(
-    Ast {
-        span: 0..55,
-        statements: StatementList {
+    (
+        Ast {
             span: 0..55,
-            extras: ItemExtras {
-                leading: LeadingExtras(
-                    [],
-                ),
-                trailing: TrailingExtras(
-                    [],
-                ),
-            },
-            statements: [
-                (
-                    LocalAssignment(
-                        LocalAssignment {
-                            span: 0..5,
-                            extras: ItemExtras {
-                                leading: LeadingExtras(
-                                    [],
-                                ),
-                                trailing: TrailingExtras(
-                                    [],
-                                ),
-                            },
-                            attr: [],
-                            id: Identifier {
-                                span: 0..1,
-                                name: "a",
-                            },
-                            ty: None,
-                            expr: Literal(
-                                Literal {
-                                    span: 4..5,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    literal: Integer(
-                                        IntegerLiteral {
-                                            span: 4..5,
-                                            value: 1,
-                                            raw: "1",
-                                        },
-                                    ),
-                                },
-                            ),
-                        },
-                    ),
-                    TrailingExtras(
-                        [
-                            Whitespace(
-                                Whitespace(
-                                    " ",
-                                ),
-                            ),
-                            Comment(
-                                Comment {
-                                    span: 7..44,
-                                    inner: MultiLine(
-                                        "multi\n    line\n    comment",
-                                    ),
-                                },
-                            ),
-                            Whitespace(
-                                Whitespace(
-                                    "\n    ",
-                                ),
-                            ),
-                        ],
-                    ),
-                ),
-                (
-                    LocalAssignment(
-                        LocalAssignment {
-                            span: 49..54,
-                            extras: ItemExtras {
-                                leading: LeadingExtras(
-                                    [],
-                                ),
-                                trailing: TrailingExtras(
-                                    [],
-                                ),
-                            },
-                            attr: [],
-                            id: Identifier {
-                                span: 49..50,
-                                name: "b",
-                            },
-                            ty: None,
-                            expr: Literal(
-                                Literal {
-                                    span: 53..54,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    literal: Integer(
-                                        IntegerLiteral {
-                                            span: 53..54,
-                                            value: 2,
-                                            raw: "2",
-                                        },
-                                    ),
-                                },
-                            ),
-                        },
-                    ),
-                    TrailingExtras(
+            statements: StatementList {
+                span: 0..55,
+                extras: ItemExtras {
+                    leading: LeadingExtras(
                         [],
                     ),
-                ),
-            ],
-            tail: None,
+                    trailing: TrailingExtras(
+                        [],
+                    ),
+                },
+                statements: [
+                    (
+                        LocalAssignment(
+                            LocalAssignment {
+                                span: 0..5,
+                                extras: ItemExtras {
+                                    leading: LeadingExtras(
+                                        [],
+                                    ),
+                                    trailing: TrailingExtras(
+                                        [],
+                                    ),
+                                },
+                                attr: [],
+                                id: Identifier {
+                                    span: 0..1,
+                                    name: "a",
+                                },
+                                ty: None,
+                                expr: Literal(
+                                    Literal {
+                                        span: 4..5,
+                                        extras: ItemExtras {
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
+                                        },
+                                        literal: Integer(
+                                            IntegerLiteral {
+                                                span: 4..5,
+                                                value: 1,
+                                                raw: "1",
+                                            },
+                                        ),
+                                    },
+                                ),
+                            },
+                        ),
+                        TrailingExtras(
+                            [
+                                Whitespace(
+                                    Whitespace(
+                                        " ",
+                                    ),
+                                ),
+                                Comment(
+                                    Comment {
+                                        span: 7..44,
+                                        inner: MultiLine(
+                                            "multi\n    line\n    comment",
+                                        ),
+                                    },
+                                ),
+                                Whitespace(
+                                    Whitespace(
+                                        "\n    ",
+                                    ),
+                                ),
+                            ],
+                        ),
+                    ),
+                    (
+                        LocalAssignment(
+                            LocalAssignment {
+                                span: 49..54,
+                                extras: ItemExtras {
+                                    leading: LeadingExtras(
+                                        [],
+                                    ),
+                                    trailing: TrailingExtras(
+                                        [],
+                                    ),
+                                },
+                                attr: [],
+                                id: Identifier {
+                                    span: 49..50,
+                                    name: "b",
+                                },
+                                ty: None,
+                                expr: Literal(
+                                    Literal {
+                                        span: 53..54,
+                                        extras: ItemExtras {
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
+                                        },
+                                        literal: Integer(
+                                            IntegerLiteral {
+                                                span: 53..54,
+                                                value: 2,
+                                                raw: "2",
+                                            },
+                                        ),
+                                    },
+                                ),
+                            },
+                        ),
+                        TrailingExtras(
+                            [],
+                        ),
+                    ),
+                ],
+                tail: None,
+            },
         },
-    },
+        Diagnostics {
+            error_count: 0,
+            warning_count: 0,
+            diagnostics: [],
+        },
+    ),
 )

@@ -1,46 +1,27 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: parse(input)
+expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
 ---
 Ok(
-    Ast {
-        span: 0..43,
-        statements: StatementList {
+    (
+        Ast {
             span: 0..43,
-            extras: ItemExtras {
-                leading: LeadingExtras(
-                    [],
-                ),
-                trailing: TrailingExtras(
-                    [],
-                ),
-            },
-            statements: [
-                (
-                    Function(
-                        Function {
-                            span: 0..43,
-                            keyword_span: 0..2,
-                            extras: ItemExtras {
-                                leading: LeadingExtras(
-                                    [],
-                                ),
-                                trailing: TrailingExtras(
-                                    [],
-                                ),
-                            },
-                            doc: DocBlock {
+            statements: StatementList {
+                span: 0..43,
+                extras: ItemExtras {
+                    leading: LeadingExtras(
+                        [],
+                    ),
+                    trailing: TrailingExtras(
+                        [],
+                    ),
+                },
+                statements: [
+                    (
+                        Function(
+                            Function {
                                 span: 0..43,
-                                lines: [],
-                            },
-                            attr: [],
-                            vis: None,
-                            id: Identifier {
-                                span: 3..6,
-                                name: "foo",
-                            },
-                            parameters: ParameterList {
-                                span: 7..16,
+                                keyword_span: 0..2,
                                 extras: ItemExtras {
                                     leading: LeadingExtras(
                                         [],
@@ -49,50 +30,18 @@ Ok(
                                         [],
                                     ),
                                 },
-                                parameters: [
-                                    Parameter {
-                                        span: 7..16,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        doc: DocBlock {
-                                            span: 7..7,
-                                            lines: [],
-                                        },
-                                        attr: [],
-                                        id: Identifier {
-                                            span: 7..8,
-                                            name: "a",
-                                        },
-                                        ty: Some(
-                                            Single(
-                                                SingleType {
-                                                    span: 10..16,
-                                                    name: "Length",
-                                                },
-                                            ),
-                                        ),
-                                        default: None,
-                                    },
-                                ],
-                            },
-                            return_type: Some(
-                                Single(
-                                    SingleType {
-                                        span: 21..27,
-                                        name: "Length",
-                                    },
-                                ),
-                            ),
-                            body: Body {
-                                span: 28..43,
-                                statements: StatementList {
-                                    span: 29..42,
+                                doc: DocBlock {
+                                    span: 0..43,
+                                    lines: [],
+                                },
+                                attr: [],
+                                vis: None,
+                                id: Identifier {
+                                    span: 3..6,
+                                    name: "foo",
+                                },
+                                parameters: ParameterList {
+                                    span: 7..16,
                                     extras: ItemExtras {
                                         leading: LeadingExtras(
                                             [],
@@ -101,94 +50,152 @@ Ok(
                                             [],
                                         ),
                                     },
-                                    statements: [
-                                        (
-                                            Return(
-                                                Return {
-                                                    span: 29..41,
-                                                    keyword_span: 29..35,
-                                                    extras: ItemExtras {
-                                                        leading: LeadingExtras(
-                                                            [],
-                                                        ),
-                                                        trailing: TrailingExtras(
-                                                            [],
-                                                        ),
+                                    parameters: [
+                                        Parameter {
+                                            span: 7..16,
+                                            extras: ItemExtras {
+                                                leading: LeadingExtras(
+                                                    [],
+                                                ),
+                                                trailing: TrailingExtras(
+                                                    [],
+                                                ),
+                                            },
+                                            doc: DocBlock {
+                                                span: 7..7,
+                                                lines: [],
+                                            },
+                                            attr: [],
+                                            id: Identifier {
+                                                span: 7..8,
+                                                name: "a",
+                                            },
+                                            ty: Some(
+                                                Single(
+                                                    SingleType {
+                                                        span: 10..16,
+                                                        name: "Length",
                                                     },
-                                                    expr: Some(
-                                                        BinaryOperation(
-                                                            BinaryOperation {
-                                                                span: 36..41,
-                                                                lhs: QualifiedName(
-                                                                    QualifiedName {
-                                                                        span: 36..37,
-                                                                        extras: ItemExtras {
-                                                                            leading: LeadingExtras(
-                                                                                [],
-                                                                            ),
-                                                                            trailing: TrailingExtras(
-                                                                                [
-                                                                                    Whitespace(
-                                                                                        Whitespace(
-                                                                                            " ",
-                                                                                        ),
-                                                                                    ),
-                                                                                ],
-                                                                            ),
-                                                                        },
-                                                                        parts: [
-                                                                            Identifier {
-                                                                                span: 36..37,
-                                                                                name: "a",
-                                                                            },
-                                                                        ],
-                                                                    },
-                                                                ),
-                                                                op: Spanned {
-                                                                    span: 38..39,
-                                                                    value: Multiply,
-                                                                },
-                                                                rhs: Literal(
-                                                                    Literal {
-                                                                        span: 40..41,
-                                                                        extras: ItemExtras {
-                                                                            leading: LeadingExtras(
-                                                                                [],
-                                                                            ),
-                                                                            trailing: TrailingExtras(
-                                                                                [],
-                                                                            ),
-                                                                        },
-                                                                        literal: Integer(
-                                                                            IntegerLiteral {
-                                                                                span: 40..41,
-                                                                                value: 2,
-                                                                                raw: "2",
-                                                                            },
-                                                                        ),
-                                                                    },
-                                                                ),
-                                                            },
-                                                        ),
-                                                    ),
-                                                },
+                                                ),
                                             ),
-                                            TrailingExtras(
+                                            default: None,
+                                        },
+                                    ],
+                                },
+                                return_type: Some(
+                                    Single(
+                                        SingleType {
+                                            span: 21..27,
+                                            name: "Length",
+                                        },
+                                    ),
+                                ),
+                                body: Body {
+                                    span: 28..43,
+                                    statements: StatementList {
+                                        span: 29..42,
+                                        extras: ItemExtras {
+                                            leading: LeadingExtras(
                                                 [],
                                             ),
-                                        ),
-                                    ],
-                                    tail: None,
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
+                                        },
+                                        statements: [
+                                            (
+                                                Return(
+                                                    Return {
+                                                        span: 29..41,
+                                                        keyword_span: 29..35,
+                                                        extras: ItemExtras {
+                                                            leading: LeadingExtras(
+                                                                [],
+                                                            ),
+                                                            trailing: TrailingExtras(
+                                                                [],
+                                                            ),
+                                                        },
+                                                        expr: Some(
+                                                            BinaryOperation(
+                                                                BinaryOperation {
+                                                                    span: 36..41,
+                                                                    lhs: QualifiedName(
+                                                                        QualifiedName {
+                                                                            span: 36..37,
+                                                                            extras: ItemExtras {
+                                                                                leading: LeadingExtras(
+                                                                                    [],
+                                                                                ),
+                                                                                trailing: TrailingExtras(
+                                                                                    [
+                                                                                        Whitespace(
+                                                                                            Whitespace(
+                                                                                                " ",
+                                                                                            ),
+                                                                                        ),
+                                                                                    ],
+                                                                                ),
+                                                                            },
+                                                                            parts: [
+                                                                                Identifier {
+                                                                                    span: 36..37,
+                                                                                    name: "a",
+                                                                                },
+                                                                            ],
+                                                                        },
+                                                                    ),
+                                                                    op: Spanned {
+                                                                        span: 38..39,
+                                                                        value: Multiply,
+                                                                    },
+                                                                    rhs: Literal(
+                                                                        Literal {
+                                                                            span: 40..41,
+                                                                            extras: ItemExtras {
+                                                                                leading: LeadingExtras(
+                                                                                    [],
+                                                                                ),
+                                                                                trailing: TrailingExtras(
+                                                                                    [],
+                                                                                ),
+                                                                            },
+                                                                            literal: Integer(
+                                                                                IntegerLiteral {
+                                                                                    span: 40..41,
+                                                                                    value: 2,
+                                                                                    raw: "2",
+                                                                                },
+                                                                            ),
+                                                                        },
+                                                                    ),
+                                                                },
+                                                            ),
+                                                        ),
+                                                    },
+                                                ),
+                                                TrailingExtras(
+                                                    [],
+                                                ),
+                                            ),
+                                        ],
+                                        tail: None,
+                                    },
                                 },
                             },
-                        },
+                        ),
+                        TrailingExtras(
+                            [],
+                        ),
                     ),
-                    TrailingExtras(
-                        [],
-                    ),
-                ),
-            ],
-            tail: None,
+                ],
+                tail: None,
+            },
         },
-    },
+        Diagnostics {
+            error_count: 0,
+            warning_count: 0,
+            diagnostics: [],
+        },
+    ),
 )

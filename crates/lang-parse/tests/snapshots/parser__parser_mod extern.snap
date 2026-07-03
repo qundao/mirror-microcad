@@ -1,52 +1,59 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: parse(input)
+expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
 ---
 Ok(
-    Ast {
-        span: 0..8,
-        statements: StatementList {
+    (
+        Ast {
             span: 0..8,
-            extras: ItemExtras {
-                leading: LeadingExtras(
-                    [],
-                ),
-                trailing: TrailingExtras(
-                    [],
-                ),
-            },
-            statements: [
-                (
-                    FileModule(
-                        FileModule {
-                            span: 0..7,
-                            keyword_span: 0..3,
-                            extras: ItemExtras {
-                                leading: LeadingExtras(
-                                    [],
-                                ),
-                                trailing: TrailingExtras(
-                                    [],
-                                ),
-                            },
-                            doc: DocBlock {
-                                span: 0..8,
-                                lines: [],
-                            },
-                            attr: [],
-                            vis: None,
-                            id: Identifier {
-                                span: 4..7,
-                                name: "foo",
-                            },
-                        },
-                    ),
-                    TrailingExtras(
+            statements: StatementList {
+                span: 0..8,
+                extras: ItemExtras {
+                    leading: LeadingExtras(
                         [],
                     ),
-                ),
-            ],
-            tail: None,
+                    trailing: TrailingExtras(
+                        [],
+                    ),
+                },
+                statements: [
+                    (
+                        FileModule(
+                            FileModule {
+                                span: 0..7,
+                                keyword_span: 0..3,
+                                extras: ItemExtras {
+                                    leading: LeadingExtras(
+                                        [],
+                                    ),
+                                    trailing: TrailingExtras(
+                                        [],
+                                    ),
+                                },
+                                doc: DocBlock {
+                                    span: 0..8,
+                                    lines: [],
+                                },
+                                attr: [],
+                                vis: None,
+                                id: Identifier {
+                                    span: 4..7,
+                                    name: "foo",
+                                },
+                            },
+                        ),
+                        TrailingExtras(
+                            [],
+                        ),
+                    ),
+                ],
+                tail: None,
+            },
         },
-    },
+        Diagnostics {
+            error_count: 0,
+            warning_count: 0,
+            diagnostics: [],
+        },
+    ),
 )

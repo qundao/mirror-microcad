@@ -1,44 +1,51 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: parse(input)
+expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
 ---
 Ok(
-    Ast {
-        span: 0..27,
-        statements: StatementList {
+    (
+        Ast {
             span: 0..27,
-            extras: ItemExtras {
-                leading: LeadingExtras(
-                    [
-                        Comment(
-                            Comment {
-                                span: 0..11,
-                                inner: SingleLine(
-                                    "// comment1",
-                                ),
-                            },
-                        ),
-                        Whitespace(
-                            Whitespace(
-                                "\n    ",
+            statements: StatementList {
+                span: 0..27,
+                extras: ItemExtras {
+                    leading: LeadingExtras(
+                        [
+                            Comment(
+                                Comment {
+                                    span: 0..11,
+                                    inner: SingleLine(
+                                        "// comment1",
+                                    ),
+                                },
                             ),
-                        ),
-                        Comment(
-                            Comment {
-                                span: 16..27,
-                                inner: SingleLine(
-                                    "// comment2",
+                            Whitespace(
+                                Whitespace(
+                                    "\n    ",
                                 ),
-                            },
-                        ),
-                    ],
-                ),
-                trailing: TrailingExtras(
-                    [],
-                ),
+                            ),
+                            Comment(
+                                Comment {
+                                    span: 16..27,
+                                    inner: SingleLine(
+                                        "// comment2",
+                                    ),
+                                },
+                            ),
+                        ],
+                    ),
+                    trailing: TrailingExtras(
+                        [],
+                    ),
+                },
+                statements: [],
+                tail: None,
             },
-            statements: [],
-            tail: None,
         },
-    },
+        Diagnostics {
+            error_count: 0,
+            warning_count: 0,
+            diagnostics: [],
+        },
+    ),
 )

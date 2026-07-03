@@ -1,59 +1,66 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: parse(input)
+expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
 ---
 Ok(
-    Ast {
-        span: 0..3,
-        statements: StatementList {
+    (
+        Ast {
             span: 0..3,
-            extras: ItemExtras {
-                leading: LeadingExtras(
-                    [],
-                ),
-                trailing: TrailingExtras(
-                    [],
-                ),
-            },
-            statements: [],
-            tail: Some(
-                ExpressionStatement {
-                    span: 0..3,
-                    extras: ItemExtras {
-                        leading: LeadingExtras(
-                            [],
-                        ),
-                        trailing: TrailingExtras(
-                            [],
-                        ),
-                    },
-                    attr: [],
-                    expr: Literal(
-                        Literal {
-                            span: 0..3,
-                            extras: ItemExtras {
-                                leading: LeadingExtras(
-                                    [],
-                                ),
-                                trailing: TrailingExtras(
-                                    [],
-                                ),
-                            },
-                            literal: Quantity(
-                                QuantityLiteral {
-                                    span: 0..3,
-                                    value: 1.0,
-                                    raw: "1",
-                                    unit: Unit {
-                                        span: 1..3,
-                                        name: "mm",
-                                    },
-                                },
-                            ),
-                        },
+            statements: StatementList {
+                span: 0..3,
+                extras: ItemExtras {
+                    leading: LeadingExtras(
+                        [],
+                    ),
+                    trailing: TrailingExtras(
+                        [],
                     ),
                 },
-            ),
+                statements: [],
+                tail: Some(
+                    ExpressionStatement {
+                        span: 0..3,
+                        extras: ItemExtras {
+                            leading: LeadingExtras(
+                                [],
+                            ),
+                            trailing: TrailingExtras(
+                                [],
+                            ),
+                        },
+                        attr: [],
+                        expr: Literal(
+                            Literal {
+                                span: 0..3,
+                                extras: ItemExtras {
+                                    leading: LeadingExtras(
+                                        [],
+                                    ),
+                                    trailing: TrailingExtras(
+                                        [],
+                                    ),
+                                },
+                                literal: Quantity(
+                                    QuantityLiteral {
+                                        span: 0..3,
+                                        value: 1.0,
+                                        raw: "1",
+                                        unit: Unit {
+                                            span: 1..3,
+                                            name: "mm",
+                                        },
+                                    },
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            },
         },
-    },
+        Diagnostics {
+            error_count: 0,
+            warning_count: 0,
+            diagnostics: [],
+        },
+    ),
 )

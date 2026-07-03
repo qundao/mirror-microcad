@@ -1,332 +1,339 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: parse(input)
+expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
 ---
 Ok(
-    Ast {
-        span: 0..44,
-        statements: StatementList {
+    (
+        Ast {
             span: 0..44,
-            extras: ItemExtras {
-                leading: LeadingExtras(
-                    [],
-                ),
-                trailing: TrailingExtras(
-                    [],
-                ),
-            },
-            statements: [],
-            tail: Some(
-                ExpressionStatement {
-                    span: 0..44,
-                    extras: ItemExtras {
-                        leading: LeadingExtras(
-                            [],
-                        ),
-                        trailing: TrailingExtras(
-                            [],
-                        ),
-                    },
-                    attr: [],
-                    expr: BinaryOperation(
-                        BinaryOperation {
-                            span: 0..44,
-                            lhs: BinaryOperation(
-                                BinaryOperation {
-                                    span: 0..40,
-                                    lhs: BinaryOperation(
-                                        BinaryOperation {
-                                            span: 0..35,
-                                            lhs: BinaryOperation(
-                                                BinaryOperation {
-                                                    span: 0..21,
-                                                    lhs: BinaryOperation(
-                                                        BinaryOperation {
-                                                            span: 0..8,
-                                                            lhs: Literal(
-                                                                Literal {
-                                                                    span: 0..3,
-                                                                    extras: ItemExtras {
-                                                                        leading: LeadingExtras(
-                                                                            [],
-                                                                        ),
-                                                                        trailing: TrailingExtras(
-                                                                            [
-                                                                                Whitespace(
-                                                                                    Whitespace(
-                                                                                        " ",
-                                                                                    ),
-                                                                                ),
-                                                                            ],
-                                                                        ),
-                                                                    },
-                                                                    literal: Quantity(
-                                                                        QuantityLiteral {
-                                                                            span: 0..3,
-                                                                            value: 0.0,
-                                                                            raw: "0",
-                                                                            unit: Unit {
-                                                                                span: 1..2,
-                                                                                name: "\"",
-                                                                            },
-                                                                        },
-                                                                    ),
-                                                                },
-                                                            ),
-                                                            op: Spanned {
-                                                                span: 3..4,
-                                                                value: Add,
-                                                            },
-                                                            rhs: Literal(
-                                                                Literal {
-                                                                    span: 5..8,
-                                                                    extras: ItemExtras {
-                                                                        leading: LeadingExtras(
-                                                                            [],
-                                                                        ),
-                                                                        trailing: TrailingExtras(
-                                                                            [
-                                                                                Whitespace(
-                                                                                    Whitespace(
-                                                                                        " ",
-                                                                                    ),
-                                                                                ),
-                                                                            ],
-                                                                        ),
-                                                                    },
-                                                                    literal: Quantity(
-                                                                        QuantityLiteral {
-                                                                            span: 5..8,
-                                                                            value: 1.0,
-                                                                            raw: "1",
-                                                                            unit: Unit {
-                                                                                span: 6..7,
-                                                                                name: "%",
-                                                                            },
-                                                                        },
-                                                                    ),
-                                                                },
-                                                            ),
-                                                        },
-                                                    ),
-                                                    op: Spanned {
-                                                        span: 8..9,
-                                                        value: Add,
-                                                    },
-                                                    rhs: BinaryOperation(
-                                                        BinaryOperation {
-                                                            span: 10..21,
-                                                            lhs: Literal(
-                                                                Literal {
-                                                                    span: 10..14,
-                                                                    extras: ItemExtras {
-                                                                        leading: LeadingExtras(
-                                                                            [],
-                                                                        ),
-                                                                        trailing: TrailingExtras(
-                                                                            [
-                                                                                Whitespace(
-                                                                                    Whitespace(
-                                                                                        " ",
-                                                                                    ),
-                                                                                ),
-                                                                            ],
-                                                                        ),
-                                                                    },
-                                                                    literal: Quantity(
-                                                                        QuantityLiteral {
-                                                                            span: 10..14,
-                                                                            value: 2.0,
-                                                                            raw: "2",
-                                                                            unit: Unit {
-                                                                                span: 11..13,
-                                                                                name: "mm",
-                                                                            },
-                                                                        },
-                                                                    ),
-                                                                },
-                                                            ),
-                                                            op: Spanned {
-                                                                span: 14..15,
-                                                                value: Divide,
-                                                            },
-                                                            rhs: Literal(
-                                                                Literal {
-                                                                    span: 16..21,
-                                                                    extras: ItemExtras {
-                                                                        leading: LeadingExtras(
-                                                                            [],
-                                                                        ),
-                                                                        trailing: TrailingExtras(
-                                                                            [
-                                                                                Whitespace(
-                                                                                    Whitespace(
-                                                                                        " ",
-                                                                                    ),
-                                                                                ),
-                                                                            ],
-                                                                        ),
-                                                                    },
-                                                                    literal: Quantity(
-                                                                        QuantityLiteral {
-                                                                            span: 16..21,
-                                                                            value: 3.0,
-                                                                            raw: "3",
-                                                                            unit: Unit {
-                                                                                span: 17..20,
-                                                                                name: "mm2",
-                                                                            },
-                                                                        },
-                                                                    ),
-                                                                },
-                                                            ),
-                                                        },
-                                                    ),
-                                                },
-                                            ),
-                                            op: Spanned {
-                                                span: 21..22,
-                                                value: Subtract,
-                                            },
-                                            rhs: BinaryOperation(
-                                                BinaryOperation {
-                                                    span: 23..35,
-                                                    lhs: Literal(
-                                                        Literal {
-                                                            span: 23..29,
-                                                            extras: ItemExtras {
-                                                                leading: LeadingExtras(
-                                                                    [],
-                                                                ),
-                                                                trailing: TrailingExtras(
-                                                                    [
-                                                                        Whitespace(
-                                                                            Whitespace(
-                                                                                " ",
-                                                                            ),
-                                                                        ),
-                                                                    ],
-                                                                ),
-                                                            },
-                                                            literal: Quantity(
-                                                                QuantityLiteral {
-                                                                    span: 23..29,
-                                                                    value: 4.0,
-                                                                    raw: "4",
-                                                                    unit: Unit {
-                                                                        span: 24..28,
-                                                                        name: "mm³",
-                                                                    },
-                                                                },
-                                                            ),
-                                                        },
-                                                    ),
-                                                    op: Spanned {
-                                                        span: 29..30,
-                                                        value: Multiply,
-                                                    },
-                                                    rhs: Literal(
-                                                        Literal {
-                                                            span: 31..35,
-                                                            extras: ItemExtras {
-                                                                leading: LeadingExtras(
-                                                                    [],
-                                                                ),
-                                                                trailing: TrailingExtras(
-                                                                    [
-                                                                        Whitespace(
-                                                                            Whitespace(
-                                                                                " ",
-                                                                            ),
-                                                                        ),
-                                                                    ],
-                                                                ),
-                                                            },
-                                                            literal: Quantity(
-                                                                QuantityLiteral {
-                                                                    span: 31..35,
-                                                                    value: 1.0,
-                                                                    raw: "1",
-                                                                    unit: Unit {
-                                                                        span: 32..34,
-                                                                        name: "°",
-                                                                    },
-                                                                },
-                                                            ),
-                                                        },
-                                                    ),
-                                                },
-                                            ),
-                                        },
-                                    ),
-                                    op: Spanned {
-                                        span: 35..36,
-                                        value: Add,
-                                    },
-                                    rhs: Literal(
-                                        Literal {
-                                            span: 37..40,
-                                            extras: ItemExtras {
-                                                leading: LeadingExtras(
-                                                    [],
-                                                ),
-                                                trailing: TrailingExtras(
-                                                    [
-                                                        Whitespace(
-                                                            Whitespace(
-                                                                " ",
-                                                            ),
-                                                        ),
-                                                    ],
-                                                ),
-                                            },
-                                            literal: Quantity(
-                                                QuantityLiteral {
-                                                    span: 37..40,
-                                                    value: 1.0,
-                                                    raw: "1",
-                                                    unit: Unit {
-                                                        span: 38..39,
-                                                        name: "\"",
-                                                    },
-                                                },
-                                            ),
-                                        },
-                                    ),
-                                },
-                            ),
-                            op: Spanned {
-                                span: 40..41,
-                                value: Subtract,
-                            },
-                            rhs: Literal(
-                                Literal {
-                                    span: 42..44,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    literal: Quantity(
-                                        QuantityLiteral {
-                                            span: 42..44,
-                                            value: 2.0,
-                                            raw: "2",
-                                            unit: Unit {
-                                                span: 43..44,
-                                                name: "'",
-                                            },
-                                        },
-                                    ),
-                                },
-                            ),
-                        },
+            statements: StatementList {
+                span: 0..44,
+                extras: ItemExtras {
+                    leading: LeadingExtras(
+                        [],
+                    ),
+                    trailing: TrailingExtras(
+                        [],
                     ),
                 },
-            ),
+                statements: [],
+                tail: Some(
+                    ExpressionStatement {
+                        span: 0..44,
+                        extras: ItemExtras {
+                            leading: LeadingExtras(
+                                [],
+                            ),
+                            trailing: TrailingExtras(
+                                [],
+                            ),
+                        },
+                        attr: [],
+                        expr: BinaryOperation(
+                            BinaryOperation {
+                                span: 0..44,
+                                lhs: BinaryOperation(
+                                    BinaryOperation {
+                                        span: 0..40,
+                                        lhs: BinaryOperation(
+                                            BinaryOperation {
+                                                span: 0..35,
+                                                lhs: BinaryOperation(
+                                                    BinaryOperation {
+                                                        span: 0..21,
+                                                        lhs: BinaryOperation(
+                                                            BinaryOperation {
+                                                                span: 0..8,
+                                                                lhs: Literal(
+                                                                    Literal {
+                                                                        span: 0..3,
+                                                                        extras: ItemExtras {
+                                                                            leading: LeadingExtras(
+                                                                                [],
+                                                                            ),
+                                                                            trailing: TrailingExtras(
+                                                                                [
+                                                                                    Whitespace(
+                                                                                        Whitespace(
+                                                                                            " ",
+                                                                                        ),
+                                                                                    ),
+                                                                                ],
+                                                                            ),
+                                                                        },
+                                                                        literal: Quantity(
+                                                                            QuantityLiteral {
+                                                                                span: 0..3,
+                                                                                value: 0.0,
+                                                                                raw: "0",
+                                                                                unit: Unit {
+                                                                                    span: 1..2,
+                                                                                    name: "\"",
+                                                                                },
+                                                                            },
+                                                                        ),
+                                                                    },
+                                                                ),
+                                                                op: Spanned {
+                                                                    span: 3..4,
+                                                                    value: Add,
+                                                                },
+                                                                rhs: Literal(
+                                                                    Literal {
+                                                                        span: 5..8,
+                                                                        extras: ItemExtras {
+                                                                            leading: LeadingExtras(
+                                                                                [],
+                                                                            ),
+                                                                            trailing: TrailingExtras(
+                                                                                [
+                                                                                    Whitespace(
+                                                                                        Whitespace(
+                                                                                            " ",
+                                                                                        ),
+                                                                                    ),
+                                                                                ],
+                                                                            ),
+                                                                        },
+                                                                        literal: Quantity(
+                                                                            QuantityLiteral {
+                                                                                span: 5..8,
+                                                                                value: 1.0,
+                                                                                raw: "1",
+                                                                                unit: Unit {
+                                                                                    span: 6..7,
+                                                                                    name: "%",
+                                                                                },
+                                                                            },
+                                                                        ),
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                        op: Spanned {
+                                                            span: 8..9,
+                                                            value: Add,
+                                                        },
+                                                        rhs: BinaryOperation(
+                                                            BinaryOperation {
+                                                                span: 10..21,
+                                                                lhs: Literal(
+                                                                    Literal {
+                                                                        span: 10..14,
+                                                                        extras: ItemExtras {
+                                                                            leading: LeadingExtras(
+                                                                                [],
+                                                                            ),
+                                                                            trailing: TrailingExtras(
+                                                                                [
+                                                                                    Whitespace(
+                                                                                        Whitespace(
+                                                                                            " ",
+                                                                                        ),
+                                                                                    ),
+                                                                                ],
+                                                                            ),
+                                                                        },
+                                                                        literal: Quantity(
+                                                                            QuantityLiteral {
+                                                                                span: 10..14,
+                                                                                value: 2.0,
+                                                                                raw: "2",
+                                                                                unit: Unit {
+                                                                                    span: 11..13,
+                                                                                    name: "mm",
+                                                                                },
+                                                                            },
+                                                                        ),
+                                                                    },
+                                                                ),
+                                                                op: Spanned {
+                                                                    span: 14..15,
+                                                                    value: Divide,
+                                                                },
+                                                                rhs: Literal(
+                                                                    Literal {
+                                                                        span: 16..21,
+                                                                        extras: ItemExtras {
+                                                                            leading: LeadingExtras(
+                                                                                [],
+                                                                            ),
+                                                                            trailing: TrailingExtras(
+                                                                                [
+                                                                                    Whitespace(
+                                                                                        Whitespace(
+                                                                                            " ",
+                                                                                        ),
+                                                                                    ),
+                                                                                ],
+                                                                            ),
+                                                                        },
+                                                                        literal: Quantity(
+                                                                            QuantityLiteral {
+                                                                                span: 16..21,
+                                                                                value: 3.0,
+                                                                                raw: "3",
+                                                                                unit: Unit {
+                                                                                    span: 17..20,
+                                                                                    name: "mm2",
+                                                                                },
+                                                                            },
+                                                                        ),
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                                op: Spanned {
+                                                    span: 21..22,
+                                                    value: Subtract,
+                                                },
+                                                rhs: BinaryOperation(
+                                                    BinaryOperation {
+                                                        span: 23..35,
+                                                        lhs: Literal(
+                                                            Literal {
+                                                                span: 23..29,
+                                                                extras: ItemExtras {
+                                                                    leading: LeadingExtras(
+                                                                        [],
+                                                                    ),
+                                                                    trailing: TrailingExtras(
+                                                                        [
+                                                                            Whitespace(
+                                                                                Whitespace(
+                                                                                    " ",
+                                                                                ),
+                                                                            ),
+                                                                        ],
+                                                                    ),
+                                                                },
+                                                                literal: Quantity(
+                                                                    QuantityLiteral {
+                                                                        span: 23..29,
+                                                                        value: 4.0,
+                                                                        raw: "4",
+                                                                        unit: Unit {
+                                                                            span: 24..28,
+                                                                            name: "mm³",
+                                                                        },
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                        op: Spanned {
+                                                            span: 29..30,
+                                                            value: Multiply,
+                                                        },
+                                                        rhs: Literal(
+                                                            Literal {
+                                                                span: 31..35,
+                                                                extras: ItemExtras {
+                                                                    leading: LeadingExtras(
+                                                                        [],
+                                                                    ),
+                                                                    trailing: TrailingExtras(
+                                                                        [
+                                                                            Whitespace(
+                                                                                Whitespace(
+                                                                                    " ",
+                                                                                ),
+                                                                            ),
+                                                                        ],
+                                                                    ),
+                                                                },
+                                                                literal: Quantity(
+                                                                    QuantityLiteral {
+                                                                        span: 31..35,
+                                                                        value: 1.0,
+                                                                        raw: "1",
+                                                                        unit: Unit {
+                                                                            span: 32..34,
+                                                                            name: "°",
+                                                                        },
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                        op: Spanned {
+                                            span: 35..36,
+                                            value: Add,
+                                        },
+                                        rhs: Literal(
+                                            Literal {
+                                                span: 37..40,
+                                                extras: ItemExtras {
+                                                    leading: LeadingExtras(
+                                                        [],
+                                                    ),
+                                                    trailing: TrailingExtras(
+                                                        [
+                                                            Whitespace(
+                                                                Whitespace(
+                                                                    " ",
+                                                                ),
+                                                            ),
+                                                        ],
+                                                    ),
+                                                },
+                                                literal: Quantity(
+                                                    QuantityLiteral {
+                                                        span: 37..40,
+                                                        value: 1.0,
+                                                        raw: "1",
+                                                        unit: Unit {
+                                                            span: 38..39,
+                                                            name: "\"",
+                                                        },
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    },
+                                ),
+                                op: Spanned {
+                                    span: 40..41,
+                                    value: Subtract,
+                                },
+                                rhs: Literal(
+                                    Literal {
+                                        span: 42..44,
+                                        extras: ItemExtras {
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
+                                        },
+                                        literal: Quantity(
+                                            QuantityLiteral {
+                                                span: 42..44,
+                                                value: 2.0,
+                                                raw: "2",
+                                                unit: Unit {
+                                                    span: 43..44,
+                                                    name: "'",
+                                                },
+                                            },
+                                        ),
+                                    },
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            },
         },
-    },
+        Diagnostics {
+            error_count: 0,
+            warning_count: 0,
+            diagnostics: [],
+        },
+    ),
 )

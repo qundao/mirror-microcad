@@ -1,66 +1,73 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: parse(input)
+expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
 ---
 Ok(
-    Ast {
-        span: 0..12,
-        statements: StatementList {
+    (
+        Ast {
             span: 0..12,
-            extras: ItemExtras {
-                leading: LeadingExtras(
-                    [],
-                ),
-                trailing: TrailingExtras(
-                    [],
-                ),
-            },
-            statements: [
-                (
-                    LocalAssignment(
-                        LocalAssignment {
-                            span: 0..11,
-                            extras: ItemExtras {
-                                leading: LeadingExtras(
-                                    [],
-                                ),
-                                trailing: TrailingExtras(
-                                    [],
-                                ),
-                            },
-                            attr: [],
-                            id: Identifier {
-                                span: 0..1,
-                                name: "b",
-                            },
-                            ty: None,
-                            expr: Literal(
-                                Literal {
-                                    span: 4..11,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    literal: Error(
-                                        LiteralError {
-                                            span: 4..11,
-                                            kind: Untypable,
-                                        },
-                                    ),
-                                },
-                            ),
-                        },
-                    ),
-                    TrailingExtras(
+            statements: StatementList {
+                span: 0..12,
+                extras: ItemExtras {
+                    leading: LeadingExtras(
                         [],
                     ),
-                ),
-            ],
-            tail: None,
+                    trailing: TrailingExtras(
+                        [],
+                    ),
+                },
+                statements: [
+                    (
+                        LocalAssignment(
+                            LocalAssignment {
+                                span: 0..11,
+                                extras: ItemExtras {
+                                    leading: LeadingExtras(
+                                        [],
+                                    ),
+                                    trailing: TrailingExtras(
+                                        [],
+                                    ),
+                                },
+                                attr: [],
+                                id: Identifier {
+                                    span: 0..1,
+                                    name: "b",
+                                },
+                                ty: None,
+                                expr: Literal(
+                                    Literal {
+                                        span: 4..11,
+                                        extras: ItemExtras {
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
+                                        },
+                                        literal: Error(
+                                            LiteralError {
+                                                span: 4..11,
+                                                kind: Untypable,
+                                            },
+                                        ),
+                                    },
+                                ),
+                            },
+                        ),
+                        TrailingExtras(
+                            [],
+                        ),
+                    ),
+                ],
+                tail: None,
+            },
         },
-    },
+        Diagnostics {
+            error_count: 0,
+            warning_count: 0,
+            diagnostics: [],
+        },
+    ),
 )

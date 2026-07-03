@@ -1,71 +1,78 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: parse(input)
+expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
 ---
 Ok(
-    Ast {
-        span: 0..6,
-        statements: StatementList {
+    (
+        Ast {
             span: 0..6,
-            extras: ItemExtras {
-                leading: LeadingExtras(
-                    [],
-                ),
-                trailing: TrailingExtras(
-                    [],
-                ),
-            },
-            statements: [],
-            tail: Some(
-                ExpressionStatement {
-                    span: 0..6,
-                    extras: ItemExtras {
-                        leading: LeadingExtras(
-                            [],
-                        ),
-                        trailing: TrailingExtras(
-                            [],
-                        ),
-                    },
-                    attr: [],
-                    expr: UnaryOperation(
-                        UnaryOperation {
-                            span: 0..6,
-                            extras: ItemExtras {
-                                leading: LeadingExtras(
-                                    [],
-                                ),
-                                trailing: TrailingExtras(
-                                    [],
-                                ),
-                            },
-                            op: Spanned {
-                                span: 0..1,
-                                value: Not,
-                            },
-                            rhs: QualifiedName(
-                                QualifiedName {
-                                    span: 1..6,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    parts: [
-                                        Identifier {
-                                            span: 1..6,
-                                            name: "input",
-                                        },
-                                    ],
-                                },
-                            ),
-                        },
+            statements: StatementList {
+                span: 0..6,
+                extras: ItemExtras {
+                    leading: LeadingExtras(
+                        [],
+                    ),
+                    trailing: TrailingExtras(
+                        [],
                     ),
                 },
-            ),
+                statements: [],
+                tail: Some(
+                    ExpressionStatement {
+                        span: 0..6,
+                        extras: ItemExtras {
+                            leading: LeadingExtras(
+                                [],
+                            ),
+                            trailing: TrailingExtras(
+                                [],
+                            ),
+                        },
+                        attr: [],
+                        expr: UnaryOperation(
+                            UnaryOperation {
+                                span: 0..6,
+                                extras: ItemExtras {
+                                    leading: LeadingExtras(
+                                        [],
+                                    ),
+                                    trailing: TrailingExtras(
+                                        [],
+                                    ),
+                                },
+                                op: Spanned {
+                                    span: 0..1,
+                                    value: Not,
+                                },
+                                rhs: QualifiedName(
+                                    QualifiedName {
+                                        span: 1..6,
+                                        extras: ItemExtras {
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
+                                        },
+                                        parts: [
+                                            Identifier {
+                                                span: 1..6,
+                                                name: "input",
+                                            },
+                                        ],
+                                    },
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            },
         },
-    },
+        Diagnostics {
+            error_count: 0,
+            warning_count: 0,
+            diagnostics: [],
+        },
+    ),
 )

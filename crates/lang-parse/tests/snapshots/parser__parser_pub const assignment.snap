@@ -1,78 +1,85 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: parse(input)
+expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
 ---
 Ok(
-    Ast {
-        span: 0..18,
-        statements: StatementList {
+    (
+        Ast {
             span: 0..18,
-            extras: ItemExtras {
-                leading: LeadingExtras(
-                    [],
-                ),
-                trailing: TrailingExtras(
-                    [],
-                ),
-            },
-            statements: [
-                (
-                    Const(
-                        Constant {
-                            span: 0..17,
-                            keyword_span: 4..9,
-                            extras: ItemExtras {
-                                leading: LeadingExtras(
-                                    [],
-                                ),
-                                trailing: TrailingExtras(
-                                    [],
-                                ),
-                            },
-                            doc: DocBlock {
-                                span: 0..18,
-                                lines: [],
-                            },
-                            attr: [],
-                            vis: Some(
-                                Spanned {
-                                    span: 0..3,
-                                    value: Public,
-                                },
-                            ),
-                            id: Identifier {
-                                span: 10..13,
-                                name: "FOO",
-                            },
-                            ty: None,
-                            expr: Literal(
-                                Literal {
-                                    span: 16..17,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    literal: Integer(
-                                        IntegerLiteral {
-                                            span: 16..17,
-                                            value: 1,
-                                            raw: "1",
-                                        },
-                                    ),
-                                },
-                            ),
-                        },
-                    ),
-                    TrailingExtras(
+            statements: StatementList {
+                span: 0..18,
+                extras: ItemExtras {
+                    leading: LeadingExtras(
                         [],
                     ),
-                ),
-            ],
-            tail: None,
+                    trailing: TrailingExtras(
+                        [],
+                    ),
+                },
+                statements: [
+                    (
+                        Const(
+                            Constant {
+                                span: 0..17,
+                                keyword_span: 4..9,
+                                extras: ItemExtras {
+                                    leading: LeadingExtras(
+                                        [],
+                                    ),
+                                    trailing: TrailingExtras(
+                                        [],
+                                    ),
+                                },
+                                doc: DocBlock {
+                                    span: 0..18,
+                                    lines: [],
+                                },
+                                attr: [],
+                                vis: Some(
+                                    Spanned {
+                                        span: 0..3,
+                                        value: Public,
+                                    },
+                                ),
+                                id: Identifier {
+                                    span: 10..13,
+                                    name: "FOO",
+                                },
+                                ty: None,
+                                expr: Literal(
+                                    Literal {
+                                        span: 16..17,
+                                        extras: ItemExtras {
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
+                                        },
+                                        literal: Integer(
+                                            IntegerLiteral {
+                                                span: 16..17,
+                                                value: 1,
+                                                raw: "1",
+                                            },
+                                        ),
+                                    },
+                                ),
+                            },
+                        ),
+                        TrailingExtras(
+                            [],
+                        ),
+                    ),
+                ],
+                tail: None,
+            },
         },
-    },
+        Diagnostics {
+            error_count: 0,
+            warning_count: 0,
+            diagnostics: [],
+        },
+    ),
 )

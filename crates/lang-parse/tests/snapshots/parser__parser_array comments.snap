@@ -1,141 +1,148 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: parse(input)
+expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
 ---
 Ok(
-    Ast {
-        span: 0..25,
-        statements: StatementList {
+    (
+        Ast {
             span: 0..25,
-            extras: ItemExtras {
-                leading: LeadingExtras(
-                    [],
-                ),
-                trailing: TrailingExtras(
-                    [],
-                ),
-            },
-            statements: [],
-            tail: Some(
-                ExpressionStatement {
-                    span: 0..25,
-                    extras: ItemExtras {
-                        leading: LeadingExtras(
-                            [],
-                        ),
-                        trailing: TrailingExtras(
-                            [],
-                        ),
-                    },
-                    attr: [],
-                    expr: ArrayList(
-                        ArrayListExpression {
-                            span: 0..25,
-                            extras: ItemExtras {
-                                leading: LeadingExtras(
-                                    [],
-                                ),
-                                trailing: TrailingExtras(
-                                    [],
-                                ),
-                            },
-                            items: [
-                                ArrayItem {
-                                    span: 1..12,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    expr: Literal(
-                                        Literal {
-                                            span: 1..12,
-                                            extras: ItemExtras {
-                                                leading: LeadingExtras(
-                                                    [],
-                                                ),
-                                                trailing: TrailingExtras(
-                                                    [
-                                                        Whitespace(
-                                                            Whitespace(
-                                                                " ",
-                                                            ),
-                                                        ),
-                                                        Comment(
-                                                            Comment {
-                                                                span: 3..12,
-                                                                inner: MultiLine(
-                                                                    "foo",
-                                                                ),
-                                                            },
-                                                        ),
-                                                    ],
-                                                ),
-                                            },
-                                            literal: Integer(
-                                                IntegerLiteral {
-                                                    span: 1..2,
-                                                    value: 1,
-                                                    raw: "1",
-                                                },
-                                            ),
-                                        },
-                                    ),
-                                },
-                                ArrayItem {
-                                    span: 13..24,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    expr: Literal(
-                                        Literal {
-                                            span: 13..24,
-                                            extras: ItemExtras {
-                                                leading: LeadingExtras(
-                                                    [],
-                                                ),
-                                                trailing: TrailingExtras(
-                                                    [
-                                                        Whitespace(
-                                                            Whitespace(
-                                                                " ",
-                                                            ),
-                                                        ),
-                                                        Comment(
-                                                            Comment {
-                                                                span: 15..24,
-                                                                inner: MultiLine(
-                                                                    "bar",
-                                                                ),
-                                                            },
-                                                        ),
-                                                    ],
-                                                ),
-                                            },
-                                            literal: Integer(
-                                                IntegerLiteral {
-                                                    span: 13..14,
-                                                    value: 2,
-                                                    raw: "2",
-                                                },
-                                            ),
-                                        },
-                                    ),
-                                },
-                            ],
-                            unit: None,
-                        },
+            statements: StatementList {
+                span: 0..25,
+                extras: ItemExtras {
+                    leading: LeadingExtras(
+                        [],
+                    ),
+                    trailing: TrailingExtras(
+                        [],
                     ),
                 },
-            ),
+                statements: [],
+                tail: Some(
+                    ExpressionStatement {
+                        span: 0..25,
+                        extras: ItemExtras {
+                            leading: LeadingExtras(
+                                [],
+                            ),
+                            trailing: TrailingExtras(
+                                [],
+                            ),
+                        },
+                        attr: [],
+                        expr: ArrayList(
+                            ArrayListExpression {
+                                span: 0..25,
+                                extras: ItemExtras {
+                                    leading: LeadingExtras(
+                                        [],
+                                    ),
+                                    trailing: TrailingExtras(
+                                        [],
+                                    ),
+                                },
+                                items: [
+                                    ArrayItem {
+                                        span: 1..12,
+                                        extras: ItemExtras {
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
+                                        },
+                                        expr: Literal(
+                                            Literal {
+                                                span: 1..12,
+                                                extras: ItemExtras {
+                                                    leading: LeadingExtras(
+                                                        [],
+                                                    ),
+                                                    trailing: TrailingExtras(
+                                                        [
+                                                            Whitespace(
+                                                                Whitespace(
+                                                                    " ",
+                                                                ),
+                                                            ),
+                                                            Comment(
+                                                                Comment {
+                                                                    span: 3..12,
+                                                                    inner: MultiLine(
+                                                                        "foo",
+                                                                    ),
+                                                                },
+                                                            ),
+                                                        ],
+                                                    ),
+                                                },
+                                                literal: Integer(
+                                                    IntegerLiteral {
+                                                        span: 1..2,
+                                                        value: 1,
+                                                        raw: "1",
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    },
+                                    ArrayItem {
+                                        span: 13..24,
+                                        extras: ItemExtras {
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
+                                        },
+                                        expr: Literal(
+                                            Literal {
+                                                span: 13..24,
+                                                extras: ItemExtras {
+                                                    leading: LeadingExtras(
+                                                        [],
+                                                    ),
+                                                    trailing: TrailingExtras(
+                                                        [
+                                                            Whitespace(
+                                                                Whitespace(
+                                                                    " ",
+                                                                ),
+                                                            ),
+                                                            Comment(
+                                                                Comment {
+                                                                    span: 15..24,
+                                                                    inner: MultiLine(
+                                                                        "bar",
+                                                                    ),
+                                                                },
+                                                            ),
+                                                        ],
+                                                    ),
+                                                },
+                                                literal: Integer(
+                                                    IntegerLiteral {
+                                                        span: 13..14,
+                                                        value: 2,
+                                                        raw: "2",
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    },
+                                ],
+                                unit: None,
+                            },
+                        ),
+                    },
+                ),
+            },
         },
-    },
+        Diagnostics {
+            error_count: 0,
+            warning_count: 0,
+            diagnostics: [],
+        },
+    ),
 )

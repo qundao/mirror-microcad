@@ -1,161 +1,168 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: parse(input)
+expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
 ---
 Ok(
-    Ast {
-        span: 0..11,
-        statements: StatementList {
+    (
+        Ast {
             span: 0..11,
-            extras: ItemExtras {
-                leading: LeadingExtras(
-                    [],
-                ),
-                trailing: TrailingExtras(
-                    [],
-                ),
-            },
-            statements: [],
-            tail: Some(
-                ExpressionStatement {
-                    span: 0..11,
-                    extras: ItemExtras {
-                        leading: LeadingExtras(
-                            [],
-                        ),
-                        trailing: TrailingExtras(
-                            [],
-                        ),
-                    },
-                    attr: [],
-                    expr: BinaryOperation(
-                        BinaryOperation {
-                            span: 0..11,
-                            lhs: UnaryOperation(
-                                UnaryOperation {
-                                    span: 0..5,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [
-                                                Whitespace(
-                                                    Whitespace(
-                                                        " ",
-                                                    ),
-                                                ),
-                                            ],
-                                        ),
-                                    },
-                                    op: Spanned {
-                                        span: 0..1,
-                                        value: Minus,
-                                    },
-                                    rhs: ArrayList(
-                                        ArrayListExpression {
-                                            span: 1..4,
-                                            extras: ItemExtras {
-                                                leading: LeadingExtras(
-                                                    [],
-                                                ),
-                                                trailing: TrailingExtras(
-                                                    [],
-                                                ),
-                                            },
-                                            items: [
-                                                ArrayItem {
-                                                    span: 2..3,
-                                                    extras: ItemExtras {
-                                                        leading: LeadingExtras(
-                                                            [],
-                                                        ),
-                                                        trailing: TrailingExtras(
-                                                            [],
-                                                        ),
-                                                    },
-                                                    expr: Literal(
-                                                        Literal {
-                                                            span: 2..3,
-                                                            extras: ItemExtras {
-                                                                leading: LeadingExtras(
-                                                                    [],
-                                                                ),
-                                                                trailing: TrailingExtras(
-                                                                    [],
-                                                                ),
-                                                            },
-                                                            literal: Integer(
-                                                                IntegerLiteral {
-                                                                    span: 2..3,
-                                                                    value: 1,
-                                                                    raw: "1",
-                                                                },
-                                                            ),
-                                                        },
-                                                    ),
-                                                },
-                                            ],
-                                            unit: None,
-                                        },
-                                    ),
-                                },
-                            ),
-                            op: Spanned {
-                                span: 5..7,
-                                value: NotEqual,
-                            },
-                            rhs: ArrayList(
-                                ArrayListExpression {
-                                    span: 8..11,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    items: [
-                                        ArrayItem {
-                                            span: 9..10,
-                                            extras: ItemExtras {
-                                                leading: LeadingExtras(
-                                                    [],
-                                                ),
-                                                trailing: TrailingExtras(
-                                                    [],
-                                                ),
-                                            },
-                                            expr: Literal(
-                                                Literal {
-                                                    span: 9..10,
-                                                    extras: ItemExtras {
-                                                        leading: LeadingExtras(
-                                                            [],
-                                                        ),
-                                                        trailing: TrailingExtras(
-                                                            [],
-                                                        ),
-                                                    },
-                                                    literal: Integer(
-                                                        IntegerLiteral {
-                                                            span: 9..10,
-                                                            value: 1,
-                                                            raw: "1",
-                                                        },
-                                                    ),
-                                                },
-                                            ),
-                                        },
-                                    ],
-                                    unit: None,
-                                },
-                            ),
-                        },
+            statements: StatementList {
+                span: 0..11,
+                extras: ItemExtras {
+                    leading: LeadingExtras(
+                        [],
+                    ),
+                    trailing: TrailingExtras(
+                        [],
                     ),
                 },
-            ),
+                statements: [],
+                tail: Some(
+                    ExpressionStatement {
+                        span: 0..11,
+                        extras: ItemExtras {
+                            leading: LeadingExtras(
+                                [],
+                            ),
+                            trailing: TrailingExtras(
+                                [],
+                            ),
+                        },
+                        attr: [],
+                        expr: BinaryOperation(
+                            BinaryOperation {
+                                span: 0..11,
+                                lhs: UnaryOperation(
+                                    UnaryOperation {
+                                        span: 0..5,
+                                        extras: ItemExtras {
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [
+                                                    Whitespace(
+                                                        Whitespace(
+                                                            " ",
+                                                        ),
+                                                    ),
+                                                ],
+                                            ),
+                                        },
+                                        op: Spanned {
+                                            span: 0..1,
+                                            value: Minus,
+                                        },
+                                        rhs: ArrayList(
+                                            ArrayListExpression {
+                                                span: 1..4,
+                                                extras: ItemExtras {
+                                                    leading: LeadingExtras(
+                                                        [],
+                                                    ),
+                                                    trailing: TrailingExtras(
+                                                        [],
+                                                    ),
+                                                },
+                                                items: [
+                                                    ArrayItem {
+                                                        span: 2..3,
+                                                        extras: ItemExtras {
+                                                            leading: LeadingExtras(
+                                                                [],
+                                                            ),
+                                                            trailing: TrailingExtras(
+                                                                [],
+                                                            ),
+                                                        },
+                                                        expr: Literal(
+                                                            Literal {
+                                                                span: 2..3,
+                                                                extras: ItemExtras {
+                                                                    leading: LeadingExtras(
+                                                                        [],
+                                                                    ),
+                                                                    trailing: TrailingExtras(
+                                                                        [],
+                                                                    ),
+                                                                },
+                                                                literal: Integer(
+                                                                    IntegerLiteral {
+                                                                        span: 2..3,
+                                                                        value: 1,
+                                                                        raw: "1",
+                                                                    },
+                                                                ),
+                                                            },
+                                                        ),
+                                                    },
+                                                ],
+                                                unit: None,
+                                            },
+                                        ),
+                                    },
+                                ),
+                                op: Spanned {
+                                    span: 5..7,
+                                    value: NotEqual,
+                                },
+                                rhs: ArrayList(
+                                    ArrayListExpression {
+                                        span: 8..11,
+                                        extras: ItemExtras {
+                                            leading: LeadingExtras(
+                                                [],
+                                            ),
+                                            trailing: TrailingExtras(
+                                                [],
+                                            ),
+                                        },
+                                        items: [
+                                            ArrayItem {
+                                                span: 9..10,
+                                                extras: ItemExtras {
+                                                    leading: LeadingExtras(
+                                                        [],
+                                                    ),
+                                                    trailing: TrailingExtras(
+                                                        [],
+                                                    ),
+                                                },
+                                                expr: Literal(
+                                                    Literal {
+                                                        span: 9..10,
+                                                        extras: ItemExtras {
+                                                            leading: LeadingExtras(
+                                                                [],
+                                                            ),
+                                                            trailing: TrailingExtras(
+                                                                [],
+                                                            ),
+                                                        },
+                                                        literal: Integer(
+                                                            IntegerLiteral {
+                                                                span: 9..10,
+                                                                value: 1,
+                                                                raw: "1",
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                            },
+                                        ],
+                                        unit: None,
+                                    },
+                                ),
+                            },
+                        ),
+                    },
+                ),
+            },
         },
-    },
+        Diagnostics {
+            error_count: 0,
+            warning_count: 0,
+            diagnostics: [],
+        },
+    ),
 )
