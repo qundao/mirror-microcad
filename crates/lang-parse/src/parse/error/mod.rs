@@ -3,10 +3,9 @@
 
 mod rich;
 
-use crate::ParseContext;
 use crate::parse::error::rich::RichPattern;
 use crate::token::Token;
-use microcad_lang_base::{Diagnostics, Refer, Span};
+use microcad_lang_base::Span;
 use miette::{Diagnostic, LabeledSpan};
 pub use rich::{Rich, RichReason};
 use std::error::Error;
@@ -35,32 +34,12 @@ impl ParseError {
 }
 
 /// Parse error collection.
-#[derive(Debug, Error, derive_more::Deref, miette::Diagnostic)]
+#[derive(Debug, Error, derive_more::Deref, miette::Diagnostic, Default)]
 pub struct ParseErrors(#[related] pub Vec<ParseError>);
-
-impl ParseErrors {
-    /// Convert parse errors to diagnostics
-    pub fn to_diagnostics(self, context: &ParseContext) -> Diagnostics {
-        use microcad_lang_base::SpanToSrcRef;
-        let mut diag_list = Diagnostics::default();
-        use microcad_lang_base::{Diagnostic as D, PushDiag};
-
-        for err in self.0 {
-            let span = err.span.clone();
-            diag_list
-                .push_diag(D::Error(
-                    Refer::<miette::Report>::new(err.into(), context.span_to_src_ref(&span)).into(),
-                ))
-                .expect("Diag list must return no error");
-        }
-
-        diag_list
-    }
-}
 
 impl std::fmt::Display for ParseErrors {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Found {} parse errors", self.0.len())
+        write!(f, "{} parse errors", self.0.len())
     }
 }
 

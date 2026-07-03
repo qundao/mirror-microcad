@@ -10,9 +10,9 @@
 
 use chumsky::error::{Error, LabelError};
 use chumsky::input::Input;
-use chumsky::prelude::SimpleSpan;
 use chumsky::util::MaybeRef;
 use chumsky::{DefaultExpected, text};
+use microcad_lang_base::Span;
 use std::borrow::Cow;
 
 /// An expected pattern for a [`Rich`] error.
@@ -321,7 +321,7 @@ where
 }
 
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct Rich<'a, T, S = SimpleSpan<usize>, C = String> {
+pub struct Rich<'a, T, S = Span, C = String> {
     span: S,
     reason: Box<RichReason<'a, T, C>>,
     context: Vec<(RichPattern<'a, T>, S)>,

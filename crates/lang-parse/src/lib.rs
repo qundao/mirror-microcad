@@ -21,6 +21,7 @@ mod parse;
 mod lex;
 
 pub use ast::Ast;
+use microcad_lang_base::{CompilationResult, Diagnostics, Source};
 pub use parse::{ParseContext, ParseError, ParseErrors, parsers};
 
 /// Parse trait.
@@ -33,13 +34,17 @@ pub trait Parse: Sized {
 
 impl Parse for Ast {
     fn parse(context: &ParseContext) -> Result<Self, ParseErrors> {
-        Ok(crate::parse(context.source.code())?)
+        parse::parse(&lex(context.source.code()).collect::<Vec<_>>())
     }
 }
 
 pub use lex::lex;
 
-/// API to parse directly from a string
-pub fn parse(source: &str) -> Result<Ast, ParseErrors> {
-    parse::parse(&lex(source).collect::<Vec<_>>())
+/// Parse a source into an abstract syntax tree.
+pub fn parse(source: &Source) -> CompilationResult<Ast> {
+    let context = ParseContext::from(source);
+    match Ast::parse(&context) {
+        Ok(ast) => Ok((ast, Diagnostics::default())), // FIXME: Right now, the parser can only return errors and no warnings
+        Err(errors) => Err(context.diagnostics(errors)),
+    }
 }

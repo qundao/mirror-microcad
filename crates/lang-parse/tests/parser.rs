@@ -4,7 +4,6 @@
 //! Parser tests
 
 use insta::assert_debug_snapshot;
-use microcad_lang_parse::parse;
 use test_case::test_case;
 
 #[test_case("single int", "1")]
@@ -217,5 +216,8 @@ use test_case::test_case;
 #[test_case("body expr method", "{}.foo();")]
 #[test_case("body expr and_tail_expr", "{}bar.foo();")]
 fn test_parser(name: &str, input: &str) {
-    assert_debug_snapshot!(format!("parser_{name}"), parse(input));
+    assert_debug_snapshot!(
+        format!("parser_{name}"),
+        microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))
+    );
 }
