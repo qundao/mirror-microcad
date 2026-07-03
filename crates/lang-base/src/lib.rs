@@ -110,3 +110,6 @@ pub trait WriteToFile: std::fmt::Display {
         write!(writer, "{self}")
     }
 }
+
+/// A result that contains the compilation artifact bundled with diagnostics.
+pub type CompilationResult<T> = Result<(T, Diagnostics), Diagnostics>;
