@@ -1,37 +1,39 @@
 // Copyright © 2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{self as base, Diagnostics, Identifier};
-use microcad_lang_lower::{self as lower, ir};
+use microcad_lang_base::{
+    CompilationResult, DiagRenderOptions, Identifier, MICROCAD_EXTENSION, Source, SourceKind,
+};
+use microcad_lang_lower::{self as lower, Ir, ir};
 use microcad_lang_parse as parse;
 
 use test_that::prelude::*;
 
-/// Get intermediate representation and diagnostics.
-fn ir_from_test_file(name: &str) -> lower::LowerResult<(lower::ir::Source, Diagnostics)> {
-    use microcad_lang_parse::Parse;
-
-    let path_string = format!("tests/test_cases/{name}.{}", base::MICROCAD_EXTENSION);
+fn source_from_test_file(name: &str) -> Source {
+    let path_string = format!("tests/test_cases/{name}.{}", MICROCAD_EXTENSION);
     let path = std::path::PathBuf::from(path_string);
     let code = std::fs::read_to_string(&path).expect("No error");
-    let source = base::Source::new(base::SourceKind::from(path), code);
-    let ast = parse::Ast::parse(&parse::ParseContext::from(&source)).expect("No parse errors");
+    Source::new(SourceKind::from(path), code)
+}
 
-    use microcad_lang_lower::Lower;
-    let mut context = lower::LowerContext::new(&source);
-    Ok((
-        lower::ir::Source::lower(&ast, &mut context)?,
-        context.diagnostics.clone(),
-    ))
+/// Get intermediate representation and diagnostics.
+fn ir_from_source(source: &Source) -> CompilationResult<Ir> {
+    let ast = parse::parse(&source)?.0;
+    lower::lower(&source, &ast)
 }
 
 macro_rules! unit_test {
     ($name:ident => |$ir:ident, $diag:ident| $body:block) => {
         #[test_that::test]
         fn $name() {
-            match ir_from_test_file(stringify!($name)) {
+            let source = source_from_test_file(stringify!($name));
+            match ir_from_source(&source) {
                 Ok(($ir, $diag)) => $body,
-                Err(err) => panic!("Error during lowering {err}"),
+                Err(err) => panic!(
+                    "{}",
+                    err.render_to_string(&&source, &DiagRenderOptions::default())
+                        .expect("No error")
+                ),
             }
         }
     };
@@ -43,14 +45,19 @@ macro_rules! snapshot_test {
         #[test_that::test]
         fn $name() {
             let name = stringify!($name);
-            match ir_from_test_file(name) {
+            let source = source_from_test_file(name);
+            match ir_from_source(&source) {
                 Ok((ir, diag)) => {
                     if diag.has_errors() || diag.has_warnings() {
                         panic!("{diag:?}");
                     }
                     insta::assert_snapshot!(name, lower::to_ron(&ir).expect("No error"));
                 }
-                Err(err) => panic!("Error during lowering {err}"),
+                Err(err) => panic!(
+                    "{}",
+                    err.render_to_string(&&source, &DiagRenderOptions::default())
+                        .expect("No error")
+                ),
             }
         }
     };
@@ -60,12 +67,17 @@ macro_rules! snapshot_test {
         #[test]
         fn $name() {
             let name = stringify!($name);
-            match ir_from_test_file(name) {
+            let source = source_from_test_file(name);
+            match ir_from_source(&source) {
                 Ok((ir, diag)) => {
                     assert!(diag.has_errors());
                     insta::assert_snapshot!(name, lower::to_ron(&ir).expect("No error"));
                 }
-                Err(err) => panic!("Error during lowering {err}"),
+                Err(err) => panic!(
+                    "{}",
+                    err.render_to_string(&&source, &DiagRenderOptions::default())
+                        .expect("No error")
+                ),
             }
         }
     };
