@@ -59,7 +59,7 @@ impl<T: std::hash::Hash> Hashed<T> {
 
 impl Hashed<String> {
     /// Convert a hashed string into a hashed &str.
-    pub fn as_str<'a>(&'a self) -> Hashed<&'a str> {
+    pub fn as_str(&self) -> Hashed<&str> {
         Hashed {
             inner: self.inner.as_str(),
             hash: self.hash,
