@@ -100,51 +100,6 @@ pub fn shorten(what: &str, max_chars: usize) -> String {
     }
 }
 
-/// Create a marker string which is colored with ANSI.
-#[cfg(feature = "ansi-color")]
-#[macro_export]
-macro_rules! mark {
-    (FOUND!) => {
-        color_print::cformat!("<G!,k,s> FOUND </>")
-    };
-    (FOUND) => {
-        color_print::cformat!("<W!,k,s> FOUND </>")
-    };
-    (MATCH) => {
-        color_print::cformat!("<Y!,k,s> MATCH </>")
-    };
-    (NO_MATCH) => {
-        color_print::cformat!("<Y,k,s> NO MATCH </>")
-    };
-    (MATCH!) => {
-        color_print::cformat!("<G!,k,s> MATCH </>")
-    };
-    (NO_MATCH!) => {
-        color_print::cformat!("<R,k,s> NO MATCH </>")
-    };
-    (CALL) => {
-        color_print::cformat!("<B,k,s> CALL </>")
-    };
-    (LOOKUP) => {
-        color_print::cformat!("<c,s>LOOKUP</>")
-    };
-    (LOAD) => {
-        color_print::cformat!("<Y,k,s> LOADING </>")
-    };
-    (RESOLVE) => {
-        color_print::cformat!("<M,k,s> RESOLVE </>")
-    };
-    (AMBIGUOUS) => {
-        color_print::cformat!("<R,k,s> AMBIGUOUS </>")
-    };
-    (NOT_FOUND!) => {
-        color_print::cformat!("<R,k,s> NOT FOUND </>")
-    };
-    (NOT_FOUND) => {
-        color_print::cformat!("<Y,k,s> NOT FOUND </>")
-    };
-}
-
 /// Trait to write something with Display trait into a file.
 pub trait WriteToFile: std::fmt::Display {
     /// Write something to a file.
