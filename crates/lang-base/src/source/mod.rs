@@ -40,6 +40,10 @@ impl Source {
         }
     }
 
+    pub fn hash(&self) -> HashId {
+        self.code.computed_hash()
+    }
+
     pub fn code(&self) -> &str {
         self.code.value()
     }
