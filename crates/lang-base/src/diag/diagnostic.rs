@@ -3,95 +3,41 @@
 
 use crate::{GetSourceByHash, Source};
 use crate::{diag::*, src_ref::*};
+use derive_more::{Deref, Display};
 use miette::SourceCode;
 
-type RcReport = std::rc::Rc<Refer<Report>>;
-
-/// Diagnostic message with source code reference attached.
-#[derive(Clone)]
-pub enum Diagnostic<ERROR = RcReport, MESSAGE = RcReport>
-where
-    ERROR: Clone,
-    MESSAGE: Clone,
-{
-    /// Trace message.
-    Trace(MESSAGE),
-    /// Informative message.
-    Info(MESSAGE),
-    /// Warning.
-    Warning(ERROR),
-    /// Error.
-    Error(ERROR),
+#[derive(Deref, Debug, Display)]
+#[display("Error: {report} | Source: {src_ref}")]
+pub struct Diagnostic {
+    #[deref]
+    pub report: miette::Report,
+    pub src_ref: SrcRef,
 }
 
 impl Diagnostic {
-    /// Get diagnostic level.
-    pub fn level(&self) -> Level {
-        match self {
-            Diagnostic::Trace(_) => Level::Trace,
-            Diagnostic::Info(_) => Level::Info,
-            Diagnostic::Warning(_) => Level::Warning,
-            Diagnostic::Error(_) => Level::Error,
-        }
-    }
-
-    /// Get message (errors will be serialized).
-    pub fn message(&self) -> String {
-        match self {
-            Diagnostic::Trace(r)
-            | Diagnostic::Info(r)
-            | Diagnostic::Warning(r)
-            | Diagnostic::Error(r) => r.to_string(),
-        }
-    }
-
-    fn report(&self) -> &Report {
-        match self {
-            Diagnostic::Trace(r)
-            | Diagnostic::Info(r)
-            | Diagnostic::Warning(r)
-            | Diagnostic::Error(r) => &r.as_ref().value,
-        }
-    }
-
     /// Pretty print the diagnostic.
-    ///
-    /// This will print the diagnostic to the given writer, including the source code reference.
-    ///
-    /// # Arguments
-    ///
-    /// * `w` - The writer to write to.
-    /// * `source_file_by_hash` - Hash provider to get the source file by hash.
-    ///
-    /// This will print:
-    ///
-    /// ```text
-    /// error: This is an error
-    ///   ---> filename:1:8
-    ///     |
-    ///  1  | part Circle(radius: length) {}
-    ///     |        ^^^^^^
-    /// ```
-    pub fn pretty_print(
+    pub fn render(
         &self,
         mut f: &mut dyn std::fmt::Write,
         source_by_hash: &impl GetSourceByHash,
         options: &DiagRenderOptions,
     ) -> std::fmt::Result {
-        let src_ref = self.src_ref();
+        let src_ref = self.src_ref;
         let hash = src_ref.source_hash();
 
         match src_ref.is_none() {
-            true => writeln!(f, "{}: {}", self.level(), self.message())?,
+            true => writeln!(f, "{}", self.report)?,
             false => {
                 match source_by_hash.get_source_by_hash(hash) {
                     Some(source) => {
-                        let wrapper = DiagnosticWrapper {
-                            diagnostic: self,
-                            source,
-                        };
                         let handler = miette::GraphicalReportHandler::new_themed(options.theme());
-                        handler.render_report(&mut f, &wrapper)?
+                        handler.render_report(
+                            &mut f,
+                            &DiagnosticWrapper {
+                                diagnostic: self,
+                                source,
+                            },
+                        )?
                     }
                     None => {}
                 };
@@ -101,97 +47,55 @@ impl Diagnostic {
         Ok(())
     }
 
-    /// Pretty print the diagnostics to a string, see `pretty_print` for more information
-    pub fn to_pretty_string(
+    /// Render the diagnostics to a string, see `pretty_print` for more information
+    pub fn render_to_string(
         &self,
         source_by_hash: &impl GetSourceByHash,
         options: &DiagRenderOptions,
     ) -> String {
         let mut buff = String::new();
-        self.pretty_print(&mut buff, source_by_hash, options)
+        self.render(&mut buff, source_by_hash, options)
             .expect("format to string can't fail");
         buff
     }
 }
 
+impl From<Diagnostic> for miette::Report {
+    fn from(value: Diagnostic) -> Self {
+        value.report
+    }
+}
+
 impl SrcReferrer for Diagnostic {
     fn src_ref(&self) -> SrcRef {
-        match self {
-            Diagnostic::Trace(message) => message.src_ref(),
-            Diagnostic::Info(message) => message.src_ref(),
-            Diagnostic::Warning(error) => error.src_ref(),
-            Diagnostic::Error(error) => error.src_ref(),
-        }
+        self.src_ref
     }
 }
 
-impl std::fmt::Display for Diagnostic {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Diagnostic::Trace(message) => write!(f, "trace: {}: {message}", self.src_ref()),
-            Diagnostic::Info(message) => write!(f, "info: {}: {message}", self.src_ref()),
-            Diagnostic::Warning(error) => write!(f, "warning: {}: {error}", self.src_ref()),
-            Diagnostic::Error(error) => write!(f, "error: {}: {error}", self.src_ref()),
-        }
-    }
-}
-
-impl std::fmt::Debug for Diagnostic {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Diagnostic::Trace(message) => write!(f, "trace: {}: {message}", self.src_ref()),
-            Diagnostic::Info(message) => write!(f, "info: {}: {message}", self.src_ref()),
-            Diagnostic::Warning(error) => write!(f, "warning: {}: {error:?}", self.src_ref()),
-            Diagnostic::Error(error) => write!(f, "error: {}: {error:?}", self.src_ref()),
-        }
-    }
-}
-
+#[derive(Display, Debug)]
+#[display("{diagnostic}")]
 struct DiagnosticWrapper<'a> {
     diagnostic: &'a Diagnostic,
     source: &'a Source,
 }
 
-impl std::fmt::Debug for DiagnosticWrapper<'_> {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{self}")
-    }
-}
-
-impl std::fmt::Display for DiagnosticWrapper<'_> {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let src_ref = self.diagnostic.src_ref();
-        match self.diagnostic {
-            Diagnostic::Trace(message) => write!(f, "trace: {src_ref}: {message}"),
-            Diagnostic::Info(message) => write!(f, "info: {src_ref}: {message}"),
-            Diagnostic::Warning(error) => write!(f, "warning: {src_ref}: {error}"),
-            Diagnostic::Error(error) => write!(f, "error: {src_ref}: {error}"),
-        }
-    }
-}
-
 impl std::error::Error for DiagnosticWrapper<'_> {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
-        self.diagnostic.report().source()
+        self.diagnostic.source()
     }
 }
 
 impl miette::Diagnostic for DiagnosticWrapper<'_> {
     fn code<'a>(&'a self) -> Option<Box<dyn std::fmt::Display + 'a>> {
-        self.diagnostic.report().code()
+        self.diagnostic.code()
     }
 
     fn severity(&self) -> Option<miette::Severity> {
-        match self.diagnostic {
-            Diagnostic::Trace(_) => None,
-            Diagnostic::Info(_) => Some(miette::Severity::Advice),
-            Diagnostic::Warning(_) => Some(miette::Severity::Warning),
-            Diagnostic::Error(_) => Some(miette::Severity::Error),
-        }
+        self.diagnostic.severity()
     }
 
     fn help<'a>(&'a self) -> Option<Box<dyn std::fmt::Display + 'a>> {
-        self.diagnostic.report().help()
+        self.diagnostic.help()
     }
 
     fn source_code(&self) -> Option<&dyn SourceCode> {
@@ -199,22 +103,24 @@ impl miette::Diagnostic for DiagnosticWrapper<'_> {
     }
 
     fn diagnostic_source(&self) -> Option<&dyn miette::Diagnostic> {
-        self.diagnostic.report().diagnostic_source()
+        self.diagnostic.diagnostic_source()
     }
 
     fn labels(&self) -> Option<Box<dyn Iterator<Item = miette::LabeledSpan> + '_>> {
-        self.diagnostic.report().labels().or_else(|| {
-            let span = self.diagnostic.src_ref().as_miette_span()?;
-            let label = miette::LabeledSpan::new_with_span(Some(self.diagnostic.message()), span);
+        self.diagnostic.labels().or_else(|| {
+            let label = miette::LabeledSpan::new_with_span(
+                Some(self.diagnostic.to_string()),
+                self.diagnostic.src_ref.span(),
+            );
             Some(Box::new(std::iter::once(label)))
         })
     }
 
     fn related<'a>(&'a self) -> Option<Box<dyn Iterator<Item = &'a dyn miette::Diagnostic> + 'a>> {
-        self.diagnostic.report().related()
+        self.diagnostic.related()
     }
 
     fn url<'a>(&'a self) -> Option<Box<dyn std::fmt::Display + 'a>> {
-        self.diagnostic.report().url()
+        self.diagnostic.url()
     }
 }

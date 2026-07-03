@@ -7,6 +7,8 @@ use std::str::FromStr;
 
 use miette::{MietteError, MietteSpanContents, SourceCode, SourceSpan, SpanContents};
 
+pub use miette::Severity;
+
 mod diag;
 pub mod element;
 mod ord_map;
@@ -34,10 +36,7 @@ pub const MICROCAD_EXTENSIONS: &[&str] = &["mu", "µcad", "mcad", "ucad"];
 /// Default extension for µcad files.
 pub const MICROCAD_EXTENSION: &str = "µcad";
 
-pub use diag::{
-    Diag, DiagError, DiagHandler, DiagRenderOptions, DiagResult, Diagnostic, Diagnostics, Level,
-    Level as DiagLevel, PushDiag,
-};
+pub use diag::{DiagRenderOptions, Diagnostic, Diagnostics};
 pub use element::{Identifier, IdentifierList};
 pub use ord_map::{OrdMap, OrdMapValue};
 pub use output::{Capture, Output, Stdout};

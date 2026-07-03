@@ -3,10 +3,43 @@
 
 use std::slice::Iter;
 
-use crate::{GetSourceByHash, diag::*};
+use crate::{GetSourceByHash, SrcReferrer, diag::*};
+
+use miette::Severity;
+use std::io::IsTerminal;
+
+/// Options that control the rendering of diagnostics
+#[derive(Debug)]
+pub struct DiagRenderOptions {
+    /// Render diagnostic with colors
+    pub color: bool,
+    /// Render diagnostic with unicode characters
+    pub unicode: bool,
+}
+
+impl DiagRenderOptions {
+    /// Get the miette theme for the options
+    pub fn theme(&self) -> miette::GraphicalTheme {
+        match (self.unicode, self.color) {
+            (true, true) => miette::GraphicalTheme::unicode(),
+            (true, false) => miette::GraphicalTheme::unicode_nocolor(),
+            (false, true) => miette::GraphicalTheme::ascii(),
+            (false, false) => miette::GraphicalTheme::none(),
+        }
+    }
+}
+
+impl Default for DiagRenderOptions {
+    fn default() -> Self {
+        Self {
+            color: std::env::var("NO_COLOR").as_deref().unwrap_or("0") == "0",
+            unicode: std::io::stdout().is_terminal() && std::io::stderr().is_terminal(),
+        }
+    }
+}
 
 /// µcad source diagnostics.
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default)]
 pub struct Diagnostics {
     /// The number of overall errors in the evaluation process.
     error_count: u32,
@@ -36,20 +69,8 @@ impl Diagnostics {
         self.warning_count = 0;
     }
 
-    /// Pretty print this list of diagnostics.
-    pub fn pretty_print(
-        &self,
-        f: &mut dyn std::fmt::Write,
-        source_by_hash: &impl GetSourceByHash,
-        options: &DiagRenderOptions,
-    ) -> std::fmt::Result {
-        self.diagnostics
-            .iter()
-            .try_for_each(|diag| diag.pretty_print(f, source_by_hash, options))
-    }
-
     /// Merges another Diagnostics collection into this one.
-    pub fn append(&mut self, mut other: Diagnostics) {
+    pub fn append(&mut self, mut other: Self) {
         self.error_count += other.error_count;
         self.warning_count += other.warning_count;
         self.diagnostics.append(&mut other.diagnostics);
@@ -70,8 +91,8 @@ impl Diagnostics {
         let mut lines: Vec<u32> = self
             .iter()
             .filter_map(|d| {
-                if d.level() == Level::Error {
-                    d.src_ref().line()
+                if d.severity().unwrap_or_default() == Severity::Error {
+                    d.src_ref.line()
                 } else {
                     None
                 }
@@ -87,8 +108,8 @@ impl Diagnostics {
         let mut lines: Vec<u32> = self
             .iter()
             .filter_map(|d| {
-                if d.level() == Level::Warning {
-                    d.src_ref().line()
+                if d.severity().unwrap_or_default() == Severity::Warning {
+                    d.src_ref.line()
                 } else {
                     None
                 }
@@ -98,46 +119,52 @@ impl Diagnostics {
         lines.dedup();
         lines
     }
+
+    pub fn push<E>(&mut self, err: E)
+    where
+        E: Into<miette::Report> + SrcReferrer,
+    {
+        let src_ref = err.src_ref(); // Extract the metadata
+        let report = err.into(); // Convert to miette::Report
+
+        match report.severity() {
+            Some(Severity::Error) | None => self.error_count += 1,
+            Some(Severity::Warning) => self.warning_count += 1,
+            _ => {}
+        };
+
+        self.diagnostics.push(Diagnostic { report, src_ref });
+    }
+
+    pub fn render(
+        &self,
+        f: &mut dyn std::fmt::Write,
+        source_by_hash: &impl GetSourceByHash,
+        options: &DiagRenderOptions,
+    ) -> std::fmt::Result {
+        self.diagnostics
+            .iter()
+            .try_for_each(|diag| diag.render(f, source_by_hash, options))
+    }
+
+    pub fn render_to_string(
+        &self,
+        source_by_hash: &impl GetSourceByHash,
+        options: &DiagRenderOptions,
+    ) -> Result<String, std::fmt::Error> {
+        let mut buffer = String::new();
+        self.render(&mut buffer, source_by_hash, options)?;
+        Ok(buffer)
+    }
 }
 
-impl<R> From<R> for Diagnostics
+impl<E> From<Vec<E>> for Diagnostics
 where
-    R: Into<Report>,
+    E: Into<miette::Report> + SrcReferrer,
 {
-    fn from(report: R) -> Self {
-        Self {
-            error_count: 1,
-            warning_count: 0,
-            diagnostics: vec![Diagnostic::Error(std::rc::Rc::new(Refer::none(
-                report.into(),
-            )))],
-        }
-    }
-}
-
-impl FromIterator<Diagnostics> for Diagnostics {
-    fn from_iter<I: IntoIterator<Item = Diagnostics>>(iter: I) -> Self {
-        let mut root = Diagnostics::default();
-        for other in iter {
-            root.append(other);
-        }
-        root
-    }
-}
-
-impl PushDiag for Diagnostics {
-    fn push_diag(&mut self, diag: Diagnostic) -> DiagResult<()> {
-        match &diag {
-            Diagnostic::Error(_) => {
-                self.error_count += 1;
-            }
-            Diagnostic::Warning(_) => {
-                self.warning_count += 1;
-            }
-            _ => (),
-        }
-
-        self.diagnostics.push(diag);
-        Ok(())
+    fn from(errors: Vec<E>) -> Self {
+        let mut diags = Self::default();
+        errors.into_iter().for_each(|err| diags.push(err));
+        diags
     }
 }
