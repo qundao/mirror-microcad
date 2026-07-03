@@ -131,5 +131,5 @@ pub fn format_code(code: &str, config: &FormatConfig) -> Result<String, Diagnost
 
 /// Format a [`ast::Source`]
 pub fn format_ast(ast: &Ast, config: &FormatConfig) -> Result<Ast, Diagnostics> {
-    Ok(parse(&Source::from(format(&ast, config).as_str()))?.0)
+    Ok(parse(&Source::from(format(ast, config).as_str()))?.0)
 }
