@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang_base::{
-    CompilationResult, DiagRenderOptions, Identifier, MICROCAD_EXTENSION, Source, SourceKind,
+    CompilationResult, DiagRenderOptions, Identifier, MICROCAD_EXTENSION, Source,
 };
 use microcad_lang_lower::{self as lower, Ir, ir};
 use microcad_lang_parse as parse;
@@ -10,10 +10,7 @@ use microcad_lang_parse as parse;
 use test_that::prelude::*;
 
 fn source_from_test_file(name: &str) -> Source {
-    let path_string = format!("tests/test_cases/{name}.{}", MICROCAD_EXTENSION);
-    let path = std::path::PathBuf::from(path_string);
-    let code = std::fs::read_to_string(&path).expect("No error");
-    Source::new(SourceKind::from(path), code)
+    Source::load(format!("tests/test_cases/{name}.{}", MICROCAD_EXTENSION)).expect("No error")
 }
 
 /// Get intermediate representation and diagnostics.
