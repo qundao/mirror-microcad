@@ -28,10 +28,10 @@ where
     let mut items = Vec::new();
     i.flat_map(|attr| attr.commands.iter())
         .try_for_each(|cmd| -> LowerResult<()> {
-            match f(cmd)? {
-                Some(item) => Ok(items.push(item)),
-                None => Ok(()),
+            if let Some(item) = f(cmd)? {
+                items.push(item);
             }
+            Ok(())
         })?;
 
     Ok(items.into_boxed_slice())
@@ -84,7 +84,7 @@ impl Lower<ast::StatementList> for ir::DocBlock {
 
 impl Lower<Vec<ast::Attribute>> for Box<[ir::Meta]> {
     fn lower(node: &Vec<ast::Attribute>, context: &mut LowerContext) -> LowerResult<Self> {
-        extract_attributes(node.into_iter(), |cmd| -> LowerResult<_> {
+        extract_attributes(node.iter(), |cmd| -> LowerResult<_> {
             Ok(match cmd {
                 ast::AttributeCommand::Assignment(local_assignment) => {
                     Some(ir::Meta::lower(local_assignment, context)?)
@@ -221,7 +221,7 @@ impl Lower<ast::StatementList> for ir::InnerAttributes {
         let mut state = State::InitDoc;
         for_each_statement(statements, context, |stmt, context| {
             let src_ref = context.span_to_src_ref(&stmt.span());
-            Ok(match stmt {
+            match stmt {
                 ast::Statement::InnerDocComment(_) => {
                     if state != State::InitDoc {
                         context.diag(LowerError::StatementNotAllowed { src_ref });
@@ -235,7 +235,8 @@ impl Lower<ast::StatementList> for ir::InnerAttributes {
                     }
                 }
                 _ => state = State::Statements,
-            })
+            }
+            Ok(())
         })?;
 
         Ok(Self(ir::Attributes {

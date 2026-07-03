@@ -38,11 +38,11 @@ pub struct If<EXPR, BODY> {
     /// If condition.
     pub cond: Box<EXPR>,
     /// Body if `true`.
-    pub body: BODY,
+    pub body: Box<BODY>,
     /// SrcRef of the `else` keyword, if present.
     pub else_ref: Option<SrcRef>,
     /// Body if `false`.
-    pub body_else: Option<BODY>,
+    pub body_else: Option<Box<BODY>>,
     /// SrcRef of the `else[ if]` keyword, if present.
     pub next_if_ref: Option<SrcRef>,
     /// Next if statement: `else if x == 1`.

@@ -139,7 +139,7 @@ where
         Ok(ir::If {
             if_ref: context.span_to_src_ref(&node.if_span),
             cond: Box::new(EXPR::lower(node.condition.as_ref(), context)?),
-            body: BODY::lower(&node.body, context)?,
+            body: BODY::lower(&node.body, context)?.into(),
             next_if_ref: node
                 .next_if_span
                 .as_ref()
@@ -158,7 +158,8 @@ where
                 .else_body
                 .as_ref()
                 .map(|body| BODY::lower(body, context))
-                .transpose()?,
+                .transpose()?
+                .map(|body| Box::new(body)),
             src_ref: context.span_to_src_ref(&node.span),
         })
     }

@@ -69,11 +69,11 @@ where
                     Some(name) => named.push(ir::NamedArgument {
                         id: ir::Identifier::lower(name, context)?,
                         expression: EXPR::lower(arg.value(), context)?,
-                        src_ref: context.span_to_src_ref(&arg.span()),
+                        src_ref: context.span_to_src_ref(arg.span()),
                     }),
                     None => unnamed.push(ir::UnnamedArgument {
                         expression: EXPR::lower(arg.value(), context)?,
-                        src_ref: context.span_to_src_ref(&arg.span()),
+                        src_ref: context.span_to_src_ref(arg.span()),
                     }),
                 }
                 Ok(())

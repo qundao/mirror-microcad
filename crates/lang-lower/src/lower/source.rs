@@ -10,7 +10,7 @@ impl Lower<ast::StatementList> for ir::SourceItems {
     fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         for_each_statement(statements, context, |stmt, context| {
             let src_ref = context.span_to_src_ref(&stmt.span());
-            Ok(match stmt {
+            match stmt {
                 ast::Statement::Init(_)
                 | ast::Statement::Return(_)
                 | ast::Statement::Property(_)
@@ -18,7 +18,8 @@ impl Lower<ast::StatementList> for ir::SourceItems {
                     context.diag(LowerError::StatementNotAllowed { src_ref })
                 }
                 _ => {}
-            })
+            }
+            Ok(())
         })?;
 
         Ok(Self {

@@ -2,8 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    Lower, LowerContext, LowerError, LowerResult,
-    ir::{self, WorkbenchStatement},
+    Lower, LowerContext, LowerError, LowerResult, ir,
     lower::{
         attribute::outer_with_doc, extract_statements, extract_statements_with_tail,
         for_each_statement,
@@ -18,12 +17,13 @@ impl Lower<ast::Init> for ir::Init {
         for_each_statement(&node.body.statements, context, |stmt, context| {
             let src_ref = context.span_to_src_ref(&stmt.span());
             use ast::Statement::*;
-            Ok(match stmt {
+            match stmt {
                 FileModule(_) | InlineModule(_) | Function(_) | Workbench(_) | Return(_)
                 | Use(_) | Property(_) | Const(_) | InnerDocComment(_) | InnerAttribute(_)
                 | Error(_) => context.diag(LowerError::StatementNotAllowed { src_ref }),
                 _ => {}
-            })
+            }
+            Ok(())
         })?;
 
         Ok(Self {
@@ -42,13 +42,14 @@ impl Lower<ast::Body> for ir::Group {
         for_each_statement(statements, context, |stmt, context| {
             let src_ref = context.span_to_src_ref(&stmt.span());
             use ast::Statement::*;
-            Ok(match stmt {
+            match stmt {
                 FileModule(_) | Const(_) | Use(_) | InlineModule(_) | Init(_) | Workbench(_)
                 | Function(_) | Return(_) | InnerAttribute(_) | InnerDocComment(_) | Error(_) => {
                     context.diag(LowerError::StatementNotAllowed { src_ref })
                 }
                 _ => {}
-            })
+            }
+            Ok(())
         })?;
 
         Ok(Self {
@@ -125,7 +126,7 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
                     })
                 },
             )?,
-            ast::Expression::If(if_expr) => Self::If(ir::If::lower(&if_expr, context)?),
+            ast::Expression::If(if_expr) => Self::If(ir::If::lower(if_expr, context)?),
             ast::Expression::Error(_) => todo!(),
         })
     }
@@ -159,7 +160,7 @@ impl Lower<ast::StatementList> for ir::Inits {
                         ast::Statement::Expression(expression_statement) => {
                             context.span_to_src_ref(&expression_statement.span)
                         }
-                        ast::Statement::Error(span) => context.span_to_src_ref(&span),
+                        ast::Statement::Error(span) => context.span_to_src_ref(span),
                         _ => SrcRef::none(),
                     };
 
@@ -200,7 +201,7 @@ impl Lower<ast::LocalAssignment> for ir::WorkbenchStatement {
             keyword_src_ref: SrcRef::none(),
             id: Some(ir::Identifier::lower(&node.id, context)?),
             ty: Option::<ir::TypeAnnotation>::lower(&node.ty, context)?,
-            expression: ir::WorkbenchExpression::lower(&node.expr.as_ref(), context)?,
+            expression: ir::WorkbenchExpression::lower(node.expr.as_ref(), context)?,
         })
     }
 }
@@ -256,9 +257,9 @@ impl Lower<ast::StatementList> for ir::WorkbenchStatements {
             node,
             context,
             // Extract statements
-            |stmt, context| Option::<ir::WorkbenchStatement>::lower(stmt, context),
+            Option::<ir::WorkbenchStatement>::lower,
             // Extract tail expression
-            |expr, context| WorkbenchStatement::lower(expr, context),
+            ir::WorkbenchStatement::lower,
         )?))
     }
 }
@@ -267,7 +268,7 @@ impl Lower<ast::StatementList> for ir::WorkbenchItems {
     fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         for_each_statement(statements, context, |stmt, context| {
             let src_ref = context.span_to_src_ref(&stmt.span());
-            Ok(match stmt {
+            match stmt {
                 ast::Statement::FileModule(_)
                 | ast::Statement::InlineModule(_)
                 | ast::Statement::Workbench(_)
@@ -276,7 +277,8 @@ impl Lower<ast::StatementList> for ir::WorkbenchItems {
                     context.diag(LowerError::StatementNotAllowed { src_ref })
                 }
                 _ => {}
-            })
+            }
+            Ok(())
         })?;
 
         Ok(Self {

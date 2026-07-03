@@ -87,7 +87,7 @@ impl<'source> LowerContext<'source> {
 
 impl<'source> SpanToSrcRef for LowerContext<'source> {
     fn span_to_src_ref(&self, span: &Span) -> SrcRef {
-        self.line_index.src_ref(self.source.code.as_str(), &span)
+        self.line_index.src_ref(self.source.code.as_str(), span)
     }
 }
 

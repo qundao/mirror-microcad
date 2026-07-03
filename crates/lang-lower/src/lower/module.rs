@@ -37,11 +37,12 @@ impl Lower<ast::StatementList> for ir::InlineModuleItems {
         for_each_statement(statements, context, |stmt, context| {
             let src_ref = context.span_to_src_ref(&stmt.span());
             use ast::Statement::*;
-            Ok(match stmt {
+            match stmt {
                 FileModule(_) | Return(_) | Expression(_) | LocalAssignment(_) | Property(_)
                 | Error(_) => context.diag(LowerError::StatementNotAllowed { src_ref }),
                 _ => {}
-            })
+            }
+            Ok(())
         })?;
 
         Ok(Self {

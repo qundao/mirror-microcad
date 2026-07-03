@@ -162,18 +162,15 @@ where
         .iter()
         .map(|(stmt, _)| stmt)
         .try_for_each(|stmt| -> Result<(), LowerError> {
-            match extractor(stmt, context)? {
-                Some(m) => mapped.push(m),
-                None => {}
+            if let Some(m) = extractor(stmt, context)? {
+                mapped.push(m);
             }
             Ok(())
         })?;
 
-    match &statements.tail {
-        Some(tail) => mapped.push(tail_extractor(tail, context)?),
-        None => {}
+    if let Some(tail) = &statements.tail {
+        mapped.push(tail_extractor(tail, context)?);
     }
-
     Ok(mapped.into_boxed_slice())
 }
 
@@ -193,9 +190,8 @@ where
         .iter()
         .map(|(stmt, _)| stmt)
         .try_for_each(|stmt| -> LowerResult<()> {
-            match extractor(stmt)? {
-                Some(m) => mapped.push(m),
-                None => {}
+            if let Some(m) = extractor(stmt)? {
+                mapped.push(m);
             }
             Ok(())
         })?;
@@ -223,8 +219,7 @@ pub fn sort_and_check<T>(mut named: Vec<T>, context: &mut LowerContext) -> Lower
 where
     T: Identifiable + SrcReferrer,
 {
-    named.sort_by(|lhs, rhs| lhs.id().cmp(&rhs.id()));
-
+    named.sort_by_key(|lhs| lhs.id());
     named
         .windows(2)
         .filter_map(|pair| {
@@ -250,9 +245,7 @@ where
     Option<T>: Lower<ast::Statement>,
 {
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(extract_statements(node, |stmt| {
-            Option::lower(stmt, context)
-        })?)
+        extract_statements(node, |stmt| Option::lower(stmt, context))
     }
 }
 

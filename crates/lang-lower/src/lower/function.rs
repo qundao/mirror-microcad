@@ -36,13 +36,14 @@ where
         for_each_statement(statements, context, |stmt, context| {
             let src_ref = context.span_to_src_ref(&stmt.span());
             use ast::Statement::*;
-            Ok(match stmt {
+            match stmt {
                 FileModule(_) | Const(_) | Use(_) | InlineModule(_) | Init(_) | Workbench(_)
                 | Function(_) | Property(_) | InnerAttribute(_) | InnerDocComment(_) | Error(_) => {
                     context.diag(LowerError::StatementNotAllowed { src_ref });
                 }
                 _ => {}
-            })
+            }
+            Ok(())
         })?;
 
         Ok(Self(Refer::new(
@@ -117,7 +118,7 @@ where
                     })
                 },
             )?,
-            ast::Expression::If(if_expr) => Self::If(ir::If::lower(&if_expr, context)?),
+            ast::Expression::If(if_expr) => Self::If(ir::If::lower(if_expr, context)?),
             ast::Expression::Error(_) => todo!(),
         })
     }
@@ -184,7 +185,7 @@ where
         let statements = extract_statements_with_tail(
             node,
             context,
-            |stmt, context| Option::<ir::FunctionStatement<NAME>>::lower(stmt, context),
+            Option::<ir::FunctionStatement<NAME>>::lower,
             // Lower Tail expression to Return statements.
             |tail, context| {
                 Ok(ir::FunctionStatement::Return(ir::ReturnStatement {
@@ -220,11 +221,12 @@ impl Lower<ast::StatementList> for ir::FunctionItems {
         for_each_statement(statements, context, |stmt, context| {
             let src_ref = context.span_to_src_ref(&stmt.span());
             use ast::Statement::*;
-            Ok(match stmt {
+            match stmt {
                 Init(_) | Workbench(_) | InlineModule(_) | FileModule(_) | Property(_)
                 | Error(_) => context.diag(LowerError::StatementNotAllowed { src_ref }),
                 _ => {}
-            })
+            }
+            Ok(())
         })?;
 
         Ok(Self {
@@ -242,7 +244,7 @@ impl Lower<ast::def::Function> for ir::Function {
             visibility: ir::Visibility::lower(&node.vis, context)?,
             keyword_ref: context.span_to_src_ref(&node.keyword_span),
             id: Identifier::lower(&node.id, context)?,
-            signature: ir::FunctionSignature::lower(&node, context)?,
+            signature: ir::FunctionSignature::lower(node, context)?,
             inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
             items: ir::FunctionItems::lower(&node.body.statements, context)?,
             statements: ir::FunctionStatements::lower(&node.body.statements, context)?,
