@@ -115,6 +115,14 @@ impl Source {
     }
 }
 
+#[cfg(feature = "io")]
+impl Source {
+    pub fn load(path: impl AsRef<std::path::Path>) -> Result<Self, std::io::Error> {
+        let code = std::fs::read_to_string(path)?;
+        Ok(Self::from(code.as_str()))
+    }
+}
+
 impl<'a> From<&'a str> for Source {
     fn from(s: &'a str) -> Self {
         Source::new(SourceKind::Str, s.to_string())
