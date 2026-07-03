@@ -3,7 +3,7 @@
 
 use crate::{Ir, Lower, LowerContext, LowerError, LowerResult, ir, lower::for_each_statement};
 
-use microcad_lang_base::{PushDiag, SpanToSrcRef};
+use microcad_lang_base::SpanToSrcRef;
 use microcad_lang_parse::{Ast, ast};
 
 impl Lower<ast::StatementList> for ir::SourceItems {
@@ -14,9 +14,9 @@ impl Lower<ast::StatementList> for ir::SourceItems {
                 ast::Statement::Init(_)
                 | ast::Statement::Return(_)
                 | ast::Statement::Property(_)
-                | ast::Statement::Error(_) => context
-                    .diagnostics
-                    .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?,
+                | ast::Statement::Error(_) => {
+                    context.diag(LowerError::StatementNotAllowed { src_ref })
+                }
                 _ => {}
             })
         })?;

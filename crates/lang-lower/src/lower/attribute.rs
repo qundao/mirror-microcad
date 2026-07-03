@@ -4,7 +4,7 @@
 use crate::lower::{extract_statements, for_each_statement};
 use crate::{Lower, LowerContext, LowerError, LowerResult, ir};
 
-use microcad_lang_base::{PushDiag, Refer, SpanToSrcRef};
+use microcad_lang_base::{Refer, SpanToSrcRef};
 use microcad_lang_parse::ast;
 
 /// Helper function to get outer attributes
@@ -224,16 +224,12 @@ impl Lower<ast::StatementList> for ir::InnerAttributes {
             Ok(match stmt {
                 ast::Statement::InnerDocComment(_) => {
                     if state != State::InitDoc {
-                        context
-                            .diagnostics
-                            .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?;
+                        context.diag(LowerError::StatementNotAllowed { src_ref });
                     }
                 }
                 ast::Statement::InnerAttribute(_) => {
                     if state == State::Statements {
-                        context
-                            .diagnostics
-                            .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?;
+                        context.diag(LowerError::StatementNotAllowed { src_ref });
                     } else {
                         state = State::Attributes;
                     }

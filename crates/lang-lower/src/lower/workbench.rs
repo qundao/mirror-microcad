@@ -10,7 +10,7 @@ use crate::{
     },
 };
 
-use microcad_lang_base::{PushDiag, Refer, SpanToSrcRef, SrcRef};
+use microcad_lang_base::{Refer, SpanToSrcRef, SrcRef};
 use microcad_lang_parse::ast;
 
 impl Lower<ast::Init> for ir::Init {
@@ -21,9 +21,7 @@ impl Lower<ast::Init> for ir::Init {
             Ok(match stmt {
                 FileModule(_) | InlineModule(_) | Function(_) | Workbench(_) | Return(_)
                 | Use(_) | Property(_) | Const(_) | InnerDocComment(_) | InnerAttribute(_)
-                | Error(_) => context
-                    .diagnostics
-                    .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?,
+                | Error(_) => context.diag(LowerError::StatementNotAllowed { src_ref }),
                 _ => {}
             })
         })?;
@@ -47,9 +45,7 @@ impl Lower<ast::Body> for ir::Group {
             Ok(match stmt {
                 FileModule(_) | Const(_) | Use(_) | InlineModule(_) | Init(_) | Workbench(_)
                 | Function(_) | Return(_) | InnerAttribute(_) | InnerDocComment(_) | Error(_) => {
-                    context
-                        .diagnostics
-                        .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?
+                    context.diag(LowerError::StatementNotAllowed { src_ref })
                 }
                 _ => {}
             })
@@ -169,9 +165,7 @@ impl Lower<ast::StatementList> for ir::Inits {
 
                     if src_ref.is_some() {
                         let src_ref = context.span_to_src_ref(&stmt.span());
-                        context
-                            .diagnostics
-                            .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?;
+                        context.diag(LowerError::StatementNotAllowed { src_ref });
                     }
                     Ok(())
                 })?;
@@ -182,9 +176,7 @@ impl Lower<ast::StatementList> for ir::Inits {
                 .try_for_each(|(stmt, _)| -> LowerResult<()> {
                     if !is_init(stmt) {
                         let src_ref = context.span_to_src_ref(&stmt.span());
-                        context
-                            .diagnostics
-                            .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?;
+                        context.diag(LowerError::StatementNotAllowed { src_ref });
                     }
                     Ok(())
                 })?;
@@ -280,9 +272,9 @@ impl Lower<ast::StatementList> for ir::WorkbenchItems {
                 | ast::Statement::InlineModule(_)
                 | ast::Statement::Workbench(_)
                 | ast::Statement::Return(_)
-                | ast::Statement::Error(_) => context
-                    .diagnostics
-                    .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?,
+                | ast::Statement::Error(_) => {
+                    context.diag(LowerError::StatementNotAllowed { src_ref })
+                }
                 _ => {}
             })
         })?;

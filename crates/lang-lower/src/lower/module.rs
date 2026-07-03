@@ -6,7 +6,7 @@ use crate::{
     lower::{attribute::outer_with_doc, for_each_statement},
 };
 
-use microcad_lang_base::{PushDiag, SpanToSrcRef};
+use microcad_lang_base::SpanToSrcRef;
 use microcad_lang_parse::ast;
 
 impl Lower<ast::def::FileModule> for ir::FileModule {
@@ -39,9 +39,7 @@ impl Lower<ast::StatementList> for ir::InlineModuleItems {
             use ast::Statement::*;
             Ok(match stmt {
                 FileModule(_) | Return(_) | Expression(_) | LocalAssignment(_) | Property(_)
-                | Error(_) => context
-                    .diagnostics
-                    .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?,
+                | Error(_) => context.diag(LowerError::StatementNotAllowed { src_ref }),
                 _ => {}
             })
         })?;

@@ -7,7 +7,7 @@ mod call;
 mod format_string;
 mod literal;
 
-use microcad_lang_base::{Identifier, PushDiag, Refer, SpanToSrcRef};
+use microcad_lang_base::{Identifier, Refer, SpanToSrcRef};
 use microcad_lang_parse::ast;
 use serde::Serialize;
 
@@ -222,13 +222,9 @@ where
                 Self::UnaryOp(ir::UnaryOp::lower(unop, context)?)
             }
             expr => {
-                context
-                    .diagnostics
-                    .error(
-                        &context.span_to_src_ref(&expr.span()),
-                        miette::miette!("This is not a constant expression"),
-                    )
-                    .ok();
+                context.diag(LowerError::InvalidConstantExpression {
+                    src_ref: context.span_to_src_ref(&expr.span()),
+                });
                 Self::Invalid
             }
         })

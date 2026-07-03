@@ -8,14 +8,14 @@ pub mod ir;
 mod lower;
 
 use microcad_lang_base::{
-    DiagResult, Diagnostic, Diagnostics, Identifier, LineIndex, PushDiag, Refer, Source, Span,
-    SpanToSrcRef, SrcRef, SrcReferrer,
+    CompilationResult, Diagnostics, Identifier, LineIndex, Source, Span, SpanToSrcRef, SrcRef,
 };
 
-pub use lower::{LowerError, LowerErrorsWithSource, LowerResult};
+pub use lower::{LowerError, LowerResult};
 
 /// Intermediate representation
 pub use ir::Source as Ir;
+use microcad_lang_parse::Ast;
 
 pub(crate) trait IsDefault {
     fn is_default(&self) -> bool;
@@ -68,7 +68,7 @@ pub trait Identifiable {
 pub struct LowerContext<'source> {
     pub source: &'source Source,
     line_index: LineIndex,
-    pub diagnostics: Diagnostics,
+    pub errors: Vec<LowerError>,
 }
 
 impl<'source> LowerContext<'source> {
@@ -76,18 +76,12 @@ impl<'source> LowerContext<'source> {
         LowerContext {
             source,
             line_index: LineIndex::from(source),
-            diagnostics: Diagnostics::default(),
+            errors: Vec::default(),
         }
     }
 
-    // Use `impl PushDiag` here
-    pub fn warning(&mut self, diagnostic: LowerError) -> DiagResult<()> {
-        let src_ref = diagnostic.src_ref();
-        self.diagnostics
-            .push_diag(Diagnostic::Warning(std::rc::Rc::new(Refer::new(
-                diagnostic.into(),
-                src_ref,
-            ))))
+    pub fn diag(&mut self, err: LowerError) {
+        self.errors.push(err);
     }
 }
 
@@ -114,4 +108,25 @@ where
 
     ron::ser::to_string_pretty(item, config)
         .map_err(|e| miette::miette!("Failed to generate pretty RON: {}", e))
+}
+
+pub fn lower(source: &Source, ast: &Ast) -> CompilationResult<Ir> {
+    let mut context = LowerContext::new(source);
+
+    // Short-circuit on fatal errors
+    let ir = match Ir::lower(ast, &mut context) {
+        Ok(ir) => ir,
+        Err(fatal_error) => {
+            // Ensure the fatal error is logged in the diagnostics
+            context.diag(fatal_error);
+            return Err(context.errors.into());
+        }
+    };
+
+    let diagnostics: Diagnostics = context.errors.into();
+    if diagnostics.has_errors() {
+        Err(diagnostics)
+    } else {
+        Ok((ir, diagnostics))
+    }
 }

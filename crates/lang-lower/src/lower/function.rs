@@ -7,7 +7,7 @@ use crate::{
     lower::{extract_statements_with_tail, for_each_statement},
 };
 
-use microcad_lang_base::{Identifier, PushDiag, Refer, SpanToSrcRef, SrcRef, SrcReferrer};
+use microcad_lang_base::{Identifier, Refer, SpanToSrcRef, SrcRef, SrcReferrer};
 use microcad_lang_parse::ast;
 use serde::Serialize;
 
@@ -39,9 +39,7 @@ where
             Ok(match stmt {
                 FileModule(_) | Const(_) | Use(_) | InlineModule(_) | Init(_) | Workbench(_)
                 | Function(_) | Property(_) | InnerAttribute(_) | InnerDocComment(_) | Error(_) => {
-                    context
-                        .diagnostics
-                        .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?
+                    context.diag(LowerError::StatementNotAllowed { src_ref });
                 }
                 _ => {}
             })
@@ -203,13 +201,10 @@ where
             let src_ref = stmt.src_ref();
             if return_src_ref.is_some() {
                 // We've already hit a return, so everything after it is unreachable dead code.
-                context.diagnostics.warning(
-                    &src_ref,
-                    LowerError::Unreachable {
-                        src_ref,
-                        last_ref: return_src_ref,
-                    },
-                )?;
+                context.diag(LowerError::Unreachable {
+                    src_ref,
+                    last_ref: return_src_ref,
+                });
             } else if let ir::FunctionStatement::Return(ret) = stmt {
                 // Found the first return statement!
                 return_src_ref = ret.src_ref;
@@ -227,9 +222,7 @@ impl Lower<ast::StatementList> for ir::FunctionItems {
             use ast::Statement::*;
             Ok(match stmt {
                 Init(_) | Workbench(_) | InlineModule(_) | FileModule(_) | Property(_)
-                | Error(_) => context
-                    .diagnostics
-                    .error(&src_ref, LowerError::StatementNotAllowed { src_ref })?,
+                | Error(_) => context.diag(LowerError::StatementNotAllowed { src_ref }),
                 _ => {}
             })
         })?;

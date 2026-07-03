@@ -14,25 +14,19 @@ mod source;
 mod r#type;
 mod workbench;
 
-use microcad_lang_base::{
-    DiagError, Hashed, Identifier, Refer, SpanToSrcRef, Spanned, SrcRef, SrcReferrer,
-};
+use microcad_lang_base::{Identifier, Refer, SpanToSrcRef, Spanned, SrcRef, SrcReferrer};
 use microcad_lang_parse::ast;
 use microcad_lang_types::ty::TypeError;
-use miette::{Diagnostic, SourceCode};
+use miette::Diagnostic;
 use thiserror::Error;
 
 use crate::Identifiable;
 use crate::{Lower, LowerContext, ir};
 
-/// Parsing errors
+/// Errors and warnings during lowering
 #[derive(Debug, Error, Diagnostic)]
 #[allow(missing_docs)]
 pub enum LowerError {
-    /// Error that occurred during handling diagnostics
-    #[error("{0}")]
-    DiagError(#[from] DiagError),
-
     #[error("Error parsing integer literal: {0}")]
     ParseIntError(#[label("{0}")] Refer<std::num::ParseIntError>),
 
@@ -61,7 +55,7 @@ pub enum LowerError {
     #[error("Unknown type: {0}")]
     UnknownType(#[label("Unknown type")] Refer<String>),
 
-    /// Matrix type with invalid dimensions
+    /// A Type error
     #[error("Type error: {0}")]
     TypeError(#[from] Refer<TypeError>),
 
@@ -107,22 +101,27 @@ pub enum LowerError {
     },
 
     #[error("Statement is unreachable")]
-    #[diagnostic(help("Remove this statement {src_ref}"))]
+    #[diagnostic(help("Remove this statement {src_ref}"), severity = "Warning")]
     Unreachable {
         #[label("Last statement to be evaluated")]
         last_ref: SrcRef,
         #[label("Statement")]
         src_ref: SrcRef,
     },
+
+    #[error("This is not a constant expression")]
+    InvalidConstantExpression {
+        #[label("Expression")]
+        src_ref: SrcRef,
+    },
 }
 
-/// Result with parse error
+/// Result with lower error
 pub type LowerResult<T> = Result<T, LowerError>;
 
 impl SrcReferrer for LowerError {
     fn src_ref(&self) -> SrcRef {
         match self {
-            LowerError::DiagError(_) => SrcRef::none(),
             LowerError::DuplicateArgument { id, .. } => id.src_ref(),
             LowerError::StatementNotAllowed { src_ref }
             | LowerError::InvalidGlobPattern(src_ref)
@@ -139,55 +138,8 @@ impl SrcReferrer for LowerError {
             LowerError::TypeError(ty) => ty.src_ref(),
             LowerError::AstParser(err) => err.src_ref(),
             LowerError::Unreachable { src_ref, .. } => *src_ref,
+            LowerError::InvalidConstantExpression { src_ref } => *src_ref,
         }
-    }
-}
-
-/// Parse error, possibly with source code
-#[derive(Debug, Error)]
-#[error("Failed to parse")] // todo
-pub struct LowerErrorsWithSource {
-    /// The errors encountered during parsing
-    pub errors: Vec<LowerError>,
-    /// The parsed source code
-    pub source_code: Option<Hashed<String>>,
-}
-
-impl From<LowerError> for LowerErrorsWithSource {
-    fn from(value: LowerError) -> Self {
-        LowerErrorsWithSource {
-            errors: vec![value],
-            source_code: None,
-        }
-    }
-}
-
-impl From<Vec<LowerError>> for LowerErrorsWithSource {
-    fn from(value: Vec<LowerError>) -> Self {
-        LowerErrorsWithSource {
-            errors: value,
-            source_code: None,
-        }
-    }
-}
-
-impl Diagnostic for LowerErrorsWithSource {
-    fn source_code(&self) -> Option<&dyn SourceCode> {
-        self.source_code
-            .as_ref()
-            .map(|source| source.value() as &dyn SourceCode)
-    }
-
-    fn related<'a>(&'a self) -> Option<Box<dyn Iterator<Item = &'a dyn Diagnostic> + 'a>> {
-        Some(Box::new(
-            self.errors.iter().map(|e| -> &dyn Diagnostic { e }),
-        ))
-    }
-}
-
-impl SrcReferrer for LowerErrorsWithSource {
-    fn src_ref(&self) -> SrcRef {
-        self.errors[0].src_ref()
     }
 }
 
@@ -271,7 +223,6 @@ pub fn sort_and_check<T>(mut named: Vec<T>, context: &mut LowerContext) -> Lower
 where
     T: Identifiable + SrcReferrer,
 {
-    use microcad_lang_base::PushDiag;
     named.sort_by(|lhs, rhs| lhs.id().cmp(&rhs.id()));
 
     named
@@ -284,16 +235,10 @@ where
             }
         })
         .try_for_each(|(prev_arg, arg)| -> LowerResult<()> {
-            context
-                .diagnostics
-                .error(
-                    &arg.src_ref(),
-                    LowerError::DuplicateArgument {
-                        id: arg.id().clone(),
-                        previous: prev_arg.id().clone(),
-                    },
-                )
-                .ok();
+            context.diag(LowerError::DuplicateArgument {
+                id: arg.id().clone(),
+                previous: prev_arg.id().clone(),
+            });
             Ok(())
         })?;
 
