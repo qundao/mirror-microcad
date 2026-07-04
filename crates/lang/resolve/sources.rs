@@ -132,6 +132,16 @@ impl Sources {
             return Ok(self.root.id().into());
         }
 
+        // Make sure file_path is in canonical form (so we can strip the source which is also in canonical form)
+        // // On windows canoncical form starts with `\\?\` so not equivalent to absolute
+        let file_path = if file_path.is_absolute() {
+            file_path
+                .canonicalize()
+                .unwrap_or_else(|_| panic!("valid path: {}", file_path.display()))
+        } else {
+            file_path.into()
+        };
+
         // check file names relative to search paths
         let path = if let Some(path) = self
             .search_paths

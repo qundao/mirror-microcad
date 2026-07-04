@@ -11,7 +11,7 @@ use std::borrow::Cow;
 #[allow(missing_docs)]
 #[logos(error(LexerError))]
 pub enum LogosToken<'a> {
-    #[regex(r"[ \t\n\f]", callback = whitespace_callback)]
+    #[regex(r"[ \t\r\n\f]", callback = whitespace_callback)]
     Whitespace(Cow<'a, str>),
 
     #[regex(r#"\/\/\/[^\n]*"#, allow_greedy = true, callback = token_cow)]
