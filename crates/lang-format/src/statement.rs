@@ -248,6 +248,12 @@ impl Format for Vec<ast::Attribute> {
     }
 }
 
+impl Format for ast::Attributes {
+    fn format(&self, f: &FormatConfig) -> Node {
+        self.0.format(f)
+    }
+}
+
 impl Format for ast::Statement {
     fn format(&self, f: &FormatConfig) -> Node {
         match &self {
