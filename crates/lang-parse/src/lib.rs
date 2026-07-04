@@ -15,6 +15,7 @@ pub mod ast;
 pub mod token;
 
 /// Contains the parser.
+#[cfg(feature = "parser")]
 mod parse;
 
 /// Contains the lexer (aka tokenizer).
@@ -22,9 +23,12 @@ mod lex;
 
 pub use ast::Ast;
 use microcad_lang_base::{CompilationResult, Diagnostics, Source};
+
+#[cfg(feature = "parser")]
 pub use parse::{ParseContext, ParseError, ParseErrors, parsers};
 
 /// Parse trait.
+#[cfg(feature = "parser")]
 pub trait Parse: Sized {
     /// Parse from a context.
     ///
@@ -32,6 +36,7 @@ pub trait Parse: Sized {
     fn parse(context: &ParseContext) -> Result<Self, ParseErrors>;
 }
 
+#[cfg(feature = "parser")]
 impl Parse for Ast {
     fn parse(context: &ParseContext) -> Result<Self, ParseErrors> {
         parse::parse(&lex(context.source.code()).collect::<Vec<_>>())
@@ -41,6 +46,7 @@ impl Parse for Ast {
 pub use lex::lex;
 
 /// Parse a source into an abstract syntax tree.
+#[cfg(feature = "parser")]
 pub fn parse(source: &Source) -> CompilationResult<Ast> {
     let context = ParseContext::from(source);
     match Ast::parse(&context) {

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //! Parser tests
+#![cfg(feature = "parser")]
 
 use insta::assert_debug_snapshot;
 use test_case::test_case;

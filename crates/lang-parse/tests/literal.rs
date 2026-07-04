@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 //! Parse syntax elements tests
+#![cfg(feature = "parser")]
 
 use insta::assert_debug_snapshot;
 use microcad_lang_parse::{Parse, ParseContext, ast};
