@@ -28,7 +28,9 @@ Ok(
                                 [],
                             ),
                         },
-                        attr: [],
+                        attr: Attributes(
+                            [],
+                        ),
                         expr: ElementAccess(
                             ElementAccess {
                                 span: 0..9,

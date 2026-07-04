@@ -21,7 +21,9 @@ Ok(
                         Use(
                             Use {
                                 span: 0..7,
-                                attr: [],
+                                attr: Attributes(
+                                    [],
+                                ),
                                 keyword_span: 0..3,
                                 extras: ItemExtras {
                                     leading: LeadingExtras(

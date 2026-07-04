@@ -35,7 +35,9 @@ Ok(
                                     lines: [],
                                 },
                                 kind: Sketch,
-                                attr: [],
+                                attr: Attributes(
+                                    [],
+                                ),
                                 vis: None,
                                 id: Identifier {
                                     span: 7..12,
@@ -66,7 +68,9 @@ Ok(
                                                 span: 13..13,
                                                 lines: [],
                                             },
-                                            attr: [],
+                                            attr: Attributes(
+                                                [],
+                                            ),
                                             id: Identifier {
                                                 span: 13..19,
                                                 name: "radius",
@@ -125,7 +129,9 @@ Ok(
                                                             span: 35..35,
                                                             lines: [],
                                                         },
-                                                        attr: [],
+                                                        attr: Attributes(
+                                                            [],
+                                                        ),
                                                         parameters: ParameterList {
                                                             span: 40..56,
                                                             extras: ItemExtras {
@@ -151,7 +157,9 @@ Ok(
                                                                         span: 40..40,
                                                                         lines: [],
                                                                     },
-                                                                    attr: [],
+                                                                    attr: Attributes(
+                                                                        [],
+                                                                    ),
                                                                     id: Identifier {
                                                                         span: 40..48,
                                                                         name: "diameter",
@@ -199,7 +207,9 @@ Ok(
                                                                                         [],
                                                                                     ),
                                                                                 },
-                                                                                attr: [],
+                                                                                attr: Attributes(
+                                                                                    [],
+                                                                                ),
                                                                                 id: Identifier {
                                                                                     span: 68..74,
                                                                                     name: "radius",
@@ -293,7 +303,9 @@ Ok(
                                                                 [],
                                                             ),
                                                         },
-                                                        attr: [],
+                                                        attr: Attributes(
+                                                            [],
+                                                        ),
                                                         expr: Call(
                                                             Call {
                                                                 span: 101..127,

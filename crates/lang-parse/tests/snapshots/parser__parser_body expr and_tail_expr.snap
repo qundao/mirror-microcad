@@ -29,7 +29,9 @@ Ok(
                                         [],
                                     ),
                                 },
-                                attr: [],
+                                attr: Attributes(
+                                    [],
+                                ),
                                 expr: Body(
                                     Body {
                                         span: 0..2,
@@ -66,7 +68,9 @@ Ok(
                                         [],
                                     ),
                                 },
-                                attr: [],
+                                attr: Attributes(
+                                    [],
+                                ),
                                 expr: ElementAccess(
                                     ElementAccess {
                                         span: 2..11,

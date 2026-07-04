@@ -35,7 +35,9 @@ Ok(
                                     lines: [],
                                 },
                                 kind: Sketch,
-                                attr: [],
+                                attr: Attributes(
+                                    [],
+                                ),
                                 vis: None,
                                 id: Identifier {
                                     span: 7..12,
@@ -66,7 +68,9 @@ Ok(
                                                 span: 13..13,
                                                 lines: [],
                                             },
-                                            attr: [],
+                                            attr: Attributes(
+                                                [],
+                                            ),
                                             id: Identifier {
                                                 span: 13..19,
                                                 name: "radius",
@@ -108,7 +112,9 @@ Ok(
                                                                 [],
                                                             ),
                                                         },
-                                                        attr: [],
+                                                        attr: Attributes(
+                                                            [],
+                                                        ),
                                                         expr: Call(
                                                             Call {
                                                                 span: 30..56,

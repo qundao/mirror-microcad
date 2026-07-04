@@ -29,7 +29,9 @@ Ok(
                                         [],
                                     ),
                                 },
-                                attr: [],
+                                attr: Attributes(
+                                    [],
+                                ),
                                 expr: If(
                                     If {
                                         span: 0..35,
@@ -132,7 +134,9 @@ Ok(
                                                                 [],
                                                             ),
                                                         },
-                                                        attr: [],
+                                                        attr: Attributes(
+                                                            [],
+                                                        ),
                                                         expr: Literal(
                                                             Literal {
                                                                 span: 11..13,
@@ -285,7 +289,9 @@ Ok(
                                                                         [],
                                                                     ),
                                                                 },
-                                                                attr: [],
+                                                                attr: Attributes(
+                                                                    [],
+                                                                ),
                                                                 expr: Literal(
                                                                     Literal {
                                                                         span: 32..34,

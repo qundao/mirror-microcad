@@ -35,7 +35,9 @@ Ok(
                                     lines: [],
                                 },
                                 kind: Part,
-                                attr: [],
+                                attr: Attributes(
+                                    [],
+                                ),
                                 vis: Some(
                                     Spanned {
                                         span: 0..3,
@@ -89,7 +91,9 @@ Ok(
                                                                 [],
                                                             ),
                                                         },
-                                                        attr: [],
+                                                        attr: Attributes(
+                                                            [],
+                                                        ),
                                                         expr: ElementAccess(
                                                             ElementAccess {
                                                                 span: 23..61,
@@ -125,7 +129,9 @@ Ok(
                                                                                                     [],
                                                                                                 ),
                                                                                             },
-                                                                                            attr: [],
+                                                                                            attr: Attributes(
+                                                                                                [],
+                                                                                            ),
                                                                                             expr: Call(
                                                                                                 Call {
                                                                                                     span: 37..41,

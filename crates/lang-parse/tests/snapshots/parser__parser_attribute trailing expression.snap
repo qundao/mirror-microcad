@@ -28,60 +28,64 @@ Ok(
                                 [],
                             ),
                         },
-                        attr: [
-                            Attribute {
-                                span: 0..25,
-                                is_inner: false,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                commands: [
-                                    Assignment(
-                                        LocalAssignment {
-                                            span: 2..19,
-                                            extras: ItemExtras {
-                                                leading: LeadingExtras(
-                                                    [],
-                                                ),
-                                                trailing: TrailingExtras(
-                                                    [],
-                                                ),
-                                            },
-                                            attr: [],
-                                            id: Identifier {
-                                                span: 2..7,
-                                                name: "color",
-                                            },
-                                            ty: None,
-                                            expr: Literal(
-                                                Literal {
-                                                    span: 10..19,
-                                                    extras: ItemExtras {
-                                                        leading: LeadingExtras(
-                                                            [],
-                                                        ),
-                                                        trailing: TrailingExtras(
-                                                            [],
-                                                        ),
-                                                    },
-                                                    literal: String(
-                                                        StringLiteral {
-                                                            span: 10..19,
-                                                            content: "#FF00FF",
-                                                        },
+                        attr: Attributes(
+                            [
+                                Attribute {
+                                    span: 0..25,
+                                    is_inner: false,
+                                    extras: ItemExtras {
+                                        leading: LeadingExtras(
+                                            [],
+                                        ),
+                                        trailing: TrailingExtras(
+                                            [],
+                                        ),
+                                    },
+                                    commands: [
+                                        Assignment(
+                                            LocalAssignment {
+                                                span: 2..19,
+                                                extras: ItemExtras {
+                                                    leading: LeadingExtras(
+                                                        [],
+                                                    ),
+                                                    trailing: TrailingExtras(
+                                                        [],
                                                     ),
                                                 },
-                                            ),
-                                        },
-                                    ),
-                                ],
-                            },
-                        ],
+                                                attr: Attributes(
+                                                    [],
+                                                ),
+                                                id: Identifier {
+                                                    span: 2..7,
+                                                    name: "color",
+                                                },
+                                                ty: None,
+                                                expr: Literal(
+                                                    Literal {
+                                                        span: 10..19,
+                                                        extras: ItemExtras {
+                                                            leading: LeadingExtras(
+                                                                [],
+                                                            ),
+                                                            trailing: TrailingExtras(
+                                                                [],
+                                                            ),
+                                                        },
+                                                        literal: String(
+                                                            StringLiteral {
+                                                                span: 10..19,
+                                                                content: "#FF00FF",
+                                                            },
+                                                        ),
+                                                    },
+                                                ),
+                                            },
+                                        ),
+                                    ],
+                                },
+                            ],
+                        ),
                         expr: Literal(
                             Literal {
                                 span: 25..26,

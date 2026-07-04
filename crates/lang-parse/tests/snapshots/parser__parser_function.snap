@@ -34,7 +34,9 @@ Ok(
                                     span: 0..46,
                                     lines: [],
                                 },
-                                attr: [],
+                                attr: Attributes(
+                                    [],
+                                ),
                                 vis: None,
                                 id: Identifier {
                                     span: 3..6,
@@ -74,7 +76,9 @@ Ok(
                                                 span: 7..7,
                                                 lines: [],
                                             },
-                                            attr: [],
+                                            attr: Attributes(
+                                                [],
+                                            ),
                                             id: Identifier {
                                                 span: 7..8,
                                                 name: "a",
@@ -123,7 +127,9 @@ Ok(
                                                         [],
                                                     ),
                                                 },
-                                                attr: [],
+                                                attr: Attributes(
+                                                    [],
+                                                ),
                                                 expr: BinaryOperation(
                                                     BinaryOperation {
                                                         span: 40..45,

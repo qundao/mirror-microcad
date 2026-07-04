@@ -28,7 +28,9 @@ Ok(
                                 [],
                             ),
                         },
-                        attr: [],
+                        attr: Attributes(
+                            [],
+                        ),
                         expr: Call(
                             Call {
                                 span: 0..5,

@@ -34,7 +34,9 @@ Ok(
                                     span: 0..22,
                                     lines: [],
                                 },
-                                attr: [],
+                                attr: Attributes(
+                                    [],
+                                ),
                                 vis: None,
                                 id: Identifier {
                                     span: 4..7,
@@ -82,7 +84,9 @@ Ok(
                                                             span: 10..10,
                                                             lines: [],
                                                         },
-                                                        attr: [],
+                                                        attr: Attributes(
+                                                            [],
+                                                        ),
                                                         vis: None,
                                                         id: Identifier {
                                                             span: 13..16,

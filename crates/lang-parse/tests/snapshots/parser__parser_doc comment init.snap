@@ -36,7 +36,9 @@ Ok(
                                         "/// Doc comment",
                                     ],
                                 },
-                                attr: [],
+                                attr: Attributes(
+                                    [],
+                                ),
                                 parameters: ParameterList {
                                     span: 25..25,
                                     extras: ItemExtras {

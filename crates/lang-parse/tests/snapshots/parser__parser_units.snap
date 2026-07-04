@@ -28,7 +28,9 @@ Ok(
                                 [],
                             ),
                         },
-                        attr: [],
+                        attr: Attributes(
+                            [],
+                        ),
                         expr: BinaryOperation(
                             BinaryOperation {
                                 span: 0..44,

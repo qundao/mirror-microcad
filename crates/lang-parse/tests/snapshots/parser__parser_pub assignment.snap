@@ -34,7 +34,9 @@ Ok(
                                     span: 0..12,
                                     lines: [],
                                 },
-                                attr: [],
+                                attr: Attributes(
+                                    [],
+                                ),
                                 vis: Some(
                                     Spanned {
                                         span: 0..3,

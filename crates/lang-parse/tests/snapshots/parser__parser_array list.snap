@@ -28,7 +28,9 @@ Ok(
                                 [],
                             ),
                         },
-                        attr: [],
+                        attr: Attributes(
+                            [],
+                        ),
                         expr: ArrayList(
                             ArrayListExpression {
                                 span: 0..9,

@@ -29,7 +29,9 @@ Ok(
                                         [],
                                     ),
                                 },
-                                attr: [],
+                                attr: Attributes(
+                                    [],
+                                ),
                                 id: Identifier {
                                     span: 0..1,
                                     name: "a",
@@ -92,7 +94,9 @@ Ok(
                                         [],
                                     ),
                                 },
-                                attr: [],
+                                attr: Attributes(
+                                    [],
+                                ),
                                 id: Identifier {
                                     span: 49..50,
                                     name: "b",
