@@ -6,11 +6,13 @@ mod expression;
 mod literal;
 mod statement;
 mod ty;
+pub mod visitor;
 
 use microcad_lang_base::{Id, Span};
 
 pub use expression::*;
 pub use literal::*;
+use microcad_lang_proc_macros::Visit;
 pub use statement::*;
 pub use ty::*;
 
@@ -31,10 +33,11 @@ impl Dummy for Identifier {
     }
 }
 /// Whitespace
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Visit)]
+#[visit(default)]
 pub struct Whitespace(pub String);
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Visit)]
 #[allow(missing_docs)]
 #[non_exhaustive]
 pub enum ItemExtra {
@@ -43,7 +46,7 @@ pub enum ItemExtra {
 }
 
 /// Non-syntactic extras that can be attached to many ast nodes
-#[derive(Clone, Debug, PartialEq, Default)]
+#[derive(Clone, Debug, PartialEq, Default, Visit)]
 #[allow(missing_docs)]
 pub struct ItemExtras {
     pub leading: LeadingExtras,
@@ -68,7 +71,7 @@ pub(crate) trait Dummy {
 }
 
 /// A µcad abstract syntax tree
-#[derive(Debug)]
+#[derive(Debug, Visit)]
 #[allow(missing_docs)]
 pub struct Ast {
     pub span: Span,

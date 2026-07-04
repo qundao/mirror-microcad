@@ -13,11 +13,13 @@
 //! * An `id` (except Use definitions)
 
 use crate::ast::{
-    Attribute, Body, DocBlock, Expression, Identifier, ItemExtras, ParameterList, Span, Type,
+    Attributes, Body, DocBlock, Expression, Identifier, ItemExtras, ParameterList, Span, Type,
 };
 
 use microcad_lang_base::Spanned;
 pub use microcad_lang_base::element::WorkbenchKind;
+
+use microcad_lang_proc_macros::Visit;
 
 /// An optional visibility modifier
 ///
@@ -28,7 +30,7 @@ pub enum Visibility {
     Public,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub struct Workbench {
     pub span: Span,
@@ -44,7 +46,7 @@ pub struct Workbench {
 }
 
 /// A definition of a module
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub struct InlineModule {
     pub span: Span,
@@ -58,7 +60,7 @@ pub struct InlineModule {
 }
 
 /// A definition of a module
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub struct FileModule {
     pub span: Span,
@@ -71,7 +73,7 @@ pub struct FileModule {
 }
 
 /// A definition of a function
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub struct Function {
     pub span: Span,
@@ -87,7 +89,7 @@ pub struct Function {
 }
 
 /// A use definition will become an alias or a wildcard.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub struct Use {
     pub span: Span,
@@ -100,7 +102,7 @@ pub struct Use {
 }
 
 /// The name of the item being imported
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub struct UseName {
     pub span: Span,
@@ -109,7 +111,7 @@ pub struct UseName {
 }
 
 /// The parts a [`UseName`] consists of, separated by `::`
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub enum UseStatementPart {
     Identifier(Identifier),
@@ -118,7 +120,7 @@ pub enum UseStatementPart {
 }
 
 /// A const assignment: `const A = 42` / `pub A = 32`
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub struct Constant {
     pub span: Span,

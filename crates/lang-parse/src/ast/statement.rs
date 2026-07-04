@@ -1,19 +1,22 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_lang_proc_macros::Visit;
+
 use crate::ast;
 use crate::ast::{Span, def};
 
 /// An inner doc block
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
+#[visit(default)]
 pub struct InnerDocComment {
     pub span: Span,
     pub line: String,
 }
 
 /// A µcad statement.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 pub enum Statement {
     /// Workbench statement: `part Foo() { ... }`
     Workbench(def::Workbench),
@@ -93,20 +96,20 @@ impl Statement {
 }
 
 /// An init definition for a workbench
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub struct Init {
     pub span: Span,
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
     pub doc: DocBlock,
-    pub attr: Vec<Attribute>,
+    pub attr: Attributes,
     pub parameters: ParameterList,
     pub body: ast::Body,
 }
 
 /// A return statement
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub struct Return {
     pub span: Span,
@@ -116,7 +119,7 @@ pub struct Return {
 }
 
 /// A parameter list of a workbench definition or function definition
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub struct ParameterList {
     pub span: Span,
@@ -135,30 +138,35 @@ impl ast::Dummy for ParameterList {
 }
 
 /// A parameter for a workbench definition or function definition
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub struct Parameter {
     pub span: Span,
     pub extras: ast::ItemExtras,
     pub doc: ast::DocBlock,
-    pub attr: Vec<Attribute>,
+    pub attr: Attributes,
     pub id: ast::Identifier,
     pub ty: Option<ast::Type>,
     pub default: Option<ast::Expression>,
 }
 
 /// An attribute that can be attached to a statement
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub struct Attribute {
     pub span: Span,
+    #[visit(skip)]
     pub is_inner: bool,
     pub extras: ast::ItemExtras,
     pub commands: Vec<AttributeCommand>,
 }
 
-/// The contents an an [`Attribute`]
+/// A list of attributes
 #[derive(Debug, PartialEq)]
+pub struct Attributes(pub Vec<Attribute>);
+
+/// The contents an an [`Attribute`]
+#[derive(Debug, PartialEq, Visit)]
 pub enum AttributeCommand {
     /// A single identifier: `#[deprecated]`
     Ident(ast::Identifier),
@@ -169,26 +177,26 @@ pub enum AttributeCommand {
 }
 
 /// A local assignment: `a = 42`
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub struct LocalAssignment {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub attr: Vec<Attribute>,
+    pub attr: Attributes,
     pub id: ast::Identifier,
     pub ty: Option<ast::Type>,
     pub expr: Box<ast::Expression>,
 }
 
 /// A property assignment: `prop a = 42`
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub struct PropertyAssignment {
     pub span: Span,
     pub keyword_span: Span,
     pub extras: ast::ItemExtras,
     pub doc: DocBlock,
-    pub attr: Vec<Attribute>,
+    pub attr: Attributes,
     pub id: ast::Identifier,
     pub ty: Option<ast::Type>,
     pub value: Box<ast::Expression>,
@@ -220,12 +228,12 @@ pub struct DocBlock {
 }
 
 /// A statement containing of a bare expression
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub struct ExpressionStatement {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub attr: Vec<Attribute>,
+    pub attr: Attributes,
     pub expr: ast::Expression,
 }
 

@@ -4,11 +4,12 @@
 use crate::ast::{ItemExtras, Span, Unit};
 
 use microcad_lang_base::CompactString;
+use microcad_lang_proc_macros::Visit;
 use std::num::{ParseFloatError, ParseIntError};
 use thiserror::Error;
 
 /// A literal value
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub struct Literal {
     pub span: Span,
@@ -17,9 +18,10 @@ pub struct Literal {
 }
 
 /// The various types of literal values a [`Literal`] can contain
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub enum LiteralKind {
+    #[visit(skip)]
     Error(LiteralError),
     String(StringLiteral),
     Bool(BoolLiteral),
@@ -77,8 +79,9 @@ pub struct FloatLiteral {
 }
 
 /// A float literal with type
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
+#[visit(default)]
 pub struct QuantityLiteral {
     pub span: Span,
     pub value: f64,
