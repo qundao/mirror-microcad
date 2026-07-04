@@ -10,7 +10,7 @@ use microcad_lang_parse::ast;
 /// Helper function to get outer attributes
 pub fn outer_with_doc(
     doc: &ast::DocBlock,
-    attr: &Vec<ast::Attribute>,
+    attr: &ast::Attributes,
     context: &mut LowerContext,
 ) -> LowerResult<ir::OuterAttributes> {
     let mut attr = ir::OuterAttributes::lower(attr, context)?;
@@ -37,8 +37,8 @@ where
     Ok(items.into_boxed_slice())
 }
 
-impl Lower<Vec<ast::Attribute>> for ir::OuterAttributes {
-    fn lower(node: &Vec<ast::Attribute>, context: &mut LowerContext) -> LowerResult<Self> {
+impl Lower<ast::Attributes> for ir::OuterAttributes {
+    fn lower(node: &ast::Attributes, context: &mut LowerContext) -> LowerResult<Self> {
         // Generate outer attributes without doc
         Ok(Self(ir::Attributes {
             doc: ir::DocBlock::default(),
@@ -82,9 +82,9 @@ impl Lower<ast::StatementList> for ir::DocBlock {
     }
 }
 
-impl Lower<Vec<ast::Attribute>> for Box<[ir::Meta]> {
-    fn lower(node: &Vec<ast::Attribute>, context: &mut LowerContext) -> LowerResult<Self> {
-        extract_attributes(node.iter(), |cmd| -> LowerResult<_> {
+impl Lower<ast::Attributes> for Box<[ir::Meta]> {
+    fn lower(node: &ast::Attributes, context: &mut LowerContext) -> LowerResult<Self> {
+        extract_attributes(node.0.iter(), |cmd| -> LowerResult<_> {
             Ok(match cmd {
                 ast::AttributeCommand::Assignment(local_assignment) => {
                     Some(ir::Meta::lower(local_assignment, context)?)
@@ -134,9 +134,9 @@ impl Lower<ast::Call> for ir::Command {
     }
 }
 
-impl Lower<Vec<ast::Attribute>> for Box<[ir::Command]> {
-    fn lower(node: &Vec<ast::Attribute>, context: &mut LowerContext) -> LowerResult<Self> {
-        extract_attributes(node.iter(), |cmd| -> LowerResult<_> {
+impl Lower<ast::Attributes> for Box<[ir::Command]> {
+    fn lower(node: &ast::Attributes, context: &mut LowerContext) -> LowerResult<Self> {
+        extract_attributes(node.0.iter(), |cmd| -> LowerResult<_> {
             Ok(match cmd {
                 ast::AttributeCommand::Call(call) => Some(ir::Command::lower(call, context)?),
                 _ => None,
@@ -170,9 +170,9 @@ impl Lower<ast::Identifier> for ir::Tag {
     }
 }
 
-impl Lower<Vec<ast::Attribute>> for Box<[ir::Tag]> {
-    fn lower(node: &Vec<ast::Attribute>, context: &mut LowerContext) -> LowerResult<Self> {
-        extract_attributes(node.iter(), |cmd| -> LowerResult<_> {
+impl Lower<ast::Attributes> for Box<[ir::Tag]> {
+    fn lower(node: &ast::Attributes, context: &mut LowerContext) -> LowerResult<Self> {
+        extract_attributes(node.0.iter(), |cmd| -> LowerResult<_> {
             Ok(match cmd {
                 ast::AttributeCommand::Ident(ident) => Some(ir::Tag::lower(ident, context)?),
                 _ => None,
