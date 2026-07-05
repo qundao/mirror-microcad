@@ -2,13 +2,18 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use custom_debug::Debug;
-use microcad_lang_base::{SrcRef, SrcReferrer, element::Visibility};
+use microcad_lang_base::{Identifier, SrcRef, SrcReferrer, element::Visibility};
 
-use crate::symbol::{Symbol, SymbolDef, SymbolMap};
+use crate::{Symbol, Symbols, symbol::def::SymbolDef};
+
+#[derive(Debug)]
+pub struct SymbolAttributes;
 
 /// Symbol content
 #[derive(Default, Debug, Clone)]
 pub(super) struct SymbolInner {
+    pub id: Identifier,
+
     /// Attributes
     pub attr: SymbolAttributes,
 
@@ -17,39 +22,13 @@ pub(super) struct SymbolInner {
 
     pub visibility: Visibility,
 
+    pub src_ref: SrcRef,
+
+    pub keyword_ref: SrcRef,
+
     /// Symbol's parent
     #[debug(skip)]
     pub parent: Option<Symbol>,
     /// Symbol's children
-    pub children: SymbolMap,
-}
-
-impl SymbolInner {
-    pub fn kind_ref(&self) -> Option<SrcRef> {
-        match &self.def {
-            SymbolDef::Module(m) => Some(m.keyword_ref),
-            SymbolDef::Workbench(wb) => Some(wb.keyword_ref),
-            SymbolDef::Function(f) => Some(f.keyword_ref),
-            _ => None,
-        }
-    }
-}
-
-impl SrcReferrer for SymbolInner {
-    fn src_ref(&self) -> SrcRef {
-        match &self.def {
-            SymbolDef::Root => SrcRef::none(),
-            SymbolDef::SourceFile(sf) => sf.src_ref(),
-            SymbolDef::Module(m) => m.src_ref(),
-            SymbolDef::Workbench(wb) => wb.src_ref(),
-            SymbolDef::Function(f) => f.src_ref(),
-            SymbolDef::Builtin(_) => SrcRef::none(),
-            SymbolDef::Assignment(a) => a.src_ref(),
-            SymbolDef::Value(id, ..) => id.src_ref(),
-            SymbolDef::Alias(_, id, _) => id.src_ref(),
-            SymbolDef::UseAll(_, name) => name.src_ref(),
-            #[cfg(test)]
-            SymbolDef::Tester(id) => id.src_ref(),
-        }
-    }
+    pub children: Symbols,
 }

@@ -5,20 +5,18 @@
 
 mod def;
 mod iterators;
-mod symbol_definition;
 mod symbol_inner;
-mod symbol_map;
 mod symbols;
 
-use indexmap::IndexSet;
 use microcad_lang_base::{RcMut, SrcRef, SrcReferrer, TreeDisplay, TreeState};
 
 pub use iterators::*;
-pub use symbol_definition::*;
-pub(crate) use symbol_map::*;
-pub(crate) use symbols::*;
+
+pub use symbols::Symbols;
 
 use symbol_inner::*;
+
+use def::SymbolDef;
 
 /// Symbol
 #[derive(Clone)]
@@ -189,27 +187,9 @@ impl Symbol {
     pub fn kind_ref(&self) -> Option<SrcRef> {
         self.inner.borrow().kind_ref()
     }
-}
-
-// visibility
-impl Symbol {
     /// Return `true` if symbol's visibility is private
     pub fn visibility(&self) -> ir::Visibility {
-        self.visibility.borrow().clone()
-    }
-
-    /// Return `true` if symbol's visibility set to is public.
-    pub fn is_public(&self) -> bool {
-        matches!(self.visibility(), ir::Visibility::Public)
-    }
-
-    /// Clone this symbol but give the clone another visibility.
-    pub(crate) fn clone_with(&self, visibility: ir::Visibility, src_ref: SrcRef) -> Self {
-        Self {
-            visibility: std::cell::RefCell::new(visibility),
-            src_ref,
-            inner: self.inner.clone(),
-        }
+        self.inner.borrow().visibilty().clone()
     }
 }
 
@@ -278,16 +258,6 @@ impl SrcReferrer for Symbol {
             self.inner.borrow().src_ref()
         } else {
             self.src_ref
-        }
-    }
-}
-
-impl Default for Symbol {
-    fn default() -> Self {
-        Self {
-            src_ref: SrcRef::none(),
-            visibility: std::cell::RefCell::new(ir::Visibility::default()),
-            inner: RcMut::new(Default::default()),
         }
     }
 }

@@ -19,4 +19,4 @@ pub enum Command {
 #[derive(Debug)]
 pub struct PropertyAttributes;
 
-pub use microcad_lang_lower::hir::DocBlock;
+pub use microcad_lang_lower::ir::DocBlock;

@@ -5,12 +5,21 @@
 
 mod resolve_context;
 mod resolve_error;
-mod symbolize;
 
-pub use externals::*;
-pub use lookup::*;
+mod symbol;
+
+use microcad_lang_base::{CompilationResult, Source};
+use microcad_lang_lower::Ir;
 pub use resolve_context::*;
 pub use resolve_error::*;
-pub use sources::*;
 
-use grant::*;
+pub use symbol::{Symbol, Symbols};
+
+/// Trait to resolve an IR node into a symbol.
+pub trait Resolve<T = Symbol> {
+    fn resolve(&self, context: &mut ResolveContext) -> ResolveResult<T>;
+}
+
+pub fn resolve(source: &Source, ir: &Ir) -> CompilationResult<Symbol> {
+    todo!()
+}

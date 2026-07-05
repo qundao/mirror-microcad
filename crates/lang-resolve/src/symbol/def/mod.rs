@@ -1,32 +1,118 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+//! Symbol definitions
+
 mod attribute;
-mod expression;
-mod function;
 mod library;
-mod source;
-mod workbench;
 
-pub use function::*;
-use microcad_lang_base::{HashId, HashMap, SrcRef};
+use microcad_lang_base::{Identifier, SrcRef};
+use microcad_lang_lower::ir::{self, FileModule, InlineModule, QualifiedName};
 use microcad_lang_types::Value;
-pub use source::Source;
-pub use workbench::*;
+use serde::{Deserialize, Serialize};
 
-pub use function::Function;
+use crate::{Symbol, symbol::def::def::SourceFile};
 
-use crate::Symbol;
+pub use ir::QualifiedName;
 
-/// Resolved from `use foo::bar::*`
-#[derive(Debug)]
-pub struct Glob(Symbol);
+/// A resolved name
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub enum Name {
+    /// Resolved into a hash id
+    Symbol(HashId),
+    /// Resolved into a local identifier
+    Local(Identifier),
+    /// Error during resolve
+    Error(QualifiedName),
+}
 
-#[derive(Debug)]
-pub struct Constant {
-    value: Value,
+#[derive(Debug, PartialEq)]
+pub struct ParameterAttributes;
+
+#[derive(Debug, PartialEq)]
+pub struct Parameter {
+    pub attr: ParameterAttributes,
+    id: Identifier,
+    ty: Type,
+    default_value: Value,
     src_ref: SrcRef,
-    keyword_src_ref: SrcRef,
+}
+
+pub struct ParameterList {
+    parameters: Box<[Parameter]>,
+}
+
+pub struct SymbolIndex {
+    index: microcad_lang_base::HashMap<HashId, Symbol>,
+}
+
+impl Symbol {
+    /// Find the name for a symbol
+    pub fn resolve_name(&self, name: &ir::QualifiedName) -> Name {
+        todo!()
+    }
+
+    pub fn hash(&self) -> HashId {
+        todo!()
+    }
+}
+
+pub type ModelExpression = ir::WorkbenchExpression<Name>;
+pub type ValueExpression = ir::FunctionExpression<Name>;
+
+pub struct ModelAttributes;
+
+pub struct WorkbenchStatement {
+    attr: ModelAttributes,
+    id: Option<Identifier>,
+    ty: Type,
+    expr: ModelExpression,
+}
+
+pub type FunctionStatment = ir::FunctionStatement<Name>;
+
+mod def {
+    use microcad_lang_lower::ir;
+
+    pub struct SourceFile {
+        attr: SourceFileAttributes,
+        statements: Box<[WorkbenchStatement]>,
+    }
+
+    pub struct InlineModule {
+        attr: ModuleAttributes,
+    }
+
+    pub struct FileModule {
+        attr: ModuleAttributes,
+    }
+
+    pub struct InitAttributes {
+        doc: ir::DocBlock,
+    }
+
+    pub struct Init {
+        attr: InitAttributes,
+        parameters: ParameterList,
+        is_default: bool,
+    }
+
+    pub struct Workbench {
+        attr: WorkbenchAttributes,
+        inits: Box<[Init]>,
+        statements: Box<[WorkbenchStatement]>,
+    }
+
+    pub struct Function {
+        attr: FunctionAttributes,
+        parameters: ParameterList,
+        return_type: Option<Type>,
+        statements: Box<[FunctionStatement]>,
+    }
+
+    pub struct Constant(Value);
+
+    pub struct Wildcard;
 }
 
 /// Symbol definition
@@ -36,24 +122,22 @@ pub enum SymbolDef {
     #[default]
     Empty,
 
-    /// A library symbol, containing a manifest file and a `lib.µcad` source file.
-    Library,
     /// Source file symbol.
-    SourceFile,
+    SourceFile(SourceFile),
     /// Inline Module symbol: `mod foo {}`
-    InlineModule,
+    InlineModule(InlineModule),
     /// File Module Symbol: `mod foo;`
-
+    FileModule(FileModule),
     /// Workbench symbol.
-    Workbench,
+    Workbench(),
     /// Function symbol.
     Function,
     /// Constant.
-    Constant,
+    Constant(Value),
     /// Builtin symbol.
     Builtin,
     /// Alias of a pub use statement.
-    Alias,
+    Alias(Symbol),
     /// Use all available symbols in the module with the given name.
-    Glob,
+    Wildcard(Wildcard),
 }

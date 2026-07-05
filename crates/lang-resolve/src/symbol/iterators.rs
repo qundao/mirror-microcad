@@ -63,8 +63,8 @@ impl Iterator for RecurseChildren {
 
 #[test]
 fn test_recurse_children() {
-    use crate::lower::ir;
     use crate::symbol::SymbolDef;
+    use microcad_lang_lower::ir;
 
     let mut root = Symbol::new(
         SymbolDef::SourceFile(std::rc::Rc::new(ir::Source::new(
