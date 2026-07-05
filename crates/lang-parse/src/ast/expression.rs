@@ -9,8 +9,9 @@ use crate::ast::Span;
 use std::num::ParseIntError;
 
 /// The type of the operator for binary operations
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Visit)]
 #[allow(missing_docs)]
+#[visit(default)]
 pub enum BinaryOperator {
     Add,
     Subtract,
@@ -57,8 +58,9 @@ impl BinaryOperator {
 }
 
 /// The type of the operator for unary operations
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Visit)]
 #[allow(missing_docs)]
+#[visit(default)]
 pub enum UnaryOperator {
     Minus,
     Plus,

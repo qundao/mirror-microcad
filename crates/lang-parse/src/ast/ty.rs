@@ -4,9 +4,10 @@
 use crate::ast;
 
 use microcad_lang_base::{Id, Span};
+use microcad_lang_proc_macros::Visit;
 
 /// The possible types
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub enum Type {
     Single(SingleType),
@@ -35,15 +36,16 @@ impl ast::Dummy for Type {
 }
 
 /// A type for a single numeric value
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
+#[visit(default)]
 pub struct SingleType {
     pub span: Span,
     pub name: Id,
 }
 
 /// An array type
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
 pub struct ArrayType {
     pub span: Span,
@@ -51,16 +53,18 @@ pub struct ArrayType {
 }
 
 /// A tuple type
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
+#[visit(default)]
 pub struct TupleType {
     pub span: Span,
     pub inner: Vec<(Option<ast::Identifier>, Type)>,
 }
 
 /// A µcad unit: mm, m³, %.
-#[derive(Debug, PartialEq, Hash, Eq)]
+#[derive(Debug, PartialEq, Hash, Eq, Visit)]
 #[allow(missing_docs)]
+#[visit(default)]
 pub struct Unit {
     pub span: Span,
     pub name: Id,

@@ -45,24 +45,27 @@ impl LiteralKind {
 }
 
 /// A string literal, without format expressions
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
+#[visit(default)]
 pub struct StringLiteral {
     pub span: Span,
     pub content: String,
 }
 
 /// A boolean literal, either `true` or `false`
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
+#[visit(default)]
 pub struct BoolLiteral {
     pub span: Span,
     pub value: bool,
 }
 
 /// An integer literal without type
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
+#[visit(default)]
 pub struct IntegerLiteral {
     pub span: Span,
     pub value: i64,
@@ -70,8 +73,9 @@ pub struct IntegerLiteral {
 }
 
 /// An float literal without type
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
+#[visit(default)]
 pub struct FloatLiteral {
     pub span: Span,
     pub value: f64,

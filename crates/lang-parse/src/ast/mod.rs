@@ -16,9 +16,12 @@ use microcad_lang_proc_macros::Visit;
 pub use statement::*;
 pub use ty::*;
 
+pub use visitor::Visitor;
+
 /// A µcad identifier
-#[derive(Debug, PartialEq, Hash, Eq)]
+#[derive(Debug, PartialEq, Hash, Eq, Visit)]
 #[allow(missing_docs)]
+#[visit(default)]
 pub struct Identifier {
     pub span: Span,
     pub name: Id,

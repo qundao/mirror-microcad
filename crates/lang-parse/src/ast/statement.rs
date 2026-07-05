@@ -220,8 +220,9 @@ pub struct Comment {
 }
 
 /// Lines of inner or outer doc block including prefix `///`/`//!`.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Visit)]
 #[allow(missing_docs)]
+#[visit(default)]
 pub struct DocBlock {
     pub span: Span,
     pub lines: Vec<String>,

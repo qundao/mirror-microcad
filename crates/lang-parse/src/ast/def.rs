@@ -24,7 +24,8 @@ use microcad_lang_proc_macros::Visit;
 /// An optional visibility modifier
 ///
 /// it can be part of constant, module, function or workbench definitions.
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Visit)]
+#[visit(default)]
 pub enum Visibility {
     /// `pub`
     Public,
