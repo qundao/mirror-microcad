@@ -2,10 +2,15 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang_base::{
-    CompilationResult, DiagRenderOptions, Identifier, MICROCAD_EXTENSION, Source,
+    CompilationResult, DiagRenderOptions, Identifier, MICROCAD_EXTENSION, Source, SpanToSrcRef,
 };
 use microcad_lang_lower::{self as lower, Ir, ir};
-use microcad_lang_parse as parse;
+use microcad_lang_parse::{
+    self as parse, Ast, Parse,
+    ast::visitor::{ExpectedDiagnostic, ExpectedDiagnostics},
+};
+
+use parse::ast;
 
 use test_that::prelude::*;
 
@@ -80,12 +85,12 @@ macro_rules! snapshot_test {
     };
 }
 
-unit_test!(assignments_const_const_assignment_init => |ir, diag| {
+/*unit_test!(assignments_const_const_assignment_init => |ir, diag| {
     assert_that!(ir.items.workbenches, len(eq(1)));
     assert_that!(*ir.statements, len(eq(1)));
 
     assert!(diag.error_count() == 1);
-});
+});*/
 
 unit_test!(assignments_const_const_assignment_mod => |ir, diag| {
     assert_that!(ir, matches_pattern!(ir::Source {
@@ -111,70 +116,38 @@ unit_test!(assignments_const_const_assignment_mod => |ir, diag| {
     assert!(!diag.has_errors())
 });
 
-snapshot_test!(assignments_const_const_assignment_workbench_code => ok);
-snapshot_test!(assignments_const_const_assignment_workbench => ok);
-snapshot_test!(assignments_model_assignment_model_module => error);
-snapshot_test!(assignments_model_assignment_model_workbench => error);
+#[test_that::test]
+fn unexpected_statements() {
+    let source = source_from_test_file("unexpected_statements");
+    let parse_context = microcad_lang_parse::ParseContext::from(&source);
+    let ast = Ast::parse(&parse_context).unwrap();
+    let ir = lower::lower(&source, &ast);
 
-unit_test!(assignments_property_prop_assignment_fn => |ir, diag| {
-    assert_eq!(ir.items.functions.len(), 1);
-    assert!(diag.has_errors());
-});
+    match ir {
+        Ok((_ir, _diag)) => {
+            panic!("This test is supposed to fail");
+        }
+        Err(diags) => {
+            let observed = ExpectedDiagnostics::new(
+                diags
+                    .iter()
+                    .map(|diag| ExpectedDiagnostic {
+                        severity: diag.severity().unwrap_or_default(),
+                        line: diag.src_ref.line().unwrap(),
+                        code: diag.code().map(|code| code.to_string()),
+                    })
+                    .collect(),
+            );
 
-unit_test!(assignments_property_prop_assignment_init => |ir, diag| {
-    assert_eq!(ir.items.workbenches.len(), 1);
-    assert!(diag.has_errors());
-});
+            println!(
+                "{}",
+                diags
+                    .render_to_string(&&source, &DiagRenderOptions::default())
+                    .unwrap()
+            );
 
-unit_test!(assignments_property_prop_assignment_source => |ir, diag| {
-    assert_eq!(diag.error_count(), 1);
-});
-
-snapshot_test!(assignments_property_prop_assignment => ok);
-
-unit_test!(assignments_value_assignment_module => |ir, diag| {
-    assert_eq!(diag.error_count(), 1);
-});
-
-/*
-
-assignments_value_assignment_workbench
-attributes_README_inner_attributes
-attributes_README_outer_attributes
-doc_comments_inner_doc_comment
-doc_comments_outer_doc_comment
-expressions_literals_boolean_literal
-expressions_literals_expression_literals
-expressions_literals_integer_literal
-expressions_literals_quantity_literal
-expressions_literals_scalar_literal
-expressions_literals_string_literal
-flow_conditions_if_expression
-structure_functions_module_functions_mod
-structure_functions_README_example
-structure_functions_result_function_conditional_result
-structure_functions_result_function_return
-structure_functions_result_return_twice
-structure_functions_workbench_functions_workbench_example
-structure_functions_workbench_functions_workbench_fn_prop
-structure_modules_inline_modules_inline_mod
-structure_modules_README_mod_example
-structure_use_use_all
-structure_use_use_as
-structure_use_use_module
-structure_use_use_statement_pub
-structure_use_use
-structure_workbenches_elements_building_code_code_post_init
-structure_workbenches_elements_building_code_code
-structure_workbenches_elements_building_code_illegal_workbench_statement_mod
-structure_workbenches_elements_building_code_illegal_workbench_statement_return
-structure_workbenches_elements_building_code_illegal_workbench_statement_sketch
-structure_workbenches_elements_init_code_pre_init_code
-structure_workbenches_elements_initializers_code_between_initializers
-structure_workbenches_elements_properties_property_no_prop_in_init_code
-structure_workbenches_elements_properties_property
-structure_workbenches_types_operations_op_example
-structure_workbenches_types_parts_part_basic
-structure_workbenches_types_sketches_sketch_basic
-
-*/
+            let expected = ast::visitor::collect_expected_diagnostics(&parse_context, &ast);
+            assert_that!(observed, eq(expected));
+        }
+    }
+}

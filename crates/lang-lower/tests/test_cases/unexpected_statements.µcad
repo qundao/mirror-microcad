@@ -1,0 +1,14 @@
+
+// Test statement for Source
+
+sketch A() {} // ok
+mod b {} // ok
+mod c; // ok
+fn d() {} // ok
+use e; // ok
+const F = 42; // ok
+#![g] // ok
+h = 42; // ok
+prop foo: Length = 42mm; // error: StatementNotAllowed
+42; // ok
+
