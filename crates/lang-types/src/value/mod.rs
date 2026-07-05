@@ -18,7 +18,7 @@ pub use array::*;
 use derive_more::From;
 pub use matrix::*;
 pub use quantity::*;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 pub use tuple::*;
 pub use value_access::*;
 pub use value_error::*;
@@ -32,7 +32,7 @@ use std::hash::Hasher;
 pub type ValueResult<Type = Value> = std::result::Result<Type, ValueError>;
 
 /// A variant value with attached source code reference.
-#[derive(Clone, Debug, Default, PartialEq, From, Serialize)]
+#[derive(Clone, Debug, Default, PartialEq, From, Serialize, Deserialize)]
 pub enum Value {
     /// Invalid value (used for error handling).
     #[default]

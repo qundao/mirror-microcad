@@ -3,12 +3,12 @@
 
 //! µcad Type
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use crate::ty::*;
 
 /// µcad Basic Types
-#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Type {
     /// Invalid type (used for error handling)
     Invalid,
