@@ -704,7 +704,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Ast,
                 .labelled("attribute")
                 .repeated()
                 .collect::<Vec<ast::Attribute>>()
-                .map(|attributes| ast::Attributes(attributes))
+                .map(ast::Attributes)
                 .boxed()
         });
 
