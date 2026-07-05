@@ -102,18 +102,16 @@ pub fn derive_visit(input: TokenStream) -> TokenStream {
 
     fn has_visit_default(attrs: &[syn::Attribute]) -> bool {
         attrs.iter().any(|attr| {
-            if attr.path().is_ident("visit") {
-                if let Ok(_) = attr.parse_nested_meta(|meta| {
-                    if meta.path.is_ident("default") {
-                        Ok(())
-                    } else {
-                        Err(meta.error("unsupported container visit attribute"))
-                    }
-                }) {
-                    return true;
-                }
-            }
-            false
+            attr.path().is_ident("visit")
+                && attr
+                    .parse_nested_meta(|meta| {
+                        if meta.path.is_ident("default") {
+                            Ok(())
+                        } else {
+                            Err(meta.error("unsupported container visit attribute"))
+                        }
+                    })
+                    .is_ok()
         })
     }
 
@@ -134,19 +132,15 @@ pub fn derive_visit(input: TokenStream) -> TokenStream {
     fn has_visit_skip(attrs: &[syn::Attribute]) -> bool {
         attrs.iter().any(|attr| {
             // Check if the attribute path is exactly "visit"
-            if attr.path().is_ident("visit") {
+            attr.path().is_ident("visit") && 
                 // Parse inside the parentheses: #[visit(...)]
-                if let Ok(_) = attr.parse_nested_meta(|meta| {
+                attr.parse_nested_meta(|meta| {
                     if meta.path.is_ident("skip") {
                         Ok(())
                     } else {
                         Err(meta.error("unsupported visit attribute"))
                     }
-                }) {
-                    return true;
-                }
-            }
-            false
+                }).is_ok()
         })
     }
 
