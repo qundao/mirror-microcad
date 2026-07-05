@@ -5,11 +5,11 @@
 
 use derive_more::Deref;
 use microcad_lang_base::SrcRef;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 /// Range start.
-#[derive(Clone, Debug, Default, Deref, PartialEq, Serialize)]
-#[serde(bound(serialize = "EXPR: Serialize"))]
+#[derive(Clone, Debug, Default, Deref, PartialEq, Serialize, Deserialize)]
+#[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct RangeFirst<EXPR>(pub Box<EXPR>);
 
 impl<EXPR> std::fmt::Display for RangeFirst<EXPR>
@@ -22,8 +22,8 @@ where
 }
 
 /// Range end.
-#[derive(Clone, Debug, Default, Deref, PartialEq, Serialize)]
-#[serde(bound(serialize = "EXPR: Serialize"))]
+#[derive(Clone, Debug, Default, Deref, PartialEq, Serialize, Deserialize)]
+#[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct RangeLast<EXPR>(pub Box<EXPR>);
 
 impl<EXPR> std::fmt::Display for RangeLast<EXPR>
@@ -36,8 +36,8 @@ where
 }
 
 /// Range expression, e.g. `a..b`.
-#[derive(Clone, Debug, Default, PartialEq, Serialize)]
-#[serde(bound(serialize = "EXPR: Serialize"))]
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+#[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct RangeExpression<EXPR> {
     /// First value in the range.
     pub first: RangeFirst<EXPR>,

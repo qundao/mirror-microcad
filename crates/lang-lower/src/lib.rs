@@ -110,6 +110,14 @@ where
         .map_err(|e| miette::miette!("Failed to generate pretty RON: {}", e))
 }
 
+/// Read IR from Rusty Object Notation (ron)
+pub fn from_ron<'a, T>(ron: impl Into<&'a str>) -> miette::Result<T>
+where
+    T: serde::Deserialize<'a>,
+{
+    ron::de::from_str(ron.into()).map_err(|e| miette::miette!("Failed to parse from RON: {}", e))
+}
+
 pub fn lower(source: &Source, ast: &Ast) -> CompilationResult<Ir> {
     let mut context = LowerContext::new(source);
 

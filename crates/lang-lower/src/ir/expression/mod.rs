@@ -19,7 +19,7 @@ pub use format_string::*;
 pub use literal::*;
 pub use qualified_name::*;
 pub use range_expression::*;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 pub use tuple_expression::*;
 
@@ -30,8 +30,11 @@ pub type ListExpression<EXPR> = Vec<EXPR>;
 
 /// If statement.
 #[skip_serializing_none]
-#[derive(Clone, Debug, Serialize)]
-#[serde(bound(serialize = "EXPR: Serialize, BODY: Serialize"))]
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(bound(
+    serialize = "EXPR: Serialize, BODY: Serialize",
+    deserialize = "EXPR: Deserialize<'de>, BODY: Deserialize<'de>"
+))]
 pub struct If<EXPR, BODY> {
     /// SrcRef of the `if` keyword.
     pub if_ref: SrcRef,
@@ -69,8 +72,8 @@ where
 }
 
 /// A binary operation: `a + b`
-#[derive(Clone, Debug, Serialize)]
-#[serde(bound(serialize = "EXPR: Serialize"))]
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct BinaryOp<EXPR> {
     /// Left-hand side
     pub lhs: Box<EXPR>,
@@ -124,8 +127,8 @@ where
 }
 
 /// A unary operation: !a
-#[derive(Clone, Debug, Serialize)]
-#[serde(bound(serialize = "EXPR: Serialize"))]
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct UnaryOp<EXPR> {
     /// Operator ('+', '-', '!')
     pub op: Refer<String>,
@@ -159,8 +162,11 @@ where
     }
 }
 
-#[derive(Debug, Serialize)]
-#[serde(bound(serialize = "EXPR: Serialize, ELEMENT: Serialize"))]
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(bound(
+    serialize = "EXPR: Serialize, ELEMENT: Serialize",
+    deserialize = "EXPR: Deserialize<'de>, ELEMENT: Deserialize<'de>"
+))]
 pub struct ElementAccess<EXPR, ELEMENT> {
     pub lhs: Box<EXPR>,
     pub element: ELEMENT,
@@ -175,8 +181,8 @@ pub trait ExpressionKind: Serialize {
 ///
 /// Use for `Constant` and default values for `Parameter`.
 /// TODO: ElementAccess are missing.
-#[derive(Debug, Serialize)]
-#[serde(bound(serialize = "NAME: Serialize"))]
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
 pub enum ConstantExpression<NAME: Serialize = ir::QualifiedName> {
     Invalid,
     Literal(ir::Literal),

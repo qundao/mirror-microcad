@@ -3,14 +3,14 @@
 
 use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
 use crate::{ir, is_default};
 
 /// A constant definition: `const FOO: Length = 32mm`.
 #[skip_serializing_none]
-#[derive(Debug, SrcReferrer, Serialize)]
+#[derive(Debug, SrcReferrer, Serialize, Deserialize)]
 pub struct Constant {
     pub src_ref: SrcRef,
     #[serde(skip_serializing_if = "is_default", default)]

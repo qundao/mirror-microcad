@@ -10,12 +10,12 @@ use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
 
 use crate::is_default;
 use derive_more::Deref;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
 /// A parameter of a parameter list.
 #[skip_serializing_none]
-#[derive(Debug, Default, SrcReferrer, Identifiable, Serialize)]
+#[derive(Debug, Default, SrcReferrer, Identifiable, Serialize, Deserialize)]
 pub struct Parameter {
     /// Parameter attributes
     #[serde(skip_serializing_if = "is_default", default)]
@@ -42,7 +42,7 @@ impl std::fmt::Display for Parameter {
 }
 
 /// Parameter list, sorted by id.
-#[derive(Debug, Default, Deref, SrcReferrer, Serialize)]
+#[derive(Debug, Default, Deref, SrcReferrer, Serialize, Deserialize)]
 pub struct ParameterList(pub Refer<Box<[ir::Parameter]>>);
 
 impl ParameterList {

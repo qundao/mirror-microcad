@@ -22,6 +22,7 @@ pub use expression::*;
 pub use function::*;
 pub use module::*;
 pub use parameter::*;
+use serde::Deserialize;
 pub use source::*;
 pub use workbench::*;
 
@@ -40,7 +41,7 @@ use crate::is_default;
 ///
 /// This is used to determine if an entity is public or private.
 /// By default, entities are private.
-#[derive(Clone, Debug, Default, PartialEq, Serialize)]
+#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
 pub enum Visibility {
     /// Private visibility
     #[default]
@@ -59,7 +60,7 @@ impl std::fmt::Display for Visibility {
 }
 
 /// Type within source code.
-#[derive(Clone, Debug, PartialEq, SrcReferrer, Serialize)]
+#[derive(Clone, Debug, PartialEq, SrcReferrer, Serialize, Deserialize)]
 pub struct TypeAnnotation(pub Refer<Type>);
 
 impl std::fmt::Display for TypeAnnotation {
@@ -76,7 +77,7 @@ impl Ty for TypeAnnotation {
 
 /// `use std::geo2d::Circle as C` => (path = "std::geo2d::Circle", id = "C")
 /// `use std::geo2d::Circle` => (path = "std::geo2d::Circle", id = "Circle")
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ExplicitAlias {
     pub attr: ir::OuterAttributes,
     pub visibility: ir::Visibility,
@@ -87,7 +88,7 @@ pub struct ExplicitAlias {
 }
 
 /// `use std::geo2d::*`
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct WildcardAlias {
     #[serde(skip_serializing_if = "is_default", default)]
     pub attr: ir::OuterAttributes,
@@ -98,7 +99,7 @@ pub struct WildcardAlias {
 }
 
 /// Aliases lowered from `use` statements.
-#[derive(Debug, Serialize)]
+#[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Aliases {
     #[serde(skip_serializing_if = "is_default", default)]
     pub explicit_aliases: Box<[ExplicitAlias]>,

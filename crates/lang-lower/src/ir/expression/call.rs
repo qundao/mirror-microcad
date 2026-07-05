@@ -5,11 +5,11 @@
 
 use crate::{Identifiable, ir, is_default};
 use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 /// NamedArgument in a [`Call`].
-#[derive(Debug, PartialEq, Serialize)]
-#[serde(bound(serialize = "EXPR: Serialize"))]
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct NamedArgument<EXPR> {
     /// Name of the argument
     pub id: Identifier,
@@ -41,8 +41,8 @@ impl<EXPR> SrcReferrer for NamedArgument<EXPR> {
 }
 
 /// Unnamed argument in a [`Call`].
-#[derive(Debug, PartialEq, Serialize)]
-#[serde(bound(serialize = "EXPR: Serialize"))]
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct UnnamedArgument<EXPR> {
     /// Value of the argument
     pub expression: EXPR,
@@ -60,8 +60,8 @@ where
 }
 
 /// *Ordered map* of arguments in a [`Call`].
-#[derive(Debug, PartialEq, Serialize)]
-#[serde(bound(serialize = "EXPR: Serialize"))]
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct ArgumentList<EXPR> {
     /// Source code reference
     pub src_ref: SrcRef,
@@ -91,8 +91,11 @@ where
 }
 
 /// Call of a *workbench* or *function*.
-#[derive(Debug, Serialize)]
-#[serde(bound(serialize = "EXPR: Serialize, EXPR::Name: Serialize"))]
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(bound(
+    serialize = "EXPR: Serialize, EXPR::Name: Serialize",
+    deserialize = "EXPR: Deserialize<'de>, EXPR::Name: Deserialize<'de>"
+))]
 pub struct Call<EXPR: ir::ExpressionKind> {
     /// Qualified name of the call.
     pub name: EXPR::Name,

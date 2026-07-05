@@ -10,12 +10,12 @@ use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Identifiable;
 
 pub use microcad_lang_base::element::WorkbenchKind;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
 /// Each WorkbenchStatement eventually evals into a [`Models`]
 #[skip_serializing_none]
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct WorkbenchStatement {
     pub attr: ir::OuterAttributes,
     #[serde(skip_serializing_if = "is_default", default)]
@@ -37,14 +37,14 @@ impl IsDefault for WorkbenchStatements {
     }
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Group {
     pub src_ref: SrcRef,
     pub attr: ir::InnerAttributes,
     pub statements: Box<[WorkbenchStatement]>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Init {
     /// SrcRef of the `init` keyword
     pub keyword_ref: SrcRef,
@@ -60,7 +60,7 @@ pub struct Init {
     pub src_ref: SrcRef,
 }
 
-#[derive(Debug, Deref, Serialize, Default)]
+#[derive(Debug, Default, Deref, Serialize, Deserialize)]
 pub struct Inits(pub Box<[Init]>);
 
 impl IsDefault for Inits {
@@ -70,7 +70,7 @@ impl IsDefault for Inits {
 }
 
 /// Node marker, e.g. `@input`.
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Marker {
     /// Marker name, e.g. `input`
     pub id: ir::Identifier,
@@ -94,7 +94,7 @@ impl std::fmt::Display for Marker {
 type Access<ELEMENT, NAME> = ir::ElementAccess<WorkbenchExpression<NAME>, ELEMENT>;
 type MethodCall<NAME> = Access<ir::Call<WorkbenchExpression<NAME>>, NAME>;
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum WorkbenchExpression<NAME: Serialize = ir::QualifiedName> {
     Invalid,
     Literal(ir::Literal),
@@ -119,7 +119,7 @@ impl<NAME: Serialize> ir::ExpressionKind for WorkbenchExpression<NAME> {
 }
 
 /// Workbench items that will be resolved into Symbols
-#[derive(Debug, Serialize)]
+#[derive(Debug, Default, Serialize, Deserialize)]
 pub struct WorkbenchItems {
     /// `use`
     #[serde(skip_serializing_if = "is_default", default)]
@@ -139,7 +139,7 @@ impl IsDefault for WorkbenchItems {
 }
 
 /// Workbench definition, e.g `sketch`, `part` or `op`.
-#[derive(Debug, Identifiable, Serialize)]
+#[derive(Debug, Identifiable, Serialize, Deserialize)]
 pub struct Workbench {
     /// SrcRef of the `sketch`/`part`/`op` keyword
     pub keyword_ref: SrcRef,

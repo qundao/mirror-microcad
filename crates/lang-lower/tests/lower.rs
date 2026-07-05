@@ -146,3 +146,24 @@ fn unexpected_statements() {
         }
     }
 }
+
+#[test_that::test]
+fn serde_circle() {
+    let source = source_from_test_file("circle");
+    let in_ir = ir_from_source(&source).unwrap().0;
+
+    // 1. Serialize/Deserialize
+    let serialized = lower::to_ron(&in_ir).expect("Serialization failed");
+    let out_ir: Ir = lower::from_ron(&*serialized).expect("Deserialization failed");
+
+    // 2. Structural Equality (The real check)
+    //assert_that!(in_ir, eq(out_ir), "IR structure changed after round-trip!");
+
+    // 3. String Identity (Optional: only if you care about stable formatting)
+    let re_serialized = lower::to_ron(&out_ir).expect("Re-serialization failed");
+    assert_that!(
+        serialized,
+        eq(re_serialized),
+        "RON string output changed after round-trip!"
+    );
+}

@@ -7,7 +7,7 @@ use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;
 use miette::SourceSpan;
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 /// A *qualified name* consists of a list of *identifiers*, separated by `::`,
 /// e.g. `a::b::c`
@@ -24,6 +24,7 @@ use serde::Serialize;
     DerefMut,
     SrcReferrer,
     Serialize,
+    Deserialize,
 )]
 pub struct QualifiedName(Refer<Vec<Identifier>>);
 

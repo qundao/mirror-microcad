@@ -5,9 +5,9 @@
 
 use crate::{IsDefault, ir, is_default};
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Default, Serialize, Deserialize)]
 pub struct SourceItems {
     /// List of file modules: `mod foo;`.
     #[serde(skip_serializing_if = "is_default", default)]
@@ -41,7 +41,7 @@ impl IsDefault for SourceItems {
 }
 
 /// IR of a µcad source file
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Source {
     /// Inner attributes.
     #[serde(skip_serializing_if = "is_default", default)]

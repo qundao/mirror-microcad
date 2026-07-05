@@ -5,10 +5,10 @@
 
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 use microcad_lang_types::{Type, Value, ty};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 /// Literal of any kind.
-#[derive(Clone, Debug, PartialEq, Serialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Literal(pub Refer<Value>);
 
 impl Literal {
