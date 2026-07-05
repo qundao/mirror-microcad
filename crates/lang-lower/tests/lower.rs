@@ -157,7 +157,11 @@ fn serde_circle() {
     let out_ir: Ir = lower::from_ron(&*serialized).expect("Deserialization failed");
 
     // 2. Structural Equality (The real check)
-    //assert_that!(in_ir, eq(out_ir), "IR structure changed after round-trip!");
+    assert_that!(
+        &in_ir,
+        eq(&out_ir),
+        "IR structure changed after round-trip!"
+    );
 
     // 3. String Identity (Optional: only if you care about stable formatting)
     let re_serialized = lower::to_ron(&out_ir).expect("Re-serialization failed");
