@@ -41,7 +41,7 @@ impl IsDefault for WorkbenchStatements {
 pub struct Group {
     pub src_ref: SrcRef,
     pub attr: ir::InnerAttributes,
-    pub statements: WorkbenchStatements,
+    pub statements: Box<[WorkbenchStatement]>,
 }
 
 #[derive(Debug, Serialize)]
@@ -55,7 +55,7 @@ pub struct Init {
     pub parameters: ir::ParameterList,
     /// Body if the init definition
     #[serde(skip_serializing_if = "is_default", default)]
-    pub statements: WorkbenchStatements,
+    pub statements: Box<[WorkbenchStatement]>,
     /// Source reference
     pub src_ref: SrcRef,
 }
@@ -165,7 +165,7 @@ pub struct Workbench {
     pub items: ir::WorkbenchItems,
     /// The actual statements to build the Model
     #[serde(skip_serializing_if = "is_default", default)]
-    pub statements: ir::WorkbenchStatements,
+    pub statements: Box<[ir::WorkbenchStatement]>,
 }
 
 impl SrcReferrer for Workbench {

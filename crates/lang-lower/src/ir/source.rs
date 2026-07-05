@@ -51,5 +51,5 @@ pub struct Source {
     pub items: ir::SourceItems,
     /// Workbench statements
     #[serde(skip_serializing_if = "is_default", default)]
-    pub statements: ir::WorkbenchStatements,
+    pub statements: Box<[ir::WorkbenchStatement]>,
 }

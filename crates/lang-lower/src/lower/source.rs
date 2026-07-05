@@ -40,7 +40,7 @@ impl Lower<Ast> for Ir {
         Ok(Self {
             attr: ir::InnerAttributes::lower(statements, context)?,
             items: ir::SourceItems::lower(statements, context)?,
-            statements: ir::WorkbenchStatements::lower(statements, context)?,
+            statements: Box::lower(statements, context)?,
         })
     }
 }

@@ -3,10 +3,7 @@
 
 use crate::{
     Lower, LowerContext, LowerError, LowerResult, ir,
-    lower::{
-        attribute::outer_with_doc, extract_statements, extract_statements_with_tail,
-        for_each_statement,
-    },
+    lower::{attribute::outer_with_doc, extract_statements, for_each_statement},
 };
 
 use microcad_lang_base::{Refer, SpanToSrcRef, SrcRef};
@@ -30,7 +27,7 @@ impl Lower<ast::Init> for ir::Init {
             attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
             keyword_ref: context.span_to_src_ref(&node.keyword_span),
             parameters: ir::ParameterList::lower(&node.parameters, context)?,
-            statements: ir::WorkbenchStatements::lower(&node.body.statements, context)?,
+            statements: Box::lower(&node.body.statements, context)?,
             src_ref: context.span_to_src_ref(&node.span),
         })
     }
@@ -55,7 +52,7 @@ impl Lower<ast::Body> for ir::Group {
         Ok(Self {
             src_ref: context.span_to_src_ref(&node.span),
             attr: ir::InnerAttributes::lower(statements, context)?,
-            statements: ir::WorkbenchStatements::lower(statements, context)?,
+            statements: Box::lower(statements, context)?,
         })
     }
 }
@@ -257,19 +254,6 @@ impl Lower<ast::Statement> for Option<ir::WorkbenchStatement> {
     }
 }
 
-impl Lower<ast::StatementList> for ir::WorkbenchStatements {
-    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self(extract_statements_with_tail(
-            node,
-            context,
-            // Extract statements
-            Option::lower,
-            // Extract tail expression
-            Option::lower,
-        )?))
-    }
-}
-
 impl Lower<ast::StatementList> for ir::WorkbenchItems {
     fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         for_each_statement(statements, context, |stmt, context| {
@@ -307,7 +291,7 @@ impl Lower<ast::def::Workbench> for ir::Workbench {
             inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
             inits: ir::Inits::lower(&node.body.statements, context)?,
             items: ir::WorkbenchItems::lower(&node.body.statements, context)?,
-            statements: ir::WorkbenchStatements::lower(&node.body.statements, context)?,
+            statements: Box::lower(&node.body.statements, context)?,
         })
     }
 }
