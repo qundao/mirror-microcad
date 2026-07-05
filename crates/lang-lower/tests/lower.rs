@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang_base::{
-    CompilationResult, DiagRenderOptions, Identifier, MICROCAD_EXTENSION, Source, SpanToSrcRef,
+    CompilationResult, DiagRenderOptions, Identifier, MICROCAD_EXTENSION, Source,
 };
 use microcad_lang_lower::{self as lower, Ir, ir};
 use microcad_lang_parse::{
