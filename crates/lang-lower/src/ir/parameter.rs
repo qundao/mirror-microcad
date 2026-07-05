@@ -15,7 +15,7 @@ use serde_with::skip_serializing_none;
 
 /// A parameter of a parameter list.
 #[skip_serializing_none]
-#[derive(Debug, Default, SrcReferrer, Identifiable, Serialize, Deserialize)]
+#[derive(Debug, Default, SrcReferrer, Identifiable, PartialEq, Serialize, Deserialize)]
 pub struct Parameter {
     /// Parameter attributes
     #[serde(skip_serializing_if = "is_default", default)]
@@ -42,7 +42,7 @@ impl std::fmt::Display for Parameter {
 }
 
 /// Parameter list, sorted by id.
-#[derive(Debug, Default, Deref, SrcReferrer, Serialize, Deserialize)]
+#[derive(Debug, Default, Deref, SrcReferrer, PartialEq, Serialize, Deserialize)]
 pub struct ParameterList(pub Refer<Box<[ir::Parameter]>>);
 
 impl ParameterList {

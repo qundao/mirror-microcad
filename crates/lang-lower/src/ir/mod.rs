@@ -77,7 +77,7 @@ impl Ty for TypeAnnotation {
 
 /// `use std::geo2d::Circle as C` => (path = "std::geo2d::Circle", id = "C")
 /// `use std::geo2d::Circle` => (path = "std::geo2d::Circle", id = "Circle")
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct ExplicitAlias {
     pub attr: ir::OuterAttributes,
     pub visibility: ir::Visibility,
@@ -88,7 +88,7 @@ pub struct ExplicitAlias {
 }
 
 /// `use std::geo2d::*`
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct WildcardAlias {
     #[serde(skip_serializing_if = "is_default", default)]
     pub attr: ir::OuterAttributes,
@@ -99,7 +99,7 @@ pub struct WildcardAlias {
 }
 
 /// Aliases lowered from `use` statements.
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
 pub struct Aliases {
     #[serde(skip_serializing_if = "is_default", default)]
     pub explicit_aliases: Box<[ExplicitAlias]>,

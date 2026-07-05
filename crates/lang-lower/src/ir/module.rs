@@ -12,7 +12,7 @@ use crate::IsDefault;
 use crate::ir;
 use crate::is_default;
 
-#[derive(Debug, Identifiable, Serialize, Deserialize)]
+#[derive(Debug, Identifiable, PartialEq, Serialize, Deserialize)]
 pub struct FileModule {
     pub src_ref: SrcRef,
     pub attr: ir::OuterAttributes,
@@ -25,7 +25,7 @@ pub struct FileModule {
 }
 
 /// Items inside an inline module that will be resolved into Symbols.
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
 pub struct InlineModuleItems {
     #[serde(skip_serializing_if = "is_default", default)]
     pub modules: Box<[ir::InlineModule]>,
@@ -54,7 +54,7 @@ impl IsDefault for InlineModuleItems {
 }
 
 /// Inline module definition.
-#[derive(Debug, Identifiable, Serialize, Deserialize)]
+#[derive(Debug, Identifiable, PartialEq, Serialize, Deserialize)]
 pub struct InlineModule {
     pub src_ref: SrcRef,
 

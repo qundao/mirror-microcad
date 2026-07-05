@@ -91,7 +91,7 @@ where
 }
 
 /// Call of a *workbench* or *function*.
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(bound(
     serialize = "EXPR: Serialize, EXPR::Name: Serialize",
     deserialize = "EXPR: Deserialize<'de>, EXPR::Name: Deserialize<'de>"

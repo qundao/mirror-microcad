@@ -30,7 +30,7 @@ pub type ListExpression<EXPR> = Vec<EXPR>;
 
 /// If statement.
 #[skip_serializing_none]
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(bound(
     serialize = "EXPR: Serialize, BODY: Serialize",
     deserialize = "EXPR: Deserialize<'de>, BODY: Deserialize<'de>"
@@ -72,7 +72,7 @@ where
 }
 
 /// A binary operation: `a + b`
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct BinaryOp<EXPR> {
     /// Left-hand side
@@ -127,7 +127,7 @@ where
 }
 
 /// A unary operation: !a
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct UnaryOp<EXPR> {
     /// Operator ('+', '-', '!')
@@ -162,7 +162,7 @@ where
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(bound(
     serialize = "EXPR: Serialize, ELEMENT: Serialize",
     deserialize = "EXPR: Deserialize<'de>, ELEMENT: Deserialize<'de>"
@@ -181,7 +181,7 @@ pub trait ExpressionKind: Serialize {
 ///
 /// Use for `Constant` and default values for `Parameter`.
 /// TODO: ElementAccess are missing.
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
 pub enum ConstantExpression<NAME: Serialize = ir::QualifiedName> {
     Invalid,

@@ -10,7 +10,7 @@ use crate::{ir, is_default};
 
 /// A constant definition: `const FOO: Length = 32mm`.
 #[skip_serializing_none]
-#[derive(Debug, SrcReferrer, Serialize, Deserialize)]
+#[derive(Debug, SrcReferrer, PartialEq, Serialize, Deserialize)]
 pub struct Constant {
     pub src_ref: SrcRef,
     #[serde(skip_serializing_if = "is_default", default)]
