@@ -7,8 +7,10 @@ use derive_more::{Deref, DerefMut};
 use serde::Serialize;
 
 /// Packs any value together with a source reference
-#[derive(Clone, Debug, Default, Ord, PartialEq, PartialOrd, Deref, DerefMut, Serialize)]
-#[serde(bound(serialize = "T: Serialize"))]
+#[derive(
+    Clone, Debug, Default, Ord, PartialEq, PartialOrd, Deref, DerefMut, Serialize, Deserialize,
+)]
+#[serde(bound(serialize = "T: Serialize", deserialize = "T: Deserialize<'de>"))]
 pub struct Refer<T> {
     /// Value
     #[deref]

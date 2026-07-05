@@ -4,12 +4,12 @@
 use compact_str::{CompactString, ToCompactString};
 use derive_more::{Deref, DerefMut};
 use miette::SourceSpan;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 use crate::{Id, Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
 
 /// µcad identifier
-#[derive(Default, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+#[derive(Default, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct Identifier(pub Refer<Id>);
 
 impl SrcReferrer for Identifier {

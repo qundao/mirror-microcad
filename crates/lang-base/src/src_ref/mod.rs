@@ -27,7 +27,7 @@ use crate::HashId;
 
 use derive_more::Deref;
 use miette::SourceSpan;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 /// Span for tokens or AST nodes, a range of byte offsets from the start of the source
 pub type Span = std::ops::Range<usize>;
@@ -332,6 +332,70 @@ impl Serialize for SrcRef {
             // Binary formats get zero-copy raw bytes via bytemuck
             let bytes: &[u8] = bytemuck::bytes_of(self);
             serializer.serialize_bytes(bytes)
+        }
+    }
+}
+
+impl<'de> Deserialize<'de> for SrcRef {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        if deserializer.is_human_readable() {
+            struct SrcRefVisitor;
+
+            impl<'de> serde::de::Visitor<'de> for SrcRefVisitor {
+                type Value = SrcRef;
+
+                fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+                    formatter.write_str("a source reference string")
+                }
+
+                fn visit_str<E>(self, value: &str) -> Result<SrcRef, E>
+                where
+                    E: serde::de::Error,
+                {
+                    if value == "None" {
+                        return Ok(SrcRef::default());
+                    }
+
+                    // Format: "{line}:{col} @ {hash} ({start}..{end})"
+                    let (lc, rest) = value
+                        .split_once(" @ ")
+                        .ok_or_else(|| E::custom("missing @"))?;
+                    let (hash, range) = rest
+                        .split_once(" (")
+                        .ok_or_else(|| E::custom("missing range"))?;
+
+                    let (line, col) = lc.split_once(':').ok_or_else(|| E::custom("missing :"))?;
+                    let range = range.trim_end_matches(')');
+                    let (start, end) = range
+                        .split_once("..")
+                        .ok_or_else(|| E::custom("missing .."))?;
+
+                    Ok(SrcRef {
+                        at: LineCol {
+                            line: line.parse().map_err(E::custom)?,
+                            col: col.parse().map_err(E::custom)?,
+                        },
+                        source_hash: u64::from_str_radix(hash.trim_start_matches("0x"), 16)
+                            .map_err(E::custom)?,
+                        start: start.parse().map_err(E::custom)?,
+                        end: end.parse().map_err(E::custom)?,
+                    })
+                }
+            }
+            deserializer.deserialize_str(SrcRefVisitor)
+        } else {
+            // Binary path: read bytes and cast back
+            let bytes = <&[u8]>::deserialize(deserializer)?;
+            if bytes.len() != std::mem::size_of::<SrcRef>() {
+                return Err(serde::de::Error::invalid_length(
+                    bytes.len(),
+                    &"size of SrcRef",
+                ));
+            }
+            Ok(*bytemuck::from_bytes(bytes))
         }
     }
 }
