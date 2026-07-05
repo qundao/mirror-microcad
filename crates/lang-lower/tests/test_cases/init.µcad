@@ -1,0 +1,12 @@
+
+sketch A(a: Length) {
+    prop b = 10mm; // error: lower::unexpected_statement
+
+    init(c: Length) {}
+
+    prop d = 20mm; // error: lower::unexpected_statement
+
+    init(e: Length) {}
+
+    prop f = 30mm; // ok
+}

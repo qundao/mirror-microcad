@@ -85,6 +85,52 @@ macro_rules! snapshot_test {
     };
 }
 
+macro_rules! test_diagnostic {
+    ($name:ident) => {
+        #[test]
+        fn $name() {
+            let filename = stringify!($name);
+            let source = source_from_test_file(filename);
+            let parse_context = microcad_lang_parse::ParseContext::from(&source);
+            let ast = Ast::parse(&parse_context).unwrap();
+            let ir = lower::lower(&source, &ast);
+            let expected = ast::visitor::collect_expected_diagnostics(&parse_context, &ast);
+
+            match ir {
+                Ok(_) => {
+                    if !expected.is_empty() {
+                        panic!("Test '{}' was expected to fail, but succeeded.", filename);
+                    }
+                }
+                Err(diags) => {
+                    let observed = ExpectedDiagnostics::new(
+                        diags
+                            .iter()
+                            .map(|diag| ExpectedDiagnostic {
+                                severity: diag.severity().unwrap_or_default(),
+                                line: diag.src_ref.line().unwrap(),
+                                code: diag.code().map(|code| code.to_string()),
+                            })
+                            .collect(),
+                    );
+
+                    let expected = ast::visitor::collect_expected_diagnostics(&parse_context, &ast);
+
+                    // Display diagnostics on failure
+                    assert_that!(
+                        observed,
+                        eq(expected),
+                        "{}",
+                        diags
+                            .render_to_string(&&source, &Default::default())
+                            .unwrap(),
+                    );
+                }
+            }
+        }
+    };
+}
+
 unit_test!(module => |ir, diag| {
     assert_that!(ir, matches_pattern!(ir::Source {
         *statements: len(eq(3)),
@@ -111,42 +157,10 @@ unit_test!(module => |ir, diag| {
 
 snapshot_test!(circle => ok);
 
-#[test_that::test]
-fn unexpected_statements() {
-    let source = source_from_test_file("unexpected_statements");
-    let parse_context = microcad_lang_parse::ParseContext::from(&source);
-    let ast = Ast::parse(&parse_context).unwrap();
-    let ir = lower::lower(&source, &ast);
+test_diagnostic!(unexpected_statements);
+test_diagnostic!(init);
 
-    match ir {
-        Ok((_ir, _diag)) => {
-            panic!("This test is supposed to fail");
-        }
-        Err(diags) => {
-            let observed = ExpectedDiagnostics::new(
-                diags
-                    .iter()
-                    .map(|diag| ExpectedDiagnostic {
-                        severity: diag.severity().unwrap_or_default(),
-                        line: diag.src_ref.line().unwrap(),
-                        code: diag.code().map(|code| code.to_string()),
-                    })
-                    .collect(),
-            );
-
-            println!(
-                "{}",
-                diags
-                    .render_to_string(&&source, &DiagRenderOptions::default())
-                    .unwrap()
-            );
-
-            let expected = ast::visitor::collect_expected_diagnostics(&parse_context, &ast);
-            assert_that!(observed, eq(expected));
-        }
-    }
-}
-
+/// Test serialization
 #[test_that::test]
 fn serde_circle() {
     let source = source_from_test_file("circle");
