@@ -85,14 +85,7 @@ macro_rules! snapshot_test {
     };
 }
 
-/*unit_test!(assignments_const_const_assignment_init => |ir, diag| {
-    assert_that!(ir.items.workbenches, len(eq(1)));
-    assert_that!(*ir.statements, len(eq(1)));
-
-    assert!(diag.error_count() == 1);
-});*/
-
-unit_test!(assignments_const_const_assignment_mod => |ir, diag| {
+unit_test!(module => |ir, diag| {
     assert_that!(ir, matches_pattern!(ir::Source {
         *statements: len(eq(3)),
         items: matches_pattern!(ir::SourceItems {
@@ -115,6 +108,8 @@ unit_test!(assignments_const_const_assignment_mod => |ir, diag| {
 
     assert!(!diag.has_errors())
 });
+
+snapshot_test!(circle => ok);
 
 #[test_that::test]
 fn unexpected_statements() {
