@@ -42,9 +42,10 @@ pub enum LowerError {
     },
 
     /// Statement not allowed.
-    #[error("Statement of type not allowed in this context")]
+    #[error("Statement not allowed in this context")]
+    #[diagnostic(code("StatementNotAllowed"))]
     StatementNotAllowed {
-        #[label("Invalid statement")]
+        #[label("This statement is not allowed in this context")]
         src_ref: SrcRef,
     },
 
@@ -84,9 +85,10 @@ pub enum LowerError {
     #[error("Invalid expression")]
     InvalidExpression { src_ref: SrcRef },
 
-    /// An invalid state was encountered
-    #[error("Invalid statement")]
-    InvalidStatement { src_ref: SrcRef },
+    /// An invalid statement was encountered
+    #[error("Statement is not allowed in this context")]
+    #[diagnostic(code("UnexpectedStatement"))]
+    UnexpectedStatement { src_ref: SrcRef },
 
     /// A type range between non-integer literals
     #[error("range expressions must be between integers")]
@@ -128,7 +130,7 @@ impl SrcReferrer for LowerError {
             | LowerError::UseGlobAlias(src_ref)
             | LowerError::InvalidLiteral { src_ref, .. }
             | LowerError::InvalidExpression { src_ref }
-            | LowerError::InvalidStatement { src_ref }
+            | LowerError::UnexpectedStatement { src_ref }
             | LowerError::InvalidRangeType { src_ref }
             | LowerError::ImplicitWorkbenchReturn { src_ref } => *src_ref,
             LowerError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
