@@ -3,7 +3,7 @@
 
 use std::ops::ControlFlow;
 
-use crate::{ParseContext, ast};
+use crate::{Ast, ParseContext, ast};
 use microcad_lang_base::{Severity, SpanToSrcRef};
 
 /// This visitor collects all comments (*not* including doc comments).
@@ -20,7 +20,7 @@ impl<'ast> ast::Visitor<'ast> for CommentCollector<'ast> {
 }
 
 /// Expected diagnostic
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct ExpectedDiagnostic {
     /// `error`, `warning`, `advice`
     pub severity: Severity,
@@ -63,6 +63,18 @@ impl ExpectedDiagnostic {
     }
 }
 
+/// A list of expected diagnostics, sorted by line number
+#[derive(Debug, PartialEq)]
+pub struct ExpectedDiagnostics(Vec<ExpectedDiagnostic>);
+
+impl ExpectedDiagnostics {
+    /// Create a new list of expected diagnostics, sorted by line number.
+    pub fn new(mut diags: Vec<ExpectedDiagnostic>) -> Self {
+        diags.sort_by_key(|diag| diag.line);
+        Self(diags)
+    }
+}
+
 /// Expected the diagnostics collector
 pub struct ExpectedDiagnosticsCollector<'source> {
     parse_context: &'source ParseContext<'source>,
@@ -79,8 +91,8 @@ impl<'source> ExpectedDiagnosticsCollector<'source> {
     }
 
     /// Get diagnostics.
-    pub fn diagnostics(&self) -> &Vec<ExpectedDiagnostic> {
-        &self.diagnostics
+    pub fn diagnostics(self) -> ExpectedDiagnostics {
+        ExpectedDiagnostics::new(self.diagnostics)
     }
 }
 
@@ -103,4 +115,16 @@ impl<'source, 'ast> ast::Visitor<'ast> for ExpectedDiagnosticsCollector<'source>
 
         std::ops::ControlFlow::Continue(())
     }
+}
+
+/// Collect the expected diagnostics in an AST
+pub fn collect_expected_diagnostics<'source>(
+    parse_context: &ParseContext<'source>,
+    ast: &Ast,
+) -> ExpectedDiagnostics {
+    use crate::ast::visitor::Visit;
+
+    let mut collector = ExpectedDiagnosticsCollector::new(parse_context);
+    let _ = ast.visit(&mut collector);
+    collector.diagnostics()
 }

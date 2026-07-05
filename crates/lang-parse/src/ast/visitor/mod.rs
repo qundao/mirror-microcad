@@ -8,7 +8,10 @@ mod visit;
 
 pub use visit::Visit;
 
-pub use collector::{CommentCollector, ExpectedDiagnostic, ExpectedDiagnosticsCollector};
+pub use collector::{
+    CommentCollector, ExpectedDiagnostic, ExpectedDiagnostics, ExpectedDiagnosticsCollector,
+    collect_expected_diagnostics,
+};
 
 use crate::ast;
 
