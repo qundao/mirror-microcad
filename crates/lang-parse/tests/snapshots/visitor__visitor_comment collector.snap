@@ -1,0 +1,26 @@
+---
+source: crates/lang-parse/tests/visitor.rs
+expression: comment_collector
+---
+CommentCollector(
+    [
+        Comment {
+            span: 5..9,
+            inner: SingleLine(
+                "// A",
+            ),
+        },
+        Comment {
+            span: 30..34,
+            inner: SingleLine(
+                "// B",
+            ),
+        },
+        Comment {
+            span: 56..60,
+            inner: SingleLine(
+                "// C",
+            ),
+        },
+    ],
+)
