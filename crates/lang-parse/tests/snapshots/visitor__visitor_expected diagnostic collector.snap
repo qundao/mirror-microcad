@@ -2,19 +2,21 @@
 source: crates/lang-parse/tests/visitor.rs
 expression: diags
 ---
-[
-    ExpectedDiagnostic {
-        severity: Error,
-        line: 1,
-        code: Some(
-            "SomeErrorCode",
-        ),
-    },
-    ExpectedDiagnostic {
-        severity: Warning,
-        line: 2,
-        code: Some(
-            "SomeCode",
-        ),
-    },
-]
+ExpectedDiagnostics(
+    [
+        ExpectedDiagnostic {
+            severity: Error,
+            line: 1,
+            code: Some(
+                "SomeErrorCode",
+            ),
+        },
+        ExpectedDiagnostic {
+            severity: Warning,
+            line: 2,
+            code: Some(
+                "SomeCode",
+            ),
+        },
+    ],
+)

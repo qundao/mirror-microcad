@@ -64,7 +64,7 @@ impl ExpectedDiagnostic {
 }
 
 /// A list of expected diagnostics, sorted by line number
-#[derive(Debug, PartialEq)]
+#[derive(Debug, derive_more::Deref, PartialEq)]
 pub struct ExpectedDiagnostics(Vec<ExpectedDiagnostic>);
 
 impl ExpectedDiagnostics {
