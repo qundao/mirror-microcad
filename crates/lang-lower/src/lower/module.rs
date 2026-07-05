@@ -39,7 +39,7 @@ impl Lower<ast::StatementList> for ir::InlineModuleItems {
             use ast::Statement::*;
             match stmt {
                 FileModule(_) | Return(_) | Expression(_) | LocalAssignment(_) | Property(_)
-                | Error(_) => context.diag(LowerError::StatementNotAllowed { src_ref }),
+                | Init(_) | Error(_) => context.diag(LowerError::StatementNotAllowed { src_ref }),
                 _ => {}
             }
             Ok(())
