@@ -1,4 +1,0 @@
-// Extracted from: expressions/literals.md
-// [![test](.test/string_literal.svg)](.test/string_literal.log)
-
-"Hello, World!"
