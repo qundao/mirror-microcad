@@ -32,6 +32,12 @@ impl Lower<ast::Statement> for Option<ir::FileModule> {
     }
 }
 
+impl Lower<ast::ExpressionStatement> for Option<ir::FileModule> {
+    fn lower(_stmt: &ast::ExpressionStatement, _context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(None)
+    }
+}
+
 impl Lower<ast::StatementList> for ir::InlineModuleItems {
     fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         for_each_statement(statements, context, |stmt, context| {
@@ -77,5 +83,11 @@ impl Lower<ast::Statement> for Option<ir::InlineModule> {
             }
             _ => None,
         })
+    }
+}
+
+impl Lower<ast::ExpressionStatement> for Option<ir::InlineModule> {
+    fn lower(_: &ast::ExpressionStatement, _: &mut LowerContext) -> LowerResult<Self> {
+        Ok(None)
     }
 }

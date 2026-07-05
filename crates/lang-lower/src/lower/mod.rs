@@ -177,7 +177,7 @@ pub fn extract_statements_with_tail<F, G, T>(
 ) -> LowerResult<Box<[T]>>
 where
     F: FnMut(&ast::Statement, &mut LowerContext) -> LowerResult<Option<T>>,
-    G: FnMut(&ast::ExpressionStatement, &mut LowerContext) -> LowerResult<T>,
+    G: FnMut(&ast::ExpressionStatement, &mut LowerContext) -> LowerResult<Option<T>>,
 {
     let mut mapped = Vec::new();
     statements
@@ -185,14 +185,12 @@ where
         .iter()
         .map(|(stmt, _)| stmt)
         .try_for_each(|stmt| -> Result<(), LowerError> {
-            if let Some(m) = extractor(stmt, context)? {
-                mapped.push(m);
-            }
+            mapped.extend(extractor(stmt, context)?);
             Ok(())
         })?;
 
     if let Some(tail) = &statements.tail {
-        mapped.push(tail_extractor(tail, context)?);
+        mapped.extend(tail_extractor(tail, context)?);
     }
     Ok(mapped.into_boxed_slice())
 }
@@ -266,9 +264,10 @@ where
 impl<T> Lower<ast::StatementList> for Box<[T]>
 where
     Option<T>: Lower<ast::Statement>,
+    Option<T>: Lower<ast::ExpressionStatement>,
 {
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
-        extract_statements(node, |stmt| Option::lower(stmt, context))
+        extract_statements_with_tail(node, context, Option::lower, Option::lower)
     }
 }
 

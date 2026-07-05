@@ -30,3 +30,9 @@ impl Lower<ast::Statement> for Option<ir::Constant> {
         })
     }
 }
+
+impl Lower<ast::ExpressionStatement> for Option<ir::Constant> {
+    fn lower(_: &ast::ExpressionStatement, _: &mut LowerContext) -> LowerResult<Self> {
+        Ok(None)
+    }
+}

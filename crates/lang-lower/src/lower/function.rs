@@ -188,11 +188,11 @@ where
             Option::<ir::FunctionStatement<NAME>>::lower,
             // Lower Tail expression to Return statements.
             |tail, context| {
-                Ok(ir::FunctionStatement::Return(ir::ReturnStatement {
+                Ok(Some(ir::FunctionStatement::Return(ir::ReturnStatement {
                     value: Some(ir::FunctionExpression::lower(&tail.expr, context)?),
                     keyword_src_ref: SrcRef::none(),
                     src_ref: context.span_to_src_ref(&tail.span),
-                }))
+                })))
             },
         )?;
 
@@ -258,5 +258,11 @@ impl Lower<ast::Statement> for Option<ir::Function> {
             ast::Statement::Function(f) => Some(ir::Function::lower(f, context)?),
             _ => None,
         })
+    }
+}
+
+impl Lower<ast::ExpressionStatement> for Option<ir::Function> {
+    fn lower(_: &ast::ExpressionStatement, _: &mut LowerContext) -> LowerResult<Self> {
+        Ok(None)
     }
 }

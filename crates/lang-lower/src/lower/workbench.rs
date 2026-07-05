@@ -234,6 +234,12 @@ impl Lower<ast::ExpressionStatement> for ir::WorkbenchStatement {
     }
 }
 
+impl Lower<ast::ExpressionStatement> for Option<ir::WorkbenchStatement> {
+    fn lower(node: &ast::ExpressionStatement, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Some(ir::WorkbenchStatement::lower(node, context)?))
+    }
+}
+
 impl Lower<ast::Statement> for Option<ir::WorkbenchStatement> {
     fn lower(stmt: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match stmt {
@@ -257,9 +263,9 @@ impl Lower<ast::StatementList> for ir::WorkbenchStatements {
             node,
             context,
             // Extract statements
-            Option::<ir::WorkbenchStatement>::lower,
+            Option::lower,
             // Extract tail expression
-            ir::WorkbenchStatement::lower,
+            Option::lower,
         )?))
     }
 }
@@ -312,5 +318,11 @@ impl Lower<ast::Statement> for Option<ir::Workbench> {
             ast::Statement::Workbench(w) => Some(ir::Workbench::lower(w, context)?),
             _ => None,
         })
+    }
+}
+
+impl Lower<ast::ExpressionStatement> for Option<ir::Workbench> {
+    fn lower(_: &ast::ExpressionStatement, _: &mut LowerContext) -> LowerResult<Self> {
+        Ok(None)
     }
 }
