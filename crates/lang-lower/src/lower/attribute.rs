@@ -224,12 +224,12 @@ impl Lower<ast::StatementList> for ir::InnerAttributes {
             match stmt {
                 ast::Statement::InnerDocComment(_) => {
                     if state != State::InitDoc {
-                        context.diag(LowerError::StatementNotAllowed { src_ref });
+                        context.diag(LowerError::InnerDocAfterInnerAttribute { src_ref });
                     }
                 }
                 ast::Statement::InnerAttribute(_) => {
                     if state == State::Statements {
-                        context.diag(LowerError::StatementNotAllowed { src_ref });
+                        context.diag(LowerError::InnerAttributeAfterStatement { src_ref });
                     } else {
                         state = State::Attributes;
                     }

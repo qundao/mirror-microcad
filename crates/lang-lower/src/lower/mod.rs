@@ -41,11 +41,30 @@ pub enum LowerError {
         previous: Identifier,
     },
 
-    /// Statement not allowed.
-    #[error("Statement not allowed in this context")]
-    #[diagnostic(code("StatementNotAllowed"))]
+    #[error("Inner doc comments must appear before inner attributes")]
+    #[diagnostic(
+        code(lower::inner_doc_after_inner_attr),
+        help("Move this doc comment to the top of the block")
+    )]
+    InnerDocAfterInnerAttribute {
+        #[label("this doc comment is out of order")]
+        src_ref: SrcRef,
+    },
+
+    #[error("Inner attributes must appear before statements")]
+    #[diagnostic(
+        code(lower::inner_attr_after_stmt),
+        help("Move this attribute above the first statement")
+    )]
+    InnerAttributeAfterStatement {
+        #[label("this attribute is out of order")]
+        src_ref: SrcRef,
+    },
+    /// Statements that are truly forbidden in a block
+    #[error("This statement is not allowed here")]
+    #[diagnostic(code(lower::unexpected_statement))]
     StatementNotAllowed {
-        #[label("This statement is not allowed in this context")]
+        #[label("unexpected statement")]
         src_ref: SrcRef,
     },
 
@@ -141,6 +160,8 @@ impl SrcReferrer for LowerError {
             LowerError::AstParser(err) => err.src_ref(),
             LowerError::Unreachable { src_ref, .. } => *src_ref,
             LowerError::InvalidConstantExpression { src_ref } => *src_ref,
+            LowerError::InnerDocAfterInnerAttribute { src_ref } => *src_ref,
+            LowerError::InnerAttributeAfterStatement { src_ref } => *src_ref,
         }
     }
 }
