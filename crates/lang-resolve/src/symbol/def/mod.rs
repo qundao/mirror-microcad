@@ -4,11 +4,10 @@
 //! Symbol definitions
 
 mod attribute;
-mod library;
 
-use microcad_lang_base::{Identifier, SrcRef};
-use microcad_lang_lower::ir::{self, FileModule, InlineModule, QualifiedName};
-use microcad_lang_types::Value;
+use microcad_lang_base::{HashId, Identifier, SrcRef};
+use microcad_lang_lower::ir;
+use microcad_lang_types::{Type, Value};
 use serde::{Deserialize, Serialize};
 
 use crate::{Symbol, symbol::def::def::SourceFile};
