@@ -4,7 +4,7 @@
 use serde::Serialize;
 
 /// Line and column within a source code file
-#[derive(Clone, Copy, Debug, Default, Serialize)]
+#[derive(Clone, Copy, Hash, Debug, Default, Serialize)]
 #[repr(C)]
 pub struct LineCol {
     /// Line number (0..)

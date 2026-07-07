@@ -7,8 +7,6 @@ pub use identifier::{Identifier, IdentifierList, ShortId};
 use serde::{Deserialize, Serialize};
 use strum::EnumString;
 
-use crate::{Refer, SrcRef};
-
 /// The possible type of workbenches
 #[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]
 pub enum WorkbenchKind {
@@ -37,7 +35,7 @@ impl std::fmt::Display for WorkbenchKind {
 /// An optional visibility modifier
 ///
 /// it can be part of constant, module, function or workbench definitions.
-#[derive(Debug, PartialEq, Default)]
+#[derive(Debug, Hash, PartialEq, Default, Serialize, Deserialize)]
 pub enum Visibility {
     /// `pub`
     Public,
@@ -46,18 +44,8 @@ pub enum Visibility {
     Private,
 }
 
-/// A binary operation
-#[derive(Debug, PartialEq)]
-#[allow(missing_docs)]
-pub struct BinaryOperation<EXPR> {
-    pub src_ref: SrcRef,
-    pub lhs: Box<EXPR>,
-    pub op: Refer<BinaryOperator>,
-    pub rhs: Box<EXPR>,
-}
-
 /// The type of the operator for binary operations
-#[derive(Debug, PartialEq, Clone, EnumString)]
+#[derive(Debug, PartialEq, Clone, EnumString, Serialize, Deserialize)]
 pub enum BinaryOperator {
     #[strum(serialize = "+")]
     Add,
@@ -96,7 +84,7 @@ pub enum BinaryOperator {
 }
 
 /// The type of the operator for unary operations
-#[derive(Debug, PartialEq, Clone, EnumString)]
+#[derive(Debug, PartialEq, Clone, EnumString, Serialize, Deserialize)]
 #[allow(missing_docs)]
 pub enum UnaryOperator {
     #[strum(serialize = "-")]
@@ -105,12 +93,4 @@ pub enum UnaryOperator {
     Plus,
     #[strum(serialize = "!")]
     Not,
-}
-
-/// A unary operation
-#[derive(Debug, PartialEq)]
-#[allow(missing_docs)]
-pub struct UnaryOperation<EXPR> {
-    pub op: UnaryOperator,
-    pub rhs: Box<EXPR>,
 }

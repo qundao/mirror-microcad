@@ -58,7 +58,7 @@ impl<T: PartialEq> PartialEq<T> for Spanned<T> {
 /// Reference into a source file.
 ///
 /// *Hint*: Source file is not part of `SrcRef` and must be provided from outside
-#[derive(Clone, Copy, Default)]
+#[derive(Clone, Copy, Hash, Default)]
 #[repr(C)]
 pub struct SrcRef {
     /// Start position in bytes
