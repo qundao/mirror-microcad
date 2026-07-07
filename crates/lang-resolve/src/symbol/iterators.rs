@@ -3,111 +3,79 @@
 
 //! Symbol iterators
 
-use crate::{Symbol, Symbols};
+use crate::{Symbol, symbol::SymbolRef};
 
 /// Iterator over children of a symbol.
-pub struct Children {
-    symbol: Symbol,
-    index: usize,
+pub struct Children<'tree> {
+    symbol: SymbolRef<'tree>,
+    // Store the bounds of the children to allow bidirectional movement
+    head: usize,
+    tail: usize,
 }
 
-impl Children {
+impl<'tree> Children<'tree> {
     /// Create children iterator from symbol.
-    pub fn new(symbol: Symbol) -> Self {
-        Self { symbol, index: 0 }
-    }
-}
-
-impl Iterator for Children {
-    type Item = Symbol;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let symbol = self.symbol.inner.borrow();
-        let child = symbol
-            .children
-            .get_index(self.index)
-            .map(|(_, child)| child);
-        self.index += 1;
-        child.cloned()
-    }
-}
-
-/// Iterator that recursively iterates over children of a symbol, including the symbol itself.
-pub struct RecurseChildren {
-    stack: Symbols,
-}
-
-impl RecurseChildren {
-    /// Create recursive children iterator from symbol (including symbol itself).
-    pub(crate) fn new(symbol: Symbol) -> Self {
+    pub fn new(symbol: SymbolRef<'tree>) -> Self {
+        let len = symbol.children.items.len();
         Self {
-            stack: vec![symbol].into(),
+            symbol,
+            head: 0,
+            tail: len,
         }
     }
 }
 
-impl Iterator for RecurseChildren {
-    type Item = Symbol;
+impl<'tree> Iterator for Children<'tree> {
+    type Item = SymbolRef<'tree>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if let Some(symbol) = self.stack.pop() {
-            self.stack
-                .extend(symbol.inner.borrow().children.values().rev().cloned());
-
-            Some(symbol)
+        if self.head < self.tail {
+            let hash = self.symbol.children.items[self.head];
+            self.head += 1;
+            self.symbol.tree.get(hash)
         } else {
             None
         }
     }
 }
 
-#[test]
-fn test_recurse_children() {
-    use crate::symbol::SymbolDef;
-    use microcad_lang_lower::ir;
-
-    let mut root = Symbol::new(
-        SymbolDef::SourceFile(std::rc::Rc::new(ir::Source::new(
-            None,
-            ir::StatementList::default(),
-            microcad_lang_base::Hashed::new(String::new()),
-            microcad_lang_base::virtual_url("test"),
-        ))),
-        None,
-    );
-
-    let mut foo = Symbol::new(
-        SymbolDef::Tester(ir::Identifier::no_ref("foo")),
-        Some(root.clone()),
-    );
-    {
-        let mut baz = Symbol::new(
-            SymbolDef::Tester(ir::Identifier::no_ref("baz")),
-            Some(foo.clone()),
-        );
-        {
-            let bam = Symbol::new(
-                SymbolDef::Tester(ir::Identifier::no_ref("bam")),
-                Some(baz.clone()),
-            );
-            baz.add_symbol(bam).expect("test error");
+// Implement DoubleEndedIterator for .rev() support
+impl<'tree> DoubleEndedIterator for Children<'tree> {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        if self.head < self.tail {
+            self.tail -= 1;
+            let hash = self.symbol.children.items[self.tail];
+            self.symbol.tree.get(hash)
+        } else {
+            None
         }
-
-        foo.add_symbol(baz).expect("test error");
     }
-    root.add_symbol(foo).expect("test error");
+}
 
-    let bar = Symbol::new(
-        SymbolDef::Tester(ir::Identifier::no_ref("bar")),
-        Some(root.clone()),
-    );
-    root.add_symbol(bar).expect("test error");
+/// Iterator that recursively iterates over children of a symbol, including the symbol itself.
+pub struct Descendants<'tree> {
+    stack: Vec<SymbolRef<'tree>>,
+}
 
-    let s = root
-        .riter()
-        .map(|symbol| format!("{}", symbol.id()))
-        .collect::<Vec<_>>()
-        .join(" ");
+impl<'tree> Descendants<'tree> {
+    /// Create recursive children iterator from symbol (including symbol itself).
+    pub fn new(symbol: SymbolRef<'tree>) -> Self {
+        Self {
+            stack: vec![symbol].into(),
+        }
+    }
+}
 
-    assert_eq!(s, "<NO ID> foo baz bam bar");
+impl<'tree> Iterator for Descendants<'tree> {
+    type Item = SymbolRef<'tree>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if let Some(symbol) = self.stack.pop() {
+            self.stack.extend(symbol.children().rev());
+
+            Some(symbol)
+        } else {
+            None
+        }
+    }
 }

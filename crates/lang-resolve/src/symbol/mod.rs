@@ -3,294 +3,240 @@
 
 //! µcad symbol tree.
 
+mod data;
 mod def;
 mod iterators;
-mod symbol_inner;
-mod symbols;
 
-use microcad_lang_base::{RcMut, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use std::hash::Hash;
+
+use derive_more::Deref;
+use microcad_lang_base::{
+    ComputedHash, HashId, HashMap, Hashed, Id, Identifier, SrcRef, element::Visibility,
+};
 
 pub use iterators::*;
 
-pub use symbols::Symbols;
+use microcad_lang_lower::ir::{InlineModule, QualifiedName};
 
-use symbol_inner::*;
+use data::*;
 
 use def::SymbolDef;
+use serde::{Deserialize, Serialize};
 
-/// Symbol
-#[derive(Clone)]
-pub struct Symbol(RcMut<SymbolInner>);
+#[derive(Debug, PartialEq, Clone, Copy, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct SymbolHandle(microcad_lang_base::HashId);
 
-// creation
-impl Symbol {
-    /// Create new symbol without children.
-    /// # Arguments
-    /// - `def`: Symbol definition
-    /// - `parent`: Symbol's parent symbol or none for root
-    pub(crate) fn new(def: SymbolDef, parent: Option<Symbol>) -> Self {
-        Symbol(RcMut::new(SymbolInner {
-            def,
-            parent,
-            ..Default::default()
-        }))
+#[derive(Debug, Default, Serialize, Deserialize)]
+pub struct SymbolIndex {
+    items: Vec<SymbolHandle>,
+}
+
+impl SymbolIndex {
+    pub fn insert(&mut self, hash: SymbolHandle) {
+        self.items.push(hash);
     }
 
-    /// Create a symbol node for a built-in.
-    /// # Arguments
-    /// - `id`: Name of the symbol
-    /// - `parameters`: Optional parameter list
-    /// - `f`: The builtin function
-    pub(crate) fn new_builtin(builtin: impl Into<Builtin>) -> Symbol {
-        Symbol::new(SymbolDef::Builtin(builtin.into()), None)
+    pub fn get_by_index(&self, index: usize) -> Option<&SymbolHandle> {
+        self.items.get(index)
     }
 
-    /// New builtin function as symbol.
-    pub fn new_builtin_fn(
-        name: &'static str,
-        parameters: impl Iterator<Item = (Identifier, ParameterValue)>,
-        f: &'static BuiltinFn,
-        doc: Option<&'static str>,
-    ) -> Symbol {
-        Self::new_builtin(BuiltinFunction {
-            id: Identifier::no_ref(name),
-            parameters: parameters.collect(),
-            f,
-            doc: doc.map(ir::DocBlock::new_builtin),
+    pub fn get_by_id<'tree>(&self, tree: &'tree SymbolTree, id: Id) -> Option<SymbolRef<'tree>> {
+        self.items
+            .iter()
+            .filter_map(|hash| tree.get(*hash))
+            .find(|symbol_ref| &symbol_ref.data.id.id() == &id)
+    }
+
+    pub fn refs<'tree>(&self, tree: &'tree SymbolTree) -> impl Iterator<Item = SymbolRef<'tree>> {
+        self.items.iter().filter_map(|hash| tree.get(*hash))
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+
+pub struct Symbol {
+    data: SymbolData,
+    handle: SymbolHandle,
+    parent: Option<SymbolHandle>,
+    children: SymbolIndex,
+}
+
+pub struct SymbolPath(Vec<Id>);
+
+impl From<QualifiedName> for SymbolPath {
+    fn from(value: QualifiedName) -> Self {
+        todo!()
+    }
+}
+
+#[derive(Debug, Deref, Clone, Copy)]
+pub struct SymbolRef<'tree> {
+    #[deref]
+    symbol: &'tree Symbol,
+    tree: &'tree SymbolTree,
+}
+
+impl<'tree> SymbolRef<'tree> {
+    pub fn id(&self) -> &Id {
+        self.data.id.id()
+    }
+
+    pub fn symbol(&self) -> &'tree Symbol {
+        self.symbol
+    }
+
+    pub fn tree(&'tree self) -> &'tree SymbolTree {
+        self.tree
+    }
+
+    pub fn children(&self) -> Children<'tree> {
+        Children::new(*self)
+    }
+
+    pub fn descendants(&self) -> Descendants<'tree> {
+        Descendants::new(*self)
+    }
+
+    pub fn handle(&self) -> SymbolHandle {
+        self.handle
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SymbolTree {
+    nodes: HashMap<SymbolHandle, Symbol>,
+    root: Option<SymbolHandle>,
+}
+
+impl SymbolTree {
+    pub fn new() -> Self {
+        Self {
+            nodes: HashMap::default(),
+            root: None,
+        }
+    }
+
+    // Helper to access the root directly
+    pub fn root(&'_ self) -> Option<SymbolRef<'_>> {
+        self.root.and_then(|hash| self.get(hash))
+    }
+
+    pub fn insert(&'_ mut self, parent: Option<SymbolHandle>, data: impl Into<SymbolData>) {
+        let data = data.into();
+        let handle = data.get_handle();
+
+        // If there is no parent, this is the root
+        if parent.is_none() {
+            assert!(self.root.is_none());
+            self.root = Some(handle);
+        }
+
+        self.nodes.insert(
+            handle,
+            Symbol {
+                data,
+                handle,
+                parent,
+                children: SymbolIndex::default(),
+            },
+        );
+
+        if let Some(parent) = parent {
+            if let Some(parent_node) = self.nodes.get_mut(&parent) {
+                parent_node.children.insert(handle);
+            }
+        }
+    }
+
+    pub fn get(&'_ self, handle: SymbolHandle) -> Option<SymbolRef<'_>> {
+        self.nodes.get(&handle).map(|symbol| SymbolRef {
+            symbol,
+            tree: &self,
         })
     }
-
-    /// Get fully qualified name.
-    pub fn full_name(&self) -> ir::QualifiedName {
-        let id = self.id();
-        match &self.get_parent() {
-            Some(parent) => {
-                let mut name = parent.full_name();
-                name.push(id);
-                name
-            }
-
-            None => {
-                let src_ref = id.src_ref();
-                ir::QualifiedName::new(vec![id], src_ref)
-            }
-        }
-    }
 }
 
-// tree structure
-impl Symbol {
-    /// Get any child with the given `id`.
-    /// # Arguments
-    /// - `id`: Anticipated *id* of the possible child.
-    pub fn get_child(&self, id: &Identifier) -> Option<Symbol> {
-        self.inner.borrow().children.get(id).cloned()
-    }
+pub struct SymbolTreeBuilder {
+    tree: SymbolTree,
+    // Stack of active parents
+    stack: Vec<SymbolHandle>,
+}
 
-    /// Add a new symbol to children.
-    pub(crate) fn add_symbol(&mut self, symbol: Symbol) -> ResolveResult<()> {
-        self.insert_symbol(symbol.id(), symbol.clone())
-    }
+impl SymbolTreeBuilder {
+    pub fn new(root_data: impl Into<SymbolData>) -> Self {
+        let mut tree = SymbolTree::new();
+        let root_data = root_data.into();
+        let root_handle = SymbolHandle(root_data.computed_hash());
 
-    /// Add a new symbol to children with specific id.
-    pub fn insert_symbol(&mut self, id: Identifier, symbol: Symbol) -> ResolveResult<()> {
-        log::trace!("insert symbol: {id}");
-        if let Some(symbol) = self.inner.borrow_mut().children.insert(id, symbol.clone()) {
-            Err(ResolveError::SymbolAlreadyDefined(symbol.full_name()))
-        } else {
-            Ok(())
+        tree.insert(None, root_data);
+
+        Self {
+            tree,
+            stack: vec![root_handle],
         }
     }
 
-    /// Insert child and change parent of child to new parent.
-    /// # Arguments
-    /// - `parent`: New parent symbol (will be changed in child!).
-    /// - `child`: Child to insert
-    pub(crate) fn add_child(parent: &Symbol, child: Symbol) {
-        child.inner.borrow_mut().parent = Some(parent.clone());
-        let id = child.id();
-        parent.inner.borrow_mut().children.insert(id, child);
+    /// Add a child to the current parent
+    pub fn add(&mut self, data: impl Into<SymbolData>) -> &mut Self {
+        let parent = self.stack.last().copied();
+        let data = data.into();
+
+        self.tree.insert(parent, data);
+        self
     }
 
-    /// Initially set children.
-    ///
-    /// Panics if children already exist.
-    pub(super) fn set_children(&self, new_children: SymbolMap) {
-        assert!(self.inner.borrow().children.is_empty());
-        self.inner.borrow_mut().children = new_children;
+    /// Enter a child scope (push to stack)
+    pub fn enter(&mut self, data: impl Into<SymbolData>) -> &mut Self {
+        let data = data.into();
+        let handle = data.get_handle();
+        self.add(data);
+        // The last inserted node (the one we just added) becomes the new parent
+        self.stack.push(handle);
+        self
     }
 
-    /// Try to apply a FnMut for each child.
-    pub(crate) fn try_children<E: std::error::Error>(
-        &self,
-        f: impl FnMut((&Identifier, &Symbol)) -> Result<(), E>,
-    ) -> Result<(), E> {
-        self.inner.borrow().children.iter().try_for_each(f)
+    /// Exit the current scope (pop from stack)
+    pub fn exit(&mut self) -> &mut Self {
+        self.stack.pop();
+        self
     }
 
-    /// Try to apply a FnMut for each child.
-    pub(crate) fn try_children_sorted<E: std::error::Error>(
-        &self,
-        f: impl FnMut((&Identifier, &Symbol)) -> Result<(), E>,
-    ) -> Result<(), E> {
-        let mut children = self.inner.borrow().children.clone();
-        children.sort_by(|id1, _, id2, _| id1.cmp(id2));
-        children.iter().try_for_each(f)
-    }
-
-    /// Apply a FnMut for each child.
-    pub fn with_children(&self, f: impl FnMut((&Identifier, &Symbol))) {
-        self.inner.borrow().children.iter().for_each(f)
-    }
-
-    /// Create a vector of cloned children.
-    fn public_children(&self, visibility: ir::Visibility, src_ref: SrcRef) -> SymbolMap {
-        let inner = self.inner.borrow();
-
-        inner
-            .children
-            .values()
-            .filter(|symbol| {
-                if symbol.is_public() {
-                    true
-                } else {
-                    log::trace!("Skipping private symbol:\n{symbol:?}");
-                    false
-                }
-            })
-            .map(|symbol| symbol.clone_with(visibility.clone(), src_ref))
-            .map(|symbol| (symbol.id(), symbol))
-            .collect()
-    }
-
-    /// Get parent symbol.
-    pub(crate) fn get_parent(&self) -> Option<Symbol> {
-        self.inner.borrow().parent.clone()
-    }
-
-    /// Set new parent.
-    pub(crate) fn set_parent(&mut self, parent: Symbol) {
-        self.inner.borrow_mut().parent = Some(parent);
-    }
-
-    /// Return iterator over symbol's children.
-    pub fn iter(&self) -> Children {
-        Children::new(self.clone())
-    }
-
-    /// Iterate recursively
-    pub fn riter(&self) -> RecurseChildren {
-        RecurseChildren::new(self.clone())
-    }
-
-    /// Get the `SrcRef` for the kind keyword of this symbol, if any
-    pub fn kind_ref(&self) -> Option<SrcRef> {
-        self.inner.borrow().kind_ref()
-    }
-    /// Return `true` if symbol's visibility is private
-    pub fn visibility(&self) -> ir::Visibility {
-        self.inner.borrow().visibilty().clone()
+    pub fn build(self) -> SymbolTree {
+        self.tree
     }
 }
 
-// definition dependent
-impl Symbol {
-    /// Return the internal *id* of this symbol.
-    pub fn id(&self) -> Identifier {
-        self.inner.borrow().def.id()
-    }
-
-    /// Work with the symbol definition.
-    pub fn with_def<T>(&self, mut f: impl FnMut(&SymbolDef) -> T) -> T {
-        f(&self.inner.borrow().def)
-    }
-
-    /// Work with the mutable symbol definition.
-    pub(crate) fn with_def_mut<T>(&self, mut f: impl FnMut(&mut SymbolDef) -> T) -> T {
-        f(&mut self.inner.borrow_mut().def)
-    }
-}
-
-// check
-impl Symbol {
-    pub fn source_hash(&self) -> u64 {
-        self.inner.borrow().def.source_hash()
-    }
-
-    /// Print out symbols from that point.
-    /// # Arguments
-    /// - `f`: Output formatter
-    /// - `id`: Overwrite symbol's internal `id` with this one if given (e.g. when using in a map).
-    /// - `state`: TreeState
-    pub fn print_symbol(
-        &self,
-        f: &mut impl std::fmt::Write,
-        id: Option<&ir::Identifier>,
-        state: TreeState,
-        children: bool,
-    ) -> std::fmt::Result {
-        let self_id = &self.id();
-        let id = id.unwrap_or(self_id);
-        let def = &self.inner.borrow().def;
-        let full_name = self.full_name();
-        let depth = state.depth;
-
-        write!(f, "{:depth$}{id} {def} [{full_name}]", "",)?;
-        if children {
-            writeln!(f)?;
-            if state.debug {
-                self.try_children(|(id, child)| {
-                    child.print_symbol(f, Some(id), state.indented(), true)
-                })?;
-            } else {
-                self.try_children_sorted(|(id, child)| {
-                    child.print_symbol(f, Some(id), state.indented(), true)
-                })?;
-            }
-        }
-        Ok(())
-    }
-}
-
-impl SrcReferrer for Symbol {
-    fn src_ref(&self) -> SrcRef {
-        if self.src_ref.is_none() {
-            self.inner.borrow().src_ref()
-        } else {
-            self.src_ref
+#[test]
+fn test_descendants_builder() {
+    fn inline_module(id: &str) -> SymbolData {
+        SymbolData {
+            id: Identifier::from(id),
+            attr: SymbolAttributes::default(),
+            def: def::InlineModule.into(),
+            visibility: Visibility::Public,
+            src_ref: SrcRef::none(),
+            keyword_ref: SrcRef::none(),
         }
     }
-}
 
-impl PartialEq for Symbol {
-    fn eq(&self, other: &Self) -> bool {
-        // just compare the pointers - not the content
-        self.inner.as_ptr() == other.inner.as_ptr()
-    }
-}
+    let mut builder = SymbolTreeBuilder::new(inline_module("root"));
 
-impl std::fmt::Display for Symbol {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.print_symbol(f, None, TreeState::new_display(), false)
-    }
-}
+    builder
+        .enter(inline_module("foo"))
+        .enter(inline_module("baz"))
+        .add(inline_module("bam"))
+        .exit() // exit baz
+        .exit() // exit foo
+        .add(inline_module("bar"));
 
-impl std::fmt::Debug for Symbol {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.tree_print(f, TreeState::new_debug(0))
-    }
-}
+    let tree = builder.build();
+    let root = tree.root().expect("Root should exist");
 
-impl TreeDisplay for Symbol {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, state: TreeState) -> std::fmt::Result {
-        if self.is_root() {
-            if state.debug {
-                self.try_children(|(_, symbol)| symbol.tree_print(f, state))
-            } else {
-                self.try_children_sorted(|(_, symbol)| symbol.tree_print(f, state))
-            }
-        } else {
-            self.print_symbol(f, Some(&self.id()), state, true)
-        }
-    }
+    let s = root
+        .descendants()
+        .map(|s| s.id().to_string())
+        .collect::<Vec<_>>()
+        .join(" ");
+
+    assert_eq!(s, "root foo baz bam bar");
 }

@@ -5,12 +5,11 @@
 
 mod attribute;
 
+use derive_more::From;
 use microcad_lang_base::{HashId, Identifier, SrcRef};
 use microcad_lang_lower::ir;
 use microcad_lang_types::{Type, Value};
 use serde::{Deserialize, Serialize};
-
-use crate::{Symbol, symbol::def::def::SourceFile};
 
 pub use ir::QualifiedName;
 
@@ -41,21 +40,6 @@ pub struct ParameterList {
     parameters: Box<[Parameter]>,
 }
 
-pub struct SymbolIndex {
-    index: microcad_lang_base::HashMap<HashId, Symbol>,
-}
-
-impl Symbol {
-    /// Find the name for a symbol
-    pub fn resolve_name(&self, name: &ir::QualifiedName) -> Name {
-        todo!()
-    }
-
-    pub fn hash(&self) -> HashId {
-        todo!()
-    }
-}
-
 pub type ModelExpression = ir::WorkbenchExpression<Name>;
 pub type ValueExpression = ir::FunctionExpression<Name>;
 
@@ -70,18 +54,7 @@ pub struct WorkbenchStatement {
 
 pub type FunctionStatment = ir::FunctionStatement<Name>;
 
-mod def {
-    use microcad_lang_lower::ir;
-
-    pub struct SourceFile {
-        attr: SourceFileAttributes,
-        statements: Box<[WorkbenchStatement]>,
-    }
-
-    pub struct InlineModule {
-        attr: ModuleAttributes,
-    }
-
+/*
     pub struct FileModule {
         attr: ModuleAttributes,
     }
@@ -109,26 +82,34 @@ mod def {
         statements: Box<[FunctionStatement]>,
     }
 
-    pub struct Constant(Value);
-
     pub struct Wildcard;
+*/
+
+#[derive(Debug, Hash, Serialize, Deserialize)]
+pub struct SourceFile {
+    //attr: SourceFileAttributes,
+    //statements: Box<[WorkbenchStatement]>,
 }
 
-/// Symbol definition
-#[derive(Debug, Default)]
-pub enum SymbolDef {
-    /// An empty definition, used during building the symbol.
-    #[default]
-    Empty,
+#[derive(Debug, Hash, Serialize, Deserialize)]
+pub struct InlineModule;
 
+#[derive(Debug, Hash, Serialize, Deserialize)]
+pub struct Constant(Value);
+
+/// Symbol definition
+#[derive(Debug, From, Hash, Serialize, Deserialize)]
+pub enum SymbolDef {
+    /// Root symbol
+    Root,
     /// Source file symbol.
     SourceFile(SourceFile),
     /// Inline Module symbol: `mod foo {}`
     InlineModule(InlineModule),
     /// File Module Symbol: `mod foo;`
-    FileModule(FileModule),
+    FileModule,
     /// Workbench symbol.
-    Workbench(),
+    Workbench,
     /// Function symbol.
     Function,
     /// Constant.
@@ -136,7 +117,7 @@ pub enum SymbolDef {
     /// Builtin symbol.
     Builtin,
     /// Alias of a pub use statement.
-    Alias(Symbol),
+    Alias,
     /// Use all available symbols in the module with the given name.
-    Wildcard(Wildcard),
+    Wildcard,
 }
