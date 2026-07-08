@@ -1,51 +1,43 @@
 ---
 source: crates/lang-lower/tests/lower.rs
-expression: "lower :: to_ron(& ir).expect(\"No error\")"
+expression: "ir.to_ron(& source).expect(\"No error\")"
 ---
 (
-    items: (
-        workbenches: [
-            (
-                keyword_ref: "6:5 @ 5b5b0d75574ec6c6 (152..158)",
-                outer_attr: ((
-                    doc: ((
-                        value: ["Circle definition with an offset.", "", "Examples:", "* With radius `r`: `Circle(r = 10.0mm);`", "* With diameter `d`: `Circle(d = 5.0mm);`"],
-                        src_ref: "1:1 @ 5b5b0d75574ec6c6 (1..148)",
+    header: (
+        magic: (48, 48, 66, 53),
+        version: ("0.6.0"),
+        kind: Ir,
+        source_hash: 6582870077959227078,
+    ),
+    payload: (
+        items: (
+            workbenches: [
+                (
+                    keyword_ref: "6:5 @ 5b5b0d75574ec6c6 (152..158)",
+                    outer_attr: ((
+                        doc: ((value: ["Circle definition with an offset.", "", "Examples:", "* With radius `r`: `Circle(r = 10.0mm);`", "* With diameter `d`: `Circle(d = 5.0mm);`"], src_ref: "1:1 @ 5b5b0d75574ec6c6 (1..148)")),
                     )),
-                )),
-                visibility: Public,
-                kind: (
-                    value: Sketch,
-                    src_ref: "1:1 @ 5b5b0d75574ec6c6 (1..422)",
-                ),
-                id: ((
-                    value: "Circle",
-                    src_ref: "6:12 @ 5b5b0d75574ec6c6 (159..165)",
-                )),
-                parameters: ((
-                    value: [
-                        (id: ((value: "center", src_ref: "6:35 @ 5b5b0d75574ec6c6 (182..188)")), default_value: Some(TupleExpression((args: (src_ref: "None", named_args: [(id: ((value: "x", src_ref: "6:45 @ 5b5b0d75574ec6c6 (192..193)")), expression: Literal(((value: Quantity((value: 0.0, quantity_type: Length, unit: Millimeter)), src_ref: "6:49 @ 5b5b0d75574ec6c6 (196..201)"))), src_ref: "6:45 @ 5b5b0d75574ec6c6 (192..201)"), (id: ((value: "y", src_ref: "6:56 @ 5b5b0d75574ec6c6 (203..204)")), expression: Literal(((value: Quantity((value: 0.0, quantity_type: Length, unit: Millimeter)), src_ref: "6:60 @ 5b5b0d75574ec6c6 (207..212)"))), src_ref: "6:56 @ 5b5b0d75574ec6c6 (203..212)")]), src_ref: "6:44 @ 5b5b0d75574ec6c6 (191..213)"))), src_ref: "6:34 @ 5b5b0d75574ec6c6 (181..213)"),
-                        (id: ((value: "radius", src_ref: "6:19 @ 5b5b0d75574ec6c6 (166..172)")), specified_type: Some(((value: Quantity(Length), src_ref: "6:27 @ 5b5b0d75574ec6c6 (174..180)"))), src_ref: "6:19 @ 5b5b0d75574ec6c6 (166..180)"),
+                    visibility: Public,
+                    kind: (
+                        value: Sketch,
+                        src_ref: "1:1 @ 5b5b0d75574ec6c6 (1..422)",
+                    ),
+                    id: ((
+                        value: "Circle",
+                        src_ref: "6:12 @ 5b5b0d75574ec6c6 (159..165)",
+                    )),
+                    parameters: ((
+                        value: [(id: ((value: "center", src_ref: "6:35 @ 5b5b0d75574ec6c6 (182..188)")), default_value: Some(TupleExpression((args: (src_ref: "None", named_args: [(id: ((value: "x", src_ref: "6:45 @ 5b5b0d75574ec6c6 (192..193)")), expression: Literal(((value: Quantity((value: 0.0, quantity_type: Length, unit: Millimeter)), src_ref: "6:49 @ 5b5b0d75574ec6c6 (196..201)"))), src_ref: "6:45 @ 5b5b0d75574ec6c6 (192..201)"), (id: ((value: "y", src_ref: "6:56 @ 5b5b0d75574ec6c6 (203..204)")), expression: Literal(((value: Quantity((value: 0.0, quantity_type: Length, unit: Millimeter)), src_ref: "6:60 @ 5b5b0d75574ec6c6 (207..212)"))), src_ref: "6:56 @ 5b5b0d75574ec6c6 (203..212)")]), src_ref: "6:44 @ 5b5b0d75574ec6c6 (191..213)"))), src_ref: "6:34 @ 5b5b0d75574ec6c6 (181..213)"), (id: ((value: "radius", src_ref: "6:19 @ 5b5b0d75574ec6c6 (166..172)")), specified_type: Some(((value: Quantity(Length), src_ref: "6:27 @ 5b5b0d75574ec6c6 (174..180)"))), src_ref: "6:19 @ 5b5b0d75574ec6c6 (166..180)")],
+                        src_ref: "6:19 @ 5b5b0d75574ec6c6 (166..213)",
+                    )),
+                    inits: ([
+                        (keyword_ref: "7:5 @ 5b5b0d75574ec6c6 (221..225)", parameters: ((value: [(id: ((value: "center", src_ref: "7:28 @ 5b5b0d75574ec6c6 (244..250)")), default_value: Some(TupleExpression((args: (src_ref: "None", named_args: [(id: ((value: "x", src_ref: "7:38 @ 5b5b0d75574ec6c6 (254..255)")), expression: Literal(((value: Quantity((value: 0.0, quantity_type: Length, unit: Millimeter)), src_ref: "7:42 @ 5b5b0d75574ec6c6 (258..263)"))), src_ref: "7:38 @ 5b5b0d75574ec6c6 (254..263)"), (id: ((value: "y", src_ref: "7:49 @ 5b5b0d75574ec6c6 (265..266)")), expression: Literal(((value: Quantity((value: 0.0, quantity_type: Length, unit: Millimeter)), src_ref: "7:53 @ 5b5b0d75574ec6c6 (269..274)"))), src_ref: "7:49 @ 5b5b0d75574ec6c6 (265..274)")]), src_ref: "7:37 @ 5b5b0d75574ec6c6 (253..275)"))), src_ref: "7:27 @ 5b5b0d75574ec6c6 (243..275)"), (id: ((value: "diameter", src_ref: "7:10 @ 5b5b0d75574ec6c6 (226..234)")), specified_type: Some(((value: Quantity(Length), src_ref: "7:20 @ 5b5b0d75574ec6c6 (236..242)"))), src_ref: "7:10 @ 5b5b0d75574ec6c6 (226..242)")], src_ref: "7:10 @ 5b5b0d75574ec6c6 (226..275)")), statements: [(attr: (()), src_ref: "8:9 @ 5b5b0d75574ec6c6 (287..310)", visibility: Private, id: Some(((value: "radius", src_ref: "8:9 @ 5b5b0d75574ec6c6 (287..293)"))), expression: BinaryOp((lhs: Name(((value: [((value: "diameter", src_ref: "8:18 @ 5b5b0d75574ec6c6 (296..304)"))], src_ref: "8:18 @ 5b5b0d75574ec6c6 (296..304)"))), op: (value: "/", src_ref: "8:27 @ 5b5b0d75574ec6c6 (305..306)"), rhs: Literal(((value: Quantity((value: 2.0, quantity_type: Scalar, unit: r#None)), src_ref: "8:29 @ 5b5b0d75574ec6c6 (307..310)"))), src_ref: "8:18 @ 5b5b0d75574ec6c6 (296..310)")))], src_ref: "7:5 @ 5b5b0d75574ec6c6 (221..323)"),
+                    ]),
+                    statements: [
+                        (attr: (()), src_ref: "11:5 @ 5b5b0d75574ec6c6 (323..418)", visibility: Public, expression: MethodCall((lhs: Call((name: ((value: [((value: "__builtin", src_ref: "11:5 @ 5b5b0d75574ec6c6 (323..332)")), ((value: "geo2d", src_ref: "11:16 @ 5b5b0d75574ec6c6 (334..339)")), ((value: "Circle", src_ref: "11:23 @ 5b5b0d75574ec6c6 (341..347)"))], src_ref: "11:5 @ 5b5b0d75574ec6c6 (323..347)")), argument_list: (src_ref: "11:30 @ 5b5b0d75574ec6c6 (348..354)", unnamed_args: [(expression: Name(((value: [((value: "radius", src_ref: "11:30 @ 5b5b0d75574ec6c6 (348..354)"))], src_ref: "11:30 @ 5b5b0d75574ec6c6 (348..354)"))), src_ref: "11:30 @ 5b5b0d75574ec6c6 (348..354)")]), src_ref: "11:5 @ 5b5b0d75574ec6c6 (323..364)")), element: (name: ((value: [((value: "__builtin", src_ref: "12:10 @ 5b5b0d75574ec6c6 (365..374)")), ((value: "ops", src_ref: "12:21 @ 5b5b0d75574ec6c6 (376..379)")), ((value: "translate", src_ref: "12:26 @ 5b5b0d75574ec6c6 (381..390)"))], src_ref: "12:10 @ 5b5b0d75574ec6c6 (365..390)")), argument_list: (src_ref: "12:36 @ 5b5b0d75574ec6c6 (391..417)", named_args: [(id: ((value: "x", src_ref: "12:36 @ 5b5b0d75574ec6c6 (391..392)")), expression: PropertyAccess((lhs: Name(((value: [((value: "center", src_ref: "12:40 @ 5b5b0d75574ec6c6 (395..401)"))], src_ref: "12:40 @ 5b5b0d75574ec6c6 (395..401)"))), element: ((value: "x", src_ref: "12:47 @ 5b5b0d75574ec6c6 (402..403)")), src_ref: "12:40 @ 5b5b0d75574ec6c6 (395..403)")), src_ref: "12:36 @ 5b5b0d75574ec6c6 (391..403)"), (id: ((value: "y", src_ref: "12:50 @ 5b5b0d75574ec6c6 (405..406)")), expression: PropertyAccess((lhs: Name(((value: [((value: "center", src_ref: "12:54 @ 5b5b0d75574ec6c6 (409..415)"))], src_ref: "12:54 @ 5b5b0d75574ec6c6 (409..415)"))), element: ((value: "y", src_ref: "12:61 @ 5b5b0d75574ec6c6 (416..417)")), src_ref: "12:54 @ 5b5b0d75574ec6c6 (409..417)")), src_ref: "12:50 @ 5b5b0d75574ec6c6 (405..417)")]), src_ref: "12:10 @ 5b5b0d75574ec6c6 (365..418)"), src_ref: "11:5 @ 5b5b0d75574ec6c6 (323..418)"))),
                     ],
-                    src_ref: "6:19 @ 5b5b0d75574ec6c6 (166..213)",
-                )),
-                inits: ([
-                    (
-                        keyword_ref: "7:5 @ 5b5b0d75574ec6c6 (221..225)",
-                        parameters: ((value: [(id: ((value: "center", src_ref: "7:28 @ 5b5b0d75574ec6c6 (244..250)")), default_value: Some(TupleExpression((args: (src_ref: "None", named_args: [(id: ((value: "x", src_ref: "7:38 @ 5b5b0d75574ec6c6 (254..255)")), expression: Literal(((value: Quantity((value: 0.0, quantity_type: Length, unit: Millimeter)), src_ref: "7:42 @ 5b5b0d75574ec6c6 (258..263)"))), src_ref: "7:38 @ 5b5b0d75574ec6c6 (254..263)"), (id: ((value: "y", src_ref: "7:49 @ 5b5b0d75574ec6c6 (265..266)")), expression: Literal(((value: Quantity((value: 0.0, quantity_type: Length, unit: Millimeter)), src_ref: "7:53 @ 5b5b0d75574ec6c6 (269..274)"))), src_ref: "7:49 @ 5b5b0d75574ec6c6 (265..274)")]), src_ref: "7:37 @ 5b5b0d75574ec6c6 (253..275)"))), src_ref: "7:27 @ 5b5b0d75574ec6c6 (243..275)"), (id: ((value: "diameter", src_ref: "7:10 @ 5b5b0d75574ec6c6 (226..234)")), specified_type: Some(((value: Quantity(Length), src_ref: "7:20 @ 5b5b0d75574ec6c6 (236..242)"))), src_ref: "7:10 @ 5b5b0d75574ec6c6 (226..242)")], src_ref: "7:10 @ 5b5b0d75574ec6c6 (226..275)")),
-                        statements: [(attr: (()), src_ref: "8:9 @ 5b5b0d75574ec6c6 (287..310)", visibility: Private, id: Some(((value: "radius", src_ref: "8:9 @ 5b5b0d75574ec6c6 (287..293)"))), expression: BinaryOp((lhs: Name(((value: [((value: "diameter", src_ref: "8:18 @ 5b5b0d75574ec6c6 (296..304)"))], src_ref: "8:18 @ 5b5b0d75574ec6c6 (296..304)"))), op: (value: "/", src_ref: "8:27 @ 5b5b0d75574ec6c6 (305..306)"), rhs: Literal(((value: Quantity((value: 2.0, quantity_type: Scalar, unit: r#None)), src_ref: "8:29 @ 5b5b0d75574ec6c6 (307..310)"))), src_ref: "8:18 @ 5b5b0d75574ec6c6 (296..310)")))],
-                        src_ref: "7:5 @ 5b5b0d75574ec6c6 (221..323)",
-                    ),
-                ]),
-                statements: [
-                    (
-                        attr: (()),
-                        src_ref: "11:5 @ 5b5b0d75574ec6c6 (323..418)",
-                        visibility: Public,
-                        expression: MethodCall((lhs: Call((name: ((value: [((value: "__builtin", src_ref: "11:5 @ 5b5b0d75574ec6c6 (323..332)")), ((value: "geo2d", src_ref: "11:16 @ 5b5b0d75574ec6c6 (334..339)")), ((value: "Circle", src_ref: "11:23 @ 5b5b0d75574ec6c6 (341..347)"))], src_ref: "11:5 @ 5b5b0d75574ec6c6 (323..347)")), argument_list: (src_ref: "11:30 @ 5b5b0d75574ec6c6 (348..354)", unnamed_args: [(expression: Name(((value: [((value: "radius", src_ref: "11:30 @ 5b5b0d75574ec6c6 (348..354)"))], src_ref: "11:30 @ 5b5b0d75574ec6c6 (348..354)"))), src_ref: "11:30 @ 5b5b0d75574ec6c6 (348..354)")]), src_ref: "11:5 @ 5b5b0d75574ec6c6 (323..364)")), element: (name: ((value: [((value: "__builtin", src_ref: "12:10 @ 5b5b0d75574ec6c6 (365..374)")), ((value: "ops", src_ref: "12:21 @ 5b5b0d75574ec6c6 (376..379)")), ((value: "translate", src_ref: "12:26 @ 5b5b0d75574ec6c6 (381..390)"))], src_ref: "12:10 @ 5b5b0d75574ec6c6 (365..390)")), argument_list: (src_ref: "12:36 @ 5b5b0d75574ec6c6 (391..417)", named_args: [(id: ((value: "x", src_ref: "12:36 @ 5b5b0d75574ec6c6 (391..392)")), expression: PropertyAccess((lhs: Name(((value: [((value: "center", src_ref: "12:40 @ 5b5b0d75574ec6c6 (395..401)"))], src_ref: "12:40 @ 5b5b0d75574ec6c6 (395..401)"))), element: ((value: "x", src_ref: "12:47 @ 5b5b0d75574ec6c6 (402..403)")), src_ref: "12:40 @ 5b5b0d75574ec6c6 (395..403)")), src_ref: "12:36 @ 5b5b0d75574ec6c6 (391..403)"), (id: ((value: "y", src_ref: "12:50 @ 5b5b0d75574ec6c6 (405..406)")), expression: PropertyAccess((lhs: Name(((value: [((value: "center", src_ref: "12:54 @ 5b5b0d75574ec6c6 (409..415)"))], src_ref: "12:54 @ 5b5b0d75574ec6c6 (409..415)"))), element: ((value: "y", src_ref: "12:61 @ 5b5b0d75574ec6c6 (416..417)")), src_ref: "12:54 @ 5b5b0d75574ec6c6 (409..417)")), src_ref: "12:50 @ 5b5b0d75574ec6c6 (405..417)")]), src_ref: "12:10 @ 5b5b0d75574ec6c6 (365..418)"), src_ref: "11:5 @ 5b5b0d75574ec6c6 (323..418)")),
-                    ),
-                ],
-            ),
-        ],
+                ),
+            ],
+        ),
     ),
 )

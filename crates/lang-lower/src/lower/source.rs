@@ -6,7 +6,7 @@ use crate::{Ir, Lower, LowerContext, LowerError, LowerResult, ir, lower::for_eac
 use microcad_lang_base::SpanToSrcRef;
 use microcad_lang_parse::{Ast, ast};
 
-impl Lower<ast::StatementList> for ir::SourceItems {
+impl Lower<ast::StatementList> for ir::Items {
     fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         for_each_statement(statements, context, |stmt, context| {
             let src_ref = context.span_to_src_ref(&stmt.span());
@@ -39,7 +39,7 @@ impl Lower<Ast> for Ir {
 
         Ok(Self {
             attr: ir::InnerAttributes::lower(statements, context)?,
-            items: ir::SourceItems::lower(statements, context)?,
+            items: ir::Items::lower(statements, context)?,
             statements: Box::lower(statements, context)?,
         })
     }

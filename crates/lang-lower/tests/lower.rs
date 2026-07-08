@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang_base::{
-    CompilationResult, DiagRenderOptions, Identifier, MICROCAD_EXTENSION, Source,
+    Artifact, CompilationResult, DiagRenderOptions, Identifier, MICROCAD_EXTENSION, Source,
 };
 use microcad_lang_lower::{self as lower, Ir, ir};
 use microcad_lang_parse::{
@@ -53,7 +53,7 @@ macro_rules! snapshot_test {
                     if diag.has_errors() || diag.has_warnings() {
                         panic!("{diag:?}");
                     }
-                    insta::assert_snapshot!(name, lower::to_ron(&ir).expect("No error"));
+                    insta::assert_snapshot!(name, ir.to_ron().expect("No error"));
                 }
                 Err(err) => panic!(
                     "{}",
@@ -73,7 +73,7 @@ macro_rules! snapshot_test {
             match ir_from_source(&source) {
                 Ok((ir, diag)) => {
                     assert!(diag.has_errors());
-                    insta::assert_snapshot!(name, lower::to_ron(&ir).expect("No error"));
+                    insta::assert_snapshot!(name, ir.to_ron().expect("No error"));
                 }
                 Err(err) => panic!(
                     "{}",
@@ -132,9 +132,9 @@ macro_rules! test_diagnostic {
 }
 
 unit_test!(module => |ir, diag| {
-    assert_that!(ir, matches_pattern!(ir::Source {
+    assert_that!(ir, matches_pattern!(Ir {
         *statements: len(eq(3)),
-        items: matches_pattern!(ir::SourceItems {
+        items: matches_pattern!(ir::Items {
             constants: len(eq(1)),
             inline_modules: [matches_pattern!(ir::InlineModule {
                 visibility: eq(ir::Visibility::Private),
@@ -156,9 +156,9 @@ unit_test!(module => |ir, diag| {
 });
 
 unit_test!(inline_module => |ir, diag| {
-    assert_that!(ir, matches_pattern!(ir::Source {
+    assert_that!(ir, matches_pattern!(Ir {
         statements: empty(),
-        items: matches_pattern!(ir::SourceItems {
+        items: matches_pattern!(ir::Items {
             constants: len(eq(1)),
             inline_modules: [matches_pattern!(ir::InlineModule {
                 visibility: eq(ir::Visibility::Public),
@@ -216,8 +216,8 @@ fn serde_circle() {
     let in_ir = ir_from_source(&source).unwrap().0;
 
     // 1. Serialize/Deserialize
-    let serialized = lower::to_ron(&in_ir).expect("Serialization failed");
-    let out_ir: Ir = lower::from_ron(&*serialized).expect("Deserialization failed");
+    let serialized = in_ir.to_ron().expect("No error");
+    let out_ir: Ir = Ir::from_ron(&*serialized).expect("Deserialization failed");
 
     // 2. Structural Equality
     assert_that!(
@@ -227,7 +227,7 @@ fn serde_circle() {
     );
 
     // 3. String Identity
-    let re_serialized = lower::to_ron(&out_ir).expect("Re-serialization failed");
+    let re_serialized = out_ir.to_ron().expect("Re-serialization failed");
     assert_that!(
         serialized,
         eq(re_serialized),

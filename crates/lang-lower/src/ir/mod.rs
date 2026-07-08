@@ -12,7 +12,6 @@ pub mod expression;
 pub mod function;
 pub mod module;
 pub mod parameter;
-pub mod source;
 pub mod workbench;
 
 pub use assignment::*;
@@ -23,7 +22,6 @@ pub use function::*;
 pub use module::*;
 pub use parameter::*;
 use serde::Deserialize;
-pub use source::*;
 pub use workbench::*;
 
 pub use microcad_lang_base::{Identifier, element::Visibility};
@@ -89,4 +87,51 @@ impl IsDefault for Aliases {
     fn is_default(&self) -> bool {
         self.explicit_aliases.is_default() && self.wildcards.is_default()
     }
+}
+
+#[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
+pub struct Items {
+    /// List of file modules: `mod foo;`.
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub file_modules: Box<[ir::FileModule]>,
+    /// Inline modules: `mod bar {...}`.
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub inline_modules: Box<[ir::InlineModule]>,
+    /// Use statements: `use ...`.
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub aliases: ir::Aliases,
+    /// Constants: `const FOO = 42;`.
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub constants: Box<[ir::Constant]>,
+    /// Functions: `fn foo(...) {...}`.
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub functions: Box<[ir::Function]>,
+    /// Workbenches: `part Bar(...) {...}`.
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub workbenches: Box<[ir::Workbench]>,
+}
+
+impl IsDefault for Items {
+    fn is_default(&self) -> bool {
+        self.file_modules.is_default()
+            && self.inline_modules.is_default()
+            && self.aliases.is_default()
+            && self.constants.is_default()
+            && self.functions.is_default()
+            && self.workbenches.is_default()
+    }
+}
+
+/// IR of a µcad source file
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct Ir {
+    /// Inner attributes.
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub attr: ir::InnerAttributes,
+    /// Items that will become Symbols
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub items: ir::Items,
+    /// Workbench statements
+    #[serde(skip_serializing_if = "is_default", default)]
+    pub statements: Box<[ir::WorkbenchStatement]>,
 }

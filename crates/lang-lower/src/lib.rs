@@ -8,14 +8,21 @@ pub mod ir;
 mod lower;
 
 use microcad_lang_base::{
-    CompilationResult, Diagnostics, Identifier, LineIndex, Source, Span, SpanToSrcRef, SrcRef,
+    Artifact, ArtifactKind, CompilationResult, Diagnostics, Identifier, LineIndex, Source, Span,
+    SpanToSrcRef, SrcRef,
 };
 
 pub use lower::{LowerError, LowerResult};
 
 /// Intermediate representation
-pub use ir::Source as Ir;
+pub use ir::Ir;
 use microcad_lang_parse::Ast;
+
+impl Artifact for Ir {
+    fn kind() -> ArtifactKind {
+        ArtifactKind::Ir
+    }
+}
 
 pub(crate) trait IsDefault {
     fn is_default(&self) -> bool;
@@ -95,29 +102,6 @@ impl<'source> SpanToSrcRef for LowerContext<'source> {
 
 pub trait Lower<AstNode>: Sized {
     fn lower(node: &AstNode, context: &mut LowerContext) -> LowerResult<Self>;
-}
-
-/// Convert IR to Rusty Object Notation (ron)
-pub fn to_ron<T>(item: &T) -> miette::Result<String>
-where
-    T: serde::Serialize,
-{
-    // Configure indentation, spacing, and multi-line breaks
-    let config = ron::ser::PrettyConfig::default()
-        .depth_limit(6)
-        .indentor("    ".to_string()) // Beautiful 4-space indent
-        .new_line("\n".to_string());
-
-    ron::ser::to_string_pretty(item, config)
-        .map_err(|e| miette::miette!("Failed to generate pretty RON: {}", e))
-}
-
-/// Read IR from Rusty Object Notation (ron)
-pub fn from_ron<'a, T>(ron: impl Into<&'a str>) -> miette::Result<T>
-where
-    T: serde::Deserialize<'a>,
-{
-    ron::de::from_str(ron.into()).map_err(|e| miette::miette!("Failed to parse from RON: {}", e))
 }
 
 pub fn lower(source: &Source, ast: &Ast) -> CompilationResult<Ir> {
