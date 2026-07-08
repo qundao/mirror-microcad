@@ -6,7 +6,6 @@
 mod data;
 pub mod def;
 mod iterators;
-mod storage;
 
 use std::hash::Hash;
 
@@ -14,8 +13,6 @@ use derive_more::Deref;
 use microcad_lang_base::{
     ComputedHash, HashId, HashMap, Hashed, Id, Identifier, SrcRef, Version, element::Visibility,
 };
-
-pub use storage::TreeStorage;
 
 pub use iterators::*;
 
