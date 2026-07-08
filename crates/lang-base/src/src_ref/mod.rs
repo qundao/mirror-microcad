@@ -387,15 +387,14 @@ impl<'de> Deserialize<'de> for SrcRef {
             }
             deserializer.deserialize_str(SrcRefVisitor)
         } else {
-            // Binary path: read bytes and cast back
-            let bytes = <&[u8]>::deserialize(deserializer)?;
+            let bytes = Vec::<u8>::deserialize(deserializer)?;
             if bytes.len() != std::mem::size_of::<SrcRef>() {
                 return Err(serde::de::Error::invalid_length(
                     bytes.len(),
                     &"size of SrcRef",
                 ));
             }
-            Ok(*bytemuck::from_bytes(bytes))
+            Ok(*bytemuck::from_bytes(&bytes))
         }
     }
 }
