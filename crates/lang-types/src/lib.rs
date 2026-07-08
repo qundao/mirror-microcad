@@ -7,4 +7,4 @@ pub mod ty;
 pub mod value;
 
 pub use ty::Type;
-pub use value::Value;
+pub use value::{Array, Tuple, Value, ValueList};
