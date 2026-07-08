@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{Diagnostics, Source};
+use microcad_lang_base::{CompilationResult, Diagnostics, Source};
 use microcad_lang_parse::{Ast, ast, parse};
 
 mod expression;
@@ -118,18 +118,22 @@ macro_rules! node {
     };
 }
 
-/// Format µcad program.
-pub fn format(ast: &Ast, config: &FormatConfig) -> String {
+/// Format µcad a parsed abstract syntax tree into a string
+pub fn format_ast(ast: &Ast, config: &FormatConfig) -> String {
     ast.format(config).to_string().trim().to_string()
+}
+
+/// Format an AST into a new AST and a new Source
+pub fn format(source: &Source, config: &FormatConfig) -> CompilationResult<(Ast, Source)> {
+    let (ast, _) = parse(&source)?;
+    let code = format_ast(&ast, config);
+    let source = Source::new(source.location.clone(), code);
+    parse(&source).map(|(ast, diag)| ((ast, source), diag))
 }
 
 /// High-level API to format a &str containing µcad source code.
 pub fn format_code(code: &str, config: &FormatConfig) -> Result<String, Diagnostics> {
-    let ast = parse(&Source::from(code))?.0;
-    Ok(format(&ast, config))
-}
-
-/// Format a [`ast::Source`]
-pub fn format_ast(ast: &Ast, config: &FormatConfig) -> Result<Ast, Diagnostics> {
-    Ok(parse(&Source::from(format(ast, config).as_str()))?.0)
+    let source = Source::from(code);
+    let ast = parse(&source)?.0;
+    Ok(format_ast(&ast, config))
 }
