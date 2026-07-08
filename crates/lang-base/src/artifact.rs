@@ -7,7 +7,7 @@ use miette::Diagnostic;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use crate::{Source, Version};
+use crate::Version;
 
 #[derive(Debug, Error, Diagnostic)]
 pub enum ArtifactError {
@@ -95,12 +95,16 @@ impl<T> Envelope<T> {
     }
 }
 
-pub trait Artifact: Serialize + Sized {
+pub trait Artifact: Sized {
     fn kind() -> ArtifactKind;
 
-    fn envelope(&'_ self, source: &Source) -> EnvelopeRef<'_, Self> {
+    fn source_hash(&self) -> HashId {
+        Default::default()
+    }
+
+    fn envelope(&'_ self) -> EnvelopeRef<'_, Self> {
         EnvelopeRef {
-            header: ArtifactHeader::new(Self::kind(), source.hash()),
+            header: ArtifactHeader::new(Self::kind(), self.source_hash()),
             payload: self,
         }
     }
@@ -115,19 +119,25 @@ pub trait Artifact: Serialize + Sized {
     }
 
     /// Convert the artifact into binary
-    fn to_binary(&self, source: &Source) -> Result<Vec<u8>, ArtifactError> {
-        Ok(postcard::to_allocvec(&self.envelope(source))?)
+    fn to_binary(&self) -> Result<Vec<u8>, ArtifactError>
+    where
+        Self: Serialize,
+    {
+        Ok(postcard::to_allocvec(&self.envelope())?)
     }
 
     /// Convert the artifact into a Rusty Object Notation
-    fn to_ron(&self, source: &Source) -> Result<String, ArtifactError> {
+    fn to_ron(&self) -> Result<String, ArtifactError>
+    where
+        Self: Serialize,
+    {
         // Configure indentation, spacing, and multi-line breaks
         let config = ron::ser::PrettyConfig::default()
-            .depth_limit(6)
+            .depth_limit(8)
             .indentor("    ".to_string()) // Beautiful 4-space indent
             .new_line("\n".to_string());
 
-        Ok(ron::ser::to_string_pretty(&self.envelope(source), config)?)
+        Ok(ron::ser::to_string_pretty(&self.envelope(), config)?)
     }
 
     fn from_ron<'de>(s: impl Into<&'de str>) -> Result<Self, ArtifactError>
