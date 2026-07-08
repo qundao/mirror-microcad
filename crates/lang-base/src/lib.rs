@@ -50,7 +50,7 @@ pub use src_ref::{LineCol, LineIndex, Refer, Span, SpanToSrcRef, Spanned, SrcRef
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
 pub use microcad_core::hash::{ComputedHash, HashId, HashMap, HashSet, Hashed, Hasher};
-pub use source::{Source, SourceKind, SourceLocation, Sourced, TextEdit};
+pub use source::{Source, SourceKind, SourceLocation, TextEdit};
 
 impl SourceCode for Source {
     fn read_span<'a>(
