@@ -5,7 +5,7 @@
 
 mod resolve;
 
-mod symbol;
+pub mod symbol;
 
 use microcad_lang_base::{CompilationResult, Source};
 use microcad_lang_lower::Ir;

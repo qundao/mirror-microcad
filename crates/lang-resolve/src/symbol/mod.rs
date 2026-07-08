@@ -4,29 +4,32 @@
 //! µcad symbol tree.
 
 mod data;
-mod def;
+pub mod def;
 mod iterators;
+mod storage;
 
 use std::hash::Hash;
 
 use derive_more::Deref;
 use microcad_lang_base::{
-    ComputedHash, HashId, HashMap, Hashed, Id, Identifier, SrcRef, element::Visibility,
+    ComputedHash, HashId, HashMap, Hashed, Id, Identifier, SrcRef, Version, element::Visibility,
 };
 
-pub use iterators::*;
+pub use storage::TreeStorage;
 
-use microcad_lang_lower::ir::{InlineModule, QualifiedName};
+pub use iterators::*;
 
 use data::*;
 
 use def::SymbolDef;
 use serde::{Deserialize, Serialize};
 
+pub use data::{SymbolAttributes, SymbolData};
+
 #[derive(Debug, PartialEq, Clone, Copy, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct SymbolHandle(microcad_lang_base::HashId);
 
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
 pub struct SymbolIndex {
     items: Vec<SymbolHandle>,
 }
@@ -52,7 +55,7 @@ impl SymbolIndex {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
 
 pub struct Symbol {
     data: SymbolData,
@@ -62,12 +65,6 @@ pub struct Symbol {
 }
 
 pub struct SymbolPath(Vec<Id>);
-
-impl From<QualifiedName> for SymbolPath {
-    fn from(value: QualifiedName) -> Self {
-        todo!()
-    }
-}
 
 #[derive(Debug, Deref, Clone, Copy)]
 pub struct SymbolRef<'tree> {
@@ -102,18 +99,29 @@ impl<'tree> SymbolRef<'tree> {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct SymbolTreeMetadata {
+    version: Version,
+}
+
+impl Default for SymbolTreeMetadata {
+    fn default() -> Self {
+        Self {
+            version: Version::current(),
+        }
+    }
+}
+
+#[derive(Debug, PartialEq, Default, Serialize, Deserialize)]
 pub struct SymbolTree {
+    metadata: SymbolTreeMetadata,
     nodes: HashMap<SymbolHandle, Symbol>,
     root: Option<SymbolHandle>,
 }
 
 impl SymbolTree {
     pub fn new() -> Self {
-        Self {
-            nodes: HashMap::default(),
-            root: None,
-        }
+        Self::default()
     }
 
     // Helper to access the root directly
@@ -204,39 +212,4 @@ impl SymbolTreeBuilder {
     pub fn build(self) -> SymbolTree {
         self.tree
     }
-}
-
-#[test]
-fn test_descendants_builder() {
-    fn inline_module(id: &str) -> SymbolData {
-        SymbolData {
-            id: Identifier::from(id),
-            attr: SymbolAttributes::default(),
-            def: def::InlineModule.into(),
-            visibility: Visibility::Public,
-            src_ref: SrcRef::none(),
-            keyword_ref: SrcRef::none(),
-        }
-    }
-
-    let mut builder = SymbolTreeBuilder::new(inline_module("root"));
-
-    builder
-        .enter(inline_module("foo"))
-        .enter(inline_module("baz"))
-        .add(inline_module("bam"))
-        .exit() // exit baz
-        .exit() // exit foo
-        .add(inline_module("bar"));
-
-    let tree = builder.build();
-    let root = tree.root().expect("Root should exist");
-
-    let s = root
-        .descendants()
-        .map(|s| s.id().to_string())
-        .collect::<Vec<_>>()
-        .join(" ");
-
-    assert_eq!(s, "root foo baz bam bar");
 }

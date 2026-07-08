@@ -11,7 +11,7 @@ use microcad_lang_lower::ir;
 use microcad_lang_types::{Type, Value};
 use serde::{Deserialize, Serialize};
 
-pub use ir::QualifiedName;
+pub use microcad_lang_lower::ir::Visibility;
 
 /// A resolved name
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -21,7 +21,7 @@ pub enum Name {
     /// Resolved into a local identifier
     Local(Identifier),
     /// Error during resolve
-    Error(QualifiedName),
+    Error(ir::QualifiedName),
 }
 
 #[derive(Debug, PartialEq)]
@@ -85,20 +85,20 @@ pub type FunctionStatment = ir::FunctionStatement<Name>;
     pub struct Wildcard;
 */
 
-#[derive(Debug, Hash, Serialize, Deserialize)]
+#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct SourceFile {
     //attr: SourceFileAttributes,
     //statements: Box<[WorkbenchStatement]>,
 }
 
-#[derive(Debug, Hash, Serialize, Deserialize)]
+#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct InlineModule;
 
-#[derive(Debug, Hash, Serialize, Deserialize)]
+#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Constant(Value);
 
 /// Symbol definition
-#[derive(Debug, From, Hash, Serialize, Deserialize)]
+#[derive(Debug, From, Hash, PartialEq, Serialize, Deserialize)]
 pub enum SymbolDef {
     /// Root symbol
     Root,
