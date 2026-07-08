@@ -72,16 +72,18 @@ pub struct LowerContext<'source> {
 }
 
 impl<'source> LowerContext<'source> {
-    pub fn new(source: &'source Source) -> Self {
-        LowerContext {
+    pub fn diag(&mut self, err: LowerError) {
+        self.errors.push(err);
+    }
+}
+
+impl<'source> From<&'source Source> for LowerContext<'source> {
+    fn from(source: &'source Source) -> Self {
+        Self {
             source,
             line_index: LineIndex::from(source),
             errors: Vec::default(),
         }
-    }
-
-    pub fn diag(&mut self, err: LowerError) {
-        self.errors.push(err);
     }
 }
 
@@ -119,7 +121,7 @@ where
 }
 
 pub fn lower(source: &Source, ast: &Ast) -> CompilationResult<Ir> {
-    let mut context = LowerContext::new(source);
+    let mut context = LowerContext::from(source);
 
     // Short-circuit on fatal errors
     let ir = match Ir::lower(ast, &mut context) {

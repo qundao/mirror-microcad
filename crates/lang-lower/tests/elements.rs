@@ -15,7 +15,7 @@ fn outer_doc_block() {
     };
 
     let source = base::Source::new(base::SourceKind::Str, String::new());
-    let mut lower_context = LowerContext::new(&source);
+    let mut lower_context = LowerContext::from(&source);
     let doc_block = ir::DocBlock::lower(&doc_block, &mut lower_context).unwrap();
 
     let lines = doc_block.0.iter().map(|s| s.as_str()).collect::<Vec<_>>();
@@ -49,7 +49,7 @@ fn inner_doc_block() {
     };
 
     let source = base::Source::new(base::SourceKind::Str, String::new());
-    let mut lower_context = LowerContext::new(&source);
+    let mut lower_context = LowerContext::from(&source);
     let doc_block = ir::DocBlock::lower(&statements, &mut lower_context).unwrap();
 
     let lines = doc_block.0.iter().map(|s| s.as_str()).collect::<Vec<_>>();
