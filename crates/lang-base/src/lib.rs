@@ -17,6 +17,7 @@ mod rc;
 mod source;
 mod src_ref;
 mod tree_display;
+mod version;
 
 pub use compact_str::{CompactString, ToCompactString};
 
@@ -35,6 +36,8 @@ pub const MICROCAD_EXTENSIONS: &[&str] = &["mu", "µcad", "mcad", "ucad"];
 
 /// Default extension for µcad files.
 pub const MICROCAD_EXTENSION: &str = "µcad";
+
+pub use version::{MICROCAD_VERSION, Version};
 
 pub use diag::{DiagRenderOptions, Diagnostic, Diagnostics};
 pub use element::{Identifier, IdentifierList};
