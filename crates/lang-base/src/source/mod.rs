@@ -121,6 +121,10 @@ impl Source {
         let code = std::fs::read_to_string(path)?;
         Ok(Self::from(code.as_str()))
     }
+
+    pub fn save(&self, path: impl AsRef<std::path::Path>) -> Result<(), std::io::Error> {
+        std::fs::write(path, self.code().as_bytes())
+    }
 }
 
 impl<'a> From<&'a str> for Source {
