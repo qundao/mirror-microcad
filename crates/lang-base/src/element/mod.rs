@@ -32,9 +32,10 @@ impl std::fmt::Display for WorkbenchKind {
     }
 }
 
-/// An optional visibility modifier
+/// Visibility of a symbol.
 ///
-/// it can be part of constant, module, function or workbench definitions.
+/// This is used to determine if an entity is public or private.
+/// By default, entities are private.
 #[derive(Debug, Hash, PartialEq, Default, Serialize, Deserialize)]
 pub enum Visibility {
     /// `pub`
@@ -42,6 +43,15 @@ pub enum Visibility {
     /// Everything is private by default.
     #[default]
     Private,
+}
+
+impl std::fmt::Display for Visibility {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Visibility::Private => Ok(()),
+            Visibility::Public => write!(f, "pub "),
+        }
+    }
 }
 
 /// The type of the operator for binary operations
