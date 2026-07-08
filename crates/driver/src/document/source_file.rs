@@ -71,15 +71,10 @@ impl SourceFile {
             })
             .into_diagnostic()?;
 
-        // 2. Read the file contents to a string
-        let raw_code = std::fs::read_to_string(path).into_diagnostic()?;
-
-        // 3. Construct and return the Source instance
-        Ok(Self::new(Cached::new(mu::Source::new(
-            url,
-            line_offset,
-            raw_code,
-        ))))
+        // 2. Construct and return the Source instance
+        Ok(Self::new(Cached::new(
+            mu::Source::load(path).into_diagnostic()?,
+        )))
     }
 
     pub fn from_file(path: impl AsRef<std::path::Path>) -> mu::Result<Self> {
@@ -92,17 +87,13 @@ impl SourceFile {
 
 impl mu::commands::GetCode for SourceFile {
     fn get_code(&self) -> Option<&str> {
-        Some(self.source.code.as_str())
+        Some(self.source.code())
     }
 }
 
 impl mu::commands::SetCode for SourceFile {
     fn set_code(&mut self, code: String) -> Option<&str> {
-        self.source = mu::Cached::new(mu::Source {
-            url: self.source.url.clone(),
-            line_offset: self.source.line_offset,
-            code: mu::Hashed::new(code),
-        });
+        self.source = mu::Cached::new(mu::Source::new(self.source, code));
         self.ast = None;
         self.ir = None;
         Some(self.source.code())
@@ -134,11 +125,7 @@ impl mu::commands::Format for SourceFile {
             let old_code = self.source.as_ref();
             let formatted = ast.code.value() != old_code.code.value();
             // Reset state
-            self.source = mu::Cached::new(mu::Source {
-                url: self.source.url.clone(),
-                line_offset: ast.line_offset,
-                code: ast.code.clone(),
-            });
+            self.source = mu::Cached::new(mu::Source::new(self.source, code));
             Ok(formatted)
         } else {
             Err(miette::miette!(
