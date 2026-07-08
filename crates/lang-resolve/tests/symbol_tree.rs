@@ -1,5 +1,8 @@
-use microcad_lang_base::{Identifier, SrcRef};
-use microcad_lang_resolve::symbol::{self, TreeStorage};
+// Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+use microcad_lang_base::{Artifact, Identifier, SrcRef};
+use microcad_lang_resolve::{SymbolTree, symbol};
 
 use test_that::prelude::*;
 
@@ -39,14 +42,14 @@ fn descendants_builder() {
         .collect::<Vec<_>>()
         .join(" ");
 
-    assert_eq!(s, "root foo baz bam bar");
+    assert_that!(s, eq("root foo baz bam bar"));
 }
 
-#[test_that::test]
-fn tree_storage_bin() {
+#[test]
+fn binary() {
     let tree = sample_tree();
-    let encoded: Vec<u8> = TreeStorage::save_bin(&tree).expect("Failed to serialize tree");
-    let decoded_tree = TreeStorage::load_bin(&encoded).expect("Failed to Deserialize");
+    let encoded: Vec<u8> = tree.to_binary().expect("No error");
+    let decoded_tree = SymbolTree::from_binary(&encoded).expect("Failed to Deserialize");
 
     assert_that!(tree, eq(decoded_tree));
 }
