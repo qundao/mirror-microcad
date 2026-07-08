@@ -8,10 +8,10 @@ mod config;
 pub mod document;
 pub mod locate;
 pub mod prelude;
-mod session;
+//mod session;
 mod watcher;
 
-use microcad_lang::value::Value;
+use microcad_lang_types::Value;
 
 /// We use [`miette::Result`] throught-out this crate.
 pub type Result<T = ()> = miette::Result<T>;
@@ -41,10 +41,11 @@ pub fn value_from_str(s: &str) -> Result<Value> {
     use mu::parse::Parse;
     use prelude as mu;
 
-    let parse_context = mu::ParseContext::new(s);
+    let source = mu::Source::from(s);
+    let parse_context = mu::parse::ParseContext::from(&source);
     mu::ir::Literal::lower(
         &mu::ast::Literal::parse(&parse_context)?,
-        &mut mu::LowerContext::new(s),
+        &mut mu::lower::LowerContext::from(&source),
     )
     .map_err(|err| err.into())
     .map(|lit| lit.value().clone())

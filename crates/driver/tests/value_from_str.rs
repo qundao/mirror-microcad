@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_core::Integer;
-use microcad_lang::{
+use microcad_lang_types::{
     ty::QuantityType,
     value::{Quantity, Value},
 };

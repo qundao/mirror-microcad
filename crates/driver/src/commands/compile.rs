@@ -14,29 +14,19 @@ pub trait Lower {
 }
 
 /// Parameters for resolve
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct ResolveParameters {
     pub search_paths: Vec<std::path::PathBuf>,
-    pub no_builtin: bool,
-}
-
-impl Default for ResolveParameters {
-    fn default() -> Self {
-        Self {
-            search_paths: microcad_builtin::dirs::default_search_paths(),
-            no_builtin: false,
-        }
-    }
 }
 
 /// Resolve the IR into a symbol tree.
 pub trait Resolve {
-    fn resolve(&mut self, params: impl Into<ResolveParameters>) -> Result<Symbol>;
+    //fn resolve(&mut self, params: impl Into<ResolveParameters>) -> Result<Symbol>;
 }
 
-/// Resolve the IR into a symbol tree.
+/// Evaluate the symbol into a model.
 pub trait Eval {
-    fn eval(&mut self) -> Result<Model>;
+    //fn eval(&mut self) -> Result<Model>;
 }
 
 /// Compile parameters
@@ -47,13 +37,14 @@ pub struct CompileParameters {
 }
 
 /// Trait for compilation toolchain.
-pub trait Compile: Parse + Lower + Resolve + Eval {
+pub trait Compile: Parse + Lower /*+ Resolve + Eval */ {
     /// Compile a document into a `Model`.
-    fn compile(&mut self, parameters: impl Into<CompileParameters>) -> Result<Model> {
-        let parameters = parameters.into();
+    fn compile(&mut self, parameters: impl Into<CompileParameters>) -> Result {
+        let _parameters = parameters.into();
         self.parse()?;
         self.lower()?;
-        self.resolve(parameters.resolve)?;
-        self.eval()
+        Ok(())
+        //self.resolve(parameters.resolve)?;
+        //self.eval()
     }
 }

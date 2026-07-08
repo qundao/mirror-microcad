@@ -37,16 +37,6 @@ impl MarkdownDocument {
     }
 }
 
-impl mu::traits::CaptureDiags for MarkdownDocument {
-    fn diags(&self) -> &Diagnostics {
-        &self.diagnostics
-    }
-
-    fn diags_mut(&mut self) -> &mut Diagnostics {
-        &mut self.diagnostics
-    }
-}
-
 impl mu::commands::Format for mu::document::Markdown {
     fn format(&mut self, params: &mu::commands::FormatParameters) -> mu::Result<bool> {
         let mut formatted = false;

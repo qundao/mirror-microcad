@@ -34,7 +34,7 @@ impl Default for DriverConfig {
             export: Default::default(),
             format: Default::default(),
             diagnostics: Default::default(),
-            search_paths: vec![microcad_std::global_library_search_path()],
+            search_paths: vec![/*microcad_std::global_library_search_path()*/],
         }
     }
 }

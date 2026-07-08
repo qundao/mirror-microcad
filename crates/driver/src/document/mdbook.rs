@@ -5,10 +5,7 @@ use microcad_lang_base::{Diagnostics, SourceLocation, Url};
 use microcad_lang_markdown::MdBook;
 use miette::IntoDiagnostic;
 
-use crate::{
-    Result, commands,
-    document::{self, CaptureDiags},
-};
+use crate::{Result, commands, document};
 
 /// A markdown book document
 pub struct MdBookDocument {
@@ -29,16 +26,6 @@ impl MdBookDocument {
             location,
             diags: Default::default(),
         })
-    }
-}
-
-impl CaptureDiags for MdBookDocument {
-    fn diags(&self) -> &Diagnostics {
-        &self.diags
-    }
-
-    fn diags_mut(&mut self) -> &mut Diagnostics {
-        &mut self.diags
     }
 }
 
@@ -66,7 +53,7 @@ impl commands::Format for document::MdBook {
 
         self.diags.append(diags);
 
-        if self.diags().has_errors() {
+        if self.diags.has_errors() {
             Err(miette::miette!("Error formatting mdbook"))
         } else {
             Ok(formatted)
