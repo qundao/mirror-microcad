@@ -26,7 +26,7 @@ use serde::Deserialize;
 pub use source::*;
 pub use workbench::*;
 
-pub use microcad_lang_base::Identifier;
+pub use microcad_lang_base::{Identifier, element::Visibility};
 pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Ty, Type, Unit};
 
 use microcad_lang_base::{Refer, SrcRef};
@@ -36,28 +36,6 @@ use serde::Serialize;
 use crate::IsDefault;
 use crate::ir;
 use crate::is_default;
-
-/// Visibility of an entity.
-///
-/// This is used to determine if an entity is public or private.
-/// By default, entities are private.
-#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
-pub enum Visibility {
-    /// Private visibility
-    #[default]
-    Private,
-    /// Public visibility
-    Public,
-}
-
-impl std::fmt::Display for Visibility {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Visibility::Private => Ok(()),
-            Visibility::Public => write!(f, "pub "),
-        }
-    }
-}
 
 /// Type within source code.
 #[derive(Clone, Debug, PartialEq, SrcReferrer, Serialize, Deserialize)]
