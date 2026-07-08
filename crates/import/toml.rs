@@ -3,8 +3,8 @@
 
 //! Import values from TOML
 
-use microcad_lang_base::{Id, SrcRef};
-use microcad_lang_types::Value;
+use microcad_lang_base::{Id, Identifier, SrcRef};
+use microcad_lang_types::*;
 
 /// Import TOML files into a tuple.
 pub struct TomlImporter;
@@ -24,7 +24,7 @@ impl TomlImporter {
                 }
                 Value::Array(Array::from_values(
                     ValueList::new(list),
-                    microcad_lang::ty::Type::Invalid, // TODO get common type here.
+                    Type::Invalid, // TODO get common type here.
                 ))
             }
             toml::Value::Table(map) => Value::Tuple(Box::new(Tuple::new_named(
@@ -34,58 +34,5 @@ impl TomlImporter {
                 SrcRef::none(),
             ))),
         }
-    }
-}
-
-impl Importer for TomlImporter {
-    fn import(
-        &self,
-        args: &microcad_lang::value::Tuple,
-    ) -> Result<microcad_lang::value::Value, microcad_lang::builtin::ImportError> {
-        let filename = args.get::<String>("filename");
-        let content = std::fs::read_to_string(filename)?;
-
-        Ok(Self::toml_to_value(
-            &toml::from_str::<toml::Value>(&content)
-                .map_err(|err| ImportError::CustomError(miette::Report::from_err(err)))?,
-        ))
-    }
-}
-
-impl FileIoInterface for TomlImporter {
-    fn id(&self) -> Id {
-        Id::new("toml")
-    }
-}
-
-#[test]
-fn toml_importer() {
-    use microcad_lang::{model::*, value::Tuple};
-
-    // Import a toml from `Cargo.toml` and convert it into a tuple.
-    let toml_importer = TomlImporter;
-
-    let mut args = Tuple::default();
-    args.insert(
-        Identifier::no_ref("filename"),
-        Value::String("Cargo.toml".into()),
-    );
-    let value = toml_importer.import(&args).expect("No error");
-    println!("{value}");
-
-    if let Value::Tuple(tuple) = value {
-        if let Value::Model(model) = tuple
-            .by_id(&Identifier::no_ref("package"))
-            .expect("Package info")
-        {
-            let model_ = model.borrow();
-            let name = model_
-                .get_property(&Identifier::no_ref("name"))
-                .expect("property");
-            let name = name.try_string().expect("String value");
-            println!("{name}");
-        }
-    } else {
-        panic!("Value must be a tuple!")
     }
 }
