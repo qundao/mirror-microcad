@@ -51,6 +51,10 @@ impl Source {
         self.code = Hashed::new(code);
     }
 
+    pub fn path(&self) -> Option<std::path::PathBuf> {
+        self.location.path()
+    }
+
     /// Compare two sources and return a vector of TextEdits.
     pub fn compare(&self, other: &Self) -> Vec<TextEdit> {
         use dissimilar::Chunk;
