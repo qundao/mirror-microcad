@@ -26,6 +26,8 @@ dissimilar = "1.0.7"
 log = "0.4"
 miette = { version = "7.6.0", features = ["derive", "fancy"] }
 pathdiff = "0.2"
+postcard = { version = "1.1", features = ["alloc"] }
+ron = "0.12"
 semver = { version = "1.0", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
 strum = { version = "0.28", features = ["derive"] }

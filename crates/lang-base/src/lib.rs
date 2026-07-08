@@ -9,6 +9,7 @@ use miette::{MietteError, MietteSpanContents, SourceCode, SourceSpan, SpanConten
 
 pub use miette::Severity;
 
+mod artifact;
 mod diag;
 pub mod element;
 mod ord_map;
@@ -39,6 +40,7 @@ pub const MICROCAD_EXTENSION: &str = "µcad";
 
 pub use version::{MICROCAD_VERSION, Version};
 
+pub use artifact::{Artifact, ArtifactKind};
 pub use diag::{DiagRenderOptions, Diagnostic, Diagnostics};
 pub use element::{Identifier, IdentifierList};
 pub use ord_map::{OrdMap, OrdMapValue};
@@ -48,7 +50,7 @@ pub use src_ref::{LineCol, LineIndex, Refer, Span, SpanToSrcRef, Spanned, SrcRef
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
 pub use microcad_core::hash::{ComputedHash, HashId, HashMap, HashSet, Hashed, Hasher};
-pub use source::{Source, SourceKind, SourceLocation, TextEdit};
+pub use source::{Source, SourceKind, SourceLocation, Sourced, TextEdit};
 
 impl SourceCode for Source {
     fn read_span<'a>(
