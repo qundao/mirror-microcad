@@ -5,11 +5,12 @@ use crate::ast::{ItemExtras, Span, Unit};
 
 use microcad_lang_base::CompactString;
 use microcad_lang_proc_macros::Visit;
+use serde::Serialize;
 use std::num::{ParseFloatError, ParseIntError};
 use thiserror::Error;
 
 /// A literal value
-#[derive(Debug, PartialEq, Visit)]
+#[derive(Debug, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct Literal {
     pub span: Span,
@@ -18,10 +19,11 @@ pub struct Literal {
 }
 
 /// The various types of literal values a [`Literal`] can contain
-#[derive(Debug, PartialEq, Visit)]
+#[derive(Debug, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub enum LiteralKind {
     #[visit(skip)]
+    #[serde(skip)]
     Error(LiteralError),
     String(StringLiteral),
     Bool(BoolLiteral),
@@ -45,7 +47,7 @@ impl LiteralKind {
 }
 
 /// A string literal, without format expressions
-#[derive(Debug, PartialEq, Visit)]
+#[derive(Debug, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 #[visit(default)]
 pub struct StringLiteral {
@@ -54,7 +56,7 @@ pub struct StringLiteral {
 }
 
 /// A boolean literal, either `true` or `false`
-#[derive(Debug, PartialEq, Visit)]
+#[derive(Debug, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 #[visit(default)]
 pub struct BoolLiteral {
@@ -63,7 +65,7 @@ pub struct BoolLiteral {
 }
 
 /// An integer literal without type
-#[derive(Debug, PartialEq, Visit)]
+#[derive(Debug, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 #[visit(default)]
 pub struct IntegerLiteral {
@@ -73,7 +75,7 @@ pub struct IntegerLiteral {
 }
 
 /// An float literal without type
-#[derive(Debug, PartialEq, Visit)]
+#[derive(Debug, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 #[visit(default)]
 pub struct FloatLiteral {
@@ -83,7 +85,7 @@ pub struct FloatLiteral {
 }
 
 /// A float literal with type
-#[derive(Debug, PartialEq, Visit)]
+#[derive(Debug, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 #[visit(default)]
 pub struct QuantityLiteral {
