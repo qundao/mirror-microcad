@@ -1,8 +1,6 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use std::slice::Iter;
-
 use crate::{GetSourceByHash, SrcReferrer, diag::*};
 
 use miette::Severity;
@@ -58,7 +56,7 @@ impl Diagnostics {
         self.warning_count > 0
     }
 
-    pub fn iter(&'_ self) -> Iter<'_, Diagnostic> {
+    pub fn iter(&'_ self) -> impl Iterator<Item = &Diagnostic> {
         self.diagnostics.iter()
     }
 
