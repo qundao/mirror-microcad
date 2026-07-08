@@ -155,6 +155,55 @@ unit_test!(module => |ir, diag| {
     assert!(!diag.has_errors())
 });
 
+unit_test!(inline_module => |ir, diag| {
+    assert_that!(ir, matches_pattern!(ir::Source {
+        statements: empty(),
+        items: matches_pattern!(ir::SourceItems {
+            constants: len(eq(1)),
+            inline_modules: [matches_pattern!(ir::InlineModule {
+                visibility: eq(ir::Visibility::Public),
+                id: eq(Identifier::from("b")),
+                items: matches_pattern!(ir::InlineModuleItems {
+                    constants: [matches_pattern!(
+                        ir::Constant {
+                            id: eq(ir::Identifier::from("C")),
+                            visibility: eq(ir::Visibility::Public),
+                        }
+                    )],
+                    modules: [
+                        matches_pattern!(ir::InlineModule {
+                            id: eq(Identifier::from("d")),
+                            visibility: eq(ir::Visibility::Public),
+                            items: matches_pattern!(ir::InlineModuleItems {
+                                constants: [matches_pattern!(
+                                    ir::Constant {
+                                        id: eq(Identifier::from("E")),
+                                        visibility: eq(ir::Visibility::Private),
+                                    }
+                                )],
+                            }),
+                        }),
+                        matches_pattern!(ir::InlineModule {
+                            id: eq(Identifier::from("f")),
+                            items: matches_pattern!(ir::InlineModuleItems {
+                                constants: [matches_pattern!(
+                                    ir::Constant {
+                                        id: eq(Identifier::from("G")),
+                                        visibility: eq(ir::Visibility::Private),
+                                    }
+                                )],
+                            }),
+
+                        })
+                    ],
+                })
+            })]
+        })
+    }));
+
+    assert!(!diag.has_errors())
+});
+
 snapshot_test!(circle => ok);
 
 test_diagnostic!(unexpected_statements);
