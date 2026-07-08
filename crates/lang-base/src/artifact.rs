@@ -1,6 +1,8 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+//! A compiler artifact to be persisted, e.g. an IR written and read from file.
+
 use derive_more::Display;
 use microcad_core::hash::HashId;
 use miette::Diagnostic;
@@ -20,7 +22,7 @@ pub enum ArtifactError {
     RonSerialization(#[from] ron::Error),
 
     /// Error during deserializing from RON.
-    #[error("RON serialization error")]
+    #[error("RON deserialization error")]
     RonDeserialization(#[from] ron::error::SpannedError),
 
     /// Wrong artifact kind
@@ -45,7 +47,7 @@ pub enum ArtifactKind {
 #[repr(C)]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ArtifactHeader {
-    pub magic: [u8; 4],
+    pub magic: [u8; 4],      // "00B5" == µ unicode
     pub version: Version,    // Increment this whenever the format changes
     pub kind: ArtifactKind,  // The artifact type (AST, IR, etc.)
     pub source_hash: HashId, // The hash of the source used (for reproducibility)
@@ -95,13 +97,16 @@ impl<T> Envelope<T> {
     }
 }
 
+/// Trait to define a compilation artifact.
 pub trait Artifact: Sized {
     fn kind() -> ArtifactKind;
 
+    /// Return the source hash of this artifact
     fn source_hash(&self) -> HashId {
         Default::default()
     }
 
+    /// Envelope this artifact with a header.
     fn envelope(&'_ self) -> EnvelopeRef<'_, Self> {
         EnvelopeRef {
             header: ArtifactHeader::new(Self::kind(), self.source_hash()),
@@ -133,13 +138,13 @@ pub trait Artifact: Sized {
     {
         // Configure indentation, spacing, and multi-line breaks
         let config = ron::ser::PrettyConfig::default()
-            .depth_limit(8)
             .indentor("    ".to_string()) // Beautiful 4-space indent
             .new_line("\n".to_string());
 
         Ok(ron::ser::to_string_pretty(&self.envelope(), config)?)
     }
 
+    /// Read the artifact from a Rusty Object Notation
     fn from_ron<'de>(s: impl Into<&'de str>) -> Result<Self, ArtifactError>
     where
         Self: Deserialize<'de>,
