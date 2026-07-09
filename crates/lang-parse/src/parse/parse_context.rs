@@ -3,7 +3,7 @@
 
 //! Parse context for parsing specific types.
 
-use microcad_lang_base::{Diagnostic, Diagnostics, LineIndex, Source, Span, SpanToSrcRef, SrcRef};
+use microcad_lang_base::{Diagnostic, Diagnostics, Source, Span, SpanToSrcRef, SrcRef};
 
 use crate::ParseErrors;
 
@@ -12,8 +12,6 @@ use crate::ParseErrors;
 pub struct ParseContext<'source> {
     /// The source
     pub source: &'source Source,
-    /// Line index
-    pub line_index: LineIndex,
 }
 
 impl<'source> ParseContext<'source> {
@@ -34,15 +32,12 @@ impl<'source> ParseContext<'source> {
 
 impl<'source> From<&'source Source> for ParseContext<'source> {
     fn from(source: &'source Source) -> Self {
-        Self {
-            source,
-            line_index: LineIndex::from(source),
-        }
+        Self { source }
     }
 }
 
 impl<'source> SpanToSrcRef for ParseContext<'source> {
     fn span_to_src_ref(&self, span: &Span) -> SrcRef {
-        self.line_index.src_ref(self.source.code.as_str(), span)
+        self.source.span_to_src_ref(span)
     }
 }
