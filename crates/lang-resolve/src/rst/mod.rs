@@ -72,6 +72,16 @@ pub struct Symbol {
     children: SymbolIndex,
 }
 
+impl Symbol {
+    pub fn new(data: SymbolDataHandle) -> Self {
+        Self {
+            data,
+            parent: None,
+            children: Default::default(),
+        }
+    }
+}
+
 pub struct SymbolPath(Vec<Id>);
 
 #[derive(Debug, Deref, Clone, Copy)]
@@ -198,6 +208,16 @@ impl Rst {
 
     fn get_mut(&mut self, handle: SymbolHandle) -> Option<&mut Symbol> {
         self.nodes.get_mut(handle.0)
+    }
+}
+
+impl From<SymbolData> for Rst {
+    fn from(data: SymbolData) -> Self {
+        let data_handle = data.get_handle();
+        Rst {
+            nodes: vec![Symbol::new(data_handle)],
+            data: [(data_handle, data)].into_iter().collect(),
+        }
     }
 }
 
