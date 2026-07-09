@@ -36,6 +36,7 @@ pub struct SourceFile {
 }
 
 impl SourceFile {
+    /// New source file from a source.
     pub fn new(source: mu::Source) -> Self {
         Self {
             source,
@@ -44,12 +45,14 @@ impl SourceFile {
         }
     }
 
+    /// Load a source file from file.
     pub fn load(path: impl AsRef<std::path::Path>) -> Result<Self> {
         let source = mu::Source::load(mu::locate::resolved_path(path)?).into_diagnostic()?;
         Ok(Self::new(source))
     }
 
-    pub fn get_artifact<T: Artifact>(result: &Option<CompilationResult<T>>) -> Result<&T> {
+    /// Extract artifact from a compilation result.
+    fn extract_artifact<T: Artifact>(result: &Option<CompilationResult<T>>) -> Result<&T> {
         match result {
             Some(Ok((artifact, _))) => Ok(artifact),
             _ => Err(miette::miette!("No artifact!")),
@@ -61,18 +64,20 @@ impl SourceFile {
         T: Artifact + Serialize,
     {
         let mut path = path.as_ref().to_path_buf();
-        path.add_extension(&T::kind().to_string());
+        path.add_extension(&T::kind().to_string().to_lowercase());
         Ok(std::fs::write(path, artifact.to_ron()?).into_diagnostic()?)
     }
 
+    /// Emit a compiler artifact with a path. The compiler artifact extension is added automatically.
     pub fn emit(&self, path: impl AsRef<std::path::Path>, artifact_kind: &ArtifactKind) -> Result {
         match artifact_kind {
-            ArtifactKind::Ast => self._emit(path, Self::get_artifact(&self.ast)?),
-            ArtifactKind::Ir => self._emit(path, Self::get_artifact(&self.ir)?),
+            ArtifactKind::Ast => self._emit(path, Self::extract_artifact(&self.ast)?),
+            ArtifactKind::Ir => self._emit(path, Self::extract_artifact(&self.ir)?),
             ArtifactKind::Rst => todo!(),
         }
     }
 
+    /// Return iterator over diagnostics
     pub fn diagnostics(&self) -> impl Iterator<Item = &mu::Diagnostic> {
         fn extract_diags<'a, T>(
             result: &'a Option<mu::CompilationResult<T>>,
