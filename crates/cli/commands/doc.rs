@@ -30,8 +30,10 @@ pub struct Doc {
 
 impl RunCommand<()> for Doc {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
-        use microcad_driver::prelude as mu;
+        todo!()
+        /*use microcad_driver::prelude as mu;
         use mu::traits::*;
+
 
         let mut document = mu::Document::open(&self.input)?;
         let params = mu::DocGenParameters {
@@ -40,7 +42,6 @@ impl RunCommand<()> for Doc {
             resolve_parameters: match self.no_std {
                 true => mu::ResolveParameters {
                     search_paths: vec![],
-                    no_builtin: true,
                 },
                 false => mu::ResolveParameters::default(),
             },
@@ -54,6 +55,6 @@ impl RunCommand<()> for Doc {
             }
         }
 
-        Ok(())
+        Ok(())*/
     }
 }

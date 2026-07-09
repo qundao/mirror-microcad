@@ -22,6 +22,8 @@ pub struct Watch {
 /// Run this command for a CLI.
 impl RunCommand for Watch {
     fn run(&self, cli: &Cli) -> miette::Result<()> {
+        todo!()
+        /*
         use microcad_driver::prelude as mu;
         use mu::traits::*;
 
@@ -67,5 +69,6 @@ impl RunCommand for Watch {
             // Wait until anything relevant happens.
             watcher.wait()?;
         }
+        */
     }
 }

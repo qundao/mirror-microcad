@@ -4,6 +4,7 @@
 //! µcad CLI commands
 
 mod check;
+mod compile;
 mod completions;
 mod create;
 mod doc;
@@ -14,6 +15,7 @@ mod watch;
 use clap::Subcommand;
 
 pub use check::Check;
+pub use compile::Compile;
 pub use create::Create;
 pub use doc::Doc;
 pub use export::Export;
@@ -27,7 +29,10 @@ pub enum Commands {
     /// Check a µcad file.
     Check(Check),
 
-    /// Parse and evaluate and export a µcad file.
+    /// Compile a µcad for debugging.
+    Compile(Compile),
+
+    /// Compile and export a µcad file.
     Export(Export),
 
     /// Create a new source file with µcad extension.
