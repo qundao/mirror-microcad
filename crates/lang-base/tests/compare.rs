@@ -1,26 +1,17 @@
-use microcad_lang_base::{ComputedHash, Hashed, LineCol, SrcRef, TextEdit};
-
-fn source(text: &str) -> microcad_lang_base::Source {
-    microcad_lang_base::Source {
-        location: microcad_lang_base::SourceLocation::new(
-            microcad_lang_base::Url::parse("file:///test.mu").unwrap(),
-        ),
-        code: Hashed::new(text.to_string()),
-    }
-}
+use microcad_lang_base::{ComputedHash, LineCol, Source, SrcRef, TextEdit};
 
 #[test]
 fn test_identical_strings_yield_no_edits() {
-    let edits =
-        source("hello world\nthis is a test").compare(&source("hello world\nthis is a test"));
+    let edits = Source::from("hello world\nthis is a test")
+        .compare(&Source::from("hello world\nthis is a test"));
 
     assert!(edits.is_empty(), "Expected no edits for identical strings");
 }
 
 #[test]
 fn test_pure_insertion() {
-    let old = source("hello world");
-    let new = source("hello beautiful world");
+    let old = Source::from("hello world");
+    let new = Source::from("hello beautiful world");
     let edits = old.compare(&new);
 
     assert_eq!(edits.len(), 1);
@@ -39,8 +30,8 @@ fn test_pure_insertion() {
 
 #[test]
 fn test_pure_deletion() {
-    let old = source("hello beautiful world");
-    let new = source("hello world");
+    let old = Source::from("hello beautiful world");
+    let new = Source::from("hello world");
     let edits = old.compare(&new);
 
     assert_eq!(edits.len(), 1);
@@ -60,8 +51,8 @@ fn test_pure_deletion() {
 
 #[test]
 fn test_multiline_replacement() {
-    let old = source("line one\nline two\nline three");
-    let new = source("line one\nline changed\nline three");
+    let old = Source::from("line one\nline two\nline three");
+    let new = Source::from("line one\nline changed\nline three");
     let edits = old.compare(&new);
 
     // Depending on how `dissimilar` slices it, this might show up as
@@ -99,8 +90,8 @@ fn test_multiline_replacement() {
 
 #[test]
 fn test_complex_mixed_changes() {
-    let old = source("fn main() {\n    println!(\"Hello\");\n}");
-    let new = source("fn main() {\n    // Greet\n    println!(\"Hello World\");\n}");
+    let old = Source::from("fn main() {\n    println!(\"Hello\");\n}");
+    let new = Source::from("fn main() {\n    // Greet\n    println!(\"Hello World\");\n}");
     let edits = old.compare(&new);
 
     // We expect edits that insert the comment and modify the string literal

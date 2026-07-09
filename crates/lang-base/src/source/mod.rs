@@ -1,7 +1,9 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{ComputedHash, GetSourceByHash, HashId, Hashed, LineCol, SrcRef};
+use crate::{
+    ComputedHash, GetSourceByHash, HashId, Hashed, LineCol, LineIndex, SpanToSrcRef, SrcRef,
+};
 use serde::Serialize;
 
 mod location;
@@ -19,6 +21,8 @@ pub struct Source {
     pub location: SourceLocation,
     /// The original hashed code
     pub code: Hashed<String>,
+    /// A line index to get lines from spans  
+    line_index: LineIndex,
 }
 
 /// A text edit, the result of comparing two sources
@@ -33,9 +37,13 @@ pub struct TextEdit {
 impl Source {
     /// Create a new source.
     pub fn new(location: impl Into<SourceLocation>, code: String) -> Self {
+        let location = location.into();
+        let line_index = LineIndex::new(&code, location.line_offset.unwrap_or_default());
+
         Self {
-            location: location.into(),
+            location,
             code: Hashed::new(code),
+            line_index,
         }
     }
 
@@ -122,8 +130,9 @@ impl Source {
 #[cfg(feature = "io")]
 impl Source {
     pub fn load(path: impl AsRef<std::path::Path>) -> Result<Self, std::io::Error> {
-        let code = std::fs::read_to_string(path)?;
-        Ok(Self::from(code.as_str()))
+        let path = path.as_ref().to_path_buf();
+        let code = std::fs::read_to_string(&path)?;
+        Ok(Self::new(SourceLocation::new(path), code))
     }
 
     pub fn save(&self, path: impl AsRef<std::path::Path>) -> Result<(), std::io::Error> {
@@ -134,6 +143,12 @@ impl Source {
 impl<'a> From<&'a str> for Source {
     fn from(s: &'a str) -> Self {
         Source::new(SourceKind::Str, s.to_string())
+    }
+}
+
+impl<'a> SpanToSrcRef for &'a Source {
+    fn span_to_src_ref(&self, span: &crate::Span) -> SrcRef {
+        self.line_index.src_ref(self.code.as_str(), span)
     }
 }
 

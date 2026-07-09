@@ -1,10 +1,12 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use serde::Serialize;
+
 use crate::{ComputedHash, Hashed, LineCol, Source, Span, SrcRef};
 
 /// An index to retrieve the offsets in a line in O(log(n)).
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
 pub struct LineIndex {
     /// Offset (bytes) the beginning of each line, zero-based
     line_offsets: Vec<u32>,
