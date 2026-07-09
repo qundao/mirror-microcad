@@ -48,6 +48,13 @@ fn descendants_builder() {
 }
 
 #[test]
+fn resolve() {
+    let mut tree = sample_rst();
+
+    assert!(!tree.root().unwrap().resolve("foo::bam").is_some());
+}
+
+#[test]
 fn binary() {
     let tree = sample_rst();
     let encoded: Vec<u8> = tree.to_binary().expect("No error");

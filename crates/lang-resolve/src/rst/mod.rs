@@ -9,7 +9,7 @@ mod iterators;
 
 use std::hash::Hash;
 
-use derive_more::Deref;
+use derive_more::{Deref, From};
 use microcad_lang_base::{
     ComputedHash, HashId, HashMap, Hashed, Id, Identifier, SrcRef, Version, element::Visibility,
 };
@@ -82,7 +82,19 @@ impl Symbol {
     }
 }
 
+#[derive(Debug, Clone, From)]
 pub struct SymbolPath(Vec<Id>);
+
+impl From<&str> for SymbolPath {
+    fn from(s: &str) -> Self {
+        Self(
+            s.split("::")
+                .filter(|segment| !segment.is_empty())
+                .map(|segment| Id::from(segment))
+                .collect(),
+        )
+    }
+}
 
 #[derive(Debug, Deref, Clone, Copy)]
 pub struct SymbolRef<'rst> {
@@ -113,8 +125,64 @@ impl<'rst> SymbolRef<'rst> {
         Descendants::new(*self)
     }
 
-    pub fn search(&self, path: &SymbolPath) -> Vec<SymbolRef<'rst>> {
-        todo!()
+    pub fn search_down(&self, path: impl Into<SymbolPath>) -> Vec<SymbolRef<'rst>> {
+        let path = path.into();
+        match path.0.as_slice() {
+            // Base case: path is empty, return this node
+            [] => vec![*self],
+
+            // Recursive case: match first ID, then search descendants
+            [first, rest @ ..] => {
+                self.children()
+                    .filter(|child| child.id() == first)
+                    .flat_map(|child| {
+                        // If there is more path, continue searching
+                        if rest.is_empty() {
+                            vec![child]
+                        } else {
+                            child.search_down(rest.to_vec())
+                        }
+                    })
+                    .collect()
+            }
+        }
+    }
+
+    /// Resolves a path relative to the current symbol.
+    /// If path starts with root indicator, it searches from top.
+    /// Otherwise, it performs a local-outward search (upward).
+    pub fn resolve(&self, path: impl Into<SymbolPath>) -> Option<SymbolRef<'rst>> {
+        // 1. If searching from current node, look upward for the first component
+        let path = path.into();
+        let mut current = *self;
+
+        loop {
+            // Check if current node matches the first element of the path
+            if current.id() == path.0.first()? {
+                // If the path matches, descend into children to find the rest
+                if let Some(target) = self.descend(&current, &path.0[1..]) {
+                    return Some(target);
+                }
+            }
+
+            // Move up
+            match current.parent {
+                Some(parent_handle) => current = self.rst.get(parent_handle)?,
+                None => break, // Reached root
+            }
+        }
+        None
+    }
+
+    /// Helper to descend into children
+    fn descend(&self, node: &SymbolRef<'rst>, remaining_path: &[Id]) -> Option<SymbolRef<'rst>> {
+        if remaining_path.is_empty() {
+            return Some(*node);
+        }
+
+        node.children()
+            .filter(|child| child.id() == &remaining_path[0])
+            .find_map(|child| self.descend(&child, &remaining_path[1..]))
     }
 }
 
@@ -166,7 +234,8 @@ impl Rst {
         handle
     }
 
-    pub fn insert_tree(&mut self, parent: Option<SymbolHandle>, rst: Self) {
+    pub fn insert_tree(&mut self, parent: Option<SymbolHandle>, rst: impl Into<Rst>) {
+        let rst = rst.into();
         self.data.extend(rst.data.into_iter());
 
         let base_index = self.nodes.len();
@@ -228,16 +297,10 @@ pub struct Builder {
 }
 
 impl Builder {
-    pub fn new(root_data: impl Into<SymbolData>) -> Self {
-        let mut tree = Rst::new();
-        let root_data = root_data.into();
-        let root_handle = SymbolHandle(0);
-
-        tree.insert_node(None, root_data);
-
+    pub fn new(root_data: impl Into<Rst>) -> Self {
         Self {
-            tree,
-            stack: vec![root_handle],
+            tree: root_data.into(),
+            stack: vec![SymbolHandle(0)],
         }
     }
 
