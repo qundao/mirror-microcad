@@ -59,7 +59,7 @@ impl<T: PartialEq> PartialEq<T> for Spanned<T> {
 /// Reference into a source file.
 ///
 /// *Hint*: Source file is not part of `SrcRef` and must be provided from outside
-#[derive(Clone, Copy, Hash, Default)]
+#[derive(Clone, Copy, PartialEq, Hash, Default)]
 #[repr(C)]
 pub struct SrcRef {
     /// Start position in bytes
@@ -284,12 +284,6 @@ impl std::fmt::Debug for SrcRef {
             ),
             false => write!(f, "<NO REF>"),
         }
-    }
-}
-
-impl PartialEq for SrcRef {
-    fn eq(&self, _: &Self) -> bool {
-        true
     }
 }
 

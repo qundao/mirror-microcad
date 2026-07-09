@@ -242,21 +242,6 @@ impl std::iter::IntoIterator for IdentifierList {
 }
 
 #[test]
-fn identifier_comparison() {
-    use crate::{LineCol, SrcRef};
-
-    // same id but different src refs
-    let id1 = Identifier::no_ref("x");
-    let id2 = Identifier(Refer::new(
-        "x".into(),
-        SrcRef::new(&(0..5), LineCol { line: 0, col: 1 }, 1),
-    ));
-
-    // shall be equal
-    assert!(id1 == id2);
-}
-
-#[test]
 fn identifier_hash() {
     use crate::{LineCol, SrcRef};
     use std::hash::{Hash, Hasher};

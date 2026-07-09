@@ -20,7 +20,7 @@ fn test_pure_insertion() {
         TextEdit {
             src_ref: SrcRef::new(
                 &(6..6),
-                LineCol { line: 1, col: 6 },
+                LineCol { line: 0, col: 6 },
                 old.code.computed_hash()
             ),
             new_text: "beautiful ".to_string(),
@@ -41,7 +41,7 @@ fn test_pure_deletion() {
             // Should delete "beautiful " spanning from char 6 to 16
             src_ref: SrcRef::new(
                 &(6..16),
-                LineCol { line: 1, col: 6 },
+                LineCol { line: 0, col: 6 },
                 old.code.computed_hash()
             ),
             new_text: String::new(),
@@ -66,7 +66,7 @@ fn test_multiline_replacement() {
             // Should delete "beautiful " spanning from char 6 to 16
             src_ref: SrcRef::new(
                 &(14..17),
-                LineCol { line: 2, col: 5 },
+                LineCol { line: 1, col: 5 },
                 old.code.computed_hash()
             ),
             new_text: String::new(),
