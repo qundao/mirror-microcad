@@ -25,9 +25,12 @@ use serde::{Deserialize, Serialize};
 pub use data::{SymbolAttributes, SymbolData};
 
 #[derive(Debug, PartialEq, Clone, Copy, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
-pub struct SymbolHandle(microcad_lang_base::HashId);
+pub struct SymbolHandle(usize);
 
-#[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Clone, Copy, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct SymbolDataHandle(microcad_lang_base::HashId);
+
+#[derive(Debug, Default, Hash, PartialEq, Serialize, Deserialize)]
 pub struct SymbolIndex {
     items: Vec<SymbolHandle>,
 }
@@ -53,11 +56,18 @@ impl SymbolIndex {
     }
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+impl FromIterator<SymbolHandle> for SymbolIndex {
+    fn from_iter<T: IntoIterator<Item = SymbolHandle>>(iter: T) -> Self {
+        Self {
+            items: iter.into_iter().collect(),
+        }
+    }
+}
+
+#[derive(Debug, PartialEq, Hash, Serialize, Deserialize)]
 
 pub struct Symbol {
-    data: SymbolData,
-    handle: SymbolHandle,
+    data: SymbolDataHandle,
     parent: Option<SymbolHandle>,
     children: SymbolIndex,
 }
@@ -68,6 +78,7 @@ pub struct SymbolPath(Vec<Id>);
 pub struct SymbolRef<'rst> {
     #[deref]
     symbol: &'rst Symbol,
+    data: &'rst SymbolData,
     rst: &'rst Rst,
 }
 
@@ -92,10 +103,6 @@ impl<'rst> SymbolRef<'rst> {
         Descendants::new(*self)
     }
 
-    pub fn handle(&self) -> SymbolHandle {
-        self.handle
-    }
-
     pub fn search(&self, path: &SymbolPath) -> Vec<SymbolRef<'rst>> {
         todo!()
     }
@@ -104,8 +111,8 @@ impl<'rst> SymbolRef<'rst> {
 /// The resolved symbol tree (RST).
 #[derive(Debug, PartialEq, Default, Serialize, Deserialize, Artifact)]
 pub struct Rst {
-    nodes: HashMap<SymbolHandle, Symbol>,
-    root: Option<SymbolHandle>,
+    nodes: Vec<Symbol>,
+    data: HashMap<SymbolDataHandle, SymbolData>,
 }
 
 impl Rst {
@@ -115,56 +122,98 @@ impl Rst {
 
     // Helper to access the root directly
     pub fn root(&'_ self) -> Option<SymbolRef<'_>> {
-        self.root.and_then(|hash| self.get(hash))
+        self.get(SymbolHandle(0))
     }
 
-    pub fn insert(&'_ mut self, parent: Option<SymbolHandle>, data: impl Into<SymbolData>) {
+    fn insert_data(&mut self, data: impl Into<SymbolData>) -> SymbolDataHandle {
         let data = data.into();
         let handle = data.get_handle();
+        self.data.insert(handle, data);
+        handle
+    }
 
-        // If there is no parent, this is the root
-        if parent.is_none() {
-            assert!(self.root.is_none());
-            self.root = Some(handle);
-        }
+    pub fn insert_node(
+        &'_ mut self,
+        parent: Option<SymbolHandle>,
+        data: impl Into<SymbolData>,
+    ) -> SymbolHandle {
+        let data = self.insert_data(data);
 
-        self.nodes.insert(
-            handle,
-            Symbol {
-                data,
-                handle,
-                parent,
-                children: SymbolIndex::default(),
-            },
-        );
+        let symbol = Symbol {
+            data,
+            parent,
+            children: SymbolIndex::default(),
+        };
+
+        let handle = SymbolHandle(self.nodes.len());
+        self.nodes.push(symbol);
 
         if let Some(parent) = parent {
-            if let Some(parent_node) = self.nodes.get_mut(&parent) {
+            if let Some(parent_node) = self.get_mut(parent) {
+                parent_node.children.insert(handle);
+            }
+        }
+        handle
+    }
+
+    pub fn insert_tree(&mut self, parent: Option<SymbolHandle>, rst: Self) {
+        self.data.extend(rst.data.into_iter());
+
+        let base_index = self.nodes.len();
+        let handle = SymbolHandle(base_index);
+
+        let nodes = rst.nodes.into_iter().map(|node| Symbol {
+            data: node.data,
+            parent: node
+                .parent
+                .map(|SymbolHandle(index)| SymbolHandle(index + base_index))
+                .or(parent),
+            children: SymbolIndex::from_iter(
+                node.children
+                    .items
+                    .into_iter()
+                    .map(|SymbolHandle(index)| SymbolHandle(index + base_index)),
+            ),
+        });
+        self.nodes.extend(nodes.into_iter());
+
+        if let Some(parent) = parent {
+            if let Some(parent_node) = self.get_mut(parent) {
                 parent_node.children.insert(handle);
             }
         }
     }
 
+    fn get_data(&self, handle: SymbolDataHandle) -> Option<&SymbolData> {
+        self.data.get(&handle)
+    }
+
     pub fn get(&'_ self, handle: SymbolHandle) -> Option<SymbolRef<'_>> {
-        self.nodes
-            .get(&handle)
-            .map(|symbol| SymbolRef { symbol, rst: &self })
+        self.nodes.get(handle.0).map(|symbol| SymbolRef {
+            data: self.get_data(symbol.data).unwrap(),
+            symbol,
+            rst: &self,
+        })
+    }
+
+    fn get_mut(&mut self, handle: SymbolHandle) -> Option<&mut Symbol> {
+        self.nodes.get_mut(handle.0)
     }
 }
 
-pub struct SymbolTreeBuilder {
+pub struct Builder {
     tree: Rst,
     // Stack of active parents
     stack: Vec<SymbolHandle>,
 }
 
-impl SymbolTreeBuilder {
+impl Builder {
     pub fn new(root_data: impl Into<SymbolData>) -> Self {
         let mut tree = Rst::new();
         let root_data = root_data.into();
-        let root_handle = SymbolHandle(root_data.computed_hash());
+        let root_handle = SymbolHandle(0);
 
-        tree.insert(None, root_data);
+        tree.insert_node(None, root_data);
 
         Self {
             tree,
@@ -173,21 +222,24 @@ impl SymbolTreeBuilder {
     }
 
     /// Add a child to the current parent
-    pub fn add(&mut self, data: impl Into<SymbolData>) -> &mut Self {
+    pub fn add_node(&mut self, data: impl Into<SymbolData>) -> &mut Self {
         let parent = self.stack.last().copied();
-        let data = data.into();
+        self.tree.insert_node(parent, data);
+        self
+    }
 
-        self.tree.insert(parent, data);
+    /// Add a sub-tree to the current parent
+    pub fn add_tree(&mut self, rst: Rst) -> &mut Self {
+        let parent = self.stack.last().copied();
+        self.tree.insert_tree(parent, rst);
         self
     }
 
     /// Enter a child scope (push to stack)
     pub fn enter(&mut self, data: impl Into<SymbolData>) -> &mut Self {
-        let data = data.into();
-        let handle = data.get_handle();
-        self.add(data);
+        self.stack.push(SymbolHandle(self.tree.nodes.len() - 1));
+        self.add_node(data);
         // The last inserted node (the one we just added) becomes the new parent
-        self.stack.push(handle);
         self
     }
 

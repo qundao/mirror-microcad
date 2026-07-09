@@ -21,7 +21,7 @@ pub enum Name {
     /// Resolved into a local identifier
     Local(Identifier),
     /// Error during resolve
-    Error(ir::QualifiedName),
+    Unresolved(ir::QualifiedName),
 }
 
 #[derive(Debug, PartialEq)]

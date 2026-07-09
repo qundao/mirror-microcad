@@ -18,17 +18,19 @@ fn inline_module(id: &str) -> rst::SymbolData {
 }
 
 fn sample_rst() -> Rst {
-    let mut builder = rst::SymbolTreeBuilder::new(inline_module("root"));
+    let mut builder = rst::Builder::new(inline_module("root"));
 
     builder
         .enter(inline_module("foo"))
         .enter(inline_module("baz"))
-        .add(inline_module("bam"))
+        .add_node(inline_module("bam"))
         .exit() // exit baz
         .exit() // exit foo
-        .add(inline_module("bar"));
+        .add_node(inline_module("bar"));
 
-    builder.build()
+    let rst = builder.build();
+    //println!("{rst:#?}");
+    rst
 }
 
 #[test]

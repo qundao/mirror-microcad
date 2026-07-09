@@ -13,5 +13,5 @@ fn resolve_inline_module_def() {
     let ron = std::fs::read_to_string("tests/test_cases/inline_module.µcad.ir")
         .expect("No errors reading IR");
     let ir = microcad_lang_lower::Ir::from_ron(ron.as_str()).expect("No error deserializing IR");
-    //let rst = microcad_lang_resolve::resolve(&source, &ir);
+    let rst = microcad_lang_resolve::resolve(&source, &ir);
 }
