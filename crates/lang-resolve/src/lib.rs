@@ -5,21 +5,15 @@
 
 mod resolve;
 
-pub mod symbol;
+pub mod rst;
 
-use microcad_lang_base::{Artifact, CompilationResult, Source};
+use microcad_lang_base::{CompilationResult, Source};
 use microcad_lang_lower::Ir;
 
-pub use symbol::{Symbol, SymbolRef, SymbolTree};
+pub use rst::{Rst, Symbol, SymbolRef};
 
 pub use resolve::{Resolve, ResolveContext, ResolveResult};
 
-impl Artifact for SymbolTree {
-    fn kind() -> microcad_lang_base::ArtifactKind {
-        microcad_lang_base::ArtifactKind::SymbolTree
-    }
-}
-
-pub fn resolve(source: &Source, ir: &Ir) -> CompilationResult<SymbolTree> {
+pub fn resolve(source: &Source, ir: &Ir) -> CompilationResult<Rst> {
     todo!()
 }

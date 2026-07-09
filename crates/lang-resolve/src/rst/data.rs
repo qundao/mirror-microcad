@@ -7,7 +7,7 @@ use custom_debug::Debug;
 use microcad_lang_base::{ComputedHash, HashId, Identifier, SrcRef, element::Visibility};
 use serde::{Deserialize, Serialize};
 
-use crate::symbol::{SymbolHandle, def::SymbolDef};
+use crate::rst::{SymbolHandle, def::SymbolDef};
 
 #[derive(Debug, Default, Hash, PartialEq, Serialize, Deserialize)]
 pub struct SymbolAttributes {

@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! µcad symbol tree.
+//! µcad resolved symbol tree (RST).
 
 mod data;
 pub mod def;
@@ -19,6 +19,7 @@ pub use iterators::*;
 use data::*;
 
 use def::SymbolDef;
+use microcad_lang_proc_macros::Artifact;
 use serde::{Deserialize, Serialize};
 
 pub use data::{SymbolAttributes, SymbolData};
@@ -40,14 +41,14 @@ impl SymbolIndex {
         self.items.get(index)
     }
 
-    pub fn get_by_id<'tree>(&self, tree: &'tree SymbolTree, id: Id) -> Option<SymbolRef<'tree>> {
+    pub fn get_by_id<'rst>(&self, tree: &'rst Rst, id: Id) -> Option<SymbolRef<'rst>> {
         self.items
             .iter()
             .filter_map(|hash| tree.get(*hash))
             .find(|symbol_ref| &symbol_ref.data.id.id() == &id)
     }
 
-    pub fn refs<'tree>(&self, tree: &'tree SymbolTree) -> impl Iterator<Item = SymbolRef<'tree>> {
+    pub fn refs<'rst>(&self, tree: &'rst Rst) -> impl Iterator<Item = SymbolRef<'rst>> {
         self.items.iter().filter_map(|hash| tree.get(*hash))
     }
 }
@@ -64,30 +65,30 @@ pub struct Symbol {
 pub struct SymbolPath(Vec<Id>);
 
 #[derive(Debug, Deref, Clone, Copy)]
-pub struct SymbolRef<'tree> {
+pub struct SymbolRef<'rst> {
     #[deref]
-    symbol: &'tree Symbol,
-    tree: &'tree SymbolTree,
+    symbol: &'rst Symbol,
+    rst: &'rst Rst,
 }
 
-impl<'tree> SymbolRef<'tree> {
+impl<'rst> SymbolRef<'rst> {
     pub fn id(&self) -> &Id {
         self.data.id.id()
     }
 
-    pub fn symbol(&self) -> &'tree Symbol {
+    pub fn symbol(&self) -> &'rst Symbol {
         self.symbol
     }
 
-    pub fn tree(&'tree self) -> &'tree SymbolTree {
-        self.tree
+    pub fn tree(&self) -> &'rst Rst {
+        self.rst
     }
 
-    pub fn children(&self) -> Children<'tree> {
+    pub fn children(&self) -> Children<'rst> {
         Children::new(*self)
     }
 
-    pub fn descendants(&self) -> Descendants<'tree> {
+    pub fn descendants(&self) -> Descendants<'rst> {
         Descendants::new(*self)
     }
 
@@ -95,18 +96,19 @@ impl<'tree> SymbolRef<'tree> {
         self.handle
     }
 
-    fn search(&self, path: &SymbolPath) -> SymbolRefs<'tree> {
+    pub fn search(&self, path: &SymbolPath) -> Vec<SymbolRef<'rst>> {
         todo!()
     }
 }
 
-#[derive(Debug, PartialEq, Default, Serialize, Deserialize)]
-pub struct SymbolTree {
+/// The resolved symbol tree (RST).
+#[derive(Debug, PartialEq, Default, Serialize, Deserialize, Artifact)]
+pub struct Rst {
     nodes: HashMap<SymbolHandle, Symbol>,
     root: Option<SymbolHandle>,
 }
 
-impl SymbolTree {
+impl Rst {
     pub fn new() -> Self {
         Self::default()
     }
@@ -144,22 +146,21 @@ impl SymbolTree {
     }
 
     pub fn get(&'_ self, handle: SymbolHandle) -> Option<SymbolRef<'_>> {
-        self.nodes.get(&handle).map(|symbol| SymbolRef {
-            symbol,
-            tree: &self,
-        })
+        self.nodes
+            .get(&handle)
+            .map(|symbol| SymbolRef { symbol, rst: &self })
     }
 }
 
 pub struct SymbolTreeBuilder {
-    tree: SymbolTree,
+    tree: Rst,
     // Stack of active parents
     stack: Vec<SymbolHandle>,
 }
 
 impl SymbolTreeBuilder {
     pub fn new(root_data: impl Into<SymbolData>) -> Self {
-        let mut tree = SymbolTree::new();
+        let mut tree = Rst::new();
         let root_data = root_data.into();
         let root_handle = SymbolHandle(root_data.computed_hash());
 
@@ -196,7 +197,7 @@ impl SymbolTreeBuilder {
         self
     }
 
-    pub fn build(self) -> SymbolTree {
+    pub fn build(self) -> Rst {
         self.tree
     }
 }

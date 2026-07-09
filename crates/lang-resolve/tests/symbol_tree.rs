@@ -2,23 +2,23 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang_base::{Artifact, Identifier, SrcRef};
-use microcad_lang_resolve::{SymbolTree, symbol};
+use microcad_lang_resolve::{Rst, rst};
 
 use test_that::prelude::*;
 
-fn inline_module(id: &str) -> symbol::SymbolData {
-    symbol::SymbolData {
+fn inline_module(id: &str) -> rst::SymbolData {
+    rst::SymbolData {
         id: Identifier::from(id),
-        attr: symbol::SymbolAttributes::default(),
-        def: symbol::def::InlineModule.into(),
-        visibility: symbol::def::Visibility::Public,
+        attr: rst::SymbolAttributes::default(),
+        def: rst::def::InlineModule.into(),
+        visibility: rst::def::Visibility::Public,
         src_ref: SrcRef::none(),
         keyword_ref: SrcRef::none(),
     }
 }
 
-fn sample_tree() -> symbol::SymbolTree {
-    let mut builder = symbol::SymbolTreeBuilder::new(inline_module("root"));
+fn sample_rst() -> Rst {
+    let mut builder = rst::SymbolTreeBuilder::new(inline_module("root"));
 
     builder
         .enter(inline_module("foo"))
@@ -33,7 +33,7 @@ fn sample_tree() -> symbol::SymbolTree {
 
 #[test]
 fn descendants_builder() {
-    let tree = sample_tree();
+    let tree = sample_rst();
     let root = tree.root().expect("Root should exist");
 
     let s = root
@@ -47,9 +47,9 @@ fn descendants_builder() {
 
 #[test]
 fn binary() {
-    let tree = sample_tree();
+    let tree = sample_rst();
     let encoded: Vec<u8> = tree.to_binary().expect("No error");
-    let decoded_tree = SymbolTree::from_binary(&encoded).expect("Failed to Deserialize");
+    let decoded_tree = Rst::from_binary(&encoded).expect("Failed to Deserialize");
 
     assert_that!(tree, eq(decoded_tree));
 }

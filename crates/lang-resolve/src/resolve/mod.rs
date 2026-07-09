@@ -5,7 +5,7 @@ use microcad_lang_base::Diagnostics;
 use miette::Diagnostic;
 use thiserror::Error;
 
-use crate::symbol;
+use crate::rst;
 
 /// Resolve error.
 #[derive(Debug, Error, Diagnostic)]
@@ -37,6 +37,6 @@ impl ResolveContext {
 }
 
 /// Trait to resolve an IR node into a symbol.
-pub trait Resolve<T = symbol::SymbolTree> {
+pub trait Resolve<T = rst::Rst> {
     fn resolve(&self, context: &mut ResolveContext) -> ResolveResult<T>;
 }
