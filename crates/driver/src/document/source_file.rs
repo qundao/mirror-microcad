@@ -4,10 +4,13 @@
 use crate::Result;
 use crate::prelude as mu;
 
-use microcad_lang_base::{Artifact, DiagRenderOptions, Version};
+use microcad_lang_base::ArtifactKind;
+use microcad_lang_base::CompilationResult;
+use microcad_lang_base::{Artifact, DiagRenderOptions};
 
 use miette::Diagnostic;
 use miette::IntoDiagnostic;
+use serde::Serialize;
 use thiserror::Error;
 
 #[derive(Error, Debug, Diagnostic)]
@@ -46,34 +49,27 @@ impl SourceFile {
         Ok(Self::new(source))
     }
 
-    fn path_with_ext(&self, extension: &str) -> Option<std::path::PathBuf> {
-        self.source.path().map(|mut path| {
-            path.add_extension(extension);
-            path
-        })
-    }
-
-    pub fn emit_ast(&self, path: Option<impl AsRef<std::path::Path>>) -> Result {
-        let path = path
-            .map(|p| p.as_ref().to_path_buf())
-            .or_else(|| self.path_with_ext("ast"))
-            .ok_or_else(|| miette::miette!("Source has no file path"))?;
-
-        match &self.ast {
-            Some(Ok((ast, _))) => Ok(std::fs::write(path, ast.to_ron()?).into_diagnostic()?),
-            _ => Err(miette::miette!("No AST to emit")),
+    pub fn get_artifact<T: Artifact>(result: &Option<CompilationResult<T>>) -> Result<&T> {
+        match result {
+            Some(Ok((artifact, _))) => Ok(artifact),
+            _ => Err(miette::miette!("No artifact!")),
         }
     }
 
-    pub fn emit_ir(&self, path: Option<impl AsRef<std::path::Path>>) -> Result {
-        let path = path
-            .map(|p| p.as_ref().to_path_buf())
-            .or_else(|| self.path_with_ext("ir"))
-            .ok_or_else(|| miette::miette!("Source has no file path"))?;
+    fn _emit<T>(&self, path: impl AsRef<std::path::Path>, artifact: &T) -> Result
+    where
+        T: Artifact + Serialize,
+    {
+        let mut path = path.as_ref().to_path_buf();
+        path.add_extension(&T::kind().to_string());
+        Ok(std::fs::write(path, artifact.to_ron()?).into_diagnostic()?)
+    }
 
-        match &self.ir {
-            Some(Ok((ir, _))) => Ok(std::fs::write(path, ir.to_ron()?).into_diagnostic()?),
-            _ => Err(miette::miette!("No IR to emit")),
+    pub fn emit(&self, path: impl AsRef<std::path::Path>, artifact_kind: &ArtifactKind) -> Result {
+        match artifact_kind {
+            ArtifactKind::Ast => self._emit(path, Self::get_artifact(&self.ast)?),
+            ArtifactKind::Ir => self._emit(path, Self::get_artifact(&self.ir)?),
+            ArtifactKind::Rst => todo!(),
         }
     }
 
