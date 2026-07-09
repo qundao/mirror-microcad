@@ -17,8 +17,8 @@ pub mod base {
 }
 
 pub use base::{
-    CompilationResult, Diagnostic, Diagnostics, HashId, HashMap, HashSet, Hashed, Identifier,
-    RcMut, Refer, Source, SourceKind, SourceLocation, SrcRef, TextEdit, Url,
+    Artifact, ArtifactKind, CompilationResult, Diagnostic, Diagnostics, HashId, HashMap, HashSet,
+    Hashed, Identifier, RcMut, Refer, Source, SourceKind, SourceLocation, SrcRef, TextEdit, Url,
 };
 
 pub mod parse {
