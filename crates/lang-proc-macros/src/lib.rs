@@ -258,3 +258,18 @@ pub fn derive_visit(input: TokenStream) -> TokenStream {
         _ => panic!("Only structs supported"),
     }
 }
+
+#[proc_macro_derive(Artifact)]
+pub fn derive_artifact(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+    let name = input.ident;
+
+    quote! {
+        impl microcad_lang_base::Artifact for #name {
+            fn kind() -> microcad_lang_base::ArtifactKind {
+                microcad_lang_base::ArtifactKind::#name
+            }
+        }
+    }
+    .into()
+}

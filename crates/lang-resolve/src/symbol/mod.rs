@@ -94,24 +94,14 @@ impl<'tree> SymbolRef<'tree> {
     pub fn handle(&self) -> SymbolHandle {
         self.handle
     }
-}
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct SymbolTreeMetadata {
-    version: Version,
-}
-
-impl Default for SymbolTreeMetadata {
-    fn default() -> Self {
-        Self {
-            version: Version::current(),
-        }
+    fn search(&self, path: &SymbolPath) -> SymbolRefs<'tree> {
+        todo!()
     }
 }
 
 #[derive(Debug, PartialEq, Default, Serialize, Deserialize)]
 pub struct SymbolTree {
-    metadata: SymbolTreeMetadata,
     nodes: HashMap<SymbolHandle, Symbol>,
     root: Option<SymbolHandle>,
 }
