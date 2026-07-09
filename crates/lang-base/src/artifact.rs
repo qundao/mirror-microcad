@@ -3,7 +3,7 @@
 
 //! A compiler artifact to be persisted, e.g. an IR written and read from file.
 
-use derive_more::Display;
+use derive_more::{Display, FromStr};
 use microcad_core::hash::HashId;
 use miette::Diagnostic;
 use serde::{Deserialize, Serialize};
@@ -37,11 +37,15 @@ pub enum ArtifactError {
     VersionMismatch { expected: Version, got: Version },
 }
 
-#[derive(Debug, Display, PartialEq, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Display, PartialEq, Clone, Copy, Serialize, Deserialize, FromStr)]
+#[from_str(rename_all = "lowercase")]
 pub enum ArtifactKind {
-    Ir,
+    /// Abstract syntax tree
     Ast,
-    SymbolTree,
+    /// Intermediate representation
+    Ir,
+    /// Resolved Symbol Tree (RST)
+    Rst,
 }
 
 #[repr(C)]

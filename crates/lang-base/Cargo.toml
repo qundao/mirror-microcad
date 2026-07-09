@@ -17,10 +17,11 @@ keywords.workspace = true
 [dependencies]
 color-print = { version = "0.3", optional = true }
 compact_str = { version = "0.9.0", features = ["serde"] }
-derive_more = { version = "2.0.1", features = [
+derive_more = { version = "2.1.1", features = [
     "deref",
     "deref_mut",
     "display",
+    "from_str",
 ] }
 dissimilar = "1.0.7"
 log = "0.4"
