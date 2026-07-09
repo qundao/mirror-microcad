@@ -146,7 +146,7 @@ impl<'a> From<&'a str> for Source {
     }
 }
 
-impl<'a> SpanToSrcRef for &'a Source {
+impl SpanToSrcRef for &Source {
     fn span_to_src_ref(&self, span: &crate::Span) -> SrcRef {
         self.line_index.src_ref(self.code.as_str(), span)
     }
