@@ -51,7 +51,7 @@ pub enum ArtifactKind {
 #[repr(C)]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ArtifactHeader {
-    pub magic: [u8; 4],      // "00B5" == µ unicode
+    pub magic: [u8; 4],      // "&mu;"
     pub version: Version,    // Increment this whenever the format changes
     pub kind: ArtifactKind,  // The artifact type (AST, IR, etc.)
     pub source_hash: HashId, // The hash of the source used (for reproducibility)
@@ -60,7 +60,7 @@ pub struct ArtifactHeader {
 impl ArtifactHeader {
     pub fn new(kind: ArtifactKind, source_hash: HashId) -> ArtifactHeader {
         Self {
-            magic: *b"00B5", // µ unicode
+            magic: *b"&mu;",
             version: Version::current(),
             kind,
             source_hash,
