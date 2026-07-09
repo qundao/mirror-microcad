@@ -12,7 +12,7 @@ use microcad_lang_base::{Id, Span};
 
 pub use expression::*;
 pub use literal::*;
-use microcad_lang_proc_macros::Visit;
+use microcad_lang_proc_macros::{Artifact, Visit};
 use serde::Serialize;
 pub use statement::*;
 pub use ty::*;
@@ -75,7 +75,7 @@ pub(crate) trait Dummy {
 }
 
 /// A µcad abstract syntax tree
-#[derive(Debug, Visit, Serialize)]
+#[derive(Debug, Visit, Serialize, Artifact)]
 #[allow(missing_docs)]
 pub struct Ast {
     pub span: Span,

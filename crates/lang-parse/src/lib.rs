@@ -22,7 +22,7 @@ mod parse;
 mod lex;
 
 pub use ast::Ast;
-use microcad_lang_base::{Artifact, ArtifactKind, CompilationResult, Diagnostics, Source};
+use microcad_lang_base::{CompilationResult, Diagnostics, Source};
 
 #[cfg(feature = "parser")]
 pub use parse::{ParseContext, ParseError, ParseErrors, parsers};
@@ -40,12 +40,6 @@ pub trait Parse: Sized {
 impl Parse for Ast {
     fn parse(context: &ParseContext) -> Result<Self, ParseErrors> {
         parse::parse(&lex(context.source.code()).collect::<Vec<_>>())
-    }
-}
-
-impl Artifact for Ast {
-    fn kind() -> ArtifactKind {
-        ArtifactKind::Ast
     }
 }
 
