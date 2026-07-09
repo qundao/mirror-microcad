@@ -3,8 +3,6 @@
 
 //! µcad CLI.
 
-use std::str::FromStr;
-
 use clap::Parser;
 
 use crate::commands::*;
@@ -54,15 +52,14 @@ impl Cli {
         mu::CompileParameters {
             resolve: mu::ResolveParameters {
                 search_paths: self.config.search_paths.clone(),
-                no_builtin: false,
             },
         }
     }
 
     /// Retrieve render parameters from resolution string.
-    pub fn render_params(&self, resolution: &str) -> mu::Result<mu::RenderParameters> {
+    /*pub fn render_params(&self, resolution: &str) -> mu::Result<mu::RenderParameters> {
         Ok(mu::RenderParameters::from_str(resolution)?.with_empty_cache())
-    }
+    }*/
 
     /// Print diagnostics with colors and unicode.
     pub fn print_diagnostics(&self, diag: &impl mu::traits::PrintDiagnostics) {
@@ -82,6 +79,9 @@ impl Cli {
         match &self.command {
             Commands::Check(check) => {
                 check.run(self)?;
+            }
+            Commands::Compile(compile) => {
+                compile.run(self)?;
             }
             Commands::Export(export) => {
                 export.run(self)?;

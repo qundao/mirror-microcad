@@ -1,9 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use clap::ValueEnum;
-use microcad_driver::prelude::base::{ArtifactKind, DiagRenderOptions};
-use miette::IntoDiagnostic;
+use microcad_driver::prelude as mu;
 
 use crate::{Cli, commands::RunCommand};
 
@@ -14,12 +12,11 @@ pub struct Compile {
     input: String,
     /// Specify compiler artifacts to be emitted (e.g., --emit ast,ir)
     #[arg(short, long)]
-    pub emit: Vec<ArtifactKind>,
+    pub emit: Vec<mu::ArtifactKind>,
 }
 
 impl RunCommand<()> for Compile {
-    fn run(&self, cli: &Cli) -> miette::Result<()> {
-        use microcad_driver::prelude as mu;
+    fn run(&self, cli: &Cli) -> mu::Result {
         use mu::traits::*;
 
         let mut source_file = mu::SourceFile::load(&self.input)?;
@@ -29,7 +26,7 @@ impl RunCommand<()> for Compile {
                 let path = source_file.source.path().expect("A path");
 
                 for artifact_kind in &self.emit {
-                    source_file.emit(&path, artifact_kind);
+                    source_file.emit(&path, artifact_kind)?;
                 }
             }
             Err(err) => {
