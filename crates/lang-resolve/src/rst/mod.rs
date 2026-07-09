@@ -102,6 +102,7 @@ pub struct SymbolRef<'rst> {
     symbol: &'rst Symbol,
     data: &'rst SymbolData,
     rst: &'rst Rst,
+    handle: SymbolHandle,
 }
 
 impl<'rst> SymbolRef<'rst> {
@@ -115,6 +116,10 @@ impl<'rst> SymbolRef<'rst> {
 
     pub fn tree(&self) -> &'rst Rst {
         self.rst
+    }
+
+    pub fn handle(&self) -> SymbolHandle {
+        self.handle
     }
 
     pub fn children(&self) -> Children<'rst> {
@@ -272,6 +277,7 @@ impl Rst {
             data: self.get_data(symbol.data).unwrap(),
             symbol,
             rst: &self,
+            handle,
         })
     }
 
