@@ -28,7 +28,7 @@ pub use microcad_lang_base::{Identifier, element::Visibility};
 pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Ty, Type, Unit};
 
 use microcad_lang_base::{Refer, SrcRef};
-use microcad_lang_proc_macros::SrcReferrer;
+use microcad_lang_proc_macros::{Artifact, SrcReferrer};
 use serde::Serialize;
 
 use crate::IsDefault;
@@ -123,7 +123,7 @@ impl IsDefault for Items {
 }
 
 /// IR of a µcad source file
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Artifact)]
 pub struct Ir {
     /// Inner attributes.
     #[serde(skip_serializing_if = "is_default", default)]

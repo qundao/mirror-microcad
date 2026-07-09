@@ -8,8 +8,7 @@ pub mod ir;
 mod lower;
 
 use microcad_lang_base::{
-    Artifact, ArtifactKind, CompilationResult, Diagnostics, Identifier, LineIndex, Source, Span,
-    SpanToSrcRef, SrcRef,
+    CompilationResult, Diagnostics, Identifier, Source, Span, SpanToSrcRef, SrcRef,
 };
 
 pub use lower::{LowerError, LowerResult};
@@ -17,12 +16,6 @@ pub use lower::{LowerError, LowerResult};
 /// Intermediate representation
 pub use ir::Ir;
 use microcad_lang_parse::Ast;
-
-impl Artifact for Ir {
-    fn kind() -> ArtifactKind {
-        ArtifactKind::Ir
-    }
-}
 
 pub(crate) trait IsDefault {
     fn is_default(&self) -> bool;
@@ -74,7 +67,6 @@ pub trait Identifiable {
 
 pub struct LowerContext<'source> {
     pub source: &'source Source,
-    line_index: LineIndex,
     pub errors: Vec<LowerError>,
 }
 
@@ -88,7 +80,6 @@ impl<'source> From<&'source Source> for LowerContext<'source> {
     fn from(source: &'source Source) -> Self {
         Self {
             source,
-            line_index: LineIndex::from(source),
             errors: Vec::default(),
         }
     }
@@ -96,7 +87,7 @@ impl<'source> From<&'source Source> for LowerContext<'source> {
 
 impl<'source> SpanToSrcRef for LowerContext<'source> {
     fn span_to_src_ref(&self, span: &Span) -> SrcRef {
-        self.line_index.src_ref(self.source.code.as_str(), span)
+        self.source.span_to_src_ref(span)
     }
 }
 
