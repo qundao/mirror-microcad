@@ -67,7 +67,7 @@ impl Lower<ast::def::InlineModule> for ir::InlineModule {
             src_ref: context.span_to_src_ref(&node.span),
             outer_attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
             visibility: ir::Visibility::lower(&node.vis, context)?,
-            keyword_ref: context.span_to_src_ref(&node.keyword_span),
+            keyword_src_ref: context.span_to_src_ref(&node.keyword_span),
             id: ir::Identifier::lower(&node.id, context)?,
             inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
             items: ir::InlineModuleItems::lower(&node.body.statements, context)?,

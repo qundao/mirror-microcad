@@ -64,7 +64,7 @@ pub struct InlineModule {
     /// Visibility of the module.
     pub visibility: ir::Visibility,
     /// SrcRef of the `mod` keyword
-    pub keyword_ref: SrcRef,
+    pub keyword_src_ref: SrcRef,
     /// Name of the module.
     pub id: ir::Identifier,
 

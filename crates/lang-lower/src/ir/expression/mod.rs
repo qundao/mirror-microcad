@@ -181,7 +181,7 @@ pub trait ExpressionKind: Serialize {
 ///
 /// Use for `Constant` and default values for `Parameter`.
 /// TODO: ElementAccess are missing.
-#[derive(Debug, PartialEq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
 pub enum ConstantExpression<NAME: Serialize = ir::QualifiedName> {
     Invalid,
