@@ -7,42 +7,37 @@ mod attribute;
 
 use derive_more::From;
 use microcad_lang_base::{HashId, Identifier, SrcRef};
-use microcad_lang_lower::ir;
+use microcad_lang_lower::ir::{self, ConstantExpression};
 use microcad_lang_types::{Type, Value};
 use serde::{Deserialize, Serialize};
 
 pub use microcad_lang_lower::ir::Visibility;
 
-/// A resolved name
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub enum Name {
-    /// Resolved into a hash id
-    Symbol(HashId),
-    /// Resolved into a local identifier
-    Local(Identifier),
-    /// Error during resolve
-    Unresolved(ir::QualifiedName),
-}
+use crate::rst::{SymbolPath, UnresolvedName};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, From, Hash, PartialEq, Serialize, Deserialize)]
 pub struct ParameterAttributes;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, From, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Parameter {
     pub attr: ParameterAttributes,
     id: Identifier,
     ty: Type,
-    default_value: Value,
+    default_value: Constant,
     src_ref: SrcRef,
 }
 
+#[derive(Debug, From, Hash, PartialEq, Serialize, Deserialize)]
 pub struct ParameterList {
     parameters: Box<[Parameter]>,
 }
 
-pub type ModelExpression = ir::WorkbenchExpression<Name>;
-pub type ValueExpression = ir::FunctionExpression<Name>;
+//pub type ModelExpression = ir::WorkbenchExpression<Name>;
+pub type ValueExpression<NAME> = ir::FunctionExpression<NAME>;
 
+pub type FunctionStatement<NAME> = ir::FunctionStatement<NAME>;
+
+/*
 pub struct ModelAttributes;
 
 pub struct WorkbenchStatement {
@@ -52,9 +47,7 @@ pub struct WorkbenchStatement {
     expr: ModelExpression,
 }
 
-pub type FunctionStatment = ir::FunctionStatement<Name>;
 
-/*
     pub struct FileModule {
         attr: ModuleAttributes,
     }
@@ -75,12 +68,6 @@ pub type FunctionStatment = ir::FunctionStatement<Name>;
         statements: Box<[WorkbenchStatement]>,
     }
 
-    pub struct Function {
-        attr: FunctionAttributes,
-        parameters: ParameterList,
-        return_type: Option<Type>,
-        statements: Box<[FunctionStatement]>,
-    }
 
     pub struct Wildcard;
 */
@@ -95,11 +82,27 @@ pub struct SourceFile {
 pub struct InlineModule;
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Constant(Value);
+pub enum Constant {
+    Resolved(Value),
+    Unresolved(ConstantExpression<UnresolvedName>),
+}
+
+#[derive(Debug, From, Hash, PartialEq, Serialize, Deserialize)]
+pub struct FunctionAttributes;
+
+#[derive(Debug, From, Hash, PartialEq, Serialize, Deserialize)]
+#[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
+pub struct Function<NAME: Serialize> {
+    attr: FunctionAttributes,
+    parameters: ParameterList,
+    return_type: Option<Type>,
+    statements: Box<[FunctionStatement<NAME>]>,
+}
 
 /// Symbol definition
 #[derive(Debug, From, Hash, PartialEq, Serialize, Deserialize)]
-pub enum SymbolDef {
+#[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
+pub enum SymbolDef<NAME: Serialize> {
     /// Root symbol
     Root,
     /// Source file symbol.
@@ -111,9 +114,9 @@ pub enum SymbolDef {
     /// Workbench symbol.
     Workbench,
     /// Function symbol.
-    Function,
+    Function(Function<NAME>),
     /// Constant.
-    Constant(Value),
+    Constant(Constant),
     /// Builtin symbol.
     Builtin,
     /// Alias of a pub use statement.
