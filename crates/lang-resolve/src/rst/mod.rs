@@ -27,9 +27,6 @@ pub use data::{SymbolAttributes, SymbolData};
 #[derive(Debug, PartialEq, Clone, Copy, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct SymbolHandle(usize);
 
-#[derive(Debug, PartialEq, Clone, Copy, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
-pub struct SymbolDataHandle(microcad_lang_base::HashId);
-
 #[derive(Debug, Default, Hash, PartialEq, Serialize, Deserialize)]
 pub struct SymbolIndex {
     items: Vec<SymbolHandle>,
@@ -279,13 +276,6 @@ impl Builder {
         }
     }
 
-    /// Add a child to the current parent
-    pub fn add_node(&mut self, data: impl Into<SymbolData>) -> &mut Self {
-        let parent = self.stack.last().copied();
-        self.tree.insert(parent, Rst::from(data.into()));
-        self
-    }
-
     /// Add a sub-tree to the current parent
     pub fn add(&mut self, rst: impl Into<Rst>) -> &mut Self {
         let parent = self.stack.last().copied();
@@ -294,9 +284,9 @@ impl Builder {
     }
 
     /// Enter a child scope (push to stack)
-    pub fn enter(&mut self, data: impl Into<SymbolData>) -> &mut Self {
+    pub fn enter(&mut self, rst: impl Into<Rst>) -> &mut Self {
         self.stack.push(SymbolHandle(self.tree.nodes.len() - 1));
-        self.add_node(data);
+        self.add(rst);
         // The last inserted node (the one we just added) becomes the new parent
         self
     }
