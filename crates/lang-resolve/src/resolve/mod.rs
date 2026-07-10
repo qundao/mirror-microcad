@@ -1,11 +1,18 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{Diagnostics, SrcReferrer};
+use microcad_lang_base::{Diagnostics, SrcRef, SrcReferrer};
+use microcad_lang_lower::{Ir, ir};
 use miette::Diagnostic;
 use thiserror::Error;
 
-use crate::rst;
+use crate::{
+    Symbol, SymbolRef,
+    rst::{
+        self, SymbolData,
+        def::{SourceFile, UnresolvedSymbolDef},
+    },
+};
 
 /// Resolve error.
 #[derive(Debug, Error, Diagnostic)]
@@ -16,21 +23,17 @@ pub type ResolveResult<T> = std::result::Result<T, ResolveError>;
 
 /// Resolve Context
 pub struct ResolveContext {
-    //pub stack: ResolveStack,
-    /// File module loader
-    //pub file_module_resolver: Box<dyn ResolveFileModule>,
+    pub builder: rst::Builder,
 
+    //pub file_module_resolver: Box<dyn ResolveFileModule>,
     /// Diagnostic handler.
     pub diagnostics: Diagnostics,
 }
 
 impl ResolveContext {
-    pub fn new(//root_symbols: impl Iter<Symbol>,
-        //file_module_resolver: dyn ResolveFileModule,
-    ) -> Self {
+    pub fn new(root: impl Into<Symbol<UnresolvedSymbolDef>>) -> Self {
         Self {
-            //stack: ResolveStack::new(root_symbols),
-            //file_module_resolver: Box::new(file_module_resolver),
+            builder: rst::Builder::new(root.into()),
             diagnostics: Diagnostics::default(),
         }
     }
@@ -40,6 +43,13 @@ impl ResolveContext {
         E: Into<miette::Report> + SrcReferrer,
     {
         self.diagnostics.push(err)
+    }
+
+    pub fn top<'tree>(&'tree self) -> SymbolRef<'tree, UnresolvedSymbolDef> {
+        self.builder
+            .tree
+            .get(*self.builder.stack.last().unwrap())
+            .unwrap()
     }
 }
 
@@ -52,4 +62,33 @@ impl Resolve for rst::def::InlineModule {
 /// Trait to resolve an IR node into a symbol.
 pub trait Resolve<T = rst::Rst> {
     fn resolve(&self, context: &mut ResolveContext) -> ResolveResult<T>;
+}
+
+impl From<&Ir> for Symbol<UnresolvedSymbolDef> {
+    fn from(ir: &Ir) -> Self {
+        Symbol {
+            data: SymbolData {
+                id: "root".into(),            // TODO Fetch name
+                doc: ir::DocBlock::default(), // TODO
+                visibility: ir::Visibility::Public,
+                src_ref: SrcRef::none(),
+                keyword_ref: SrcRef::none(),
+            },
+            def: UnresolvedSymbolDef::SourceFile(SourceFile {}),
+            parent: None,
+            children: Default::default(),
+        }
+    }
+}
+
+impl From<ir::InlineModule> for SymbolData {
+    fn from(ir: ir::InlineModule) -> Self {
+        Self {
+            id: ir.id.id().clone(),
+            doc: ir.outer_attr.doc.clone(),
+            visibility: ir.visibility,
+            src_ref: ir.src_ref,
+            keyword_ref: ir.keyword_ref,
+        }
+    }
 }

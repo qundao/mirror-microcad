@@ -7,13 +7,19 @@ mod attribute;
 
 use derive_more::From;
 use microcad_lang_base::{Identifier, SrcRef};
-use microcad_lang_lower::ir::{self, ConstantExpression};
+use microcad_lang_lower::{
+    Identifiable,
+    ir::{self, ConstantExpression},
+};
 use microcad_lang_types::{Type, Value};
 use serde::{Deserialize, Serialize};
 
 pub use microcad_lang_lower::ir::Visibility;
 
-use crate::{ResolveContext, rst};
+use crate::{
+    Resolve, ResolveContext, ResolveResult,
+    rst::{self, SymbolData, UnresolvedName},
+};
 
 #[derive(Debug, From, Hash, PartialEq, Serialize, Deserialize)]
 pub struct ParameterAttributes;
@@ -23,7 +29,7 @@ pub struct Parameter {
     pub attr: ParameterAttributes,
     id: Identifier,
     ty: Type,
-    default_value: Constant,
+    default_value: Value,
     src_ref: SrcRef,
 }
 
@@ -81,46 +87,35 @@ pub struct SourceFile {
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct InlineModule;
 
-#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
-pub enum Constant {
-    Resolved(Value),
-    Unresolved(ConstantExpression<rst::UnresolvedName>),
-}
-
-impl Constant {
-    pub fn resolve<'rst>(
-        &self,
-        symbol: &rst::SymbolRef<'rst, rst::SymbolData<rst::UnresolvedName>>,
-    ) -> Self {
+impl Resolve<Value> for ConstantExpression<rst::UnresolvedName> {
+    fn resolve<'tree>(&self, context: &mut ResolveContext) -> ResolveResult<Value> {
         match self {
-            Constant::Resolved(value) => Self::Resolved(value.clone()),
-            Constant::Unresolved(constant_expression) => match constant_expression {
-                ConstantExpression::Invalid => todo!(),
-                ConstantExpression::Literal(literal) => Self::Resolved(literal.value().clone()),
-                ConstantExpression::Call(call) => todo!(),
-                ConstantExpression::Name(rst::UnresolvedName(path)) => {
-                    match symbol.resolve(path.clone()) {
-                        Some(symbol) => match &symbol.data.def {
-                            SymbolDef::Root => todo!(),
-                            SymbolDef::SourceFile(source_file) => todo!(),
-                            SymbolDef::InlineModule(inline_module) => todo!(),
-                            SymbolDef::FileModule => todo!(),
-                            SymbolDef::Workbench => todo!(),
-                            SymbolDef::Function(function) => todo!(),
-                            SymbolDef::Constant(constant) => constant.resolve(&symbol),
-                            SymbolDef::Builtin => todo!(),
-                            SymbolDef::Alias => todo!(),
-                            SymbolDef::Wildcard => todo!(),
-                        },
-                        None => todo!("Error handling"),
-                    }
+            ConstantExpression::Invalid => todo!(),
+            ConstantExpression::Literal(literal) => Ok(literal.value().clone()),
+            ConstantExpression::Call(call) => todo!(),
+            ConstantExpression::Name(rst::UnresolvedName(path)) => {
+                use UnresolvedSymbolDef::*;
+                let resolved = context.top().resolve(path.clone());
+                match resolved {
+                    Some(symbol) => match &symbol.def {
+                        SourceFile(source_file) => todo!(),
+                        InlineModule(inline_module) => todo!(),
+                        FileModule => todo!(),
+                        Workbench => todo!(),
+                        Function(function) => todo!(),
+                        Constant(constant) => todo!(), // TODO constant.resolve(context),
+                        Builtin => todo!(),
+                        Alias => todo!(),
+                        Wildcard => todo!(),
+                    },
+                    None => todo!("Error handling"),
                 }
-                ConstantExpression::FormatString(format_string) => todo!(),
-                ConstantExpression::ArrayExpression(array_expression) => todo!(),
-                ConstantExpression::TupleExpression(tuple_expression) => todo!(),
-                ConstantExpression::BinaryOp(binary_op) => todo!(),
-                ConstantExpression::UnaryOp(unary_op) => todo!(),
-            },
+            }
+            ConstantExpression::FormatString(format_string) => todo!(),
+            ConstantExpression::ArrayExpression(array_expression) => todo!(),
+            ConstantExpression::TupleExpression(tuple_expression) => todo!(),
+            ConstantExpression::BinaryOp(binary_op) => todo!(),
+            ConstantExpression::UnaryOp(unary_op) => todo!(),
         }
     }
 }
@@ -139,10 +134,7 @@ pub struct Function<NAME: Serialize> {
 
 /// Symbol definition
 #[derive(Debug, From, Hash, PartialEq, Serialize, Deserialize)]
-#[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
-pub enum SymbolDef<NAME: Serialize> {
-    /// Root symbol
-    Root,
+pub enum UnresolvedSymbolDef {
     /// Source file symbol.
     SourceFile(SourceFile),
     /// Inline Module symbol: `mod foo {}`
@@ -152,9 +144,32 @@ pub enum SymbolDef<NAME: Serialize> {
     /// Workbench symbol.
     Workbench,
     /// Function symbol.
-    Function(Function<NAME>),
+    Function(Function<UnresolvedName>),
     /// Constant.
-    Constant(Constant),
+    Constant(ConstantExpression<rst::UnresolvedName>),
+    /// Builtin symbol.
+    Builtin,
+    /// Alias of a pub use statement.
+    Alias,
+    /// Use all available symbols in the module with the given name.
+    Wildcard,
+}
+
+/// Symbol definition
+#[derive(Debug, From, Hash, PartialEq, Serialize, Deserialize)]
+pub enum ResolvedSymbolDef {
+    /// Source file symbol.
+    SourceFile(SourceFile),
+    /// Inline Module symbol: `mod foo {}`
+    InlineModule(InlineModule),
+    /// File Module Symbol: `mod foo;`
+    FileModule,
+    /// Workbench symbol.
+    Workbench,
+    /// Function symbol.
+    Function(Function<rst::ResolvedName>),
+    /// Constant.
+    Constant(Value),
     /// Builtin symbol.
     Builtin,
     /// Alias of a pub use statement.

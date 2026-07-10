@@ -2,24 +2,30 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang_base::{Artifact, Id, Identifier, SrcRef};
+use microcad_lang_lower::ir::DocBlock;
 use microcad_lang_resolve::{
     Rst, SymbolRef,
-    rst::{self, ResolvedName, SymbolData, SymbolTree, UnresolvedName},
+    rst::{
+        self, ResolvedName, SymbolData, SymbolTree, UnresolvedName,
+        def::{InlineModule, UnresolvedSymbolDef},
+    },
 };
 
 use test_that::prelude::*;
 
-fn inline_module(id: &str) -> (Id, rst::SymbolData<UnresolvedName>) {
-    (
-        Id::from(id),
-        rst::SymbolData {
-            attr: rst::SymbolAttributes::default(),
-            def: rst::def::InlineModule.into(),
+fn inline_module(id: &str) -> rst::Symbol<rst::def::UnresolvedSymbolDef> {
+    rst::Symbol {
+        data: rst::SymbolData {
             visibility: rst::def::Visibility::Public,
             src_ref: SrcRef::none(),
             keyword_ref: SrcRef::none(),
+            id: Id::from(id),
+            doc: DocBlock::default(),
         },
-    )
+        def: rst::def::UnresolvedSymbolDef::InlineModule(InlineModule),
+        parent: None,
+        children: Default::default(),
+    }
 }
 
 fn sample_rst() -> Rst {
@@ -54,23 +60,23 @@ fn descendants_builder() {
 
 #[test]
 fn resolve() {
-    fn resolve_id<'rst>(root: &SymbolRef<'rst, SymbolData<ResolvedName>>, id: &str) -> Id {
+    fn resolve_id<'tree>(root: SymbolRef<'tree, rst::def::ResolvedSymbolDef>, id: &str) -> Id {
         root.resolve(id).unwrap().id().clone()
     }
     let tree = sample_rst();
 
     let root = tree.root().unwrap();
 
-    assert_that!(resolve_id(&root, "root::foo"), eq("foo"));
-    assert_that!(resolve_id(&root, "root::foo::baz"), eq("baz"));
-    assert_that!(resolve_id(&root, "root::foo::bam"), eq("bam"));
-    assert_that!(resolve_id(&root, "root::bar"), eq("bar"));
+    assert_that!(resolve_id(root, "root::foo"), eq("foo"));
+    assert_that!(resolve_id(root, "root::foo::baz"), eq("baz"));
+    assert_that!(resolve_id(root, "root::foo::bam"), eq("bam"));
+    assert_that!(resolve_id(root, "root::bar"), eq("bar"));
 
     let foo = root.resolve("root::foo").unwrap();
-    assert_that!(resolve_id(&foo, "foo"), eq("foo"));
-    assert_that!(resolve_id(&foo, "foo::baz"), eq("baz"));
-    assert_that!(resolve_id(&foo, "foo::bam"), eq("bam"));
-    assert_that!(resolve_id(&foo, "root"), eq("root"));
+    assert_that!(resolve_id(foo, "foo"), eq("foo"));
+    assert_that!(resolve_id(foo, "foo::baz"), eq("baz"));
+    assert_that!(resolve_id(foo, "foo::bam"), eq("bam"));
+    assert_that!(resolve_id(foo, "root"), eq("root"));
 }
 
 #[test]
