@@ -72,7 +72,7 @@ pub struct WorkbenchStatement {
     pub struct Wildcard;
 */
 
-#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SourceFile {
     //attr: SourceFileAttributes,
     //statements: Box<[WorkbenchStatement]>,
