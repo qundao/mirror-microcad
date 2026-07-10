@@ -19,7 +19,7 @@
                         )),
                     )),
                     visibility: Public,
-                    keyword_ref: "6:5 @ 3120565c23d7ae3e (110..113)",
+                    keyword_src_ref: "6:5 @ 3120565c23d7ae3e (110..113)",
                     id: ((
                         value: "b",
                         src_ref: "6:9 @ 3120565c23d7ae3e (114..115)",
@@ -29,7 +29,7 @@
                             (
                                 src_ref: "9:5 @ 3120565c23d7ae3e (145..216)",
                                 visibility: Public,
-                                keyword_ref: "9:9 @ 3120565c23d7ae3e (149..152)",
+                                keyword_src_ref: "9:9 @ 3120565c23d7ae3e (149..152)",
                                 id: ((
                                     value: "d",
                                     src_ref: "9:13 @ 3120565c23d7ae3e (153..154)",
@@ -59,7 +59,7 @@
                             (
                                 src_ref: "14:5 @ 3120565c23d7ae3e (216..254)",
                                 visibility: Private,
-                                keyword_ref: "14:5 @ 3120565c23d7ae3e (216..219)",
+                                keyword_src_ref: "14:5 @ 3120565c23d7ae3e (216..219)",
                                 id: ((
                                     value: "f",
                                     src_ref: "14:9 @ 3120565c23d7ae3e (220..221)",
