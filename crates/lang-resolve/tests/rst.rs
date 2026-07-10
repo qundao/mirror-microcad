@@ -23,10 +23,10 @@ fn sample_rst() -> Rst {
     builder
         .enter(inline_module("foo"))
         .enter(inline_module("baz"))
-        .add_node(inline_module("bam"))
+        .add(inline_module("bam"))
         .exit() // exit baz
         .exit() // exit foo
-        .add_node(inline_module("bar"));
+        .add(inline_module("bar"));
 
     let rst = builder.build();
     //println!("{rst:#?}");
@@ -77,7 +77,7 @@ fn insert_tree() {
         root.resolve("root::foo").unwrap()
     };
 
-    tree.insert_tree(Some(foo.handle()), sample_rst());
+    tree.insert(Some(foo.handle()), sample_rst());
 
     let s = tree
         .root()

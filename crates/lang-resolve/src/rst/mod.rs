@@ -208,38 +208,7 @@ impl Rst {
         self.get(SymbolHandle(0))
     }
 
-    fn insert_data(&mut self, data: impl Into<SymbolData>) -> SymbolDataHandle {
-        let data = data.into();
-        let handle = data.get_handle();
-        self.data.insert(handle, data);
-        handle
-    }
-
-    pub fn insert_node(
-        &'_ mut self,
-        parent: Option<SymbolHandle>,
-        data: impl Into<SymbolData>,
-    ) -> SymbolHandle {
-        let data = self.insert_data(data);
-
-        let symbol = Symbol {
-            data,
-            parent,
-            children: SymbolIndex::default(),
-        };
-
-        let handle = SymbolHandle(self.nodes.len());
-        self.nodes.push(symbol);
-
-        if let Some(parent) = parent {
-            if let Some(parent_node) = self.get_mut(parent) {
-                parent_node.children.insert(handle);
-            }
-        }
-        handle
-    }
-
-    pub fn insert_tree(&mut self, parent: Option<SymbolHandle>, rst: impl Into<Rst>) {
+    pub fn insert(&mut self, parent: Option<SymbolHandle>, rst: impl Into<Rst>) {
         let rst = rst.into();
         self.data.extend(rst.data.into_iter());
 
@@ -313,14 +282,14 @@ impl Builder {
     /// Add a child to the current parent
     pub fn add_node(&mut self, data: impl Into<SymbolData>) -> &mut Self {
         let parent = self.stack.last().copied();
-        self.tree.insert_node(parent, data);
+        self.tree.insert(parent, Rst::from(data.into()));
         self
     }
 
     /// Add a sub-tree to the current parent
-    pub fn add_tree(&mut self, rst: Rst) -> &mut Self {
+    pub fn add(&mut self, rst: impl Into<Rst>) -> &mut Self {
         let parent = self.stack.last().copied();
-        self.tree.insert_tree(parent, rst);
+        self.tree.insert(parent, rst);
         self
     }
 
