@@ -16,7 +16,7 @@ pub use iterators::*;
 
 use serde::{Deserialize, Serialize};
 
-pub use data::{SymbolAttributes, SymbolData};
+pub use data::SymbolData;
 
 use crate::rst::def::{ResolvedSymbolDef, UnresolvedSymbolDef};
 
@@ -111,8 +111,8 @@ where
 impl<'tree, DEF: Serialize> Clone for SymbolRef<'tree, DEF> {
     fn clone(&self) -> Self {
         Self {
-            symbol: self.symbol.clone(),
-            tree: self.tree.clone(),
+            symbol: self.symbol,
+            tree: self.tree,
             handle: self.handle.clone(),
         }
     }

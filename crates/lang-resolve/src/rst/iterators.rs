@@ -5,7 +5,7 @@
 
 use serde::Serialize;
 
-use crate::{Symbol, rst::SymbolRef};
+use crate::rst::SymbolRef;
 
 /// Iterator over children of a symbol.
 pub struct Children<'tree, DEF: Serialize> {

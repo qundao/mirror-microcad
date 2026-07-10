@@ -7,19 +7,14 @@ mod resolve;
 
 pub mod rst;
 
-use microcad_lang_base::{CompilationResult, Id, Identifier, Source, SrcRef};
-use microcad_lang_lower::{
-    Ir,
-    ir::{DocBlock, Visibility},
-};
+use microcad_lang_base::{CompilationResult, Source};
+use microcad_lang_lower::Ir;
 
 pub use rst::{Rst, Symbol, SymbolRef};
 
 pub use resolve::{Resolve, ResolveContext, ResolveResult};
 
-use crate::rst::{SymbolAttributes, UnresolvedName};
-
-pub fn resolve(source: &Source, ir: &Ir) -> CompilationResult<Rst> {
+pub fn resolve(_source: &Source, ir: &Ir) -> CompilationResult<Rst> {
     let mut context = ResolveContext::new(ir);
 
     for inline_module in &ir.items.inline_modules {

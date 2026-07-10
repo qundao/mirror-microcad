@@ -53,12 +53,6 @@ impl ResolveContext {
     }
 }
 
-impl Resolve for rst::def::InlineModule {
-    fn resolve(&self, context: &mut ResolveContext) -> ResolveResult<rst::Rst> {
-        todo!()
-    }
-}
-
 /// Trait to resolve an IR node into a symbol.
 pub trait Resolve<T = rst::Rst> {
     fn resolve(&self, context: &mut ResolveContext) -> ResolveResult<T>;
@@ -74,7 +68,7 @@ impl From<&ir::QualifiedName> for rst::SymbolPath {
 }
 
 impl From<&Ir> for Symbol<UnresolvedSymbolDef> {
-    fn from(ir: &Ir) -> Self {
+    fn from(_ir: &Ir) -> Self {
         Symbol {
             data: SymbolData {
                 id: "root".into(),            // TODO Fetch name
