@@ -216,8 +216,8 @@ pub fn resolve_symbol<'tree>(
             UnresolvedSymbolDef::FileModule => todo!(),
             UnresolvedSymbolDef::Workbench => todo!(),
             UnresolvedSymbolDef::Function(_) => todo!(),
-            UnresolvedSymbolDef::Constant(constant_expression) => {
-                ResolvedSymbolDef::Constant(resolve_constant(constant_expression, symbol_ref)?)
+            UnresolvedSymbolDef::Constant(constant) => {
+                ResolvedSymbolDef::Constant(resolve_constant(constant, symbol_ref)?)
             }
             UnresolvedSymbolDef::Builtin => todo!(),
             UnresolvedSymbolDef::Alias => todo!(),

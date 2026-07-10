@@ -19,6 +19,7 @@ fn resolve_inline_module_def() {
 
     let root = rst.root().unwrap();
 
+    assert!(root.resolve("root::A").is_some());
     assert!(root.resolve("root::b::C").is_some());
     assert!(root.resolve("root::b::d::E").is_some());
     assert!(root.resolve("root::b::f::G").is_some()); // Show be unreachable
