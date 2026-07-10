@@ -8,7 +8,9 @@ use serde::{Deserialize, Serialize};
 use crate::ty::*;
 
 /// Definition of type & scale of numbers.
-#[derive(Default, Clone, Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[derive(
+    Default, Clone, Debug, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize,
+)]
 pub enum Unit {
     // Scalar
     /// No unit was given.
