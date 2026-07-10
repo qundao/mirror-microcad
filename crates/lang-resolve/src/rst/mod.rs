@@ -331,7 +331,11 @@ impl Builder {
         self
     }
 
-    pub fn build(self) -> Rst {
+    pub fn build(self) -> SymbolTree<UnresolvedSymbolDef> {
+        self.tree
+    }
+
+    pub fn build_rst(self) -> Rst {
         let root = self.tree.root().expect("Root node expected");
 
         // Convert unresolved symbols into resolved symbols

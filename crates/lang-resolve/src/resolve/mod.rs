@@ -64,6 +64,15 @@ pub trait Resolve<T = rst::Rst> {
     fn resolve(&self, context: &mut ResolveContext) -> ResolveResult<T>;
 }
 
+impl From<&ir::QualifiedName> for rst::SymbolPath {
+    fn from(name: &ir::QualifiedName) -> Self {
+        name.iter()
+            .map(|id| id.id().clone())
+            .collect::<Vec<_>>()
+            .into()
+    }
+}
+
 impl From<&Ir> for Symbol<UnresolvedSymbolDef> {
     fn from(ir: &Ir) -> Self {
         Symbol {
@@ -88,7 +97,19 @@ impl From<&ir::InlineModule> for SymbolData {
             doc: ir.outer_attr.doc.clone(),
             visibility: ir.visibility.clone(),
             src_ref: ir.src_ref,
-            keyword_ref: ir.keyword_ref,
+            keyword_ref: ir.keyword_src_ref,
+        }
+    }
+}
+
+impl From<&ir::Constant> for SymbolData {
+    fn from(ir: &ir::Constant) -> Self {
+        Self {
+            id: ir.id.id().clone(),
+            doc: ir.attr.doc.clone(),
+            visibility: ir.visibility.clone(),
+            src_ref: ir.src_ref,
+            keyword_ref: ir.keyword_src_ref,
         }
     }
 }

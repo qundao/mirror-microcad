@@ -11,7 +11,7 @@ use microcad_lang_lower::{
     Identifiable,
     ir::{self, ConstantExpression},
 };
-use microcad_lang_types::{Type, Value};
+use microcad_lang_types::{Type, Value, ty::Ty};
 use serde::{Deserialize, Serialize};
 
 pub use microcad_lang_lower::ir::Visibility;
@@ -88,20 +88,21 @@ pub struct SourceFile {
 pub struct InlineModule;
 
 pub fn resolve_constant<'tree>(
-    constant: &ConstantExpression<rst::UnresolvedName>,
+    constant: &rst::def::Constant,
     parent: rst::SymbolRef<'tree, UnresolvedSymbolDef>,
 ) -> ResolveResult<Value> {
-    match constant {
+    match &constant.expr {
         ConstantExpression::Invalid => todo!(),
         ConstantExpression::Literal(literal) => Ok(literal.value().clone()),
         ConstantExpression::Call(call) => todo!(),
-        ConstantExpression::Name(rst::UnresolvedName(path)) => {
+        ConstantExpression::Name(name) => {
             use UnresolvedSymbolDef::*;
+            let path: rst::SymbolPath = name.into();
             let resolved = parent.resolve(path.clone());
             match resolved {
                 Some(symbol) => match &symbol.def {
                     SourceFile(source_file) => todo!(),
-                    InlineModule(inline_module) => todo!(),
+                    InlineModule => todo!(),
                     FileModule => todo!(),
                     Workbench => todo!(),
                     Function(function) => todo!(),
@@ -133,13 +134,19 @@ pub struct Function<NAME: Serialize> {
     statements: Box<[FunctionStatement<NAME>]>,
 }
 
+#[derive(Debug, From, Hash, PartialEq, Serialize, Deserialize)]
+pub struct Constant {
+    pub ty: Option<ir::TypeAnnotation>,
+    pub expr: ir::ConstantExpression,
+}
+
 /// Symbol definition
 #[derive(Debug, From, Hash, PartialEq, Serialize, Deserialize)]
 pub enum UnresolvedSymbolDef {
     /// Source file symbol.
     SourceFile(SourceFile),
     /// Inline Module symbol: `mod foo {}`
-    InlineModule(InlineModule),
+    InlineModule,
     /// File Module Symbol: `mod foo;`
     FileModule,
     /// Workbench symbol.
@@ -147,7 +154,7 @@ pub enum UnresolvedSymbolDef {
     /// Function symbol.
     Function(Function<UnresolvedName>),
     /// Constant.
-    Constant(ConstantExpression<rst::UnresolvedName>),
+    Constant(Constant),
     /// Builtin symbol.
     Builtin,
     /// Alias of a pub use statement.
@@ -179,8 +186,29 @@ pub enum ResolvedSymbolDef {
     Wildcard,
 }
 
+pub fn constant(ir: &ir::Constant) -> rst::SymbolTree<UnresolvedSymbolDef> {
+    Symbol::new(
+        ir.into(),
+        UnresolvedSymbolDef::Constant(Constant {
+            ty: ir.ty.clone(),
+            expr: ir.expr.clone(),
+        }),
+    )
+    .into()
+}
+
 pub fn inline_module(ir: &ir::InlineModule) -> rst::SymbolTree<UnresolvedSymbolDef> {
-    Symbol::new(ir.into(), UnresolvedSymbolDef::InlineModule(InlineModule)).into()
+    let mut builder = rst::Builder::new(Symbol::new(ir.into(), UnresolvedSymbolDef::InlineModule));
+
+    for ir in &ir.items.modules {
+        builder.add(inline_module(ir));
+    }
+
+    for ir in &ir.items.constants {
+        builder.add(constant(ir));
+    }
+
+    builder.tree
 }
 
 pub fn resolve_symbol<'tree>(
@@ -191,9 +219,7 @@ pub fn resolve_symbol<'tree>(
             UnresolvedSymbolDef::SourceFile(source_file) => {
                 ResolvedSymbolDef::SourceFile(SourceFile {})
             }
-            UnresolvedSymbolDef::InlineModule(inline_module) => {
-                ResolvedSymbolDef::InlineModule(InlineModule)
-            }
+            UnresolvedSymbolDef::InlineModule => ResolvedSymbolDef::InlineModule(InlineModule),
             UnresolvedSymbolDef::FileModule => todo!(),
             UnresolvedSymbolDef::Workbench => todo!(),
             UnresolvedSymbolDef::Function(function) => todo!(),

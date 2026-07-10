@@ -22,7 +22,7 @@ fn inline_module(id: &str) -> rst::Symbol<rst::def::UnresolvedSymbolDef> {
             id: Id::from(id),
             doc: DocBlock::default(),
         },
-        def: rst::def::UnresolvedSymbolDef::InlineModule(InlineModule),
+        def: rst::def::UnresolvedSymbolDef::InlineModule,
         parent: None,
         children: Default::default(),
     }
@@ -39,7 +39,7 @@ fn sample_rst() -> Rst {
         .exit() // exit foo
         .add(inline_module("bar"));
 
-    let rst = builder.build();
+    let rst = builder.build_rst();
     println!("{rst:#?}");
     rst
 }

@@ -28,5 +28,5 @@ pub fn resolve(source: &Source, ir: &Ir) -> CompilationResult<Rst> {
         //   builder.add(node);
     }
 
-    Ok((context.builder.build(), context.diagnostics))
+    Ok((context.builder.build_rst(), context.diagnostics))
 }
