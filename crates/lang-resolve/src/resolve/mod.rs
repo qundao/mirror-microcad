@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::Diagnostics;
+use microcad_lang_base::{Diagnostics, SrcReferrer};
 use miette::Diagnostic;
 use thiserror::Error;
 
@@ -33,6 +33,13 @@ impl ResolveContext {
             //file_module_resolver: Box::new(file_module_resolver),
             diagnostics: Diagnostics::default(),
         }
+    }
+
+    pub fn diag<E>(&mut self, err: E)
+    where
+        E: Into<miette::Report> + SrcReferrer,
+    {
+        self.diagnostics.push(err)
     }
 }
 

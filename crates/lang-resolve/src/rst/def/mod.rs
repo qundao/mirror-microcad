@@ -6,14 +6,14 @@
 mod attribute;
 
 use derive_more::From;
-use microcad_lang_base::{HashId, Identifier, SrcRef};
+use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_lower::ir::{self, ConstantExpression};
 use microcad_lang_types::{Type, Value};
 use serde::{Deserialize, Serialize};
 
 pub use microcad_lang_lower::ir::Visibility;
 
-use crate::rst::{SymbolPath, UnresolvedName};
+use crate::{ResolveContext, rst};
 
 #[derive(Debug, From, Hash, PartialEq, Serialize, Deserialize)]
 pub struct ParameterAttributes;
@@ -84,7 +84,45 @@ pub struct InlineModule;
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub enum Constant {
     Resolved(Value),
-    Unresolved(ConstantExpression<UnresolvedName>),
+    Unresolved(ConstantExpression<rst::UnresolvedName>),
+}
+
+impl Constant {
+    pub fn resolve<'rst>(
+        &self,
+        symbol: &rst::SymbolRef<'rst, rst::SymbolData<rst::UnresolvedName>>,
+    ) -> Self {
+        match self {
+            Constant::Resolved(value) => Self::Resolved(value.clone()),
+            Constant::Unresolved(constant_expression) => match constant_expression {
+                ConstantExpression::Invalid => todo!(),
+                ConstantExpression::Literal(literal) => Self::Resolved(literal.value().clone()),
+                ConstantExpression::Call(call) => todo!(),
+                ConstantExpression::Name(rst::UnresolvedName(path)) => {
+                    match symbol.resolve(path.clone()) {
+                        Some(symbol) => match &symbol.data.def {
+                            SymbolDef::Root => todo!(),
+                            SymbolDef::SourceFile(source_file) => todo!(),
+                            SymbolDef::InlineModule(inline_module) => todo!(),
+                            SymbolDef::FileModule => todo!(),
+                            SymbolDef::Workbench => todo!(),
+                            SymbolDef::Function(function) => todo!(),
+                            SymbolDef::Constant(constant) => constant.resolve(&symbol),
+                            SymbolDef::Builtin => todo!(),
+                            SymbolDef::Alias => todo!(),
+                            SymbolDef::Wildcard => todo!(),
+                        },
+                        None => todo!("Error handling"),
+                    }
+                }
+                ConstantExpression::FormatString(format_string) => todo!(),
+                ConstantExpression::ArrayExpression(array_expression) => todo!(),
+                ConstantExpression::TupleExpression(tuple_expression) => todo!(),
+                ConstantExpression::BinaryOp(binary_op) => todo!(),
+                ConstantExpression::UnaryOp(unary_op) => todo!(),
+            },
+        }
+    }
 }
 
 #[derive(Debug, From, Hash, PartialEq, Serialize, Deserialize)]

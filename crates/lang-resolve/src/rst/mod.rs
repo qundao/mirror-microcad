@@ -7,21 +7,13 @@ mod data;
 pub mod def;
 mod iterators;
 
-use std::{collections::BTreeMap, hash::Hash};
+use std::hash::Hash;
 
-use derive_more::{Deref, From};
-use microcad_lang_base::{
-    Artifact, ComputedHash, HashId, HashMap, Hashed, Id, Identifier, SrcRef, Version,
-    element::Visibility,
-};
+use derive_more::From;
+use microcad_lang_base::Id;
 
 pub use iterators::*;
 
-use data::*;
-
-use def::SymbolDef;
-use microcad_lang_lower::ir::QualifiedName;
-use microcad_lang_proc_macros::Artifact;
 use serde::{Deserialize, Serialize};
 
 pub use data::{SymbolAttributes, SymbolData};
@@ -29,7 +21,7 @@ pub use data::{SymbolAttributes, SymbolData};
 #[derive(Debug, PartialEq, Clone, Copy, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct SymbolHandle(usize);
 
-#[derive(Debug, Default, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct SymbolIndex {
     items: Vec<SymbolHandle>,
 }
@@ -72,15 +64,15 @@ impl FromIterator<SymbolHandle> for SymbolIndex {
 
 #[derive(Debug, PartialEq, Hash, Serialize, Deserialize)]
 
-pub struct Symbol {
+pub struct Symbol<DATA: Serialize> {
     pub id: Id,
-    data: SymbolDataHandle,
+    data: DATA,
     parent: Option<SymbolHandle>,
     children: SymbolIndex,
 }
 
-impl Symbol {
-    pub fn new(id: Id, data: SymbolDataHandle) -> Self {
+impl<DATA: Serialize> Symbol<DATA> {
+    pub fn new(id: Id, data: DATA) -> Self {
         Self {
             id,
             data,
@@ -106,14 +98,13 @@ impl From<&str> for SymbolPath {
 
 #[derive(Debug, Clone, Copy)]
 pub struct SymbolRef<'rst, DATA: Serialize> {
-    symbol: &'rst Symbol,
-    data: &'rst DATA,
+    symbol: &'rst Symbol<DATA>,
     tree: &'rst SymbolTree<DATA>,
     handle: SymbolHandle,
 }
 
 impl<'rst, DATA: Serialize> std::ops::Deref for SymbolRef<'rst, DATA> {
-    type Target = Symbol;
+    type Target = Symbol<DATA>;
 
     fn deref(&self) -> &Self::Target {
         self.symbol
@@ -125,8 +116,12 @@ impl<'rst, DATA: Serialize> SymbolRef<'rst, DATA> {
         &self.id
     }
 
-    pub fn symbol(&self) -> &'rst Symbol {
+    pub fn symbol(&self) -> &'rst Symbol<DATA> {
         self.symbol
+    }
+
+    pub fn data(&self) -> &'rst DATA {
+        &self.symbol.data
     }
 
     pub fn tree(&self) -> &'rst SymbolTree<DATA> {
@@ -230,8 +225,7 @@ impl<'rst, DATA: Serialize> SymbolRef<'rst, DATA> {
 #[serde(bound(serialize = "DATA: Serialize", deserialize = "DATA: Deserialize<'de>"))]
 
 pub struct SymbolTree<DATA: Serialize> {
-    nodes: Vec<Symbol>,
-    data: BTreeMap<SymbolDataHandle, DATA>,
+    nodes: Vec<Symbol<DATA>>,
 }
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
@@ -252,7 +246,6 @@ impl<DATA: Serialize> SymbolTree<DATA> {
     pub fn new() -> Self {
         Self {
             nodes: Default::default(),
-            data: Default::default(),
         }
     }
 
@@ -263,7 +256,6 @@ impl<DATA: Serialize> SymbolTree<DATA> {
 
     pub fn insert(&mut self, parent: Option<SymbolHandle>, tree: impl Into<SymbolTree<DATA>>) {
         let rst = tree.into();
-        self.data.extend(rst.data.into_iter());
 
         let base_index = self.nodes.len();
         let handle = SymbolHandle(base_index);
@@ -291,31 +283,23 @@ impl<DATA: Serialize> SymbolTree<DATA> {
         }
     }
 
-    fn get_data(&self, handle: SymbolDataHandle) -> Option<&DATA> {
-        self.data.get(&handle)
-    }
-
     pub fn get(&'_ self, handle: SymbolHandle) -> Option<SymbolRef<'_, DATA>> {
         self.nodes.get(handle.0).map(|symbol| SymbolRef {
-            data: self.get_data(symbol.data).unwrap(),
             symbol,
             tree: &self,
             handle,
         })
     }
 
-    fn get_mut(&mut self, handle: SymbolHandle) -> Option<&mut Symbol> {
+    fn get_mut(&mut self, handle: SymbolHandle) -> Option<&mut Symbol<DATA>> {
         self.nodes.get_mut(handle.0)
     }
 }
 
 impl<NAME: Serialize + Hash> From<(Id, SymbolData<NAME>)> for SymbolTree<SymbolData<NAME>> {
     fn from(data: (Id, SymbolData<NAME>)) -> Self {
-        let id = data.0;
-        let data_handle = data.1.get_handle();
         Self {
-            nodes: vec![Symbol::new(id, data_handle)],
-            data: [(data_handle, data.1)].into_iter().collect(),
+            nodes: vec![Symbol::new(data.0, data.1)],
         }
     }
 }
@@ -355,7 +339,19 @@ impl Builder {
         self
     }
 
-    pub fn build(self) -> SymbolTree<SymbolData<UnresolvedName>> {
-        self.tree
+    pub fn build(self) -> Rst {
+        let root = self.tree.root().expect("Root node expected");
+
+        let nodes: Vec<Symbol<SymbolData<ResolvedName>>> = root
+            .descendants()
+            .map(|symbol| Symbol {
+                id: symbol.id.clone(),
+                data: symbol.resolve_data(),
+                parent: symbol.parent,
+                children: symbol.children.clone(),
+            })
+            .collect();
+
+        Rst { nodes }
     }
 }

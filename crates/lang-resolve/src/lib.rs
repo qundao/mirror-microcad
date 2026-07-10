@@ -16,10 +16,7 @@ pub use resolve::{Resolve, ResolveContext, ResolveResult};
 
 use crate::rst::{SymbolAttributes, UnresolvedName};
 
-pub fn resolve(
-    source: &Source,
-    ir: &Ir,
-) -> CompilationResult<rst::SymbolTree<rst::SymbolData<UnresolvedName>>> {
+pub fn resolve(source: &Source, ir: &Ir) -> CompilationResult<Rst> {
     let mut builder = rst::Builder::new((
         Id::from("root"),
         rst::SymbolData {

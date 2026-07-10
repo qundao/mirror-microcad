@@ -4,7 +4,7 @@
 use microcad_lang_base::{Artifact, Id, Identifier, SrcRef};
 use microcad_lang_resolve::{
     Rst, SymbolRef,
-    rst::{self, SymbolData, SymbolTree, UnresolvedName},
+    rst::{self, ResolvedName, SymbolData, SymbolTree, UnresolvedName},
 };
 
 use test_that::prelude::*;
@@ -22,7 +22,7 @@ fn inline_module(id: &str) -> (Id, rst::SymbolData<UnresolvedName>) {
     )
 }
 
-fn sample_unresolved_tree() -> SymbolTree<rst::SymbolData<UnresolvedName>> {
+fn sample_rst() -> Rst {
     let mut builder = rst::Builder::new(inline_module("root"));
 
     builder
@@ -34,13 +34,13 @@ fn sample_unresolved_tree() -> SymbolTree<rst::SymbolData<UnresolvedName>> {
         .add(inline_module("bar"));
 
     let rst = builder.build();
-    //println!("{rst:#?}");
+    println!("{rst:#?}");
     rst
 }
 
 #[test]
 fn descendants_builder() {
-    let tree = sample_unresolved_tree();
+    let tree = sample_rst();
     let root = tree.root().expect("Root should exist");
 
     let s = root
@@ -54,10 +54,10 @@ fn descendants_builder() {
 
 #[test]
 fn resolve() {
-    fn resolve_id<'rst>(root: &SymbolRef<'rst, SymbolData<UnresolvedName>>, id: &str) -> Id {
+    fn resolve_id<'rst>(root: &SymbolRef<'rst, SymbolData<ResolvedName>>, id: &str) -> Id {
         root.resolve(id).unwrap().id().clone()
     }
-    let tree = sample_unresolved_tree();
+    let tree = sample_rst();
 
     let root = tree.root().unwrap();
 
@@ -75,14 +75,14 @@ fn resolve() {
 
 #[test]
 fn insert_tree() {
-    let mut tree = sample_unresolved_tree();
+    let mut tree = sample_rst();
 
     let foo = {
         let root = tree.root().unwrap();
         root.resolve("root::foo").unwrap()
     };
 
-    tree.insert(Some(foo.handle()), sample_unresolved_tree());
+    tree.insert(Some(foo.handle()), sample_rst());
 
     let s = tree
         .root()
