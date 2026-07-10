@@ -36,7 +36,7 @@ impl std::fmt::Display for WorkbenchKind {
 ///
 /// This is used to determine if an entity is public or private.
 /// By default, entities are private.
-#[derive(Debug, Hash, PartialEq, Default, Serialize, Deserialize)]
+#[derive(Debug, Hash, Clone, PartialEq, Default, Serialize, Deserialize)]
 pub enum Visibility {
     /// `pub`
     Public,
