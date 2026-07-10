@@ -23,6 +23,7 @@ pub fn resolve(source: &Source, ir: &Ir) -> CompilationResult<Rst> {
     let mut context = ResolveContext::new(ir);
 
     for inline_module in &ir.items.inline_modules {
+        context.builder.add(rst::def::inline_module(inline_module));
         // let node = inline_module.resolve(&mut context);
         //   builder.add(node);
     }

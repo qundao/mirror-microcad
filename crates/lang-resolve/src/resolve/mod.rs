@@ -81,12 +81,12 @@ impl From<&Ir> for Symbol<UnresolvedSymbolDef> {
     }
 }
 
-impl From<ir::InlineModule> for SymbolData {
-    fn from(ir: ir::InlineModule) -> Self {
+impl From<&ir::InlineModule> for SymbolData {
+    fn from(ir: &ir::InlineModule) -> Self {
         Self {
             id: ir.id.id().clone(),
             doc: ir.outer_attr.doc.clone(),
-            visibility: ir.visibility,
+            visibility: ir.visibility.clone(),
             src_ref: ir.src_ref,
             keyword_ref: ir.keyword_ref,
         }

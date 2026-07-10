@@ -14,4 +14,5 @@ fn resolve_inline_module_def() {
         .expect("No errors reading IR");
     let ir = microcad_lang_lower::Ir::from_ron(ron.as_str()).expect("No error deserializing IR");
     let rst = microcad_lang_resolve::resolve(&source, &ir);
+    println!("{rst:#?}")
 }

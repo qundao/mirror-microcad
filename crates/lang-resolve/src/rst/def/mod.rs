@@ -17,7 +17,7 @@ use serde::{Deserialize, Serialize};
 pub use microcad_lang_lower::ir::Visibility;
 
 use crate::{
-    Resolve, ResolveContext, ResolveResult,
+    Resolve, ResolveContext, ResolveResult, Symbol, SymbolRef,
     rst::{self, SymbolData, UnresolvedName},
 };
 
@@ -87,36 +87,37 @@ pub struct SourceFile {
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct InlineModule;
 
-impl Resolve<Value> for ConstantExpression<rst::UnresolvedName> {
-    fn resolve<'tree>(&self, context: &mut ResolveContext) -> ResolveResult<Value> {
-        match self {
-            ConstantExpression::Invalid => todo!(),
-            ConstantExpression::Literal(literal) => Ok(literal.value().clone()),
-            ConstantExpression::Call(call) => todo!(),
-            ConstantExpression::Name(rst::UnresolvedName(path)) => {
-                use UnresolvedSymbolDef::*;
-                let resolved = context.top().resolve(path.clone());
-                match resolved {
-                    Some(symbol) => match &symbol.def {
-                        SourceFile(source_file) => todo!(),
-                        InlineModule(inline_module) => todo!(),
-                        FileModule => todo!(),
-                        Workbench => todo!(),
-                        Function(function) => todo!(),
-                        Constant(constant) => todo!(), // TODO constant.resolve(context),
-                        Builtin => todo!(),
-                        Alias => todo!(),
-                        Wildcard => todo!(),
-                    },
-                    None => todo!("Error handling"),
-                }
+pub fn resolve_constant<'tree>(
+    constant: &ConstantExpression<rst::UnresolvedName>,
+    parent: rst::SymbolRef<'tree, UnresolvedSymbolDef>,
+) -> ResolveResult<Value> {
+    match constant {
+        ConstantExpression::Invalid => todo!(),
+        ConstantExpression::Literal(literal) => Ok(literal.value().clone()),
+        ConstantExpression::Call(call) => todo!(),
+        ConstantExpression::Name(rst::UnresolvedName(path)) => {
+            use UnresolvedSymbolDef::*;
+            let resolved = parent.resolve(path.clone());
+            match resolved {
+                Some(symbol) => match &symbol.def {
+                    SourceFile(source_file) => todo!(),
+                    InlineModule(inline_module) => todo!(),
+                    FileModule => todo!(),
+                    Workbench => todo!(),
+                    Function(function) => todo!(),
+                    Constant(constant) => resolve_constant(constant, symbol),
+                    Builtin => todo!(),
+                    Alias => todo!(),
+                    Wildcard => todo!(),
+                },
+                None => todo!("Error handling"),
             }
-            ConstantExpression::FormatString(format_string) => todo!(),
-            ConstantExpression::ArrayExpression(array_expression) => todo!(),
-            ConstantExpression::TupleExpression(tuple_expression) => todo!(),
-            ConstantExpression::BinaryOp(binary_op) => todo!(),
-            ConstantExpression::UnaryOp(unary_op) => todo!(),
         }
+        ConstantExpression::FormatString(format_string) => todo!(),
+        ConstantExpression::ArrayExpression(array_expression) => todo!(),
+        ConstantExpression::TupleExpression(tuple_expression) => todo!(),
+        ConstantExpression::BinaryOp(binary_op) => todo!(),
+        ConstantExpression::UnaryOp(unary_op) => todo!(),
     }
 }
 
@@ -176,4 +177,35 @@ pub enum ResolvedSymbolDef {
     Alias,
     /// Use all available symbols in the module with the given name.
     Wildcard,
+}
+
+pub fn inline_module(ir: &ir::InlineModule) -> rst::SymbolTree<UnresolvedSymbolDef> {
+    Symbol::new(ir.into(), UnresolvedSymbolDef::InlineModule(InlineModule)).into()
+}
+
+pub fn resolve_symbol<'tree>(
+    symbol_ref: SymbolRef<'tree, UnresolvedSymbolDef>,
+) -> ResolveResult<crate::Symbol<ResolvedSymbolDef>> {
+    Ok(crate::Symbol {
+        def: match &symbol_ref.def {
+            UnresolvedSymbolDef::SourceFile(source_file) => {
+                ResolvedSymbolDef::SourceFile(SourceFile {})
+            }
+            UnresolvedSymbolDef::InlineModule(inline_module) => {
+                ResolvedSymbolDef::InlineModule(InlineModule)
+            }
+            UnresolvedSymbolDef::FileModule => todo!(),
+            UnresolvedSymbolDef::Workbench => todo!(),
+            UnresolvedSymbolDef::Function(function) => todo!(),
+            UnresolvedSymbolDef::Constant(constant_expression) => {
+                ResolvedSymbolDef::Constant(resolve_constant(constant_expression, symbol_ref)?)
+            }
+            UnresolvedSymbolDef::Builtin => todo!(),
+            UnresolvedSymbolDef::Alias => todo!(),
+            UnresolvedSymbolDef::Wildcard => todo!(),
+        },
+        data: symbol_ref.data.clone(),
+        parent: symbol_ref.parent,
+        children: symbol_ref.children.clone(),
+    })
 }

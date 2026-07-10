@@ -337,12 +337,7 @@ impl Builder {
         // Convert unresolved symbols into resolved symbols
         let nodes: Vec<Symbol<ResolvedSymbolDef>> = root
             .descendants()
-            .map(|symbol| Symbol {
-                def: todo!(),
-                data: symbol.data,
-                parent: symbol.parent,
-                children: symbol.children,
-            })
+            .map(|symbol| def::resolve_symbol(symbol).expect("TODO Error handling"))
             .collect();
 
         Rst { nodes }
