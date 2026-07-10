@@ -186,7 +186,6 @@ pub trait ExpressionKind: Serialize {
 pub enum ConstantExpression<NAME: Serialize = ir::QualifiedName> {
     Invalid,
     Literal(ir::Literal),
-    Call(ir::Call<ConstantExpression<NAME>>),
     Name(NAME),
     FormatString(ir::FormatString),
     ArrayExpression(ir::ArrayExpression<ConstantExpression<NAME>>),
@@ -206,7 +205,6 @@ where
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {
             ConstantExpression::Literal(literal) => write!(f, "{literal}"),
-            ConstantExpression::Call(call) => write!(f, "{call}"),
             ConstantExpression::Name(qualified_name) => write!(f, "{qualified_name}"),
             ConstantExpression::FormatString(format_string) => write!(f, "{format_string}"),
             ConstantExpression::ArrayExpression(array_expression) => {

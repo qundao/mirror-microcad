@@ -194,7 +194,6 @@ where
 {
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
-            ast::Expression::Call(expr) => Self::Call(ir::Call::lower(expr, context)?),
             ast::Expression::Bracketed(expr, _) => Self::lower(expr, context)?,
             ast::Expression::Literal(ast::Literal {
                 literal: ast::LiteralKind::String(s),
