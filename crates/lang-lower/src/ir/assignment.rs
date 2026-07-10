@@ -11,7 +11,7 @@ use serde_with::skip_serializing_none;
 
 /// A local assignment specifying an identifier, type and value
 #[skip_serializing_none]
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct LocalAssignment<EXPR> {
     /// Assignee

@@ -8,7 +8,7 @@ use microcad_lang_types::{Type, Value, ty};
 use serde::{Deserialize, Serialize};
 
 /// Literal of any kind.
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Literal(pub Refer<Value>);
 
 impl Literal {

@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 use crate::{Id, Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
 
 /// µcad identifier
-#[derive(Default, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[derive(Default, Clone, Debug, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct Identifier(pub Refer<Id>);
 
 impl SrcReferrer for Identifier {
@@ -150,12 +150,6 @@ impl PartialEq<Identifier> for ShortId {
 impl From<Identifier> for SourceSpan {
     fn from(value: Identifier) -> Self {
         value.src_ref().into()
-    }
-}
-
-impl std::hash::Hash for Identifier {
-    fn hash<H: std::hash::Hasher>(&self, hasher: &mut H) {
-        self.0.hash(hasher)
     }
 }
 

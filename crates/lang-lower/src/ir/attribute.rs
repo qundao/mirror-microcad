@@ -12,7 +12,7 @@ use microcad_lang_proc_macros::SrcReferrer;
 use serde::{Deserialize, Serialize};
 
 /// Block of documentation comments, stripped of `/// `.
-#[derive(Clone, Debug, Default, SrcReferrer, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, Hash, SrcReferrer, PartialEq, Serialize, Deserialize)]
 pub struct DocBlock(pub Refer<Box<[String]>>);
 
 impl DocBlock {
@@ -68,25 +68,25 @@ impl std::fmt::Display for DocBlock {
 }
 
 /// Metadata for a [`Model`]
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Meta {
     pub name: ir::QualifiedName,
     pub expr: ConstantExpression,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Command {
     pub name: ir::QualifiedName,
     pub argument_list: ir::ArgumentList<ConstantExpression>,
     pub src_ref: SrcRef,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Tag {
     pub name: ir::Identifier,
 }
 
-#[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Default, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Attributes {
     /// Documentation
     #[serde(skip_serializing_if = "ir::DocBlock::is_empty", default)]
@@ -135,7 +135,7 @@ impl IsDefault for InnerAttributes {
 }
 
 /// Inner attributes (`///`, `#[...]`), usually lowered from definitions.
-#[derive(Debug, Default, Deref, DerefMut, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Default, Deref, DerefMut, Hash, PartialEq, Serialize, Deserialize)]
 pub struct OuterAttributes(#[serde(skip_serializing_if = "is_default", default)] pub Attributes);
 
 impl OuterAttributes {

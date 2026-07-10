@@ -35,7 +35,7 @@ impl std::fmt::Display for FunctionSignature {
 }
 
 /// A function scope `{}`
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
 pub struct Scope<NAME: Serialize>(pub Refer<FunctionStatements<NAME>>);
 
@@ -45,7 +45,7 @@ type Access<ELEMENT, NAME> = ir::ElementAccess<FunctionExpression<NAME>, ELEMENT
 /// A method call
 type MethodCall<NAME> = Access<ir::Call<FunctionExpression<NAME>>, NAME>;
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
 pub enum FunctionExpression<NAME: Serialize = ir::QualifiedName> {
     Invalid,
@@ -94,7 +94,7 @@ where
     }
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
 pub struct ReturnStatement<NAME: Serialize> {
     pub value: Option<FunctionExpression<NAME>>,
@@ -102,7 +102,7 @@ pub struct ReturnStatement<NAME: Serialize> {
     pub src_ref: SrcRef,
 }
 
-#[derive(Debug, derive_more::From, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, derive_more::From, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
 pub enum FunctionStatement<NAME: Serialize> {
     /// `a = 42`
@@ -124,7 +124,7 @@ impl<NAME: Serialize + SrcReferrer> SrcReferrer for FunctionStatement<NAME> {
     }
 }
 
-#[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Default, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
 pub struct FunctionStatements<NAME: Serialize>(pub Box<[FunctionStatement<NAME>]>);
 

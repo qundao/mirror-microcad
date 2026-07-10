@@ -36,7 +36,7 @@ use crate::ir;
 use crate::is_default;
 
 /// Type within source code.
-#[derive(Clone, Debug, PartialEq, SrcReferrer, Serialize, Deserialize)]
+#[derive(Clone, Debug, Hash, PartialEq, SrcReferrer, Serialize, Deserialize)]
 pub struct TypeAnnotation(pub Refer<Type>);
 
 impl std::fmt::Display for TypeAnnotation {
@@ -53,7 +53,7 @@ impl Ty for TypeAnnotation {
 
 /// `use std::geo2d::Circle as C` => (path = "std::geo2d::Circle", id = "C")
 /// `use std::geo2d::Circle` => (path = "std::geo2d::Circle", id = "Circle")
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct ExplicitAlias {
     pub attr: ir::OuterAttributes,
     pub visibility: ir::Visibility,
@@ -64,7 +64,7 @@ pub struct ExplicitAlias {
 }
 
 /// `use std::geo2d::*`
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct WildcardAlias {
     #[serde(skip_serializing_if = "is_default", default)]
     pub attr: ir::OuterAttributes,

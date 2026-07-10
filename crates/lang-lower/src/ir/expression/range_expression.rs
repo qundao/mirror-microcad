@@ -8,7 +8,7 @@ use microcad_lang_base::SrcRef;
 use serde::{Deserialize, Serialize};
 
 /// Range start.
-#[derive(Clone, Debug, Default, Deref, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, Deref, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct RangeFirst<EXPR>(pub Box<EXPR>);
 
@@ -22,7 +22,7 @@ where
 }
 
 /// Range end.
-#[derive(Clone, Debug, Default, Deref, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, Deref, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct RangeLast<EXPR>(pub Box<EXPR>);
 
@@ -36,7 +36,7 @@ where
 }
 
 /// Range expression, e.g. `a..b`.
-#[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct RangeExpression<EXPR> {
     /// First value in the range.

@@ -11,32 +11,8 @@ use serde::{Deserialize, Serialize};
 
 /// A *qualified name* consists of a list of *identifiers*, separated by `::`,
 /// e.g. `a::b::c`
-#[derive(Default, Clone, Debug, PartialEq, Deref, SrcReferrer, Serialize, Deserialize)]
+#[derive(Default, Clone, Debug, Hash, PartialEq, Deref, SrcReferrer, Serialize, Deserialize)]
 pub struct QualifiedName(Refer<Box<[Identifier]>>);
-
-/// List of *qualified names* which can be displayed.
-#[derive(Debug, Deref)]
-pub struct QualifiedNames(Vec<QualifiedName>);
-
-impl std::fmt::Display for QualifiedNames {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            self.0
-                .iter()
-                .map(|name| name.to_string())
-                .collect::<Vec<_>>()
-                .join(", ")
-        )
-    }
-}
-
-impl FromIterator<QualifiedName> for QualifiedNames {
-    fn from_iter<T: IntoIterator<Item = QualifiedName>>(iter: T) -> Self {
-        Self(iter.into_iter().collect())
-    }
-}
 
 impl QualifiedName {
     /// Create [`QualifiedName`] from [`Identifier`]s.

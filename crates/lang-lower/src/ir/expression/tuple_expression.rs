@@ -9,7 +9,7 @@ use microcad_lang_base::SrcRef;
 use serde::{Deserialize, Serialize};
 
 /// Tuple expression, e.g. `(x=1+2,4,z=9)`.
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct TupleExpression<EXPR> {
     /// List of tuple members.
