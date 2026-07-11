@@ -59,7 +59,7 @@ impl<T: PartialEq> PartialEq<T> for Spanned<T> {
 /// Reference into a source file.
 ///
 /// *Hint*: Source file is not part of `SrcRef` and must be provided from outside
-#[derive(Clone, Copy, Hash, Default)]
+#[derive(Clone, Copy, Default)]
 #[repr(C)]
 pub struct SrcRef {
     /// Start position in bytes
@@ -74,6 +74,12 @@ pub struct SrcRef {
     ///
     /// A `source_hash == 0` is considered as `None`.
     pub source_hash: HashId,
+}
+
+impl std::hash::Hash for SrcRef {
+    fn hash<H: std::hash::Hasher>(&self, _: &mut H) {
+        // This intentionally empty
+    }
 }
 
 pub trait SpanToSrcRef {
