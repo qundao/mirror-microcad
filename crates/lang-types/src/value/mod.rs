@@ -26,7 +26,10 @@ pub use value_list::*;
 
 use crate::ty::*;
 use microcad_core::*;
-use microcad_lang_base::SrcRef;
+use microcad_lang_base::{
+    SrcRef,
+    element::{BinaryOperator, UnaryOperator},
+};
 use std::hash::Hasher;
 
 pub type ValueResult<Type = Value> = std::result::Result<Type, ValueError>;
@@ -51,8 +54,6 @@ pub enum Value {
     Tuple(Box<Tuple>),
     /// A matrix.
     Matrix(Box<Matrix>),
-    /// Return value
-    Return(Box<Value>),
 }
 
 impl Value {
@@ -72,32 +73,33 @@ impl Value {
     }
 
     /// Binary operation
-    pub fn binary_op(lhs: Value, rhs: Value, op: &str) -> ValueResult {
+    pub fn binary_op(self, op: &BinaryOperator, rhs: Value) -> ValueResult {
+        let lhs = self;
+        use BinaryOperator::*;
         match op {
-            "+" => lhs + rhs,
-            "-" => lhs - rhs,
-            "*" => lhs * rhs,
-            "/" => lhs / rhs,
-            "^" => lhs.pow(&rhs),
-            "&" | "and" => lhs & rhs,
-            "|" | "or" => lhs | rhs,
-            ">" => Ok(Value::Bool(lhs > rhs)),
-            "<" => Ok(Value::Bool(lhs < rhs)),
-            "≤" | "<=" => Ok(Value::Bool(lhs <= rhs)),
-            "≥" | ">=" => Ok(Value::Bool(lhs >= rhs)),
-            "~" => todo!("implement near ~="),
-            "==" => Ok(Value::Bool(lhs == rhs)),
-            "!=" => Ok(Value::Bool(lhs != rhs)),
-            _ => unimplemented!("{op:?}"),
+            Add => lhs + rhs,
+            Subtract => lhs - rhs,
+            Multiply => lhs * rhs,
+            Divide => lhs / rhs,
+            Union | Or => lhs | rhs,
+            Intersect | And => lhs & rhs,
+            PowerXor | Xor => lhs.pow(&rhs),
+            GreaterThan => Ok((lhs > rhs).into()),
+            LessThan => Ok((lhs < rhs).into()),
+            GreaterEqual => Ok((lhs >= rhs).into()),
+            LessEqual => Ok((lhs <= rhs).into()),
+            Equal => Ok((lhs == rhs).into()),
+            NotEqual => Ok((lhs != rhs).into()),
+            _ => Err(ValueError::InvalidOperator(op.to_string())),
         }
     }
 
     /// Unary operation.
-    pub fn unary_op(self, op: &str) -> ValueResult {
+    pub fn unary_op(self, op: &UnaryOperator) -> ValueResult {
         match op {
-            "-" => -self,
-            "!" => !self,
-            _ => Err(ValueError::InvalidOperator(op.to_string())),
+            UnaryOperator::Minus => -self,
+            UnaryOperator::Not => !self,
+            UnaryOperator::Plus => Ok(self),
         }
     }
 
@@ -121,14 +123,6 @@ impl Value {
         }
 
         Err(ValueError::CannotConvert(self.to_string(), "Scalar".into()))
-    }
-
-    /// Unpack any Value::Return(..)
-    pub fn un_return(&self) -> Value {
-        match self {
-            Value::Return(value) => value.as_ref().clone(),
-            value => value.clone(),
-        }
     }
 }
 
@@ -165,7 +159,6 @@ impl crate::ty::Ty for Value {
             Value::Array(list) => list.ty(),
             Value::Tuple(tuple) => tuple.ty(),
             Value::Matrix(matrix) => matrix.ty(),
-            Value::Return(r) => r.ty(),
         }
     }
 }
@@ -363,7 +356,6 @@ impl std::fmt::Display for Value {
             Value::Array(l) => write!(f, "{l}"),
             Value::Tuple(t) => write!(f, "{t}"),
             Value::Matrix(m) => write!(f, "{m}"),
-            Value::Return(r) => write!(f, "{r}"),
         }
     }
 }
@@ -379,7 +371,6 @@ impl std::hash::Hash for Value {
             Value::Array(array) => array.hash(state),
             Value::Tuple(tuple) => tuple.hash(state),
             Value::Matrix(matrix) => matrix.hash(state),
-            Value::Return(value) => value.hash(state),
         }
     }
 }
