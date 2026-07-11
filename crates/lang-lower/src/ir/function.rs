@@ -9,7 +9,7 @@ use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 use serde::{Deserialize, Serialize};
 
 /// Parameters and return type of a function
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Hash, Serialize, Deserialize)]
 pub struct FunctionSignature {
     /// Function's parameters
     pub parameters: ir::ParameterList,

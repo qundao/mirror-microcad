@@ -15,8 +15,8 @@ use serde_with::skip_serializing_none;
 
 /// Each WorkbenchStatement eventually evals into a [`Models`]
 #[skip_serializing_none]
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct WorkbenchStatement {
+#[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
+pub struct WorkbenchStatement<NAME: Serialize = ir::QualifiedName> {
     pub attr: ir::OuterAttributes,
     #[serde(skip_serializing_if = "is_default", default)]
     pub src_ref: SrcRef,
@@ -25,19 +25,10 @@ pub struct WorkbenchStatement {
     pub keyword_src_ref: SrcRef,
     pub id: Option<ir::Identifier>,
     pub ty: Option<ir::TypeAnnotation>,
-    pub expression: WorkbenchExpression,
+    pub expression: WorkbenchExpression<NAME>,
 }
 
-#[derive(Debug, Deref, Serialize)]
-pub struct WorkbenchStatements(pub Box<[WorkbenchStatement]>);
-
-impl IsDefault for WorkbenchStatements {
-    fn is_default(&self) -> bool {
-        self.0.is_default()
-    }
-}
-
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
 pub struct Group {
     pub src_ref: SrcRef,
     pub attr: ir::InnerAttributes,
@@ -70,7 +61,7 @@ impl IsDefault for Inits {
 }
 
 /// Node marker, e.g. `@input`.
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Hash, Deserialize)]
 pub struct Marker {
     /// Marker name, e.g. `input`
     pub id: ir::Identifier,
@@ -94,7 +85,7 @@ impl std::fmt::Display for Marker {
 type Access<ELEMENT, NAME> = ir::ElementAccess<WorkbenchExpression<NAME>, ELEMENT>;
 type MethodCall<NAME> = Access<ir::Call<WorkbenchExpression<NAME>>, NAME>;
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub enum WorkbenchExpression<NAME: Serialize = ir::QualifiedName> {
     Invalid,
     Literal(ir::Literal),

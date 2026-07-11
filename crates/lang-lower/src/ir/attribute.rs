@@ -68,25 +68,25 @@ impl std::fmt::Display for DocBlock {
 }
 
 /// Metadata for a [`Model`]
-#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Meta {
     pub name: ir::QualifiedName,
     pub expr: ConstantExpression,
 }
 
-#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Command {
     pub name: ir::QualifiedName,
     pub argument_list: ir::ArgumentList<ConstantExpression>,
     pub src_ref: SrcRef,
 }
 
-#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Tag {
     pub name: ir::Identifier,
 }
 
-#[derive(Debug, Default, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Attributes {
     /// Documentation
     #[serde(skip_serializing_if = "ir::DocBlock::is_empty", default)]
@@ -118,7 +118,7 @@ impl IsDefault for Attributes {
 }
 
 /// Inner attributes (`//!`, `#![...]`), usually lowered from a `ast::StatementList`.
-#[derive(Debug, Default, Deref, DerefMut, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Deref, DerefMut, PartialEq, Hash, Serialize, Deserialize)]
 pub struct InnerAttributes(#[serde(skip_serializing_if = "is_default", default)] pub Attributes);
 
 impl InnerAttributes {
@@ -135,7 +135,7 @@ impl IsDefault for InnerAttributes {
 }
 
 /// Inner attributes (`///`, `#[...]`), usually lowered from definitions.
-#[derive(Debug, Default, Deref, DerefMut, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, Deref, DerefMut, Hash, PartialEq, Serialize, Deserialize)]
 pub struct OuterAttributes(#[serde(skip_serializing_if = "is_default", default)] pub Attributes);
 
 impl OuterAttributes {

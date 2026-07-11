@@ -162,7 +162,7 @@ where
     }
 }
 
-#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(
     serialize = "EXPR: Serialize, ELEMENT: Serialize",
     deserialize = "EXPR: Deserialize<'de>, ELEMENT: Deserialize<'de>"
