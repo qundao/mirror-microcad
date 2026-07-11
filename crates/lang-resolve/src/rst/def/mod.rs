@@ -89,7 +89,6 @@ pub fn resolve_constant<'tree>(
     match &constant.expr {
         Invalid => todo!(),
         Literal(literal) => Ok(literal.value().clone()),
-        Call(_) => todo!(),
         Name(name) => {
             use UnresolvedSymbolDef::*;
             let path: rst::SymbolPath = name.into();
