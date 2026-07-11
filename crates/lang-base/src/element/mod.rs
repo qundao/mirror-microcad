@@ -5,10 +5,10 @@ mod identifier;
 
 pub use identifier::{Identifier, IdentifierList, ShortId};
 use serde::{Deserialize, Serialize};
-use strum::EnumString;
+use strum::{Display, EnumString};
 
 /// The possible type of workbenches
-#[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Hash, Copy, Clone, Serialize, Deserialize)]
 pub enum WorkbenchKind {
     /// `sketch`
     Sketch,
@@ -55,7 +55,7 @@ impl std::fmt::Display for Visibility {
 }
 
 /// The type of the operator for binary operations
-#[derive(Debug, PartialEq, Clone, EnumString, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Clone, EnumString, Display, Serialize, Deserialize)]
 pub enum BinaryOperator {
     #[strum(serialize = "+")]
     Add,
@@ -94,7 +94,7 @@ pub enum BinaryOperator {
 }
 
 /// The type of the operator for unary operations
-#[derive(Debug, PartialEq, Clone, EnumString, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Clone, Display, EnumString, Serialize, Deserialize)]
 #[allow(missing_docs)]
 pub enum UnaryOperator {
     #[strum(serialize = "-")]
