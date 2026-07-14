@@ -53,19 +53,17 @@ pub enum ArtifactKind {
 #[repr(C)]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ArtifactHeader {
-    pub magic: [u8; 4],      // "&mu;"
-    pub version: Version,    // Increment this whenever the format changes
-    pub kind: ArtifactKind,  // The artifact type (AST, IR, etc.)
-    pub source_hash: HashId, // The hash of the source used (for reproducibility)
+    pub magic: [u8; 4],     // "&mu;"
+    pub version: Version,   // Increment this whenever the format changes
+    pub kind: ArtifactKind, // The artifact type (AST, IR, etc.)
 }
 
-impl ArtifactHeader {
-    pub fn new(kind: ArtifactKind, source_hash: HashId) -> ArtifactHeader {
+impl From<ArtifactKind> for ArtifactHeader {
+    fn from(kind: ArtifactKind) -> Self {
         Self {
             magic: *b"&mu;",
             version: Version::current(),
             kind,
-            source_hash,
         }
     }
 }
@@ -115,7 +113,7 @@ pub trait Artifact: Sized {
     /// Envelope this artifact with a header.
     fn envelope(&'_ self) -> EnvelopeRef<'_, Self> {
         EnvelopeRef {
-            header: ArtifactHeader::new(Self::kind(), self.source_hash()),
+            header: Self::kind().into(),
             payload: self,
         }
     }

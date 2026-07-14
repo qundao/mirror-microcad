@@ -33,7 +33,7 @@ use serde::{Deserialize, Serialize};
 pub type Span = std::ops::Range<usize>;
 
 /// Something that has a span attached.
-#[derive(Debug, PartialEq, Deref, Clone, Serialize)]
+#[derive(Debug, Hash, PartialEq, Deref, Clone, Serialize)]
 #[serde(bound(serialize = "T: Serialize"))]
 pub struct Spanned<T> {
     /// the span of the token
@@ -448,6 +448,6 @@ fn test_src_ref() {
     let cube = SrcRef::new(&cube, LineCol { line: 1, col: 0 }, input.computed_hash());
     let size_y = SrcRef::new(&size_y, LineCol { line: 1, col: 0 }, input.computed_hash());
 
-    assert_eq!(cube.source_slice(input.value()), "Cube");
-    assert_eq!(size_y.source_slice(input.value()), "size_y");
+    assert_eq!(cube.source_slice(input.inner_ref()), "Cube");
+    assert_eq!(size_y.source_slice(input.inner_ref()), "size_y");
 }

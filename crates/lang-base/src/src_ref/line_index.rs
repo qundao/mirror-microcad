@@ -45,7 +45,7 @@ impl LineIndex {
     pub fn src_ref(&self, code: Hashed<&str>, span: &Span) -> SrcRef {
         SrcRef::new(
             span,
-            self.line_col(code.value(), span.start),
+            self.line_col(code.inner_ref(), span.start),
             code.computed_hash(),
         )
     }

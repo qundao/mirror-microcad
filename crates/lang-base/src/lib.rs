@@ -104,14 +104,51 @@ pub fn shorten(what: &str, max_chars: usize) -> String {
     }
 }
 
-/// Trait to write something with Display trait into a file.
-pub trait WriteToFile: std::fmt::Display {
-    /// Write something to a file.
-    fn write_to_file(&self, filename: &impl AsRef<std::path::Path>) -> std::io::Result<()> {
-        use std::io::Write;
-        let file = std::fs::File::create(filename)?;
-        let mut writer = std::io::BufWriter::new(file);
-        write!(writer, "{self}")
+/// Check if the element only includes one identifier
+pub trait SingleIdentifier {
+    /// If the element only includes one identifier, return it
+    fn single_identifier(&self) -> Option<&Identifier>;
+
+    /// Returns true if the element only includes a single identifier.
+    fn is_single_identifier(&self) -> bool {
+        self.single_identifier().is_some()
+    }
+}
+
+/// Identifier accessor.
+pub trait Identifiable {
+    /// Get clone of the identifier.
+    fn id(&self) -> Identifier {
+        self.id_ref().clone()
+    }
+
+    /// Get reference to the identifier.
+    fn id_ref(&self) -> &Identifier;
+
+    /// Get identifier as string.
+    fn id_as_str(&self) -> &str {
+        self.id_ref().0.as_str()
+    }
+}
+
+pub trait IsDefault {
+    fn is_default(&self) -> bool;
+}
+
+// The single function you point Serde to
+pub fn is_default<T: IsDefault>(t: &T) -> bool {
+    t.is_default()
+}
+
+impl<T> IsDefault for Box<[T]> {
+    fn is_default(&self) -> bool {
+        self.is_empty() // No PartialEq bound required!
+    }
+}
+
+impl IsDefault for SrcRef {
+    fn is_default(&self) -> bool {
+        self.is_none()
     }
 }
 
