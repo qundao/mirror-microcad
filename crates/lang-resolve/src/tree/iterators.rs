@@ -5,7 +5,7 @@
 
 use serde::Serialize;
 
-use crate::rst::SymbolRef;
+use crate::tree::SymbolRef;
 
 /// Iterator over children of a symbol.
 pub struct Children<'tree, DEF: Serialize> {
@@ -34,7 +34,7 @@ impl<'tree, DEF: Serialize> Iterator for Children<'tree, DEF> {
         if self.head < self.tail {
             let hash = self.symbol.children.items[self.head];
             self.head += 1;
-            self.symbol.tree.get(hash)
+            self.symbol.tree().get(hash)
         } else {
             None
         }
@@ -47,7 +47,7 @@ impl<'tree, DEF: Serialize> DoubleEndedIterator for Children<'tree, DEF> {
         if self.head < self.tail {
             self.tail -= 1;
             let hash = self.symbol.children.items[self.tail];
-            self.symbol.tree.get(hash)
+            self.symbol.tree().get(hash)
         } else {
             None
         }

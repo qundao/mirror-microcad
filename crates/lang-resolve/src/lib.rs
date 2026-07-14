@@ -5,27 +5,21 @@
 
 mod resolve;
 
+pub(crate) mod tree;
+
+pub mod mir;
 pub mod rst;
 
 use microcad_lang_base::{CompilationResult, Source};
 use microcad_lang_lower::Ir;
 
-pub use rst::{Rst, Symbol, SymbolRef};
+/// The mid-level intermediat
+pub use mir::Mir;
 
-pub use resolve::{Resolve, ResolveContext, ResolveResult};
+pub use rst::Rst;
 
-pub fn resolve(_source: &Source, ir: &Ir) -> CompilationResult<Rst> {
-    let mut context = ResolveContext::new(ir);
+pub use resolve::{Resolve, ResolveContext, ResolveResult, scaffold};
 
-    for ir in &ir.items.inline_modules {
-        context.builder.add(rst::def::inline_module(ir));
-        // let node = inline_module.resolve(&mut context);
-        //   builder.add(node);
-    }
-
-    for ir in &ir.items.constants {
-        context.builder.add(rst::def::constant(ir));
-    }
-
-    Ok((context.builder.build_rst(), context.diagnostics))
+pub fn resolve(_source: &Source, _mir: &Mir) -> CompilationResult<Rst> {
+    todo!()
 }

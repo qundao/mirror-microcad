@@ -1,71 +1,63 @@
-// Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+// Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! µcad resolved symbol tree (RST).
-
-mod builtin;
-
-use builtin::Builtin;
-
-use std::hash::Hash;
+//! Mid-level intermediate representation (MIR).
 
 use derive_more::From;
-use microcad_lang_base::{HashId, Id, Identifier, Refer, SrcRef};
+use microcad_lang_base::{HashId, SrcRef};
 use microcad_lang_proc_macros::Artifact;
-use microcad_lang_types::Value;
+use serde::{Deserialize, Serialize};
 
 use microcad_lang_lower::ir;
 
+pub use crate::tree::SymbolMetadata;
+
+pub type Type = Option<ir::TypeAnnotation>;
+
+pub type UnresolvedName = ir::QualifiedName;
+
+pub type DocBlock = crate::tree::symbol::meta::DocBlock;
+
+pub type ConstantExpression = ir::ConstantExpression<UnresolvedName>;
+
+pub use ir::{Identifier, Visibility};
+
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
-pub enum ResolvedName {
-    Local(Id),
-    Symbol(SymbolHandle),
-    Unresolved(SymbolPath),
+pub struct Constant {
+    // pub attr: ConstantAttributes
+    pub ty: Type,
+    pub expr: ConstantExpression,
 }
-
-use crate::{
-    mir,
-    tree::{SymbolHandle, SymbolPath},
-};
-
-use serde::{Deserialize, Serialize};
-
-pub type DocBlock = mir::DocBlock;
-pub type Type = mir::Type;
-
-#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Constant(pub Refer<Value>);
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Parameter {
     // pub attr: ParameterAttributes,
-    doc: DocBlock,
-    id: Identifier,
-    ty: Type,
-    default_value: Value,
-    src_ref: SrcRef,
+    pub doc: DocBlock,
+    pub id: Identifier,
+    pub ty: Type,
+    pub default_value: Option<ConstantExpression>,
+    pub src_ref: SrcRef,
 }
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct ParameterList {
-    parameters: Box<[Parameter]>,
-    // by_id: HashMap<Id, usize>
+    pub parameters: Box<[Parameter]>,
 }
 
-pub type FunctionExpression = ir::FunctionExpression<ResolvedName>;
-pub type FunctionStatement = ir::FunctionStatement<ResolvedName>;
+pub type FunctionExpression = ir::FunctionExpression<UnresolvedName>;
+pub type FunctionStatement = ir::FunctionStatement<UnresolvedName>;
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Function {
     // pub attr: FunctionAttributes,
     pub parameters: ParameterList,
-    pub return_ty: Option<Type>,
+    pub return_ty: Type,
     pub statements: Box<[FunctionStatement]>,
 }
 
-pub type WorkbenchExpression = ir::WorkbenchExpression<ResolvedName>;
-pub type WorkbenchStatement = ir::WorkbenchStatement;
-pub type WorkbenchKind = mir::WorkbenchKind;
+pub type WorkbenchExpression = ir::WorkbenchExpression<UnresolvedName>;
+pub type WorkbenchStatement = ir::WorkbenchStatement<UnresolvedName>;
+pub type WorkbenchKind = ir::WorkbenchKind;
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 
@@ -77,8 +69,9 @@ pub struct InitStatement {
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Init {
+    // pub attr: InitAttributes
+    pub doc: DocBlock,
     pub parameters: ParameterList,
-    pub ty: Type,
     pub statements: Box<[InitStatement]>,
 }
 
@@ -95,21 +88,21 @@ pub struct Workbench {
     pub statements: Box<[WorkbenchStatement]>,
 }
 
-#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Alias(SymbolHandle);
+#[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Alias(pub UnresolvedName);
 
-#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Wildcard(SymbolHandle);
+#[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Wildcard(pub UnresolvedName);
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SourceFile {
     //attr: SourceFileAttributes,
-    statements: Box<[WorkbenchStatement]>,
+    pub statements: Box<[WorkbenchStatement]>,
 }
 
 /// Symbol definition
-#[derive(Debug, From, Hash, PartialEq, Serialize, Deserialize)]
-pub enum ResolvedSymbolDef {
+#[derive(Debug, Hash, From, PartialEq, Serialize, Deserialize)]
+pub enum UnresolvedSymbolDef {
     /// Source file symbol.
     SourceFile(SourceFile),
     /// Inline Module symbol: `mod foo {}`
@@ -122,22 +115,21 @@ pub enum ResolvedSymbolDef {
     Function(Function),
     /// Constant.
     Constant(Constant),
-    /// Builtin symbol.
-    Builtin(Builtin),
     /// Alias of a pub use statement.
     Alias(Alias),
     /// Use all available symbols in the module with the given name.
     Wildcard(Wildcard),
 }
 
-pub type ResolvedSymbol = crate::tree::Symbol<ResolvedSymbolDef>;
+pub type UnresolvedSymbol = crate::tree::Symbol<UnresolvedSymbolDef>;
 
-pub type ResolvedSymbolRef<'rst> = crate::tree::SymbolRef<'rst, ResolvedSymbolDef>;
+pub type UnresolvedSymbolRef<'mir> = crate::tree::SymbolRef<'mir, UnresolvedSymbolDef>;
 
-pub type ResolvedSymbolTree = crate::tree::SymbolTree<ResolvedSymbolDef>;
+pub type UnresolvedSymbolTree = crate::tree::SymbolTree<UnresolvedSymbolDef>;
 
-#[derive(Debug, From, Hash, PartialEq, Serialize, Artifact)]
-pub struct Rst {
-    tree: ResolvedSymbolTree,
-    hash: HashId,
+#[derive(Debug, Artifact, Serialize, Deserialize)]
+pub struct Mir {
+    pub input_hash: HashId,
+    pub output_hash: HashId,
+    pub tree: UnresolvedSymbolTree,
 }

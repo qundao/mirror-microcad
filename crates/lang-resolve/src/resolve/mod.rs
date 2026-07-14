@@ -1,18 +1,14 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{Diagnostics, SrcRef, SrcReferrer};
-use microcad_lang_lower::{Ir, ir};
+pub mod scaffold;
+
+use microcad_lang_base::{Diagnostics, SrcReferrer};
+use microcad_lang_lower::ir;
 use miette::Diagnostic;
 use thiserror::Error;
 
-use crate::{
-    Symbol, SymbolRef,
-    rst::{
-        self, SymbolData,
-        def::{SourceFile, UnresolvedSymbolDef},
-    },
-};
+use crate::rst;
 
 /// Resolve error.
 #[derive(Debug, Error, Diagnostic)]
@@ -23,17 +19,14 @@ pub type ResolveResult<T> = std::result::Result<T, ResolveError>;
 
 /// Resolve Context
 pub struct ResolveContext {
-    pub builder: rst::Builder,
-
     //pub file_module_resolver: Box<dyn ResolveFileModule>,
     /// Diagnostic handler.
     pub diagnostics: Diagnostics,
 }
 
 impl ResolveContext {
-    pub fn new(root: impl Into<Symbol<UnresolvedSymbolDef>>) -> Self {
+    pub fn new() -> Self {
         Self {
-            builder: rst::Builder::new(root.into()),
             diagnostics: Diagnostics::default(),
         }
     }
@@ -45,12 +38,12 @@ impl ResolveContext {
         self.diagnostics.push(err)
     }
 
-    pub fn top<'tree>(&'tree self) -> SymbolRef<'tree, UnresolvedSymbolDef> {
+    /*pub fn top<'tree>(&'tree self) -> SymbolRef<'tree, UnresolvedSymbolDef> {
         self.builder
             .tree
             .get(*self.builder.stack.last().unwrap())
             .unwrap()
-    }
+    }*/
 }
 
 /// Trait to resolve an IR node into a symbol.
@@ -58,52 +51,78 @@ pub trait Resolve<T = rst::Rst> {
     fn resolve(&self, context: &mut ResolveContext) -> ResolveResult<T>;
 }
 
-impl From<&ir::QualifiedName> for rst::SymbolPath {
-    fn from(name: &ir::QualifiedName) -> Self {
-        name.iter()
+impl From<ir::QualifiedName> for crate::tree::SymbolPath {
+    fn from(name: ir::QualifiedName) -> Self {
+        name.value
+            .clone()
+            .iter()
             .map(|id| id.id().clone())
             .collect::<Vec<_>>()
             .into()
     }
 }
 
-impl From<&Ir> for Symbol<UnresolvedSymbolDef> {
-    fn from(_ir: &Ir) -> Self {
-        Symbol {
-            data: SymbolData {
-                id: "root".into(),            // TODO Fetch name
-                doc: ir::DocBlock::default(), // TODO
-                visibility: ir::Visibility::Public,
-                src_ref: SrcRef::none(),
-                keyword_ref: SrcRef::none(),
-            },
-            def: UnresolvedSymbolDef::SourceFile(SourceFile {}),
-            parent: None,
-            children: Default::default(),
+/*
+
+
+pub fn resolve_constant<'tree>(
+    constant: &rst::def::Constant,
+    parent: rst::SymbolRef<'tree, UnresolvedSymbolDef>,
+) -> ResolveResult<Value> {
+    use ir::ConstantExpression::*;
+    match &constant.expr {
+        Invalid => todo!(),
+        Literal(literal) => Ok(literal.value().clone()),
+        Name(name) => {
+            use UnresolvedSymbolDef::*;
+            let path: rst::SymbolPath = name.into();
+            let resolved = parent.resolve(path.clone());
+            match resolved {
+                Some(symbol) => match &symbol.def {
+                    SourceFile(_) => todo!(),
+                    InlineModule => todo!(),
+                    FileModule => todo!(),
+                    Workbench => todo!(),
+                    Function(_) => todo!(),
+                    Constant(constant) => resolve_constant(constant, symbol),
+                    Builtin => todo!(),
+                    Alias => todo!(),
+                    Wildcard => todo!(),
+                },
+                None => todo!("Error handling"),
+            }
         }
+        FormatString(_) => todo!(),
+        ArrayExpression(_) => todo!(),
+        TupleExpression(_) => todo!(),
+        BinaryOp(_) => todo!(),
+        UnaryOp(_) => todo!(),
     }
 }
 
-impl From<&ir::InlineModule> for SymbolData {
-    fn from(ir: &ir::InlineModule) -> Self {
-        Self {
-            id: ir.id.id().clone(),
-            doc: ir.outer_attr.doc.clone(),
-            visibility: ir.visibility.clone(),
-            src_ref: ir.src_ref,
-            keyword_ref: ir.keyword_src_ref,
-        }
-    }
+
+
+pub fn resolve_symbol<'tree>(
+    symbol_ref: SymbolRef<'tree, UnresolvedSymbolDef>,
+) -> ResolveResult<crate::Symbol<ResolvedSymbolDef>> {
+    Ok(crate::Symbol {
+        def: match &symbol_ref.def {
+            UnresolvedSymbolDef::SourceFile(_) => ResolvedSymbolDef::SourceFile(SourceFile {}),
+            UnresolvedSymbolDef::InlineModule => ResolvedSymbolDef::InlineModule(InlineModule),
+            UnresolvedSymbolDef::FileModule => todo!(),
+            UnresolvedSymbolDef::Workbench => todo!(),
+            UnresolvedSymbolDef::Function(_) => todo!(),
+            UnresolvedSymbolDef::Constant(constant) => {
+                ResolvedSymbolDef::Constant(resolve_constant(constant, symbol_ref)?)
+            }
+            UnresolvedSymbolDef::Builtin => todo!(),
+            UnresolvedSymbolDef::Alias => todo!(),
+            UnresolvedSymbolDef::Wildcard => todo!(),
+        },
+        data: symbol_ref.data.clone(),
+        parent: symbol_ref.parent,
+        children: symbol_ref.children.clone(),
+    })
 }
 
-impl From<&ir::Constant> for SymbolData {
-    fn from(ir: &ir::Constant) -> Self {
-        Self {
-            id: ir.id.id().clone(),
-            doc: ir.attr.doc.clone(),
-            visibility: ir.visibility.clone(),
-            src_ref: ir.src_ref,
-            keyword_ref: ir.keyword_src_ref,
-        }
-    }
-}
+*/
