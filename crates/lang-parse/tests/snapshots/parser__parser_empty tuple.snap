@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 12126386160536034400,
+        input_hash: "0xa84993f6f3f69c60",
+        output_hash: "0x470510d1af2713c2",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 2,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 2,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 2,
@@ -25,8 +35,8 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
+                    attr: ([]),
+                    expr: Tuple((
                         span: (
                             start: 0,
                             end: 2,
@@ -35,22 +45,10 @@ expression: output
                             leading: ([]),
                             trailing: ([]),
                         ),
-                        attr: ([]),
-                        expr: Tuple((
-                            span: (
-                                start: 0,
-                                end: 2,
-                            ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            values: [],
-                        )),
+                        values: [],
                     )),
-                ),
+                )),
             ),
-            hash: 5117515044349219778,
         ),
     ),
 )

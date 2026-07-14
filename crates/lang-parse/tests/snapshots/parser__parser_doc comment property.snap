@@ -9,78 +9,76 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 627122140822568393,
+        input_hash: "0x8b3fc43b282fdc9",
+        output_hash: "0x82ea4ed97481db3b",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 31,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 31,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 31,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (Property((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (Property((
+                        span: (
+                            start: 0,
+                            end: 30,
+                        ),
+                        keyword_span: (
+                            start: 20,
+                            end: 24,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        doc: (
                             span: (
                                 start: 0,
-                                end: 30,
+                                end: 20,
                             ),
-                            keyword_span: (
-                                start: 20,
-                                end: 24,
+                            lines: [
+                                "/// Doc comment",
+                            ],
+                        ),
+                        attr: ([]),
+                        id: (
+                            span: (
+                                start: 25,
+                                end: 26,
+                            ),
+                            name: "a",
+                        ),
+                        ty: None,
+                        value: Literal((
+                            span: (
+                                start: 29,
+                                end: 30,
                             ),
                             extras: (
                                 leading: ([]),
                                 trailing: ([]),
                             ),
-                            doc: (
-                                span: (
-                                    start: 0,
-                                    end: 20,
-                                ),
-                                lines: [
-                                    "/// Doc comment",
-                                ],
-                            ),
-                            attr: ([]),
-                            id: (
-                                span: (
-                                    start: 25,
-                                    end: 26,
-                                ),
-                                name: "a",
-                            ),
-                            ty: None,
-                            value: Literal((
+                            literal: Integer((
                                 span: (
                                     start: 29,
                                     end: 30,
                                 ),
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([]),
-                                ),
-                                literal: Integer((
-                                    span: (
-                                        start: 29,
-                                        end: 30,
-                                    ),
-                                    value: 1,
-                                    raw: "1",
-                                )),
+                                value: 1,
+                                raw: "1",
                             )),
-                        )), ([])),
-                    ],
-                    tail: None,
-                ),
+                        )),
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 9433439065350462267,
         ),
     ),
 )

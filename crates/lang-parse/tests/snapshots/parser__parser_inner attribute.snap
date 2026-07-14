@@ -9,48 +9,46 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 16014346051756756399,
+        input_hash: "0xde3e62e2ed240daf",
+        output_hash: "0x35aa534192d93b03",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 10,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 10,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 10,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (InnerAttribute((
-                            span: (
-                                start: 0,
-                                end: 10,
-                            ),
-                            is_inner: true,
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            commands: [
-                                Ident((
-                                    span: (
-                                        start: 3,
-                                        end: 9,
-                                    ),
-                                    name: "export",
-                                )),
-                            ],
-                        )), ([])),
-                    ],
-                    tail: None,
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
                 ),
+                statements: [
+                    (InnerAttribute((
+                        span: (
+                            start: 0,
+                            end: 10,
+                        ),
+                        is_inner: true,
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        commands: [
+                            Ident((
+                                span: (
+                                    start: 3,
+                                    end: 9,
+                                ),
+                                name: "export",
+                            )),
+                        ],
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 3866994771152681731,
         ),
     ),
 )

@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 810255452549933711,
+        input_hash: "0xb3e9b0a8a8fea8f",
+        output_hash: "0x133929a53ed8d041",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 2,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 2,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 2,
@@ -25,8 +35,8 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
+                    attr: ([]),
+                    expr: Literal((
                         span: (
                             start: 0,
                             end: 2,
@@ -35,36 +45,24 @@ expression: output
                             leading: ([]),
                             trailing: ([]),
                         ),
-                        attr: ([]),
-                        expr: Literal((
+                        literal: Quantity((
                             span: (
                                 start: 0,
                                 end: 2,
                             ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            literal: Quantity((
+                            value: 1.0,
+                            raw: "1",
+                            unit: (
                                 span: (
-                                    start: 0,
+                                    start: 1,
                                     end: 2,
                                 ),
-                                value: 1.0,
-                                raw: "1",
-                                unit: (
-                                    span: (
-                                        start: 1,
-                                        end: 2,
-                                    ),
-                                    name: "%",
-                                ),
-                            )),
+                                name: "%",
+                            ),
                         )),
                     )),
-                ),
+                )),
             ),
-            hash: 1385184150093877313,
         ),
     ),
 )

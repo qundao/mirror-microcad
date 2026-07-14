@@ -9,85 +9,83 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 8872293240800722853,
+        input_hash: "0x7b20b7b1f106bfa5",
+        output_hash: "0x38203fa7df5f4194",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 27,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 27,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 27,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (Use((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (Use((
+                        span: (
+                            start: 0,
+                            end: 26,
+                        ),
+                        attr: ([]),
+                        keyword_span: (
+                            start: 4,
+                            end: 7,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        vis: Some((
                             span: (
                                 start: 0,
-                                end: 26,
+                                end: 3,
                             ),
-                            attr: ([]),
-                            keyword_span: (
-                                start: 4,
-                                end: 7,
+                            value: Public,
+                        )),
+                        name: (
+                            span: (
+                                start: 8,
+                                end: 17,
                             ),
                             extras: (
                                 leading: ([]),
-                                trailing: ([]),
+                                trailing: ([
+                                    Whitespace((" ")),
+                                ]),
                             ),
-                            vis: Some((
-                                span: (
-                                    start: 0,
-                                    end: 3,
-                                ),
-                                value: Public,
-                            )),
-                            name: (
-                                span: (
-                                    start: 8,
-                                    end: 17,
-                                ),
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([
-                                        Whitespace((" ")),
-                                    ]),
-                                ),
-                                parts: [
-                                    Identifier((
-                                        span: (
-                                            start: 8,
-                                            end: 11,
-                                        ),
-                                        name: "foo",
-                                    )),
-                                    Identifier((
-                                        span: (
-                                            start: 13,
-                                            end: 16,
-                                        ),
-                                        name: "bar",
-                                    )),
-                                ],
+                            parts: [
+                                Identifier((
+                                    span: (
+                                        start: 8,
+                                        end: 11,
+                                    ),
+                                    name: "foo",
+                                )),
+                                Identifier((
+                                    span: (
+                                        start: 13,
+                                        end: 16,
+                                    ),
+                                    name: "bar",
+                                )),
+                            ],
+                        ),
+                        use_as: Some((
+                            span: (
+                                start: 20,
+                                end: 26,
                             ),
-                            use_as: Some((
-                                span: (
-                                    start: 20,
-                                    end: 26,
-                                ),
-                                name: "foobar",
-                            )),
-                        )), ([])),
-                    ],
-                    tail: None,
-                ),
+                            name: "foobar",
+                        )),
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 4044302455618355604,
         ),
     ),
 )

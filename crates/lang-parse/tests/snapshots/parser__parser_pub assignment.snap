@@ -9,83 +9,81 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 3616331958845031275,
+        input_hash: "0x322fcac1a4d9c36b",
+        output_hash: "0xd3df96f5d0551c4e",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 12,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 12,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 12,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (Const((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (Const((
+                        span: (
+                            start: 0,
+                            end: 11,
+                        ),
+                        keyword_span: (
+                            start: 0,
+                            end: 3,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        doc: (
                             span: (
                                 start: 0,
-                                end: 11,
+                                end: 12,
                             ),
-                            keyword_span: (
+                            lines: [],
+                        ),
+                        attr: ([]),
+                        vis: Some((
+                            span: (
                                 start: 0,
                                 end: 3,
+                            ),
+                            value: Public,
+                        )),
+                        id: (
+                            span: (
+                                start: 4,
+                                end: 7,
+                            ),
+                            name: "FOO",
+                        ),
+                        ty: None,
+                        expr: Literal((
+                            span: (
+                                start: 10,
+                                end: 11,
                             ),
                             extras: (
                                 leading: ([]),
                                 trailing: ([]),
                             ),
-                            doc: (
-                                span: (
-                                    start: 0,
-                                    end: 12,
-                                ),
-                                lines: [],
-                            ),
-                            attr: ([]),
-                            vis: Some((
-                                span: (
-                                    start: 0,
-                                    end: 3,
-                                ),
-                                value: Public,
-                            )),
-                            id: (
-                                span: (
-                                    start: 4,
-                                    end: 7,
-                                ),
-                                name: "FOO",
-                            ),
-                            ty: None,
-                            expr: Literal((
+                            literal: Integer((
                                 span: (
                                     start: 10,
                                     end: 11,
                                 ),
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([]),
-                                ),
-                                literal: Integer((
-                                    span: (
-                                        start: 10,
-                                        end: 11,
-                                    ),
-                                    value: 1,
-                                    raw: "1",
-                                )),
+                                value: 1,
+                                raw: "1",
                             )),
-                        )), ([])),
-                    ],
-                    tail: None,
-                ),
+                        )),
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 15267087244315663438,
         ),
     ),
 )

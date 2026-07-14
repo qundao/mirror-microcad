@@ -9,154 +9,152 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 3799813196271244457,
+        input_hash: "0x34bba5f84096d4a9",
+        output_hash: "0xd4cb30dbdfb0bbaa",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 38,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 38,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 38,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (LocalAssignment((
-                            span: (
-                                start: 0,
-                                end: 37,
-                            ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            attr: ([
-                                (
-                                    span: (
-                                        start: 0,
-                                        end: 32,
-                                    ),
-                                    is_inner: false,
-                                    extras: (
-                                        leading: ([]),
-                                        trailing: ([]),
-                                    ),
-                                    commands: [
-                                        Call((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (LocalAssignment((
+                        span: (
+                            start: 0,
+                            end: 37,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([
+                            (
+                                span: (
+                                    start: 0,
+                                    end: 32,
+                                ),
+                                is_inner: false,
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                commands: [
+                                    Call((
+                                        span: (
+                                            start: 2,
+                                            end: 26,
+                                        ),
+                                        extras: (
+                                            leading: ([]),
+                                            trailing: ([]),
+                                        ),
+                                        name: (
                                             span: (
                                                 start: 2,
-                                                end: 26,
+                                                end: 5,
                                             ),
                                             extras: (
                                                 leading: ([]),
                                                 trailing: ([]),
                                             ),
-                                            name: (
-                                                span: (
-                                                    start: 2,
-                                                    end: 5,
-                                                ),
-                                                extras: (
-                                                    leading: ([]),
-                                                    trailing: ([]),
-                                                ),
-                                                parts: [
-                                                    (
-                                                        span: (
-                                                            start: 2,
-                                                            end: 5,
-                                                        ),
-                                                        name: "svg",
+                                            parts: [
+                                                (
+                                                    span: (
+                                                        start: 2,
+                                                        end: 5,
                                                     ),
-                                                ],
+                                                    name: "svg",
+                                                ),
+                                            ],
+                                        ),
+                                        arguments: (
+                                            span: (
+                                                start: 6,
+                                                end: 25,
                                             ),
-                                            arguments: (
-                                                span: (
-                                                    start: 6,
-                                                    end: 25,
-                                                ),
-                                                extras: (
-                                                    leading: ([]),
-                                                    trailing: ([]),
-                                                ),
-                                                arguments: [
-                                                    Named((
+                                            extras: (
+                                                leading: ([]),
+                                                trailing: ([]),
+                                            ),
+                                            arguments: [
+                                                Named((
+                                                    span: (
+                                                        start: 6,
+                                                        end: 25,
+                                                    ),
+                                                    extras: (
+                                                        leading: ([]),
+                                                        trailing: ([]),
+                                                    ),
+                                                    id: (
                                                         span: (
                                                             start: 6,
+                                                            end: 11,
+                                                        ),
+                                                        name: "style",
+                                                    ),
+                                                    expr: Literal((
+                                                        span: (
+                                                            start: 14,
                                                             end: 25,
                                                         ),
                                                         extras: (
                                                             leading: ([]),
                                                             trailing: ([]),
                                                         ),
-                                                        id: (
-                                                            span: (
-                                                                start: 6,
-                                                                end: 11,
-                                                            ),
-                                                            name: "style",
-                                                        ),
-                                                        expr: Literal((
+                                                        literal: String((
                                                             span: (
                                                                 start: 14,
                                                                 end: 25,
                                                             ),
-                                                            extras: (
-                                                                leading: ([]),
-                                                                trailing: ([]),
-                                                            ),
-                                                            literal: String((
-                                                                span: (
-                                                                    start: 14,
-                                                                    end: 25,
-                                                                ),
-                                                                content: "fill:none",
-                                                            )),
+                                                            content: "fill:none",
                                                         )),
                                                     )),
-                                                ],
-                                            ),
-                                        )),
-                                    ],
-                                ),
-                            ]),
-                            id: (
-                                span: (
-                                    start: 32,
-                                    end: 33,
-                                ),
-                                name: "a",
+                                                )),
+                                            ],
+                                        ),
+                                    )),
+                                ],
                             ),
-                            ty: None,
-                            expr: Literal((
+                        ]),
+                        id: (
+                            span: (
+                                start: 32,
+                                end: 33,
+                            ),
+                            name: "a",
+                        ),
+                        ty: None,
+                        expr: Literal((
+                            span: (
+                                start: 36,
+                                end: 37,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            literal: Integer((
                                 span: (
                                     start: 36,
                                     end: 37,
                                 ),
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([]),
-                                ),
-                                literal: Integer((
-                                    span: (
-                                        start: 36,
-                                        end: 37,
-                                    ),
-                                    value: 1,
-                                    raw: "1",
-                                )),
+                                value: 1,
+                                raw: "1",
                             )),
-                        )), ([])),
-                    ],
-                    tail: None,
-                ),
+                        )),
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 15333403077221858218,
         ),
     ),
 )

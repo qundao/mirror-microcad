@@ -9,279 +9,289 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 6891531073282206067,
+        input_hash: "0x5fa3a2ff8d8d6973",
+        output_hash: "0x7cd4df8a66838bff",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 130,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 130,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 130,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (Workbench((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (Workbench((
+                        span: (
+                            start: 0,
+                            end: 130,
+                        ),
+                        keyword_span: (
+                            start: 0,
+                            end: 6,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        doc: (
                             span: (
                                 start: 0,
                                 end: 130,
                             ),
-                            keyword_span: (
-                                start: 0,
-                                end: 6,
+                            lines: [],
+                        ),
+                        kind: Sketch,
+                        attr: ([]),
+                        vis: None,
+                        id: (
+                            span: (
+                                start: 7,
+                                end: 12,
+                            ),
+                            name: "Wheel",
+                        ),
+                        parameters: (
+                            span: (
+                                start: 13,
+                                end: 27,
                             ),
                             extras: (
                                 leading: ([]),
                                 trailing: ([]),
                             ),
-                            doc: (
-                                span: (
-                                    start: 0,
-                                    end: 130,
-                                ),
-                                lines: [],
-                            ),
-                            kind: Sketch,
-                            attr: ([]),
-                            vis: None,
-                            id: (
-                                span: (
-                                    start: 7,
-                                    end: 12,
-                                ),
-                                name: "Wheel",
-                            ),
-                            parameters: (
-                                span: (
-                                    start: 13,
-                                    end: 27,
-                                ),
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([]),
-                                ),
-                                parameters: [
-                                    (
+                            parameters: [
+                                (
+                                    span: (
+                                        start: 13,
+                                        end: 27,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    doc: (
                                         span: (
                                             start: 13,
+                                            end: 13,
+                                        ),
+                                        lines: [],
+                                    ),
+                                    attr: ([]),
+                                    id: (
+                                        span: (
+                                            start: 13,
+                                            end: 19,
+                                        ),
+                                        name: "radius",
+                                    ),
+                                    ty: Some(Single((
+                                        span: (
+                                            start: 21,
                                             end: 27,
+                                        ),
+                                        name: "Length",
+                                    ))),
+                                    default: None,
+                                ),
+                            ],
+                        ),
+                        body: (
+                            span: (
+                                start: 29,
+                                end: 130,
+                            ),
+                            statements: (
+                                span: (
+                                    start: 30,
+                                    end: 129,
+                                ),
+                                extras: (
+                                    leading: ([
+                                        Whitespace(("\n    ")),
+                                    ]),
+                                    trailing: ([]),
+                                ),
+                                statements: [
+                                    (Init((
+                                        span: (
+                                            start: 35,
+                                            end: 101,
+                                        ),
+                                        keyword_span: (
+                                            start: 35,
+                                            end: 39,
                                         ),
                                         extras: (
                                             leading: ([]),
-                                            trailing: ([]),
+                                            trailing: ([
+                                                Whitespace(("\n    ")),
+                                            ]),
                                         ),
                                         doc: (
                                             span: (
-                                                start: 13,
-                                                end: 13,
+                                                start: 35,
+                                                end: 35,
                                             ),
                                             lines: [],
                                         ),
                                         attr: ([]),
-                                        id: (
+                                        parameters: (
                                             span: (
-                                                start: 13,
-                                                end: 19,
-                                            ),
-                                            name: "radius",
-                                        ),
-                                        ty: Some(Single((
-                                            span: (
-                                                start: 21,
-                                                end: 27,
-                                            ),
-                                            name: "Length",
-                                        ))),
-                                        default: None,
-                                    ),
-                                ],
-                            ),
-                            body: (
-                                span: (
-                                    start: 29,
-                                    end: 130,
-                                ),
-                                statements: (
-                                    span: (
-                                        start: 30,
-                                        end: 129,
-                                    ),
-                                    extras: (
-                                        leading: ([
-                                            Whitespace(("\n    ")),
-                                        ]),
-                                        trailing: ([]),
-                                    ),
-                                    statements: [
-                                        (Init((
-                                            span: (
-                                                start: 35,
-                                                end: 101,
-                                            ),
-                                            keyword_span: (
-                                                start: 35,
-                                                end: 39,
+                                                start: 40,
+                                                end: 56,
                                             ),
                                             extras: (
                                                 leading: ([]),
-                                                trailing: ([
-                                                    Whitespace(("\n    ")),
-                                                ]),
+                                                trailing: ([]),
                                             ),
-                                            doc: (
-                                                span: (
-                                                    start: 35,
-                                                    end: 35,
-                                                ),
-                                                lines: [],
-                                            ),
-                                            attr: ([]),
-                                            parameters: (
-                                                span: (
-                                                    start: 40,
-                                                    end: 56,
-                                                ),
-                                                extras: (
-                                                    leading: ([]),
-                                                    trailing: ([]),
-                                                ),
-                                                parameters: [
-                                                    (
+                                            parameters: [
+                                                (
+                                                    span: (
+                                                        start: 40,
+                                                        end: 56,
+                                                    ),
+                                                    extras: (
+                                                        leading: ([]),
+                                                        trailing: ([]),
+                                                    ),
+                                                    doc: (
                                                         span: (
                                                             start: 40,
+                                                            end: 40,
+                                                        ),
+                                                        lines: [],
+                                                    ),
+                                                    attr: ([]),
+                                                    id: (
+                                                        span: (
+                                                            start: 40,
+                                                            end: 48,
+                                                        ),
+                                                        name: "diameter",
+                                                    ),
+                                                    ty: Some(Single((
+                                                        span: (
+                                                            start: 50,
                                                             end: 56,
+                                                        ),
+                                                        name: "Length",
+                                                    ))),
+                                                    default: None,
+                                                ),
+                                            ],
+                                        ),
+                                        body: (
+                                            span: (
+                                                start: 57,
+                                                end: 96,
+                                            ),
+                                            statements: (
+                                                span: (
+                                                    start: 59,
+                                                    end: 95,
+                                                ),
+                                                extras: (
+                                                    leading: ([
+                                                        Whitespace(("\n        ")),
+                                                    ]),
+                                                    trailing: ([]),
+                                                ),
+                                                statements: [
+                                                    (LocalAssignment((
+                                                        span: (
+                                                            start: 68,
+                                                            end: 89,
                                                         ),
                                                         extras: (
                                                             leading: ([]),
                                                             trailing: ([]),
                                                         ),
-                                                        doc: (
-                                                            span: (
-                                                                start: 40,
-                                                                end: 40,
-                                                            ),
-                                                            lines: [],
-                                                        ),
                                                         attr: ([]),
                                                         id: (
                                                             span: (
-                                                                start: 40,
-                                                                end: 48,
-                                                            ),
-                                                            name: "diameter",
-                                                        ),
-                                                        ty: Some(Single((
-                                                            span: (
-                                                                start: 50,
-                                                                end: 56,
-                                                            ),
-                                                            name: "Length",
-                                                        ))),
-                                                        default: None,
-                                                    ),
-                                                ],
-                                            ),
-                                            body: (
-                                                span: (
-                                                    start: 57,
-                                                    end: 96,
-                                                ),
-                                                statements: (
-                                                    span: (
-                                                        start: 59,
-                                                        end: 95,
-                                                    ),
-                                                    extras: (
-                                                        leading: ([
-                                                            Whitespace(("\n        ")),
-                                                        ]),
-                                                        trailing: ([]),
-                                                    ),
-                                                    statements: [
-                                                        (LocalAssignment((
-                                                            span: (
                                                                 start: 68,
+                                                                end: 74,
+                                                            ),
+                                                            name: "radius",
+                                                        ),
+                                                        ty: None,
+                                                        expr: BinaryOperation((
+                                                            span: (
+                                                                start: 77,
                                                                 end: 89,
                                                             ),
-                                                            extras: (
-                                                                leading: ([]),
-                                                                trailing: ([]),
-                                                            ),
-                                                            attr: ([]),
-                                                            id: (
-                                                                span: (
-                                                                    start: 68,
-                                                                    end: 74,
-                                                                ),
-                                                                name: "radius",
-                                                            ),
-                                                            ty: None,
-                                                            expr: BinaryOperation((
+                                                            lhs: QualifiedName((
                                                                 span: (
                                                                     start: 77,
+                                                                    end: 85,
+                                                                ),
+                                                                extras: (
+                                                                    leading: ([]),
+                                                                    trailing: ([
+                                                                        Whitespace((" ")),
+                                                                    ]),
+                                                                ),
+                                                                parts: [
+                                                                    (
+                                                                        span: (
+                                                                            start: 77,
+                                                                            end: 85,
+                                                                        ),
+                                                                        name: "diameter",
+                                                                    ),
+                                                                ],
+                                                            )),
+                                                            op: (
+                                                                span: (
+                                                                    start: 86,
+                                                                    end: 87,
+                                                                ),
+                                                                value: Divide,
+                                                            ),
+                                                            rhs: Literal((
+                                                                span: (
+                                                                    start: 88,
                                                                     end: 89,
                                                                 ),
-                                                                lhs: QualifiedName((
-                                                                    span: (
-                                                                        start: 77,
-                                                                        end: 85,
-                                                                    ),
-                                                                    extras: (
-                                                                        leading: ([]),
-                                                                        trailing: ([
-                                                                            Whitespace((" ")),
-                                                                        ]),
-                                                                    ),
-                                                                    parts: [
-                                                                        (
-                                                                            span: (
-                                                                                start: 77,
-                                                                                end: 85,
-                                                                            ),
-                                                                            name: "diameter",
-                                                                        ),
-                                                                    ],
-                                                                )),
-                                                                op: (
-                                                                    span: (
-                                                                        start: 86,
-                                                                        end: 87,
-                                                                    ),
-                                                                    value: Divide,
+                                                                extras: (
+                                                                    leading: ([]),
+                                                                    trailing: ([]),
                                                                 ),
-                                                                rhs: Literal((
+                                                                literal: Integer((
                                                                     span: (
                                                                         start: 88,
                                                                         end: 89,
                                                                     ),
-                                                                    extras: (
-                                                                        leading: ([]),
-                                                                        trailing: ([]),
-                                                                    ),
-                                                                    literal: Integer((
-                                                                        span: (
-                                                                            start: 88,
-                                                                            end: 89,
-                                                                        ),
-                                                                        value: 2,
-                                                                        raw: "2",
-                                                                    )),
+                                                                    value: 2,
+                                                                    raw: "2",
                                                                 )),
                                                             )),
-                                                        )), ([
-                                                            Whitespace(("\n    ")),
-                                                        ])),
-                                                    ],
-                                                    tail: None,
-                                                ),
+                                                        )),
+                                                    )), ([
+                                                        Whitespace(("\n    ")),
+                                                    ])),
+                                                ],
+                                                tail: None,
                                             ),
-                                        )), ([])),
-                                        (Expression((
+                                        ),
+                                    )), ([])),
+                                    (Expression((
+                                        span: (
+                                            start: 101,
+                                            end: 127,
+                                        ),
+                                        extras: (
+                                            leading: ([]),
+                                            trailing: ([]),
+                                        ),
+                                        attr: ([]),
+                                        expr: Call((
                                             span: (
                                                 start: 101,
                                                 end: 127,
@@ -290,60 +300,59 @@ expression: output
                                                 leading: ([]),
                                                 trailing: ([]),
                                             ),
-                                            attr: ([]),
-                                            expr: Call((
+                                            name: (
                                                 span: (
                                                     start: 101,
-                                                    end: 127,
+                                                    end: 119,
                                                 ),
                                                 extras: (
                                                     leading: ([]),
                                                     trailing: ([]),
                                                 ),
-                                                name: (
-                                                    span: (
-                                                        start: 101,
-                                                        end: 119,
+                                                parts: [
+                                                    (
+                                                        span: (
+                                                            start: 101,
+                                                            end: 104,
+                                                        ),
+                                                        name: "std",
                                                     ),
-                                                    extras: (
-                                                        leading: ([]),
-                                                        trailing: ([]),
+                                                    (
+                                                        span: (
+                                                            start: 106,
+                                                            end: 111,
+                                                        ),
+                                                        name: "geo2d",
                                                     ),
-                                                    parts: [
-                                                        (
-                                                            span: (
-                                                                start: 101,
-                                                                end: 104,
-                                                            ),
-                                                            name: "std",
+                                                    (
+                                                        span: (
+                                                            start: 113,
+                                                            end: 119,
                                                         ),
-                                                        (
-                                                            span: (
-                                                                start: 106,
-                                                                end: 111,
-                                                            ),
-                                                            name: "geo2d",
-                                                        ),
-                                                        (
-                                                            span: (
-                                                                start: 113,
-                                                                end: 119,
-                                                            ),
-                                                            name: "Circle",
-                                                        ),
-                                                    ],
+                                                        name: "Circle",
+                                                    ),
+                                                ],
+                                            ),
+                                            arguments: (
+                                                span: (
+                                                    start: 120,
+                                                    end: 126,
                                                 ),
-                                                arguments: (
-                                                    span: (
-                                                        start: 120,
-                                                        end: 126,
-                                                    ),
-                                                    extras: (
-                                                        leading: ([]),
-                                                        trailing: ([]),
-                                                    ),
-                                                    arguments: [
-                                                        Unnamed((
+                                                extras: (
+                                                    leading: ([]),
+                                                    trailing: ([]),
+                                                ),
+                                                arguments: [
+                                                    Unnamed((
+                                                        span: (
+                                                            start: 120,
+                                                            end: 126,
+                                                        ),
+                                                        extras: (
+                                                            leading: ([]),
+                                                            trailing: ([]),
+                                                        ),
+                                                        expr: QualifiedName((
                                                             span: (
                                                                 start: 120,
                                                                 end: 126,
@@ -352,42 +361,31 @@ expression: output
                                                                 leading: ([]),
                                                                 trailing: ([]),
                                                             ),
-                                                            expr: QualifiedName((
-                                                                span: (
-                                                                    start: 120,
-                                                                    end: 126,
-                                                                ),
-                                                                extras: (
-                                                                    leading: ([]),
-                                                                    trailing: ([]),
-                                                                ),
-                                                                parts: [
-                                                                    (
-                                                                        span: (
-                                                                            start: 120,
-                                                                            end: 126,
-                                                                        ),
-                                                                        name: "radius",
+                                                            parts: [
+                                                                (
+                                                                    span: (
+                                                                        start: 120,
+                                                                        end: 126,
                                                                     ),
-                                                                ],
-                                                            )),
+                                                                    name: "radius",
+                                                                ),
+                                                            ],
                                                         )),
-                                                    ],
-                                                ),
-                                            )),
-                                        )), ([
-                                            Whitespace(("\n")),
-                                        ])),
-                                    ],
-                                    tail: None,
-                                ),
+                                                    )),
+                                                ],
+                                            ),
+                                        )),
+                                    )), ([
+                                        Whitespace(("\n")),
+                                    ])),
+                                ],
+                                tail: None,
                             ),
-                        )), ([])),
-                    ],
-                    tail: None,
-                ),
+                        ),
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 8995060141284101119,
         ),
     ),
 )

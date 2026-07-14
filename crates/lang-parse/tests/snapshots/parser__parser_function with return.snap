@@ -9,195 +9,193 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 15344870840333779755,
+        input_hash: "0xd4f3eeba8a58432b",
+        output_hash: "0xe0e23d4992b9c0f4",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 43,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 43,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 43,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (Function((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (Function((
+                        span: (
+                            start: 0,
+                            end: 43,
+                        ),
+                        keyword_span: (
+                            start: 0,
+                            end: 2,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        doc: (
                             span: (
                                 start: 0,
                                 end: 43,
                             ),
-                            keyword_span: (
-                                start: 0,
-                                end: 2,
+                            lines: [],
+                        ),
+                        attr: ([]),
+                        vis: None,
+                        id: (
+                            span: (
+                                start: 3,
+                                end: 6,
+                            ),
+                            name: "foo",
+                        ),
+                        parameters: (
+                            span: (
+                                start: 7,
+                                end: 16,
                             ),
                             extras: (
                                 leading: ([]),
                                 trailing: ([]),
                             ),
-                            doc: (
-                                span: (
-                                    start: 0,
-                                    end: 43,
-                                ),
-                                lines: [],
-                            ),
-                            attr: ([]),
-                            vis: None,
-                            id: (
-                                span: (
-                                    start: 3,
-                                    end: 6,
-                                ),
-                                name: "foo",
-                            ),
-                            parameters: (
-                                span: (
-                                    start: 7,
-                                    end: 16,
-                                ),
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([]),
-                                ),
-                                parameters: [
-                                    (
-                                        span: (
-                                            start: 7,
-                                            end: 16,
-                                        ),
-                                        extras: (
-                                            leading: ([]),
-                                            trailing: ([]),
-                                        ),
-                                        doc: (
-                                            span: (
-                                                start: 7,
-                                                end: 7,
-                                            ),
-                                            lines: [],
-                                        ),
-                                        attr: ([]),
-                                        id: (
-                                            span: (
-                                                start: 7,
-                                                end: 8,
-                                            ),
-                                            name: "a",
-                                        ),
-                                        ty: Some(Single((
-                                            span: (
-                                                start: 10,
-                                                end: 16,
-                                            ),
-                                            name: "Length",
-                                        ))),
-                                        default: None,
-                                    ),
-                                ],
-                            ),
-                            return_type: Some(Single((
-                                span: (
-                                    start: 21,
-                                    end: 27,
-                                ),
-                                name: "Length",
-                            ))),
-                            body: (
-                                span: (
-                                    start: 28,
-                                    end: 43,
-                                ),
-                                statements: (
+                            parameters: [
+                                (
                                     span: (
-                                        start: 29,
-                                        end: 42,
+                                        start: 7,
+                                        end: 16,
                                     ),
                                     extras: (
                                         leading: ([]),
                                         trailing: ([]),
                                     ),
-                                    statements: [
-                                        (Return((
+                                    doc: (
+                                        span: (
+                                            start: 7,
+                                            end: 7,
+                                        ),
+                                        lines: [],
+                                    ),
+                                    attr: ([]),
+                                    id: (
+                                        span: (
+                                            start: 7,
+                                            end: 8,
+                                        ),
+                                        name: "a",
+                                    ),
+                                    ty: Some(Single((
+                                        span: (
+                                            start: 10,
+                                            end: 16,
+                                        ),
+                                        name: "Length",
+                                    ))),
+                                    default: None,
+                                ),
+                            ],
+                        ),
+                        return_type: Some(Single((
+                            span: (
+                                start: 21,
+                                end: 27,
+                            ),
+                            name: "Length",
+                        ))),
+                        body: (
+                            span: (
+                                start: 28,
+                                end: 43,
+                            ),
+                            statements: (
+                                span: (
+                                    start: 29,
+                                    end: 42,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                statements: [
+                                    (Return((
+                                        span: (
+                                            start: 29,
+                                            end: 41,
+                                        ),
+                                        keyword_span: (
+                                            start: 29,
+                                            end: 35,
+                                        ),
+                                        extras: (
+                                            leading: ([]),
+                                            trailing: ([]),
+                                        ),
+                                        expr: Some(BinaryOperation((
                                             span: (
-                                                start: 29,
+                                                start: 36,
                                                 end: 41,
                                             ),
-                                            keyword_span: (
-                                                start: 29,
-                                                end: 35,
-                                            ),
-                                            extras: (
-                                                leading: ([]),
-                                                trailing: ([]),
-                                            ),
-                                            expr: Some(BinaryOperation((
+                                            lhs: QualifiedName((
                                                 span: (
                                                     start: 36,
+                                                    end: 37,
+                                                ),
+                                                extras: (
+                                                    leading: ([]),
+                                                    trailing: ([
+                                                        Whitespace((" ")),
+                                                    ]),
+                                                ),
+                                                parts: [
+                                                    (
+                                                        span: (
+                                                            start: 36,
+                                                            end: 37,
+                                                        ),
+                                                        name: "a",
+                                                    ),
+                                                ],
+                                            )),
+                                            op: (
+                                                span: (
+                                                    start: 38,
+                                                    end: 39,
+                                                ),
+                                                value: Multiply,
+                                            ),
+                                            rhs: Literal((
+                                                span: (
+                                                    start: 40,
                                                     end: 41,
                                                 ),
-                                                lhs: QualifiedName((
-                                                    span: (
-                                                        start: 36,
-                                                        end: 37,
-                                                    ),
-                                                    extras: (
-                                                        leading: ([]),
-                                                        trailing: ([
-                                                            Whitespace((" ")),
-                                                        ]),
-                                                    ),
-                                                    parts: [
-                                                        (
-                                                            span: (
-                                                                start: 36,
-                                                                end: 37,
-                                                            ),
-                                                            name: "a",
-                                                        ),
-                                                    ],
-                                                )),
-                                                op: (
-                                                    span: (
-                                                        start: 38,
-                                                        end: 39,
-                                                    ),
-                                                    value: Multiply,
+                                                extras: (
+                                                    leading: ([]),
+                                                    trailing: ([]),
                                                 ),
-                                                rhs: Literal((
+                                                literal: Integer((
                                                     span: (
                                                         start: 40,
                                                         end: 41,
                                                     ),
-                                                    extras: (
-                                                        leading: ([]),
-                                                        trailing: ([]),
-                                                    ),
-                                                    literal: Integer((
-                                                        span: (
-                                                            start: 40,
-                                                            end: 41,
-                                                        ),
-                                                        value: 2,
-                                                        raw: "2",
-                                                    )),
+                                                    value: 2,
+                                                    raw: "2",
                                                 )),
-                                            ))),
-                                        )), ([])),
-                                    ],
-                                    tail: None,
-                                ),
+                                            )),
+                                        ))),
+                                    )), ([])),
+                                ],
+                                tail: None,
                             ),
-                        )), ([])),
-                    ],
-                    tail: None,
-                ),
+                        ),
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 16204581795436019956,
         ),
     ),
 )

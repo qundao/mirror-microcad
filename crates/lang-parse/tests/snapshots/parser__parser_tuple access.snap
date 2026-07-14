@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 15946854345240995007,
+        input_hash: "0xdd4e9b8974fbe4bf",
+        output_hash: "0x4e3feb4387607fbd",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 7,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 7,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 7,
@@ -25,65 +35,53 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
+                    attr: ([]),
+                    expr: ElementAccess((
                         span: (
                             start: 0,
                             end: 7,
                         ),
-                        extras: (
-                            leading: ([]),
-                            trailing: ([]),
-                        ),
-                        attr: ([]),
-                        expr: ElementAccess((
+                        expr: QualifiedName((
                             span: (
                                 start: 0,
-                                end: 7,
+                                end: 3,
                             ),
-                            expr: QualifiedName((
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            parts: [
+                                (
+                                    span: (
+                                        start: 0,
+                                        end: 3,
+                                    ),
+                                    name: "foo",
+                                ),
+                            ],
+                        )),
+                        element_chain: [
+                            (
                                 span: (
-                                    start: 0,
-                                    end: 3,
+                                    start: 3,
+                                    end: 7,
                                 ),
                                 extras: (
                                     leading: ([]),
                                     trailing: ([]),
                                 ),
-                                parts: [
-                                    (
-                                        span: (
-                                            start: 0,
-                                            end: 3,
-                                        ),
-                                        name: "foo",
-                                    ),
-                                ],
-                            )),
-                            element_chain: [
-                                (
+                                inner: Tuple((
                                     span: (
-                                        start: 3,
+                                        start: 4,
                                         end: 7,
                                     ),
-                                    extras: (
-                                        leading: ([]),
-                                        trailing: ([]),
-                                    ),
-                                    inner: Tuple((
-                                        span: (
-                                            start: 4,
-                                            end: 7,
-                                        ),
-                                        name: "bar",
-                                    )),
-                                ),
-                            ],
-                        )),
+                                    name: "bar",
+                                )),
+                            ),
+                        ],
                     )),
-                ),
+                )),
             ),
-            hash: 5638483933757734845,
         ),
     ),
 )

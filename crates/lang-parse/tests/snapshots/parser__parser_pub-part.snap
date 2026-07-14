@@ -9,173 +9,183 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 8354246212730988493,
+        input_hash: "0x73f03eaaf3fba7cd",
+        output_hash: "0x3a080c6133952658",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 84,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 84,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 84,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (Workbench((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (Workbench((
+                        span: (
+                            start: 0,
+                            end: 84,
+                        ),
+                        keyword_span: (
+                            start: 4,
+                            end: 8,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        doc: (
                             span: (
                                 start: 0,
                                 end: 84,
                             ),
-                            keyword_span: (
-                                start: 4,
-                                end: 8,
+                            lines: [],
+                        ),
+                        kind: Part,
+                        attr: ([]),
+                        vis: Some((
+                            span: (
+                                start: 0,
+                                end: 3,
+                            ),
+                            value: Public,
+                        )),
+                        id: (
+                            span: (
+                                start: 9,
+                                end: 14,
+                            ),
+                            name: "Wheel",
+                        ),
+                        parameters: (
+                            span: (
+                                start: 15,
+                                end: 43,
                             ),
                             extras: (
                                 leading: ([]),
                                 trailing: ([]),
                             ),
-                            doc: (
-                                span: (
-                                    start: 0,
-                                    end: 84,
-                                ),
-                                lines: [],
-                            ),
-                            kind: Part,
-                            attr: ([]),
-                            vis: Some((
-                                span: (
-                                    start: 0,
-                                    end: 3,
-                                ),
-                                value: Public,
-                            )),
-                            id: (
-                                span: (
-                                    start: 9,
-                                    end: 14,
-                                ),
-                                name: "Wheel",
-                            ),
-                            parameters: (
-                                span: (
-                                    start: 15,
-                                    end: 43,
-                                ),
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([]),
-                                ),
-                                parameters: [
-                                    (
-                                        span: (
-                                            start: 15,
-                                            end: 29,
-                                        ),
-                                        extras: (
-                                            leading: ([]),
-                                            trailing: ([]),
-                                        ),
-                                        doc: (
-                                            span: (
-                                                start: 15,
-                                                end: 15,
-                                            ),
-                                            lines: [],
-                                        ),
-                                        attr: ([]),
-                                        id: (
-                                            span: (
-                                                start: 15,
-                                                end: 21,
-                                            ),
-                                            name: "radius",
-                                        ),
-                                        ty: Some(Single((
-                                            span: (
-                                                start: 23,
-                                                end: 29,
-                                            ),
-                                            name: "Length",
-                                        ))),
-                                        default: None,
-                                    ),
-                                    (
-                                        span: (
-                                            start: 30,
-                                            end: 43,
-                                        ),
-                                        extras: (
-                                            leading: ([
-                                                Whitespace((" ")),
-                                            ]),
-                                            trailing: ([]),
-                                        ),
-                                        doc: (
-                                            span: (
-                                                start: 31,
-                                                end: 31,
-                                            ),
-                                            lines: [],
-                                        ),
-                                        attr: ([]),
-                                        id: (
-                                            span: (
-                                                start: 31,
-                                                end: 37,
-                                            ),
-                                            name: "height",
-                                        ),
-                                        ty: None,
-                                        default: Some(Literal((
-                                            span: (
-                                                start: 40,
-                                                end: 43,
-                                            ),
-                                            extras: (
-                                                leading: ([]),
-                                                trailing: ([]),
-                                            ),
-                                            literal: Quantity((
-                                                span: (
-                                                    start: 40,
-                                                    end: 43,
-                                                ),
-                                                value: 1.0,
-                                                raw: "1",
-                                                unit: (
-                                                    span: (
-                                                        start: 41,
-                                                        end: 43,
-                                                    ),
-                                                    name: "mm",
-                                                ),
-                                            )),
-                                        ))),
-                                    ),
-                                ],
-                            ),
-                            body: (
-                                span: (
-                                    start: 45,
-                                    end: 84,
-                                ),
-                                statements: (
+                            parameters: [
+                                (
                                     span: (
-                                        start: 46,
-                                        end: 83,
+                                        start: 15,
+                                        end: 29,
                                     ),
                                     extras: (
                                         leading: ([]),
                                         trailing: ([]),
                                     ),
-                                    statements: [
-                                        (Expression((
+                                    doc: (
+                                        span: (
+                                            start: 15,
+                                            end: 15,
+                                        ),
+                                        lines: [],
+                                    ),
+                                    attr: ([]),
+                                    id: (
+                                        span: (
+                                            start: 15,
+                                            end: 21,
+                                        ),
+                                        name: "radius",
+                                    ),
+                                    ty: Some(Single((
+                                        span: (
+                                            start: 23,
+                                            end: 29,
+                                        ),
+                                        name: "Length",
+                                    ))),
+                                    default: None,
+                                ),
+                                (
+                                    span: (
+                                        start: 30,
+                                        end: 43,
+                                    ),
+                                    extras: (
+                                        leading: ([
+                                            Whitespace((" ")),
+                                        ]),
+                                        trailing: ([]),
+                                    ),
+                                    doc: (
+                                        span: (
+                                            start: 31,
+                                            end: 31,
+                                        ),
+                                        lines: [],
+                                    ),
+                                    attr: ([]),
+                                    id: (
+                                        span: (
+                                            start: 31,
+                                            end: 37,
+                                        ),
+                                        name: "height",
+                                    ),
+                                    ty: None,
+                                    default: Some(Literal((
+                                        span: (
+                                            start: 40,
+                                            end: 43,
+                                        ),
+                                        extras: (
+                                            leading: ([]),
+                                            trailing: ([]),
+                                        ),
+                                        literal: Quantity((
+                                            span: (
+                                                start: 40,
+                                                end: 43,
+                                            ),
+                                            value: 1.0,
+                                            raw: "1",
+                                            unit: (
+                                                span: (
+                                                    start: 41,
+                                                    end: 43,
+                                                ),
+                                                name: "mm",
+                                            ),
+                                        )),
+                                    ))),
+                                ),
+                            ],
+                        ),
+                        body: (
+                            span: (
+                                start: 45,
+                                end: 84,
+                            ),
+                            statements: (
+                                span: (
+                                    start: 46,
+                                    end: 83,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                statements: [
+                                    (Expression((
+                                        span: (
+                                            start: 46,
+                                            end: 82,
+                                        ),
+                                        extras: (
+                                            leading: ([]),
+                                            trailing: ([]),
+                                        ),
+                                        attr: ([]),
+                                        expr: Call((
                                             span: (
                                                 start: 46,
                                                 end: 82,
@@ -184,60 +194,59 @@ expression: output
                                                 leading: ([]),
                                                 trailing: ([]),
                                             ),
-                                            attr: ([]),
-                                            expr: Call((
+                                            name: (
                                                 span: (
                                                     start: 46,
-                                                    end: 82,
+                                                    end: 66,
                                                 ),
                                                 extras: (
                                                     leading: ([]),
                                                     trailing: ([]),
                                                 ),
-                                                name: (
-                                                    span: (
-                                                        start: 46,
-                                                        end: 66,
+                                                parts: [
+                                                    (
+                                                        span: (
+                                                            start: 46,
+                                                            end: 49,
+                                                        ),
+                                                        name: "std",
                                                     ),
-                                                    extras: (
-                                                        leading: ([]),
-                                                        trailing: ([]),
+                                                    (
+                                                        span: (
+                                                            start: 51,
+                                                            end: 56,
+                                                        ),
+                                                        name: "geo3d",
                                                     ),
-                                                    parts: [
-                                                        (
-                                                            span: (
-                                                                start: 46,
-                                                                end: 49,
-                                                            ),
-                                                            name: "std",
+                                                    (
+                                                        span: (
+                                                            start: 58,
+                                                            end: 66,
                                                         ),
-                                                        (
-                                                            span: (
-                                                                start: 51,
-                                                                end: 56,
-                                                            ),
-                                                            name: "geo3d",
-                                                        ),
-                                                        (
-                                                            span: (
-                                                                start: 58,
-                                                                end: 66,
-                                                            ),
-                                                            name: "Cylinder",
-                                                        ),
-                                                    ],
+                                                        name: "Cylinder",
+                                                    ),
+                                                ],
+                                            ),
+                                            arguments: (
+                                                span: (
+                                                    start: 67,
+                                                    end: 81,
                                                 ),
-                                                arguments: (
-                                                    span: (
-                                                        start: 67,
-                                                        end: 81,
-                                                    ),
-                                                    extras: (
-                                                        leading: ([]),
-                                                        trailing: ([]),
-                                                    ),
-                                                    arguments: [
-                                                        Unnamed((
+                                                extras: (
+                                                    leading: ([]),
+                                                    trailing: ([]),
+                                                ),
+                                                arguments: [
+                                                    Unnamed((
+                                                        span: (
+                                                            start: 67,
+                                                            end: 73,
+                                                        ),
+                                                        extras: (
+                                                            leading: ([]),
+                                                            trailing: ([]),
+                                                        ),
+                                                        expr: QualifiedName((
                                                             span: (
                                                                 start: 67,
                                                                 end: 73,
@@ -246,27 +255,27 @@ expression: output
                                                                 leading: ([]),
                                                                 trailing: ([]),
                                                             ),
-                                                            expr: QualifiedName((
-                                                                span: (
-                                                                    start: 67,
-                                                                    end: 73,
-                                                                ),
-                                                                extras: (
-                                                                    leading: ([]),
-                                                                    trailing: ([]),
-                                                                ),
-                                                                parts: [
-                                                                    (
-                                                                        span: (
-                                                                            start: 67,
-                                                                            end: 73,
-                                                                        ),
-                                                                        name: "radius",
+                                                            parts: [
+                                                                (
+                                                                    span: (
+                                                                        start: 67,
+                                                                        end: 73,
                                                                     ),
-                                                                ],
-                                                            )),
+                                                                    name: "radius",
+                                                                ),
+                                                            ],
                                                         )),
-                                                        Unnamed((
+                                                    )),
+                                                    Unnamed((
+                                                        span: (
+                                                            start: 75,
+                                                            end: 81,
+                                                        ),
+                                                        extras: (
+                                                            leading: ([]),
+                                                            trailing: ([]),
+                                                        ),
+                                                        expr: QualifiedName((
                                                             span: (
                                                                 start: 75,
                                                                 end: 81,
@@ -275,40 +284,29 @@ expression: output
                                                                 leading: ([]),
                                                                 trailing: ([]),
                                                             ),
-                                                            expr: QualifiedName((
-                                                                span: (
-                                                                    start: 75,
-                                                                    end: 81,
-                                                                ),
-                                                                extras: (
-                                                                    leading: ([]),
-                                                                    trailing: ([]),
-                                                                ),
-                                                                parts: [
-                                                                    (
-                                                                        span: (
-                                                                            start: 75,
-                                                                            end: 81,
-                                                                        ),
-                                                                        name: "height",
+                                                            parts: [
+                                                                (
+                                                                    span: (
+                                                                        start: 75,
+                                                                        end: 81,
                                                                     ),
-                                                                ],
-                                                            )),
+                                                                    name: "height",
+                                                                ),
+                                                            ],
                                                         )),
-                                                    ],
-                                                ),
-                                            )),
-                                        )), ([])),
-                                    ],
-                                    tail: None,
-                                ),
+                                                    )),
+                                                ],
+                                            ),
+                                        )),
+                                    )), ([])),
+                                ],
+                                tail: None,
                             ),
-                        )), ([])),
-                    ],
-                    tail: None,
-                ),
+                        ),
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 4181605865630279256,
         ),
     ),
 )

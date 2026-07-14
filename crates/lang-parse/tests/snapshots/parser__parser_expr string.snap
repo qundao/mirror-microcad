@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 6056714833267314109,
+        input_hash: "0x540dc60d0ebccdbd",
+        output_hash: "0xfd52b41ceff73eb9",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 36,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 36,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 36,
@@ -25,8 +35,8 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
+                    attr: ([]),
+                    expr: String((
                         span: (
                             start: 0,
                             end: 36,
@@ -35,100 +45,88 @@ expression: output
                             leading: ([]),
                             trailing: ([]),
                         ),
-                        attr: ([]),
-                        expr: String((
-                            span: (
-                                start: 0,
-                                end: 36,
-                            ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            parts: [
-                                Content((
+                        parts: [
+                            Content((
+                                span: (
+                                    start: 1,
+                                    end: 8,
+                                ),
+                                content: "string ",
+                            )),
+                            Expression((
+                                span: (
+                                    start: 23,
+                                    end: 24,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                expr: BinaryOperation((
                                     span: (
-                                        start: 1,
-                                        end: 8,
+                                        start: 9,
+                                        end: 23,
                                     ),
-                                    content: "string ",
-                                )),
-                                Expression((
-                                    span: (
-                                        start: 23,
-                                        end: 24,
-                                    ),
-                                    extras: (
-                                        leading: ([]),
-                                        trailing: ([]),
-                                    ),
-                                    expr: BinaryOperation((
+                                    lhs: QualifiedName((
                                         span: (
                                             start: 9,
+                                            end: 13,
+                                        ),
+                                        extras: (
+                                            leading: ([]),
+                                            trailing: ([
+                                                Whitespace((" ")),
+                                            ]),
+                                        ),
+                                        parts: [
+                                            (
+                                                span: (
+                                                    start: 9,
+                                                    end: 13,
+                                                ),
+                                                name: "more",
+                                            ),
+                                        ],
+                                    )),
+                                    op: (
+                                        span: (
+                                            start: 14,
+                                            end: 15,
+                                        ),
+                                        value: Add,
+                                    ),
+                                    rhs: QualifiedName((
+                                        span: (
+                                            start: 16,
                                             end: 23,
                                         ),
-                                        lhs: QualifiedName((
-                                            span: (
-                                                start: 9,
-                                                end: 13,
-                                            ),
-                                            extras: (
-                                                leading: ([]),
-                                                trailing: ([
-                                                    Whitespace((" ")),
-                                                ]),
-                                            ),
-                                            parts: [
-                                                (
-                                                    span: (
-                                                        start: 9,
-                                                        end: 13,
-                                                    ),
-                                                    name: "more",
-                                                ),
-                                            ],
-                                        )),
-                                        op: (
-                                            span: (
-                                                start: 14,
-                                                end: 15,
-                                            ),
-                                            value: Add,
+                                        extras: (
+                                            leading: ([]),
+                                            trailing: ([]),
                                         ),
-                                        rhs: QualifiedName((
-                                            span: (
-                                                start: 16,
-                                                end: 23,
-                                            ),
-                                            extras: (
-                                                leading: ([]),
-                                                trailing: ([]),
-                                            ),
-                                            parts: [
-                                                (
-                                                    span: (
-                                                        start: 16,
-                                                        end: 23,
-                                                    ),
-                                                    name: "complex",
+                                        parts: [
+                                            (
+                                                span: (
+                                                    start: 16,
+                                                    end: 23,
                                                 ),
-                                            ],
-                                        )),
+                                                name: "complex",
+                                            ),
+                                        ],
                                     )),
                                 )),
-                                Content((
-                                    span: (
-                                        start: 24,
-                                        end: 35,
-                                    ),
-                                    content: " expression",
-                                )),
-                            ],
-                        )),
+                            )),
+                            Content((
+                                span: (
+                                    start: 24,
+                                    end: 35,
+                                ),
+                                content: " expression",
+                            )),
+                        ],
                     )),
-                ),
+                )),
             ),
-            hash: 18253850276064083641,
         ),
     ),
 )

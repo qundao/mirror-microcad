@@ -9,120 +9,118 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 6579886618884952319,
+        input_hash: "0x5b507404a4fbd0ff",
+        output_hash: "0x60e53306ce2178a3",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 50,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 50,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 50,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (InlineModule((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (InlineModule((
+                        span: (
+                            start: 0,
+                            end: 50,
+                        ),
+                        keyword_span: (
+                            start: 20,
+                            end: 23,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        doc: (
                             span: (
                                 start: 0,
+                                end: 20,
+                            ),
+                            lines: [
+                                "/// Doc comment",
+                            ],
+                        ),
+                        attr: ([]),
+                        vis: None,
+                        id: (
+                            span: (
+                                start: 24,
+                                end: 27,
+                            ),
+                            name: "foo",
+                        ),
+                        body: (
+                            span: (
+                                start: 28,
                                 end: 50,
                             ),
-                            keyword_span: (
-                                start: 20,
-                                end: 23,
-                            ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            doc: (
+                            statements: (
                                 span: (
-                                    start: 0,
-                                    end: 20,
+                                    start: 29,
+                                    end: 49,
                                 ),
-                                lines: [
-                                    "/// Doc comment",
-                                ],
-                            ),
-                            attr: ([]),
-                            vis: None,
-                            id: (
-                                span: (
-                                    start: 24,
-                                    end: 27,
+                                extras: (
+                                    leading: ([
+                                        Whitespace(("\n        ")),
+                                    ]),
+                                    trailing: ([]),
                                 ),
-                                name: "foo",
-                            ),
-                            body: (
-                                span: (
-                                    start: 28,
-                                    end: 50,
-                                ),
-                                statements: (
-                                    span: (
-                                        start: 29,
-                                        end: 49,
-                                    ),
-                                    extras: (
-                                        leading: ([
-                                            Whitespace(("\n        ")),
-                                        ]),
-                                        trailing: ([]),
-                                    ),
-                                    statements: [
-                                        (LocalAssignment((
+                                statements: [
+                                    (LocalAssignment((
+                                        span: (
+                                            start: 38,
+                                            end: 43,
+                                        ),
+                                        extras: (
+                                            leading: ([]),
+                                            trailing: ([]),
+                                        ),
+                                        attr: ([]),
+                                        id: (
                                             span: (
                                                 start: 38,
+                                                end: 39,
+                                            ),
+                                            name: "a",
+                                        ),
+                                        ty: None,
+                                        expr: Literal((
+                                            span: (
+                                                start: 42,
                                                 end: 43,
                                             ),
                                             extras: (
                                                 leading: ([]),
                                                 trailing: ([]),
                                             ),
-                                            attr: ([]),
-                                            id: (
-                                                span: (
-                                                    start: 38,
-                                                    end: 39,
-                                                ),
-                                                name: "a",
-                                            ),
-                                            ty: None,
-                                            expr: Literal((
+                                            literal: Integer((
                                                 span: (
                                                     start: 42,
                                                     end: 43,
                                                 ),
-                                                extras: (
-                                                    leading: ([]),
-                                                    trailing: ([]),
-                                                ),
-                                                literal: Integer((
-                                                    span: (
-                                                        start: 42,
-                                                        end: 43,
-                                                    ),
-                                                    value: 1,
-                                                    raw: "1",
-                                                )),
+                                                value: 1,
+                                                raw: "1",
                                             )),
-                                        )), ([
-                                            Whitespace(("\n    ")),
-                                        ])),
-                                    ],
-                                    tail: None,
-                                ),
+                                        )),
+                                    )), ([
+                                        Whitespace(("\n    ")),
+                                    ])),
+                                ],
+                                tail: None,
                             ),
-                        )), ([])),
-                    ],
-                    tail: None,
-                ),
+                        ),
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 6982042901628942499,
         ),
     ),
 )

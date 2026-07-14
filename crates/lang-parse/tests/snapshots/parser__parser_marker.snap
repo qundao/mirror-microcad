@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 4879409065068372218,
+        input_hash: "0x43b724b14538a0fa",
+        output_hash: "0xf4bfd802a9c5f698",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 6,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 6,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 6,
@@ -25,28 +35,16 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
+                    attr: ([]),
+                    expr: Marker((
                         span: (
-                            start: 0,
+                            start: 1,
                             end: 6,
                         ),
-                        extras: (
-                            leading: ([]),
-                            trailing: ([]),
-                        ),
-                        attr: ([]),
-                        expr: Marker((
-                            span: (
-                                start: 1,
-                                end: 6,
-                            ),
-                            name: "input",
-                        )),
+                        name: "input",
                     )),
-                ),
+                )),
             ),
-            hash: 17636052171756009112,
         ),
     ),
 )

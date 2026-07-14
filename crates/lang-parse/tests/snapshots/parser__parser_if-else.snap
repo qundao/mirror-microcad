@@ -9,213 +9,211 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 13846594178841090060,
+        input_hash: "0xc028fc0b12d0980c",
+        output_hash: "0x74c866d8c9a3a3a",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 25,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 25,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 25,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (Expression((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (Expression((
+                        span: (
+                            start: 0,
+                            end: 25,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: If((
                             span: (
                                 start: 0,
                                 end: 25,
+                            ),
+                            if_span: (
+                                start: 0,
+                                end: 2,
                             ),
                             extras: (
                                 leading: ([]),
                                 trailing: ([]),
                             ),
-                            attr: ([]),
-                            expr: If((
+                            condition: BinaryOperation((
                                 span: (
-                                    start: 0,
-                                    end: 25,
+                                    start: 3,
+                                    end: 9,
                                 ),
-                                if_span: (
-                                    start: 0,
-                                    end: 2,
-                                ),
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([]),
-                                ),
-                                condition: BinaryOperation((
+                                lhs: QualifiedName((
                                     span: (
                                         start: 3,
+                                        end: 4,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([
+                                            Whitespace((" ")),
+                                        ]),
+                                    ),
+                                    parts: [
+                                        (
+                                            span: (
+                                                start: 3,
+                                                end: 4,
+                                            ),
+                                            name: "a",
+                                        ),
+                                    ],
+                                )),
+                                op: (
+                                    span: (
+                                        start: 5,
+                                        end: 6,
+                                    ),
+                                    value: GreaterThan,
+                                ),
+                                rhs: Literal((
+                                    span: (
+                                        start: 7,
                                         end: 9,
                                     ),
-                                    lhs: QualifiedName((
-                                        span: (
-                                            start: 3,
-                                            end: 4,
-                                        ),
-                                        extras: (
-                                            leading: ([]),
-                                            trailing: ([
-                                                Whitespace((" ")),
-                                            ]),
-                                        ),
-                                        parts: [
-                                            (
-                                                span: (
-                                                    start: 3,
-                                                    end: 4,
-                                                ),
-                                                name: "a",
-                                            ),
-                                        ],
-                                    )),
-                                    op: (
-                                        span: (
-                                            start: 5,
-                                            end: 6,
-                                        ),
-                                        value: GreaterThan,
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([
+                                            Whitespace((" ")),
+                                        ]),
                                     ),
-                                    rhs: Literal((
+                                    literal: Integer((
                                         span: (
                                             start: 7,
-                                            end: 9,
+                                            end: 8,
                                         ),
-                                        extras: (
-                                            leading: ([]),
-                                            trailing: ([
-                                                Whitespace((" ")),
-                                            ]),
-                                        ),
-                                        literal: Integer((
-                                            span: (
-                                                start: 7,
-                                                end: 8,
-                                            ),
-                                            value: 1,
-                                            raw: "1",
-                                        )),
+                                        value: 1,
+                                        raw: "1",
                                     )),
                                 )),
-                                body: (
+                            )),
+                            body: (
+                                span: (
+                                    start: 9,
+                                    end: 14,
+                                ),
+                                statements: (
                                     span: (
-                                        start: 9,
-                                        end: 14,
+                                        start: 10,
+                                        end: 13,
                                     ),
-                                    statements: (
+                                    extras: (
+                                        leading: ([
+                                            Whitespace((" ")),
+                                        ]),
+                                        trailing: ([]),
+                                    ),
+                                    statements: [],
+                                    tail: Some((
                                         span: (
-                                            start: 10,
+                                            start: 11,
                                             end: 13,
                                         ),
                                         extras: (
-                                            leading: ([
-                                                Whitespace((" ")),
-                                            ]),
+                                            leading: ([]),
                                             trailing: ([]),
                                         ),
-                                        statements: [],
-                                        tail: Some((
+                                        attr: ([]),
+                                        expr: Literal((
                                             span: (
                                                 start: 11,
                                                 end: 13,
                                             ),
                                             extras: (
                                                 leading: ([]),
-                                                trailing: ([]),
+                                                trailing: ([
+                                                    Whitespace((" ")),
+                                                ]),
                                             ),
-                                            attr: ([]),
-                                            expr: Literal((
+                                            literal: Integer((
                                                 span: (
                                                     start: 11,
-                                                    end: 13,
+                                                    end: 12,
                                                 ),
-                                                extras: (
-                                                    leading: ([]),
-                                                    trailing: ([
-                                                        Whitespace((" ")),
-                                                    ]),
-                                                ),
-                                                literal: Integer((
-                                                    span: (
-                                                        start: 11,
-                                                        end: 12,
-                                                    ),
-                                                    value: 3,
-                                                    raw: "3",
-                                                )),
+                                                value: 3,
+                                                raw: "3",
                                             )),
                                         )),
-                                    ),
+                                    )),
                                 ),
-                                next_if_span: None,
-                                next_if: None,
-                                else_span: Some((
-                                    start: 15,
-                                    end: 19,
-                                )),
-                                else_body: Some((
+                            ),
+                            next_if_span: None,
+                            next_if: None,
+                            else_span: Some((
+                                start: 15,
+                                end: 19,
+                            )),
+                            else_body: Some((
+                                span: (
+                                    start: 20,
+                                    end: 25,
+                                ),
+                                statements: (
                                     span: (
-                                        start: 20,
-                                        end: 25,
+                                        start: 21,
+                                        end: 24,
                                     ),
-                                    statements: (
+                                    extras: (
+                                        leading: ([
+                                            Whitespace((" ")),
+                                        ]),
+                                        trailing: ([]),
+                                    ),
+                                    statements: [],
+                                    tail: Some((
                                         span: (
-                                            start: 21,
+                                            start: 22,
                                             end: 24,
                                         ),
                                         extras: (
-                                            leading: ([
-                                                Whitespace((" ")),
-                                            ]),
+                                            leading: ([]),
                                             trailing: ([]),
                                         ),
-                                        statements: [],
-                                        tail: Some((
+                                        attr: ([]),
+                                        expr: Literal((
                                             span: (
                                                 start: 22,
                                                 end: 24,
                                             ),
                                             extras: (
                                                 leading: ([]),
-                                                trailing: ([]),
+                                                trailing: ([
+                                                    Whitespace((" ")),
+                                                ]),
                                             ),
-                                            attr: ([]),
-                                            expr: Literal((
+                                            literal: Integer((
                                                 span: (
                                                     start: 22,
-                                                    end: 24,
+                                                    end: 23,
                                                 ),
-                                                extras: (
-                                                    leading: ([]),
-                                                    trailing: ([
-                                                        Whitespace((" ")),
-                                                    ]),
-                                                ),
-                                                literal: Integer((
-                                                    span: (
-                                                        start: 22,
-                                                        end: 23,
-                                                    ),
-                                                    value: 4,
-                                                    raw: "4",
-                                                )),
+                                                value: 4,
+                                                raw: "4",
                                             )),
                                         )),
-                                    ),
-                                )),
+                                    )),
+                                ),
                             )),
-                        )), ([])),
-                    ],
-                    tail: None,
-                ),
+                        )),
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 525943061563980346,
         ),
     ),
 )

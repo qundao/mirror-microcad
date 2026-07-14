@@ -9,64 +9,62 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 18017279935063580111,
+        input_hash: "0xfa0a3ca42c3cddcf",
+        output_hash: "0x3a28a25bec98894c",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 8,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 8,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 8,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (Use((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (Use((
+                        span: (
+                            start: 0,
+                            end: 7,
+                        ),
+                        attr: ([]),
+                        keyword_span: (
+                            start: 0,
+                            end: 3,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        vis: None,
+                        name: (
                             span: (
-                                start: 0,
+                                start: 4,
                                 end: 7,
-                            ),
-                            attr: ([]),
-                            keyword_span: (
-                                start: 0,
-                                end: 3,
                             ),
                             extras: (
                                 leading: ([]),
                                 trailing: ([]),
                             ),
-                            vis: None,
-                            name: (
-                                span: (
-                                    start: 4,
-                                    end: 7,
-                                ),
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([]),
-                                ),
-                                parts: [
-                                    Identifier((
-                                        span: (
-                                            start: 4,
-                                            end: 7,
-                                        ),
-                                        name: "foo",
-                                    )),
-                                ],
-                            ),
-                            use_as: None,
-                        )), ([])),
-                    ],
-                    tail: None,
-                ),
+                            parts: [
+                                Identifier((
+                                    span: (
+                                        start: 4,
+                                        end: 7,
+                                    ),
+                                    name: "foo",
+                                )),
+                            ],
+                        ),
+                        use_as: None,
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 4190777968963389772,
         ),
     ),
 )

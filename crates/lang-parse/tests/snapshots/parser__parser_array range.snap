@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 13676345670461687307,
+        input_hash: "0xbdcc23ed4952060b",
+        output_hash: "0x1b50cb5ebff6296f",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 7,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 7,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 7,
@@ -25,8 +35,8 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
+                    attr: ([]),
+                    expr: ArrayRange((
                         span: (
                             start: 0,
                             end: 7,
@@ -35,17 +45,16 @@ expression: output
                             leading: ([]),
                             trailing: ([]),
                         ),
-                        attr: ([]),
-                        expr: ArrayRange((
+                        start: (
                             span: (
-                                start: 0,
-                                end: 7,
+                                start: 1,
+                                end: 2,
                             ),
                             extras: (
                                 leading: ([]),
                                 trailing: ([]),
                             ),
-                            start: (
+                            expr: Literal((
                                 span: (
                                     start: 1,
                                     end: 2,
@@ -54,26 +63,26 @@ expression: output
                                     leading: ([]),
                                     trailing: ([]),
                                 ),
-                                expr: Literal((
+                                literal: Integer((
                                     span: (
                                         start: 1,
                                         end: 2,
                                     ),
-                                    extras: (
-                                        leading: ([]),
-                                        trailing: ([]),
-                                    ),
-                                    literal: Integer((
-                                        span: (
-                                            start: 1,
-                                            end: 2,
-                                        ),
-                                        value: 1,
-                                        raw: "1",
-                                    )),
+                                    value: 1,
+                                    raw: "1",
                                 )),
+                            )),
+                        ),
+                        end: (
+                            span: (
+                                start: 4,
+                                end: 6,
                             ),
-                            end: (
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            expr: Literal((
                                 span: (
                                     start: 4,
                                     end: 6,
@@ -82,31 +91,20 @@ expression: output
                                     leading: ([]),
                                     trailing: ([]),
                                 ),
-                                expr: Literal((
+                                literal: Integer((
                                     span: (
                                         start: 4,
                                         end: 6,
                                     ),
-                                    extras: (
-                                        leading: ([]),
-                                        trailing: ([]),
-                                    ),
-                                    literal: Integer((
-                                        span: (
-                                            start: 4,
-                                            end: 6,
-                                        ),
-                                        value: 10,
-                                        raw: "10",
-                                    )),
+                                    value: 10,
+                                    raw: "10",
                                 )),
-                            ),
-                            unit: None,
-                        )),
+                            )),
+                        ),
+                        unit: None,
                     )),
-                ),
+                )),
             ),
-            hash: 1968296644968851823,
         ),
     ),
 )

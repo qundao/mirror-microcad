@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 15401311348005721897,
+        input_hash: "0xd5bc73124512d729",
+        output_hash: "0xa9525666cdb7e013",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 1,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 1,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 1,
@@ -25,8 +35,8 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
+                    attr: ([]),
+                    expr: Literal((
                         span: (
                             start: 0,
                             end: 1,
@@ -35,29 +45,17 @@ expression: output
                             leading: ([]),
                             trailing: ([]),
                         ),
-                        attr: ([]),
-                        expr: Literal((
+                        literal: Integer((
                             span: (
                                 start: 0,
                                 end: 1,
                             ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            literal: Integer((
-                                span: (
-                                    start: 0,
-                                    end: 1,
-                                ),
-                                value: 1,
-                                raw: "1",
-                            )),
+                            value: 1,
+                            raw: "1",
                         )),
                     )),
-                ),
+                )),
             ),
-            hash: 12200909340038127635,
         ),
     ),
 )

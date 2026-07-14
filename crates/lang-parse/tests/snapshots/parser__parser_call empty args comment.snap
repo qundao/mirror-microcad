@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 7100634413631282167,
+        input_hash: "0x628a8560e0681bf7",
+        output_hash: "0xc8bc75dd8633ba90",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 17,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 17,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 17,
@@ -25,8 +35,8 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
+                    attr: ([]),
+                    expr: Call((
                         span: (
                             start: 0,
                             end: 17,
@@ -35,59 +45,47 @@ expression: output
                             leading: ([]),
                             trailing: ([]),
                         ),
-                        attr: ([]),
-                        expr: Call((
+                        name: (
                             span: (
                                 start: 0,
-                                end: 17,
+                                end: 3,
                             ),
                             extras: (
                                 leading: ([]),
                                 trailing: ([]),
                             ),
-                            name: (
-                                span: (
-                                    start: 0,
-                                    end: 3,
-                                ),
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([]),
-                                ),
-                                parts: [
-                                    (
-                                        span: (
-                                            start: 0,
-                                            end: 3,
-                                        ),
-                                        name: "foo",
+                            parts: [
+                                (
+                                    span: (
+                                        start: 0,
+                                        end: 3,
                                     ),
-                                ],
-                            ),
-                            arguments: (
-                                span: (
-                                    start: 4,
-                                    end: 16,
+                                    name: "foo",
                                 ),
-                                extras: (
-                                    leading: ([
-                                        Comment((
-                                            span: (
-                                                start: 4,
-                                                end: 16,
-                                            ),
-                                            inner: MultiLine("foobar"),
-                                        )),
-                                    ]),
-                                    trailing: ([]),
-                                ),
-                                arguments: [],
+                            ],
+                        ),
+                        arguments: (
+                            span: (
+                                start: 4,
+                                end: 16,
                             ),
-                        )),
+                            extras: (
+                                leading: ([
+                                    Comment((
+                                        span: (
+                                            start: 4,
+                                            end: 16,
+                                        ),
+                                        inner: MultiLine("foobar"),
+                                    )),
+                                ]),
+                                trailing: ([]),
+                            ),
+                            arguments: [],
+                        ),
                     )),
-                ),
+                )),
             ),
-            hash: 14464565697506949776,
         ),
     ),
 )

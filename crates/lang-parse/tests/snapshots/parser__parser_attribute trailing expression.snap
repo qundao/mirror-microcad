@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 16600041358008899099,
+        input_hash: "0xe65f31aa10e9d61b",
+        output_hash: "0x9abfb8856f5e33a4",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 26,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 26,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 26,
@@ -25,89 +35,77 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
-                        span: (
-                            start: 0,
-                            end: 26,
-                        ),
-                        extras: (
-                            leading: ([]),
-                            trailing: ([]),
-                        ),
-                        attr: ([
-                            (
-                                span: (
-                                    start: 0,
-                                    end: 25,
-                                ),
-                                is_inner: false,
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([]),
-                                ),
-                                commands: [
-                                    Assignment((
+                    attr: ([
+                        (
+                            span: (
+                                start: 0,
+                                end: 25,
+                            ),
+                            is_inner: false,
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            commands: [
+                                Assignment((
+                                    span: (
+                                        start: 2,
+                                        end: 19,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    attr: ([]),
+                                    id: (
                                         span: (
                                             start: 2,
+                                            end: 7,
+                                        ),
+                                        name: "color",
+                                    ),
+                                    ty: None,
+                                    expr: Literal((
+                                        span: (
+                                            start: 10,
                                             end: 19,
                                         ),
                                         extras: (
                                             leading: ([]),
                                             trailing: ([]),
                                         ),
-                                        attr: ([]),
-                                        id: (
-                                            span: (
-                                                start: 2,
-                                                end: 7,
-                                            ),
-                                            name: "color",
-                                        ),
-                                        ty: None,
-                                        expr: Literal((
+                                        literal: String((
                                             span: (
                                                 start: 10,
                                                 end: 19,
                                             ),
-                                            extras: (
-                                                leading: ([]),
-                                                trailing: ([]),
-                                            ),
-                                            literal: String((
-                                                span: (
-                                                    start: 10,
-                                                    end: 19,
-                                                ),
-                                                content: "#FF00FF",
-                                            )),
+                                            content: "#FF00FF",
                                         )),
                                     )),
-                                ],
-                            ),
-                        ]),
-                        expr: Literal((
+                                )),
+                            ],
+                        ),
+                    ]),
+                    expr: Literal((
+                        span: (
+                            start: 25,
+                            end: 26,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        literal: Integer((
                             span: (
                                 start: 25,
                                 end: 26,
                             ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            literal: Integer((
-                                span: (
-                                    start: 25,
-                                    end: 26,
-                                ),
-                                value: 1,
-                                raw: "1",
-                            )),
+                            value: 1,
+                            raw: "1",
                         )),
                     )),
-                ),
+                )),
             ),
-            hash: 11150834085631243172,
         ),
     ),
 )

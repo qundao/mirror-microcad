@@ -9,86 +9,84 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 10233056896018394822,
+        input_hash: "0x8e031f07a589aec6",
+        output_hash: "0xf1e0e6dcac7d8940",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 20,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 20,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 20,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (LocalAssignment((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (LocalAssignment((
+                        span: (
+                            start: 0,
+                            end: 19,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([
+                            (
+                                span: (
+                                    start: 0,
+                                    end: 14,
+                                ),
+                                is_inner: false,
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                commands: [
+                                    Ident((
+                                        span: (
+                                            start: 2,
+                                            end: 8,
+                                        ),
+                                        name: "export",
+                                    )),
+                                ],
+                            ),
+                        ]),
+                        id: (
                             span: (
-                                start: 0,
+                                start: 14,
+                                end: 15,
+                            ),
+                            name: "a",
+                        ),
+                        ty: None,
+                        expr: Literal((
+                            span: (
+                                start: 18,
                                 end: 19,
                             ),
                             extras: (
                                 leading: ([]),
                                 trailing: ([]),
                             ),
-                            attr: ([
-                                (
-                                    span: (
-                                        start: 0,
-                                        end: 14,
-                                    ),
-                                    is_inner: false,
-                                    extras: (
-                                        leading: ([]),
-                                        trailing: ([]),
-                                    ),
-                                    commands: [
-                                        Ident((
-                                            span: (
-                                                start: 2,
-                                                end: 8,
-                                            ),
-                                            name: "export",
-                                        )),
-                                    ],
-                                ),
-                            ]),
-                            id: (
-                                span: (
-                                    start: 14,
-                                    end: 15,
-                                ),
-                                name: "a",
-                            ),
-                            ty: None,
-                            expr: Literal((
+                            literal: Integer((
                                 span: (
                                     start: 18,
                                     end: 19,
                                 ),
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([]),
-                                ),
-                                literal: Integer((
-                                    span: (
-                                        start: 18,
-                                        end: 19,
-                                    ),
-                                    value: 1,
-                                    raw: "1",
-                                )),
+                                value: 1,
+                                raw: "1",
                             )),
-                        )), ([])),
-                    ],
-                    tail: None,
-                ),
+                        )),
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 17429184393384921408,
         ),
     ),
 )

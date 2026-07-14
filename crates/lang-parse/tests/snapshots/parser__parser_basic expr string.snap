@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 7275310215853396098,
+        input_hash: "0x64f7181856b65082",
+        output_hash: "0x6d963d6d4ec87b62",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 26,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 26,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 26,
@@ -25,8 +35,8 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
+                    attr: ([]),
+                    expr: String((
                         span: (
                             start: 0,
                             end: 26,
@@ -35,66 +45,54 @@ expression: output
                             leading: ([]),
                             trailing: ([]),
                         ),
-                        attr: ([]),
-                        expr: String((
-                            span: (
-                                start: 0,
-                                end: 26,
-                            ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            parts: [
-                                Content((
+                        parts: [
+                            Content((
+                                span: (
+                                    start: 1,
+                                    end: 8,
+                                ),
+                                content: "string ",
+                            )),
+                            Expression((
+                                span: (
+                                    start: 13,
+                                    end: 14,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                expr: QualifiedName((
                                     span: (
-                                        start: 1,
-                                        end: 8,
-                                    ),
-                                    content: "string ",
-                                )),
-                                Expression((
-                                    span: (
-                                        start: 13,
-                                        end: 14,
+                                        start: 9,
+                                        end: 13,
                                     ),
                                     extras: (
                                         leading: ([]),
                                         trailing: ([]),
                                     ),
-                                    expr: QualifiedName((
-                                        span: (
-                                            start: 9,
-                                            end: 13,
-                                        ),
-                                        extras: (
-                                            leading: ([]),
-                                            trailing: ([]),
-                                        ),
-                                        parts: [
-                                            (
-                                                span: (
-                                                    start: 9,
-                                                    end: 13,
-                                                ),
-                                                name: "with",
+                                    parts: [
+                                        (
+                                            span: (
+                                                start: 9,
+                                                end: 13,
                                             ),
-                                        ],
-                                    )),
+                                            name: "with",
+                                        ),
+                                    ],
                                 )),
-                                Content((
-                                    span: (
-                                        start: 14,
-                                        end: 25,
-                                    ),
-                                    content: " expression",
-                                )),
-                            ],
-                        )),
+                            )),
+                            Content((
+                                span: (
+                                    start: 14,
+                                    end: 25,
+                                ),
+                                content: " expression",
+                            )),
+                        ],
                     )),
-                ),
+                )),
             ),
-            hash: 7896566536323234658,
         ),
     ),
 )

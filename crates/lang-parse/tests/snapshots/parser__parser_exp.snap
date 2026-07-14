@@ -9,183 +9,27 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 8814132365533804099,
+        input_hash: "0x7a5216afeaea7643",
+        output_hash: "0xd6d4855323ff9bd8",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 36,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 36,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 36,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (Expression((
-                            span: (
-                                start: 0,
-                                end: 5,
-                            ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            attr: ([]),
-                            expr: Literal((
-                                span: (
-                                    start: 0,
-                                    end: 5,
-                                ),
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([]),
-                                ),
-                                literal: Float((
-                                    span: (
-                                        start: 0,
-                                        end: 5,
-                                    ),
-                                    value: 0.0001,
-                                    raw: ".1e-3",
-                                )),
-                            )),
-                        )), ([
-                            Whitespace((" ")),
-                        ])),
-                        (Expression((
-                            span: (
-                                start: 7,
-                                end: 12,
-                            ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            attr: ([]),
-                            expr: Literal((
-                                span: (
-                                    start: 7,
-                                    end: 12,
-                                ),
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([]),
-                                ),
-                                literal: Float((
-                                    span: (
-                                        start: 7,
-                                        end: 12,
-                                    ),
-                                    value: 100.0,
-                                    raw: ".1e+3",
-                                )),
-                            )),
-                        )), ([
-                            Whitespace((" ")),
-                        ])),
-                        (Expression((
-                            span: (
-                                start: 14,
-                                end: 18,
-                            ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            attr: ([]),
-                            expr: Literal((
-                                span: (
-                                    start: 14,
-                                    end: 18,
-                                ),
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([]),
-                                ),
-                                literal: Float((
-                                    span: (
-                                        start: 14,
-                                        end: 18,
-                                    ),
-                                    value: 100.0,
-                                    raw: ".1e3",
-                                )),
-                            )),
-                        )), ([
-                            Whitespace((" ")),
-                        ])),
-                        (Expression((
-                            span: (
-                                start: 20,
-                                end: 24,
-                            ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            attr: ([]),
-                            expr: Literal((
-                                span: (
-                                    start: 20,
-                                    end: 24,
-                                ),
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([]),
-                                ),
-                                literal: Float((
-                                    span: (
-                                        start: 20,
-                                        end: 24,
-                                    ),
-                                    value: 1000.0,
-                                    raw: "1.e3",
-                                )),
-                            )),
-                        )), ([
-                            Whitespace((" ")),
-                        ])),
-                        (Expression((
-                            span: (
-                                start: 26,
-                                end: 31,
-                            ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            attr: ([]),
-                            expr: Literal((
-                                span: (
-                                    start: 26,
-                                    end: 31,
-                                ),
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([]),
-                                ),
-                                literal: Float((
-                                    span: (
-                                        start: 26,
-                                        end: 31,
-                                    ),
-                                    value: 1200.0,
-                                    raw: "1.2e3",
-                                )),
-                            )),
-                        )), ([
-                            Whitespace((" ")),
-                        ])),
-                    ],
-                    tail: Some((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (Expression((
                         span: (
-                            start: 33,
-                            end: 36,
+                            start: 0,
+                            end: 5,
                         ),
                         extras: (
                             leading: ([]),
@@ -194,8 +38,8 @@ expression: output
                         attr: ([]),
                         expr: Literal((
                             span: (
-                                start: 33,
-                                end: 36,
+                                start: 0,
+                                end: 5,
                             ),
                             extras: (
                                 leading: ([]),
@@ -203,17 +47,171 @@ expression: output
                             ),
                             literal: Float((
                                 span: (
-                                    start: 33,
-                                    end: 36,
+                                    start: 0,
+                                    end: 5,
                                 ),
-                                value: 1000.0,
-                                raw: "1e3",
+                                value: 0.0001,
+                                raw: ".1e-3",
                             )),
                         )),
+                    )), ([
+                        Whitespace((" ")),
+                    ])),
+                    (Expression((
+                        span: (
+                            start: 7,
+                            end: 12,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: Literal((
+                            span: (
+                                start: 7,
+                                end: 12,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            literal: Float((
+                                span: (
+                                    start: 7,
+                                    end: 12,
+                                ),
+                                value: 100.0,
+                                raw: ".1e+3",
+                            )),
+                        )),
+                    )), ([
+                        Whitespace((" ")),
+                    ])),
+                    (Expression((
+                        span: (
+                            start: 14,
+                            end: 18,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: Literal((
+                            span: (
+                                start: 14,
+                                end: 18,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            literal: Float((
+                                span: (
+                                    start: 14,
+                                    end: 18,
+                                ),
+                                value: 100.0,
+                                raw: ".1e3",
+                            )),
+                        )),
+                    )), ([
+                        Whitespace((" ")),
+                    ])),
+                    (Expression((
+                        span: (
+                            start: 20,
+                            end: 24,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: Literal((
+                            span: (
+                                start: 20,
+                                end: 24,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            literal: Float((
+                                span: (
+                                    start: 20,
+                                    end: 24,
+                                ),
+                                value: 1000.0,
+                                raw: "1.e3",
+                            )),
+                        )),
+                    )), ([
+                        Whitespace((" ")),
+                    ])),
+                    (Expression((
+                        span: (
+                            start: 26,
+                            end: 31,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: Literal((
+                            span: (
+                                start: 26,
+                                end: 31,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            literal: Float((
+                                span: (
+                                    start: 26,
+                                    end: 31,
+                                ),
+                                value: 1200.0,
+                                raw: "1.2e3",
+                            )),
+                        )),
+                    )), ([
+                        Whitespace((" ")),
+                    ])),
+                ],
+                tail: Some((
+                    span: (
+                        start: 33,
+                        end: 36,
+                    ),
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
+                    ),
+                    attr: ([]),
+                    expr: Literal((
+                        span: (
+                            start: 33,
+                            end: 36,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        literal: Float((
+                            span: (
+                                start: 33,
+                                end: 36,
+                            ),
+                            value: 1000.0,
+                            raw: "1e3",
+                        )),
                     )),
-                ),
+                )),
             ),
-            hash: 15480144411311971288,
         ),
     ),
 )

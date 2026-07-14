@@ -9,122 +9,120 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 2623084869298528705,
+        input_hash: "0x246711ca7a3da1c1",
+        output_hash: "0xa969073325592be2",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 46,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 46,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 46,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (Function((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (Function((
+                        span: (
+                            start: 0,
+                            end: 46,
+                        ),
+                        keyword_span: (
+                            start: 20,
+                            end: 22,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        doc: (
                             span: (
                                 start: 0,
-                                end: 46,
+                                end: 20,
                             ),
-                            keyword_span: (
-                                start: 20,
-                                end: 22,
+                            lines: [
+                                "/// Doc comment",
+                            ],
+                        ),
+                        attr: ([]),
+                        vis: None,
+                        id: (
+                            span: (
+                                start: 23,
+                                end: 26,
+                            ),
+                            name: "Foo",
+                        ),
+                        parameters: (
+                            span: (
+                                start: 27,
+                                end: 27,
                             ),
                             extras: (
                                 leading: ([]),
                                 trailing: ([]),
                             ),
-                            doc: (
-                                span: (
-                                    start: 0,
-                                    end: 20,
-                                ),
-                                lines: [
-                                    "/// Doc comment",
-                                ],
+                            parameters: [],
+                        ),
+                        return_type: None,
+                        body: (
+                            span: (
+                                start: 29,
+                                end: 46,
                             ),
-                            attr: ([]),
-                            vis: None,
-                            id: (
+                            statements: (
                                 span: (
-                                    start: 23,
-                                    end: 26,
-                                ),
-                                name: "Foo",
-                            ),
-                            parameters: (
-                                span: (
-                                    start: 27,
-                                    end: 27,
+                                    start: 30,
+                                    end: 45,
                                 ),
                                 extras: (
-                                    leading: ([]),
+                                    leading: ([
+                                        Whitespace(("\n        ")),
+                                    ]),
                                     trailing: ([]),
                                 ),
-                                parameters: [],
-                            ),
-                            return_type: None,
-                            body: (
-                                span: (
-                                    start: 29,
-                                    end: 46,
-                                ),
-                                statements: (
+                                statements: [],
+                                tail: Some((
                                     span: (
-                                        start: 30,
+                                        start: 39,
                                         end: 45,
                                     ),
                                     extras: (
-                                        leading: ([
-                                            Whitespace(("\n        ")),
-                                        ]),
+                                        leading: ([]),
                                         trailing: ([]),
                                     ),
-                                    statements: [],
-                                    tail: Some((
+                                    attr: ([]),
+                                    expr: Literal((
                                         span: (
                                             start: 39,
                                             end: 45,
                                         ),
                                         extras: (
                                             leading: ([]),
-                                            trailing: ([]),
+                                            trailing: ([
+                                                Whitespace(("\n    ")),
+                                            ]),
                                         ),
-                                        attr: ([]),
-                                        expr: Literal((
+                                        literal: Integer((
                                             span: (
                                                 start: 39,
-                                                end: 45,
+                                                end: 40,
                                             ),
-                                            extras: (
-                                                leading: ([]),
-                                                trailing: ([
-                                                    Whitespace(("\n    ")),
-                                                ]),
-                                            ),
-                                            literal: Integer((
-                                                span: (
-                                                    start: 39,
-                                                    end: 40,
-                                                ),
-                                                value: 1,
-                                                raw: "1",
-                                            )),
+                                            value: 1,
+                                            raw: "1",
                                         )),
                                     )),
-                                ),
+                                )),
                             ),
-                        )), ([])),
-                    ],
-                    tail: None,
-                ),
+                        ),
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 12207296181215767522,
         ),
     ),
 )

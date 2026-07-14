@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 1241829121912409979,
+        input_hash: "0x113bdd01c3530f7b",
+        output_hash: "0xf9a437d9e69d5d0f",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 8,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 8,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 8,
@@ -25,97 +35,85 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
+                    attr: ([]),
+                    expr: ElementAccess((
                         span: (
                             start: 0,
                             end: 8,
                         ),
-                        extras: (
-                            leading: ([]),
-                            trailing: ([]),
-                        ),
-                        attr: ([]),
-                        expr: ElementAccess((
+                        expr: Body((
                             span: (
                                 start: 0,
-                                end: 8,
+                                end: 2,
                             ),
-                            expr: Body((
+                            statements: (
                                 span: (
-                                    start: 0,
-                                    end: 2,
+                                    start: 1,
+                                    end: 1,
                                 ),
-                                statements: (
-                                    span: (
-                                        start: 1,
-                                        end: 1,
-                                    ),
-                                    extras: (
-                                        leading: ([]),
-                                        trailing: ([]),
-                                    ),
-                                    statements: [],
-                                    tail: None,
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
                                 ),
-                            )),
-                            element_chain: [
-                                (
+                                statements: [],
+                                tail: None,
+                            ),
+                        )),
+                        element_chain: [
+                            (
+                                span: (
+                                    start: 2,
+                                    end: 8,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                inner: Method((
                                     span: (
-                                        start: 2,
+                                        start: 3,
                                         end: 8,
                                     ),
                                     extras: (
                                         leading: ([]),
                                         trailing: ([]),
                                     ),
-                                    inner: Method((
+                                    name: (
                                         span: (
                                             start: 3,
-                                            end: 8,
+                                            end: 6,
                                         ),
                                         extras: (
                                             leading: ([]),
                                             trailing: ([]),
                                         ),
-                                        name: (
-                                            span: (
-                                                start: 3,
-                                                end: 6,
-                                            ),
-                                            extras: (
-                                                leading: ([]),
-                                                trailing: ([]),
-                                            ),
-                                            parts: [
-                                                (
-                                                    span: (
-                                                        start: 3,
-                                                        end: 6,
-                                                    ),
-                                                    name: "foo",
+                                        parts: [
+                                            (
+                                                span: (
+                                                    start: 3,
+                                                    end: 6,
                                                 ),
-                                            ],
-                                        ),
-                                        arguments: (
-                                            span: (
-                                                start: 7,
-                                                end: 7,
+                                                name: "foo",
                                             ),
-                                            extras: (
-                                                leading: ([]),
-                                                trailing: ([]),
-                                            ),
-                                            arguments: [],
+                                        ],
+                                    ),
+                                    arguments: (
+                                        span: (
+                                            start: 7,
+                                            end: 7,
                                         ),
-                                    )),
-                                ),
-                            ],
-                        )),
+                                        extras: (
+                                            leading: ([]),
+                                            trailing: ([]),
+                                        ),
+                                        arguments: [],
+                                    ),
+                                )),
+                            ),
+                        ],
                     )),
-                ),
+                )),
             ),
-            hash: 17988564220641107215,
         ),
     ),
 )

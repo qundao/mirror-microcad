@@ -9,43 +9,41 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 18059794727415028478,
+        input_hash: "0xfaa1479ea40b9afe",
+        output_hash: "0x42c136769b292e78",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 27,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 27,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 27,
-                    ),
-                    extras: (
-                        leading: ([
-                            Comment((
-                                span: (
-                                    start: 0,
-                                    end: 11,
-                                ),
-                                inner: SingleLine("// comment1"),
-                            )),
-                            Whitespace(("\n    ")),
-                            Comment((
-                                span: (
-                                    start: 16,
-                                    end: 27,
-                                ),
-                                inner: SingleLine("// comment2"),
-                            )),
-                        ]),
-                        trailing: ([]),
-                    ),
-                    statements: [],
-                    tail: None,
+                extras: (
+                    leading: ([
+                        Comment((
+                            span: (
+                                start: 0,
+                                end: 11,
+                            ),
+                            inner: SingleLine("// comment1"),
+                        )),
+                        Whitespace(("\n    ")),
+                        Comment((
+                            span: (
+                                start: 16,
+                                end: 27,
+                            ),
+                            inner: SingleLine("// comment2"),
+                        )),
+                    ]),
+                    trailing: ([]),
                 ),
+                statements: [],
+                tail: None,
             ),
-            hash: 4810185760045608568,
         ),
     ),
 )

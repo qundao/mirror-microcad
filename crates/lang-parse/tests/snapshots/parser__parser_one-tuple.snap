@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 10138950686611619799,
+        input_hash: "0x8cb4c9ee56b03fd7",
+        output_hash: "0x2da75a2c582260cb",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 4,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 4,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 4,
@@ -25,8 +35,8 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
+                    attr: ([]),
+                    expr: Tuple((
                         span: (
                             start: 0,
                             end: 4,
@@ -35,18 +45,18 @@ expression: output
                             leading: ([]),
                             trailing: ([]),
                         ),
-                        attr: ([]),
-                        expr: Tuple((
-                            span: (
-                                start: 0,
-                                end: 4,
-                            ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            values: [
-                                (
+                        values: [
+                            (
+                                span: (
+                                    start: 1,
+                                    end: 2,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                id: None,
+                                expr: Literal((
                                     span: (
                                         start: 1,
                                         end: 2,
@@ -55,32 +65,20 @@ expression: output
                                         leading: ([]),
                                         trailing: ([]),
                                     ),
-                                    id: None,
-                                    expr: Literal((
+                                    literal: Integer((
                                         span: (
                                             start: 1,
                                             end: 2,
                                         ),
-                                        extras: (
-                                            leading: ([]),
-                                            trailing: ([]),
-                                        ),
-                                        literal: Integer((
-                                            span: (
-                                                start: 1,
-                                                end: 2,
-                                            ),
-                                            value: 1,
-                                            raw: "1",
-                                        )),
+                                        value: 1,
+                                        raw: "1",
                                     )),
-                                ),
-                            ],
-                        )),
+                                )),
+                            ),
+                        ],
                     )),
-                ),
+                )),
             ),
-            hash: 3289697199321145547,
         ),
     ),
 )

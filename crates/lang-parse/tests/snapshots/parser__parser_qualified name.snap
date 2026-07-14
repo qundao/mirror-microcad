@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 4886986663620057133,
+        input_hash: "0x43d2107a6b25182d",
+        output_hash: "0x7a63fc26049a71a2",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 8,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 8,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 8,
@@ -25,8 +35,8 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
+                    attr: ([]),
+                    expr: QualifiedName((
                         span: (
                             start: 0,
                             end: 8,
@@ -35,37 +45,25 @@ expression: output
                             leading: ([]),
                             trailing: ([]),
                         ),
-                        attr: ([]),
-                        expr: QualifiedName((
-                            span: (
-                                start: 0,
-                                end: 8,
-                            ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            parts: [
-                                (
-                                    span: (
-                                        start: 0,
-                                        end: 3,
-                                    ),
-                                    name: "foo",
+                        parts: [
+                            (
+                                span: (
+                                    start: 0,
+                                    end: 3,
                                 ),
-                                (
-                                    span: (
-                                        start: 5,
-                                        end: 8,
-                                    ),
-                                    name: "bar",
+                                name: "foo",
+                            ),
+                            (
+                                span: (
+                                    start: 5,
+                                    end: 8,
                                 ),
-                            ],
-                        )),
+                                name: "bar",
+                            ),
+                        ],
                     )),
-                ),
+                )),
             ),
-            hash: 8819169735537750434,
         ),
     ),
 )

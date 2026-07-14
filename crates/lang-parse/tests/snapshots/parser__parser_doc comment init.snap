@@ -9,81 +9,79 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 17264266741914646625,
+        input_hash: "0xef96ff21bb69b861",
+        output_hash: "0x99807ce6c0d05303",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 28,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 28,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 28,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (Init((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (Init((
+                        span: (
+                            start: 0,
+                            end: 28,
+                        ),
+                        keyword_span: (
+                            start: 20,
+                            end: 24,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        doc: (
                             span: (
                                 start: 0,
-                                end: 28,
+                                end: 20,
                             ),
-                            keyword_span: (
-                                start: 20,
-                                end: 24,
+                            lines: [
+                                "/// Doc comment",
+                            ],
+                        ),
+                        attr: ([]),
+                        parameters: (
+                            span: (
+                                start: 25,
+                                end: 25,
                             ),
                             extras: (
                                 leading: ([]),
                                 trailing: ([]),
                             ),
-                            doc: (
-                                span: (
-                                    start: 0,
-                                    end: 20,
-                                ),
-                                lines: [
-                                    "/// Doc comment",
-                                ],
+                            parameters: [],
+                        ),
+                        body: (
+                            span: (
+                                start: 26,
+                                end: 28,
                             ),
-                            attr: ([]),
-                            parameters: (
+                            statements: (
                                 span: (
-                                    start: 25,
-                                    end: 25,
+                                    start: 27,
+                                    end: 27,
                                 ),
                                 extras: (
                                     leading: ([]),
                                     trailing: ([]),
                                 ),
-                                parameters: [],
+                                statements: [],
+                                tail: None,
                             ),
-                            body: (
-                                span: (
-                                    start: 26,
-                                    end: 28,
-                                ),
-                                statements: (
-                                    span: (
-                                        start: 27,
-                                        end: 27,
-                                    ),
-                                    extras: (
-                                        leading: ([]),
-                                        trailing: ([]),
-                                    ),
-                                    statements: [],
-                                    tail: None,
-                                ),
-                            ),
-                        )), ([])),
-                    ],
-                    tail: None,
-                ),
+                        ),
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 11060978015341138691,
         ),
     ),
 )

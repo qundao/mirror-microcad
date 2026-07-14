@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 3881850037112606398,
+        input_hash: "0x35df1a0ab56f0ebe",
+        output_hash: "0xb31ead901afd4d80",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 47,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 47,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 47,
@@ -25,8 +35,8 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
+                    attr: ([]),
+                    expr: String((
                         span: (
                             start: 0,
                             end: 47,
@@ -35,100 +45,88 @@ expression: output
                             leading: ([]),
                             trailing: ([]),
                         ),
-                        attr: ([]),
-                        expr: String((
-                            span: (
-                                start: 0,
-                                end: 47,
-                            ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            parts: [
-                                Content((
+                        parts: [
+                            Content((
+                                span: (
+                                    start: 1,
+                                    end: 8,
+                                ),
+                                content: "string ",
+                            )),
+                            Expression((
+                                span: (
+                                    start: 34,
+                                    end: 35,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                expr: BinaryOperation((
                                     span: (
-                                        start: 1,
-                                        end: 8,
+                                        start: 9,
+                                        end: 31,
                                     ),
-                                    content: "string ",
-                                )),
-                                Expression((
-                                    span: (
-                                        start: 34,
-                                        end: 35,
-                                    ),
-                                    extras: (
-                                        leading: ([]),
-                                        trailing: ([]),
-                                    ),
-                                    expr: BinaryOperation((
+                                    lhs: QualifiedName((
                                         span: (
                                             start: 9,
+                                            end: 18,
+                                        ),
+                                        extras: (
+                                            leading: ([]),
+                                            trailing: ([
+                                                Whitespace((" ")),
+                                            ]),
+                                        ),
+                                        parts: [
+                                            (
+                                                span: (
+                                                    start: 9,
+                                                    end: 18,
+                                                ),
+                                                name: "formatted",
+                                            ),
+                                        ],
+                                    )),
+                                    op: (
+                                        span: (
+                                            start: 19,
+                                            end: 20,
+                                        ),
+                                        value: Subtract,
+                                    ),
+                                    rhs: QualifiedName((
+                                        span: (
+                                            start: 21,
                                             end: 31,
                                         ),
-                                        lhs: QualifiedName((
-                                            span: (
-                                                start: 9,
-                                                end: 18,
-                                            ),
-                                            extras: (
-                                                leading: ([]),
-                                                trailing: ([
-                                                    Whitespace((" ")),
-                                                ]),
-                                            ),
-                                            parts: [
-                                                (
-                                                    span: (
-                                                        start: 9,
-                                                        end: 18,
-                                                    ),
-                                                    name: "formatted",
-                                                ),
-                                            ],
-                                        )),
-                                        op: (
-                                            span: (
-                                                start: 19,
-                                                end: 20,
-                                            ),
-                                            value: Subtract,
+                                        extras: (
+                                            leading: ([]),
+                                            trailing: ([]),
                                         ),
-                                        rhs: QualifiedName((
-                                            span: (
-                                                start: 21,
-                                                end: 31,
-                                            ),
-                                            extras: (
-                                                leading: ([]),
-                                                trailing: ([]),
-                                            ),
-                                            parts: [
-                                                (
-                                                    span: (
-                                                        start: 21,
-                                                        end: 31,
-                                                    ),
-                                                    name: "expression",
+                                        parts: [
+                                            (
+                                                span: (
+                                                    start: 21,
+                                                    end: 31,
                                                 ),
-                                            ],
-                                        )),
+                                                name: "expression",
+                                            ),
+                                        ],
                                     )),
                                 )),
-                                Content((
-                                    span: (
-                                        start: 35,
-                                        end: 46,
-                                    ),
-                                    content: " expression",
-                                )),
-                            ],
-                        )),
+                            )),
+                            Content((
+                                span: (
+                                    start: 35,
+                                    end: 46,
+                                ),
+                                content: " expression",
+                            )),
+                        ],
                     )),
-                ),
+                )),
             ),
-            hash: 12906944416530124160,
         ),
     ),
 )

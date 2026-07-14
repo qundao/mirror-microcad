@@ -9,78 +9,88 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 7091346451901191065,
+        input_hash: "0x62698606c4cc1399",
+        output_hash: "0x5f81e612b7f22aad",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 22,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 22,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 22,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (Function((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (Function((
+                        span: (
+                            start: 0,
+                            end: 22,
+                        ),
+                        keyword_span: (
+                            start: 0,
+                            end: 2,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        doc: (
                             span: (
                                 start: 0,
                                 end: 22,
                             ),
-                            keyword_span: (
-                                start: 0,
-                                end: 2,
+                            lines: [],
+                        ),
+                        attr: ([]),
+                        vis: None,
+                        id: (
+                            span: (
+                                start: 3,
+                                end: 6,
+                            ),
+                            name: "foo",
+                        ),
+                        parameters: (
+                            span: (
+                                start: 7,
+                                end: 17,
                             ),
                             extras: (
-                                leading: ([]),
+                                leading: ([
+                                    Comment((
+                                        span: (
+                                            start: 7,
+                                            end: 17,
+                                        ),
+                                        inner: MultiLine("test"),
+                                    )),
+                                ]),
                                 trailing: ([]),
                             ),
-                            doc: (
-                                span: (
-                                    start: 0,
-                                    end: 22,
-                                ),
-                                lines: [],
+                            parameters: [],
+                        ),
+                        return_type: None,
+                        body: (
+                            span: (
+                                start: 19,
+                                end: 22,
                             ),
-                            attr: ([]),
-                            vis: None,
-                            id: (
+                            statements: (
                                 span: (
-                                    start: 3,
-                                    end: 6,
-                                ),
-                                name: "foo",
-                            ),
-                            parameters: (
-                                span: (
-                                    start: 7,
-                                    end: 17,
+                                    start: 20,
+                                    end: 21,
                                 ),
                                 extras: (
-                                    leading: ([
-                                        Comment((
-                                            span: (
-                                                start: 7,
-                                                end: 17,
-                                            ),
-                                            inner: MultiLine("test"),
-                                        )),
-                                    ]),
+                                    leading: ([]),
                                     trailing: ([]),
                                 ),
-                                parameters: [],
-                            ),
-                            return_type: None,
-                            body: (
-                                span: (
-                                    start: 19,
-                                    end: 22,
-                                ),
-                                statements: (
+                                statements: [],
+                                tail: Some((
                                     span: (
                                         start: 20,
                                         end: 21,
@@ -89,8 +99,8 @@ expression: output
                                         leading: ([]),
                                         trailing: ([]),
                                     ),
-                                    statements: [],
-                                    tail: Some((
+                                    attr: ([]),
+                                    expr: Literal((
                                         span: (
                                             start: 20,
                                             end: 21,
@@ -99,34 +109,22 @@ expression: output
                                             leading: ([]),
                                             trailing: ([]),
                                         ),
-                                        attr: ([]),
-                                        expr: Literal((
+                                        literal: Integer((
                                             span: (
                                                 start: 20,
                                                 end: 21,
                                             ),
-                                            extras: (
-                                                leading: ([]),
-                                                trailing: ([]),
-                                            ),
-                                            literal: Integer((
-                                                span: (
-                                                    start: 20,
-                                                    end: 21,
-                                                ),
-                                                value: 2,
-                                                raw: "2",
-                                            )),
+                                            value: 2,
+                                            raw: "2",
                                         )),
                                     )),
-                                ),
+                                )),
                             ),
-                        )), ([])),
-                    ],
-                    tail: None,
-                ),
+                        ),
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 6882034673668729517,
         ),
     ),
 )

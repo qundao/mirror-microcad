@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 733796169002063123,
+        input_hash: "0xa2ef7ba56e91513",
+        output_hash: "0xa0b961dba54c8892",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 35,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 35,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 35,
@@ -25,8 +35,8 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
+                    attr: ([]),
+                    expr: Literal((
                         span: (
                             start: 0,
                             end: 35,
@@ -35,28 +45,16 @@ expression: output
                             leading: ([]),
                             trailing: ([]),
                         ),
-                        attr: ([]),
-                        expr: Literal((
+                        literal: String((
                             span: (
                                 start: 0,
                                 end: 35,
                             ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            literal: String((
-                                span: (
-                                    start: 0,
-                                    end: 35,
-                                ),
-                                content: "string { with } escaped bracket",
-                            )),
+                            content: "string { with } escaped bracket",
                         )),
                     )),
-                ),
+                )),
             ),
-            hash: 11581395512758929554,
         ),
     ),
 )

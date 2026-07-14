@@ -9,64 +9,62 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 11805134683495433971,
+        input_hash: "0xa3d44372c76386f3",
+        output_hash: "0x6df8214f2626c9fc",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 12,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 12,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 12,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (LocalAssignment((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (LocalAssignment((
+                        span: (
+                            start: 0,
+                            end: 11,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        id: (
                             span: (
                                 start: 0,
+                                end: 1,
+                            ),
+                            name: "b",
+                        ),
+                        ty: None,
+                        expr: Literal((
+                            span: (
+                                start: 4,
                                 end: 11,
                             ),
                             extras: (
                                 leading: ([]),
                                 trailing: ([]),
                             ),
-                            attr: ([]),
-                            id: (
-                                span: (
-                                    start: 0,
-                                    end: 1,
-                                ),
-                                name: "b",
-                            ),
-                            ty: None,
-                            expr: Literal((
+                            literal: Error((
                                 span: (
                                     start: 4,
                                     end: 11,
                                 ),
-                                extras: (
-                                    leading: ([]),
-                                    trailing: ([]),
-                                ),
-                                literal: Error((
-                                    span: (
-                                        start: 4,
-                                        end: 11,
-                                    ),
-                                    kind: "only numeric literals can be typed",
-                                )),
+                                kind: "only numeric literals can be typed",
                             )),
-                        )), ([])),
-                    ],
-                    tail: None,
-                ),
+                        )),
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 7924120168184596988,
         ),
     ),
 )

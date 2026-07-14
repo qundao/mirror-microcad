@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 1333797621451013877,
+        input_hash: "0x128299deb4d93ef5",
+        output_hash: "0x5c25b41b7b5cd504",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 25,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 25,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 25,
@@ -25,8 +35,8 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
+                    attr: ([]),
+                    expr: ArrayList((
                         span: (
                             start: 0,
                             end: 25,
@@ -35,98 +45,86 @@ expression: output
                             leading: ([]),
                             trailing: ([]),
                         ),
-                        attr: ([]),
-                        expr: ArrayList((
-                            span: (
-                                start: 0,
-                                end: 25,
-                            ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            items: [
-                                (
+                        items: [
+                            (
+                                span: (
+                                    start: 1,
+                                    end: 12,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                expr: Literal((
                                     span: (
                                         start: 1,
                                         end: 12,
                                     ),
                                     extras: (
                                         leading: ([]),
-                                        trailing: ([]),
+                                        trailing: ([
+                                            Whitespace((" ")),
+                                            Comment((
+                                                span: (
+                                                    start: 3,
+                                                    end: 12,
+                                                ),
+                                                inner: MultiLine("foo"),
+                                            )),
+                                        ]),
                                     ),
-                                    expr: Literal((
+                                    literal: Integer((
                                         span: (
                                             start: 1,
-                                            end: 12,
+                                            end: 2,
                                         ),
-                                        extras: (
-                                            leading: ([]),
-                                            trailing: ([
-                                                Whitespace((" ")),
-                                                Comment((
-                                                    span: (
-                                                        start: 3,
-                                                        end: 12,
-                                                    ),
-                                                    inner: MultiLine("foo"),
-                                                )),
-                                            ]),
-                                        ),
-                                        literal: Integer((
-                                            span: (
-                                                start: 1,
-                                                end: 2,
-                                            ),
-                                            value: 1,
-                                            raw: "1",
-                                        )),
+                                        value: 1,
+                                        raw: "1",
                                     )),
+                                )),
+                            ),
+                            (
+                                span: (
+                                    start: 13,
+                                    end: 24,
                                 ),
-                                (
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                expr: Literal((
                                     span: (
                                         start: 13,
                                         end: 24,
                                     ),
                                     extras: (
                                         leading: ([]),
-                                        trailing: ([]),
+                                        trailing: ([
+                                            Whitespace((" ")),
+                                            Comment((
+                                                span: (
+                                                    start: 15,
+                                                    end: 24,
+                                                ),
+                                                inner: MultiLine("bar"),
+                                            )),
+                                        ]),
                                     ),
-                                    expr: Literal((
+                                    literal: Integer((
                                         span: (
                                             start: 13,
-                                            end: 24,
+                                            end: 14,
                                         ),
-                                        extras: (
-                                            leading: ([]),
-                                            trailing: ([
-                                                Whitespace((" ")),
-                                                Comment((
-                                                    span: (
-                                                        start: 15,
-                                                        end: 24,
-                                                    ),
-                                                    inner: MultiLine("bar"),
-                                                )),
-                                            ]),
-                                        ),
-                                        literal: Integer((
-                                            span: (
-                                                start: 13,
-                                                end: 14,
-                                            ),
-                                            value: 2,
-                                            raw: "2",
-                                        )),
+                                        value: 2,
+                                        raw: "2",
                                     )),
-                                ),
-                            ],
-                            unit: None,
-                        )),
+                                )),
+                            ),
+                        ],
+                        unit: None,
                     )),
-                ),
+                )),
             ),
-            hash: 6639911255754462468,
         ),
     ),
 )

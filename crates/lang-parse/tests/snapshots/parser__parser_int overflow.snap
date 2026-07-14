@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 14267305298502408934,
+        input_hash: "0xc5ffa693db48dae6",
+        output_hash: "0xbbf08c41d1af42bf",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 19,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 19,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 19,
@@ -25,8 +35,8 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
+                    attr: ([]),
+                    expr: Literal((
                         span: (
                             start: 0,
                             end: 19,
@@ -35,28 +45,16 @@ expression: output
                             leading: ([]),
                             trailing: ([]),
                         ),
-                        attr: ([]),
-                        expr: Literal((
+                        literal: Error((
                             span: (
                                 start: 0,
                                 end: 19,
                             ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            literal: Error((
-                                span: (
-                                    start: 0,
-                                    end: 19,
-                                ),
-                                kind: "number too large to fit in target type",
-                            )),
+                            kind: "number too large to fit in target type",
                         )),
                     )),
-                ),
+                )),
             ),
-            hash: 13542478293821768383,
         ),
     ),
 )

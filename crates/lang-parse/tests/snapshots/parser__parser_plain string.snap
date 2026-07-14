@@ -9,14 +9,24 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 15352337926272484784,
+        input_hash: "0xd50e7600f73a85b0",
+        output_hash: "0xea6a2744c495abdd",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 14,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 14,
                 ),
-                statements: (
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
                     span: (
                         start: 0,
                         end: 14,
@@ -25,8 +35,8 @@ expression: output
                         leading: ([]),
                         trailing: ([]),
                     ),
-                    statements: [],
-                    tail: Some((
+                    attr: ([]),
+                    expr: Literal((
                         span: (
                             start: 0,
                             end: 14,
@@ -35,28 +45,16 @@ expression: output
                             leading: ([]),
                             trailing: ([]),
                         ),
-                        attr: ([]),
-                        expr: Literal((
+                        literal: String((
                             span: (
                                 start: 0,
                                 end: 14,
                             ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            literal: String((
-                                span: (
-                                    start: 0,
-                                    end: 14,
-                                ),
-                                content: "plain string",
-                            )),
+                            content: "plain string",
                         )),
                     )),
-                ),
+                )),
             ),
-            hash: 16891356528715869149,
         ),
     ),
 )

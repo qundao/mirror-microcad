@@ -9,58 +9,56 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 6253169955019680996,
+        input_hash: "0x56c7b8f18117ece4",
+        output_hash: "0x3c1dd8eaf6419127",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 8,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 8,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 8,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (FileModule((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (FileModule((
+                        span: (
+                            start: 0,
+                            end: 7,
+                        ),
+                        keyword_span: (
+                            start: 0,
+                            end: 3,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        doc: (
                             span: (
                                 start: 0,
+                                end: 8,
+                            ),
+                            lines: [],
+                        ),
+                        attr: ([]),
+                        vis: None,
+                        id: (
+                            span: (
+                                start: 4,
                                 end: 7,
                             ),
-                            keyword_span: (
-                                start: 0,
-                                end: 3,
-                            ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            doc: (
-                                span: (
-                                    start: 0,
-                                    end: 8,
-                                ),
-                                lines: [],
-                            ),
-                            attr: ([]),
-                            vis: None,
-                            id: (
-                                span: (
-                                    start: 4,
-                                    end: 7,
-                                ),
-                                name: "foo",
-                            ),
-                        )), ([])),
-                    ],
-                    tail: None,
-                ),
+                            name: "foo",
+                        ),
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 4331856920265724199,
         ),
     ),
 )

@@ -9,145 +9,143 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: 10145320548099201844,
+        input_hash: "0x8ccb6b4949ec9b34",
+        output_hash: "0xb5183bc8513746fe",
         tree: (
-            inner: (
+            span: (
+                start: 0,
+                end: 12,
+            ),
+            statements: (
                 span: (
                     start: 0,
                     end: 12,
                 ),
-                statements: (
-                    span: (
-                        start: 0,
-                        end: 12,
-                    ),
-                    extras: (
-                        leading: ([]),
-                        trailing: ([]),
-                    ),
-                    statements: [
-                        (Expression((
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (Expression((
+                        span: (
+                            start: 0,
+                            end: 2,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: Body((
                             span: (
                                 start: 0,
                                 end: 2,
                             ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            attr: ([]),
-                            expr: Body((
+                            statements: (
                                 span: (
-                                    start: 0,
-                                    end: 2,
+                                    start: 1,
+                                    end: 1,
                                 ),
-                                statements: (
-                                    span: (
-                                        start: 1,
-                                        end: 1,
-                                    ),
-                                    extras: (
-                                        leading: ([]),
-                                        trailing: ([]),
-                                    ),
-                                    statements: [],
-                                    tail: None,
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
                                 ),
-                            )),
-                        )), ([])),
-                        (Expression((
+                                statements: [],
+                                tail: None,
+                            ),
+                        )),
+                    )), ([])),
+                    (Expression((
+                        span: (
+                            start: 2,
+                            end: 11,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: ElementAccess((
                             span: (
                                 start: 2,
                                 end: 11,
                             ),
-                            extras: (
-                                leading: ([]),
-                                trailing: ([]),
-                            ),
-                            attr: ([]),
-                            expr: ElementAccess((
+                            expr: QualifiedName((
                                 span: (
                                     start: 2,
-                                    end: 11,
+                                    end: 5,
                                 ),
-                                expr: QualifiedName((
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                parts: [
+                                    (
+                                        span: (
+                                            start: 2,
+                                            end: 5,
+                                        ),
+                                        name: "bar",
+                                    ),
+                                ],
+                            )),
+                            element_chain: [
+                                (
                                     span: (
-                                        start: 2,
-                                        end: 5,
+                                        start: 5,
+                                        end: 11,
                                     ),
                                     extras: (
                                         leading: ([]),
                                         trailing: ([]),
                                     ),
-                                    parts: [
-                                        (
-                                            span: (
-                                                start: 2,
-                                                end: 5,
-                                            ),
-                                            name: "bar",
-                                        ),
-                                    ],
-                                )),
-                                element_chain: [
-                                    (
+                                    inner: Method((
                                         span: (
-                                            start: 5,
+                                            start: 6,
                                             end: 11,
                                         ),
                                         extras: (
                                             leading: ([]),
                                             trailing: ([]),
                                         ),
-                                        inner: Method((
+                                        name: (
                                             span: (
                                                 start: 6,
-                                                end: 11,
+                                                end: 9,
                                             ),
                                             extras: (
                                                 leading: ([]),
                                                 trailing: ([]),
                                             ),
-                                            name: (
-                                                span: (
-                                                    start: 6,
-                                                    end: 9,
-                                                ),
-                                                extras: (
-                                                    leading: ([]),
-                                                    trailing: ([]),
-                                                ),
-                                                parts: [
-                                                    (
-                                                        span: (
-                                                            start: 6,
-                                                            end: 9,
-                                                        ),
-                                                        name: "foo",
+                                            parts: [
+                                                (
+                                                    span: (
+                                                        start: 6,
+                                                        end: 9,
                                                     ),
-                                                ],
-                                            ),
-                                            arguments: (
-                                                span: (
-                                                    start: 10,
-                                                    end: 10,
+                                                    name: "foo",
                                                 ),
-                                                extras: (
-                                                    leading: ([]),
-                                                    trailing: ([]),
-                                                ),
-                                                arguments: [],
+                                            ],
+                                        ),
+                                        arguments: (
+                                            span: (
+                                                start: 10,
+                                                end: 10,
                                             ),
-                                        )),
-                                    ),
-                                ],
-                            )),
-                        )), ([])),
-                    ],
-                    tail: None,
-                ),
+                                            extras: (
+                                                leading: ([]),
+                                                trailing: ([]),
+                                            ),
+                                            arguments: [],
+                                        ),
+                                    )),
+                                ),
+                            ],
+                        )),
+                    )), ([])),
+                ],
+                tail: None,
             ),
-            hash: 13049245651848087294,
         ),
     ),
 )
