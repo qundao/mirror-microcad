@@ -4,7 +4,7 @@
 //! Mid-level intermediate representation (MIR).
 
 use derive_more::From;
-use microcad_lang_base::{HashId, SrcRef};
+use microcad_lang_base::{HashId, Refer, SrcRef};
 use microcad_lang_proc_macros::Artifact;
 use serde::{Deserialize, Serialize};
 
@@ -29,7 +29,7 @@ pub struct Constant {
     pub expr: ConstantExpression,
 }
 
-#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Parameter {
     // pub attr: ParameterAttributes,
     pub doc: DocBlock,
@@ -39,7 +39,7 @@ pub struct Parameter {
     pub src_ref: SrcRef,
 }
 
-#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct ParameterList {
     pub parameters: Box<[Parameter]>,
 }
@@ -79,7 +79,7 @@ pub struct Init {
 pub struct Workbench {
     //pub attr: WorkbenchAttributes
     /// Workbench kind.
-    pub kind: WorkbenchKind,
+    pub kind: Refer<WorkbenchKind>,
 
     /// Initializers.
     /// The default initializer and tthe workbench parameters are located in the last init.
