@@ -1,139 +1,131 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..46,
-            statements: StatementList {
-                span: 0..46,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 2623084869298528705,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 46,
+                ),
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 46,
                     ),
-                    trailing: TrailingExtras(
-                        [],
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
                     ),
-                },
-                statements: [
-                    (
-                        Function(
-                            Function {
-                                span: 0..46,
-                                keyword_span: 20..22,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                doc: DocBlock {
-                                    span: 0..20,
-                                    lines: [
-                                        "/// Doc comment",
-                                    ],
-                                },
-                                attr: Attributes(
-                                    [],
+                    statements: [
+                        (Function((
+                            span: (
+                                start: 0,
+                                end: 46,
+                            ),
+                            keyword_span: (
+                                start: 20,
+                                end: 22,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            doc: (
+                                span: (
+                                    start: 0,
+                                    end: 20,
                                 ),
-                                vis: None,
-                                id: Identifier {
-                                    span: 23..26,
-                                    name: "Foo",
-                                },
-                                parameters: ParameterList {
-                                    span: 27..27,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
+                                lines: [
+                                    "/// Doc comment",
+                                ],
+                            ),
+                            attr: ([]),
+                            vis: None,
+                            id: (
+                                span: (
+                                    start: 23,
+                                    end: 26,
+                                ),
+                                name: "Foo",
+                            ),
+                            parameters: (
+                                span: (
+                                    start: 27,
+                                    end: 27,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                parameters: [],
+                            ),
+                            return_type: None,
+                            body: (
+                                span: (
+                                    start: 29,
+                                    end: 46,
+                                ),
+                                statements: (
+                                    span: (
+                                        start: 30,
+                                        end: 45,
+                                    ),
+                                    extras: (
+                                        leading: ([
+                                            Whitespace(("\n        ")),
+                                        ]),
+                                        trailing: ([]),
+                                    ),
+                                    statements: [],
+                                    tail: Some((
+                                        span: (
+                                            start: 39,
+                                            end: 45,
                                         ),
-                                        trailing: TrailingExtras(
-                                            [],
+                                        extras: (
+                                            leading: ([]),
+                                            trailing: ([]),
                                         ),
-                                    },
-                                    parameters: [],
-                                },
-                                return_type: None,
-                                body: Body {
-                                    span: 29..46,
-                                    statements: StatementList {
-                                        span: 30..45,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [
-                                                    Whitespace(
-                                                        Whitespace(
-                                                            "\n        ",
-                                                        ),
-                                                    ),
-                                                ],
+                                        attr: ([]),
+                                        expr: Literal((
+                                            span: (
+                                                start: 39,
+                                                end: 45,
                                             ),
-                                            trailing: TrailingExtras(
-                                                [],
+                                            extras: (
+                                                leading: ([]),
+                                                trailing: ([
+                                                    Whitespace(("\n    ")),
+                                                ]),
                                             ),
-                                        },
-                                        statements: [],
-                                        tail: Some(
-                                            ExpressionStatement {
-                                                span: 39..45,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [],
-                                                    ),
-                                                },
-                                                attr: Attributes(
-                                                    [],
+                                            literal: Integer((
+                                                span: (
+                                                    start: 39,
+                                                    end: 40,
                                                 ),
-                                                expr: Literal(
-                                                    Literal {
-                                                        span: 39..45,
-                                                        extras: ItemExtras {
-                                                            leading: LeadingExtras(
-                                                                [],
-                                                            ),
-                                                            trailing: TrailingExtras(
-                                                                [
-                                                                    Whitespace(
-                                                                        Whitespace(
-                                                                            "\n    ",
-                                                                        ),
-                                                                    ),
-                                                                ],
-                                                            ),
-                                                        },
-                                                        literal: Integer(
-                                                            IntegerLiteral {
-                                                                span: 39..40,
-                                                                value: 1,
-                                                                raw: "1",
-                                                            },
-                                                        ),
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                    },
-                                },
-                            },
-                        ),
-                        TrailingExtras(
-                            [],
-                        ),
-                    ),
-                ],
-                tail: None,
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                                                value: 1,
+                                                raw: "1",
+                                            )),
+                                        )),
+                                    )),
+                                ),
+                            ),
+                        )), ([])),
+                    ],
+                    tail: None,
+                ),
+            ),
+            hash: 12207296181215767522,
+        ),
     ),
 )
+---

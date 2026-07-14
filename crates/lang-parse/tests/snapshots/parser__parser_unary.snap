@@ -1,80 +1,82 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..6,
-            statements: StatementList {
-                span: 0..6,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
-                    ),
-                    trailing: TrailingExtras(
-                        [],
-                    ),
-                },
-                statements: [],
-                tail: Some(
-                    ExpressionStatement {
-                        span: 0..6,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attr: Attributes(
-                            [],
-                        ),
-                        expr: UnaryOperation(
-                            UnaryOperation {
-                                span: 0..6,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                op: Spanned {
-                                    span: 0..1,
-                                    value: Not,
-                                },
-                                rhs: QualifiedName(
-                                    QualifiedName {
-                                        span: 1..6,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        parts: [
-                                            Identifier {
-                                                span: 1..6,
-                                                name: "input",
-                                            },
-                                        ],
-                                    },
-                                ),
-                            },
-                        ),
-                    },
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 9218043923398308059,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 6,
                 ),
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 6,
+                    ),
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
+                    ),
+                    statements: [],
+                    tail: Some((
+                        span: (
+                            start: 0,
+                            end: 6,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: UnaryOperation((
+                            span: (
+                                start: 0,
+                                end: 6,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            op: (
+                                span: (
+                                    start: 0,
+                                    end: 1,
+                                ),
+                                value: Not,
+                            ),
+                            rhs: QualifiedName((
+                                span: (
+                                    start: 1,
+                                    end: 6,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                parts: [
+                                    (
+                                        span: (
+                                            start: 1,
+                                            end: 6,
+                                        ),
+                                        name: "input",
+                                    ),
+                                ],
+                            )),
+                        )),
+                    )),
+                ),
+            ),
+            hash: 18355955202506693185,
+        ),
     ),
 )
+---

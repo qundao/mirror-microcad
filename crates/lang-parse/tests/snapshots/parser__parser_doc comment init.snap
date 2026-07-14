@@ -1,86 +1,90 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..28,
-            statements: StatementList {
-                span: 0..28,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 17264266741914646625,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 28,
+                ),
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 28,
                     ),
-                    trailing: TrailingExtras(
-                        [],
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
                     ),
-                },
-                statements: [
-                    (
-                        Init(
-                            Init {
-                                span: 0..28,
-                                keyword_span: 20..24,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                doc: DocBlock {
-                                    span: 0..20,
-                                    lines: [
-                                        "/// Doc comment",
-                                    ],
-                                },
-                                attr: Attributes(
-                                    [],
+                    statements: [
+                        (Init((
+                            span: (
+                                start: 0,
+                                end: 28,
+                            ),
+                            keyword_span: (
+                                start: 20,
+                                end: 24,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            doc: (
+                                span: (
+                                    start: 0,
+                                    end: 20,
                                 ),
-                                parameters: ParameterList {
-                                    span: 25..25,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    parameters: [],
-                                },
-                                body: Body {
-                                    span: 26..28,
-                                    statements: StatementList {
-                                        span: 27..27,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        statements: [],
-                                        tail: None,
-                                    },
-                                },
-                            },
-                        ),
-                        TrailingExtras(
-                            [],
-                        ),
-                    ),
-                ],
-                tail: None,
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                                lines: [
+                                    "/// Doc comment",
+                                ],
+                            ),
+                            attr: ([]),
+                            parameters: (
+                                span: (
+                                    start: 25,
+                                    end: 25,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                parameters: [],
+                            ),
+                            body: (
+                                span: (
+                                    start: 26,
+                                    end: 28,
+                                ),
+                                statements: (
+                                    span: (
+                                        start: 27,
+                                        end: 27,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    statements: [],
+                                    tail: None,
+                                ),
+                            ),
+                        )), ([])),
+                    ],
+                    tail: None,
+                ),
+            ),
+            hash: 11060978015341138691,
+        ),
     ),
 )
+---

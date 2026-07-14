@@ -1,75 +1,73 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..12,
-            statements: StatementList {
-                span: 0..12,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 11805134683495433971,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 12,
+                ),
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 12,
                     ),
-                    trailing: TrailingExtras(
-                        [],
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
                     ),
-                },
-                statements: [
-                    (
-                        LocalAssignment(
-                            LocalAssignment {
-                                span: 0..11,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                attr: Attributes(
-                                    [],
+                    statements: [
+                        (LocalAssignment((
+                            span: (
+                                start: 0,
+                                end: 11,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            attr: ([]),
+                            id: (
+                                span: (
+                                    start: 0,
+                                    end: 1,
                                 ),
-                                id: Identifier {
-                                    span: 0..1,
-                                    name: "b",
-                                },
-                                ty: None,
-                                expr: Literal(
-                                    Literal {
-                                        span: 4..11,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        literal: Error(
-                                            LiteralError {
-                                                span: 4..11,
-                                                kind: Untypable,
-                                            },
-                                        ),
-                                    },
+                                name: "b",
+                            ),
+                            ty: None,
+                            expr: Literal((
+                                span: (
+                                    start: 4,
+                                    end: 11,
                                 ),
-                            },
-                        ),
-                        TrailingExtras(
-                            [],
-                        ),
-                    ),
-                ],
-                tail: None,
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                literal: Error((
+                                    span: (
+                                        start: 4,
+                                        end: 11,
+                                    ),
+                                    kind: "only numeric literals can be typed",
+                                )),
+                            )),
+                        )), ([])),
+                    ],
+                    tail: None,
+                ),
+            ),
+            hash: 7924120168184596988,
+        ),
     ),
 )
+---

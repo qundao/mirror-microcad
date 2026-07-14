@@ -1,134 +1,133 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..22,
-            statements: StatementList {
-                span: 0..22,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 7091346451901191065,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 22,
+                ),
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 22,
                     ),
-                    trailing: TrailingExtras(
-                        [],
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
                     ),
-                },
-                statements: [
-                    (
-                        Function(
-                            Function {
-                                span: 0..22,
-                                keyword_span: 0..2,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                doc: DocBlock {
-                                    span: 0..22,
-                                    lines: [],
-                                },
-                                attr: Attributes(
-                                    [],
+                    statements: [
+                        (Function((
+                            span: (
+                                start: 0,
+                                end: 22,
+                            ),
+                            keyword_span: (
+                                start: 0,
+                                end: 2,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            doc: (
+                                span: (
+                                    start: 0,
+                                    end: 22,
                                 ),
-                                vis: None,
-                                id: Identifier {
-                                    span: 3..6,
-                                    name: "foo",
-                                },
-                                parameters: ParameterList {
-                                    span: 7..17,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [
-                                                Comment(
-                                                    Comment {
-                                                        span: 7..17,
-                                                        inner: MultiLine(
-                                                            "test",
-                                                        ),
-                                                    },
-                                                ),
-                                            ],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    parameters: [],
-                                },
-                                return_type: None,
-                                body: Body {
-                                    span: 19..22,
-                                    statements: StatementList {
-                                        span: 20..21,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
+                                lines: [],
+                            ),
+                            attr: ([]),
+                            vis: None,
+                            id: (
+                                span: (
+                                    start: 3,
+                                    end: 6,
+                                ),
+                                name: "foo",
+                            ),
+                            parameters: (
+                                span: (
+                                    start: 7,
+                                    end: 17,
+                                ),
+                                extras: (
+                                    leading: ([
+                                        Comment((
+                                            span: (
+                                                start: 7,
+                                                end: 17,
                                             ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        statements: [],
-                                        tail: Some(
-                                            ExpressionStatement {
-                                                span: 20..21,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [],
-                                                    ),
-                                                },
-                                                attr: Attributes(
-                                                    [],
-                                                ),
-                                                expr: Literal(
-                                                    Literal {
-                                                        span: 20..21,
-                                                        extras: ItemExtras {
-                                                            leading: LeadingExtras(
-                                                                [],
-                                                            ),
-                                                            trailing: TrailingExtras(
-                                                                [],
-                                                            ),
-                                                        },
-                                                        literal: Integer(
-                                                            IntegerLiteral {
-                                                                span: 20..21,
-                                                                value: 2,
-                                                                raw: "2",
-                                                            },
-                                                        ),
-                                                    },
-                                                ),
-                                            },
+                                            inner: MultiLine("test"),
+                                        )),
+                                    ]),
+                                    trailing: ([]),
+                                ),
+                                parameters: [],
+                            ),
+                            return_type: None,
+                            body: (
+                                span: (
+                                    start: 19,
+                                    end: 22,
+                                ),
+                                statements: (
+                                    span: (
+                                        start: 20,
+                                        end: 21,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    statements: [],
+                                    tail: Some((
+                                        span: (
+                                            start: 20,
+                                            end: 21,
                                         ),
-                                    },
-                                },
-                            },
-                        ),
-                        TrailingExtras(
-                            [],
-                        ),
-                    ),
-                ],
-                tail: None,
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                                        extras: (
+                                            leading: ([]),
+                                            trailing: ([]),
+                                        ),
+                                        attr: ([]),
+                                        expr: Literal((
+                                            span: (
+                                                start: 20,
+                                                end: 21,
+                                            ),
+                                            extras: (
+                                                leading: ([]),
+                                                trailing: ([]),
+                                            ),
+                                            literal: Integer((
+                                                span: (
+                                                    start: 20,
+                                                    end: 21,
+                                                ),
+                                                value: 2,
+                                                raw: "2",
+                                            )),
+                                        )),
+                                    )),
+                                ),
+                            ),
+                        )), ([])),
+                    ],
+                    tail: None,
+                ),
+            ),
+            hash: 6882034673668729517,
+        ),
     ),
 )
+---

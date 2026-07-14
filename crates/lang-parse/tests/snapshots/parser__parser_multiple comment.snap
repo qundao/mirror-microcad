@@ -1,51 +1,52 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..27,
-            statements: StatementList {
-                span: 0..27,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [
-                            Comment(
-                                Comment {
-                                    span: 0..11,
-                                    inner: SingleLine(
-                                        "// comment1",
-                                    ),
-                                },
-                            ),
-                            Whitespace(
-                                Whitespace(
-                                    "\n    ",
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 18059794727415028478,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 27,
+                ),
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 27,
+                    ),
+                    extras: (
+                        leading: ([
+                            Comment((
+                                span: (
+                                    start: 0,
+                                    end: 11,
                                 ),
-                            ),
-                            Comment(
-                                Comment {
-                                    span: 16..27,
-                                    inner: SingleLine(
-                                        "// comment2",
-                                    ),
-                                },
-                            ),
-                        ],
+                                inner: SingleLine("// comment1"),
+                            )),
+                            Whitespace(("\n    ")),
+                            Comment((
+                                span: (
+                                    start: 16,
+                                    end: 27,
+                                ),
+                                inner: SingleLine("// comment2"),
+                            )),
+                        ]),
+                        trailing: ([]),
                     ),
-                    trailing: TrailingExtras(
-                        [],
-                    ),
-                },
-                statements: [],
-                tail: None,
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                    statements: [],
+                    tail: None,
+                ),
+            ),
+            hash: 4810185760045608568,
+        ),
     ),
 )
+---

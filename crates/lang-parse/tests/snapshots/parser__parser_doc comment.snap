@@ -1,251 +1,240 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..85,
-            statements: StatementList {
-                span: 0..85,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 14875723306222828469,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 85,
+                ),
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 85,
                     ),
-                    trailing: TrailingExtras(
-                        [],
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
                     ),
-                },
-                statements: [
-                    (
-                        Workbench(
-                            Workbench {
-                                span: 0..85,
-                                keyword_span: 20..24,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                doc: DocBlock {
-                                    span: 0..20,
-                                    lines: [
-                                        "/// Doc comment",
-                                    ],
-                                },
-                                kind: Part,
-                                attr: Attributes(
-                                    [],
+                    statements: [
+                        (Workbench((
+                            span: (
+                                start: 0,
+                                end: 85,
+                            ),
+                            keyword_span: (
+                                start: 20,
+                                end: 24,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            doc: (
+                                span: (
+                                    start: 0,
+                                    end: 20,
                                 ),
-                                vis: None,
-                                id: Identifier {
-                                    span: 25..28,
-                                    name: "Foo",
-                                },
-                                parameters: ParameterList {
-                                    span: 29..29,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    parameters: [],
-                                },
-                                body: Body {
-                                    span: 31..85,
-                                    statements: StatementList {
-                                        span: 32..84,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [
-                                                    Whitespace(
-                                                        Whitespace(
-                                                            "\n        ",
-                                                        ),
-                                                    ),
-                                                ],
+                                lines: [
+                                    "/// Doc comment",
+                                ],
+                            ),
+                            kind: Part,
+                            attr: ([]),
+                            vis: None,
+                            id: (
+                                span: (
+                                    start: 25,
+                                    end: 28,
+                                ),
+                                name: "Foo",
+                            ),
+                            parameters: (
+                                span: (
+                                    start: 29,
+                                    end: 29,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                parameters: [],
+                            ),
+                            body: (
+                                span: (
+                                    start: 31,
+                                    end: 85,
+                                ),
+                                statements: (
+                                    span: (
+                                        start: 32,
+                                        end: 84,
+                                    ),
+                                    extras: (
+                                        leading: ([
+                                            Whitespace(("\n        ")),
+                                        ]),
+                                        trailing: ([]),
+                                    ),
+                                    statements: [
+                                        (Expression((
+                                            span: (
+                                                start: 41,
+                                                end: 78,
                                             ),
-                                            trailing: TrailingExtras(
-                                                [],
+                                            extras: (
+                                                leading: ([]),
+                                                trailing: ([]),
                                             ),
-                                        },
-                                        statements: [
-                                            (
-                                                Expression(
-                                                    ExpressionStatement {
-                                                        span: 41..78,
-                                                        extras: ItemExtras {
-                                                            leading: LeadingExtras(
-                                                                [],
-                                                            ),
-                                                            trailing: TrailingExtras(
-                                                                [],
-                                                            ),
-                                                        },
-                                                        attr: Attributes(
-                                                            [],
-                                                        ),
-                                                        expr: Call(
-                                                            Call {
-                                                                span: 41..78,
-                                                                extras: ItemExtras {
-                                                                    leading: LeadingExtras(
-                                                                        [],
-                                                                    ),
-                                                                    trailing: TrailingExtras(
-                                                                        [],
-                                                                    ),
-                                                                },
-                                                                name: QualifiedName {
-                                                                    span: 41..49,
-                                                                    extras: ItemExtras {
-                                                                        leading: LeadingExtras(
-                                                                            [],
-                                                                        ),
-                                                                        trailing: TrailingExtras(
-                                                                            [],
-                                                                        ),
-                                                                    },
-                                                                    parts: [
-                                                                        Identifier {
-                                                                            span: 41..49,
-                                                                            name: "Cylinder",
-                                                                        },
-                                                                    ],
-                                                                },
-                                                                arguments: ArgumentList {
-                                                                    span: 50..77,
-                                                                    extras: ItemExtras {
-                                                                        leading: LeadingExtras(
-                                                                            [],
-                                                                        ),
-                                                                        trailing: TrailingExtras(
-                                                                            [],
-                                                                        ),
-                                                                    },
-                                                                    arguments: [
-                                                                        Named(
-                                                                            NamedArgument {
-                                                                                span: 50..63,
-                                                                                extras: ItemExtras {
-                                                                                    leading: LeadingExtras(
-                                                                                        [],
-                                                                                    ),
-                                                                                    trailing: TrailingExtras(
-                                                                                        [],
-                                                                                    ),
-                                                                                },
-                                                                                id: Identifier {
-                                                                                    span: 50..56,
-                                                                                    name: "height",
-                                                                                },
-                                                                                expr: Literal(
-                                                                                    Literal {
-                                                                                        span: 59..63,
-                                                                                        extras: ItemExtras {
-                                                                                            leading: LeadingExtras(
-                                                                                                [],
-                                                                                            ),
-                                                                                            trailing: TrailingExtras(
-                                                                                                [],
-                                                                                            ),
-                                                                                        },
-                                                                                        literal: Quantity(
-                                                                                            QuantityLiteral {
-                                                                                                span: 59..63,
-                                                                                                value: 10.0,
-                                                                                                raw: "10",
-                                                                                                unit: Unit {
-                                                                                                    span: 61..63,
-                                                                                                    name: "mm",
-                                                                                                },
-                                                                                            },
-                                                                                        ),
-                                                                                    },
-                                                                                ),
-                                                                            },
-                                                                        ),
-                                                                        Named(
-                                                                            NamedArgument {
-                                                                                span: 65..77,
-                                                                                extras: ItemExtras {
-                                                                                    leading: LeadingExtras(
-                                                                                        [],
-                                                                                    ),
-                                                                                    trailing: TrailingExtras(
-                                                                                        [],
-                                                                                    ),
-                                                                                },
-                                                                                id: Identifier {
-                                                                                    span: 65..71,
-                                                                                    name: "radius",
-                                                                                },
-                                                                                expr: Literal(
-                                                                                    Literal {
-                                                                                        span: 74..77,
-                                                                                        extras: ItemExtras {
-                                                                                            leading: LeadingExtras(
-                                                                                                [],
-                                                                                            ),
-                                                                                            trailing: TrailingExtras(
-                                                                                                [],
-                                                                                            ),
-                                                                                        },
-                                                                                        literal: Quantity(
-                                                                                            QuantityLiteral {
-                                                                                                span: 74..77,
-                                                                                                value: 5.0,
-                                                                                                raw: "5",
-                                                                                                unit: Unit {
-                                                                                                    span: 75..77,
-                                                                                                    name: "mm",
-                                                                                                },
-                                                                                            },
-                                                                                        ),
-                                                                                    },
-                                                                                ),
-                                                                            },
-                                                                        ),
-                                                                    ],
-                                                                },
-                                                            },
-                                                        ),
-                                                    },
+                                            attr: ([]),
+                                            expr: Call((
+                                                span: (
+                                                    start: 41,
+                                                    end: 78,
                                                 ),
-                                                TrailingExtras(
-                                                    [
-                                                        Whitespace(
-                                                            Whitespace(
-                                                                "\n    ",
+                                                extras: (
+                                                    leading: ([]),
+                                                    trailing: ([]),
+                                                ),
+                                                name: (
+                                                    span: (
+                                                        start: 41,
+                                                        end: 49,
+                                                    ),
+                                                    extras: (
+                                                        leading: ([]),
+                                                        trailing: ([]),
+                                                    ),
+                                                    parts: [
+                                                        (
+                                                            span: (
+                                                                start: 41,
+                                                                end: 49,
                                                             ),
+                                                            name: "Cylinder",
                                                         ),
                                                     ],
                                                 ),
-                                            ),
-                                        ],
-                                        tail: None,
-                                    },
-                                },
-                            },
-                        ),
-                        TrailingExtras(
-                            [],
-                        ),
-                    ),
-                ],
-                tail: None,
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                                                arguments: (
+                                                    span: (
+                                                        start: 50,
+                                                        end: 77,
+                                                    ),
+                                                    extras: (
+                                                        leading: ([]),
+                                                        trailing: ([]),
+                                                    ),
+                                                    arguments: [
+                                                        Named((
+                                                            span: (
+                                                                start: 50,
+                                                                end: 63,
+                                                            ),
+                                                            extras: (
+                                                                leading: ([]),
+                                                                trailing: ([]),
+                                                            ),
+                                                            id: (
+                                                                span: (
+                                                                    start: 50,
+                                                                    end: 56,
+                                                                ),
+                                                                name: "height",
+                                                            ),
+                                                            expr: Literal((
+                                                                span: (
+                                                                    start: 59,
+                                                                    end: 63,
+                                                                ),
+                                                                extras: (
+                                                                    leading: ([]),
+                                                                    trailing: ([]),
+                                                                ),
+                                                                literal: Quantity((
+                                                                    span: (
+                                                                        start: 59,
+                                                                        end: 63,
+                                                                    ),
+                                                                    value: 10.0,
+                                                                    raw: "10",
+                                                                    unit: (
+                                                                        span: (
+                                                                            start: 61,
+                                                                            end: 63,
+                                                                        ),
+                                                                        name: "mm",
+                                                                    ),
+                                                                )),
+                                                            )),
+                                                        )),
+                                                        Named((
+                                                            span: (
+                                                                start: 65,
+                                                                end: 77,
+                                                            ),
+                                                            extras: (
+                                                                leading: ([]),
+                                                                trailing: ([]),
+                                                            ),
+                                                            id: (
+                                                                span: (
+                                                                    start: 65,
+                                                                    end: 71,
+                                                                ),
+                                                                name: "radius",
+                                                            ),
+                                                            expr: Literal((
+                                                                span: (
+                                                                    start: 74,
+                                                                    end: 77,
+                                                                ),
+                                                                extras: (
+                                                                    leading: ([]),
+                                                                    trailing: ([]),
+                                                                ),
+                                                                literal: Quantity((
+                                                                    span: (
+                                                                        start: 74,
+                                                                        end: 77,
+                                                                    ),
+                                                                    value: 5.0,
+                                                                    raw: "5",
+                                                                    unit: (
+                                                                        span: (
+                                                                            start: 75,
+                                                                            end: 77,
+                                                                        ),
+                                                                        name: "mm",
+                                                                    ),
+                                                                )),
+                                                            )),
+                                                        )),
+                                                    ],
+                                                ),
+                                            )),
+                                        )), ([
+                                            Whitespace(("\n    ")),
+                                        ])),
+                                    ],
+                                    tail: None,
+                                ),
+                            ),
+                        )), ([])),
+                    ],
+                    tail: None,
+                ),
+            ),
+            hash: 6793972727337260799,
+        ),
     ),
 )
+---

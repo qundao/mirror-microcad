@@ -1,91 +1,87 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..4,
-            statements: StatementList {
-                span: 0..4,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
-                    ),
-                    trailing: TrailingExtras(
-                        [],
-                    ),
-                },
-                statements: [],
-                tail: Some(
-                    ExpressionStatement {
-                        span: 0..4,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attr: Attributes(
-                            [],
-                        ),
-                        expr: Tuple(
-                            TupleExpression {
-                                span: 0..4,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                values: [
-                                    TupleItem {
-                                        span: 1..2,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        id: None,
-                                        expr: Literal(
-                                            Literal {
-                                                span: 1..2,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [],
-                                                    ),
-                                                },
-                                                literal: Integer(
-                                                    IntegerLiteral {
-                                                        span: 1..2,
-                                                        value: 1,
-                                                        raw: "1",
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                    },
-                                ],
-                            },
-                        ),
-                    },
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 10138950686611619799,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 4,
                 ),
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 4,
+                    ),
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
+                    ),
+                    statements: [],
+                    tail: Some((
+                        span: (
+                            start: 0,
+                            end: 4,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: Tuple((
+                            span: (
+                                start: 0,
+                                end: 4,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            values: [
+                                (
+                                    span: (
+                                        start: 1,
+                                        end: 2,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    id: None,
+                                    expr: Literal((
+                                        span: (
+                                            start: 1,
+                                            end: 2,
+                                        ),
+                                        extras: (
+                                            leading: ([]),
+                                            trailing: ([]),
+                                        ),
+                                        literal: Integer((
+                                            span: (
+                                                start: 1,
+                                                end: 2,
+                                            ),
+                                            value: 1,
+                                            raw: "1",
+                                        )),
+                                    )),
+                                ),
+                            ],
+                        )),
+                    )),
+                ),
+            ),
+            hash: 3289697199321145547,
+        ),
     ),
 )
+---

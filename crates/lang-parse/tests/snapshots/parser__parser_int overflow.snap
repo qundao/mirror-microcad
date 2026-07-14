@@ -1,67 +1,63 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..19,
-            statements: StatementList {
-                span: 0..19,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
-                    ),
-                    trailing: TrailingExtras(
-                        [],
-                    ),
-                },
-                statements: [],
-                tail: Some(
-                    ExpressionStatement {
-                        span: 0..19,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attr: Attributes(
-                            [],
-                        ),
-                        expr: Literal(
-                            Literal {
-                                span: 0..19,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                literal: Error(
-                                    LiteralError {
-                                        span: 0..19,
-                                        kind: Int(
-                                            ParseIntError {
-                                                kind: PosOverflow,
-                                            },
-                                        ),
-                                    },
-                                ),
-                            },
-                        ),
-                    },
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 14267305298502408934,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 19,
                 ),
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 19,
+                    ),
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
+                    ),
+                    statements: [],
+                    tail: Some((
+                        span: (
+                            start: 0,
+                            end: 19,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: Literal((
+                            span: (
+                                start: 0,
+                                end: 19,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            literal: Error((
+                                span: (
+                                    start: 0,
+                                    end: 19,
+                                ),
+                                kind: "number too large to fit in target type",
+                            )),
+                        )),
+                    )),
+                ),
+            ),
+            hash: 13542478293821768383,
+        ),
     ),
 )
+---

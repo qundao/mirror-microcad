@@ -1,81 +1,64 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..63,
-            statements: StatementList {
-                span: 0..63,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 15327330577364761284,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 63,
+                ),
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 63,
                     ),
-                    trailing: TrailingExtras(
-                        [],
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
                     ),
-                },
-                statements: [
-                    (
-                        InnerDocComment(
-                            InnerDocComment {
-                                span: 0..16,
-                                line: "//! Doc comment1",
-                            },
-                        ),
-                        TrailingExtras(
-                            [
-                                Whitespace(
-                                    Whitespace(
-                                        "\n    ",
-                                    ),
-                                ),
-                            ],
-                        ),
-                    ),
-                    (
-                        InnerDocComment(
-                            InnerDocComment {
-                                span: 21..37,
-                                line: "//! Doc comment2",
-                            },
-                        ),
-                        TrailingExtras(
-                            [
-                                Whitespace(
-                                    Whitespace(
-                                        "\n    ",
-                                    ),
-                                ),
-                            ],
-                        ),
-                    ),
-                    (
-                        InnerDocComment(
-                            InnerDocComment {
-                                span: 42..58,
-                                line: "//! Doc comment3",
-                            },
-                        ),
-                        TrailingExtras(
-                            [
-                                Whitespace(
-                                    Whitespace(
-                                        "\n    ",
-                                    ),
-                                ),
-                            ],
-                        ),
-                    ),
-                ],
-                tail: None,
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                    statements: [
+                        (InnerDocComment((
+                            span: (
+                                start: 0,
+                                end: 16,
+                            ),
+                            line: "//! Doc comment1",
+                        )), ([
+                            Whitespace(("\n    ")),
+                        ])),
+                        (InnerDocComment((
+                            span: (
+                                start: 21,
+                                end: 37,
+                            ),
+                            line: "//! Doc comment2",
+                        )), ([
+                            Whitespace(("\n    ")),
+                        ])),
+                        (InnerDocComment((
+                            span: (
+                                start: 42,
+                                end: 58,
+                            ),
+                            line: "//! Doc comment3",
+                        )), ([
+                            Whitespace(("\n    ")),
+                        ])),
+                    ],
+                    tail: None,
+                ),
+            ),
+            hash: 2377250644756176385,
+        ),
     ),
 )
+---

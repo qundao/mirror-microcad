@@ -1,82 +1,86 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..14,
-            statements: StatementList {
-                span: 0..14,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 9282674872031433800,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 14,
+                ),
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 14,
                     ),
-                    trailing: TrailingExtras(
-                        [],
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
                     ),
-                },
-                statements: [
-                    (
-                        Const(
-                            Constant {
-                                span: 0..13,
-                                keyword_span: 0..5,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                doc: DocBlock {
-                                    span: 0..14,
-                                    lines: [],
-                                },
-                                attr: Attributes(
-                                    [],
+                    statements: [
+                        (Const((
+                            span: (
+                                start: 0,
+                                end: 13,
+                            ),
+                            keyword_span: (
+                                start: 0,
+                                end: 5,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            doc: (
+                                span: (
+                                    start: 0,
+                                    end: 14,
                                 ),
-                                vis: None,
-                                id: Identifier {
-                                    span: 6..9,
-                                    name: "FOO",
-                                },
-                                ty: None,
-                                expr: Literal(
-                                    Literal {
-                                        span: 12..13,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        literal: Integer(
-                                            IntegerLiteral {
-                                                span: 12..13,
-                                                value: 1,
-                                                raw: "1",
-                                            },
-                                        ),
-                                    },
+                                lines: [],
+                            ),
+                            attr: ([]),
+                            vis: None,
+                            id: (
+                                span: (
+                                    start: 6,
+                                    end: 9,
                                 ),
-                            },
-                        ),
-                        TrailingExtras(
-                            [],
-                        ),
-                    ),
-                ],
-                tail: None,
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                                name: "FOO",
+                            ),
+                            ty: None,
+                            expr: Literal((
+                                span: (
+                                    start: 12,
+                                    end: 13,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                literal: Integer((
+                                    span: (
+                                        start: 12,
+                                        end: 13,
+                                    ),
+                                    value: 1,
+                                    raw: "1",
+                                )),
+                            )),
+                        )), ([])),
+                    ],
+                    tail: None,
+                ),
+            ),
+            hash: 9094328827933887945,
+        ),
     ),
 )
+---

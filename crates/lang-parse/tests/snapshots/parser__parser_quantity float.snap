@@ -1,68 +1,71 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..4,
-            statements: StatementList {
-                span: 0..4,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
-                    ),
-                    trailing: TrailingExtras(
-                        [],
-                    ),
-                },
-                statements: [],
-                tail: Some(
-                    ExpressionStatement {
-                        span: 0..4,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attr: Attributes(
-                            [],
-                        ),
-                        expr: Literal(
-                            Literal {
-                                span: 0..4,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                literal: Quantity(
-                                    QuantityLiteral {
-                                        span: 0..4,
-                                        value: 0.2,
-                                        raw: ".2",
-                                        unit: Unit {
-                                            span: 2..4,
-                                            name: "mm",
-                                        },
-                                    },
-                                ),
-                            },
-                        ),
-                    },
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 5746673763332415366,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 4,
                 ),
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 4,
+                    ),
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
+                    ),
+                    statements: [],
+                    tail: Some((
+                        span: (
+                            start: 0,
+                            end: 4,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: Literal((
+                            span: (
+                                start: 0,
+                                end: 4,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            literal: Quantity((
+                                span: (
+                                    start: 0,
+                                    end: 4,
+                                ),
+                                value: 0.2,
+                                raw: ".2",
+                                unit: (
+                                    span: (
+                                        start: 2,
+                                        end: 4,
+                                    ),
+                                    name: "mm",
+                                ),
+                            )),
+                        )),
+                    )),
+                ),
+            ),
+            hash: 5655876833796235742,
+        ),
     ),
 )
+---

@@ -1,87 +1,90 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..7,
-            statements: StatementList {
-                span: 0..7,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
-                    ),
-                    trailing: TrailingExtras(
-                        [],
-                    ),
-                },
-                statements: [],
-                tail: Some(
-                    ExpressionStatement {
-                        span: 0..7,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attr: Attributes(
-                            [],
-                        ),
-                        expr: ElementAccess(
-                            ElementAccess {
-                                span: 0..7,
-                                expr: QualifiedName(
-                                    QualifiedName {
-                                        span: 0..3,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        parts: [
-                                            Identifier {
-                                                span: 0..3,
-                                                name: "foo",
-                                            },
-                                        ],
-                                    },
-                                ),
-                                element_chain: [
-                                    Element {
-                                        span: 3..7,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        inner: Attribute(
-                                            Identifier {
-                                                span: 4..7,
-                                                name: "bar",
-                                            },
-                                        ),
-                                    },
-                                ],
-                            },
-                        ),
-                    },
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 13502753625269157244,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 7,
                 ),
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 7,
+                    ),
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
+                    ),
+                    statements: [],
+                    tail: Some((
+                        span: (
+                            start: 0,
+                            end: 7,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: ElementAccess((
+                            span: (
+                                start: 0,
+                                end: 7,
+                            ),
+                            expr: QualifiedName((
+                                span: (
+                                    start: 0,
+                                    end: 3,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                parts: [
+                                    (
+                                        span: (
+                                            start: 0,
+                                            end: 3,
+                                        ),
+                                        name: "foo",
+                                    ),
+                                ],
+                            )),
+                            element_chain: [
+                                (
+                                    span: (
+                                        start: 3,
+                                        end: 7,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    inner: Attribute((
+                                        span: (
+                                            start: 4,
+                                            end: 7,
+                                        ),
+                                        name: "bar",
+                                    )),
+                                ),
+                            ],
+                        )),
+                    )),
+                ),
+            ),
+            hash: 7067504611392207717,
+        ),
     ),
 )
+---

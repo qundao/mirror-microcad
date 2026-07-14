@@ -1,90 +1,83 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..17,
-            statements: StatementList {
-                span: 0..17,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 16184172980129324300,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 17,
+                ),
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 17,
                     ),
-                    trailing: TrailingExtras(
-                        [],
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
                     ),
-                },
-                statements: [
-                    (
-                        LocalAssignment(
-                            LocalAssignment {
-                                span: 0..5,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
+                    statements: [
+                        (LocalAssignment((
+                            span: (
+                                start: 0,
+                                end: 5,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            attr: ([]),
+                            id: (
+                                span: (
+                                    start: 0,
+                                    end: 1,
+                                ),
+                                name: "a",
+                            ),
+                            ty: None,
+                            expr: Literal((
+                                span: (
+                                    start: 4,
+                                    end: 5,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                literal: Integer((
+                                    span: (
+                                        start: 4,
+                                        end: 5,
                                     ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                attr: Attributes(
-                                    [],
+                                    value: 1,
+                                    raw: "1",
+                                )),
+                            )),
+                        )), ([
+                            Whitespace((" ")),
+                            Comment((
+                                span: (
+                                    start: 7,
+                                    end: 17,
                                 ),
-                                id: Identifier {
-                                    span: 0..1,
-                                    name: "a",
-                                },
-                                ty: None,
-                                expr: Literal(
-                                    Literal {
-                                        span: 4..5,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        literal: Integer(
-                                            IntegerLiteral {
-                                                span: 4..5,
-                                                value: 1,
-                                                raw: "1",
-                                            },
-                                        ),
-                                    },
-                                ),
-                            },
-                        ),
-                        TrailingExtras(
-                            [
-                                Whitespace(
-                                    Whitespace(
-                                        " ",
-                                    ),
-                                ),
-                                Comment(
-                                    Comment {
-                                        span: 7..17,
-                                        inner: SingleLine(
-                                            "// comment",
-                                        ),
-                                    },
-                                ),
-                            ],
-                        ),
-                    ),
-                ],
-                tail: None,
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                                inner: SingleLine("// comment"),
+                            )),
+                        ])),
+                    ],
+                    tail: None,
+                ),
+            ),
+            hash: 16189679121633378073,
+        ),
     ),
 )
+---

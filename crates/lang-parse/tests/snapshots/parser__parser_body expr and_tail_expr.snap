@@ -1,169 +1,154 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..12,
-            statements: StatementList {
-                span: 0..12,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 10145320548099201844,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 12,
+                ),
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 12,
                     ),
-                    trailing: TrailingExtras(
-                        [],
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
                     ),
-                },
-                statements: [
-                    (
-                        Expression(
-                            ExpressionStatement {
-                                span: 0..2,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                attr: Attributes(
-                                    [],
+                    statements: [
+                        (Expression((
+                            span: (
+                                start: 0,
+                                end: 2,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            attr: ([]),
+                            expr: Body((
+                                span: (
+                                    start: 0,
+                                    end: 2,
                                 ),
-                                expr: Body(
-                                    Body {
-                                        span: 0..2,
-                                        statements: StatementList {
-                                            span: 1..1,
-                                            extras: ItemExtras {
-                                                leading: LeadingExtras(
-                                                    [],
-                                                ),
-                                                trailing: TrailingExtras(
-                                                    [],
-                                                ),
-                                            },
-                                            statements: [],
-                                            tail: None,
-                                        },
-                                    },
-                                ),
-                            },
-                        ),
-                        TrailingExtras(
-                            [],
-                        ),
-                    ),
-                    (
-                        Expression(
-                            ExpressionStatement {
-                                span: 2..11,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
+                                statements: (
+                                    span: (
+                                        start: 1,
+                                        end: 1,
                                     ),
-                                    trailing: TrailingExtras(
-                                        [],
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
                                     ),
-                                },
-                                attr: Attributes(
-                                    [],
+                                    statements: [],
+                                    tail: None,
                                 ),
-                                expr: ElementAccess(
-                                    ElementAccess {
-                                        span: 2..11,
-                                        expr: QualifiedName(
-                                            QualifiedName {
-                                                span: 2..5,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [],
-                                                    ),
-                                                },
-                                                parts: [
-                                                    Identifier {
-                                                        span: 2..5,
-                                                        name: "bar",
-                                                    },
-                                                ],
-                                            },
+                            )),
+                        )), ([])),
+                        (Expression((
+                            span: (
+                                start: 2,
+                                end: 11,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            attr: ([]),
+                            expr: ElementAccess((
+                                span: (
+                                    start: 2,
+                                    end: 11,
+                                ),
+                                expr: QualifiedName((
+                                    span: (
+                                        start: 2,
+                                        end: 5,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    parts: [
+                                        (
+                                            span: (
+                                                start: 2,
+                                                end: 5,
+                                            ),
+                                            name: "bar",
                                         ),
-                                        element_chain: [
-                                            Element {
-                                                span: 5..11,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [],
-                                                    ),
-                                                },
-                                                inner: Method(
-                                                    Call {
-                                                        span: 6..11,
-                                                        extras: ItemExtras {
-                                                            leading: LeadingExtras(
-                                                                [],
-                                                            ),
-                                                            trailing: TrailingExtras(
-                                                                [],
-                                                            ),
-                                                        },
-                                                        name: QualifiedName {
-                                                            span: 6..9,
-                                                            extras: ItemExtras {
-                                                                leading: LeadingExtras(
-                                                                    [],
-                                                                ),
-                                                                trailing: TrailingExtras(
-                                                                    [],
-                                                                ),
-                                                            },
-                                                            parts: [
-                                                                Identifier {
-                                                                    span: 6..9,
-                                                                    name: "foo",
-                                                                },
-                                                            ],
-                                                        },
-                                                        arguments: ArgumentList {
-                                                            span: 10..10,
-                                                            extras: ItemExtras {
-                                                                leading: LeadingExtras(
-                                                                    [],
-                                                                ),
-                                                                trailing: TrailingExtras(
-                                                                    [],
-                                                                ),
-                                                            },
-                                                            arguments: [],
-                                                        },
-                                                    },
+                                    ],
+                                )),
+                                element_chain: [
+                                    (
+                                        span: (
+                                            start: 5,
+                                            end: 11,
+                                        ),
+                                        extras: (
+                                            leading: ([]),
+                                            trailing: ([]),
+                                        ),
+                                        inner: Method((
+                                            span: (
+                                                start: 6,
+                                                end: 11,
+                                            ),
+                                            extras: (
+                                                leading: ([]),
+                                                trailing: ([]),
+                                            ),
+                                            name: (
+                                                span: (
+                                                    start: 6,
+                                                    end: 9,
                                                 ),
-                                            },
-                                        ],
-                                    },
-                                ),
-                            },
-                        ),
-                        TrailingExtras(
-                            [],
-                        ),
-                    ),
-                ],
-                tail: None,
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                                                extras: (
+                                                    leading: ([]),
+                                                    trailing: ([]),
+                                                ),
+                                                parts: [
+                                                    (
+                                                        span: (
+                                                            start: 6,
+                                                            end: 9,
+                                                        ),
+                                                        name: "foo",
+                                                    ),
+                                                ],
+                                            ),
+                                            arguments: (
+                                                span: (
+                                                    start: 10,
+                                                    end: 10,
+                                                ),
+                                                extras: (
+                                                    leading: ([]),
+                                                    trailing: ([]),
+                                                ),
+                                                arguments: [],
+                                            ),
+                                        )),
+                                    ),
+                                ],
+                            )),
+                        )), ([])),
+                    ],
+                    tail: None,
+                ),
+            ),
+            hash: 13049245651848087294,
+        ),
     ),
 )
+---

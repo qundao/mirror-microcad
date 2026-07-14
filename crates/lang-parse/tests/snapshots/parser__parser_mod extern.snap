@@ -1,61 +1,67 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..8,
-            statements: StatementList {
-                span: 0..8,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 6253169955019680996,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 8,
+                ),
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 8,
                     ),
-                    trailing: TrailingExtras(
-                        [],
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
                     ),
-                },
-                statements: [
-                    (
-                        FileModule(
-                            FileModule {
-                                span: 0..7,
-                                keyword_span: 0..3,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                doc: DocBlock {
-                                    span: 0..8,
-                                    lines: [],
-                                },
-                                attr: Attributes(
-                                    [],
+                    statements: [
+                        (FileModule((
+                            span: (
+                                start: 0,
+                                end: 7,
+                            ),
+                            keyword_span: (
+                                start: 0,
+                                end: 3,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            doc: (
+                                span: (
+                                    start: 0,
+                                    end: 8,
                                 ),
-                                vis: None,
-                                id: Identifier {
-                                    span: 4..7,
-                                    name: "foo",
-                                },
-                            },
-                        ),
-                        TrailingExtras(
-                            [],
-                        ),
-                    ),
-                ],
-                tail: None,
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                                lines: [],
+                            ),
+                            attr: ([]),
+                            vis: None,
+                            id: (
+                                span: (
+                                    start: 4,
+                                    end: 7,
+                                ),
+                                name: "foo",
+                            ),
+                        )), ([])),
+                    ],
+                    tail: None,
+                ),
+            ),
+            hash: 4331856920265724199,
+        ),
     ),
 )
+---

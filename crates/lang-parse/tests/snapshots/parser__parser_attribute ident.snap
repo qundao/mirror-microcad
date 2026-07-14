@@ -1,97 +1,95 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..20,
-            statements: StatementList {
-                span: 0..20,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 10233056896018394822,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 20,
+                ),
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 20,
                     ),
-                    trailing: TrailingExtras(
-                        [],
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
                     ),
-                },
-                statements: [
-                    (
-                        LocalAssignment(
-                            LocalAssignment {
-                                span: 0..19,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
+                    statements: [
+                        (LocalAssignment((
+                            span: (
+                                start: 0,
+                                end: 19,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            attr: ([
+                                (
+                                    span: (
+                                        start: 0,
+                                        end: 14,
                                     ),
-                                    trailing: TrailingExtras(
-                                        [],
+                                    is_inner: false,
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
                                     ),
-                                },
-                                attr: Attributes(
-                                    [
-                                        Attribute {
-                                            span: 0..14,
-                                            is_inner: false,
-                                            extras: ItemExtras {
-                                                leading: LeadingExtras(
-                                                    [],
-                                                ),
-                                                trailing: TrailingExtras(
-                                                    [],
-                                                ),
-                                            },
-                                            commands: [
-                                                Ident(
-                                                    Identifier {
-                                                        span: 2..8,
-                                                        name: "export",
-                                                    },
-                                                ),
-                                            ],
-                                        },
+                                    commands: [
+                                        Ident((
+                                            span: (
+                                                start: 2,
+                                                end: 8,
+                                            ),
+                                            name: "export",
+                                        )),
                                     ],
                                 ),
-                                id: Identifier {
-                                    span: 14..15,
-                                    name: "a",
-                                },
-                                ty: None,
-                                expr: Literal(
-                                    Literal {
-                                        span: 18..19,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        literal: Integer(
-                                            IntegerLiteral {
-                                                span: 18..19,
-                                                value: 1,
-                                                raw: "1",
-                                            },
-                                        ),
-                                    },
+                            ]),
+                            id: (
+                                span: (
+                                    start: 14,
+                                    end: 15,
                                 ),
-                            },
-                        ),
-                        TrailingExtras(
-                            [],
-                        ),
-                    ),
-                ],
-                tail: None,
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                                name: "a",
+                            ),
+                            ty: None,
+                            expr: Literal((
+                                span: (
+                                    start: 18,
+                                    end: 19,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                literal: Integer((
+                                    span: (
+                                        start: 18,
+                                        end: 19,
+                                    ),
+                                    value: 1,
+                                    raw: "1",
+                                )),
+                            )),
+                        )), ([])),
+                    ],
+                    tail: None,
+                ),
+            ),
+            hash: 17429184393384921408,
+        ),
     ),
 )
+---

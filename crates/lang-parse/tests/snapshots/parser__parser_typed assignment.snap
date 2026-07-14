@@ -1,121 +1,121 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..20,
-            statements: StatementList {
-                span: 0..20,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 15525775564859857324,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 20,
+                ),
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 20,
                     ),
-                    trailing: TrailingExtras(
-                        [],
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
                     ),
-                },
-                statements: [
-                    (
-                        LocalAssignment(
-                            LocalAssignment {
-                                span: 0..19,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                attr: Attributes(
-                                    [],
+                    statements: [
+                        (LocalAssignment((
+                            span: (
+                                start: 0,
+                                end: 19,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            attr: ([]),
+                            id: (
+                                span: (
+                                    start: 0,
+                                    end: 1,
                                 ),
-                                id: Identifier {
-                                    span: 0..1,
-                                    name: "a",
-                                },
-                                ty: Some(
-                                    Single(
-                                        SingleType {
-                                            span: 3..9,
-                                            name: "Length",
-                                        },
-                                    ),
+                                name: "a",
+                            ),
+                            ty: Some(Single((
+                                span: (
+                                    start: 3,
+                                    end: 9,
                                 ),
-                                expr: BinaryOperation(
-                                    BinaryOperation {
-                                        span: 12..19,
-                                        lhs: QualifiedName(
-                                            QualifiedName {
-                                                span: 12..13,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [
-                                                            Whitespace(
-                                                                Whitespace(
-                                                                    " ",
-                                                                ),
-                                                            ),
-                                                        ],
-                                                    ),
-                                                },
-                                                parts: [
-                                                    Identifier {
-                                                        span: 12..13,
-                                                        name: "b",
-                                                    },
-                                                ],
-                                            },
+                                name: "Length",
+                            ))),
+                            expr: BinaryOperation((
+                                span: (
+                                    start: 12,
+                                    end: 19,
+                                ),
+                                lhs: QualifiedName((
+                                    span: (
+                                        start: 12,
+                                        end: 13,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([
+                                            Whitespace((" ")),
+                                        ]),
+                                    ),
+                                    parts: [
+                                        (
+                                            span: (
+                                                start: 12,
+                                                end: 13,
+                                            ),
+                                            name: "b",
                                         ),
-                                        op: Spanned {
-                                            span: 14..15,
-                                            value: Multiply,
-                                        },
-                                        rhs: Literal(
-                                            Literal {
-                                                span: 16..19,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [],
-                                                    ),
-                                                },
-                                                literal: Quantity(
-                                                    QuantityLiteral {
-                                                        span: 16..19,
-                                                        value: 2.0,
-                                                        raw: "2",
-                                                        unit: Unit {
-                                                            span: 17..19,
-                                                            name: "mm",
-                                                        },
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                    },
+                                    ],
+                                )),
+                                op: (
+                                    span: (
+                                        start: 14,
+                                        end: 15,
+                                    ),
+                                    value: Multiply,
                                 ),
-                            },
-                        ),
-                        TrailingExtras(
-                            [],
-                        ),
-                    ),
-                ],
-                tail: None,
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                                rhs: Literal((
+                                    span: (
+                                        start: 16,
+                                        end: 19,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    literal: Quantity((
+                                        span: (
+                                            start: 16,
+                                            end: 19,
+                                        ),
+                                        value: 2.0,
+                                        raw: "2",
+                                        unit: (
+                                            span: (
+                                                start: 17,
+                                                end: 19,
+                                            ),
+                                            name: "mm",
+                                        ),
+                                    )),
+                                )),
+                            )),
+                        )), ([])),
+                    ],
+                    tail: None,
+                ),
+            ),
+            hash: 1923024530237905897,
+        ),
     ),
 )
+---

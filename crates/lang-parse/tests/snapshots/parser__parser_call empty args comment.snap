@@ -1,95 +1,94 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..17,
-            statements: StatementList {
-                span: 0..17,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
-                    ),
-                    trailing: TrailingExtras(
-                        [],
-                    ),
-                },
-                statements: [],
-                tail: Some(
-                    ExpressionStatement {
-                        span: 0..17,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attr: Attributes(
-                            [],
-                        ),
-                        expr: Call(
-                            Call {
-                                span: 0..17,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                name: QualifiedName {
-                                    span: 0..3,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    parts: [
-                                        Identifier {
-                                            span: 0..3,
-                                            name: "foo",
-                                        },
-                                    ],
-                                },
-                                arguments: ArgumentList {
-                                    span: 4..16,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [
-                                                Comment(
-                                                    Comment {
-                                                        span: 4..16,
-                                                        inner: MultiLine(
-                                                            "foobar",
-                                                        ),
-                                                    },
-                                                ),
-                                            ],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    arguments: [],
-                                },
-                            },
-                        ),
-                    },
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 7100634413631282167,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 17,
                 ),
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 17,
+                    ),
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
+                    ),
+                    statements: [],
+                    tail: Some((
+                        span: (
+                            start: 0,
+                            end: 17,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: Call((
+                            span: (
+                                start: 0,
+                                end: 17,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            name: (
+                                span: (
+                                    start: 0,
+                                    end: 3,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                parts: [
+                                    (
+                                        span: (
+                                            start: 0,
+                                            end: 3,
+                                        ),
+                                        name: "foo",
+                                    ),
+                                ],
+                            ),
+                            arguments: (
+                                span: (
+                                    start: 4,
+                                    end: 16,
+                                ),
+                                extras: (
+                                    leading: ([
+                                        Comment((
+                                            span: (
+                                                start: 4,
+                                                end: 16,
+                                            ),
+                                            inner: MultiLine("foobar"),
+                                        )),
+                                    ]),
+                                    trailing: ([]),
+                                ),
+                                arguments: [],
+                            ),
+                        )),
+                    )),
+                ),
+            ),
+            hash: 14464565697506949776,
+        ),
     ),
 )
+---

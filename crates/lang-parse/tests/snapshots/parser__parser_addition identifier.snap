@@ -1,98 +1,98 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..10,
-            statements: StatementList {
-                span: 0..10,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
-                    ),
-                    trailing: TrailingExtras(
-                        [],
-                    ),
-                },
-                statements: [],
-                tail: Some(
-                    ExpressionStatement {
-                        span: 0..10,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attr: Attributes(
-                            [],
-                        ),
-                        expr: BinaryOperation(
-                            BinaryOperation {
-                                span: 0..10,
-                                lhs: QualifiedName(
-                                    QualifiedName {
-                                        span: 0..6,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [
-                                                    Whitespace(
-                                                        Whitespace(
-                                                            " ",
-                                                        ),
-                                                    ),
-                                                ],
-                                            ),
-                                        },
-                                        parts: [
-                                            Identifier {
-                                                span: 0..6,
-                                                name: "length",
-                                            },
-                                        ],
-                                    },
-                                ),
-                                op: Spanned {
-                                    span: 7..8,
-                                    value: Add,
-                                },
-                                rhs: Literal(
-                                    Literal {
-                                        span: 9..10,
-                                        extras: ItemExtras {
-                                            leading: LeadingExtras(
-                                                [],
-                                            ),
-                                            trailing: TrailingExtras(
-                                                [],
-                                            ),
-                                        },
-                                        literal: Integer(
-                                            IntegerLiteral {
-                                                span: 9..10,
-                                                value: 1,
-                                                raw: "1",
-                                            },
-                                        ),
-                                    },
-                                ),
-                            },
-                        ),
-                    },
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 14260594695928954752,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 10,
                 ),
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 10,
+                    ),
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
+                    ),
+                    statements: [],
+                    tail: Some((
+                        span: (
+                            start: 0,
+                            end: 10,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: BinaryOperation((
+                            span: (
+                                start: 0,
+                                end: 10,
+                            ),
+                            lhs: QualifiedName((
+                                span: (
+                                    start: 0,
+                                    end: 6,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([
+                                        Whitespace((" ")),
+                                    ]),
+                                ),
+                                parts: [
+                                    (
+                                        span: (
+                                            start: 0,
+                                            end: 6,
+                                        ),
+                                        name: "length",
+                                    ),
+                                ],
+                            )),
+                            op: (
+                                span: (
+                                    start: 7,
+                                    end: 8,
+                                ),
+                                value: Add,
+                            ),
+                            rhs: Literal((
+                                span: (
+                                    start: 9,
+                                    end: 10,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                literal: Integer((
+                                    span: (
+                                        start: 9,
+                                        end: 10,
+                                    ),
+                                    value: 1,
+                                    raw: "1",
+                                )),
+                            )),
+                        )),
+                    )),
+                ),
+            ),
+            hash: 14786458645844442511,
+        ),
     ),
 )
+---

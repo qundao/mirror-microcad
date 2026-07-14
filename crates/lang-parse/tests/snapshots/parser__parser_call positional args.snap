@@ -1,179 +1,156 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..38,
-            statements: StatementList {
-                span: 0..38,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
-                    ),
-                    trailing: TrailingExtras(
-                        [],
-                    ),
-                },
-                statements: [],
-                tail: Some(
-                    ExpressionStatement {
-                        span: 0..38,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attr: Attributes(
-                            [],
-                        ),
-                        expr: Call(
-                            Call {
-                                span: 0..38,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                name: QualifiedName {
-                                    span: 0..3,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    parts: [
-                                        Identifier {
-                                            span: 0..3,
-                                            name: "foo",
-                                        },
-                                    ],
-                                },
-                                arguments: ArgumentList {
-                                    span: 4..37,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [
-                                                Whitespace(
-                                                    Whitespace(
-                                                        "\n        ",
-                                                    ),
-                                                ),
-                                            ],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    arguments: [
-                                        Unnamed(
-                                            UnnamedArgument {
-                                                span: 13..14,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [],
-                                                    ),
-                                                },
-                                                expr: Literal(
-                                                    Literal {
-                                                        span: 13..14,
-                                                        extras: ItemExtras {
-                                                            leading: LeadingExtras(
-                                                                [],
-                                                            ),
-                                                            trailing: TrailingExtras(
-                                                                [],
-                                                            ),
-                                                        },
-                                                        literal: Integer(
-                                                            IntegerLiteral {
-                                                                span: 13..14,
-                                                                value: 1,
-                                                                raw: "1",
-                                                            },
-                                                        ),
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                        Unnamed(
-                                            UnnamedArgument {
-                                                span: 16..37,
-                                                extras: ItemExtras {
-                                                    leading: LeadingExtras(
-                                                        [
-                                                            Comment(
-                                                                Comment {
-                                                                    span: 16..22,
-                                                                    inner: SingleLine(
-                                                                        "// foo",
-                                                                    ),
-                                                                },
-                                                            ),
-                                                            Whitespace(
-                                                                Whitespace(
-                                                                    "\n        ",
-                                                                ),
-                                                            ),
-                                                        ],
-                                                    ),
-                                                    trailing: TrailingExtras(
-                                                        [],
-                                                    ),
-                                                },
-                                                expr: Literal(
-                                                    Literal {
-                                                        span: 31..37,
-                                                        extras: ItemExtras {
-                                                            leading: LeadingExtras(
-                                                                [],
-                                                            ),
-                                                            trailing: TrailingExtras(
-                                                                [
-                                                                    Whitespace(
-                                                                        Whitespace(
-                                                                            "\n    ",
-                                                                        ),
-                                                                    ),
-                                                                ],
-                                                            ),
-                                                        },
-                                                        literal: Integer(
-                                                            IntegerLiteral {
-                                                                span: 31..32,
-                                                                value: 2,
-                                                                raw: "2",
-                                                            },
-                                                        ),
-                                                    },
-                                                ),
-                                            },
-                                        ),
-                                    ],
-                                },
-                            },
-                        ),
-                    },
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 7850470760013370884,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 38,
                 ),
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 38,
+                    ),
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
+                    ),
+                    statements: [],
+                    tail: Some((
+                        span: (
+                            start: 0,
+                            end: 38,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: Call((
+                            span: (
+                                start: 0,
+                                end: 38,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            name: (
+                                span: (
+                                    start: 0,
+                                    end: 3,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                parts: [
+                                    (
+                                        span: (
+                                            start: 0,
+                                            end: 3,
+                                        ),
+                                        name: "foo",
+                                    ),
+                                ],
+                            ),
+                            arguments: (
+                                span: (
+                                    start: 4,
+                                    end: 37,
+                                ),
+                                extras: (
+                                    leading: ([
+                                        Whitespace(("\n        ")),
+                                    ]),
+                                    trailing: ([]),
+                                ),
+                                arguments: [
+                                    Unnamed((
+                                        span: (
+                                            start: 13,
+                                            end: 14,
+                                        ),
+                                        extras: (
+                                            leading: ([]),
+                                            trailing: ([]),
+                                        ),
+                                        expr: Literal((
+                                            span: (
+                                                start: 13,
+                                                end: 14,
+                                            ),
+                                            extras: (
+                                                leading: ([]),
+                                                trailing: ([]),
+                                            ),
+                                            literal: Integer((
+                                                span: (
+                                                    start: 13,
+                                                    end: 14,
+                                                ),
+                                                value: 1,
+                                                raw: "1",
+                                            )),
+                                        )),
+                                    )),
+                                    Unnamed((
+                                        span: (
+                                            start: 16,
+                                            end: 37,
+                                        ),
+                                        extras: (
+                                            leading: ([
+                                                Comment((
+                                                    span: (
+                                                        start: 16,
+                                                        end: 22,
+                                                    ),
+                                                    inner: SingleLine("// foo"),
+                                                )),
+                                                Whitespace(("\n        ")),
+                                            ]),
+                                            trailing: ([]),
+                                        ),
+                                        expr: Literal((
+                                            span: (
+                                                start: 31,
+                                                end: 37,
+                                            ),
+                                            extras: (
+                                                leading: ([]),
+                                                trailing: ([
+                                                    Whitespace(("\n    ")),
+                                                ]),
+                                            ),
+                                            literal: Integer((
+                                                span: (
+                                                    start: 31,
+                                                    end: 32,
+                                                ),
+                                                value: 2,
+                                                raw: "2",
+                                            )),
+                                        )),
+                                    )),
+                                ],
+                            ),
+                        )),
+                    )),
+                ),
+            ),
+            hash: 1379974465917646957,
+        ),
     ),
 )
+---

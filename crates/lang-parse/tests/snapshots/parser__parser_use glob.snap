@@ -1,82 +1,84 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..16,
-            statements: StatementList {
-                span: 0..16,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 12817586228421317999,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 16,
+                ),
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 16,
                     ),
-                    trailing: TrailingExtras(
-                        [],
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
                     ),
-                },
-                statements: [
-                    (
-                        Use(
-                            Use {
-                                span: 0..15,
-                                attr: Attributes(
-                                    [],
+                    statements: [
+                        (Use((
+                            span: (
+                                start: 0,
+                                end: 15,
+                            ),
+                            attr: ([]),
+                            keyword_span: (
+                                start: 0,
+                                end: 3,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            vis: None,
+                            name: (
+                                span: (
+                                    start: 4,
+                                    end: 15,
                                 ),
-                                keyword_span: 0..3,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                vis: None,
-                                name: UseName {
-                                    span: 4..15,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                parts: [
+                                    Identifier((
+                                        span: (
+                                            start: 4,
+                                            end: 7,
                                         ),
-                                        trailing: TrailingExtras(
-                                            [],
+                                        name: "foo",
+                                    )),
+                                    Identifier((
+                                        span: (
+                                            start: 9,
+                                            end: 12,
                                         ),
-                                    },
-                                    parts: [
-                                        Identifier(
-                                            Identifier {
-                                                span: 4..7,
-                                                name: "foo",
-                                            },
-                                        ),
-                                        Identifier(
-                                            Identifier {
-                                                span: 9..12,
-                                                name: "bar",
-                                            },
-                                        ),
-                                        Glob(
-                                            14..15,
-                                        ),
-                                    ],
-                                },
-                                use_as: None,
-                            },
-                        ),
-                        TrailingExtras(
-                            [],
-                        ),
-                    ),
-                ],
-                tail: None,
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                                        name: "bar",
+                                    )),
+                                    Glob((
+                                        start: 14,
+                                        end: 15,
+                                    )),
+                                ],
+                            ),
+                            use_as: None,
+                        )), ([])),
+                    ],
+                    tail: None,
+                ),
+            ),
+            hash: 9913194044245455469,
+        ),
     ),
 )
+---

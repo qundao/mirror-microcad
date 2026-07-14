@@ -1,108 +1,101 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..26,
-            statements: StatementList {
-                span: 0..26,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
-                    ),
-                    trailing: TrailingExtras(
-                        [],
-                    ),
-                },
-                statements: [],
-                tail: Some(
-                    ExpressionStatement {
-                        span: 0..26,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attr: Attributes(
-                            [],
-                        ),
-                        expr: String(
-                            FormatString {
-                                span: 0..26,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                parts: [
-                                    Content(
-                                        StringLiteral {
-                                            span: 1..8,
-                                            content: "string ",
-                                        },
-                                    ),
-                                    Expression(
-                                        StringExpression {
-                                            span: 13..14,
-                                            extras: ItemExtras {
-                                                leading: LeadingExtras(
-                                                    [],
-                                                ),
-                                                trailing: TrailingExtras(
-                                                    [],
-                                                ),
-                                            },
-                                            expr: QualifiedName(
-                                                QualifiedName {
-                                                    span: 9..13,
-                                                    extras: ItemExtras {
-                                                        leading: LeadingExtras(
-                                                            [],
-                                                        ),
-                                                        trailing: TrailingExtras(
-                                                            [],
-                                                        ),
-                                                    },
-                                                    parts: [
-                                                        Identifier {
-                                                            span: 9..13,
-                                                            name: "with",
-                                                        },
-                                                    ],
-                                                },
-                                            ),
-                                            specification: StringFormatSpecification {
-                                                span: 13..13,
-                                                precision: None,
-                                                width: None,
-                                            },
-                                        },
-                                    ),
-                                    Content(
-                                        StringLiteral {
-                                            span: 14..25,
-                                            content: " expression",
-                                        },
-                                    ),
-                                ],
-                            },
-                        ),
-                    },
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 7275310215853396098,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 26,
                 ),
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 26,
+                    ),
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
+                    ),
+                    statements: [],
+                    tail: Some((
+                        span: (
+                            start: 0,
+                            end: 26,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: String((
+                            span: (
+                                start: 0,
+                                end: 26,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            parts: [
+                                Content((
+                                    span: (
+                                        start: 1,
+                                        end: 8,
+                                    ),
+                                    content: "string ",
+                                )),
+                                Expression((
+                                    span: (
+                                        start: 13,
+                                        end: 14,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    expr: QualifiedName((
+                                        span: (
+                                            start: 9,
+                                            end: 13,
+                                        ),
+                                        extras: (
+                                            leading: ([]),
+                                            trailing: ([]),
+                                        ),
+                                        parts: [
+                                            (
+                                                span: (
+                                                    start: 9,
+                                                    end: 13,
+                                                ),
+                                                name: "with",
+                                            ),
+                                        ],
+                                    )),
+                                )),
+                                Content((
+                                    span: (
+                                        start: 14,
+                                        end: 25,
+                                    ),
+                                    content: " expression",
+                                )),
+                            ],
+                        )),
+                    )),
+                ),
+            ),
+            hash: 7896566536323234658,
+        ),
     ),
 )
+---

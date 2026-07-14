@@ -1,57 +1,57 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..10,
-            statements: StatementList {
-                span: 0..10,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 16014346051756756399,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 10,
+                ),
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 10,
                     ),
-                    trailing: TrailingExtras(
-                        [],
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
                     ),
-                },
-                statements: [
-                    (
-                        InnerAttribute(
-                            Attribute {
-                                span: 0..10,
-                                is_inner: true,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
+                    statements: [
+                        (InnerAttribute((
+                            span: (
+                                start: 0,
+                                end: 10,
+                            ),
+                            is_inner: true,
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            commands: [
+                                Ident((
+                                    span: (
+                                        start: 3,
+                                        end: 9,
                                     ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                commands: [
-                                    Ident(
-                                        Identifier {
-                                            span: 3..9,
-                                            name: "export",
-                                        },
-                                    ),
-                                ],
-                            },
-                        ),
-                        TrailingExtras(
-                            [],
-                        ),
-                    ),
-                ],
-                tail: None,
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                                    name: "export",
+                                )),
+                            ],
+                        )), ([])),
+                    ],
+                    tail: None,
+                ),
+            ),
+            hash: 3866994771152681731,
+        ),
     ),
 )
+---

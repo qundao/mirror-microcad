@@ -1,19 +1,13 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Err(
-    Diagnostics {
-        error_count: 1,
-        warning_count: 0,
-        diagnostics: [
-            Diagnostic {
-                report: ParseError {
-                    span: 4..20,
-                    error: unclosed string at 4..20,
-                },
-                src_ref: 1:5 (4..20) in 0x8b02d0fe81baead,
-            },
-        ],
-    },
-)
+
+---
+  x Error: unclosed string | Source: 1:5
+   ,-[/:1:5]
+ 1 | a = "unclosed string;
+   :     ^^^^^^^^|^^^^^^^
+   :             `-- unclosed string
+ 2 |     b = 1;
+   `----

@@ -1,67 +1,67 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..3,
-            statements: StatementList {
-                span: 0..3,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
-                    ),
-                    trailing: TrailingExtras(
-                        [],
-                    ),
-                },
-                statements: [],
-                tail: Some(
-                    ExpressionStatement {
-                        span: 0..3,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attr: Attributes(
-                            [],
-                        ),
-                        expr: Bracketed(
-                            Literal(
-                                Literal {
-                                    span: 1..2,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    literal: Integer(
-                                        IntegerLiteral {
-                                            span: 1..2,
-                                            value: 1,
-                                            raw: "1",
-                                        },
-                                    ),
-                                },
-                            ),
-                            0..3,
-                        ),
-                    },
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 9147862458691137547,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 3,
                 ),
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 3,
+                    ),
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
+                    ),
+                    statements: [],
+                    tail: Some((
+                        span: (
+                            start: 0,
+                            end: 3,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: Bracketed(Literal((
+                            span: (
+                                start: 1,
+                                end: 2,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            literal: Integer((
+                                span: (
+                                    start: 1,
+                                    end: 2,
+                                ),
+                                value: 1,
+                                raw: "1",
+                            )),
+                        )), (
+                            start: 0,
+                            end: 3,
+                        )),
+                    )),
+                ),
+            ),
+            hash: 13509287101787136159,
+        ),
     ),
 )
+---

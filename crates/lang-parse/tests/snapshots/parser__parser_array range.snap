@@ -1,120 +1,113 @@
 ---
 source: crates/lang-parse/tests/parser.rs
-expression: "microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))"
+expression: output
 ---
-Ok(
-    (
-        Ast {
-            span: 0..7,
-            statements: StatementList {
-                span: 0..7,
-                extras: ItemExtras {
-                    leading: LeadingExtras(
-                        [],
-                    ),
-                    trailing: TrailingExtras(
-                        [],
-                    ),
-                },
-                statements: [],
-                tail: Some(
-                    ExpressionStatement {
-                        span: 0..7,
-                        extras: ItemExtras {
-                            leading: LeadingExtras(
-                                [],
-                            ),
-                            trailing: TrailingExtras(
-                                [],
-                            ),
-                        },
-                        attr: Attributes(
-                            [],
-                        ),
-                        expr: ArrayRange(
-                            ArrayRangeExpression {
-                                span: 0..7,
-                                extras: ItemExtras {
-                                    leading: LeadingExtras(
-                                        [],
-                                    ),
-                                    trailing: TrailingExtras(
-                                        [],
-                                    ),
-                                },
-                                start: ArrayItem {
-                                    span: 1..2,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    expr: Literal(
-                                        Literal {
-                                            span: 1..2,
-                                            extras: ItemExtras {
-                                                leading: LeadingExtras(
-                                                    [],
-                                                ),
-                                                trailing: TrailingExtras(
-                                                    [],
-                                                ),
-                                            },
-                                            literal: Integer(
-                                                IntegerLiteral {
-                                                    span: 1..2,
-                                                    value: 1,
-                                                    raw: "1",
-                                                },
-                                            ),
-                                        },
-                                    ),
-                                },
-                                end: ArrayItem {
-                                    span: 4..6,
-                                    extras: ItemExtras {
-                                        leading: LeadingExtras(
-                                            [],
-                                        ),
-                                        trailing: TrailingExtras(
-                                            [],
-                                        ),
-                                    },
-                                    expr: Literal(
-                                        Literal {
-                                            span: 4..6,
-                                            extras: ItemExtras {
-                                                leading: LeadingExtras(
-                                                    [],
-                                                ),
-                                                trailing: TrailingExtras(
-                                                    [],
-                                                ),
-                                            },
-                                            literal: Integer(
-                                                IntegerLiteral {
-                                                    span: 4..6,
-                                                    value: 10,
-                                                    raw: "10",
-                                                },
-                                            ),
-                                        },
-                                    ),
-                                },
-                                unit: None,
-                            },
-                        ),
-                    },
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: 13676345670461687307,
+        tree: (
+            inner: (
+                span: (
+                    start: 0,
+                    end: 7,
                 ),
-            },
-        },
-        Diagnostics {
-            error_count: 0,
-            warning_count: 0,
-            diagnostics: [],
-        },
+                statements: (
+                    span: (
+                        start: 0,
+                        end: 7,
+                    ),
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
+                    ),
+                    statements: [],
+                    tail: Some((
+                        span: (
+                            start: 0,
+                            end: 7,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        expr: ArrayRange((
+                            span: (
+                                start: 0,
+                                end: 7,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            start: (
+                                span: (
+                                    start: 1,
+                                    end: 2,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                expr: Literal((
+                                    span: (
+                                        start: 1,
+                                        end: 2,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    literal: Integer((
+                                        span: (
+                                            start: 1,
+                                            end: 2,
+                                        ),
+                                        value: 1,
+                                        raw: "1",
+                                    )),
+                                )),
+                            ),
+                            end: (
+                                span: (
+                                    start: 4,
+                                    end: 6,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                expr: Literal((
+                                    span: (
+                                        start: 4,
+                                        end: 6,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    literal: Integer((
+                                        span: (
+                                            start: 4,
+                                            end: 6,
+                                        ),
+                                        value: 10,
+                                        raw: "10",
+                                    )),
+                                )),
+                            ),
+                            unit: None,
+                        )),
+                    )),
+                ),
+            ),
+            hash: 1968296644968851823,
+        ),
     ),
 )
+---
