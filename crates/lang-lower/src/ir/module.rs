@@ -3,29 +3,28 @@
 
 //! Module definition syntax element.
 
-use microcad_lang_base::{SrcRef, SrcReferrer};
+use crate::ir;
+
+use microcad_lang_base::{IsDefault, SrcRef, SrcReferrer, is_default};
 use microcad_lang_proc_macros::Identifiable;
+
 use serde::Deserialize;
 use serde::Serialize;
 
-use crate::IsDefault;
-use crate::ir;
-use crate::is_default;
-
-#[derive(Debug, Identifiable, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, Identifiable, PartialEq, Serialize, Deserialize)]
 pub struct FileModule {
     pub src_ref: SrcRef,
     pub attr: ir::OuterAttributes,
 
     pub visibility: ir::Visibility,
 
-    pub keyword_ref: SrcRef,
+    pub keyword_src_ref: SrcRef,
     /// Name of the module.
     pub id: ir::Identifier,
 }
 
 /// Items inside an inline module that will be resolved into Symbols.
-#[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
 pub struct InlineModuleItems {
     #[serde(skip_serializing_if = "is_default", default)]
     pub modules: Box<[ir::InlineModule]>,
@@ -54,7 +53,7 @@ impl IsDefault for InlineModuleItems {
 }
 
 /// Inline module definition.
-#[derive(Debug, Identifiable, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Identifiable, Hash, PartialEq, Serialize, Deserialize)]
 pub struct InlineModule {
     pub src_ref: SrcRef,
 

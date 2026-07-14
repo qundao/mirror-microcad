@@ -3,8 +3,9 @@
 
 //! Syntax elements related to calls.
 
-use crate::{Identifiable, ir, is_default};
-use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
+use crate::ir;
+use microcad_lang_base::{Identifiable, Identifier, SrcRef, SrcReferrer, is_default};
+
 use serde::{Deserialize, Serialize};
 
 /// NamedArgument in a [`Call`].

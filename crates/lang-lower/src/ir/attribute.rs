@@ -3,10 +3,10 @@
 
 //! Attribute syntax entities.
 
-use crate::ir::{self, ConstantExpression};
-use crate::{IsDefault, is_default};
+use crate::ir;
+
 use derive_more::{Deref, DerefMut};
-use microcad_lang_base::{Refer, SrcRef};
+use microcad_lang_base::{IsDefault, Refer, SrcRef, is_default};
 
 use microcad_lang_proc_macros::SrcReferrer;
 use serde::{Deserialize, Serialize};
@@ -71,13 +71,13 @@ impl std::fmt::Display for DocBlock {
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Meta {
     pub name: ir::QualifiedName,
-    pub expr: ConstantExpression,
+    pub expr: ir::ConstantExpression,
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Command {
     pub name: ir::QualifiedName,
-    pub argument_list: ir::ArgumentList<ConstantExpression>,
+    pub argument_list: ir::ArgumentList<ir::ConstantExpression>,
     pub src_ref: SrcRef,
 }
 

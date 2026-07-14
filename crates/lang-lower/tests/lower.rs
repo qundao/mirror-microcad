@@ -20,8 +20,8 @@ fn source_from_test_file(name: &str) -> Source {
 
 /// Get intermediate representation and diagnostics.
 fn ir_from_source(source: &Source) -> CompilationResult<Ir> {
-    let ast = parse::parse(&source)?.0;
-    lower::lower(&source, &ast)
+    let ast = parse::parse(source)?.0;
+    lower::lower(source, &ast)
 }
 
 macro_rules! unit_test {
@@ -132,9 +132,9 @@ macro_rules! test_diagnostic {
 }
 
 unit_test!(module => |ir, diag| {
-    assert_that!(ir, matches_pattern!(Ir {
+    assert_that!(ir.tree, matches_pattern!(ir::Source {
         *statements: len(eq(3)),
-        items: matches_pattern!(ir::Items {
+        items: matches_pattern!(ir::SourceItems {
             constants: len(eq(1)),
             inline_modules: [matches_pattern!(ir::InlineModule {
                 visibility: eq(ir::Visibility::Private),
@@ -156,9 +156,9 @@ unit_test!(module => |ir, diag| {
 });
 
 unit_test!(inline_module => |ir, diag| {
-    assert_that!(ir, matches_pattern!(Ir {
+    assert_that!(ir.tree, matches_pattern!(ir::Source {
         statements: empty(),
-        items: matches_pattern!(ir::Items {
+        items: matches_pattern!(ir::SourceItems {
             constants: len(eq(1)),
             inline_modules: [matches_pattern!(ir::InlineModule {
                 visibility: eq(ir::Visibility::Public),
@@ -217,7 +217,7 @@ fn serde_circle() {
 
     // 1. Serialize/Deserialize
     let serialized = in_ir.to_ron().expect("No error");
-    let out_ir: Ir = Ir::from_ron(&*serialized).expect("Deserialization failed");
+    let out_ir = Ir::from_ron(&*serialized).expect("Deserialization failed");
 
     // 2. Structural Equality
     assert_that!(

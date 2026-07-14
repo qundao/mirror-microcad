@@ -3,7 +3,7 @@
 
 use derive_more::Deref;
 
-use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer};
+use microcad_lang_base::{Identifier, Refer, SingleIdentifier, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;
 use miette::SourceSpan;
 
@@ -29,7 +29,7 @@ impl QualifiedName {
     }
 }
 
-impl crate::SingleIdentifier for QualifiedName {
+impl SingleIdentifier for QualifiedName {
     fn single_identifier(&self) -> Option<&Identifier> {
         if self.is_single_identifier() {
             self.0.first()
@@ -84,15 +84,5 @@ impl From<&str> for QualifiedName {
         Self(Refer::none(
             value.split("::").map(Identifier::from).collect(),
         ))
-    }
-}
-
-impl From<QualifiedName> for String {
-    fn from(value: QualifiedName) -> Self {
-        value
-            .iter()
-            .map(|id| format!("{id}"))
-            .collect::<Vec<_>>()
-            .join("::")
     }
 }

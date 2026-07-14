@@ -129,7 +129,7 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
     }
 }
 
-impl Lower<ast::StatementList> for ir::Inits {
+impl Lower<ast::StatementList> for Box<[ir::Init]> {
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         fn is_init(stmt: &ast::Statement) -> bool {
             matches!(stmt, ast::Statement::Init(_))
@@ -180,12 +180,12 @@ impl Lower<ast::StatementList> for ir::Inits {
                 })?;
         }
 
-        Ok(Self(extract_statements(node, |stmt| {
+        Ok(extract_statements(node, |stmt| {
             Ok(match stmt {
                 ast::Statement::Init(init) => Some(ir::Init::lower(init, context)?),
                 _ => None,
             })
-        })?))
+        })?)
     }
 }
 
@@ -289,7 +289,7 @@ impl Lower<ast::def::Workbench> for ir::Workbench {
             id: ir::Identifier::lower(&node.id, context)?,
             parameters: ir::ParameterList::lower(&node.parameters, context)?,
             inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
-            inits: ir::Inits::lower(&node.body.statements, context)?,
+            inits: Box::lower(&node.body.statements, context)?,
             items: ir::WorkbenchItems::lower(&node.body.statements, context)?,
             statements: Box::lower(&node.body.statements, context)?,
         })

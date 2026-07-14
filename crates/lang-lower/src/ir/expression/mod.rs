@@ -3,8 +3,6 @@
 
 //! µcad syntax elements related to expressions
 
-use crate::{SingleIdentifier, ir};
-
 mod array_expression;
 mod call;
 mod format_string;
@@ -19,11 +17,13 @@ pub use format_string::*;
 pub use literal::*;
 pub use qualified_name::*;
 pub use range_expression::*;
-use serde::{Deserialize, Serialize};
-use serde_with::skip_serializing_none;
 pub use tuple_expression::*;
 
-use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer};
+use crate::ir;
+use microcad_lang_base::{Identifier, Refer, SingleIdentifier, SrcRef, SrcReferrer};
+
+use serde::{Deserialize, Serialize};
+use serde_with::skip_serializing_none;
 
 /// List of expressions.
 pub type ListExpression<EXPR> = Vec<EXPR>;

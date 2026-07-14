@@ -3,10 +3,9 @@
 
 //! Workbench definition syntax element
 
-use crate::{IsDefault, ir, is_default};
+use crate::ir;
 
-use derive_more::Deref;
-use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer};
+use microcad_lang_base::{Identifier, IsDefault, Refer, SrcRef, SrcReferrer, is_default};
 use microcad_lang_proc_macros::Identifiable;
 
 pub use microcad_lang_base::element::WorkbenchKind;
@@ -35,7 +34,7 @@ pub struct Group {
     pub statements: Box<[WorkbenchStatement]>,
 }
 
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Init {
     /// SrcRef of the `init` keyword
     pub keyword_ref: SrcRef,
@@ -49,15 +48,6 @@ pub struct Init {
     pub statements: Box<[WorkbenchStatement]>,
     /// Source reference
     pub src_ref: SrcRef,
-}
-
-#[derive(Debug, Default, Deref, PartialEq, Serialize, Deserialize)]
-pub struct Inits(pub Box<[Init]>);
-
-impl IsDefault for Inits {
-    fn is_default(&self) -> bool {
-        self.0.is_default()
-    }
 }
 
 /// Node marker, e.g. `@input`.
@@ -110,7 +100,7 @@ impl<NAME: Serialize> ir::ExpressionKind for WorkbenchExpression<NAME> {
 }
 
 /// Workbench items that will be resolved into Symbols
-#[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
 pub struct WorkbenchItems {
     /// `use`
     #[serde(skip_serializing_if = "is_default", default)]
@@ -130,7 +120,7 @@ impl IsDefault for WorkbenchItems {
 }
 
 /// Workbench definition, e.g `sketch`, `part` or `op`.
-#[derive(Debug, Identifiable, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Identifiable, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Workbench {
     /// SrcRef of the `sketch`/`part`/`op` keyword
     pub keyword_ref: SrcRef,
@@ -150,7 +140,7 @@ pub struct Workbench {
     pub inner_attr: ir::InnerAttributes,
     /// `init`
     #[serde(skip_serializing_if = "is_default", default)]
-    pub inits: ir::Inits,
+    pub inits: Box<[Init]>,
     /// Items that will be resolved into Symbols
     #[serde(skip_serializing_if = "is_default", default)]
     pub items: ir::WorkbenchItems,

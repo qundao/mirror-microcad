@@ -14,13 +14,14 @@ mod source;
 mod r#type;
 mod workbench;
 
-use microcad_lang_base::{Identifier, Refer, SpanToSrcRef, Spanned, SrcRef, SrcReferrer};
+use microcad_lang_base::{
+    Identifiable, Identifier, Refer, SpanToSrcRef, Spanned, SrcRef, SrcReferrer,
+};
 use microcad_lang_parse::ast;
 use microcad_lang_types::ty::TypeError;
 use miette::Diagnostic;
 use thiserror::Error;
 
-use crate::Identifiable;
 use crate::{Lower, LowerContext, ir};
 
 /// Errors and warnings during lowering
@@ -344,6 +345,7 @@ impl Lower<ast::StatementList> for ir::Aliases {
                                 },
                                 context,
                             )?,
+                            src_ref: context.span_to_src_ref(&use_statement.span),
                         }))
                     }
                     None => unreachable!(),
@@ -358,6 +360,7 @@ impl Lower<ast::StatementList> for ir::Aliases {
                         keyword_src_ref: context.span_to_src_ref(&use_statement.keyword_span),
                         visibility: ir::Visibility::lower(&use_statement.vis, context)?,
                         path: ir::QualifiedName::lower(&use_statement.name, context)?,
+                        src_ref: context.span_to_src_ref(&use_statement.span),
                     })),
                     None => unreachable!(),
                     Some(_) => Ok(None),

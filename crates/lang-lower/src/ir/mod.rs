@@ -12,6 +12,7 @@ pub mod expression;
 pub mod function;
 pub mod module;
 pub mod parameter;
+pub mod source;
 pub mod workbench;
 
 pub use assignment::*;
@@ -21,19 +22,17 @@ pub use expression::*;
 pub use function::*;
 pub use module::*;
 pub use parameter::*;
-use serde::Deserialize;
+pub use source::*;
 pub use workbench::*;
 
 pub use microcad_lang_base::{Identifier, element::Visibility};
 pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Ty, Type, Unit};
 
-use microcad_lang_base::{Refer, SrcRef};
-use microcad_lang_proc_macros::{Artifact, SrcReferrer};
-use serde::Serialize;
+use microcad_lang_base::{IsDefault, Refer, SrcRef, is_default};
+use microcad_lang_proc_macros::SrcReferrer;
+use serde::{Deserialize, Serialize};
 
-use crate::IsDefault;
 use crate::ir;
-use crate::is_default;
 
 /// Type within source code.
 #[derive(Clone, Debug, Hash, PartialEq, SrcReferrer, Serialize, Deserialize)]
@@ -53,7 +52,7 @@ impl Ty for TypeAnnotation {
 
 /// `use std::geo2d::Circle as C` => (path = "std::geo2d::Circle", id = "C")
 /// `use std::geo2d::Circle` => (path = "std::geo2d::Circle", id = "Circle")
-#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct ExplicitAlias {
     pub attr: ir::OuterAttributes,
     pub visibility: ir::Visibility,
@@ -61,10 +60,11 @@ pub struct ExplicitAlias {
     pub keyword_src_ref: SrcRef,
     pub path: QualifiedName,
     pub id: Identifier,
+    pub src_ref: SrcRef,
 }
 
 /// `use std::geo2d::*`
-#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct WildcardAlias {
     #[serde(skip_serializing_if = "is_default", default)]
     pub attr: ir::OuterAttributes,
@@ -72,10 +72,11 @@ pub struct WildcardAlias {
     #[serde(skip_serializing_if = "SrcRef::is_none", default)]
     pub keyword_src_ref: SrcRef,
     pub path: QualifiedName,
+    pub src_ref: SrcRef,
 }
 
 /// Aliases lowered from `use` statements.
-#[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Aliases {
     #[serde(skip_serializing_if = "is_default", default)]
     pub explicit_aliases: Box<[ExplicitAlias]>,
@@ -87,51 +88,4 @@ impl IsDefault for Aliases {
     fn is_default(&self) -> bool {
         self.explicit_aliases.is_default() && self.wildcards.is_default()
     }
-}
-
-#[derive(Debug, Default, PartialEq, Serialize, Deserialize)]
-pub struct Items {
-    /// List of file modules: `mod foo;`.
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub file_modules: Box<[ir::FileModule]>,
-    /// Inline modules: `mod bar {...}`.
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub inline_modules: Box<[ir::InlineModule]>,
-    /// Use statements: `use ...`.
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub aliases: ir::Aliases,
-    /// Constants: `const FOO = 42;`.
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub constants: Box<[ir::Constant]>,
-    /// Functions: `fn foo(...) {...}`.
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub functions: Box<[ir::Function]>,
-    /// Workbenches: `part Bar(...) {...}`.
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub workbenches: Box<[ir::Workbench]>,
-}
-
-impl IsDefault for Items {
-    fn is_default(&self) -> bool {
-        self.file_modules.is_default()
-            && self.inline_modules.is_default()
-            && self.aliases.is_default()
-            && self.constants.is_default()
-            && self.functions.is_default()
-            && self.workbenches.is_default()
-    }
-}
-
-/// IR of a µcad source file
-#[derive(Debug, PartialEq, Serialize, Deserialize, Artifact)]
-pub struct Ir {
-    /// Inner attributes.
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub attr: ir::InnerAttributes,
-    /// Items that will become Symbols
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub items: ir::Items,
-    /// Workbench statements
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub statements: Box<[ir::WorkbenchStatement]>,
 }

@@ -1,16 +1,16 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::SrcRef;
+use microcad_lang_base::{SrcRef, is_default};
 use microcad_lang_proc_macros::SrcReferrer;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
-use crate::{ir, is_default};
+use crate::ir;
 
 /// A constant definition: `const FOO: Length = 32mm`.
 #[skip_serializing_none]
-#[derive(Debug, SrcReferrer, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, SrcReferrer, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Constant {
     pub src_ref: SrcRef,
     #[serde(skip_serializing_if = "is_default", default)]

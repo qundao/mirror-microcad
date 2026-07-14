@@ -7,61 +7,38 @@ pub mod ir;
 
 mod lower;
 
+use std::hash::{Hash, Hasher};
+
 use microcad_lang_base::{
-    CompilationResult, Diagnostics, Identifier, Source, Span, SpanToSrcRef, SrcRef,
+    CompilationResult, Diagnostics, HashId, Source, Span, SpanToSrcRef, SrcRef,
 };
 
 pub use lower::{LowerError, LowerResult};
 
 /// Intermediate representation
-pub use ir::Ir;
 use microcad_lang_parse::Ast;
+use microcad_lang_proc_macros::Artifact;
+use serde::{Deserialize, Serialize};
 
-pub(crate) trait IsDefault {
-    fn is_default(&self) -> bool;
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Artifact)]
+pub struct Ir {
+    pub input_hash: HashId,
+    pub output_hash: HashId,
+    pub tree: ir::Source,
 }
 
-// The single function you point Serde to
-pub(crate) fn is_default<T: IsDefault>(t: &T) -> bool {
-    t.is_default()
-}
+impl Lower<Ast> for Ir {
+    fn lower(node: &Ast, context: &mut LowerContext) -> LowerResult<Self> {
+        let tree = ir::Source::lower(node.tree(), context)?;
+        let mut hasher = microcad_lang_base::Hasher::default();
+        tree.hash(&mut hasher);
+        let output_hash = hasher.finish();
 
-impl<T> IsDefault for Box<[T]> {
-    fn is_default(&self) -> bool {
-        self.is_empty() // No PartialEq bound required!
-    }
-}
-
-impl IsDefault for SrcRef {
-    fn is_default(&self) -> bool {
-        self.is_none()
-    }
-}
-
-/// Check if the element only includes one identifier
-pub trait SingleIdentifier {
-    /// If the element only includes one identifier, return it
-    fn single_identifier(&self) -> Option<&Identifier>;
-
-    /// Returns true if the element only includes a single identifier.
-    fn is_single_identifier(&self) -> bool {
-        self.single_identifier().is_some()
-    }
-}
-
-/// Identifier accessor.
-pub trait Identifiable {
-    /// Get clone of the identifier.
-    fn id(&self) -> Identifier {
-        self.id_ref().clone()
-    }
-
-    /// Get reference to the identifier.
-    fn id_ref(&self) -> &Identifier;
-
-    /// Get identifier as string.
-    fn id_as_str(&self) -> &str {
-        self.id_ref().0.as_str()
+        Ok(Self {
+            input_hash: node.output_hash(),
+            output_hash,
+            tree,
+        })
     }
 }
 
@@ -95,8 +72,11 @@ pub trait Lower<AstNode>: Sized {
     fn lower(node: &AstNode, context: &mut LowerContext) -> LowerResult<Self>;
 }
 
-pub fn lower(source: &Source, ast: &Ast) -> CompilationResult<Ir> {
-    let mut context = LowerContext::from(source);
+pub fn lower<'source>(
+    context: impl Into<LowerContext<'source>>,
+    ast: &Ast,
+) -> CompilationResult<Ir> {
+    let mut context = context.into();
 
     // Short-circuit on fatal errors
     let ir = match Ir::lower(ast, &mut context) {
