@@ -37,7 +37,7 @@ impl std::fmt::Display for FunctionSignature {
 /// A function scope `{}`
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
-pub struct Scope<NAME: Serialize>(pub Refer<FunctionStatements<NAME>>);
+pub struct Scope<NAME: Serialize>(pub Refer<Box<[FunctionStatement<NAME>]>>);
 
 /// Generic Access
 type Access<ELEMENT, NAME> = ir::ElementAccess<FunctionExpression<NAME>, ELEMENT>;
@@ -125,16 +125,6 @@ impl<NAME: Serialize + SrcReferrer> SrcReferrer for FunctionStatement<NAME> {
 }
 
 #[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
-#[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
-pub struct FunctionStatements<NAME: Serialize>(pub Box<[FunctionStatement<NAME>]>);
-
-impl<NAME: Serialize> IsDefault for FunctionStatements<NAME> {
-    fn is_default(&self) -> bool {
-        self.0.is_default()
-    }
-}
-
-#[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
 pub struct FunctionItems {
     /// use ...
     #[serde(skip_serializing_if = "is_default", default)]
@@ -175,5 +165,5 @@ pub struct Function {
 
     /// Function statements
     #[serde(skip_serializing_if = "is_default", default)]
-    pub statements: ir::FunctionStatements<ir::QualifiedName>,
+    pub statements: Box<[ir::FunctionStatement<ir::QualifiedName>]>,
 }

@@ -22,7 +22,7 @@ pub struct Parameter {
     #[serde(skip_serializing_if = "is_default", default)]
     pub attr: ir::OuterAttributes,
     /// Name of the parameter
-    pub(crate) id: Identifier,
+    pub id: Identifier,
     /// Type of the parameter or `None`
     pub specified_type: Option<ir::TypeAnnotation>,
     /// default value of the parameter or `None`

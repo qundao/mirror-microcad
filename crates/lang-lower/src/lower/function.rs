@@ -47,7 +47,7 @@ where
         })?;
 
         Ok(Self(Refer::new(
-            ir::FunctionStatements::lower(statements, context)?,
+            Box::lower(statements, context)?,
             context.span_to_src_ref(&node.span),
         )))
     }
@@ -177,7 +177,7 @@ where
     }
 }
 
-impl<NAME> Lower<ast::StatementList> for ir::FunctionStatements<NAME>
+impl<NAME> Lower<ast::StatementList> for Box<[ir::FunctionStatement<NAME>]>
 where
     NAME: SrcReferrer + Serialize + Lower<ast::QualifiedName>,
 {
@@ -212,7 +212,7 @@ where
             }
         }
 
-        Ok(Self(statements))
+        Ok(statements)
     }
 }
 
@@ -247,7 +247,7 @@ impl Lower<ast::def::Function> for ir::Function {
             signature: ir::FunctionSignature::lower(node, context)?,
             inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
             items: ir::FunctionItems::lower(&node.body.statements, context)?,
-            statements: ir::FunctionStatements::lower(&node.body.statements, context)?,
+            statements: Box::lower(&node.body.statements, context)?,
         })
     }
 }
