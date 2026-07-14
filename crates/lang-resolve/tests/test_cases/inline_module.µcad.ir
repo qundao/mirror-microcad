@@ -3,136 +3,139 @@
         magic: (38, 109, 117, 59),
         version: ("0.6.0"),
         kind: Ir,
-        source_hash: 0,
     ),
     payload: (
-        items: (
-            inline_modules: [
-                (
-                    src_ref: "5:1 @ 3120565c23d7ae3e (64..256)",
-                    outer_attr: ((
-                        doc: ((
-                            value: [
-                                "This inline module has documentation",
-                            ],
-                            src_ref: "5:1 @ 3120565c23d7ae3e (64..106)",
-                        )),
-                    )),
-                    visibility: Public,
-                    keyword_src_ref: "6:5 @ 3120565c23d7ae3e (110..113)",
-                    id: ((
-                        value: "b",
-                        src_ref: "6:9 @ 3120565c23d7ae3e (114..115)",
-                    )),
-                    items: (
-                        modules: [
-                            (
-                                src_ref: "9:5 @ 3120565c23d7ae3e (145..216)",
-                                visibility: Public,
-                                keyword_src_ref: "9:9 @ 3120565c23d7ae3e (149..152)",
-                                id: ((
-                                    value: "d",
-                                    src_ref: "9:13 @ 3120565c23d7ae3e (153..154)",
-                                )),
-                                items: (
-                                    constants: [
-                                        (
-                                            src_ref: "10:9 @ 3120565c23d7ae3e (165..179)",
-                                            visibility: Private,
-                                            keyword_src_ref: "10:9 @ 3120565c23d7ae3e (165..170)",
-                                            id: ((
-                                                value: "E",
-                                                src_ref: "10:15 @ 3120565c23d7ae3e (171..172)",
-                                            )),
-                                            expr: Literal(((
-                                                value: Quantity((
-                                                    value: 42.0,
-                                                    quantity_type: Length,
-                                                    unit: Millimeter,
-                                                )),
-                                                src_ref: "10:19 @ 3120565c23d7ae3e (175..179)",
-                                            ))),
-                                        ),
-                                    ],
-                                ),
-                            ),
-                            (
-                                src_ref: "14:5 @ 3120565c23d7ae3e (216..254)",
-                                visibility: Private,
-                                keyword_src_ref: "14:5 @ 3120565c23d7ae3e (216..219)",
-                                id: ((
-                                    value: "f",
-                                    src_ref: "14:9 @ 3120565c23d7ae3e (220..221)",
-                                )),
-                                items: (
-                                    constants: [
-                                        (
-                                            src_ref: "15:9 @ 3120565c23d7ae3e (232..246)",
-                                            visibility: Private,
-                                            keyword_src_ref: "15:9 @ 3120565c23d7ae3e (232..237)",
-                                            id: ((
-                                                value: "G",
-                                                src_ref: "15:15 @ 3120565c23d7ae3e (238..239)",
-                                            )),
-                                            expr: Literal(((
-                                                value: Quantity((
-                                                    value: 42.0,
-                                                    quantity_type: Scalar,
-                                                    unit: r#None,
-                                                )),
-                                                src_ref: "15:19 @ 3120565c23d7ae3e (242..246)",
-                                            ))),
-                                        ),
-                                    ],
-                                ),
-                            ),
-                        ],
-                        constants: [
-                            (
-                                src_ref: "7:5 @ 3120565c23d7ae3e (122..138)",
-                                visibility: Public,
-                                keyword_src_ref: "7:9 @ 3120565c23d7ae3e (126..131)",
-                                id: ((
-                                    value: "C",
-                                    src_ref: "7:15 @ 3120565c23d7ae3e (132..133)",
-                                )),
-                                expr: Literal(((
-                                    value: Integer(42),
-                                    src_ref: "7:19 @ 3120565c23d7ae3e (136..138)",
-                                ))),
-                            ),
-                        ],
-                    ),
-                ),
-            ],
-            constants: [
-                (
-                    src_ref: "2:1 @ 3120565c23d7ae3e (27..61)",
-                    attr: ((
-                        doc: ((
-                            value: [
-                                "A constant",
-                            ],
-                            src_ref: "2:1 @ 3120565c23d7ae3e (27..42)",
-                        )),
-                    )),
-                    visibility: Public,
-                    keyword_src_ref: "3:5 @ 3120565c23d7ae3e (46..51)",
-                    id: ((
-                        value: "A",
-                        src_ref: "3:11 @ 3120565c23d7ae3e (52..53)",
-                    )),
-                    expr: FormatString(((
-                        value: [
-                            String((
-                                value: "Foo",
-                                src_ref: "3:15 @ 3120565c23d7ae3e (56..61)",
+        input_hash: "0xe1e773534456e0f5",
+        output_hash: "0xc44f50fbd7695a50",
+        tree: (
+            items: (
+                inline_modules: [
+                    (
+                        src_ref: "5:1 @ 0x3120565c23d7ae3e (64..256)",
+                        outer_attr: ((
+                            doc: ((
+                                value: [
+                                    "This inline module has documentation",
+                                ],
+                                src_ref: "5:1 @ 0x3120565c23d7ae3e (64..106)",
                             )),
-                        ],
-                        src_ref: "3:15 @ 3120565c23d7ae3e (56..61)",
-                    ))),
-                ),
-            ],
+                        )),
+                        visibility: Public,
+                        keyword_src_ref: "6:5 @ 0x3120565c23d7ae3e (110..113)",
+                        id: ((
+                            value: "b",
+                            src_ref: "6:9 @ 0x3120565c23d7ae3e (114..115)",
+                        )),
+                        items: (
+                            modules: [
+                                (
+                                    src_ref: "9:5 @ 0x3120565c23d7ae3e (145..216)",
+                                    visibility: Public,
+                                    keyword_src_ref: "9:9 @ 0x3120565c23d7ae3e (149..152)",
+                                    id: ((
+                                        value: "d",
+                                        src_ref: "9:13 @ 0x3120565c23d7ae3e (153..154)",
+                                    )),
+                                    items: (
+                                        constants: [
+                                            (
+                                                src_ref: "10:9 @ 0x3120565c23d7ae3e (165..179)",
+                                                visibility: Private,
+                                                keyword_src_ref: "10:9 @ 0x3120565c23d7ae3e (165..170)",
+                                                id: ((
+                                                    value: "E",
+                                                    src_ref: "10:15 @ 0x3120565c23d7ae3e (171..172)",
+                                                )),
+                                                expr: Literal(((
+                                                    value: Quantity((
+                                                        value: 42.0,
+                                                        quantity_type: Length,
+                                                        unit: Millimeter,
+                                                    )),
+                                                    src_ref: "10:19 @ 0x3120565c23d7ae3e (175..179)",
+                                                ))),
+                                            ),
+                                        ],
+                                    ),
+                                ),
+                                (
+                                    src_ref: "14:5 @ 0x3120565c23d7ae3e (216..254)",
+                                    visibility: Private,
+                                    keyword_src_ref: "14:5 @ 0x3120565c23d7ae3e (216..219)",
+                                    id: ((
+                                        value: "f",
+                                        src_ref: "14:9 @ 0x3120565c23d7ae3e (220..221)",
+                                    )),
+                                    items: (
+                                        constants: [
+                                            (
+                                                src_ref: "15:9 @ 0x3120565c23d7ae3e (232..246)",
+                                                visibility: Private,
+                                                keyword_src_ref: "15:9 @ 0x3120565c23d7ae3e (232..237)",
+                                                id: ((
+                                                    value: "G",
+                                                    src_ref: "15:15 @ 0x3120565c23d7ae3e (238..239)",
+                                                )),
+                                                expr: Literal(((
+                                                    value: Quantity((
+                                                        value: 42.0,
+                                                        quantity_type: Scalar,
+                                                        unit: r#None,
+                                                    )),
+                                                    src_ref: "15:19 @ 0x3120565c23d7ae3e (242..246)",
+                                                ))),
+                                            ),
+                                        ],
+                                    ),
+                                ),
+                            ],
+                            constants: [
+                                (
+                                    src_ref: "7:5 @ 0x3120565c23d7ae3e (122..138)",
+                                    visibility: Public,
+                                    keyword_src_ref: "7:9 @ 0x3120565c23d7ae3e (126..131)",
+                                    id: ((
+                                        value: "C",
+                                        src_ref: "7:15 @ 0x3120565c23d7ae3e (132..133)",
+                                    )),
+                                    expr: Literal(((
+                                        value: Integer(42),
+                                        src_ref: "7:19 @ 0x3120565c23d7ae3e (136..138)",
+                                    ))),
+                                ),
+                            ],
+                        ),
+                    ),
+                ],
+                constants: [
+                    (
+                        src_ref: "2:1 @ 0x3120565c23d7ae3e (27..61)",
+                        attr: ((
+                            doc: ((
+                                value: [
+                                    "A constant",
+                                ],
+                                src_ref: "2:1 @ 0x3120565c23d7ae3e (27..42)",
+                            )),
+                        )),
+                        visibility: Public,
+                        keyword_src_ref: "3:5 @ 0x3120565c23d7ae3e (46..51)",
+                        id: ((
+                            value: "A",
+                            src_ref: "3:11 @ 0x3120565c23d7ae3e (52..53)",
+                        )),
+                        expr: FormatString(((
+                            value: [
+                                String((
+                                    value: "Foo",
+                                    src_ref: "3:15 @ 0x3120565c23d7ae3e (56..61)",
+                                )),
+                            ],
+                            src_ref: "3:15 @ 0x3120565c23d7ae3e (56..61)",
+                        ))),
+                    ),
+                ],
+            ),
         ),
     ),
 )
