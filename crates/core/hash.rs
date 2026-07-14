@@ -52,8 +52,13 @@ impl<T: std::hash::Hash> Hashed<T> {
     }
 
     /// Return inner value.
-    pub fn value(&self) -> &T {
+    pub fn inner_ref(&self) -> &T {
         &self.inner
+    }
+
+    /// Return inner value.
+    pub fn inner(self) -> T {
+        self.inner
     }
 }
 
