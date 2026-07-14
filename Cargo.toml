@@ -10,6 +10,7 @@ members = [
     "crates/docgen",
     "crates/driver",
     "crates/export",
+    "crates/hash",
     "crates/import",
     "crates/lang-base",
     "crates/lang-eval",
@@ -58,6 +59,7 @@ microcad-core = { path = "crates/core", version = "0.6.0" }
 microcad-docgen = { path = "crates/docgen", version = "0.6.0" }
 microcad-driver = { path = "crates/driver", version = "0.6.0" }
 microcad-export = { path = "crates/export", version = "0.6.0" }
+microcad-hash = { path = "crates/hash", version = "0.6.0" }
 microcad-import = { path = "crates/import", version = "0.6.0" }
 microcad-lang-base = { path = "crates/lang-base", version = "0.6.0" }
 microcad-lang-eval = { path = "crates/lang-eval", version = "0.6.0" }
