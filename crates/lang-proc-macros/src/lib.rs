@@ -75,8 +75,8 @@ pub fn derive_id(input: TokenStream) -> TokenStream {
             // Generate `Identifiable` for a struct with `id` field `struct Foo { bar: Integer, id: Identifier };`.
             Fields::Named(_) => {
                 quote! {
-                    impl crate::Identifiable for #name {
-                        fn id_ref(&self) -> &crate::Identifier  {
+                    impl microcad_lang_base::Identifiable for #name {
+                        fn id_ref(&self) -> &microcad_lang_base::Identifier  {
                             &self.id
                         }
                     }
