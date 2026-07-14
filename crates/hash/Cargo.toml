@@ -1,0 +1,20 @@
+# Copyright © 2026 The µcad authors <info@microcad.xyz>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+[package]
+name = "microcad-hash"
+description = "µcad hash utilities"
+documentation = "https://docs.rs/microcad-hash"
+authors = ["Michael Winkelmann (michael@winkelmann.site)"]
+version.workspace = true
+edition.workspace = true
+homepage.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+license.workspace = true
+keywords.workspace = true
+
+[dependencies]
+rustc-hash = "2.1.1"
+serde = { version = "1.0", features = ["derive"] }
+derive_more = { version = "2", features = ["deref"] }
