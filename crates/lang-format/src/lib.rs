@@ -80,9 +80,15 @@ impl Format for ast::DocBlock {
     }
 }
 
-impl Format for Ast {
+impl Format for ast::Source {
     fn format(&self, f: &FormatConfig) -> Node {
         self.statements.format(f)
+    }
+}
+
+impl Format for Ast {
+    fn format(&self, f: &FormatConfig) -> Node {
+        self.tree().format(f)
     }
 }
 
@@ -125,7 +131,7 @@ pub fn format_ast(ast: &Ast, config: &FormatConfig) -> String {
 
 /// Format an AST into a new AST and a new Source
 pub fn format(source: &Source, config: &FormatConfig) -> CompilationResult<(Ast, Source)> {
-    let (ast, _) = parse(&source)?;
+    let (ast, _) = parse(source)?;
     let code = format_ast(&ast, config);
     let source = Source::new(source.location.clone(), code);
     parse(&source).map(|(ast, diag)| ((ast, source), diag))
