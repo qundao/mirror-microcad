@@ -3,7 +3,7 @@
 
 //! Named tuple evaluation entity
 
-use microcad_core::hash::HashMap;
+use microcad_hash::HashMap;
 
 use microcad_lang_base::{Identifier, IdentifierList, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;
@@ -40,10 +40,7 @@ macro_rules! create_tuple {
 
 impl Tuple {
     /// Create new named tuple.
-    pub fn new_named(
-        named: microcad_core::hash::HashMap<Identifier, Value>,
-        src_ref: SrcRef,
-    ) -> Self {
+    pub fn new_named(named: microcad_hash::HashMap<Identifier, Value>, src_ref: SrcRef) -> Self {
         Self {
             named,
             unnamed: HashMap::default(),

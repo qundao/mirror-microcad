@@ -30,7 +30,6 @@ use microcad_lang_base::{
     SrcRef,
     element::{BinaryOperator, UnaryOperator},
 };
-use std::hash::Hasher;
 
 pub type ValueResult<Type = Value> = std::result::Result<Type, ValueError>;
 
@@ -372,15 +371,6 @@ impl std::hash::Hash for Value {
             Value::Tuple(tuple) => tuple.hash(state),
             Value::Matrix(matrix) => matrix.hash(state),
         }
-    }
-}
-
-impl microcad_lang_base::ComputedHash for Value {
-    fn computed_hash(&self) -> hash::HashId {
-        use std::hash::Hash;
-        let mut hasher = microcad_lang_base::Hasher::default();
-        self.hash(&mut hasher);
-        hasher.finish()
     }
 }
 

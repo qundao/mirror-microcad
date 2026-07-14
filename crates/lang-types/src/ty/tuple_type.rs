@@ -12,9 +12,9 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct TupleType {
     /// Named fields
-    pub named: microcad_core::hash::HashMap<Identifier, Type>,
+    pub named: microcad_hash::HashMap<Identifier, Type>,
     /// Unnamed fields
-    pub unnamed: microcad_core::hash::HashSet<Type>,
+    pub unnamed: microcad_hash::HashSet<Type>,
 }
 
 impl TupleType {
