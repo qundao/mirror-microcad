@@ -18,7 +18,8 @@ pub mod base {
 
 pub use base::{
     Artifact, ArtifactKind, CompilationResult, Diagnostic, Diagnostics, HashId, HashMap, HashSet,
-    Hashed, Identifier, RcMut, Refer, Source, SourceKind, SourceLocation, SrcRef, TextEdit, Url,
+    Hashed, Identifier, RcMut, Refer, Source, SourceKind, SourceLocation, SrcRef, StageResult,
+    TextEdit, Url,
 };
 
 pub mod parse {
@@ -32,6 +33,12 @@ pub mod lower {
 }
 
 pub use lower::{Ir, ir, lower};
+
+pub mod resolve {
+    pub use microcad_lang_resolve::*;
+}
+
+pub use resolve::{Mir, Rst, resolve};
 
 pub use crate::config::DriverConfig;
 pub use crate::document::{Document, SourceFile};
@@ -54,9 +61,8 @@ pub use crate::commands::{
 };
 
 pub mod traits {
-    pub use super::base::{ComputedHash, SrcReferrer};
+    pub use super::base::{Identifiable, SrcReferrer, ToHash};
     pub use super::core::{CalcBounds2D, CalcBounds3D};
-    pub use super::lower::Identifiable;
 
     pub use super::commands::{
         Compile, Format, GetCode, PrintDiagnostics, SetCode, Sync, compile::Eval, compile::Lower,

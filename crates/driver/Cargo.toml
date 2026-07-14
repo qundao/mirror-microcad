@@ -33,6 +33,7 @@ microcad-lang-format = { workspace = true }
 microcad-lang-lower = { workspace = true }
 microcad-lang-markdown = { workspace = true }
 microcad-lang-parse = { workspace = true }
+microcad-lang-resolve = { workspace = true }
 microcad-lang-types = { workspace = true }
 microcad-std = { workspace = true }
 

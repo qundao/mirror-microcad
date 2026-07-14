@@ -6,6 +6,7 @@ use crate::prelude as mu;
 
 use microcad_lang_base::ArtifactKind;
 use microcad_lang_base::CompilationResult;
+use microcad_lang_base::StageResult;
 use microcad_lang_base::{Artifact, DiagRenderOptions};
 
 use miette::Diagnostic;
@@ -31,8 +32,11 @@ pub enum SourceError {
 /// A µcad source file document.
 pub struct SourceFile {
     pub source: mu::Source,
-    pub ast: Option<mu::CompilationResult<mu::Ast>>,
-    pub ir: Option<mu::CompilationResult<mu::Ir>>,
+    pub ast: mu::StageResult<mu::Ast>,
+    pub ir: mu::StageResult<mu::Ir>,
+    pub mir: mu::StageResult<mu::Mir>,
+    pub rst: mu::StageResult<mu::Rst>,
+    //pub model: Option<mu::CompilationResult<mu::Model>>,
 }
 
 impl SourceFile {
@@ -40,8 +44,10 @@ impl SourceFile {
     pub fn new(source: mu::Source) -> Self {
         Self {
             source,
-            ast: None,
-            ir: None,
+            ast: mu::StageResult::default(),
+            ir: mu::StageResult::default(),
+            mir: mu::StageResult::default(),
+            rst: mu::StageResult::default(),
         }
     }
 
@@ -51,44 +57,25 @@ impl SourceFile {
         Ok(Self::new(source))
     }
 
-    /// Extract artifact from a compilation result.
-    fn extract_artifact<T: Artifact>(result: &Option<CompilationResult<T>>) -> Result<&T> {
-        match result {
-            Some(Ok((artifact, _))) => Ok(artifact),
-            _ => Err(miette::miette!("No artifact!")),
-        }
-    }
-
-    fn _emit<T>(&self, path: impl AsRef<std::path::Path>, artifact: &T) -> Result
-    where
-        T: Artifact + Serialize,
-    {
-        let mut path = path.as_ref().to_path_buf();
-        path.add_extension(&T::kind().to_string().to_lowercase());
-        Ok(std::fs::write(path, artifact.to_ron()?).into_diagnostic()?)
-    }
-
     /// Emit a compiler artifact with a path. The compiler artifact extension is added automatically.
     pub fn emit(&self, path: impl AsRef<std::path::Path>, artifact_kind: &ArtifactKind) -> Result {
         match artifact_kind {
-            ArtifactKind::Ast => self._emit(path, Self::extract_artifact(&self.ast)?),
-            ArtifactKind::Ir => self._emit(path, Self::extract_artifact(&self.ir)?),
-            ArtifactKind::Rst => todo!(),
-        }
+            ArtifactKind::Ast => self.ast.artifact().map(|ast| ast.emit(path)),
+            ArtifactKind::Ir => self.ir.artifact().map(|ir| ir.emit(path)),
+            ArtifactKind::Mir => self.mir.artifact().map(|mir| mir.emit(path)),
+            ArtifactKind::Rst => self.rst.artifact().map(|rst| rst.emit(path)),
+        };
+
+        Ok(())
     }
 
     /// Return iterator over diagnostics
     pub fn diagnostics(&self) -> impl Iterator<Item = &mu::Diagnostic> {
-        fn extract_diags<'a, T>(
-            result: &'a Option<mu::CompilationResult<T>>,
-        ) -> Box<dyn Iterator<Item = &'a mu::Diagnostic> + 'a> {
-            match result {
-                Some(Ok((_, diags))) | Some(Err(diags)) => Box::new(diags.iter()),
-                None => Box::new(std::iter::empty()),
-            }
-        }
-
-        extract_diags(&self.ast).chain(extract_diags(&self.ir))
+        self.ast
+            .diag_iter()
+            .chain(self.ir.diag_iter())
+            .chain(self.mir.diag_iter())
+            .chain(self.rst.diag_iter())
     }
 
     /// Loads the code from the file specified in the `url`.
@@ -127,25 +114,25 @@ impl mu::commands::GetCode for SourceFile {
 impl mu::commands::SetCode for SourceFile {
     fn set_code(&mut self, code: String) -> Option<&str> {
         self.source = mu::Source::new(self.source.location.clone(), code);
-        self.ast = None;
-        self.ir = None;
+        self.ast.reset();
+        self.ir.reset();
         Some(self.source.code())
     }
 }
 
 impl mu::commands::Format for SourceFile {
     fn format(&mut self, params: &mu::commands::FormatParameters) -> Result<bool> {
-        self.ir = None;
+        self.ir.reset();
 
         match mu::format(&self.source, params) {
             Ok(((ast, source), diags)) => {
                 let changed = self.source.code() != source.code();
                 self.source = source;
-                self.ast = Some(Ok((ast, diags)));
+                self.ast = Ok((ast, diags)).into();
                 Ok(changed)
             }
             Err(diags) => {
-                self.ast = Some(Err(diags));
+                self.ast = Err(diags).into();
                 Ok(false)
             }
         }
@@ -163,17 +150,17 @@ impl mu::commands::Sync for SourceFile {
 
 impl mu::commands::compile::Parse for SourceFile {
     fn parse(&mut self) -> Result {
-        self.ir = None;
-        self.ast = Some(mu::parse(&self.source));
+        self.ir.reset();
+        self.ast = mu::parse(&self.source).into();
         Ok(())
     }
 }
 
 impl mu::commands::compile::Lower for SourceFile {
     fn lower(&mut self) -> Result {
-        match &self.ast {
-            Some(Ok((ast, _))) => {
-                self.ir = Some(mu::lower(&self.source, ast));
+        match &self.ast.artifact() {
+            Some(ast) => {
+                self.ir = mu::lower(&self.source, ast).into();
                 Ok(())
             }
             _ => Err(SourceError::InvalidState.into()),
