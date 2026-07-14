@@ -125,6 +125,6 @@ pub fn collect_expected_diagnostics<'source>(
     use crate::ast::visitor::Visit;
 
     let mut collector = ExpectedDiagnosticsCollector::new(parse_context);
-    let _ = ast.visit(&mut collector);
+    let _ = ast.tree().visit(&mut collector);
     collector.diagnostics()
 }

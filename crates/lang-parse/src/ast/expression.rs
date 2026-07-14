@@ -10,7 +10,7 @@ use crate::ast::Span;
 use std::num::ParseIntError;
 
 /// The type of the operator for binary operations
-#[derive(Debug, PartialEq, Clone, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Clone, Visit, Serialize)]
 #[allow(missing_docs)]
 #[visit(default)]
 pub enum BinaryOperator {
@@ -59,7 +59,7 @@ impl BinaryOperator {
 }
 
 /// The type of the operator for unary operations
-#[derive(Debug, PartialEq, Clone, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Clone, Visit, Serialize)]
 #[allow(missing_docs)]
 #[visit(default)]
 pub enum UnaryOperator {
@@ -80,7 +80,7 @@ impl UnaryOperator {
 }
 
 /// Any expression.
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 pub enum Expression {
     /// A literal: `42mm`
     Literal(ast::Literal),
@@ -143,7 +143,7 @@ impl Expression {
 }
 
 /// A string containing a format expression
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct FormatString {
     pub span: Span,
@@ -152,7 +152,7 @@ pub struct FormatString {
 }
 
 /// A part of a [`FormatString`]
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub enum StringPart {
     Char(StringCharacter),
@@ -161,7 +161,7 @@ pub enum StringPart {
 }
 
 /// A single character that is part of a [`FormatString`]
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 #[visit(default)]
 pub struct StringCharacter {
@@ -170,7 +170,7 @@ pub struct StringCharacter {
 }
 
 /// A format expression that is part of a [`FormatString`]
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct StringExpression {
     pub span: Span,
@@ -192,6 +192,12 @@ pub struct StringFormatSpecification {
     pub width: Option<Result<u32, (ParseIntError, Span)>>,
 }
 
+impl std::hash::Hash for StringFormatSpecification {
+    fn hash<H: std::hash::Hasher>(&self, _state: &mut H) {
+        //
+    }
+}
+
 impl StringFormatSpecification {
     /// Check if an part of the specification is specified
     pub fn is_some(&self) -> bool {
@@ -200,7 +206,7 @@ impl StringFormatSpecification {
 }
 
 /// An item that is part of a tuple expression
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct TupleItem {
     pub span: Span,
@@ -221,7 +227,7 @@ impl ast::Dummy for TupleItem {
 }
 
 /// A tuple expression, a fixed size set of items that don't need to be the same type
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct TupleExpression {
     pub span: Span,
@@ -230,7 +236,7 @@ pub struct TupleExpression {
 }
 
 /// An array range, containing all values from the start value (inclusive) till then end value (exclusive)
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct ArrayRangeExpression {
     pub span: Span,
@@ -241,7 +247,7 @@ pub struct ArrayRangeExpression {
 }
 
 /// An array specified as a list of items
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct ArrayListExpression {
     pub span: Span,
@@ -251,7 +257,7 @@ pub struct ArrayListExpression {
 }
 
 /// An item that can be part of an array expression
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct ArrayItem {
     pub span: Span,
@@ -260,7 +266,7 @@ pub struct ArrayItem {
 }
 
 /// A qualified name, containing one or more [`Identifier`]s separated by `::`
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct QualifiedName {
     pub span: Span,
@@ -269,7 +275,7 @@ pub struct QualifiedName {
 }
 
 /// A binary operation
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct BinaryOperation {
     pub span: Span,
@@ -279,7 +285,7 @@ pub struct BinaryOperation {
 }
 
 /// A unary operation
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct UnaryOperation {
     pub span: Span,
@@ -289,7 +295,7 @@ pub struct UnaryOperation {
 }
 
 /// A function call
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct Call {
     pub span: Span,
@@ -301,7 +307,7 @@ pub struct Call {
 /// An expression that access an element from another expression.
 ///
 /// Either accessing an array or tuple item, accessing an attribute of a value or a method call.
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct ElementAccess {
     pub span: Span,
@@ -310,7 +316,7 @@ pub struct ElementAccess {
 }
 
 /// The possible element access types
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub enum ElementInner {
     Attribute(ast::Identifier),
@@ -319,7 +325,7 @@ pub enum ElementInner {
     ArrayElement(Box<Expression>),
 }
 
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct Element {
     pub span: Span,
@@ -327,7 +333,7 @@ pub struct Element {
     pub inner: ElementInner,
 }
 
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct Body {
     pub span: Span,
@@ -335,7 +341,7 @@ pub struct Body {
 }
 
 /// An if expression, can be used as either a statement or expression
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct If {
     pub span: Span,
@@ -350,7 +356,7 @@ pub struct If {
 }
 
 /// A list of arguments to a function call
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct ArgumentList {
     pub span: Span,
@@ -369,7 +375,7 @@ impl ast::Dummy for ArgumentList {
 }
 
 /// A function argument that is part of an [`ArgumentList`]
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub enum Argument {
     Unnamed(UnnamedArgument),
@@ -403,7 +409,7 @@ impl Argument {
 }
 
 /// An argument without specified name
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct UnnamedArgument {
     pub span: Span,
@@ -412,7 +418,7 @@ pub struct UnnamedArgument {
 }
 
 /// An argument with a specified name
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct NamedArgument {
     pub span: Span,

@@ -14,6 +14,11 @@ pub mod ast;
 /// Tokens
 pub mod token;
 
+#[cfg(feature = "parser")]
+use microcad_lang_base::ToHash;
+#[cfg(feature = "parser")]
+pub use parse::{ParseContext, ParseError, ParseErrors, parsers};
+
 /// Contains the parser.
 #[cfg(feature = "parser")]
 mod parse;
@@ -21,11 +26,43 @@ mod parse;
 /// Contains the lexer (aka tokenizer).
 mod lex;
 
-pub use ast::Ast;
-use microcad_lang_base::{CompilationResult, Diagnostics, Source};
+use microcad_lang_base::{CompilationResult, Diagnostics, HashId};
+use microcad_lang_proc_macros::Artifact;
 
-#[cfg(feature = "parser")]
-pub use parse::{ParseContext, ParseError, ParseErrors, parsers};
+pub use lex::lex;
+
+use serde::Serialize;
+
+/// A parsed abstract syntax tree with hashes.
+#[derive(Debug, Artifact, Serialize)]
+pub struct Ast {
+    input_hash: HashId,
+    output_hash: HashId,
+    tree: ast::Source,
+}
+
+impl Ast {
+    /// Return the tree for [`Ast`].
+    pub fn tree(&self) -> &ast::Source {
+        &self.tree
+    }
+
+    /// Input hash.
+    pub fn input_hash(&self) -> HashId {
+        self.input_hash
+    }
+
+    /// Output hash.
+    pub fn output_hash(&self) -> HashId {
+        self.output_hash
+    }
+}
+
+impl From<Ast> for ast::Source {
+    fn from(ast: Ast) -> Self {
+        ast.tree
+    }
+}
 
 /// Parse trait.
 #[cfg(feature = "parser")]
@@ -39,16 +76,20 @@ pub trait Parse: Sized {
 #[cfg(feature = "parser")]
 impl Parse for Ast {
     fn parse(context: &ParseContext) -> Result<Self, ParseErrors> {
-        parse::parse(&lex(context.source.code()).collect::<Vec<_>>())
+        let tree = parse::parse(&lex(context.source.code()).collect::<Vec<_>>())?;
+
+        Ok(Self {
+            input_hash: context.source.hash(),
+            output_hash: tree.to_hash(),
+            tree,
+        })
     }
 }
 
-pub use lex::lex;
-
 /// Parse a source into an abstract syntax tree.
 #[cfg(feature = "parser")]
-pub fn parse(source: &Source) -> CompilationResult<Ast> {
-    let context = ParseContext::from(source);
+pub fn parse<'source>(context: impl Into<ParseContext<'source>>) -> CompilationResult<Ast> {
+    let context = context.into();
     match Ast::parse(&context) {
         Ok(ast) => Ok((ast, Diagnostics::default())), // FIXME: Right now, the parser can only return errors and no warnings
         Err(errors) => Err(context.diagnostics(errors)),

@@ -5,12 +5,12 @@ use crate::ast::{ItemExtras, Span, Unit};
 
 use microcad_lang_base::CompactString;
 use microcad_lang_proc_macros::Visit;
-use serde::Serialize;
+use serde::{Serialize, Serializer};
 use std::num::{ParseFloatError, ParseIntError};
 use thiserror::Error;
 
 /// A literal value
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct Literal {
     pub span: Span,
@@ -19,11 +19,10 @@ pub struct Literal {
 }
 
 /// The various types of literal values a [`Literal`] can contain
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub enum LiteralKind {
     #[visit(skip)]
-    #[serde(skip)]
     Error(LiteralError),
     String(StringLiteral),
     Bool(BoolLiteral),
@@ -47,7 +46,7 @@ impl LiteralKind {
 }
 
 /// A string literal, without format expressions
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 #[visit(default)]
 pub struct StringLiteral {
@@ -56,7 +55,7 @@ pub struct StringLiteral {
 }
 
 /// A boolean literal, either `true` or `false`
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 #[visit(default)]
 pub struct BoolLiteral {
@@ -65,7 +64,7 @@ pub struct BoolLiteral {
 }
 
 /// An integer literal without type
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 #[visit(default)]
 pub struct IntegerLiteral {
@@ -84,6 +83,12 @@ pub struct FloatLiteral {
     pub raw: CompactString,
 }
 
+impl std::hash::Hash for FloatLiteral {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.raw.hash(state);
+    }
+}
+
 /// A float literal with type
 #[derive(Debug, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
@@ -95,8 +100,15 @@ pub struct QuantityLiteral {
     pub unit: Unit,
 }
 
+impl std::hash::Hash for QuantityLiteral {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.raw.hash(state);
+        self.unit.hash(state);
+    }
+}
+
 /// An error that can be encountered while parsing literal tokens
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, Hash, PartialEq, Clone, Serialize)]
 #[allow(missing_docs)]
 pub struct LiteralError {
     pub span: Span,
@@ -114,4 +126,19 @@ pub enum LiteralErrorKind {
     UnclosedString,
     #[error("only numeric literals can be typed")]
     Untypable,
+}
+
+impl std::hash::Hash for LiteralErrorKind {
+    fn hash<H: std::hash::Hasher>(&self, _state: &mut H) {
+        // TODO implement
+    }
+}
+
+impl Serialize for LiteralErrorKind {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str(&self.to_string())
+    }
 }

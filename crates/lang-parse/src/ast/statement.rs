@@ -8,7 +8,7 @@ use crate::ast;
 use crate::ast::{Span, def};
 
 /// An inner doc block
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 #[visit(default)]
 pub struct InnerDocComment {
@@ -17,7 +17,7 @@ pub struct InnerDocComment {
 }
 
 /// A µcad statement.
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 pub enum Statement {
     /// Workbench statement: `part Foo() { ... }`
     Workbench(def::Workbench),
@@ -97,7 +97,7 @@ impl Statement {
 }
 
 /// An init definition for a workbench
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct Init {
     pub span: Span,
@@ -110,7 +110,7 @@ pub struct Init {
 }
 
 /// A return statement
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct Return {
     pub span: Span,
@@ -120,7 +120,7 @@ pub struct Return {
 }
 
 /// A parameter list of a workbench definition or function definition
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct ParameterList {
     pub span: Span,
@@ -139,7 +139,7 @@ impl ast::Dummy for ParameterList {
 }
 
 /// A parameter for a workbench definition or function definition
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct Parameter {
     pub span: Span,
@@ -152,7 +152,7 @@ pub struct Parameter {
 }
 
 /// An attribute that can be attached to a statement
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct Attribute {
     pub span: Span,
@@ -163,11 +163,11 @@ pub struct Attribute {
 }
 
 /// A list of attributes
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, Hash, PartialEq, Serialize)]
 pub struct Attributes(pub Vec<Attribute>);
 
 /// The contents an an [`Attribute`]
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 pub enum AttributeCommand {
     /// A single identifier: `#[deprecated]`
     Ident(ast::Identifier),
@@ -178,7 +178,7 @@ pub enum AttributeCommand {
 }
 
 /// A local assignment: `a = 42`
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct LocalAssignment {
     pub span: Span,
@@ -190,7 +190,7 @@ pub struct LocalAssignment {
 }
 
 /// A property assignment: `prop a = 42`
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct PropertyAssignment {
     pub span: Span,
@@ -203,7 +203,7 @@ pub struct PropertyAssignment {
     pub value: Box<ast::Expression>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Serialize)]
 #[allow(missing_docs)]
 pub enum CommentInner {
     // A list of single line comments starting with `//`.
@@ -213,7 +213,7 @@ pub enum CommentInner {
 }
 
 /// A single- or multi-line comment
-#[derive(Debug, Clone, PartialEq, Serialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Serialize)]
 #[allow(missing_docs)]
 pub struct Comment {
     pub span: Span,
@@ -221,7 +221,7 @@ pub struct Comment {
 }
 
 /// Lines of inner or outer doc block including prefix `///`/`//!`.
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 #[visit(default)]
 pub struct DocBlock {
@@ -230,7 +230,7 @@ pub struct DocBlock {
 }
 
 /// A statement containing of a bare expression
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct ExpressionStatement {
     pub span: Span,
@@ -240,7 +240,7 @@ pub struct ExpressionStatement {
 }
 
 /// A list of statements, with optional trailing whitespace kept and an optional "tail" expression
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, Hash, PartialEq, Serialize)]
 #[allow(missing_docs)]
 pub struct StatementList {
     pub span: Span,

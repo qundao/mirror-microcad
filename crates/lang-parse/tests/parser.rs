@@ -4,7 +4,6 @@
 //! Parser tests
 #![cfg(feature = "parser")]
 
-use insta::assert_debug_snapshot;
 use test_case::test_case;
 
 #[test_case("single int", "1")]
@@ -216,9 +215,32 @@ use test_case::test_case;
 #[test_case("body expr method tail", "{}.foo()")]
 #[test_case("body expr method", "{}.foo();")]
 #[test_case("body expr and_tail_expr", "{}bar.foo();")]
-fn test_parser(name: &str, input: &str) {
-    assert_debug_snapshot!(
-        format!("parser_{name}"),
-        microcad_lang_parse::parse(&microcad_lang_base::Source::from(input))
-    );
+fn test_parser(name: &str, input: &str) -> miette::Result<()> {
+    use miette::IntoDiagnostic;
+
+    use microcad_lang_base::{Artifact, DiagRenderOptions, Source};
+
+    let source = Source::from(input);
+    let result = microcad_lang_parse::parse(&source);
+
+    // 1. Extract AST (or empty if failed)
+    let ast_str = result.as_ref().map_or(String::default(), |(ast, _)| {
+        ast.to_ron()
+            .unwrap_or_else(|e| format!("Serialization error: {e}"))
+    });
+
+    // 2. Extract Diagnostics
+    let diag_ref = result.as_ref().map_or_else(|d| d, |(_, d)| d);
+    let diag_str = diag_ref
+        .render_to_string(
+            &&source,
+            &DiagRenderOptions {
+                color: false,
+                unicode: false,
+            },
+        )
+        .into_diagnostic()?;
+
+    let output = format!("{ast_str}\n---\n{diag_str}");
+    Ok(insta::assert_snapshot!(format!("parser_{name}"), output))
 }

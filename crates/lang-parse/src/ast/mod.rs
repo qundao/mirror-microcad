@@ -12,7 +12,7 @@ use microcad_lang_base::{Id, Span};
 
 pub use expression::*;
 pub use literal::*;
-use microcad_lang_proc_macros::{Artifact, Visit};
+use microcad_lang_proc_macros::Visit;
 use serde::Serialize;
 pub use statement::*;
 pub use ty::*;
@@ -37,11 +37,11 @@ impl Dummy for Identifier {
     }
 }
 /// Whitespace
-#[derive(Debug, Clone, PartialEq, Visit, Serialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Visit, Serialize)]
 #[visit(default)]
 pub struct Whitespace(pub String);
 
-#[derive(Debug, Clone, PartialEq, Visit, Serialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 #[non_exhaustive]
 pub enum ItemExtra {
@@ -50,7 +50,7 @@ pub enum ItemExtra {
 }
 
 /// Non-syntactic extras that can be attached to many ast nodes
-#[derive(Clone, Debug, PartialEq, Default, Visit, Serialize)]
+#[derive(Clone, Debug, Hash, PartialEq, Default, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct ItemExtras {
     pub leading: LeadingExtras,
@@ -58,12 +58,12 @@ pub struct ItemExtras {
 }
 
 /// Extras that occur *before* a syntax element.
-#[derive(Debug, Clone, PartialEq, Default, Serialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Default, Serialize)]
 #[allow(missing_docs)]
 pub struct TrailingExtras(pub Vec<ItemExtra>);
 
 /// Extras that occur *after* a syntax element.
-#[derive(Debug, Clone, PartialEq, Default, Serialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Default, Serialize)]
 #[allow(missing_docs)]
 pub struct LeadingExtras(pub Vec<ItemExtra>);
 
@@ -75,9 +75,9 @@ pub(crate) trait Dummy {
 }
 
 /// A µcad abstract syntax tree
-#[derive(Debug, Visit, Serialize, Artifact)]
+#[derive(Debug, Hash, Visit, Serialize)]
 #[allow(missing_docs)]
-pub struct Ast {
+pub struct Source {
     pub span: Span,
     pub statements: StatementList,
 }

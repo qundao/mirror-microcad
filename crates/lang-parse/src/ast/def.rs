@@ -25,14 +25,14 @@ use serde::Serialize;
 /// An optional visibility modifier
 ///
 /// it can be part of constant, module, function or workbench definitions.
-#[derive(Debug, PartialEq, Clone, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Clone, Visit, Serialize)]
 #[visit(default)]
 pub enum Visibility {
     /// `pub`
     Public,
 }
 
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct Workbench {
     pub span: Span,
@@ -48,7 +48,7 @@ pub struct Workbench {
 }
 
 /// A definition of a module
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct InlineModule {
     pub span: Span,
@@ -62,7 +62,7 @@ pub struct InlineModule {
 }
 
 /// A definition of a module
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct FileModule {
     pub span: Span,
@@ -75,7 +75,7 @@ pub struct FileModule {
 }
 
 /// A definition of a function
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct Function {
     pub span: Span,
@@ -91,7 +91,7 @@ pub struct Function {
 }
 
 /// A use definition will become an alias or a wildcard.
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct Use {
     pub span: Span,
@@ -104,7 +104,7 @@ pub struct Use {
 }
 
 /// The name of the item being imported
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct UseName {
     pub span: Span,
@@ -113,7 +113,7 @@ pub struct UseName {
 }
 
 /// The parts a [`UseName`] consists of, separated by `::`
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub enum UseStatementPart {
     Identifier(Identifier),
@@ -122,7 +122,7 @@ pub enum UseStatementPart {
 }
 
 /// A const assignment: `const A = 42` / `pub A = 32`
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct Constant {
     pub span: Span,

@@ -27,7 +27,7 @@ fn comment_collector(name: &str, input: &str) {
         .expect("No error")
         .0;
     let mut comment_collector = CommentCollector::default();
-    let _ = ast.visit(&mut comment_collector);
+    let _ = ast.tree().visit(&mut comment_collector);
 
     assert_debug_snapshot!(format!("visitor_{name}"), comment_collector);
 }
@@ -60,7 +60,7 @@ fn expected_diagnostics_collector(name: &str, input: &str) {
     let ast = Ast::parse(&context).expect("No parse errors");
 
     let mut collector = ExpectedDiagnosticsCollector::new(&context);
-    let _ = ast.visit(&mut collector);
+    let _ = ast.tree().visit(&mut collector);
 
     let diags = collector.diagnostics();
 

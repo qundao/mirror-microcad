@@ -8,7 +8,7 @@ use microcad_lang_proc_macros::Visit;
 use serde::Serialize;
 
 /// The possible types
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub enum Type {
     Single(SingleType),
@@ -37,7 +37,7 @@ impl ast::Dummy for Type {
 }
 
 /// A type for a single numeric value
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 #[visit(default)]
 pub struct SingleType {
@@ -46,7 +46,7 @@ pub struct SingleType {
 }
 
 /// An array type
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct ArrayType {
     pub span: Span,
@@ -54,7 +54,7 @@ pub struct ArrayType {
 }
 
 /// A tuple type
-#[derive(Debug, PartialEq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 #[visit(default)]
 pub struct TupleType {
@@ -63,7 +63,7 @@ pub struct TupleType {
 }
 
 /// A µcad unit: mm, m³, %.
-#[derive(Debug, PartialEq, Hash, Eq, Visit, Serialize)]
+#[derive(Debug, Hash, PartialEq, Eq, Visit, Serialize)]
 #[allow(missing_docs)]
 #[visit(default)]
 pub struct Unit {
