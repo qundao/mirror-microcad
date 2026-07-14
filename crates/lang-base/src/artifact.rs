@@ -170,10 +170,20 @@ pub trait Artifact: Sized {
 }
 
 /// The result of a compilation stage.
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct StageResult<T: Artifact>(Option<Result<(T, Diagnostics), Diagnostics>>);
 
+impl<T: Artifact> Default for StageResult<T> {
+    fn default() -> Self {
+        Self(None)
+    }
+}
+
 impl<T: Artifact> StageResult<T> {
+    pub fn reset(&mut self) {
+        self.0 = None;
+    }
+
     /// Return the artifacts.
     pub fn artifact(&self) -> Option<&T> {
         self.0.as_ref()?.as_ref().ok().map(|(val, _)| val)
