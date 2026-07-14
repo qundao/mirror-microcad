@@ -7,10 +7,8 @@ pub mod ir;
 
 mod lower;
 
-use std::hash::{Hash, Hasher};
-
 use microcad_lang_base::{
-    CompilationResult, Diagnostics, HashId, Source, Span, SpanToSrcRef, SrcRef,
+    CompilationResult, Diagnostics, HashId, Source, Span, SpanToSrcRef, SrcRef, ToHash,
 };
 
 pub use lower::{LowerError, LowerResult};
@@ -30,13 +28,10 @@ pub struct Ir {
 impl Lower<Ast> for Ir {
     fn lower(node: &Ast, context: &mut LowerContext) -> LowerResult<Self> {
         let tree = ir::Source::lower(node.tree(), context)?;
-        let mut hasher = microcad_lang_base::Hasher::default();
-        tree.hash(&mut hasher);
-        let output_hash = hasher.finish();
 
         Ok(Self {
             input_hash: node.output_hash(),
-            output_hash,
+            output_hash: tree.to_hash(),
             tree,
         })
     }
