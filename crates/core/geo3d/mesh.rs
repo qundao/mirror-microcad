@@ -8,7 +8,7 @@ use crate::{
 use cgmath::{ElementWise, Vector3};
 use manifold_rs::{Manifold, Mesh};
 
-use crate::hash::HashMap;
+use microcad_hash::HashMap;
 
 /// Triangle mesh
 #[derive(Default, Clone)]

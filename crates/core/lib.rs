@@ -10,7 +10,6 @@ pub mod color;
 pub mod core_error;
 pub mod geo2d;
 pub mod geo3d;
-pub mod hash;
 pub mod length;
 pub mod render;
 pub mod traits;
