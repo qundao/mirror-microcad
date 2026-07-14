@@ -139,7 +139,7 @@ impl Inspector {
                                 current_source_hash: hash_to_shared_string(code.computed_hash()),
                                 current_line: 1,
                             });
-                            main_window.set_source_code(code.value().into());
+                            main_window.set_source_code(code.inner_ref().into());
                         }
                         ViewModelRequest::SetSymbolTree(items) => {
                             main_window.set_symbol_tree(to_slint::model_rc_from_items(items))
