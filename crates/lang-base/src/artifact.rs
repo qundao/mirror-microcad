@@ -5,13 +5,13 @@
 
 use derive_more::{Display, FromStr};
 use microcad_core::hash::HashId;
-use miette::Diagnostic;
+use miette::Diagnostic as MietteDiagnostic;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use crate::Version;
+use crate::{CompilationResult, Diagnostic, Diagnostics, Version};
 
-#[derive(Debug, Error, Diagnostic)]
+#[derive(Debug, Error, MietteDiagnostic)]
 pub enum ArtifactError {
     /// Postcard error
     #[error("Binary serialization error")]
@@ -155,5 +155,54 @@ pub trait Artifact: Sized {
     {
         let envelope: Envelope<Self> = ron::de::from_str(s.into())?;
         envelope.unwrap(Self::kind())
+    }
+
+    #[cfg(feature = "io")]
+    fn emit(&self, path: impl AsRef<std::path::Path>) -> miette::Result<()>
+    where
+        Self: Serialize,
+    {
+        use miette::IntoDiagnostic;
+        let mut path = path.as_ref().to_path_buf();
+        path.add_extension(&Self::kind().to_string().to_lowercase());
+        Ok(std::fs::write(path, self.to_ron()?).into_diagnostic()?)
+    }
+}
+
+/// The result of a compilation stage.
+#[derive(Debug, Default)]
+pub struct StageResult<T: Artifact>(Option<Result<(T, Diagnostics), Diagnostics>>);
+
+impl<T: Artifact> StageResult<T> {
+    /// Return the artifacts.
+    pub fn artifact(&self) -> Option<&T> {
+        self.0.as_ref()?.as_ref().ok().map(|(val, _)| val)
+    }
+
+    /// Return the diagnostics.
+    pub fn diagnostics(&self) -> Option<&Diagnostics> {
+        match &self.0 {
+            Some(Ok((_, diags))) | Some(Err(diags)) => Some(diags),
+            None => None,
+        }
+    }
+
+    /// Return an iterator over the diagnostics.
+    pub fn diag_iter<'a>(&'a self) -> Box<dyn Iterator<Item = &'a Diagnostic> + 'a> {
+        match &self.diagnostics() {
+            Some(diags) => Box::new(diags.iter()),
+            None => Box::new(std::iter::empty()),
+        }
+    }
+
+    /// Returns true if this compilation stage has been successful.
+    pub fn is_success(&self) -> bool {
+        matches!(self.0, Some(Ok(_)))
+    }
+}
+
+impl<T: Artifact> From<CompilationResult<T>> for StageResult<T> {
+    fn from(result: CompilationResult<T>) -> Self {
+        Self(Some(result))
     }
 }
