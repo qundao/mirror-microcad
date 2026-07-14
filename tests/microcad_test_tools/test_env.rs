@@ -95,7 +95,7 @@ impl std::fmt::Display for TestEnv {
                 .path()
                 .unwrap(),
             orig_name = self.orig_name,
-            code = self.source.code.value(),
+            code = self.source.code.inner_ref(),
             line_offset = self.source.line_offset
         )
     }
@@ -215,7 +215,7 @@ impl TestEnv {
 
     /// Return test source code.
     pub fn code(&self) -> &str {
-        self.source.code.value()
+        self.source.code.inner_ref()
     }
 
     /// Return test parameters.
