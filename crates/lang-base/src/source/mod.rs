@@ -1,9 +1,8 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{
-    ComputedHash, GetSourceByHash, HashId, Hashed, LineCol, LineIndex, SpanToSrcRef, SrcRef,
-};
+use crate::{GetSourceByHash, LineCol, LineIndex, SpanToSrcRef, SrcRef};
+use microcad_hash::{HashId, Hashed, ToHash};
 use serde::Serialize;
 
 mod location;
@@ -48,7 +47,7 @@ impl Source {
     }
 
     pub fn hash(&self) -> HashId {
-        self.code.computed_hash()
+        self.code.to_hash()
     }
 
     pub fn code(&self) -> &str {
@@ -68,7 +67,7 @@ impl Source {
         use dissimilar::Chunk;
         let chunks = dissimilar::diff(&self.code, &other.code);
         let mut edits = Vec::new();
-        let source_hash = self.code.computed_hash();
+        let source_hash = self.hash();
 
         // Track the current position in the *old_str*
         let mut current = LineCol::default();

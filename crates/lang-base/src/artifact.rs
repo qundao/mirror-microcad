@@ -4,7 +4,7 @@
 //! A compiler artifact to be persisted, e.g. an IR written and read from file.
 
 use derive_more::{Display, FromStr};
-use microcad_core::hash::HashId;
+use microcad_hash::HashId;
 use miette::Diagnostic as MietteDiagnostic;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;

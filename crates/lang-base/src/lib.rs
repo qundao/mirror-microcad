@@ -49,7 +49,7 @@ pub use rc::{Rc, RcMut};
 pub use src_ref::{LineCol, LineIndex, Refer, Span, SpanToSrcRef, Spanned, SrcRef, SrcReferrer};
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
-pub use microcad_core::hash::{ComputedHash, HashId, HashMap, HashSet, Hashed, Hasher};
+pub use microcad_hash::{HashId, HashMap, HashSet, Hashed, Hasher, ToHash};
 pub use source::{Source, SourceKind, SourceLocation, TextEdit};
 
 impl SourceCode for Source {

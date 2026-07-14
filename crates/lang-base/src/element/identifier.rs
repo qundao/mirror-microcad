@@ -238,12 +238,13 @@ impl std::iter::IntoIterator for IdentifierList {
 #[test]
 fn identifier_comparison() {
     use crate::{LineCol, SrcRef};
+    use microcad_hash::HashId;
 
     // same id but different src refs
     let id1 = Identifier::no_ref("x");
     let id2 = Identifier(Refer::new(
         "x".into(),
-        SrcRef::new(&(0..5), LineCol { line: 0, col: 1 }, 1),
+        SrcRef::new(&(0..5), LineCol { line: 0, col: 1 }, HashId::default()),
     ));
 
     // shall be equal
@@ -252,6 +253,8 @@ fn identifier_comparison() {
 
 #[test]
 fn identifier_hash() {
+    use microcad_hash::HashId;
+
     use crate::{LineCol, SrcRef};
     use std::hash::{Hash, Hasher};
 
@@ -259,7 +262,7 @@ fn identifier_hash() {
     let id1 = Identifier(Refer::none("x".into()));
     let id2 = Identifier(Refer::new(
         "x".into(),
-        SrcRef::new(&(0..5), LineCol { line: 0, col: 1 }, 1),
+        SrcRef::new(&(0..5), LineCol { line: 0, col: 1 }, HashId::default()),
     ));
 
     let mut hasher = std::hash::DefaultHasher::new();

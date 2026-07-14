@@ -1,9 +1,10 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use microcad_hash::Hashed;
 use serde::Serialize;
 
-use crate::{ComputedHash, Hashed, LineCol, Source, Span, SrcRef};
+use crate::{LineCol, Source, Span, SrcRef};
 
 /// An index to retrieve the offsets in a line in O(log(n)).
 #[derive(Clone, Debug, Serialize)]
@@ -46,7 +47,7 @@ impl LineIndex {
         SrcRef::new(
             span,
             self.line_col(code.inner_ref(), span.start),
-            code.computed_hash(),
+            code.hash(),
         )
     }
 }

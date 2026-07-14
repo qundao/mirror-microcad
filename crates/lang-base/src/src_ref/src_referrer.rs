@@ -11,7 +11,7 @@ pub trait SrcReferrer {
     fn src_ref(&self) -> SrcRef;
 
     /// Return source code hash.
-    fn source_hash(&self) -> u64 {
+    fn source_hash(&self) -> HashId {
         self.src_ref().source_hash()
     }
 }

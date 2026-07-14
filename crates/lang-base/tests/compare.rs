@@ -1,4 +1,7 @@
-use microcad_lang_base::{ComputedHash, LineCol, Source, SrcRef, TextEdit};
+// Copyright © 2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+use microcad_lang_base::{LineCol, Source, SrcRef, TextEdit, ToHash};
 
 #[test]
 fn test_identical_strings_yield_no_edits() {
@@ -18,11 +21,7 @@ fn test_pure_insertion() {
     assert_eq!(
         edits[0],
         TextEdit {
-            src_ref: SrcRef::new(
-                &(6..6),
-                LineCol { line: 1, col: 6 },
-                old.code.computed_hash()
-            ),
+            src_ref: SrcRef::new(&(6..6), LineCol { line: 1, col: 6 }, old.code.to_hash()),
             new_text: "beautiful ".to_string(),
         }
     );
@@ -39,11 +38,7 @@ fn test_pure_deletion() {
         edits[0],
         TextEdit {
             // Should delete "beautiful " spanning from char 6 to 16
-            src_ref: SrcRef::new(
-                &(6..16),
-                LineCol { line: 1, col: 6 },
-                old.code.computed_hash()
-            ),
+            src_ref: SrcRef::new(&(6..16), LineCol { line: 1, col: 6 }, old.code.to_hash()),
             new_text: String::new(),
         }
     );
@@ -64,11 +59,7 @@ fn test_multiline_replacement() {
         edits[0],
         TextEdit {
             // Should delete "beautiful " spanning from char 6 to 16
-            src_ref: SrcRef::new(
-                &(14..17),
-                LineCol { line: 2, col: 5 },
-                old.code.computed_hash()
-            ),
+            src_ref: SrcRef::new(&(14..17), LineCol { line: 2, col: 5 }, old.code.to_hash()),
             new_text: String::new(),
         }
     );
@@ -78,11 +69,7 @@ fn test_multiline_replacement() {
         edits[1],
         TextEdit {
             // Should delete "beautiful " spanning from char 6 to 16
-            src_ref: SrcRef::new(
-                &(17..17),
-                LineCol { line: 1, col: 8 },
-                old.code.computed_hash()
-            ),
+            src_ref: SrcRef::new(&(17..17), LineCol { line: 1, col: 8 }, old.code.to_hash()),
             new_text: "changed".to_string()
         }
     );

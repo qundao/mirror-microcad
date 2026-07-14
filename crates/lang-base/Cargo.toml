@@ -15,12 +15,14 @@ license.workspace = true
 keywords.workspace = true
 
 [dependencies]
+bytemuck = "1.25.0"
 color-print = { version = "0.3", optional = true }
-compact_str = { version = "0.9.0", features = ["serde"] }
+compact_str = { version = "0.10.0", features = ["serde"] }
 derive_more = { version = "2.1.1", features = [
     "deref",
     "deref_mut",
     "display",
+    "from",
     "from_str",
 ] }
 dissimilar = "1.0.7"
@@ -35,8 +37,7 @@ strum = { version = "0.28", features = ["derive"] }
 thiserror = "2.0.17"
 url = { version = "2.5", features = ["serde"] }
 
-microcad-core = { workspace = true }
-bytemuck = "1.25.0"
+microcad-hash = { workspace = true }
 
 [features]
 default = ["ansi-color", "io"]

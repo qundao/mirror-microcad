@@ -5,7 +5,7 @@
 
 use std::ops::Index;
 
-use microcad_core::hash::HashMap;
+use microcad_hash::HashMap;
 
 /// Trait a value in an `OrdMap` must implement.
 /// # Types

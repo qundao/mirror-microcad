@@ -23,9 +23,8 @@ pub use line_index::*;
 pub use refer::*;
 pub use src_referrer::*;
 
-use crate::HashId;
-
 use derive_more::Deref;
+use microcad_hash::HashId;
 use miette::SourceSpan;
 use serde::{Deserialize, Serialize};
 
@@ -125,7 +124,7 @@ impl SrcRef {
     }
 
     pub fn is_none(&self) -> bool {
-        self.source_hash == 0
+        self.source_hash.is_empty()
     }
 
     pub fn is_some(&self) -> bool {
@@ -166,7 +165,7 @@ impl SrcRef {
     /// - `u64` if `SrcRefInner` is some
     ///
     /// This is used to map `SrcRef` -> `SourceFile`
-    pub fn source_hash(&self) -> u64 {
+    pub fn source_hash(&self) -> HashId {
         self.source_hash
     }
 
@@ -285,7 +284,7 @@ impl std::fmt::Debug for SrcRef {
         match &self.is_some() {
             true => write!(
                 f,
-                "{} ({}..{}) in {:#x}",
+                "{} ({}..{}) in {}",
                 self.at, self.start, self.end, self.source_hash
             ),
             false => write!(f, "<NO REF>"),
@@ -325,7 +324,7 @@ impl Serialize for SrcRef {
             // Text formats (RON, JSON) get the ultra-compact string
             let compact = match self.is_some() {
                 true => format!(
-                    "{}:{} @ {:x} ({}..{})",
+                    "{}:{} @ {} ({}..{})",
                     self.line().unwrap(),
                     self.col().unwrap(),
                     self.source_hash,
@@ -385,8 +384,7 @@ impl<'de> Deserialize<'de> for SrcRef {
                             line: line.parse().map_err(E::custom)?,
                             col: col.parse().map_err(E::custom)?,
                         },
-                        source_hash: u64::from_str_radix(hash.trim_start_matches("0x"), 16)
-                            .map_err(E::custom)?,
+                        source_hash: hash.parse().map_err(E::custom)?,
                         start: start.parse().map_err(E::custom)?,
                         end: end.parse().map_err(E::custom)?,
                     })
@@ -408,24 +406,31 @@ impl<'de> Deserialize<'de> for SrcRef {
 
 #[test]
 fn merge_all() {
+    use microcad_hash::HashId;
+    let hash = HashId::new(13);
+
     assert_eq!(
         SrcRef::merge_all(
             [
-                SrcRef::new(&Span { start: 5, end: 8 }, LineCol { line: 1, col: 6 }, 123),
+                SrcRef::new(
+                    &Span { start: 5, end: 8 },
+                    LineCol { line: 1, col: 6 },
+                    hash
+                ),
                 SrcRef::new(
                     &Span { start: 8, end: 10 },
                     LineCol { line: 2, col: 1 },
-                    123
+                    hash
                 ),
                 SrcRef::new(
                     &Span { start: 12, end: 16 },
                     LineCol { line: 3, col: 1 },
-                    123
+                    hash
                 ),
                 SrcRef::new(
                     &Span { start: 0, end: 10 },
                     LineCol { line: 1, col: 1 },
-                    123
+                    hash
                 ),
             ]
             .iter(),
@@ -433,20 +438,20 @@ fn merge_all() {
         SrcRef::new(
             &Span { start: 0, end: 16 },
             LineCol { line: 1, col: 1 },
-            123
+            hash
         ),
     );
 }
 
 #[test]
 fn test_src_ref() {
-    use microcad_core::hash::{ComputedHash, Hashed};
+    use microcad_hash::Hashed;
     let input = Hashed::new("geo3d::Cube(size_x = 3.0, size_y = 3.0, size_z = 3.0);");
 
     let cube = 7..11;
     let size_y = 26..32;
-    let cube = SrcRef::new(&cube, LineCol { line: 1, col: 0 }, input.computed_hash());
-    let size_y = SrcRef::new(&size_y, LineCol { line: 1, col: 0 }, input.computed_hash());
+    let cube = SrcRef::new(&cube, LineCol { line: 1, col: 0 }, input.hash());
+    let size_y = SrcRef::new(&size_y, LineCol { line: 1, col: 0 }, input.hash());
 
     assert_eq!(cube.source_slice(input.inner_ref()), "Cube");
     assert_eq!(size_y.source_slice(input.inner_ref()), "size_y");
