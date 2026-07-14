@@ -9,10 +9,12 @@ pub mod parsers;
 pub use error::{ParseError, ParseErrorKind, ParseErrors, RichError};
 pub use parse_context::ParseContext;
 
-use crate::lex::*;
-use crate::parse::{error::Rich, helpers::*};
-use crate::token::Token;
-use crate::{Ast, ast};
+use crate::{
+    ast, lex,
+    parse::{error::Rich, helpers::*},
+    token::Token,
+};
+
 use chumsky::{
     Parser, extra,
     input::{Input, MappedInput},
@@ -94,7 +96,9 @@ pub fn input<'input, 'tokens>(
 }
 
 /// Build an abstract syntax tree from a list of tokens
-pub fn parse<'tokens>(tokens: &'tokens [Spanned<Token<'tokens>>]) -> Result<Ast, ParseErrors> {
+pub fn parse<'tokens>(
+    tokens: &'tokens [Spanned<Token<'tokens>>],
+) -> Result<ast::Source, ParseErrors> {
     parser()
         .parse(input(tokens))
         .into_result()
@@ -111,7 +115,8 @@ const STRUCTURAL_TOKENS: &[Token] = &[
     Token::SigilSemiColon,
 ];
 
-fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Ast, Extra<'tokens>> {
+fn parser<'tokens>()
+-> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Source, Extra<'tokens>> {
     use crate::ast::Dummy;
 
     let mut statement_list_parser = Recursive::declare();
@@ -1140,7 +1145,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Ast,
 
     expression_parser.define({
         let unclosed_string = select_ref! {
-            Token::Error(LexerError::UnclosedString(_)) => (),
+            Token::Error(lex::LexerError::UnclosedString(_)) => (),
         }
         .ignore_then(
             semi_recovery
@@ -1551,7 +1556,7 @@ fn parser<'tokens>() -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, Ast,
 
     statement_list_parser
         .then_ignore(end())
-        .map_with(move |statements, ex| Ast {
+        .map_with(move |statements, ex| ast::Source {
             span: ex.span(),
             statements,
         })
