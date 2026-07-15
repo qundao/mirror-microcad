@@ -5,13 +5,10 @@ use crate::Result;
 use crate::prelude as mu;
 
 use microcad_lang_base::ArtifactKind;
-use microcad_lang_base::CompilationResult;
-use microcad_lang_base::StageResult;
 use microcad_lang_base::{Artifact, DiagRenderOptions};
 
 use miette::Diagnostic;
 use miette::IntoDiagnostic;
-use serde::Serialize;
 use thiserror::Error;
 
 #[derive(Error, Debug, Diagnostic)]
@@ -161,6 +158,18 @@ impl mu::commands::compile::Lower for SourceFile {
         match &self.ast.artifact() {
             Some(ast) => {
                 self.ir = mu::lower(&self.source, ast).into();
+                Ok(())
+            }
+            _ => Err(SourceError::InvalidState.into()),
+        }
+    }
+}
+
+impl mu::commands::compile::Resolve for SourceFile {
+    fn scaffold(&mut self /*,  params: impl Into<ScaffoldParameters>  */) -> Result {
+        match &self.ir.artifact() {
+            Some(ir) => {
+                self.mir = mu::scaffold(ir, &self.source).into();
                 Ok(())
             }
             _ => Err(SourceError::InvalidState.into()),

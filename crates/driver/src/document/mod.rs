@@ -13,7 +13,7 @@ use microcad_lang_base::{DiagRenderOptions, SourceKind, Url};
 pub use source_file::SourceFile;
 pub use stdin::Stdin;
 
-use crate::prelude as mu;
+use crate::prelude::{self as mu, traits::Resolve};
 
 pub type Markdown = markdown::MarkdownDocument;
 pub type MdBook = mdbook::MdBookDocument;
@@ -87,6 +87,15 @@ impl mu::commands::compile::Parse for Document {
     fn parse(&mut self) -> mu::Result {
         match self {
             Document::SourceFile(source) => source.parse(),
+            _ => unimplemented!(),
+        }
+    }
+}
+
+impl mu::commands::compile::Resolve for Document {
+    fn scaffold(&mut self) -> mu::Result {
+        match self {
+            Document::SourceFile(source) => source.scaffold(),
             _ => unimplemented!(),
         }
     }

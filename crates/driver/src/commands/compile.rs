@@ -21,7 +21,11 @@ pub struct ResolveParameters {
 
 /// Resolve the IR into a symbol tree.
 pub trait Resolve {
-    //fn resolve(&mut self, params: impl Into<ResolveParameters>) -> Result<Symbol>;
+    fn scaffold(&mut self /*,  params: impl Into<ScaffoldParameters>  */) -> Result;
+
+    fn resolve(&mut self, _params: impl Into<ResolveParameters>) -> Result {
+        self.scaffold()
+    }
 }
 
 /// Evaluate the symbol into a model.
@@ -37,14 +41,14 @@ pub struct CompileParameters {
 }
 
 /// Trait for compilation toolchain.
-pub trait Compile: Parse + Lower /*+ Resolve + Eval */ {
+pub trait Compile: Parse + Lower + Resolve /*+ Eval */ {
     /// Compile a document into a `Model`.
     fn compile(&mut self, parameters: impl Into<CompileParameters>) -> Result {
-        let _parameters = parameters.into();
+        let parameters = parameters.into();
         self.parse()?;
         self.lower()?;
+        self.resolve(parameters.resolve)?;
         Ok(())
-        //self.resolve(parameters.resolve)?;
         //self.eval()
     }
 }
