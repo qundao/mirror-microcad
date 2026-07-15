@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{Artifact, Id, SrcRef};
+use microcad_lang_base::{Artifact, HashId, Id, SrcRef};
 use microcad_lang_lower::ir::DocBlock;
 use microcad_lang_resolve::{Mir, mir, scaffold};
 
@@ -38,6 +38,14 @@ fn sample_tree() -> mir::UnresolvedSymbolTree {
     tree
 }
 
+fn sample_mir() -> Mir {
+    Mir {
+        input_hash: HashId::default(),
+        output_hash: HashId::default(),
+        tree: sample_tree(),
+    }
+}
+
 #[test]
 fn descendants_builder() {
     let tree = sample_tree();
@@ -61,16 +69,14 @@ fn resolve() {
 
     let root = tree.root().unwrap();
 
-    assert_that!(resolve_id(root, "root::foo"), eq("foo"));
-    assert_that!(resolve_id(root, "root::foo::baz"), eq("baz"));
-    assert_that!(resolve_id(root, "root::foo::bam"), eq("bam"));
-    assert_that!(resolve_id(root, "root::bar"), eq("bar"));
+    assert_that!(resolve_id(root, "foo"), eq("foo"));
+    assert_that!(resolve_id(root, "foo::baz"), eq("baz"));
+    assert_that!(resolve_id(root, "foo::bam"), eq("bam"));
+    assert_that!(resolve_id(root, "bar"), eq("bar"));
 
-    let foo = root.resolve("root::foo").unwrap();
-    assert_that!(resolve_id(foo, "foo"), eq("foo"));
-    assert_that!(resolve_id(foo, "foo::baz"), eq("baz"));
-    assert_that!(resolve_id(foo, "foo::bam"), eq("bam"));
-    assert_that!(resolve_id(foo, "root"), eq("root"));
+    let foo = root.resolve("foo").unwrap();
+    assert_that!(resolve_id(foo, "baz"), eq("baz"));
+    assert_that!(resolve_id(foo, "bam"), eq("bam"));
 }
 
 #[test]
@@ -79,7 +85,7 @@ fn insert_tree() {
 
     let foo = {
         let root = tree.root().unwrap();
-        root.resolve("root::foo").unwrap()
+        root.resolve("foo").unwrap()
     };
 
     tree.insert(Some(foo.handle()), sample_tree());
@@ -96,34 +102,38 @@ fn insert_tree() {
 }
 
 #[test]
-fn resolve_inline_module_def() {
+fn scaffold_inline_module_def() {
     let source = microcad_lang_base::Source::load("tests/test_cases/inline_module.µcad")
         .expect("No errors loading source");
 
-    /*
     let ron = std::fs::read_to_string("tests/test_cases/inline_module.µcad.ir")
         .expect("No errors reading IR");
     let ir = microcad_lang_lower::Ir::from_ron(ron.as_str()).expect("No error deserializing IR");
-    let (rst, diag) = microcad_lang_resolve::resolve(&source, &ir).expect("No error resolving IR");
-    println!("{rst:#?}");
+    let (mir, diag) = microcad_lang_resolve::scaffold(&ir, &source).expect("No error resolving IR");
+    println!("{mir:#?}");
     assert!(!diag.has_errors());
 
-    let root = rst.root().unwrap();
+    let root = mir.tree.root().unwrap();
 
-    assert!(root.resolve("root::A").is_some());
-    assert!(root.resolve("root::b::C").is_some());
-    assert!(root.resolve("root::b::d::E").is_some());
-    assert!(root.resolve("root::b::f::G").is_some()); // Show be unreachable
-    */
+    let s = root
+        .descendants()
+        .filter_map(|s| s.id().map(|id| id.to_string()))
+        .collect::<Vec<_>>()
+        .join(" ");
+
+    assert_that!(s, eq("root A b C d E f G"));
+
+    assert!(root.resolve("A").is_some());
+    assert!(root.resolve("b::C").is_some());
+    assert!(root.resolve("b::d::E").is_some());
+    assert!(root.resolve("b::f::G").is_some()); // Should be unreachable*/
 }
 
-/*
 #[test]
-fn binary() {
-    let tree = sample_unresolved_tree();
-    let encoded: Vec<u8> = tree.to_binary().expect("No error");
-    let decoded_tree = Rst::from_binary(&encoded).expect("Failed to Deserialize");
+fn mir_binary() {
+    let mir = sample_mir();
+    let encoded_mir: Vec<u8> = mir.to_binary().expect("No error");
+    let decoded_mir = Mir::from_binary(&encoded_mir).expect("Failed to Deserialize");
 
-    assert_that!(tree, eq(decoded_tree));
+    assert_that!(mir, eq(decoded_mir));
 }
-*/

@@ -165,6 +165,15 @@ impl<'source> ScaffoldContext<'source> {
     }
 }
 
+impl<'source> From<&'source Source> for ScaffoldContext<'source> {
+    fn from(source: &'source Source) -> Self {
+        ScaffoldContext {
+            source,
+            diags: vec![],
+        }
+    }
+}
+
 pub type ScaffoldResult = Result<mir::UnresolvedSymbolTree, ScaffoldError>;
 
 pub trait Scaffold {
@@ -182,7 +191,7 @@ impl From<ir::DocBlock> for mir::DocBlock {
 }
 
 impl Scaffold for ir::FileModule {
-    fn scaffold(&self, context: &mut ScaffoldContext) -> ScaffoldResult {
+    fn scaffold(&self, _context: &mut ScaffoldContext) -> ScaffoldResult {
         Ok(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: Some(self.id.clone()),
@@ -402,7 +411,7 @@ impl Scaffold for ir::Source {
     fn scaffold(&self, context: &mut ScaffoldContext) -> ScaffoldResult {
         let mut builder = TreeBuilder::new(mir::UnresolvedSymbol::new(
             SymbolMetadata {
-                id: None, // Might be some
+                id: Some(mir::Identifier::from("root")), // Might be some
                 doc: self.attr.doc.clone().into(),
                 visibility: mir::Visibility::Public,
                 src_ref: SrcRef::none(),

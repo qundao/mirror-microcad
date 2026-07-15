@@ -12,7 +12,8 @@ use microcad_lang_lower::ir;
 
 pub use crate::tree::SymbolMetadata;
 
-pub type Type = Option<ir::TypeAnnotation>;
+pub type Type = ir::Type;
+pub type TypeAnnotation = Option<ir::TypeAnnotation>;
 
 pub type UnresolvedName = ir::QualifiedName;
 
@@ -25,7 +26,7 @@ pub use ir::{Identifier, Visibility};
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Constant {
     // pub attr: ConstantAttributes
-    pub ty: Type,
+    pub ty: TypeAnnotation,
     pub expr: ConstantExpression,
 }
 
@@ -34,7 +35,7 @@ pub struct Parameter {
     // pub attr: ParameterAttributes,
     pub doc: DocBlock,
     pub id: Identifier,
-    pub ty: Type,
+    pub ty: TypeAnnotation,
     pub default_value: Option<ConstantExpression>,
     pub src_ref: SrcRef,
 }
@@ -51,7 +52,7 @@ pub type FunctionStatement = ir::FunctionStatement<UnresolvedName>;
 pub struct Function {
     // pub attr: FunctionAttributes,
     pub parameters: ParameterList,
-    pub return_ty: Type,
+    pub return_ty: TypeAnnotation,
     pub statements: Box<[FunctionStatement]>,
 }
 
@@ -63,7 +64,7 @@ pub type WorkbenchKind = ir::WorkbenchKind;
 
 pub struct InitStatement {
     pub id: Identifier,
-    pub ty: Type,
+    pub ty: TypeAnnotation,
     pub expression: WorkbenchExpression,
 }
 
@@ -127,7 +128,7 @@ pub type UnresolvedSymbolRef<'mir> = crate::tree::SymbolRef<'mir, UnresolvedSymb
 
 pub type UnresolvedSymbolTree = crate::tree::SymbolTree<UnresolvedSymbolDef>;
 
-#[derive(Debug, Artifact, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Artifact, Serialize, Deserialize)]
 pub struct Mir {
     pub input_hash: HashId,
     pub output_hash: HashId,

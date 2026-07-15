@@ -233,7 +233,9 @@ impl<'tree, DEF: Serialize> SymbolRef<'tree, DEF> {
     pub fn resolve(&self, path: impl Into<SymbolPath>) -> Option<SymbolRef<'tree, DEF>> {
         // 1. If searching from current node, look upward for the first component
         let path = path.into();
-        let mut current = *self;
+        let mut current = self
+            .children
+            .get_by_id(self.tree(), path.0.first().cloned().unwrap())?;
 
         loop {
             // Check if current node matches the first element of the path

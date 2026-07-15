@@ -7,14 +7,24 @@ mod builtin;
 
 use builtin::Builtin;
 
+use crate::{
+    mir,
+    tree::{SymbolHandle, SymbolPath},
+};
 use std::hash::Hash;
 
+use serde::{Deserialize, Serialize};
+
 use derive_more::From;
-use microcad_lang_base::{HashId, Id, Identifier, Refer, SrcRef};
+use microcad_lang_base::{HashId, Id, Refer, SrcRef};
 use microcad_lang_proc_macros::Artifact;
 use microcad_lang_types::Value;
 
+pub type TypeAnnotation = mir::TypeAnnotation;
+
 use microcad_lang_lower::ir;
+
+pub use crate::mir::Identifier;
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub enum ResolvedName {
@@ -22,13 +32,6 @@ pub enum ResolvedName {
     Symbol(SymbolHandle),
     Unresolved(SymbolPath),
 }
-
-use crate::{
-    mir,
-    tree::{SymbolHandle, SymbolPath},
-};
-
-use serde::{Deserialize, Serialize};
 
 pub type DocBlock = mir::DocBlock;
 pub type Type = mir::Type;
@@ -39,16 +42,16 @@ pub struct Constant(pub Refer<Value>);
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Parameter {
     // pub attr: ParameterAttributes,
-    doc: DocBlock,
-    id: Identifier,
-    ty: Type,
-    default_value: Value,
-    src_ref: SrcRef,
+    pub doc: DocBlock,
+    pub id: Identifier,
+    pub ty: Type,
+    pub default_value: Value,
+    pub src_ref: SrcRef,
 }
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct ParameterList {
-    parameters: Box<[Parameter]>,
+    pub parameters: Box<[Parameter]>,
     // by_id: HashMap<Id, usize>
 }
 
@@ -86,7 +89,7 @@ pub struct Init {
 pub struct Workbench {
     //pub attr: WorkbenchAttributes
     /// Workbench kind.
-    pub kind: WorkbenchKind,
+    pub kind: Refer<WorkbenchKind>,
 
     /// Initializers.
     /// The default initializer and tthe workbench parameters are located in the last init.

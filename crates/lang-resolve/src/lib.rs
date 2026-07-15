@@ -23,3 +23,5 @@ pub use resolve::{Resolve, ResolveContext, ResolveResult, scaffold};
 pub fn resolve(_source: &Source, _mir: &Mir) -> CompilationResult<Rst> {
     todo!()
 }
+
+pub use scaffold::scaffold;

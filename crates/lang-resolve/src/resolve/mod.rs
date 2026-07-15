@@ -3,7 +3,10 @@
 
 pub mod scaffold;
 
-use microcad_lang_base::{Diagnostics, SrcReferrer};
+mod case_check;
+mod type_check;
+
+use microcad_lang_base::{Diagnostics, SrcRef, SrcReferrer, element::Case};
 use microcad_lang_lower::ir;
 use miette::Diagnostic;
 use thiserror::Error;
@@ -12,7 +15,25 @@ use crate::rst;
 
 /// Resolve error.
 #[derive(Debug, Error, Diagnostic)]
-pub enum ResolveError {}
+pub enum ResolveError {
+    #[error("Wrong case")]
+    #[diagnostic(severity = "warning")]
+    WrongCase {
+        expected: Case,
+        actual: Case,
+        #[label]
+        src_ref: SrcRef,
+    },
+    #[error("Type mismatch: {specified} != {actual}")]
+    TypeMismatch {
+        specified: rst::Type,
+        #[label("Specified type")]
+        specified_src_ref: SrcRef,
+        actual: rst::Type,
+        #[label("Actual type")]
+        actual_src_ref: SrcRef,
+    },
+}
 
 /// Result type of any resolve.
 pub type ResolveResult<T> = std::result::Result<T, ResolveError>;
