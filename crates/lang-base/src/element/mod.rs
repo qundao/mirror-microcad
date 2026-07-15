@@ -3,7 +3,7 @@
 
 mod identifier;
 
-pub use identifier::{Identifier, IdentifierList, ShortId};
+pub use identifier::{Case, Identifier, IdentifierList, ShortId};
 use serde::{Deserialize, Serialize};
 use strum::{Display, EnumString};
 
