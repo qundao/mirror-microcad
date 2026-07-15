@@ -1,0 +1,37 @@
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ir,
+    ),
+    payload: (
+        input_hash: "0xf52bb6f4a9be416",
+        output_hash: "0xdb182f0fe2909a44",
+        tree: (
+            items: (
+                file_modules: [
+                    (
+                        src_ref: "0:1 @ 0x5396e7638cd3b8e0 (0..7)",
+                        attr: (()),
+                        visibility: Private,
+                        keyword_src_ref: "0:1 @ 0x5396e7638cd3b8e0 (0..3)",
+                        id: ((
+                            value: "sub",
+                            src_ref: "0:5 @ 0x5396e7638cd3b8e0 (4..7)",
+                        )),
+                    ),
+                    (
+                        src_ref: "1:1 @ 0x5396e7638cd3b8e0 (44..55)",
+                        attr: (()),
+                        visibility: Public,
+                        keyword_src_ref: "1:5 @ 0x5396e7638cd3b8e0 (48..51)",
+                        id: ((
+                            value: "foo",
+                            src_ref: "1:9 @ 0x5396e7638cd3b8e0 (52..55)",
+                        )),
+                    ),
+                ],
+            ),
+        ),
+    ),
+)

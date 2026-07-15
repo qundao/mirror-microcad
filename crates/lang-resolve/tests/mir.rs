@@ -1,8 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{Artifact, HashId, Id, SrcRef};
-use microcad_lang_lower::ir::DocBlock;
+use microcad_lang_base::{Artifact, CompilationResult, HashId, Id, SrcRef};
 use microcad_lang_resolve::{Mir, mir, scaffold};
 
 use test_that::prelude::*;
@@ -101,15 +100,27 @@ fn insert_tree() {
     assert_that!(s, eq("root foo baz bam root foo baz bam bar bar"));
 }
 
-#[test]
-fn scaffold_inline_module_def() {
-    let source = microcad_lang_base::Source::load("tests/test_cases/inline_module.µcad")
-        .expect("No errors loading source");
+fn scaffold_file(file: &str) -> CompilationResult<Mir> {
+    let source = microcad_lang_base::Source::load(&format!("tests/test_cases/{file}.µcad"))
+        .expect("Error loading source file");
+    let ron = std::fs::read_to_string(format!("tests/test_cases/{file}.µcad.ir"))
+        .expect("Error reading RON");
+    let ir = microcad_lang_lower::Ir::from_ron(ron.as_str()).expect("Error parsing RON to IR");
+    microcad_lang_resolve::scaffold(&ir, &source)
+}
 
-    let ron = std::fs::read_to_string("tests/test_cases/inline_module.µcad.ir")
-        .expect("No errors reading IR");
-    let ir = microcad_lang_lower::Ir::from_ron(ron.as_str()).expect("No error deserializing IR");
-    let (mir, diag) = microcad_lang_resolve::scaffold(&ir, &source).expect("No error resolving IR");
+#[test]
+fn mir_binary() {
+    let mir = sample_mir();
+    let encoded_mir: Vec<u8> = mir.to_binary().expect("No error");
+    let decoded_mir = Mir::from_binary(&encoded_mir).expect("Failed to Deserialize");
+
+    assert_that!(mir, eq(decoded_mir));
+}
+
+#[test]
+fn scaffold_inline_module() {
+    let (mir, diag) = scaffold_file("inline_module").expect("No error resolving IR");
     println!("{mir:#?}");
     assert!(!diag.has_errors());
 
@@ -130,10 +141,8 @@ fn scaffold_inline_module_def() {
 }
 
 #[test]
-fn mir_binary() {
-    let mir = sample_mir();
-    let encoded_mir: Vec<u8> = mir.to_binary().expect("No error");
-    let decoded_mir = Mir::from_binary(&encoded_mir).expect("Failed to Deserialize");
+fn scaffold_file_module() {
+    let (mir, diag) = scaffold_file("file_module").expect("No error resolving IR");
 
-    assert_that!(mir, eq(decoded_mir));
+    println!("{mir:#?}");
 }
