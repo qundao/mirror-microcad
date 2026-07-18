@@ -65,22 +65,11 @@ pub trait Scaffold {
     fn scaffold(&self, context: &mut ScaffoldContext) -> ScaffoldResult;
 }
 
-impl From<ir::DocBlock> for mir::DocBlock {
-    fn from(value: ir::DocBlock) -> Self {
-        let src_ref = value.src_ref();
-        Self(Refer::new(
-            value.0.into_iter().collect::<Vec<_>>().join("\n"),
-            src_ref,
-        ))
-    }
-}
-
 impl Scaffold for ir::FileModule {
     fn scaffold(&self, _context: &mut ScaffoldContext) -> ScaffoldResult {
         Ok(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: Some(self.id.clone()),
-                doc: self.attr.doc.clone().into(),
                 visibility: self.visibility.clone(),
                 src_ref: self.src_ref,
                 keyword_src_ref: self.keyword_src_ref,
@@ -96,7 +85,6 @@ impl Scaffold for ir::ExplicitAlias {
         Ok(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: Some(self.id.clone()),
-                doc: self.attr.doc.clone().into(),
                 visibility: self.visibility.clone(),
                 src_ref: self.src_ref,
                 keyword_src_ref: self.keyword_src_ref,
@@ -112,7 +100,6 @@ impl Scaffold for ir::WildcardAlias {
         Ok(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: None,
-                doc: self.attr.doc.clone().into(),
                 visibility: self.visibility.clone(),
                 src_ref: self.src_ref,
                 keyword_src_ref: self.keyword_src_ref,
@@ -130,12 +117,12 @@ impl Scaffold for ir::Constant {
         Ok(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: Some(self.id.clone()),
-                doc: self.attr.doc.clone().into(),
                 visibility: self.visibility.clone(),
                 src_ref: self.src_ref,
                 keyword_src_ref: self.keyword_src_ref,
             },
             mir::Constant {
+                attr: self.attr.clone().into(),
                 ty: self.ty.clone(),
                 expr: self.expr.clone(),
             },
@@ -149,7 +136,6 @@ impl Scaffold for ir::InlineModule {
         let mut builder = TreeBuilder::new(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: Some(self.id.clone()),
-                doc: self.outer_attr.doc.clone().into(),
                 visibility: ir::Visibility::Public,
                 src_ref: SrcRef::none(),
                 keyword_src_ref: SrcRef::none(),
@@ -166,12 +152,12 @@ impl Scaffold for ir::Function {
         let mut builder = TreeBuilder::new(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: Some(self.id.clone()),
-                doc: self.outer_attr.doc.clone().into(),
                 visibility: ir::Visibility::Public,
                 src_ref: SrcRef::none(),
                 keyword_src_ref: SrcRef::none(),
             },
             mir::Function {
+                attr: (self.outer_attr.clone(), self.inner_attr.clone()).into(),
                 statements: self.statements.clone(),
                 parameters: self.signature.parameters.clone().into(),
                 return_ty: self.signature.return_type.clone(),
@@ -183,60 +169,15 @@ impl Scaffold for ir::Function {
     }
 }
 
-impl From<ir::Parameter> for mir::Parameter {
-    fn from(parameter: ir::Parameter) -> Self {
-        Self {
-            doc: parameter.attr.doc.clone().into(),
-            id: parameter.id.clone(),
-            ty: parameter.specified_type,
-            default_value: parameter.default_value,
-            src_ref: parameter.src_ref,
-        }
-    }
-}
-
-impl From<ir::ParameterList> for mir::ParameterList {
-    fn from(parameter_list: ir::ParameterList) -> Self {
-        Self {
-            parameters: parameter_list
-                .0
-                .value
-                .into_iter()
-                .map(|param| mir::Parameter::from(param))
-                .collect::<Vec<_>>()
-                .into_boxed_slice(),
-        }
-    }
-}
-
 impl From<ir::Workbench> for mir::Workbench {
     fn from(workbench: ir::Workbench) -> Self {
-        let parameters: mir::ParameterList = workbench.parameters.into();
-        let statements = parameters
-            .parameters
-            .iter()
-            .cloned()
-            .map(|param| mir::InitStatement {
-                id: param.id,
-                ty: param.ty,
-                expression: todo!(), //param.default_value.clone(),
-            })
-            .collect::<Vec<_>>()
-            .into_boxed_slice();
-
-        let default_init = mir::Init {
-            doc: workbench.outer_attr.doc.clone().into(),
-            parameters,
-            statements,
-        };
-
         Self {
             kind: workbench.kind,
             inits: workbench
                 .inits
                 .into_iter()
                 .map(|init| mir::Init {
-                    doc: init.attr.doc.clone().into(),
+                    attr: init.attr.clone().into(),
                     parameters: init.parameters.into(),
                     statements: init
                         .statements
@@ -249,23 +190,10 @@ impl From<ir::Workbench> for mir::Workbench {
                         .collect::<Vec<_>>()
                         .into_boxed_slice(),
                 })
-                .chain([default_init].into_iter())
                 .collect::<Vec<_>>()
                 .into_boxed_slice(),
-            statements: workbench
-                .statements
-                .into_iter()
-                .map(|stmt| mir::WorkbenchStatement {
-                    attr: todo!(),
-                    src_ref: todo!(),
-                    visibility: todo!(),
-                    keyword_src_ref: todo!(),
-                    id: todo!(),
-                    ty: todo!(),
-                    expression: todo!(),
-                })
-                .collect::<Vec<_>>()
-                .into_boxed_slice(),
+            parameters: workbench.parameters,
+            statements: workbench.statements.clone(),
         }
     }
 }
@@ -275,16 +203,11 @@ impl Scaffold for ir::Workbench {
         let mut builder = TreeBuilder::new(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: Some(self.id.clone()),
-                doc: self.outer_attr.doc.clone().into(),
                 visibility: ir::Visibility::Public,
                 src_ref: SrcRef::none(),
                 keyword_src_ref: SrcRef::none(),
             },
-            mir::Workbench {
-                statements: self.statements.clone(),
-                kind: self.kind.clone(),
-                inits: todo!(),
-            },
+            mir::Workbench::from(self.clone()),
         ));
 
         builder.scaffold(context, self.items.scaffoldables())?;
@@ -297,7 +220,6 @@ impl Scaffold for ir::Source {
         let mut builder = TreeBuilder::new(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: Some(mir::Identifier::from("root")), // Might be some
-                doc: self.attr.doc.clone().into(),
                 visibility: mir::Visibility::Public,
                 src_ref: SrcRef::none(),
                 keyword_src_ref: SrcRef::none(),

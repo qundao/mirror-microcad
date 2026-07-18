@@ -80,8 +80,6 @@ pub mod meta {
 #[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SymbolMetadata {
     pub id: Option<Identifier>,
-    /// Doc
-    pub doc: meta::DocBlock,
 
     /// Visibility
     pub visibility: meta::Visibility,

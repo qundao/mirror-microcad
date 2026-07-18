@@ -4,7 +4,7 @@
 //! Mid-level intermediate representation (MIR).
 
 use derive_more::From;
-use microcad_lang_base::{HashId, Refer, SrcRef};
+use microcad_lang_base::{HashId, Refer};
 use microcad_lang_proc_macros::Artifact;
 use serde::{Deserialize, Serialize};
 
@@ -21,28 +21,13 @@ pub type DocBlock = crate::tree::symbol::meta::DocBlock;
 
 pub type ConstantExpression = ir::ConstantExpression<UnresolvedName>;
 
-pub use ir::{Identifier, Visibility};
+pub use ir::{Attributes, FunctionSignature, Identifier, Parameter, ParameterList, Visibility};
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Constant {
-    // pub attr: ConstantAttributes
+    pub attr: Attributes,
     pub ty: TypeAnnotation,
     pub expr: ConstantExpression,
-}
-
-#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Parameter {
-    // pub attr: ParameterAttributes,
-    pub doc: DocBlock,
-    pub id: Identifier,
-    pub ty: TypeAnnotation,
-    pub default_value: Option<ConstantExpression>,
-    pub src_ref: SrcRef,
-}
-
-#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct ParameterList {
-    pub parameters: Box<[Parameter]>,
 }
 
 pub type FunctionExpression = ir::FunctionExpression<UnresolvedName>;
@@ -50,7 +35,7 @@ pub type FunctionStatement = ir::FunctionStatement<UnresolvedName>;
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Function {
-    // pub attr: FunctionAttributes,
+    pub attr: Attributes,
     pub parameters: ParameterList,
     pub return_ty: TypeAnnotation,
     pub statements: Box<[FunctionStatement]>,
@@ -70,8 +55,7 @@ pub struct InitStatement {
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Init {
-    // pub attr: InitAttributes
-    pub doc: DocBlock,
+    pub attr: Attributes,
     pub parameters: ParameterList,
     pub statements: Box<[InitStatement]>,
 }
@@ -82,10 +66,12 @@ pub struct Workbench {
     /// Workbench kind.
     pub kind: Refer<WorkbenchKind>,
 
+    pub parameters: ParameterList,
+
     /// Initializers.
-    /// The default initializer and tthe workbench parameters are located in the last init.
     pub inits: Box<[Init]>,
 
+    /// Statements.
     pub statements: Box<[WorkbenchStatement]>,
 }
 
