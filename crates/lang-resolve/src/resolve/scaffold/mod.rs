@@ -8,7 +8,7 @@ mod scaffoldable;
 mod tree_builder;
 
 use microcad_lang_base::{
-    CompilationResult, Diagnostics, Refer, Source, SourceLocation, SrcRef, SrcReferrer,
+    CompilationResult, Diagnostics, Source, SourceLocation, SrcRef, SrcReferrer,
 };
 use miette::Diagnostic;
 use thiserror::Error;
@@ -74,7 +74,9 @@ impl Scaffold for ir::FileModule {
                 src_ref: self.src_ref,
                 keyword_src_ref: self.keyword_src_ref,
             },
-            mir::UnresolvedSymbolDef::FileModule, // TODO Resolve file name already here.
+            mir::UnresolvedSymbolDef::FileModule(mir::FileModule {
+                attr: self.attr.clone().into(),
+            }), // TODO Resolve file name already here.
         )
         .into())
     }
@@ -140,7 +142,9 @@ impl Scaffold for ir::InlineModule {
                 src_ref: SrcRef::none(),
                 keyword_src_ref: SrcRef::none(),
             },
-            mir::UnresolvedSymbolDef::InlineModule,
+            mir::UnresolvedSymbolDef::InlineModule(mir::InlineModule {
+                attr: (self.outer_attr.clone(), self.inner_attr.clone()).into(),
+            }),
         ));
         builder.scaffold(context, self.items.scaffoldables())?;
         Ok(builder.build())
@@ -179,16 +183,7 @@ impl From<ir::Workbench> for mir::Workbench {
                 .map(|init| mir::Init {
                     attr: init.attr.clone().into(),
                     parameters: init.parameters.into(),
-                    statements: init
-                        .statements
-                        .iter()
-                        .map(|stmt| mir::InitStatement {
-                            id: todo!(),
-                            ty: todo!(),
-                            expression: todo!(),
-                        })
-                        .collect::<Vec<_>>()
-                        .into_boxed_slice(),
+                    statements: init.statements.clone(),
                 })
                 .collect::<Vec<_>>()
                 .into_boxed_slice(),
@@ -225,6 +220,7 @@ impl Scaffold for ir::Source {
                 keyword_src_ref: SrcRef::none(),
             },
             mir::SourceFile {
+                attr: self.attr.clone().into(),
                 statements: self.statements.clone(),
             },
         ));

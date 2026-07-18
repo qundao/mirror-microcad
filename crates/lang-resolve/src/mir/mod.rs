@@ -57,7 +57,7 @@ pub struct InitStatement {
 pub struct Init {
     pub attr: Attributes,
     pub parameters: ParameterList,
-    pub statements: Box<[InitStatement]>,
+    pub statements: Box<[WorkbenchStatement]>,
 }
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
@@ -83,8 +83,18 @@ pub struct Wildcard(pub UnresolvedName);
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SourceFile {
-    //attr: SourceFileAttributes,
+    pub attr: Attributes,
     pub statements: Box<[WorkbenchStatement]>,
+}
+
+#[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
+pub struct InlineModule {
+    pub attr: Attributes,
+}
+
+#[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
+pub struct FileModule {
+    pub attr: Attributes,
 }
 
 /// Symbol definition
@@ -93,9 +103,9 @@ pub enum UnresolvedSymbolDef {
     /// Source file symbol.
     SourceFile(SourceFile),
     /// Inline Module symbol: `mod foo {}`
-    InlineModule,
+    InlineModule(InlineModule),
     /// File Module Symbol: `mod foo;`
-    FileModule,
+    FileModule(FileModule),
     /// Workbench symbol.
     Workbench(Workbench),
     /// Function symbol.

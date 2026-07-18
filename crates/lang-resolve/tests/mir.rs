@@ -13,9 +13,10 @@ fn inline_module(id: &str) -> mir::UnresolvedSymbol {
             src_ref: SrcRef::none(),
             keyword_src_ref: SrcRef::none(),
             id: Some(mir::Identifier::from(id)),
-            doc: mir::DocBlock::default(),
         },
-        def: mir::UnresolvedSymbolDef::InlineModule,
+        def: mir::UnresolvedSymbolDef::InlineModule(mir::InlineModule {
+            attr: mir::Attributes::default(),
+        }),
         parent: None,
         children: Default::default(),
     }
