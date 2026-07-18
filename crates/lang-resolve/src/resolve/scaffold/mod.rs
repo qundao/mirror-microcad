@@ -3,158 +3,43 @@
 
 //! Scaffolding builds Unresolved Symbol Tree as mid-level intermediate represenation from IR.
 
-use microcad_lang_base::{CompilationResult, Diagnostics, Refer, Source, SrcRef, SrcReferrer};
+mod path_resolver;
+mod scaffoldable;
+mod tree_builder;
+
+use microcad_lang_base::{
+    CompilationResult, Diagnostics, Refer, Source, SourceLocation, SrcRef, SrcReferrer,
+};
 use miette::Diagnostic;
 use thiserror::Error;
 
-use crate::{
-    Mir, mir,
-    tree::{SymbolHandle, SymbolMetadata},
-};
+use crate::{Mir, mir, scaffold::scaffoldable::Scaffoldables, tree::SymbolMetadata};
+
+pub use path_resolver::{DefaultPathResolver, PathResolver};
+pub use tree_builder::TreeBuilder;
 
 use microcad_lang_lower::{Ir, ir};
 
-pub struct TreeBuilder {
-    pub tree: mir::UnresolvedSymbolTree,
-    // Stack of active parents
-    pub stack: Vec<SymbolHandle>,
-}
-
-impl TreeBuilder {
-    pub fn new(root_data: impl Into<mir::UnresolvedSymbolTree>) -> Self {
-        Self {
-            tree: root_data.into(),
-            stack: vec![SymbolHandle::root()],
-        }
-    }
-
-    /// Add a sub-tree to the current parent
-    pub fn add(&mut self, tree: impl Into<mir::UnresolvedSymbolTree>) -> &mut Self {
-        let parent = self.stack.last().copied();
-        self.tree.insert(parent, tree);
-        self
-    }
-
-    pub fn scaffold<'a>(
-        &mut self,
-        context: &mut ScaffoldContext,
-        mut items: impl Iterator<Item = &'a dyn Scaffold>,
-    ) -> Result<(), ScaffoldError> {
-        items.try_for_each(|item| {
-            self.add(item.scaffold(context)?);
-            Ok(())
-        })?;
-        Ok(())
-    }
-
-    /// Enter a child scope (push to stack)
-    pub fn enter(&mut self, tree: impl Into<mir::UnresolvedSymbolTree>) -> &mut Self {
-        self.stack
-            .push(self.tree.last_handle().expect("At least one node"));
-        self.add(tree);
-        // The last inserted node (the one we just added) becomes the new parent
-        self
-    }
-
-    /// Exit the current scope (pop from stack)
-    pub fn exit(&mut self) -> &mut Self {
-        self.stack.pop();
-        self
-    }
-
-    pub fn build(self) -> mir::UnresolvedSymbolTree {
-        self.tree
-    }
-
-    /*
-    pub fn build_rst(self) -> Rst {
-        let root = self.tree.root().expect("Root node expected");
-
-        // Convert unresolved symbols into resolved symbols
-        let nodes: Vec<Symbol<ResolvedSymbolDef>> = root
-            .descendants()
-            .map(|symbol| def::resolve_symbol(symbol).expect("TODO Error handling"))
-            .collect();
-
-        Rst { nodes }
-    }
-
-    */
-}
-
-// In your logic/compiler layer (where Scaffold is defined)
-pub trait ItemsExt {
-    fn scaffoldables(&self) -> impl Iterator<Item = &dyn Scaffold>;
-}
-
-impl<T> ItemsExt for Box<[T]>
-where
-    T: Scaffold,
-{
-    fn scaffoldables(&self) -> impl Iterator<Item = &dyn Scaffold> {
-        self.iter().map(|i| i as &dyn Scaffold)
-    }
-}
-
-impl ItemsExt for ir::Aliases {
-    fn scaffoldables(&self) -> impl Iterator<Item = &dyn Scaffold> {
-        self.explicit_aliases
-            .scaffoldables()
-            .chain(self.wildcards.scaffoldables())
-    }
-}
-
-impl ItemsExt for ir::FunctionItems {
-    fn scaffoldables(&self) -> impl Iterator<Item = &dyn Scaffold> {
-        self.aliases
-            .scaffoldables()
-            .chain(self.constants.scaffoldables())
-    }
-}
-
-impl ItemsExt for ir::WorkbenchItems {
-    fn scaffoldables(&self) -> impl Iterator<Item = &dyn Scaffold> {
-        self.aliases
-            .scaffoldables()
-            .chain(self.constants.scaffoldables())
-            .chain(self.functions.scaffoldables())
-    }
-}
-
-impl ItemsExt for ir::InlineModuleItems {
-    fn scaffoldables(&self) -> impl Iterator<Item = &dyn Scaffold> {
-        self.aliases
-            .scaffoldables()
-            .chain(self.constants.scaffoldables())
-            .chain(self.modules.scaffoldables())
-            .chain(self.functions.scaffoldables())
-            .chain(self.workbenches.scaffoldables())
-    }
-}
-
-impl ItemsExt for ir::SourceItems {
-    fn scaffoldables(&self) -> impl Iterator<Item = &dyn Scaffold> {
-        self.file_modules
-            .scaffoldables()
-            .chain(self.aliases.scaffoldables())
-            .chain(self.constants.scaffoldables())
-            .chain(self.inline_modules.scaffoldables())
-            .chain(self.functions.scaffoldables())
-            .chain(self.workbenches.scaffoldables())
-    }
-}
-
 #[derive(Debug, Error, Diagnostic)]
-pub enum ScaffoldError {}
+pub enum ScaffoldError {
+    #[error("Source has no file path: {loc}")]
+    SourceHasNoPath {
+        loc: SourceLocation,
+        #[label("The source code")]
+        src_ref: SrcRef,
+    },
+}
 
 impl SrcReferrer for ScaffoldError {
     fn src_ref(&self) -> SrcRef {
-        SrcRef::none()
+        match &self {
+            ScaffoldError::SourceHasNoPath { src_ref, .. } => *src_ref,
+        }
     }
 }
 
 pub struct ScaffoldContext<'source> {
-    pub(crate) source: &'source Source,
+    pub(crate) path_resolver: Box<dyn PathResolver<'source> + 'source>,
     pub(crate) diags: Vec<ScaffoldError>,
     // pub(crate) path_resolver: Box<dyn FileModulePathResolver>>
 }
@@ -168,7 +53,7 @@ impl<'source> ScaffoldContext<'source> {
 impl<'source> From<&'source Source> for ScaffoldContext<'source> {
     fn from(source: &'source Source) -> Self {
         ScaffoldContext {
-            source,
+            path_resolver: Box::new(DefaultPathResolver { source }),
             diags: vec![],
         }
     }

@@ -6,16 +6,19 @@ pub mod scaffold;
 mod case_check;
 mod type_check;
 
-use microcad_lang_base::{Diagnostics, SrcRef, SrcReferrer, element::Case};
+use microcad_lang_base::{Diagnostics, HashId, SrcRef, SrcReferrer, element::Case};
 use microcad_lang_lower::ir;
 use miette::Diagnostic;
 use thiserror::Error;
 
-use crate::rst;
+use crate::{rst, scaffold::ScaffoldError};
 
 /// Resolve error.
 #[derive(Debug, Error, Diagnostic)]
 pub enum ResolveError {
+    #[error("{0}")]
+    ScaffoldError(#[from] ScaffoldError),
+
     #[error("Wrong case")]
     #[diagnostic(severity = "warning")]
     WrongCase {
@@ -33,6 +36,21 @@ pub enum ResolveError {
         #[label("Actual type")]
         actual_src_ref: SrcRef,
     },
+    #[error("No source with hash: {0}")]
+    NoSourceWithHash(HashId),
+}
+
+impl SrcReferrer for ResolveError {
+    fn src_ref(&self) -> SrcRef {
+        match self {
+            ResolveError::ScaffoldError(err) => err.src_ref(),
+            ResolveError::WrongCase { src_ref, .. } => *src_ref,
+            ResolveError::TypeMismatch {
+                specified_src_ref, ..
+            } => *specified_src_ref,
+            ResolveError::NoSourceWithHash(_) => SrcRef::none(),
+        }
+    }
 }
 
 /// Result type of any resolve.
