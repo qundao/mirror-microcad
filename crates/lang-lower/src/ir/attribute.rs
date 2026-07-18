@@ -6,7 +6,7 @@
 use crate::ir;
 
 use derive_more::{Deref, DerefMut};
-use microcad_lang_base::{IsDefault, Refer, SrcRef, is_default};
+use microcad_lang_base::{IsDefault, Refer, SrcRef};
 
 use microcad_lang_proc_macros::SrcReferrer;
 use serde::{Deserialize, Serialize};
@@ -89,16 +89,12 @@ pub struct Tag {
 #[derive(Debug, Default, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Attributes {
     /// Documentation
-    #[serde(skip_serializing_if = "ir::DocBlock::is_empty", default)]
     pub doc: ir::DocBlock,
     /// Metadata: #[color = "red"]
-    #[serde(skip_serializing_if = "is_default", default)]
     pub meta: Box<[Meta]>,
     /// Commands: #[export("file.svg")] #[deprecate(since = "0.2.0")]
-    #[serde(skip_serializing_if = "is_default", default)]
     pub commands: Box<[Command]>,
     /// Tags: #[deprecated]
-    #[serde(skip_serializing_if = "is_default", default)]
     pub tags: Box<[Tag]>,
 }
 
@@ -153,6 +149,12 @@ impl IsDefault for OuterAttributes {
 
 impl From<OuterAttributes> for Attributes {
     fn from(value: OuterAttributes) -> Self {
+        value.0
+    }
+}
+
+impl From<InnerAttributes> for Attributes {
+    fn from(value: InnerAttributes) -> Self {
         value.0
     }
 }

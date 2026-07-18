@@ -48,7 +48,7 @@ fn inner_doc_block() {
         tail: None,
     };
 
-    let source = base::Source::new(base::SourceKind::Str, String::new());
+    let source = base::Source::from("");
     let mut lower_context = LowerContext::from(&source);
     let doc_block = ir::DocBlock::lower(&statements, &mut lower_context).unwrap();
 
