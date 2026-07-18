@@ -150,3 +150,41 @@ impl IsDefault for OuterAttributes {
         self.is_empty()
     }
 }
+
+impl From<OuterAttributes> for Attributes {
+    fn from(value: OuterAttributes) -> Self {
+        value.0
+    }
+}
+
+impl From<(OuterAttributes, InnerAttributes)> for Attributes {
+    fn from(attr: (OuterAttributes, InnerAttributes)) -> Self {
+        Self {
+            doc: ir::DocBlock::merge(&attr.0.doc, &attr.1.doc),
+            meta: attr
+                .0
+                .meta
+                .clone()
+                .into_iter()
+                .chain(attr.1.meta.clone().into_iter())
+                .collect::<Vec<_>>()
+                .into_boxed_slice(),
+            commands: attr
+                .0
+                .commands
+                .clone()
+                .into_iter()
+                .chain(attr.1.commands.clone().into_iter())
+                .collect::<Vec<_>>()
+                .into_boxed_slice(),
+            tags: attr
+                .0
+                .tags
+                .clone()
+                .into_iter()
+                .chain(attr.1.tags.clone().into_iter())
+                .collect::<Vec<_>>()
+                .into_boxed_slice(),
+        }
+    }
+}
