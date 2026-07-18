@@ -133,7 +133,7 @@ fn scaffold_inline_module() {
         .collect::<Vec<_>>()
         .join(" ");
 
-    assert_that!(s, eq("root A b C d E f G"));
+    assert_that!(s, eq("inline_module A b C d E f G"));
 
     assert!(root.resolve("A").is_some());
     assert!(root.resolve("b::C").is_some());

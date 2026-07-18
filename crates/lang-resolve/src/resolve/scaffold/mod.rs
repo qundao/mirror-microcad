@@ -215,7 +215,7 @@ impl Scaffold for ir::Source {
     fn scaffold(&self, context: &mut ScaffoldContext) -> ScaffoldResult {
         let mut builder = TreeBuilder::new(mir::UnresolvedSymbol::new(
             SymbolMetadata {
-                id: Some(mir::Identifier::from("root")), // Might be some
+                id: Some(context.path_resolver.module_name_from_source()?),
                 visibility: mir::Visibility::Public,
                 src_ref: SrcRef::none(),
                 keyword_src_ref: SrcRef::none(),

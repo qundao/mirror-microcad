@@ -51,6 +51,7 @@ pub trait PathResolver<'source> {
     }
 }
 
+/// The [`DefaultPathResolver`] does perform any file system operations.
 pub struct DefaultPathResolver<'source> {
     pub(crate) source: &'source Source,
 }
@@ -65,4 +66,9 @@ impl<'source> PathResolver<'source> for DefaultPathResolver<'source> {
     fn source(&self) -> &'source Source {
         self.source
     }
+}
+
+#[cfg(feature = "io")]
+pub struct FilePathResolve<'source> {
+    pub(crate) source: &'source Source,
 }
