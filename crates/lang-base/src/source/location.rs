@@ -21,6 +21,7 @@ pub enum SourceKind {
 
 impl SourceKind {
     /// Returns a fallback or explicit URL representation of the source.
+    #[deny(clippy::wildcard_match_arm)]
     pub fn url(&self) -> Url {
         match self {
             SourceKind::Url(url) => url.clone(),
@@ -86,6 +87,20 @@ impl SourceKind {
 pub struct SourceLocation {
     pub kind: SourceKind,
     pub line_offset: Option<u32>,
+}
+
+impl std::fmt::Display for SourceLocation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        // 1. Get the path string or URL string via your existing helper
+        let base = self.kind.source_name();
+
+        // 2. Format with or without the suffix based on line_offset presence
+        if let Some(offset) = self.line_offset {
+            write!(f, "{}:{}", base, offset)
+        } else {
+            write!(f, "{}", base)
+        }
+    }
 }
 
 impl SourceLocation {
