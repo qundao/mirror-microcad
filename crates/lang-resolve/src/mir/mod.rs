@@ -94,7 +94,12 @@ pub struct InlineModule {
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct FileModule {
+    /// Attributes for this file module
     pub attr: Attributes,
+    /// The path of the file module to be loaded.
+    ///
+    /// We use `String` here as type instead of `PathBuf` for platform-independent serialization.
+    pub path: String,
 }
 
 /// Symbol definition

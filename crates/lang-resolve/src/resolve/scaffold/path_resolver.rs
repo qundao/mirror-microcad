@@ -1,7 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{Identifier, Source, SrcReferrer};
+use microcad_lang_base::{Identifier, MICROCAD_EXTENSION, Source, SrcReferrer};
 
 use crate::scaffold::ScaffoldError;
 
@@ -35,8 +35,19 @@ pub trait PathResolver<'source> {
         file_module_name: &Identifier,
     ) -> Result<std::path::PathBuf, ScaffoldError> {
         Ok(self
-            .source_path()
-            .map(|path| path.join(file_module_name.id().to_string()))?)
+            .source_path()?
+            .with_extension("")
+            .join(file_module_name.id().to_string())
+            .with_extension(MICROCAD_EXTENSION))
+    }
+
+    fn file_module_path_as_string(
+        &self,
+        file_module_name: &Identifier,
+    ) -> Result<String, ScaffoldError> {
+        let path = self.file_module_path(file_module_name)?;
+
+        Ok(path.to_string_lossy().into_owned())
     }
 }
 

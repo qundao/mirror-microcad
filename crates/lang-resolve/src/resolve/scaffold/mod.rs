@@ -66,7 +66,7 @@ pub trait Scaffold {
 }
 
 impl Scaffold for ir::FileModule {
-    fn scaffold(&self, _context: &mut ScaffoldContext) -> ScaffoldResult {
+    fn scaffold(&self, context: &mut ScaffoldContext) -> ScaffoldResult {
         Ok(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: Some(self.id.clone()),
@@ -76,6 +76,7 @@ impl Scaffold for ir::FileModule {
             },
             mir::UnresolvedSymbolDef::FileModule(mir::FileModule {
                 attr: self.attr.clone().into(),
+                path: context.path_resolver.file_module_path_as_string(&self.id)?,
             }), // TODO Resolve file name already here.
         )
         .into())

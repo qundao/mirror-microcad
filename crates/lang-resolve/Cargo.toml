@@ -29,3 +29,7 @@ microcad-lang-types = { workspace = true }
 [dev-dependencies]
 test-that = "0.5"
 insta = "1.45.0"
+
+[features]
+default = ["io"]
+io = []

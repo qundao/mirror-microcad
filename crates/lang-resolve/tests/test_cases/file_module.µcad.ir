@@ -12,7 +12,15 @@
                 file_modules: [
                     (
                         src_ref: "0:1 @ 0x5396e7638cd3b8e0 (0..7)",
-                        attr: (()),
+                        attr: ((
+                            doc: ((
+                                value: [],
+                                src_ref: "0:1 @ 0x5396e7638cd3b8e0 (0..92)",
+                            )),
+                            meta: [],
+                            commands: [],
+                            tags: [],
+                        )),
                         visibility: Private,
                         keyword_src_ref: "0:1 @ 0x5396e7638cd3b8e0 (0..3)",
                         id: ((
@@ -22,7 +30,15 @@
                     ),
                     (
                         src_ref: "1:1 @ 0x5396e7638cd3b8e0 (44..55)",
-                        attr: (()),
+                        attr: ((
+                            doc: ((
+                                value: [],
+                                src_ref: "1:1 @ 0x5396e7638cd3b8e0 (44..44)",
+                            )),
+                            meta: [],
+                            commands: [],
+                            tags: [],
+                        )),
                         visibility: Public,
                         keyword_src_ref: "1:5 @ 0x5396e7638cd3b8e0 (48..51)",
                         id: ((
