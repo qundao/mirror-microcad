@@ -56,19 +56,4 @@ impl TreeBuilder {
     pub fn build(self) -> mir::UnresolvedSymbolTree {
         self.tree
     }
-
-    /*
-    pub fn build_rst(self) -> Rst {
-        let root = self.tree.root().expect("Root node expected");
-
-        // Convert unresolved symbols into resolved symbols
-        let nodes: Vec<Symbol<ResolvedSymbolDef>> = root
-            .descendants()
-            .map(|symbol| def::resolve_symbol(symbol).expect("TODO Error handling"))
-            .collect();
-
-        Rst { nodes }
-    }
-
-    */
 }
