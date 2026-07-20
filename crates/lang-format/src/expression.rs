@@ -66,7 +66,7 @@ impl Format for ast::Expression {
             ast::Expression::ArrayRange(array_range_expression) => array_range_expression.format(f),
             ast::Expression::ArrayList(array_list_expression) => array_list_expression.format(f),
             ast::Expression::String(format_string) => format_string.format(f),
-            ast::Expression::QualifiedName(qualified_name) => qualified_name.format(f),
+            ast::Expression::SymbolPath(qualified_name) => qualified_name.format(f),
             ast::Expression::Marker(identifier) => format!("@{}", identifier.name).into(),
             ast::Expression::BinaryOperation(binary_operation) => binary_operation.format(f),
             ast::Expression::UnaryOperation(unary_operation) => unary_operation.format(f),
@@ -176,9 +176,10 @@ impl Format for ast::ArrayListExpression {
     }
 }
 
-impl Format for ast::QualifiedName {
+impl Format for ast::SymbolPath {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
+            if self.prefix.is_some() { "::" } else { "" }
             Node::hlist(self.parts.iter().map(|identifier| identifier.format(f)), "::")
         )
     }
@@ -260,7 +261,7 @@ impl Format for ast::ElementAccess {
             ast::Expression::ArrayRange(_) => false,
             ast::Expression::ArrayList(_) => true,
             ast::Expression::String(_) => true,
-            ast::Expression::QualifiedName(_) => true,
+            ast::Expression::SymbolPath(_) => true,
             ast::Expression::Marker(_) => true,
             ast::Expression::BinaryOperation(_) => true,
             ast::Expression::UnaryOperation(_) => true,

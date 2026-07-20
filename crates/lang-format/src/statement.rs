@@ -110,6 +110,7 @@ impl Format for ast::def::UseStatementPart {
 impl Format for ast::def::UseName {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
+            if self.prefix.is_some() { "::" } else { "" }
             Node::hlist(self.parts.iter().map(|part| part.format(f)), "::")
         )
     }
