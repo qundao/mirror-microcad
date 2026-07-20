@@ -10,7 +10,7 @@ expression: output
     ),
     payload: (
         input_hash: "0x35ddf56ef652771b",
-        output_hash: "0xa07b0c9273b3e3be",
+        output_hash: "0xb9d0f578a52d6e1f",
         tree: (
             span: (
                 start: 0,
@@ -145,10 +145,10 @@ expression: output
                                             start: 40,
                                             end: 45,
                                         ),
-                                        lhs: QualifiedName((
+                                        lhs: SymbolPath((
                                             span: (
                                                 start: 40,
-                                                end: 41,
+                                                end: 42,
                                             ),
                                             extras: (
                                                 leading: ([]),
@@ -156,6 +156,7 @@ expression: output
                                                     Whitespace((" ")),
                                                 ]),
                                             ),
+                                            prefix: None,
                                             parts: [
                                                 (
                                                     span: (

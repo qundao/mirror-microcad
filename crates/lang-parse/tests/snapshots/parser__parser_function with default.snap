@@ -10,7 +10,7 @@ expression: output
     ),
     payload: (
         input_hash: "0x8808fc1048f2bdf6",
-        output_hash: "0x2856f5ae65485f5d",
+        output_hash: "0xe9be7685faa1597f",
         tree: (
             span: (
                 start: 0,
@@ -184,10 +184,10 @@ expression: output
                                             start: 28,
                                             end: 33,
                                         ),
-                                        lhs: QualifiedName((
+                                        lhs: SymbolPath((
                                             span: (
                                                 start: 28,
-                                                end: 29,
+                                                end: 30,
                                             ),
                                             extras: (
                                                 leading: ([]),
@@ -195,6 +195,7 @@ expression: output
                                                     Whitespace((" ")),
                                                 ]),
                                             ),
+                                            prefix: None,
                                             parts: [
                                                 (
                                                     span: (
@@ -212,7 +213,7 @@ expression: output
                                             ),
                                             value: Divide,
                                         ),
-                                        rhs: QualifiedName((
+                                        rhs: SymbolPath((
                                             span: (
                                                 start: 32,
                                                 end: 33,
@@ -221,6 +222,7 @@ expression: output
                                                 leading: ([]),
                                                 trailing: ([]),
                                             ),
+                                            prefix: None,
                                             parts: [
                                                 (
                                                     span: (

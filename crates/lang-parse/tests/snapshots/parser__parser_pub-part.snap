@@ -10,7 +10,7 @@ expression: output
     ),
     payload: (
         input_hash: "0x73f03eaaf3fba7cd",
-        output_hash: "0x3a080c6133952658",
+        output_hash: "0x10aee666221260c2",
         tree: (
             span: (
                 start: 0,
@@ -203,6 +203,7 @@ expression: output
                                                     leading: ([]),
                                                     trailing: ([]),
                                                 ),
+                                                prefix: None,
                                                 parts: [
                                                     (
                                                         span: (
@@ -246,7 +247,7 @@ expression: output
                                                             leading: ([]),
                                                             trailing: ([]),
                                                         ),
-                                                        expr: QualifiedName((
+                                                        expr: SymbolPath((
                                                             span: (
                                                                 start: 67,
                                                                 end: 73,
@@ -255,6 +256,7 @@ expression: output
                                                                 leading: ([]),
                                                                 trailing: ([]),
                                                             ),
+                                                            prefix: None,
                                                             parts: [
                                                                 (
                                                                     span: (
@@ -275,7 +277,7 @@ expression: output
                                                             leading: ([]),
                                                             trailing: ([]),
                                                         ),
-                                                        expr: QualifiedName((
+                                                        expr: SymbolPath((
                                                             span: (
                                                                 start: 75,
                                                                 end: 81,
@@ -284,6 +286,7 @@ expression: output
                                                                 leading: ([]),
                                                                 trailing: ([]),
                                                             ),
+                                                            prefix: None,
                                                             parts: [
                                                                 (
                                                                     span: (

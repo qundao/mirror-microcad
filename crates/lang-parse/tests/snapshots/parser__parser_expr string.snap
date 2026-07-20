@@ -10,7 +10,7 @@ expression: output
     ),
     payload: (
         input_hash: "0x540dc60d0ebccdbd",
-        output_hash: "0xfd52b41ceff73eb9",
+        output_hash: "0x171e19bb7255c36f",
         tree: (
             span: (
                 start: 0,
@@ -67,10 +67,10 @@ expression: output
                                         start: 9,
                                         end: 23,
                                     ),
-                                    lhs: QualifiedName((
+                                    lhs: SymbolPath((
                                         span: (
                                             start: 9,
-                                            end: 13,
+                                            end: 14,
                                         ),
                                         extras: (
                                             leading: ([]),
@@ -78,6 +78,7 @@ expression: output
                                                 Whitespace((" ")),
                                             ]),
                                         ),
+                                        prefix: None,
                                         parts: [
                                             (
                                                 span: (
@@ -95,7 +96,7 @@ expression: output
                                         ),
                                         value: Add,
                                     ),
-                                    rhs: QualifiedName((
+                                    rhs: SymbolPath((
                                         span: (
                                             start: 16,
                                             end: 23,
@@ -104,6 +105,7 @@ expression: output
                                             leading: ([]),
                                             trailing: ([]),
                                         ),
+                                        prefix: None,
                                         parts: [
                                             (
                                                 span: (

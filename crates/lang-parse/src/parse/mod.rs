@@ -256,19 +256,26 @@ fn parser<'tokens>()
     .labelled("identifier")
     .boxed();
 
-    let qualified_name = identifier_parser
-        .clone()
-        .separated_by(just(Token::SigilDoubleColon))
-        .at_least(1)
-        .collect::<Vec<_>>()
-        .with_extras()
-        .map_with(|(parts, extras), e| ast::QualifiedName {
-            span: e.span(),
-            parts,
-            extras,
-        })
-        .labelled("qualified name")
-        .boxed();
+    let symbol_path = select_ref! {
+        Token::SigilDoubleColon = e => e.span()
+    }
+    .or_not()
+    .then(
+        identifier_parser
+            .clone()
+            .separated_by(just(Token::SigilDoubleColon))
+            .at_least(1)
+            .collect::<Vec<_>>(),
+    )
+    .with_extras()
+    .map_with(|((prefix, parts), extras), e| ast::SymbolPath {
+        span: e.span(),
+        prefix,
+        parts,
+        extras,
+    })
+    .labelled("qualified name")
+    .boxed();
 
     let unit = ast::Unit::parser().boxed();
 
@@ -401,7 +408,7 @@ fn parser<'tokens>()
         .collect::<Vec<_>>()
         .boxed();
 
-    let call_inner = qualified_name
+    let call_inner = symbol_path
         .clone()
         .then(
             tuple_body
@@ -1410,30 +1417,7 @@ fn parser<'tokens>()
             .labelled("if expression")
             .boxed();
 
-        let qualified_name_expr = identifier_parser
-            .clone()
-            .map_with(|ident, e| ast::QualifiedName {
-                span: e.span(),
-                parts: vec![ident],
-                extras: ast::ItemExtras::default(),
-            })
-            .foldl_with(
-                just(Token::SigilDoubleColon)
-                    .ignore_then(identifier_parser.clone())
-                    .repeated(),
-                |mut acc, part, _| {
-                    acc.span.end = part.span.end;
-                    acc.parts.push(part);
-                    acc
-                },
-            )
-            .with_extras()
-            .map(|(mut name, extras)| {
-                name.extras = extras;
-                name
-            })
-            .map(ast::Expression::QualifiedName)
-            .boxed();
+        let symbol_path_expr = symbol_path.clone().map(ast::Expression::SymbolPath).boxed();
 
         let call = call_inner
             .clone()
@@ -1455,7 +1439,7 @@ fn parser<'tokens>()
             .or(array_range)
             .or(array_list)
             .or(body_expression)
-            .or(qualified_name_expr)
+            .or(symbol_path_expr)
             .boxed();
 
         let access_attribute = just(Token::SigilHash)

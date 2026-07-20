@@ -94,8 +94,8 @@ pub enum Expression {
     ArrayList(ArrayListExpression),
     /// A format string: `"We have {n} items"`
     String(FormatString),
-    /// A qualified name: `foo::bar::baz`
-    QualifiedName(QualifiedName),
+    /// A symbol path: `foo::bar::baz`
+    SymbolPath(SymbolPath),
     /// A marker expression: `@input`
     Marker(ast::Identifier),
     /// A binary operation: `1 + 3`
@@ -124,7 +124,7 @@ impl Expression {
             Expression::ArrayRange(ex) => ex.span.clone(),
             Expression::ArrayList(ex) => ex.span.clone(),
             Expression::String(ex) => ex.span.clone(),
-            Expression::QualifiedName(ex) => ex.span.clone(),
+            Expression::SymbolPath(ex) => ex.span.clone(),
             Expression::Marker(ex) => ex.span.clone(),
             Expression::BinaryOperation(ex) => ex.span.clone(),
             Expression::UnaryOperation(ex) => ex.span.clone(),
@@ -268,9 +268,10 @@ pub struct ArrayItem {
 /// A qualified name, containing one or more [`Identifier`]s separated by `::`
 #[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
-pub struct QualifiedName {
+pub struct SymbolPath {
     pub span: Span,
     pub extras: ast::ItemExtras,
+    pub prefix: Option<Span>,
     pub parts: Vec<ast::Identifier>,
 }
 
@@ -300,7 +301,7 @@ pub struct UnaryOperation {
 pub struct Call {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub name: QualifiedName,
+    pub name: SymbolPath,
     pub arguments: ArgumentList,
 }
 
