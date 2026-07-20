@@ -165,14 +165,21 @@ where
     }
 }
 
-impl Lower<ast::QualifiedName> for ir::QualifiedName {
-    fn lower(node: &ast::QualifiedName, context: &mut LowerContext) -> LowerResult<Self> {
-        let parts = node
-            .parts
-            .iter()
-            .map(|ident| ir::Identifier::lower(ident, context))
-            .collect::<Result<Vec<_>, _>>()?;
-        Ok(Self::new(parts, context.span_to_src_ref(&node.span)))
+impl Lower<ast::SymbolPath> for ir::SymbolPath {
+    fn lower(node: &ast::SymbolPath, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
+            prefix: node
+                .prefix
+                .as_ref()
+                .map(|span| context.span_to_src_ref(span)),
+            parts: node
+                .parts
+                .iter()
+                .map(|ident| ir::Identifier::lower(ident, context))
+                .collect::<Result<Vec<_>, _>>()?
+                .into_boxed_slice(),
+            src_ref: context.span_to_src_ref(&node.span),
+        })
     }
 }
 
@@ -190,7 +197,7 @@ where
 
 impl<NAME: Serialize> Lower<ast::Expression> for ir::ConstantExpression<NAME>
 where
-    NAME: Lower<ast::QualifiedName>,
+    NAME: Lower<ast::SymbolPath>,
 {
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
@@ -214,7 +221,7 @@ where
                 unit: ir::Unit::lower(&a.unit, context)?,
                 src_ref: context.span_to_src_ref(&a.span),
             }),
-            ast::Expression::QualifiedName(n) => Self::Name(NAME::lower(n, context)?),
+            ast::Expression::SymbolPath(n) => Self::Name(NAME::lower(n, context)?),
             ast::Expression::BinaryOperation(binop) => {
                 Self::BinaryOp(ir::BinaryOp::lower(binop, context)?)
             }

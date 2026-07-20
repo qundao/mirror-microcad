@@ -58,7 +58,7 @@ pub struct ExplicitAlias {
     pub visibility: ir::Visibility,
     #[serde(skip_serializing_if = "SrcRef::is_none", default)]
     pub keyword_src_ref: SrcRef,
-    pub path: QualifiedName,
+    pub path: SymbolPath,
     pub id: Identifier,
     pub src_ref: SrcRef,
 }
@@ -71,7 +71,7 @@ pub struct WildcardAlias {
     pub visibility: ir::Visibility,
     #[serde(skip_serializing_if = "SrcRef::is_none", default)]
     pub keyword_src_ref: SrcRef,
-    pub path: QualifiedName,
+    pub path: SymbolPath,
     pub src_ref: SrcRef,
 }
 

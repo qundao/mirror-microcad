@@ -47,7 +47,7 @@ type MethodCall<NAME> = Access<ir::Call<FunctionExpression<NAME>>, NAME>;
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
-pub enum FunctionExpression<NAME: Serialize = ir::QualifiedName> {
+pub enum FunctionExpression<NAME: Serialize = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
     Name(NAME),
@@ -165,5 +165,5 @@ pub struct Function {
 
     /// Function statements
     #[serde(skip_serializing_if = "is_default", default)]
-    pub statements: Box<[ir::FunctionStatement<ir::QualifiedName>]>,
+    pub statements: Box<[ir::FunctionStatement<ir::SymbolPath>]>,
 }

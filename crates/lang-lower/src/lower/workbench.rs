@@ -81,7 +81,7 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
                 unit: ir::Unit::lower(&a.unit, context)?,
                 src_ref: context.span_to_src_ref(&a.span),
             }),
-            ast::Expression::QualifiedName(n) => Self::Name(ir::QualifiedName::lower(n, context)?),
+            ast::Expression::SymbolPath(n) => Self::Name(ir::SymbolPath::lower(n, context)?),
             ast::Expression::BinaryOperation(binop) => {
                 Self::BinaryOp(ir::BinaryOp::lower(binop, context)?)
             }

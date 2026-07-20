@@ -9,8 +9,8 @@ expression: "ir.to_ron().expect(\"No error\")"
         kind: Ir,
     ),
     payload: (
-        input_hash: "0x42372f051f218215",
-        output_hash: "0x4b16a7eee7ec2222",
+        input_hash: "0x7cd65a945030702d",
+        output_hash: "0xe52f69268644a03f",
         tree: (
             items: (
                 workbenches: [
@@ -27,6 +27,9 @@ expression: "ir.to_ron().expect(\"No error\")"
                                 ],
                                 src_ref: "1:1 @ 0x5b5b0d75574ec6c6 (1..148)",
                             )),
+                            meta: [],
+                            commands: [],
+                            tags: [],
                         )),
                         visibility: Public,
                         kind: (
@@ -164,7 +167,15 @@ expression: "ir.to_ron().expect(\"No error\")"
                                 )),
                                 statements: [
                                     (
-                                        attr: (()),
+                                        attr: ((
+                                            doc: ((
+                                                value: [],
+                                                src_ref: "None",
+                                            )),
+                                            meta: [],
+                                            commands: [],
+                                            tags: [],
+                                        )),
                                         src_ref: "8:9 @ 0x5b5b0d75574ec6c6 (287..310)",
                                         visibility: Private,
                                         id: Some(((
@@ -172,15 +183,16 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             src_ref: "8:9 @ 0x5b5b0d75574ec6c6 (287..293)",
                                         ))),
                                         expression: BinaryOp((
-                                            lhs: Name(((
-                                                value: [
+                                            lhs: Name((
+                                                prefix: None,
+                                                parts: [
                                                     ((
                                                         value: "diameter",
                                                         src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..304)",
                                                     )),
                                                 ],
-                                                src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..304)",
-                                            ))),
+                                                src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..305)",
+                                            )),
                                             op: (
                                                 value: "/",
                                                 src_ref: "8:27 @ 0x5b5b0d75574ec6c6 (305..306)",
@@ -202,13 +214,22 @@ expression: "ir.to_ron().expect(\"No error\")"
                         ],
                         statements: [
                             (
-                                attr: (()),
+                                attr: ((
+                                    doc: ((
+                                        value: [],
+                                        src_ref: "None",
+                                    )),
+                                    meta: [],
+                                    commands: [],
+                                    tags: [],
+                                )),
                                 src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..418)",
                                 visibility: Public,
                                 expression: MethodCall((
                                     lhs: Call((
-                                        name: ((
-                                            value: [
+                                        name: (
+                                            prefix: None,
+                                            parts: [
                                                 ((
                                                     value: "__builtin",
                                                     src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..332)",
@@ -223,20 +244,21 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                 )),
                                             ],
                                             src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..347)",
-                                        )),
+                                        ),
                                         argument_list: (
                                             src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
                                             unnamed_args: [
                                                 (
-                                                    expression: Name(((
-                                                        value: [
+                                                    expression: Name((
+                                                        prefix: None,
+                                                        parts: [
                                                             ((
                                                                 value: "radius",
                                                                 src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
                                                             )),
                                                         ],
                                                         src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
-                                                    ))),
+                                                    )),
                                                     src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
                                                 ),
                                             ],
@@ -244,8 +266,9 @@ expression: "ir.to_ron().expect(\"No error\")"
                                         src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..364)",
                                     )),
                                     element: (
-                                        name: ((
-                                            value: [
+                                        name: (
+                                            prefix: None,
+                                            parts: [
                                                 ((
                                                     value: "__builtin",
                                                     src_ref: "12:10 @ 0x5b5b0d75574ec6c6 (365..374)",
@@ -260,7 +283,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                 )),
                                             ],
                                             src_ref: "12:10 @ 0x5b5b0d75574ec6c6 (365..390)",
-                                        )),
+                                        ),
                                         argument_list: (
                                             src_ref: "12:36 @ 0x5b5b0d75574ec6c6 (391..417)",
                                             named_args: [
@@ -270,15 +293,16 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                         src_ref: "12:36 @ 0x5b5b0d75574ec6c6 (391..392)",
                                                     )),
                                                     expression: PropertyAccess((
-                                                        lhs: Name(((
-                                                            value: [
+                                                        lhs: Name((
+                                                            prefix: None,
+                                                            parts: [
                                                                 ((
                                                                     value: "center",
                                                                     src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..401)",
                                                                 )),
                                                             ],
                                                             src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..401)",
-                                                        ))),
+                                                        )),
                                                         element: ((
                                                             value: "x",
                                                             src_ref: "12:47 @ 0x5b5b0d75574ec6c6 (402..403)",
@@ -293,15 +317,16 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                         src_ref: "12:50 @ 0x5b5b0d75574ec6c6 (405..406)",
                                                     )),
                                                     expression: PropertyAccess((
-                                                        lhs: Name(((
-                                                            value: [
+                                                        lhs: Name((
+                                                            prefix: None,
+                                                            parts: [
                                                                 ((
                                                                     value: "center",
                                                                     src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..415)",
                                                                 )),
                                                             ],
                                                             src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..415)",
-                                                        ))),
+                                                        )),
                                                         element: ((
                                                             value: "y",
                                                             src_ref: "12:61 @ 0x5b5b0d75574ec6c6 (416..417)",

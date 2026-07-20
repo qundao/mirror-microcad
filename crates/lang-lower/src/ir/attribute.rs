@@ -70,13 +70,13 @@ impl std::fmt::Display for DocBlock {
 /// Metadata for a [`Model`]
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Meta {
-    pub name: ir::QualifiedName,
+    pub name: ir::SymbolPath,
     pub expr: ir::ConstantExpression,
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Command {
-    pub name: ir::QualifiedName,
+    pub name: ir::SymbolPath,
     pub argument_list: ir::ArgumentList<ir::ConstantExpression>,
     pub src_ref: SrcRef,
 }

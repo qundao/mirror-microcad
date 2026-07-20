@@ -293,9 +293,13 @@ impl Lower<ast::Identifier> for ir::Identifier {
     }
 }
 
-impl Lower<ast::def::UseName> for ir::QualifiedName {
+impl Lower<ast::def::UseName> for ir::SymbolPath {
     fn lower(node: &ast::def::UseName, context: &mut LowerContext) -> LowerResult<Self> {
-        let name = node
+        let prefix = node
+            .prefix
+            .as_ref()
+            .map(|span| context.span_to_src_ref(span));
+        let parts = node
             .parts
             .iter()
             .filter_map(|part| match part {
@@ -305,9 +309,14 @@ impl Lower<ast::def::UseName> for ir::QualifiedName {
                 ast::def::UseStatementPart::Glob(_) => None,
                 ast::def::UseStatementPart::Error(_) => None,
             })
-            .collect::<Result<Vec<_>, _>>()?;
+            .collect::<Result<Vec<_>, _>>()?
+            .into_boxed_slice();
 
-        Ok(Self::new(name, context.span_to_src_ref(&node.span)))
+        Ok(Self {
+            prefix,
+            parts,
+            src_ref: context.span_to_src_ref(&node.span),
+        })
     }
 }
 
@@ -335,7 +344,7 @@ impl Lower<ast::StatementList> for ir::Aliases {
                             attr: ir::OuterAttributes::lower(&use_statement.attr, context)?,
                             keyword_src_ref: context.span_to_src_ref(&use_statement.keyword_span),
                             visibility: ir::Visibility::lower(&use_statement.vis, context)?,
-                            path: ir::QualifiedName::lower(&use_statement.name, context)?,
+                            path: ir::SymbolPath::lower(&use_statement.name, context)?,
                             id: ir::Identifier::lower(
                                 match &use_statement.use_as {
                                     // Use id `C` from `as C`
@@ -359,7 +368,7 @@ impl Lower<ast::StatementList> for ir::Aliases {
                         attr: ir::OuterAttributes::lower(&use_statement.attr, context)?,
                         keyword_src_ref: context.span_to_src_ref(&use_statement.keyword_span),
                         visibility: ir::Visibility::lower(&use_statement.vis, context)?,
-                        path: ir::QualifiedName::lower(&use_statement.name, context)?,
+                        path: ir::SymbolPath::lower(&use_statement.name, context)?,
                         src_ref: context.span_to_src_ref(&use_statement.span),
                     })),
                     None => unreachable!(),

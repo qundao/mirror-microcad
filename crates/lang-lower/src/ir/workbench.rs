@@ -15,7 +15,7 @@ use serde_with::skip_serializing_none;
 /// Each WorkbenchStatement eventually evals into a [`Models`]
 #[skip_serializing_none]
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
-pub struct WorkbenchStatement<NAME: Serialize = ir::QualifiedName> {
+pub struct WorkbenchStatement<NAME: Serialize = ir::SymbolPath> {
     pub attr: ir::OuterAttributes,
     #[serde(skip_serializing_if = "is_default", default)]
     pub src_ref: SrcRef,
@@ -76,7 +76,7 @@ type Access<ELEMENT, NAME> = ir::ElementAccess<WorkbenchExpression<NAME>, ELEMEN
 type MethodCall<NAME> = Access<ir::Call<WorkbenchExpression<NAME>>, NAME>;
 
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
-pub enum WorkbenchExpression<NAME: Serialize = ir::QualifiedName> {
+pub enum WorkbenchExpression<NAME: Serialize = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
     Name(NAME),

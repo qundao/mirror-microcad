@@ -29,7 +29,7 @@ impl Lower<ast::def::Function> for ir::FunctionSignature {
 
 impl<NAME: Serialize> Lower<ast::Body> for ir::Scope<NAME>
 where
-    NAME: SrcReferrer + Lower<ast::QualifiedName>,
+    NAME: SrcReferrer + Lower<ast::SymbolPath>,
 {
     fn lower(node: &ast::Body, context: &mut LowerContext) -> LowerResult<Self> {
         let statements = &node.statements;
@@ -55,7 +55,7 @@ where
 
 impl<NAME: Serialize> Lower<ast::Expression> for ir::FunctionExpression<NAME>
 where
-    NAME: SrcReferrer + Lower<ast::QualifiedName>,
+    NAME: SrcReferrer + Lower<ast::SymbolPath>,
 {
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
@@ -80,7 +80,7 @@ where
                 unit: ir::Unit::lower(&a.unit, context)?,
                 src_ref: context.span_to_src_ref(&a.span),
             }),
-            ast::Expression::QualifiedName(n) => Self::Name(NAME::lower(n, context)?),
+            ast::Expression::SymbolPath(n) => Self::Name(NAME::lower(n, context)?),
             ast::Expression::BinaryOperation(binop) => {
                 Self::BinaryOp(ir::BinaryOp::lower(binop, context)?)
             }
@@ -126,7 +126,7 @@ where
 
 impl<NAME: Serialize> Lower<Option<ast::Expression>> for Option<ir::FunctionExpression<NAME>>
 where
-    NAME: SrcReferrer + Lower<ast::QualifiedName>,
+    NAME: SrcReferrer + Lower<ast::SymbolPath>,
 {
     fn lower(node: &Option<ast::Expression>, context: &mut LowerContext) -> LowerResult<Self> {
         node.as_ref()
@@ -137,7 +137,7 @@ where
 
 impl<NAME: Serialize> Lower<ast::Return> for ir::ReturnStatement<NAME>
 where
-    NAME: SrcReferrer + Lower<ast::QualifiedName>,
+    NAME: SrcReferrer + Lower<ast::SymbolPath>,
 {
     fn lower(node: &ast::Return, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
@@ -150,7 +150,7 @@ where
 
 impl<NAME: Serialize> Lower<ast::Statement> for Option<ir::FunctionStatement<NAME>>
 where
-    NAME: SrcReferrer + Lower<ast::QualifiedName>,
+    NAME: SrcReferrer + Lower<ast::SymbolPath>,
 {
     fn lower(stmt: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match stmt {
@@ -179,7 +179,7 @@ where
 
 impl<NAME> Lower<ast::StatementList> for Box<[ir::FunctionStatement<NAME>]>
 where
-    NAME: SrcReferrer + Serialize + Lower<ast::QualifiedName>,
+    NAME: SrcReferrer + Serialize + Lower<ast::SymbolPath>,
 {
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         let statements = extract_statements_with_tail(

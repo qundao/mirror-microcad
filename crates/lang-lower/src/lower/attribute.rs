@@ -97,9 +97,8 @@ impl Lower<ast::Attributes> for Box<[ir::Meta]> {
 
 impl Lower<ast::LocalAssignment> for ir::Meta {
     fn lower(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
-        let identifier = ir::Identifier::lower(&node.id, context)?;
         Ok(ir::Meta {
-            name: ir::QualifiedName::new(vec![identifier], context.span_to_src_ref(&node.id.span)),
+            name: ir::SymbolPath::from(ir::Identifier::lower(&node.id, context)?),
             expr: ir::ConstantExpression::lower(&node.expr, context)?,
         })
     }
@@ -127,7 +126,7 @@ impl Lower<ast::StatementList> for Box<[ir::Meta]> {
 impl Lower<ast::Call> for ir::Command {
     fn lower(node: &ast::Call, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            name: ir::QualifiedName::lower(&node.name, context)?,
+            name: ir::SymbolPath::lower(&node.name, context)?,
             argument_list: ir::ArgumentList::lower(&node.arguments, context)?,
             src_ref: context.span_to_src_ref(&node.span),
         })

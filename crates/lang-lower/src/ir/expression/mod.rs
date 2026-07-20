@@ -7,16 +7,16 @@ mod array_expression;
 mod call;
 mod format_string;
 mod literal;
-mod qualified_name;
 mod range_expression;
+mod symbol_path;
 mod tuple_expression;
 
 pub use array_expression::*;
 pub use call::*;
 pub use format_string::*;
 pub use literal::*;
-pub use qualified_name::*;
 pub use range_expression::*;
+pub use symbol_path::*;
 pub use tuple_expression::*;
 
 use crate::ir;
@@ -183,7 +183,7 @@ pub trait ExpressionKind: Serialize {
 /// TODO: ElementAccess are missing.
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
-pub enum ConstantExpression<NAME: Serialize = ir::QualifiedName> {
+pub enum ConstantExpression<NAME: Serialize = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
     Name(NAME),
