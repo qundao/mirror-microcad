@@ -1,0 +1,74 @@
+---
+source: crates/lang-parse/tests/parser.rs
+expression: output
+---
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: "0x1d78bb6803744cde",
+        output_hash: "0x54f48a532108e237",
+        tree: (
+            span: (
+                start: 0,
+                end: 10,
+            ),
+            statements: (
+                span: (
+                    start: 0,
+                    end: 10,
+                ),
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
+                    span: (
+                        start: 0,
+                        end: 10,
+                    ),
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
+                    ),
+                    attr: ([]),
+                    expr: SymbolPath((
+                        span: (
+                            start: 0,
+                            end: 10,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        prefix: Some((
+                            start: 0,
+                            end: 2,
+                        )),
+                        parts: [
+                            (
+                                span: (
+                                    start: 2,
+                                    end: 5,
+                                ),
+                                name: "foo",
+                            ),
+                            (
+                                span: (
+                                    start: 7,
+                                    end: 10,
+                                ),
+                                name: "bar",
+                            ),
+                        ],
+                    )),
+                )),
+            ),
+        ),
+    ),
+)
+---
