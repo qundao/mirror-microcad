@@ -79,7 +79,7 @@ impl Parse for Ast {
         let tree = parse::parse(&lex(context.source.code()).collect::<Vec<_>>())?;
 
         Ok(Self {
-            input_hash: context.source.hash(),
+            input_hash: context.source.hash_id(),
             output_hash: tree.to_hash(),
             tree,
         })
