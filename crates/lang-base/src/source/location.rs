@@ -5,7 +5,7 @@ use crate::Url;
 use serde::Serialize;
 
 /// Kind of the source file
-#[derive(Debug, Clone, Serialize, PartialEq, Eq, derive_more::From)]
+#[derive(Debug, Clone, Hash, Serialize, PartialEq, Eq, derive_more::From)]
 pub enum SourceKind {
     /// A source url
     Url(Url),
@@ -83,7 +83,7 @@ impl SourceKind {
 
 /// Represents *where* the code came from.
 /// Stored once in the central SourceMap, indexed by SourceId.
-#[derive(Debug, Clone, Serialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Hash, Serialize, PartialEq, Eq)]
 pub struct SourceLocation {
     pub kind: SourceKind,
     pub line_offset: Option<u32>,
@@ -136,5 +136,11 @@ impl SourceLocation {
 impl From<SourceKind> for SourceLocation {
     fn from(kind: SourceKind) -> Self {
         Self::new(kind)
+    }
+}
+
+impl From<std::path::PathBuf> for SourceLocation {
+    fn from(path: std::path::PathBuf) -> Self {
+        Self::new(path)
     }
 }
