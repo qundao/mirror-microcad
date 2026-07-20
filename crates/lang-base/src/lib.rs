@@ -12,6 +12,8 @@ pub use miette::Severity;
 mod artifact;
 mod diag;
 pub mod element;
+mod fs;
+mod manifest;
 mod ord_map;
 mod output;
 mod rc;
@@ -32,6 +34,8 @@ pub fn virtual_url(name: &str) -> Url {
     Url::from_str(&format!("virtual://{name}")).unwrap()
 }
 
+pub use microcad_hash::{HashId, HashMap, HashSet, Hashed, Hasher, ToHash};
+
 /// List of valid µcad extensions.
 pub const MICROCAD_EXTENSIONS: &[&str] = &["mu", "µcad", "mcad", "ucad"];
 
@@ -49,8 +53,11 @@ pub use rc::{Rc, RcMut};
 pub use src_ref::{LineCol, LineIndex, Refer, Span, SpanToSrcRef, Spanned, SrcRef, SrcReferrer};
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
-pub use microcad_hash::{HashId, HashMap, HashSet, Hashed, Hasher, ToHash};
-pub use source::{Source, SourceKind, SourceLocation, TextEdit};
+pub use source::{Source, SourceKind, SourceLocation, SourceMap, TextEdit};
+
+pub use manifest::{Manifest, ManifestError};
+
+pub use fs::{FileSystem, VirtualFileSystem};
 
 impl SourceCode for Source {
     fn read_span<'a>(
