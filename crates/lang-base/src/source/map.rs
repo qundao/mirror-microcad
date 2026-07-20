@@ -29,8 +29,8 @@ impl SourceMap {
         self.by_hash_id
             .entry(hash_id)
             .or_insert_with(|| Arc::new(source));
-
         self.by_location.insert(location, hash_id);
+
         hash_id
     }
 
