@@ -187,7 +187,7 @@ pub enum ConstantExpression<NAME: Serialize = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
     Name(NAME),
-    FormatString(ir::FormatString),
+    FormatString(ir::FormatString<NAME>),
     ArrayExpression(ir::ArrayExpression<ConstantExpression<NAME>>),
     TupleExpression(ir::TupleExpression<ConstantExpression<NAME>>),
     BinaryOp(ir::BinaryOp<ConstantExpression<NAME>>),

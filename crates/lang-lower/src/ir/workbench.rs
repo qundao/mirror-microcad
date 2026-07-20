@@ -80,7 +80,7 @@ pub enum WorkbenchExpression<NAME: Serialize = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
     Name(NAME),
-    FormatString(ir::FormatString),
+    FormatString(ir::FormatString<NAME>),
     ArrayExpression(ir::ArrayExpression<WorkbenchExpression<NAME>>),
     TupleExpression(ir::TupleExpression<WorkbenchExpression<NAME>>),
     Group(ir::Group),

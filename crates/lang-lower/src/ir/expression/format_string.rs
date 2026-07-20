@@ -12,14 +12,14 @@ use serde_with::skip_serializing_none;
 
 /// Format string item.
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
-pub enum FormatStringInner {
+pub enum FormatStringInner<NAME: Serialize> {
     /// String literal.
     String(Refer<String>),
     /// Format expression.
-    FormatExpression(Box<FormatExpression>),
+    FormatExpression(Box<FormatExpression<NAME>>),
 }
 
-impl SrcReferrer for FormatStringInner {
+impl<NAME: Serialize> SrcReferrer for FormatStringInner<NAME> {
     fn src_ref(&self) -> SrcRef {
         match self {
             FormatStringInner::String(s) => s.src_ref(),
@@ -30,15 +30,15 @@ impl SrcReferrer for FormatStringInner {
 
 /// Format string.
 #[derive(Default, Clone, Debug, PartialEq, Hash, Serialize, Deserialize)]
-pub struct FormatString(pub Refer<Vec<FormatStringInner>>);
+pub struct FormatString<NAME: Serialize>(pub Refer<Vec<FormatStringInner<NAME>>>);
 
-impl SrcReferrer for FormatString {
+impl<NAME: Serialize> SrcReferrer for FormatString<NAME> {
     fn src_ref(&self) -> SrcRef {
         self.0.src_ref
     }
 }
 
-impl FormatString {
+impl<NAME: Serialize> FormatString<NAME> {
     /// Insert a string.
     pub fn push_string(&mut self, s: String, src_ref: SrcRef) {
         self.0
@@ -46,7 +46,7 @@ impl FormatString {
     }
 
     /// Insert a format expression
-    pub fn push_format_expr(&mut self, expr: FormatExpression) {
+    pub fn push_format_expr(&mut self, expr: FormatExpression<NAME>) {
         self.0
             .push(FormatStringInner::FormatExpression(Box::new(expr)));
     }
@@ -57,7 +57,7 @@ impl FormatString {
     }
 }
 
-impl From<Refer<String>> for FormatString {
+impl<NAME: Serialize> From<Refer<String>> for FormatString<NAME> {
     fn from(value: Refer<String>) -> Self {
         FormatString(Refer {
             src_ref: value.src_ref,
@@ -66,7 +66,10 @@ impl From<Refer<String>> for FormatString {
     }
 }
 
-impl std::fmt::Display for FormatString {
+impl<NAME: Serialize> std::fmt::Display for FormatString<NAME>
+where
+    NAME: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, r#"""#)?;
         for elem in &*self.0 {
@@ -83,20 +86,20 @@ impl std::fmt::Display for FormatString {
 /// Format expression including format specification.
 #[skip_serializing_none]
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
-pub struct FormatExpression {
+pub struct FormatExpression<NAME: Serialize> {
     /// Format specifier
     pub spec: Option<ir::FormatSpec>,
     /// Expression to format
-    pub expression: ir::ConstantExpression,
+    pub expression: ir::ConstantExpression<NAME>,
     /// Source code reference
     src_ref: SrcRef,
 }
 
-impl FormatExpression {
+impl<NAME: Serialize> FormatExpression<NAME> {
     /// Create new format expression.
     pub fn new(
         spec: Option<ir::FormatSpec>,
-        expression: ir::ConstantExpression,
+        expression: ir::ConstantExpression<NAME>,
         src_ref: SrcRef,
     ) -> Self {
         Self {
@@ -107,13 +110,16 @@ impl FormatExpression {
     }
 }
 
-impl SrcReferrer for FormatExpression {
+impl<NAME: Serialize> SrcReferrer for FormatExpression<NAME> {
     fn src_ref(&self) -> SrcRef {
         self.src_ref
     }
 }
 
-impl std::fmt::Display for FormatExpression {
+impl<NAME: Serialize> std::fmt::Display for FormatExpression<NAME>
+where
+    NAME: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         if let Some(spec) = &self.spec {
             write!(f, "{{{}:{}}}", spec, self.expression)

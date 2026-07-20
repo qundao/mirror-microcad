@@ -51,7 +51,7 @@ pub enum FunctionExpression<NAME: Serialize = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
     Name(NAME),
-    FormatString(ir::FormatString),
+    FormatString(ir::FormatString<NAME>),
     ArrayExpression(ir::ArrayExpression<FunctionExpression<NAME>>),
     TupleExpression(ir::TupleExpression<FunctionExpression<NAME>>),
     Scope(Scope<NAME>),
