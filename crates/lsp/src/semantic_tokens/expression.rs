@@ -74,7 +74,7 @@ impl_tokens!(ast::FormatString => |self_, ctx| {
          .for_each(|part| part.semantic_tokens(ctx));
 });
 
-impl_tokens!(ast::QualifiedName => |self_, ctx| {
+impl_tokens!(ast::SymbolPath => |self_, ctx| {
     // TODO The token type might be different than `NAMESPACE`, depending on the context.
     self_.extras.semantic_tokens(ctx);
     self_.parts
@@ -151,7 +151,7 @@ impl_tokens!(ast::Expression => |self_, ctx| {
             array_list_expression.semantic_tokens(ctx)
         }
         ast::Expression::String(format_string) => format_string.semantic_tokens(ctx),
-        ast::Expression::QualifiedName(qualified_name) => qualified_name.semantic_tokens(ctx),
+        ast::Expression::SymbolPath(qualified_name) => qualified_name.semantic_tokens(ctx),
         ast::Expression::Marker(identifier) => {
             ctx.push_token(&identifier.span, TokenType::EVENT, &[])
         }
