@@ -108,6 +108,7 @@ pub struct Use {
 #[allow(missing_docs)]
 pub struct UseName {
     pub span: Span,
+    pub root_prefix: Option<Span>,
     pub extras: ItemExtras,
     pub parts: Vec<UseStatementPart>,
 }

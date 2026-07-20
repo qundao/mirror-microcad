@@ -873,24 +873,31 @@ fn parser<'tokens>()
             ))
             .boxed();
 
-        let use_parts = use_part
-            .separated_by(just(Token::SigilDoubleColon))
-            .at_least(1)
-            .collect::<Vec<_>>()
-            .with_extras()
-            .map_with(|(parts, extras), e| ast::def::UseName {
-                span: e.span(),
-                extras,
-                parts,
-            })
-            .boxed();
+        let use_name = select_ref! {
+            Token::SigilDoubleColon = e => e.span()
+        }
+        .or_not()
+        .then(
+            use_part
+                .separated_by(just(Token::SigilDoubleColon))
+                .at_least(1)
+                .collect::<Vec<_>>(),
+        )
+        .with_extras()
+        .map_with(|((root_prefix, parts), extras), e| ast::def::UseName {
+            span: e.span(),
+            root_prefix,
+            extras,
+            parts,
+        })
+        .boxed();
 
         let use_statement = outer_attribute_parser
             .clone()
             .then(visibility.then_whitespace().or_not())
             .then(just(Token::KeywordUse).map_with(|_, e| e.span()))
             .then_whitespace()
-            .then(use_parts)
+            .then(use_name)
             .then(
                 select_ref! {
                     Token::KeywordAs => (),
