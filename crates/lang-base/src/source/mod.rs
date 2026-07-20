@@ -6,8 +6,11 @@ use microcad_hash::{HashId, Hashed, ToHash};
 use serde::Serialize;
 
 mod location;
+mod map;
 
 pub use location::{SourceKind, SourceLocation};
+
+pub use map::SourceMap;
 
 /// Unparsed source code with a location.
 ///
@@ -26,7 +29,7 @@ pub struct Source {
 
 impl SrcReferrer for Source {
     fn src_ref(&self) -> SrcRef {
-        SrcRef::new(&(0..self.code().len()), LineCol::default(), self.hash())
+        SrcRef::new(&(0..self.code().len()), LineCol::default(), self.hash_id())
     }
 }
 
@@ -52,7 +55,7 @@ impl Source {
         }
     }
 
-    pub fn hash(&self) -> HashId {
+    pub fn hash_id(&self) -> HashId {
         self.code.to_hash()
     }
 
@@ -73,7 +76,7 @@ impl Source {
         use dissimilar::Chunk;
         let chunks = dissimilar::diff(&self.code, &other.code);
         let mut edits = Vec::new();
-        let source_hash = self.hash();
+        let source_hash = self.hash_id();
 
         // Track the current position in the *old_str*
         let mut current = LineCol::default();
@@ -159,7 +162,7 @@ impl SpanToSrcRef for &Source {
 
 impl<'a> GetSourceByHash for &'a Source {
     fn get_source_by_hash(&self, hash: HashId) -> Option<&'a Source> {
-        if hash == self.hash() {
+        if hash == self.hash_id() {
             Some(self)
         } else {
             None
