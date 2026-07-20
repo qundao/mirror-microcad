@@ -46,7 +46,7 @@ expression: output
                                 start: 4,
                                 end: 7,
                             ),
-                            root_prefix: None,
+                            prefix: None,
                             extras: (
                                 leading: ([]),
                                 trailing: ([]),

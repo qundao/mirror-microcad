@@ -46,7 +46,7 @@ expression: output
                                 start: 4,
                                 end: 14,
                             ),
-                            root_prefix: Some((
+                            prefix: Some((
                                 start: 4,
                                 end: 6,
                             )),

@@ -884,9 +884,9 @@ fn parser<'tokens>()
                 .collect::<Vec<_>>(),
         )
         .with_extras()
-        .map_with(|((root_prefix, parts), extras), e| ast::def::UseName {
+        .map_with(|((prefix, parts), extras), e| ast::def::UseName {
             span: e.span(),
-            root_prefix,
+            prefix,
             extras,
             parts,
         })
