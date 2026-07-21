@@ -3,7 +3,7 @@
 
 //! Tuple expression.
 
-use crate::ir;
+use crate::{CastInto, ir};
 
 use microcad_lang_base::SrcRef;
 use serde::{Deserialize, Serialize};
@@ -25,5 +25,17 @@ where
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "({})", self.args)?;
         Ok(())
+    }
+}
+
+impl<T, EXPR> CastInto<TupleExpression<T>> for TupleExpression<EXPR>
+where
+    EXPR: CastInto<T> + Serialize,
+{
+    fn cast_into(self) -> TupleExpression<T> {
+        TupleExpression {
+            args: self.args.cast_into(),
+            src_ref: self.src_ref,
+        }
     }
 }

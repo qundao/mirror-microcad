@@ -114,10 +114,12 @@ where
     EXPR: Lower<ast::Expression>,
 {
     fn lower(node: &ast::ArrayListExpression, context: &mut LowerContext) -> LowerResult<Self> {
-        node.items
-            .iter()
-            .map(|item| EXPR::lower(&item.expr, context))
-            .collect::<Result<Vec<EXPR>, _>>()
+        Ok(Self(
+            node.items
+                .iter()
+                .map(|item| EXPR::lower(&item.expr, context))
+                .collect::<Result<Vec<EXPR>, _>>()?,
+        ))
     }
 }
 

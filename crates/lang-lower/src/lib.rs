@@ -11,6 +11,8 @@ use microcad_lang_base::{
     CompilationResult, Diagnostics, HashId, Source, Span, SpanToSrcRef, SrcRef, ToHash,
 };
 
+pub use ir::CastInto;
+
 pub use lower::{LowerError, LowerResult};
 
 /// Intermediate representation

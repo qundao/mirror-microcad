@@ -3,7 +3,7 @@
 
 //! µcad format expression syntax elements
 
-use crate::ir;
+use crate::{CastInto, ir};
 
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;
@@ -12,7 +12,7 @@ use serde_with::skip_serializing_none;
 
 /// Format string item.
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
-pub enum FormatStringInner<NAME: Serialize> {
+pub enum FormatStringInner<NAME: Serialize = ir::SymbolPath> {
     /// String literal.
     String(Refer<String>),
     /// Format expression.
@@ -28,9 +28,36 @@ impl<NAME: Serialize> SrcReferrer for FormatStringInner<NAME> {
     }
 }
 
+impl<T: Serialize, NAME: Serialize> CastInto<FormatStringInner<T>> for FormatStringInner<NAME>
+where
+    NAME: CastInto<T>,
+{
+    fn cast_into(self) -> FormatStringInner<T> {
+        match self {
+            FormatStringInner::String(s) => FormatStringInner::String(s),
+            FormatStringInner::FormatExpression(expr) => {
+                FormatStringInner::FormatExpression(Box::new(expr.cast_into()))
+            }
+        }
+    }
+}
+
 /// Format string.
 #[derive(Default, Clone, Debug, PartialEq, Hash, Serialize, Deserialize)]
-pub struct FormatString<NAME: Serialize>(pub Refer<Vec<FormatStringInner<NAME>>>);
+pub struct FormatString<NAME: Serialize = ir::SymbolPath>(pub Refer<Vec<FormatStringInner<NAME>>>);
+
+impl<T: Serialize, NAME: Serialize> CastInto<FormatString<T>> for FormatString<NAME>
+where
+    NAME: CastInto<T>,
+{
+    fn cast_into(self) -> FormatString<T> {
+        let src_ref = self.src_ref();
+        FormatString(Refer::new(
+            self.0.into_iter().map(|a| a.cast_into()).collect(),
+            src_ref,
+        ))
+    }
+}
 
 impl<NAME: Serialize> SrcReferrer for FormatString<NAME> {
     fn src_ref(&self) -> SrcRef {
@@ -113,6 +140,19 @@ impl<NAME: Serialize> FormatExpression<NAME> {
 impl<NAME: Serialize> SrcReferrer for FormatExpression<NAME> {
     fn src_ref(&self) -> SrcRef {
         self.src_ref
+    }
+}
+
+impl<T: Serialize, NAME: Serialize> CastInto<FormatExpression<T>> for FormatExpression<NAME>
+where
+    NAME: CastInto<T>,
+{
+    fn cast_into(self) -> FormatExpression<T> {
+        FormatExpression {
+            spec: self.spec,
+            expression: self.expression.cast_into(),
+            src_ref: self.src_ref,
+        }
     }
 }
 

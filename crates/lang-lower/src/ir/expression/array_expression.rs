@@ -3,7 +3,7 @@
 
 //! Array expressions
 
-use crate::ir;
+use crate::{CastInto, ir};
 use derive_more::Deref;
 use microcad_lang_base::{SrcRef, SrcReferrer};
 use serde::{Deserialize, Serialize};
@@ -27,14 +27,23 @@ where
             f,
             "{}",
             match &self {
-                ArrayExpressionInner::List(expressions) => expressions
-                    .iter()
-                    .map(|c| c.to_string())
-                    .collect::<Vec<_>>()
-                    .join(", "),
+                ArrayExpressionInner::List(expressions) => expressions.to_string(),
                 ArrayExpressionInner::Range(range_expression) => range_expression.to_string(),
             }
         )
+    }
+}
+
+impl<T, EXPR> CastInto<ArrayExpressionInner<T>> for ArrayExpressionInner<EXPR>
+where
+    EXPR: CastInto<T> + Serialize,
+{
+    fn cast_into(self) -> ArrayExpressionInner<T> {
+        use ArrayExpressionInner::*;
+        match self {
+            List(list_expression) => List(list_expression.cast_into()),
+            Range(range_expression) => Range(range_expression.cast_into()),
+        }
     }
 }
 
@@ -46,10 +55,12 @@ where
         match &self {
             ArrayExpressionInner::List(expressions) => SrcRef::merge(
                 &expressions
+                    .0
                     .first()
                     .map(|start| start.src_ref())
                     .unwrap_or_default(),
                 &expressions
+                    .0
                     .last()
                     .map(|end| end.src_ref())
                     .unwrap_or_default(),
@@ -78,5 +89,18 @@ where
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "[{}]{}", self.inner, self.unit)
+    }
+}
+
+impl<T, EXPR> CastInto<ArrayExpression<T>> for ArrayExpression<EXPR>
+where
+    EXPR: CastInto<T> + Serialize,
+{
+    fn cast_into(self) -> ArrayExpression<T> {
+        ArrayExpression {
+            inner: self.inner.cast_into(),
+            unit: self.unit,
+            src_ref: self.src_ref,
+        }
     }
 }

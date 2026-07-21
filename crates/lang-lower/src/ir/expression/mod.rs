@@ -19,14 +19,35 @@ pub use range_expression::*;
 pub use symbol_path::*;
 pub use tuple_expression::*;
 
-use crate::ir;
+use crate::{CastInto, impl_cast_into, ir};
 use microcad_lang_base::{Identifier, Refer, SingleIdentifier, SrcRef, SrcReferrer};
 
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
 /// List of expressions.
-pub type ListExpression<EXPR> = Vec<EXPR>;
+#[derive(Clone, Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
+pub struct ListExpression<EXPR>(pub Vec<EXPR>);
+
+impl<EXPR> std::fmt::Display for ListExpression<EXPR>
+where
+    EXPR: std::fmt::Display,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            self.0
+                .iter()
+                .map(|c| c.to_string())
+                .collect::<Vec<_>>()
+                .join(", "),
+        )
+    }
+}
+
+impl_cast_into!(tuple ListExpression: vec_cast);
 
 /// If statement.
 #[skip_serializing_none]
@@ -52,6 +73,24 @@ pub struct If<EXPR, BODY> {
     pub next_if: Option<Box<If<EXPR, BODY>>>,
     /// Source code reference.
     pub src_ref: SrcRef,
+}
+
+impl<T: Serialize, EXPR: Serialize, BODY: Serialize> CastInto<If<T, BODY>> for If<EXPR, BODY>
+where
+    EXPR: CastInto<T>,
+{
+    fn cast_into(self) -> If<T, BODY> {
+        If {
+            if_ref: self.if_ref,
+            cond: Box::new(self.cond.cast_into()),
+            body: self.body,
+            else_ref: self.else_ref,
+            body_else: self.body_else,
+            next_if_ref: self.next_if_ref,
+            next_if: self.next_if.map(|next_if| Box::new(next_if.cast_into())),
+            src_ref: self.src_ref,
+        }
+    }
 }
 
 impl<EXPR, BODY> std::fmt::Display for If<EXPR, BODY>
@@ -83,6 +122,20 @@ pub struct BinaryOp<EXPR> {
     pub rhs: Box<EXPR>,
     /// Source code reference
     pub src_ref: SrcRef,
+}
+
+impl<T: Serialize, EXPR: Serialize> CastInto<BinaryOp<T>> for BinaryOp<EXPR>
+where
+    EXPR: CastInto<T>,
+{
+    fn cast_into(self) -> BinaryOp<T> {
+        BinaryOp {
+            lhs: Box::new(self.lhs.cast_into()),
+            op: self.op,
+            rhs: Box::new(self.rhs.cast_into()),
+            src_ref: self.src_ref,
+        }
+    }
 }
 
 impl<EXPR> SrcReferrer for BinaryOp<EXPR> {
@@ -138,6 +191,19 @@ pub struct UnaryOp<EXPR> {
     pub src_ref: SrcRef,
 }
 
+impl<T: Serialize, EXPR: Serialize> CastInto<UnaryOp<T>> for UnaryOp<EXPR>
+where
+    EXPR: CastInto<T>,
+{
+    fn cast_into(self) -> UnaryOp<T> {
+        UnaryOp {
+            op: self.op,
+            rhs: Box::new(self.rhs.cast_into()),
+            src_ref: self.src_ref,
+        }
+    }
+}
+
 impl<EXPR> SrcReferrer for UnaryOp<EXPR> {
     fn src_ref(&self) -> SrcRef {
         self.src_ref
@@ -173,6 +239,20 @@ pub struct ElementAccess<EXPR, ELEMENT> {
     pub src_ref: SrcRef,
 }
 
+impl<T: Serialize, EXPR: Serialize, ELEMENT: Serialize> CastInto<ElementAccess<T, ELEMENT>>
+    for ElementAccess<EXPR, ELEMENT>
+where
+    EXPR: CastInto<T>,
+{
+    fn cast_into(self) -> ElementAccess<T, ELEMENT> {
+        ElementAccess {
+            lhs: Box::new(self.lhs.cast_into()),
+            element: self.element,
+            src_ref: self.src_ref,
+        }
+    }
+}
+
 pub trait ExpressionKind: Serialize {
     type Name;
 }
@@ -192,6 +272,25 @@ pub enum ConstantExpression<NAME: Serialize = ir::SymbolPath> {
     TupleExpression(ir::TupleExpression<ConstantExpression<NAME>>),
     BinaryOp(ir::BinaryOp<ConstantExpression<NAME>>),
     UnaryOp(ir::UnaryOp<ConstantExpression<NAME>>),
+}
+
+impl<T: Serialize, NAME: Serialize> CastInto<ConstantExpression<T>> for ConstantExpression<NAME>
+where
+    NAME: CastInto<T>,
+{
+    fn cast_into(self) -> ConstantExpression<T> {
+        use ConstantExpression::*;
+        match self {
+            Invalid => Invalid,
+            Literal(literal) => Literal(literal),
+            Name(name) => Name(name.cast_into()),
+            FormatString(format_string) => FormatString(format_string.cast_into()),
+            ArrayExpression(array_expression) => ArrayExpression(array_expression.cast_into()),
+            TupleExpression(tuple_expression) => TupleExpression(tuple_expression.cast_into()),
+            BinaryOp(binary_op) => BinaryOp(binary_op.cast_into()),
+            UnaryOp(unary_op) => UnaryOp(unary_op.cast_into()),
+        }
+    }
 }
 
 impl<NAME: Serialize> ExpressionKind for ConstantExpression<NAME> {
