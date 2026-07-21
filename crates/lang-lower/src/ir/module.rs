@@ -58,7 +58,6 @@ pub struct InlineModule {
     pub src_ref: SrcRef,
 
     /// Outer attributes.
-    #[serde(skip_serializing_if = "is_default", default)]
     pub outer_attr: ir::OuterAttributes,
     /// Visibility of the module.
     pub visibility: ir::Visibility,
@@ -67,7 +66,6 @@ pub struct InlineModule {
     /// Name of the module.
     pub id: ir::Identifier,
 
-    #[serde(skip_serializing_if = "is_default", default)]
     pub inner_attr: ir::InnerAttributes,
 
     #[serde(skip_serializing_if = "is_default", default)]

@@ -145,7 +145,6 @@ pub struct Function {
     /// Source ref for the whole definition
     pub src_ref: SrcRef,
     /// Outer attributes
-    #[serde(skip_serializing_if = "is_default", default)]
     pub outer_attr: ir::OuterAttributes,
     /// public / private
     pub visibility: ir::Visibility,
@@ -157,7 +156,6 @@ pub struct Function {
     /// Function signature
     pub signature: ir::FunctionSignature,
     /// #![...]
-    #[serde(skip_serializing_if = "is_default", default)]
     pub inner_attr: ir::InnerAttributes,
 
     #[serde(skip_serializing_if = "is_default", default)]

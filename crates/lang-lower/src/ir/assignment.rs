@@ -3,7 +3,7 @@
 
 //! µcad assignment syntax element
 
-use crate::ir;
+use crate::{CastInto, ir};
 
 use microcad_lang_base::{Identifier, SrcRef};
 use serde::{Deserialize, Serialize};
@@ -40,6 +40,20 @@ where
                 expr = self.expression
             ),
             None => write!(f, "{id} = {expr}", id = self.id, expr = self.expression),
+        }
+    }
+}
+
+impl<T, EXPR> CastInto<LocalAssignment<T>> for LocalAssignment<EXPR>
+where
+    EXPR: CastInto<T>,
+{
+    fn cast_into(self) -> LocalAssignment<T> {
+        LocalAssignment {
+            id: self.id,
+            specified_type: self.specified_type,
+            expression: self.expression.cast_into(),
+            src_ref: self.src_ref,
         }
     }
 }

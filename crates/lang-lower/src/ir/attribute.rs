@@ -3,7 +3,7 @@
 
 //! Attribute syntax entities.
 
-use crate::ir;
+use crate::{CastInto, ir};
 
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{IsDefault, Refer, SrcRef};
@@ -69,16 +69,41 @@ impl std::fmt::Display for DocBlock {
 
 /// Metadata for a [`Model`]
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Meta {
+pub struct Meta<NAME: Serialize = ir::SymbolPath> {
     pub name: ir::SymbolPath,
-    pub expr: ir::ConstantExpression,
+    pub expr: ir::ConstantExpression<NAME>,
+}
+
+impl<T: Serialize, NAME: Serialize> CastInto<Meta<T>> for Meta<NAME>
+where
+    NAME: CastInto<T>,
+{
+    fn cast_into(self) -> Meta<T> {
+        Meta {
+            name: self.name,
+            expr: self.expr.cast_into(),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Command {
+pub struct Command<NAME: Serialize = ir::SymbolPath> {
     pub name: ir::SymbolPath,
-    pub argument_list: ir::ArgumentList<ir::ConstantExpression>,
+    pub argument_list: ir::ArgumentList<ir::ConstantExpression<NAME>>,
     pub src_ref: SrcRef,
+}
+
+impl<T: Serialize, NAME: Serialize> CastInto<Command<T>> for Command<NAME>
+where
+    NAME: CastInto<T>,
+{
+    fn cast_into(self) -> Command<T> {
+        Command {
+            name: self.name,
+            argument_list: self.argument_list.cast_into(),
+            src_ref: self.src_ref,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
@@ -86,19 +111,19 @@ pub struct Tag {
     pub name: ir::Identifier,
 }
 
-#[derive(Debug, Default, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Attributes {
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
+pub struct Attributes<NAME: Serialize = ir::SymbolPath> {
     /// Documentation
     pub doc: ir::DocBlock,
     /// Metadata: #[color = "red"]
-    pub meta: Box<[Meta]>,
+    pub meta: Box<[Meta<NAME>]>,
     /// Commands: #[export("file.svg")] #[deprecate(since = "0.2.0")]
-    pub commands: Box<[Command]>,
+    pub commands: Box<[Command<NAME>]>,
     /// Tags: #[deprecated]
     pub tags: Box<[Tag]>,
 }
 
-impl Attributes {
+impl<NAME: Serialize> Attributes<NAME> {
     pub fn is_empty(&self) -> bool {
         self.doc.is_empty()
             && self.meta.is_empty()
@@ -107,86 +132,86 @@ impl Attributes {
     }
 }
 
-impl IsDefault for Attributes {
+impl<NAME: Serialize> IsDefault for Attributes<NAME> {
     fn is_default(&self) -> bool {
         self.is_empty()
     }
 }
 
-/// Inner attributes (`//!`, `#![...]`), usually lowered from a `ast::StatementList`.
-#[derive(Debug, Clone, Default, Deref, DerefMut, PartialEq, Hash, Serialize, Deserialize)]
-pub struct InnerAttributes(#[serde(skip_serializing_if = "is_default", default)] pub Attributes);
+impl<T: Serialize, NAME: Serialize> CastInto<Attributes<T>> for Attributes<NAME>
+where
+    NAME: CastInto<T>,
+{
+    fn cast_into(self) -> Attributes<T> {
+        Attributes {
+            doc: self.doc,
+            meta: self.meta.cast_into(),
+            commands: self.commands.cast_into(),
+            tags: self.tags,
+        }
+    }
+}
 
-impl InnerAttributes {
+/// Inner attributes (`//!`, `#![...]`), usually lowered from a `ast::StatementList`.
+#[derive(Debug, Clone, Deref, DerefMut, PartialEq, Hash, Serialize, Deserialize)]
+pub struct InnerAttributes<NAME: Serialize = ir::SymbolPath>(pub Attributes<NAME>);
+
+impl<NAME: Serialize> InnerAttributes<NAME> {
     /// Check if inner attributes are empty
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
 }
 
-impl IsDefault for InnerAttributes {
+impl<T: Serialize, NAME: Serialize> CastInto<InnerAttributes<T>> for InnerAttributes<NAME>
+where
+    NAME: CastInto<T>,
+{
+    fn cast_into(self) -> InnerAttributes<T> {
+        InnerAttributes(self.0.cast_into())
+    }
+}
+
+impl<NAME: Serialize> IsDefault for InnerAttributes<NAME> {
     fn is_default(&self) -> bool {
         self.is_empty()
     }
 }
 
 /// Inner attributes (`///`, `#[...]`), usually lowered from definitions.
-#[derive(Debug, Default, Clone, Deref, DerefMut, Hash, PartialEq, Serialize, Deserialize)]
-pub struct OuterAttributes(#[serde(skip_serializing_if = "is_default", default)] pub Attributes);
+#[derive(Debug, Clone, Deref, DerefMut, Hash, PartialEq, Serialize, Deserialize)]
+pub struct OuterAttributes<NAME: Serialize = ir::SymbolPath>(pub Attributes<NAME>);
 
-impl OuterAttributes {
+impl<NAME: Serialize> OuterAttributes<NAME> {
     /// Check if outer attributes are empty
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
 }
 
-impl IsDefault for OuterAttributes {
+impl<T: Serialize, NAME: Serialize> CastInto<OuterAttributes<T>> for OuterAttributes<NAME>
+where
+    NAME: CastInto<T>,
+{
+    fn cast_into(self) -> OuterAttributes<T> {
+        OuterAttributes(self.0.cast_into())
+    }
+}
+
+impl<NAME: Serialize> IsDefault for OuterAttributes<NAME> {
     fn is_default(&self) -> bool {
         self.is_empty()
     }
 }
 
-impl From<OuterAttributes> for Attributes {
-    fn from(value: OuterAttributes) -> Self {
+impl<NAME: Serialize> From<OuterAttributes<NAME>> for Attributes<NAME> {
+    fn from(value: OuterAttributes<NAME>) -> Self {
         value.0
     }
 }
 
-impl From<InnerAttributes> for Attributes {
-    fn from(value: InnerAttributes) -> Self {
+impl<NAME: Serialize> From<InnerAttributes<NAME>> for Attributes<NAME> {
+    fn from(value: InnerAttributes<NAME>) -> Self {
         value.0
-    }
-}
-
-impl From<(OuterAttributes, InnerAttributes)> for Attributes {
-    fn from(attr: (OuterAttributes, InnerAttributes)) -> Self {
-        Self {
-            doc: ir::DocBlock::merge(&attr.0.doc, &attr.1.doc),
-            meta: attr
-                .0
-                .meta
-                .clone()
-                .into_iter()
-                .chain(attr.1.meta.clone().into_iter())
-                .collect::<Vec<_>>()
-                .into_boxed_slice(),
-            commands: attr
-                .0
-                .commands
-                .clone()
-                .into_iter()
-                .chain(attr.1.commands.clone().into_iter())
-                .collect::<Vec<_>>()
-                .into_boxed_slice(),
-            tags: attr
-                .0
-                .tags
-                .clone()
-                .into_iter()
-                .chain(attr.1.tags.clone().into_iter())
-                .collect::<Vec<_>>()
-                .into_boxed_slice(),
-        }
     }
 }

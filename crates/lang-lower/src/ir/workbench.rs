@@ -39,7 +39,6 @@ pub struct Init {
     /// SrcRef of the `init` keyword
     pub keyword_ref: SrcRef,
     /// Outer attributes.
-    #[serde(skip_serializing_if = "is_default", default)]
     pub attr: ir::OuterAttributes,
     /// Parameter list for this init definition
     pub parameters: ir::ParameterList,
@@ -125,7 +124,6 @@ pub struct Workbench {
     /// SrcRef of the `sketch`/`part`/`op` keyword
     pub keyword_ref: SrcRef,
     /// Workbench outer attributes.
-    #[serde(skip_serializing_if = "is_default", default)]
     pub outer_attr: ir::OuterAttributes,
     /// Visibility from outside modules.
     pub visibility: ir::Visibility,
@@ -136,7 +134,6 @@ pub struct Workbench {
     /// Workbench's building plan.
     pub parameters: ir::ParameterList,
     /// Workbench inner attributes
-    #[serde(skip_serializing_if = "is_default", default)]
     pub inner_attr: ir::InnerAttributes,
     /// `init`
     #[serde(skip_serializing_if = "is_default", default)]

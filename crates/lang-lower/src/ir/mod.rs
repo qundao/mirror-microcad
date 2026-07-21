@@ -75,7 +75,6 @@ pub struct ExplicitAlias {
 /// `use std::geo2d::*`
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct WildcardAlias {
-    #[serde(skip_serializing_if = "is_default", default)]
     pub attr: ir::OuterAttributes,
     pub visibility: ir::Visibility,
     #[serde(skip_serializing_if = "SrcRef::is_none", default)]

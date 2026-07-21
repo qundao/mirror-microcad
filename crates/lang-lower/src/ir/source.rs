@@ -46,7 +46,6 @@ impl IsDefault for SourceItems {
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Source {
     /// Inner attributes.
-    #[serde(skip_serializing_if = "is_default", default)]
     pub attr: ir::InnerAttributes,
     /// Items that will become Symbols
     #[serde(skip_serializing_if = "is_default", default)]

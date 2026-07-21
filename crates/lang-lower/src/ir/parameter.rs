@@ -3,9 +3,9 @@
 
 //! µcad parameter syntax elements
 
-use crate::ir;
+use crate::{CastInto, ir};
 
-use microcad_lang_base::{Identifier, Refer, SrcRef, is_default};
+use microcad_lang_base::{Identifier, Refer, SrcRef};
 use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
 
 use derive_more::Deref;
@@ -14,24 +14,25 @@ use serde_with::skip_serializing_none;
 
 /// A parameter of a parameter list.
 #[skip_serializing_none]
-#[derive(
-    Debug, Clone, Default, Hash, SrcReferrer, Identifiable, PartialEq, Serialize, Deserialize,
-)]
-pub struct Parameter {
+#[derive(Debug, Clone, Hash, SrcReferrer, Identifiable, PartialEq, Serialize, Deserialize)]
+#[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
+pub struct Parameter<NAME: Serialize = ir::SymbolPath> {
     /// Parameter attributes
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub attr: ir::OuterAttributes,
+    pub attr: ir::OuterAttributes<NAME>,
     /// Name of the parameter
     pub id: Identifier,
     /// Type of the parameter or `None`
     pub specified_type: Option<ir::TypeAnnotation>,
     /// default value of the parameter or `None`
-    pub default_value: Option<ir::ConstantExpression>,
+    pub default_value: Option<ir::ConstantExpression<NAME>>,
     /// Source code reference
     pub src_ref: SrcRef,
 }
 
-impl std::fmt::Display for Parameter {
+impl<NAME: Serialize> std::fmt::Display for Parameter<NAME>
+where
+    NAME: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match (&self.specified_type, &self.default_value) {
             (Some(t), Some(v)) => write!(f, "{}: {t} = {v}", self.id),
@@ -42,11 +43,26 @@ impl std::fmt::Display for Parameter {
     }
 }
 
-/// Parameter list, sorted by id.
-#[derive(Debug, Clone, Default, Deref, SrcReferrer, Hash, PartialEq, Serialize, Deserialize)]
-pub struct ParameterList(pub Refer<Box<[ir::Parameter]>>);
+impl<T: Serialize, NAME: Serialize> CastInto<Parameter<T>> for Parameter<NAME>
+where
+    NAME: CastInto<T>,
+{
+    fn cast_into(self) -> Parameter<T> {
+        Parameter {
+            attr: self.attr.cast_into(),
+            id: self.id,
+            specified_type: self.specified_type,
+            default_value: self.default_value.map(|v| v.cast_into()),
+            src_ref: self.src_ref,
+        }
+    }
+}
 
-impl ParameterList {
+/// Parameter list, sorted by id.
+#[derive(Debug, Clone, Deref, SrcReferrer, Hash, PartialEq, Serialize, Deserialize)]
+pub struct ParameterList<NAME: Serialize = ir::SymbolPath>(pub Refer<Box<[ir::Parameter<NAME>]>>);
+
+impl<NAME: Serialize> ParameterList<NAME> {
     /// Return ids of all parameters
     pub fn ids(&self) -> impl Iterator<Item = Identifier> {
         self.iter().map(|param| param.id.clone())
@@ -58,7 +74,10 @@ impl ParameterList {
     }
 }
 
-impl std::fmt::Display for ParameterList {
+impl<NAME: Serialize> std::fmt::Display for ParameterList<NAME>
+where
+    NAME: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,

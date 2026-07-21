@@ -12,6 +12,15 @@ expression: "ir.to_ron().expect(\"No error\")"
         input_hash: "0x7cd65a945030702d",
         output_hash: "0xe52f69268644a03f",
         tree: (
+            attr: ((
+                doc: ((
+                    value: [],
+                    src_ref: "0:1 @ 0x5b5b0d75574ec6c6 (0..422)",
+                )),
+                meta: [],
+                commands: [],
+                tags: [],
+            )),
             items: (
                 workbenches: [
                     (
@@ -43,6 +52,15 @@ expression: "ir.to_ron().expect(\"No error\")"
                         parameters: ((
                             value: [
                                 (
+                                    attr: ((
+                                        doc: ((
+                                            value: [],
+                                            src_ref: "6:35 @ 0x5b5b0d75574ec6c6 (182..182)",
+                                        )),
+                                        meta: [],
+                                        commands: [],
+                                        tags: [],
+                                    )),
                                     id: ((
                                         value: "center",
                                         src_ref: "6:35 @ 0x5b5b0d75574ec6c6 (182..188)",
@@ -88,6 +106,15 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     src_ref: "6:34 @ 0x5b5b0d75574ec6c6 (181..213)",
                                 ),
                                 (
+                                    attr: ((
+                                        doc: ((
+                                            value: [],
+                                            src_ref: "6:19 @ 0x5b5b0d75574ec6c6 (166..166)",
+                                        )),
+                                        meta: [],
+                                        commands: [],
+                                        tags: [],
+                                    )),
                                     id: ((
                                         value: "radius",
                                         src_ref: "6:19 @ 0x5b5b0d75574ec6c6 (166..172)",
@@ -101,12 +128,39 @@ expression: "ir.to_ron().expect(\"No error\")"
                             ],
                             src_ref: "6:19 @ 0x5b5b0d75574ec6c6 (166..213)",
                         )),
+                        inner_attr: ((
+                            doc: ((
+                                value: [],
+                                src_ref: "6:69 @ 0x5b5b0d75574ec6c6 (216..420)",
+                            )),
+                            meta: [],
+                            commands: [],
+                            tags: [],
+                        )),
                         inits: [
                             (
                                 keyword_ref: "7:5 @ 0x5b5b0d75574ec6c6 (221..225)",
+                                attr: ((
+                                    doc: ((
+                                        value: [],
+                                        src_ref: "7:5 @ 0x5b5b0d75574ec6c6 (221..221)",
+                                    )),
+                                    meta: [],
+                                    commands: [],
+                                    tags: [],
+                                )),
                                 parameters: ((
                                     value: [
                                         (
+                                            attr: ((
+                                                doc: ((
+                                                    value: [],
+                                                    src_ref: "7:28 @ 0x5b5b0d75574ec6c6 (244..244)",
+                                                )),
+                                                meta: [],
+                                                commands: [],
+                                                tags: [],
+                                            )),
                                             id: ((
                                                 value: "center",
                                                 src_ref: "7:28 @ 0x5b5b0d75574ec6c6 (244..250)",
@@ -152,6 +206,15 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             src_ref: "7:27 @ 0x5b5b0d75574ec6c6 (243..275)",
                                         ),
                                         (
+                                            attr: ((
+                                                doc: ((
+                                                    value: [],
+                                                    src_ref: "7:10 @ 0x5b5b0d75574ec6c6 (226..226)",
+                                                )),
+                                                meta: [],
+                                                commands: [],
+                                                tags: [],
+                                            )),
                                             id: ((
                                                 value: "diameter",
                                                 src_ref: "7:10 @ 0x5b5b0d75574ec6c6 (226..234)",
