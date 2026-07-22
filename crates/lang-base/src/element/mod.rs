@@ -55,7 +55,7 @@ impl std::fmt::Display for Visibility {
 }
 
 /// The type of the operator for binary operations
-#[derive(Debug, PartialEq, Clone, EnumString, Display, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Clone, Copy, EnumString, Display, Serialize, Deserialize)]
 pub enum BinaryOperator {
     #[strum(serialize = "+")]
     Add,
@@ -94,7 +94,7 @@ pub enum BinaryOperator {
 }
 
 /// The type of the operator for unary operations
-#[derive(Debug, PartialEq, Clone, Display, EnumString, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Clone, Copy, Display, EnumString, Serialize, Deserialize)]
 #[allow(missing_docs)]
 pub enum UnaryOperator {
     #[strum(serialize = "-")]
