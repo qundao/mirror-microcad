@@ -111,10 +111,11 @@ impl Identifier {
         } else {
             // Must be PascalCase: starts with uppercase and contains no underscores
             let mut chars = s.chars();
-            if let Some(first) = chars.next() {
-                if first.is_ascii_uppercase() && chars.all(|c| c.is_ascii_alphanumeric()) {
-                    return Case::Pascal;
-                }
+            if let Some(first) = chars.next()
+                && first.is_ascii_uppercase()
+                && chars.all(|c| c.is_ascii_alphanumeric())
+            {
+                return Case::Pascal;
             }
         }
 

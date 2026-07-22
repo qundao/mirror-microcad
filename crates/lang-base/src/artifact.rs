@@ -164,7 +164,7 @@ pub trait Artifact: Sized {
     {
         use miette::IntoDiagnostic;
         let mut path = path.as_ref().to_path_buf();
-        path.add_extension(&Self::kind().to_string().to_lowercase());
+        path.add_extension(Self::kind().to_string().to_lowercase());
         std::fs::write(path, self.to_ron()?).into_diagnostic()
     }
 }
