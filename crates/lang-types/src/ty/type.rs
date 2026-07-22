@@ -3,12 +3,13 @@
 
 //! µcad Type
 
+use derive_more::From;
 use serde::{Deserialize, Serialize};
 
 use crate::ty::*;
 
 /// µcad Basic Types
-#[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, From, Eq, Hash, Serialize, Deserialize)]
 pub enum Type {
     /// Invalid type (used for error handling)
     Invalid,
@@ -103,12 +104,6 @@ impl std::str::FromStr for Type {
             "Model" => Ok(Type::Model),
             _ => Err(TypeError::UnknownType(ty.to_string())),
         }
-    }
-}
-
-impl From<QuantityType> for Type {
-    fn from(value: QuantityType) -> Self {
-        Type::Quantity(value)
     }
 }
 

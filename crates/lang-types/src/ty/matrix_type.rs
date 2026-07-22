@@ -5,6 +5,8 @@
 
 use serde::{Deserialize, Serialize};
 
+use crate::{BinaryOperator, TypeError, TypeResult};
+
 /// M x N Matrix Type.
 #[derive(Clone, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct MatrixType {
@@ -24,5 +26,39 @@ impl MatrixType {
 impl std::fmt::Display for MatrixType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "Matrix{}x{}", self.rows, self.columns)
+    }
+}
+
+impl std::ops::Add for MatrixType {
+    type Output = TypeResult;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        let lhs = self;
+        if lhs == rhs {
+            Ok(lhs.into())
+        } else {
+            Err(TypeError::IncompatibleMatrixTypes {
+                lhs,
+                rhs,
+                op: BinaryOperator::Add,
+            })
+        }
+    }
+}
+
+impl std::ops::Sub for MatrixType {
+    type Output = TypeResult;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        let lhs = self;
+        if lhs == rhs {
+            Ok(lhs.into())
+        } else {
+            Err(TypeError::IncompatibleMatrixTypes {
+                lhs,
+                rhs,
+                op: BinaryOperator::Subtract,
+            })
+        }
     }
 }

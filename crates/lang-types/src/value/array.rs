@@ -213,7 +213,7 @@ impl std::ops::Mul<Value> for Array {
                         .map(|value| value.clone() * rhs.clone())
                         .collect::<Result<Vec<_>, _>>()?
                 }),
-                self.ty * rhs.ty().clone(),
+                (self.ty * rhs.ty())?,
             ))),
             _ => Err(ValueError::InvalidOperator("*".into())),
         }
@@ -235,7 +235,7 @@ impl std::ops::Div<Value> for Array {
             // Integer / Integer => Scalar
             (Type::Integer, Type::Integer) => Ok(Value::Array(Array::from_values(
                 values,
-                self.ty / rhs.ty().clone(),
+                (self.ty / rhs.ty())?,
             ))),
             (Type::Quantity(_), _) => Ok(Value::Array(values.try_into()?)),
             _ => Err(ValueError::InvalidOperator("/".into())),

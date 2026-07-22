@@ -3,22 +3,23 @@
 
 //! Value errors.
 
-use crate::value::{error::QuantityError, *};
 use miette::Diagnostic;
 use thiserror::Error;
 
 use microcad_lang_base::Identifier;
 
+use crate::{Type, TypeError};
+
 /// Value error
 #[derive(Debug, Error, Diagnostic)]
 pub enum ValueError {
+    /// Type error
+    #[error("Type error: {0}")]
+    TypeError(#[from] TypeError),
+
     /// Invalid operator
     #[error("Invalid operator: {0}")]
     InvalidOperator(String),
-
-    /// Quantity Error.
-    #[error("Quantity error: {0}")]
-    QuantityError(#[from] QuantityError),
 
     /// Cannot convert to color.
     #[error("Cannot convert named tuple to color: {0}")]

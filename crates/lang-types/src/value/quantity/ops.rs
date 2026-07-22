@@ -3,10 +3,7 @@
 
 //! Quantity binary operators module.
 
-use crate::{
-    Integer, Quantity, QuantityType, Scalar,
-    value::{QuantityError, QuantityResult},
-};
+use crate::{Integer, Quantity, Scalar, Type, ValueResult};
 
 impl std::ops::Neg for Quantity {
     type Output = Quantity;
@@ -17,137 +14,113 @@ impl std::ops::Neg for Quantity {
 }
 
 impl std::ops::Add for Quantity {
-    type Output = QuantityResult;
+    type Output = ValueResult;
 
     fn add(self, rhs: Self) -> Self::Output {
-        if self.quantity_type == rhs.quantity_type {
-            Ok(Quantity::new(self.value + rhs.value, self.quantity_type))
-        } else {
-            Err(QuantityError::InvalidOperation(self, '+', rhs))
+        let lhs = self;
+        match (lhs.quantity_type + rhs.quantity_type)? {
+            Type::Quantity(ty) => Ok(Quantity::new(lhs.value + rhs.value, ty).into()),
+            _ => unreachable!(),
         }
     }
 }
 
 impl std::ops::Add<Integer> for Quantity {
-    type Output = QuantityResult;
+    type Output = ValueResult;
 
     fn add(self, rhs: Integer) -> Self::Output {
-        if self.quantity_type == QuantityType::Scalar {
-            Ok(Quantity::new(
-                self.value + rhs as Scalar,
-                self.quantity_type,
-            ))
-        } else {
-            Err(QuantityError::InvalidOperation(self, '+', rhs.into()))
-        }
+        Quantity::scalar(rhs as Scalar) + self
     }
 }
 
 impl std::ops::Add<Quantity> for Integer {
-    type Output = QuantityResult;
+    type Output = ValueResult;
 
     fn add(self, rhs: Quantity) -> Self::Output {
-        if rhs.quantity_type == QuantityType::Scalar {
-            Ok(Quantity::new(self as Scalar + rhs.value, rhs.quantity_type))
-        } else {
-            Err(QuantityError::InvalidOperation(self.into(), '+', rhs))
-        }
+        Quantity::scalar(self as Scalar) + rhs
     }
 }
 
 impl std::ops::Sub for Quantity {
-    type Output = QuantityResult;
+    type Output = ValueResult;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        if self.quantity_type == rhs.quantity_type {
-            Ok(Quantity::new(self.value - rhs.value, self.quantity_type))
-        } else {
-            Err(QuantityError::InvalidOperation(self, '-', rhs))
+        let lhs = self;
+        match (lhs.quantity_type - rhs.quantity_type)? {
+            Type::Quantity(ty) => Ok(Quantity::new(lhs.value - rhs.value, ty).into()),
+            _ => unreachable!(),
         }
     }
 }
 
 impl std::ops::Sub<Integer> for Quantity {
-    type Output = QuantityResult;
+    type Output = ValueResult;
 
     fn sub(self, rhs: Integer) -> Self::Output {
-        if self.quantity_type == QuantityType::Scalar {
-            Ok(Quantity::new(
-                self.value - rhs as Scalar,
-                self.quantity_type,
-            ))
-        } else {
-            Err(QuantityError::InvalidOperation(self, '-', rhs.into()))
-        }
+        self - Quantity::scalar(rhs as Scalar)
     }
 }
 
 impl std::ops::Sub<Quantity> for Integer {
-    type Output = QuantityResult;
+    type Output = ValueResult;
 
     fn sub(self, rhs: Quantity) -> Self::Output {
-        if rhs.quantity_type == QuantityType::Scalar {
-            Ok(Quantity::new(self as Scalar - rhs.value, rhs.quantity_type))
-        } else {
-            Err(QuantityError::InvalidOperation(self.into(), '-', rhs))
-        }
+        Quantity::scalar(self as Scalar) - rhs
     }
 }
 
 impl std::ops::Mul for Quantity {
-    type Output = QuantityResult;
+    type Output = ValueResult;
 
     fn mul(self, rhs: Self) -> Self::Output {
-        let t = self.quantity_type.clone() * rhs.quantity_type.clone();
-        if t == QuantityType::Invalid {
-            Err(QuantityError::InvalidOperation(self, '*', rhs))
-        } else {
-            Ok(Self::new(self.value * rhs.value, t))
+        let lhs = self;
+        match (lhs.quantity_type * rhs.quantity_type)? {
+            Type::Quantity(ty) => Ok(Quantity::new(lhs.value * rhs.value, ty).into()),
+            _ => unreachable!(),
         }
     }
 }
 
 impl std::ops::Mul<Integer> for Quantity {
-    type Output = QuantityResult;
+    type Output = ValueResult;
 
     fn mul(self, rhs: Integer) -> Self::Output {
-        self * Into::<Quantity>::into(rhs)
+        self * Quantity::scalar(rhs as Scalar)
     }
 }
 
 impl std::ops::Mul<Quantity> for Integer {
-    type Output = QuantityResult;
+    type Output = ValueResult;
 
     fn mul(self, rhs: Quantity) -> Self::Output {
-        Into::<Quantity>::into(self) * rhs
+        Quantity::scalar(self as Scalar) * rhs
     }
 }
 
 impl std::ops::Div for Quantity {
-    type Output = QuantityResult;
+    type Output = ValueResult;
 
     fn div(self, rhs: Self) -> Self::Output {
-        let t = self.quantity_type.clone() / rhs.quantity_type.clone();
-        if t == QuantityType::Invalid {
-            Err(QuantityError::InvalidOperation(self, '/', rhs))
-        } else {
-            Ok(Self::new(self.value / rhs.value, t))
+        let lhs = self;
+        match (lhs.quantity_type / rhs.quantity_type)? {
+            Type::Quantity(ty) => Ok(Quantity::new(lhs.value / rhs.value, ty).into()),
+            _ => unreachable!(),
         }
     }
 }
 
 impl std::ops::Div<Integer> for Quantity {
-    type Output = QuantityResult;
+    type Output = ValueResult;
 
     fn div(self, rhs: Integer) -> Self::Output {
-        self / Into::<Quantity>::into(rhs)
+        self / Quantity::scalar(rhs as Scalar)
     }
 }
 
 impl std::ops::Div<Quantity> for Integer {
-    type Output = QuantityResult;
+    type Output = ValueResult;
 
     fn div(self, rhs: Quantity) -> Self::Output {
-        Into::<Quantity>::into(self) / rhs
+        Quantity::scalar(self as Scalar) / rhs
     }
 }

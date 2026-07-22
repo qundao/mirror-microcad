@@ -3,12 +3,10 @@
 
 //! Matrix value type
 
-pub mod error;
 pub mod ops;
 
 use crate::ty::*;
 
-pub use error::*;
 use serde::{Deserialize, Serialize};
 
 use crate::{Integer, Length, Scalar};
@@ -96,7 +94,6 @@ impl Quantity {
             QuantityType::Density => todo!(),
             QuantityType::Angle => todo!(),
             QuantityType::Weight => todo!(),
-            QuantityType::Invalid => todo!(),
         }
     }
 }

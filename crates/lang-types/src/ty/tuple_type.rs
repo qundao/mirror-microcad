@@ -3,9 +3,9 @@
 
 //! Tuple type syntax element
 
-use crate::ty::*;
-
+use crate::{BinaryOperator, Type, TypeError, TypeResult};
 use microcad_lang_base::Identifier;
+
 use serde::{Deserialize, Serialize};
 
 /// (Partially named) tuple (e.g. `(n: Scalar, m: String, Integer)`)
@@ -185,5 +185,55 @@ impl std::fmt::Display for TupleType {
             types.sort();
             types.join(", ")
         })
+    }
+}
+
+impl std::ops::Neg for TupleType {
+    type Output = TypeResult;
+
+    fn neg(self) -> Self::Output {
+        todo!()
+    }
+}
+
+impl std::ops::Not for TupleType {
+    type Output = TypeResult;
+
+    fn not(self) -> Self::Output {
+        todo!()
+    }
+}
+
+impl std::ops::Add for TupleType {
+    type Output = TypeResult;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        let lhs = self;
+        if lhs.is_matching(&rhs) {
+            Ok(Type::from(Box::new(lhs)).into())
+        } else {
+            Err(TypeError::IncompatibleTupleTypes {
+                lhs,
+                rhs,
+                op: BinaryOperator::Add,
+            })
+        }
+    }
+}
+
+impl std::ops::Sub for TupleType {
+    type Output = TypeResult;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        let lhs = self;
+        if lhs.is_matching(&rhs) {
+            Ok(Type::from(Box::new(lhs)).into())
+        } else {
+            Err(TypeError::IncompatibleTupleTypes {
+                lhs,
+                rhs,
+                op: BinaryOperator::Subtract,
+            })
+        }
     }
 }

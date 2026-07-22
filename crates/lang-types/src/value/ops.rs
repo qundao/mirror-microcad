@@ -15,8 +15,8 @@ impl Operators for Value {
 
     /// Binary operation
     fn binary_op(self, op: BinaryOperator, rhs: Self) -> ValueResult {
-        let lhs = self;
         use BinaryOperator::*;
+        let lhs = self;
         match op {
             Add => lhs + rhs,
             Subtract => lhs - rhs,
@@ -81,11 +81,11 @@ impl std::ops::Add for Value {
             // Add two integers
             (Value::Integer(lhs), Value::Integer(rhs)) => Ok(Value::Integer(lhs + rhs)),
             // Add a quantity to an integer
-            (Value::Integer(lhs), Value::Quantity(rhs)) => Ok(Value::Quantity((lhs + rhs)?)),
+            (Value::Integer(lhs), Value::Quantity(rhs)) => lhs + rhs,
             // Add an integer to a quantity
-            (Value::Quantity(lhs), Value::Integer(rhs)) => Ok(Value::Quantity((lhs + rhs)?)),
+            (Value::Quantity(lhs), Value::Integer(rhs)) => lhs + rhs,
             // Add two scalars
-            (Value::Quantity(lhs), Value::Quantity(rhs)) => Ok(Value::Quantity((lhs + rhs)?)),
+            (Value::Quantity(lhs), Value::Quantity(rhs)) => lhs + rhs,
             // Concatenate two strings
             (Value::String(lhs), Value::String(rhs)) => Ok(Value::String(lhs + &rhs)),
             // Concatenate two lists
@@ -120,13 +120,13 @@ impl std::ops::Sub for Value {
             // Subtract two integers
             (Value::Integer(lhs), Value::Integer(rhs)) => Ok(Value::Integer(lhs - rhs)),
             // Subtract an scalar and an integer
-            (Value::Quantity(lhs), Value::Integer(rhs)) => Ok(Value::Quantity((lhs - rhs)?)),
+            (Value::Quantity(lhs), Value::Integer(rhs)) => lhs - rhs,
             // Subtract an integer and a scalar
-            (Value::Integer(lhs), Value::Quantity(rhs)) => Ok(Value::Quantity((lhs - rhs)?)),
+            (Value::Integer(lhs), Value::Quantity(rhs)) => lhs - rhs,
             // Subtract two numbers
-            (Value::Quantity(lhs), Value::Quantity(rhs)) => Ok(Value::Quantity((lhs - rhs)?)),
+            (Value::Quantity(lhs), Value::Quantity(rhs)) => lhs - rhs,
             // Subtract value to an array: `[1,2,3] - 1 = [0,1,2]`.
-            (Value::Array(lhs), rhs) => Ok((lhs - rhs)?),
+            (Value::Array(lhs), rhs) => lhs - rhs,
             // Subtract two tuples of the same type: (x = 1., y = 2.) - (x = 3., y = 4.)
             (Value::Tuple(lhs), Value::Tuple(rhs)) => Ok((*lhs - *rhs)?.into()),
 
@@ -145,11 +145,11 @@ impl std::ops::Mul for Value {
             // Multiply two integers
             (Value::Integer(lhs), Value::Integer(rhs)) => Ok(Value::Integer(lhs * rhs)),
             // Multiply an integer and a scalar, result is scalar
-            (Value::Integer(lhs), Value::Quantity(rhs)) => Ok(Value::Quantity((lhs * rhs)?)),
+            (Value::Integer(lhs), Value::Quantity(rhs)) => lhs * rhs,
             // Multiply a scalar and an integer, result is scalar
-            (Value::Quantity(lhs), Value::Integer(rhs)) => Ok(Value::Quantity((lhs * rhs)?)),
+            (Value::Quantity(lhs), Value::Integer(rhs)) => lhs * rhs,
             // Multiply two scalars
-            (Value::Quantity(lhs), Value::Quantity(rhs)) => Ok(Value::Quantity((lhs * rhs)?)),
+            (Value::Quantity(lhs), Value::Quantity(rhs)) => lhs * rhs,
             (Value::Array(array), value) | (value, Value::Array(array)) => Ok((array * value)?),
 
             (Value::Tuple(tuple), value) | (value, Value::Tuple(tuple)) => {
@@ -172,9 +172,9 @@ impl std::ops::Mul<Unit> for Value {
             (Value::Integer(i), Type::Quantity(quantity_type)) => Ok(Value::Quantity(
                 Quantity::new(unit.normalize(i as Scalar), quantity_type),
             )),
-            (Value::Quantity(quantity), Type::Quantity(quantity_type)) => Ok(Value::Quantity(
-                (quantity * Quantity::new(unit.normalize(1.0), quantity_type))?,
-            )),
+            (Value::Quantity(quantity), Type::Quantity(quantity_type)) => {
+                quantity * Quantity::new(unit.normalize(1.0), quantity_type)
+            }
             (Value::Array(array), Type::Quantity(quantity_type)) => {
                 Ok((array * Value::Quantity(Quantity::new(unit.normalize(1.0), quantity_type)))?)
             }
@@ -193,9 +193,9 @@ impl std::ops::Div for Value {
             (Value::Integer(lhs), Value::Integer(rhs)) => {
                 Ok(Value::Quantity((lhs as Scalar / rhs as Scalar).into()))
             }
-            (Value::Quantity(lhs), Value::Integer(rhs)) => Ok(Value::Quantity((lhs / rhs)?)),
-            (Value::Integer(lhs), Value::Quantity(rhs)) => Ok(Value::Quantity((lhs / rhs)?)),
-            (Value::Quantity(lhs), Value::Quantity(rhs)) => Ok(Value::Quantity((lhs / rhs)?)),
+            (Value::Quantity(lhs), Value::Integer(rhs)) => lhs / rhs,
+            (Value::Integer(lhs), Value::Quantity(rhs)) => lhs / rhs,
+            (Value::Quantity(lhs), Value::Quantity(rhs)) => lhs / rhs,
             (Value::Array(array), value) => Ok((array / value)?),
             (Value::Tuple(tuple), value) => Ok((tuple.as_ref().clone() / value)?.into()),
             (lhs, rhs) => Err(ValueError::InvalidOperator(format!("{lhs} / {rhs}"))),

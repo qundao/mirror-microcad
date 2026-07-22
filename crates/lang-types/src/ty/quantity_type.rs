@@ -3,10 +3,11 @@
 
 //! µcad quantity type
 
+use microcad_lang_base::element::BinaryOperator;
 use serde::{Deserialize, Serialize};
 use strum::IntoStaticStr;
 
-use crate::ty::Unit;
+use crate::{TypeError, TypeResult, ty::Unit};
 
 /// A quantity type with
 #[derive(
@@ -27,8 +28,6 @@ pub enum QuantityType {
     Angle,
     /// Weight of a specific volume of material.
     Weight,
-    /// An invalid, unsupported quantity type.
-    Invalid,
 }
 
 impl QuantityType {
@@ -42,7 +41,6 @@ impl QuantityType {
             QuantityType::Density => Unit::GramPerMeter3,
             QuantityType::Angle => Unit::Rad,
             QuantityType::Weight => Unit::Gram,
-            QuantityType::Invalid => todo!(),
         }
     }
 }
@@ -54,45 +52,82 @@ impl std::fmt::Display for QuantityType {
     }
 }
 
+impl std::ops::Add for QuantityType {
+    type Output = TypeResult;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        let lhs = self;
+        Ok(match (lhs, rhs) {
+            (lhs, rhs) if lhs == rhs => lhs,
+            (lhs, rhs) => {
+                return Err(TypeError::UnsupportedBinaryOperator {
+                    op: BinaryOperator::Add,
+                    lhs: lhs.into(),
+                    rhs: rhs.into(),
+                });
+            }
+        }
+        .into())
+    }
+}
+
+impl std::ops::Sub for QuantityType {
+    type Output = TypeResult;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        let lhs = self;
+        Ok(match (lhs, rhs) {
+            (lhs, rhs) if lhs == rhs => lhs,
+            (lhs, rhs) => {
+                return Err(TypeError::UnsupportedBinaryOperator {
+                    op: BinaryOperator::Subtract,
+                    lhs: lhs.into(),
+                    rhs: rhs.into(),
+                });
+            }
+        }
+        .into())
+    }
+}
+
 impl std::ops::Mul for QuantityType {
-    type Output = QuantityType;
+    type Output = TypeResult;
 
     fn mul(self, rhs: Self) -> Self::Output {
-        if self == Self::Invalid || rhs == Self::Invalid {
-            return Self::Invalid;
+        use QuantityType::*;
+        let lhs = self;
+        Ok(match (lhs, rhs) {
+            (Length, Length) => Area,
+            (ty, Scalar) | (Scalar, ty) => ty,
+            (lhs, rhs) => {
+                return Err(TypeError::UnsupportedBinaryOperator {
+                    op: BinaryOperator::Multiply,
+                    lhs: lhs.into(),
+                    rhs: rhs.into(),
+                });
+            }
         }
-        if self == QuantityType::Scalar {
-            return rhs;
-        }
-        if rhs == QuantityType::Scalar {
-            return self;
-        }
-
-        match (self, rhs) {
-            (QuantityType::Length, QuantityType::Length) => QuantityType::Area,
-            (QuantityType::Length, QuantityType::Area)
-            | (QuantityType::Area, QuantityType::Length) => QuantityType::Volume,
-            (_, _) => QuantityType::Invalid,
-        }
+        .into())
     }
 }
 
 impl std::ops::Div for QuantityType {
-    type Output = QuantityType;
+    type Output = TypeResult;
 
     fn div(self, rhs: Self) -> Self::Output {
-        if rhs == self {
-            return QuantityType::Scalar;
+        use QuantityType::*;
+        let lhs = self;
+        Ok(match (lhs, rhs) {
+            (ty, Scalar) => ty,
+            (lhs, rhs) if lhs == rhs => Scalar,
+            (lhs, rhs) => {
+                return Err(TypeError::UnsupportedBinaryOperator {
+                    op: BinaryOperator::Divide,
+                    lhs: lhs.into(),
+                    rhs: rhs.into(),
+                });
+            }
         }
-        if rhs == QuantityType::Scalar {
-            return self;
-        }
-
-        match (self, rhs) {
-            (QuantityType::Area, QuantityType::Length)
-            | (QuantityType::Volume, QuantityType::Area) => QuantityType::Length,
-            (QuantityType::Volume, QuantityType::Length) => QuantityType::Area,
-            (_, _) => QuantityType::Invalid,
-        }
+        .into())
     }
 }
