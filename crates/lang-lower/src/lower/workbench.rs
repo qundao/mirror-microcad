@@ -180,12 +180,12 @@ impl Lower<ast::StatementList> for Box<[ir::Init]> {
                 })?;
         }
 
-        Ok(extract_statements(node, |stmt| {
+        extract_statements(node, |stmt| {
             Ok(match stmt {
                 ast::Statement::Init(init) => Some(ir::Init::lower(init, context)?),
                 _ => None,
             })
-        })?)
+        })
     }
 }
 

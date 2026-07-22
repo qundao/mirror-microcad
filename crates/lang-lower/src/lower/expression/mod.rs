@@ -164,7 +164,7 @@ where
                 .as_ref()
                 .map(|body| EXPR::Body::lower(body, context))
                 .transpose()?
-                .map(|body| Box::new(body)),
+                .map(Box::new),
             src_ref: context.span_to_src_ref(&node.span),
         })
     }
