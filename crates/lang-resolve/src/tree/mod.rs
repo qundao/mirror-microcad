@@ -17,7 +17,7 @@ pub use symbol::*;
 #[derive(Debug, PartialEq, Hash, Default, Serialize, Deserialize)]
 #[serde(bound(serialize = "DEF: Serialize", deserialize = "DEF: Deserialize<'de>"))]
 pub struct SymbolTree<DEF: Serialize> {
-    nodes: Vec<Symbol<DEF>>,
+    pub(crate) nodes: Vec<Symbol<DEF>>,
 }
 
 impl<DEF: Serialize> SymbolTree<DEF> {

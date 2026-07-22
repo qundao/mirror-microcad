@@ -18,7 +18,7 @@ use crate::{Mir, mir, scaffold::scaffoldable::Scaffoldables, tree::SymbolMetadat
 pub use path_resolver::{DefaultPathResolver, PathResolver};
 pub use tree_builder::TreeBuilder;
 
-use microcad_lang_lower::{Ir, ir};
+use microcad_lang_lower::{CastInto, Ir, ir};
 
 #[derive(Debug, Error, Diagnostic)]
 pub enum ScaffoldError {
@@ -75,7 +75,7 @@ impl Scaffold for ir::FileModule {
                 keyword_src_ref: self.keyword_src_ref,
             },
             mir::UnresolvedSymbolDef::FileModule(mir::FileModule {
-                attr: self.attr.clone().into(),
+                attr: self.attr.0.clone().cast_into(),
                 path: context.path_resolver.file_module_path_as_string(&self.id)?,
             }), // TODO Resolve file name already here.
         )
@@ -92,7 +92,7 @@ impl Scaffold for ir::ExplicitAlias {
                 src_ref: self.src_ref,
                 keyword_src_ref: self.keyword_src_ref,
             },
-            mir::Alias(self.path.clone()),
+            mir::Alias(self.path.clone().into()),
         )
         .into())
     }
@@ -107,7 +107,7 @@ impl Scaffold for ir::WildcardAlias {
                 src_ref: self.src_ref,
                 keyword_src_ref: self.keyword_src_ref,
             },
-            mir::Wildcard(self.path.clone()),
+            mir::Wildcard(self.path.clone().into()),
         )
         .into())
     }
@@ -115,8 +115,6 @@ impl Scaffold for ir::WildcardAlias {
 
 impl Scaffold for ir::Constant {
     fn scaffold(&self, _context: &mut ScaffoldContext) -> ScaffoldResult {
-        // TODO: Check id is in UPPERCASE
-
         Ok(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: Some(self.id.clone()),
@@ -125,9 +123,9 @@ impl Scaffold for ir::Constant {
                 keyword_src_ref: self.keyword_src_ref,
             },
             mir::Constant {
-                attr: self.attr.clone().into(),
+                attr: self.attr.0.clone().cast_into(),
                 ty: self.ty.clone(),
-                expr: self.expr.clone(),
+                expr: self.expr.clone().cast_into(),
             },
         )
         .into())
@@ -144,7 +142,12 @@ impl Scaffold for ir::InlineModule {
                 keyword_src_ref: SrcRef::none(),
             },
             mir::UnresolvedSymbolDef::InlineModule(mir::InlineModule {
-                attr: (self.outer_attr.clone(), self.inner_attr.clone()).into(),
+                attr: self
+                    .outer_attr
+                    .0
+                    .clone()
+                    .extend(self.inner_attr.0.clone())
+                    .cast_into(),
             }),
         ));
         builder.scaffold(context, self.items.scaffoldables())?;
@@ -157,40 +160,25 @@ impl Scaffold for ir::Function {
         let mut builder = TreeBuilder::new(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: Some(self.id.clone()),
-                visibility: ir::Visibility::Public,
-                src_ref: SrcRef::none(),
-                keyword_src_ref: SrcRef::none(),
+                visibility: self.visibility.clone(),
+                src_ref: self.src_ref,
+                keyword_src_ref: self.keyword_ref,
             },
             mir::Function {
-                attr: (self.outer_attr.clone(), self.inner_attr.clone()).into(),
-                statements: self.statements.clone(),
-                parameters: self.signature.parameters.clone().into(),
+                attr: self
+                    .outer_attr
+                    .0
+                    .clone()
+                    .extend(self.inner_attr.0.clone())
+                    .cast_into(),
+                statements: self.statements.clone().cast_into(),
+                parameters: self.signature.parameters.clone().cast_into(),
                 return_ty: self.signature.return_type.clone(),
             },
         ));
 
         builder.scaffold(context, self.items.scaffoldables())?;
         Ok(builder.build())
-    }
-}
-
-impl From<ir::Workbench> for mir::Workbench {
-    fn from(workbench: ir::Workbench) -> Self {
-        Self {
-            kind: workbench.kind,
-            inits: workbench
-                .inits
-                .into_iter()
-                .map(|init| mir::Init {
-                    attr: init.attr.clone().into(),
-                    parameters: init.parameters.into(),
-                    statements: init.statements.clone(),
-                })
-                .collect::<Vec<_>>()
-                .into_boxed_slice(),
-            parameters: workbench.parameters,
-            statements: workbench.statements.clone(),
-        }
     }
 }
 
@@ -203,7 +191,21 @@ impl Scaffold for ir::Workbench {
                 src_ref: SrcRef::none(),
                 keyword_src_ref: SrcRef::none(),
             },
-            mir::Workbench::from(self.clone()),
+            mir::Workbench {
+                kind: self.kind.clone(),
+                inits: self
+                    .inits
+                    .iter()
+                    .map(|init| mir::Init {
+                        attr: init.attr.0.clone().cast_into(),
+                        parameters: init.parameters.clone().cast_into(),
+                        statements: init.statements.clone().cast_into(),
+                    })
+                    .collect::<Vec<_>>()
+                    .into_boxed_slice(),
+                parameters: self.parameters.clone().cast_into(),
+                statements: self.statements.clone().cast_into(),
+            },
         ));
 
         builder.scaffold(context, self.items.scaffoldables())?;
@@ -221,8 +223,8 @@ impl Scaffold for ir::Source {
                 keyword_src_ref: SrcRef::none(),
             },
             mir::SourceFile {
-                attr: self.attr.clone().into(),
-                statements: self.statements.clone(),
+                attr: self.attr.0.clone().cast_into(),
+                statements: self.statements.clone().cast_into(),
             },
         ));
 

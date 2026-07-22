@@ -32,10 +32,11 @@ impl CaseCheck for rst::ResolvedSymbolDef {
     fn expected_case(&self) -> Option<Case> {
         use rst::ResolvedSymbolDef::*;
         match &self {
-            SourceFile(_) | InlineModule | FileModule | Function(_) => Some(Case::LowerSnake),
+            SourceFile(_) | InlineModule | Function(_) => Some(Case::LowerSnake),
             Workbench(_) => Some(Case::Pascal),
             Constant(_) => Some(Case::UpperSnake),
             Builtin(_) | Alias(_) | Wildcard(_) => None,
+            _ => None,
         }
     }
 }

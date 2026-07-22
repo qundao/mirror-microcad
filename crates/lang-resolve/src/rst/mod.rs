@@ -26,18 +26,24 @@ use microcad_lang_lower::ir;
 
 pub use crate::mir::Identifier;
 
-#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub enum ResolvedName {
     Local(Id),
     Symbol(SymbolHandle),
-    Unresolved(SymbolPath),
+    Error(SymbolPath),
 }
 
-pub type DocBlock = mir::DocBlock;
+#[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
+pub struct DocBlock(pub Refer<String>);
+
 pub type Type = mir::Type;
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Constant(pub Refer<Value>);
+pub struct Constant {
+    pub doc: DocBlock,
+    //attr: ConstantAttributes,
+    pub value: Refer<Value>,
+}
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Parameter {
@@ -67,7 +73,7 @@ pub struct Function {
 }
 
 pub type WorkbenchExpression = ir::WorkbenchExpression<ResolvedName>;
-pub type WorkbenchStatement = ir::WorkbenchStatement;
+pub type WorkbenchStatement = ir::WorkbenchStatement<ResolvedName>;
 pub type WorkbenchKind = mir::WorkbenchKind;
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
@@ -113,12 +119,15 @@ pub struct SourceFile {
 /// Symbol definition
 #[derive(Debug, From, Hash, PartialEq, Serialize, Deserialize)]
 pub enum ResolvedSymbolDef {
+    /*/// Workspace root
+    Root(Workspace),
+    /// External dependency
+    External(External),
+    */
     /// Source file symbol.
     SourceFile(SourceFile),
     /// Inline Module symbol: `mod foo {}`
     InlineModule,
-    /// File Module Symbol: `mod foo;`
-    FileModule,
     /// Workbench symbol.
     Workbench(Workbench),
     /// Function symbol.
@@ -141,6 +150,7 @@ pub type ResolvedSymbolTree = crate::tree::SymbolTree<ResolvedSymbolDef>;
 
 #[derive(Debug, From, Hash, PartialEq, Serialize, Artifact)]
 pub struct Rst {
-    tree: ResolvedSymbolTree,
-    hash: HashId,
+    pub input_hash: HashId,
+    pub output_hash: HashId,
+    pub tree: ResolvedSymbolTree,
 }

@@ -1,9 +1,10 @@
-use derive_more::From;
 use serde::{Deserialize, Serialize};
 
 use super::{SymbolTree, iterators};
 
 pub use microcad_lang_base::{Id, Identifier};
+
+pub use microcad_lang_lower::ir::SymbolPath;
 
 #[derive(Debug, PartialEq, Clone, Copy, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct SymbolHandle(pub(super) usize);
@@ -70,9 +71,6 @@ pub mod meta {
     pub use microcad_lang_base::SrcRef;
     use serde::{Deserialize, Serialize};
 
-    #[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
-    pub struct DocBlock(pub Refer<String>);
-
     pub type Visibility = ir::Visibility;
 }
 
@@ -108,20 +106,6 @@ impl<DEF: Serialize> Symbol<DEF> {
             parent: None,
             children: Default::default(),
         }
-    }
-}
-
-#[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
-pub struct SymbolPath(Vec<Id>);
-
-impl From<&str> for SymbolPath {
-    fn from(s: &str) -> Self {
-        Self(
-            s.split("::")
-                .filter(|segment| !segment.is_empty())
-                .map(|segment| Id::from(segment))
-                .collect(),
-        )
     }
 }
 
@@ -194,83 +178,5 @@ impl<'tree, DEF: Serialize> SymbolRef<'tree, DEF> {
 
     pub fn descendants(&self) -> iterators::Descendants<'tree, DEF> {
         iterators::Descendants::new(*self)
-    }
-
-    pub fn search_down(&self, path: impl Into<SymbolPath>) -> Vec<SymbolRef<'tree, DEF>> {
-        let path = path.into();
-        match path.0.as_slice() {
-            // Base case: path is empty, return this node
-            [] => vec![*self],
-
-            // Recursive case: match first ID, then search descendants
-            [first, rest @ ..] => {
-                self.children()
-                    .filter(|child| {
-                        if let Some(id) = child.id() {
-                            id.id() == first
-                        } else {
-                            false
-                        }
-                    })
-                    .flat_map(|child| {
-                        // If there is more path, continue searching
-                        if rest.is_empty() {
-                            vec![child]
-                        } else {
-                            child.search_down(rest.to_vec())
-                        }
-                    })
-                    .collect()
-            }
-        }
-    }
-
-    /// Resolves a path relative to the current symbol.
-    /// If path starts with root indicator, it searches from top.
-    /// Otherwise, it performs a local-outward search (upward).
-    pub fn resolve(&self, path: impl Into<SymbolPath>) -> Option<SymbolRef<'tree, DEF>> {
-        // 1. If searching from current node, look upward for the first component
-        let path = path.into();
-        let mut current = self
-            .children
-            .get_by_id(self.tree(), path.0.first().cloned().unwrap())?;
-
-        loop {
-            // Check if current node matches the first element of the path
-            if current.id()?.id() == path.0.first()? {
-                // If the path matches, descend into children to find the rest
-                if let Some(target) = self.descend(&current, &path.0[1..]) {
-                    return Some(target);
-                }
-            }
-
-            // Move up
-            match current.parent {
-                Some(parent_handle) => current = self.tree.get(parent_handle)?,
-                None => break, // Reached root
-            }
-        }
-        None
-    }
-
-    /// Helper to descend into children
-    fn descend(
-        &self,
-        node: &SymbolRef<'tree, DEF>,
-        remaining_path: &[Id],
-    ) -> Option<SymbolRef<'tree, DEF>> {
-        if remaining_path.is_empty() {
-            return Some(*node);
-        }
-
-        node.children()
-            .filter(|child| {
-                if let Some(id) = child.id() {
-                    id.id() == &remaining_path[0]
-                } else {
-                    false
-                }
-            })
-            .find_map(|child| self.descend(&child, &remaining_path[1..]))
     }
 }

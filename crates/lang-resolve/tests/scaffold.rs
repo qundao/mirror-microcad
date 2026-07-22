@@ -60,47 +60,6 @@ fn descendants_builder() {
     assert_that!(s, eq("root foo baz bam bar"));
 }
 
-#[test]
-fn resolve() {
-    fn resolve_id<'mir>(root: mir::UnresolvedSymbolRef<'mir>, id: &str) -> Id {
-        root.resolve(id).unwrap().id().unwrap().id().clone()
-    }
-    let tree = sample_tree();
-
-    let root = tree.root().unwrap();
-
-    assert_that!(resolve_id(root, "foo"), eq("foo"));
-    assert_that!(resolve_id(root, "foo::baz"), eq("baz"));
-    assert_that!(resolve_id(root, "foo::bam"), eq("bam"));
-    assert_that!(resolve_id(root, "bar"), eq("bar"));
-
-    let foo = root.resolve("foo").unwrap();
-    assert_that!(resolve_id(foo, "baz"), eq("baz"));
-    assert_that!(resolve_id(foo, "bam"), eq("bam"));
-}
-
-#[test]
-fn insert_tree() {
-    let mut tree = sample_tree();
-
-    let foo = {
-        let root = tree.root().unwrap();
-        root.resolve("foo").unwrap()
-    };
-
-    tree.insert(Some(foo.handle()), sample_tree());
-
-    let s = tree
-        .root()
-        .unwrap()
-        .descendants()
-        .filter_map(|s| s.id().map(|id| id.to_string()))
-        .collect::<Vec<_>>()
-        .join(" ");
-
-    assert_that!(s, eq("root foo baz bam root foo baz bam bar bar"));
-}
-
 fn scaffold_file(file: &str) -> CompilationResult<Mir> {
     let source = microcad_lang_base::Source::load(&format!("tests/test_cases/{file}.µcad"))
         .expect("Error loading source file");
@@ -135,10 +94,12 @@ fn scaffold_inline_module() {
 
     assert_that!(s, eq("inline_module A b C d E f G"));
 
+    /*
     assert!(root.resolve("A").is_some());
     assert!(root.resolve("b::C").is_some());
     assert!(root.resolve("b::d::E").is_some());
-    assert!(root.resolve("b::f::G").is_some()); // Should be unreachable*/
+    assert!(root.resolve("b::f::G").is_some()); // Should be unreachable
+    */
 }
 
 #[test]

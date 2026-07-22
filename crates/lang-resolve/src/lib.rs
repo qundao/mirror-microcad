@@ -18,10 +18,6 @@ pub use mir::Mir;
 
 pub use rst::Rst;
 
-pub use resolve::{Resolve, ResolveContext, ResolveResult, scaffold};
-
-pub fn resolve(_source: &Source, _mir: &Mir) -> CompilationResult<Rst> {
-    todo!()
-}
+pub use resolve::{Resolve, ResolveContext, ResolveResult, resolve, scaffold};
 
 pub use scaffold::scaffold;
