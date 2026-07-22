@@ -123,12 +123,50 @@ pub struct Attributes<NAME: Serialize = ir::SymbolPath> {
     pub tags: Box<[Tag]>,
 }
 
+impl<NAME: Serialize> Default for Attributes<NAME> {
+    fn default() -> Self {
+        Self {
+            doc: Default::default(),
+            meta: Default::default(),
+            commands: Default::default(),
+            tags: Default::default(),
+        }
+    }
+}
+
 impl<NAME: Serialize> Attributes<NAME> {
     pub fn is_empty(&self) -> bool {
         self.doc.is_empty()
             && self.meta.is_empty()
             && self.commands.is_empty()
             && self.tags.is_empty()
+    }
+
+    /// Consumes both `self` and `rhs`, returning a merged `Attributes` with appended fields.
+    pub fn extend(mut self, rhs: Self) -> Self {
+        /// Helper function to combine two `Box<[T]>` without reallocating if one side is empty.
+        fn extend_boxed_slices<T>(lhs: Box<[T]>, rhs: Box<[T]>) -> Box<[T]> {
+            if rhs.is_empty() {
+                return lhs;
+            }
+            if lhs.is_empty() {
+                return rhs;
+            }
+
+            let mut vec = lhs.into_vec();
+            vec.extend(rhs.into_vec());
+            vec.into_boxed_slice()
+        }
+
+        // Extend documentation
+        self.doc = ir::DocBlock::merge(&self.doc, &rhs.doc);
+
+        // Convert Box<[T]> to Vec<T> to append, then back to Box<[T]>
+        self.meta = extend_boxed_slices(self.meta, rhs.meta);
+        self.commands = extend_boxed_slices(self.commands, rhs.commands);
+        self.tags = extend_boxed_slices(self.tags, rhs.tags);
+
+        self
     }
 }
 
