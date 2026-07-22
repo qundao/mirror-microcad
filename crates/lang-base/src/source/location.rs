@@ -21,7 +21,6 @@ pub enum SourceKind {
 
 impl SourceKind {
     /// Returns a fallback or explicit URL representation of the source.
-    #[deny(clippy::wildcard_match_arm)]
     pub fn url(&self) -> Url {
         match self {
             SourceKind::Url(url) => url.clone(),
