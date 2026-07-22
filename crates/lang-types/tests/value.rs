@@ -1,8 +1,4 @@
-use microcad_lang_types::{
-    Value,
-    ty::{Integer, Scalar},
-    value::ValueResult,
-};
+use microcad_lang_types::{Integer, Scalar, Value, ValueResult};
 
 fn integer(value: Integer) -> Value {
     value.into()

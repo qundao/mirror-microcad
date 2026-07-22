@@ -11,6 +11,8 @@ use crate::ty::*;
 pub use error::*;
 use serde::{Deserialize, Serialize};
 
+use crate::{Integer, Length, Scalar};
+
 const OUTPUT_PRECISION: i32 = 14;
 
 /// A numeric value

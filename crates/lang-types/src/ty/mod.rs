@@ -4,6 +4,7 @@
 //! µcad syntax elements of types
 
 mod matrix_type;
+mod ops;
 mod quantity_type;
 mod tuple_type;
 mod r#type;
@@ -37,6 +38,3 @@ pub trait Ty {
     /// Return type
     fn ty(&self) -> Type;
 }
-
-/// Re-import from microcad_core
-pub use microcad_core::{Integer, Length, Scalar};

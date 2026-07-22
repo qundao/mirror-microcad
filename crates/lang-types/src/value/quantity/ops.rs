@@ -1,11 +1,12 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Quantity binery operators module.
+//! Quantity binary operators module.
 
-use microcad_core::{Integer, Scalar};
-
-use crate::{ty::*, value::*};
+use crate::{
+    Integer, Quantity, QuantityType, Scalar,
+    value::{QuantityError, QuantityResult},
+};
 
 impl std::ops::Neg for Quantity {
     type Output = Quantity;

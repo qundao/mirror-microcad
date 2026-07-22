@@ -3,20 +3,19 @@
 
 //! Matrix value type
 
-use microcad_core::Scalar;
-use serde::{Deserialize, Serialize};
+use crate::{Mat2, Mat3, Mat4, MatrixType, Scalar, Ty, Type};
 
-use crate::ty::*;
+use serde::{Deserialize, Serialize};
 
 /// Matrix type
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum Matrix {
     /// 2x2 matrix.
-    Matrix2(microcad_core::Mat2),
+    Matrix2(Mat2),
     /// 3x3 matrix.
-    Matrix3(microcad_core::Mat3),
+    Matrix3(Mat3),
     /// 4x4 matrix.
-    Matrix4(microcad_core::Mat4),
+    Matrix4(Mat4),
 }
 
 impl Ty for Matrix {
