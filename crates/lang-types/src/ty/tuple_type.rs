@@ -97,12 +97,13 @@ impl TupleType {
     /// Test if all fields have a common type.
     pub(crate) fn common_type(&self) -> Option<&Type> {
         let mut iter = self.unnamed.iter().chain(self.named.values());
-        if let Some(first) = iter.next() {
-            if iter.all(|x| x == first) {
-                return Some(first);
-            }
+        if let Some(first) = iter.next()
+            && iter.all(|x| x == first)
+        {
+            Some(first)
+        } else {
+            None
         }
-        None
     }
 
     /// Check if the named tuple is a [`Color`].
@@ -210,11 +211,11 @@ impl std::ops::Add for TupleType {
     fn add(self, rhs: Self) -> Self::Output {
         let lhs = self;
         if lhs.is_matching(&rhs) {
-            Ok(Type::from(Box::new(lhs)).into())
+            Ok(Type::from(Box::new(lhs)))
         } else {
             Err(TypeError::IncompatibleTupleTypes {
-                lhs,
-                rhs,
+                lhs: Box::new(lhs),
+                rhs: Box::new(rhs),
                 op: BinaryOperator::Add,
             })
         }
@@ -227,11 +228,11 @@ impl std::ops::Sub for TupleType {
     fn sub(self, rhs: Self) -> Self::Output {
         let lhs = self;
         if lhs.is_matching(&rhs) {
-            Ok(Type::from(Box::new(lhs)).into())
+            Ok(Type::from(Box::new(lhs)))
         } else {
             Err(TypeError::IncompatibleTupleTypes {
-                lhs,
-                rhs,
+                lhs: Box::new(lhs),
+                rhs: Box::new(rhs),
                 op: BinaryOperator::Subtract,
             })
         }

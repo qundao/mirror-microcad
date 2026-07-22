@@ -16,10 +16,10 @@ impl TypeList {
 
     /// Check if all list items are of a common type
     pub fn common_type(&self) -> Option<Type> {
-        if let Some(ty) = self.0.first() {
-            if self.0[1..].iter().all(|t| t == ty) {
-                return Some(ty.clone());
-            }
+        if let Some(ty) = self.0.first()
+            && self.0[1..].iter().all(|t| t == ty)
+        {
+            return Some(ty.clone());
         }
         None
     }

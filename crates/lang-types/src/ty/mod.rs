@@ -58,8 +58,8 @@ pub enum TypeError {
 
     #[error("Incompatible tuple types '{lhs}' and '{rhs}' for binary operation {op}")]
     IncompatibleTupleTypes {
-        lhs: TupleType,
-        rhs: TupleType,
+        lhs: Box<TupleType>,
+        rhs: Box<TupleType>,
         op: BinaryOperator,
     },
 }
