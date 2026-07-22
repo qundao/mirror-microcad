@@ -322,7 +322,7 @@ pub struct ElementAccess {
 pub enum ElementInner {
     Attribute(ast::Identifier),
     Tuple(ast::Identifier),
-    Method(Call),
+    Method(Box<Call>),
     ArrayElement(Box<Expression>),
 }
 

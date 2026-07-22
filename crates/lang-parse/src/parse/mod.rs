@@ -1463,7 +1463,7 @@ fn parser<'tokens>()
 
         let access_method = just(Token::SigilDot)
             .ignore_then(call_inner)
-            .map(ast::ElementInner::Method)
+            .map(|call| ast::ElementInner::Method(Box::new(call)))
             .labelled("method call")
             .boxed();
 
