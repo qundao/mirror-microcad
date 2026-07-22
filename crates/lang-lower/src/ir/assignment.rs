@@ -44,7 +44,8 @@ where
     }
 }
 
-impl<T, EXPR> CastInto<LocalAssignment<T>> for LocalAssignment<EXPR>
+impl<T: ir::ExpressionKind, EXPR: ir::ExpressionKind> CastInto<LocalAssignment<T>>
+    for LocalAssignment<EXPR>
 where
     EXPR: CastInto<T>,
 {

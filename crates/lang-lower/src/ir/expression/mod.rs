@@ -19,7 +19,7 @@ pub use range_expression::*;
 pub use symbol_path::*;
 pub use tuple_expression::*;
 
-use crate::{CastInto, impl_cast_into, ir};
+use crate::{CastInto, ir};
 use microcad_lang_base::{Identifier, Refer, SingleIdentifier, SrcRef, SrcReferrer};
 
 use serde::{Deserialize, Serialize};
@@ -47,45 +47,53 @@ where
     }
 }
 
-impl_cast_into!(tuple ListExpression: vec_cast);
+impl<T, EXPR> CastInto<ListExpression<T>> for ListExpression<EXPR>
+where
+    EXPR: CastInto<T> + Serialize,
+{
+    fn cast_into(self) -> ListExpression<T> {
+        ListExpression(self.0.into_iter().map(|e| e.cast_into()).collect())
+    }
+}
 
 /// If statement.
 #[skip_serializing_none]
 #[derive(Clone, Debug, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(
-    serialize = "EXPR: Serialize, BODY: Serialize",
-    deserialize = "EXPR: Deserialize<'de>, BODY: Deserialize<'de>"
+    serialize = "EXPR: Serialize, EXPR::Body: Serialize",
+    deserialize = "EXPR: Deserialize<'de>, EXPR::Body: Deserialize<'de>"
 ))]
-pub struct If<EXPR, BODY> {
+pub struct If<EXPR: ExpressionKind> {
     /// SrcRef of the `if` keyword.
     pub if_ref: SrcRef,
     /// If condition.
     pub cond: Box<EXPR>,
     /// Body if `true`.
-    pub body: Box<BODY>,
+    pub body: Box<EXPR::Body>,
     /// SrcRef of the `else` keyword, if present.
     pub else_ref: Option<SrcRef>,
     /// Body if `false`.
-    pub body_else: Option<Box<BODY>>,
+    pub body_else: Option<Box<EXPR::Body>>,
     /// SrcRef of the `else[ if]` keyword, if present.
     pub next_if_ref: Option<SrcRef>,
     /// Next if statement: `else if x == 1`.
-    pub next_if: Option<Box<If<EXPR, BODY>>>,
+    pub next_if: Option<Box<If<EXPR>>>,
     /// Source code reference.
     pub src_ref: SrcRef,
 }
 
-impl<T: Serialize, EXPR: Serialize, BODY: Serialize> CastInto<If<T, BODY>> for If<EXPR, BODY>
+impl<T: ExpressionKind, EXPR: ExpressionKind> CastInto<If<T>> for If<EXPR>
 where
     EXPR: CastInto<T>,
+    EXPR::Body: CastInto<T::Body> + Serialize,
 {
-    fn cast_into(self) -> If<T, BODY> {
+    fn cast_into(self) -> If<T> {
         If {
             if_ref: self.if_ref,
             cond: Box::new(self.cond.cast_into()),
-            body: self.body,
+            body: Box::new(self.body.cast_into()),
             else_ref: self.else_ref,
-            body_else: self.body_else,
+            body_else: self.body_else.map(|body| Box::new(body.cast_into())),
             next_if_ref: self.next_if_ref,
             next_if: self.next_if.map(|next_if| Box::new(next_if.cast_into())),
             src_ref: self.src_ref,
@@ -93,10 +101,10 @@ where
     }
 }
 
-impl<EXPR, BODY> std::fmt::Display for If<EXPR, BODY>
+impl<EXPR> std::fmt::Display for If<EXPR>
 where
-    EXPR: std::fmt::Display,
-    BODY: std::fmt::Display,
+    EXPR: ExpressionKind + std::fmt::Display,
+    EXPR::Body: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         writeln!(f, "if {cond} {body}", cond = self.cond, body = self.body)?;
@@ -235,19 +243,20 @@ where
 ))]
 pub struct ElementAccess<EXPR, ELEMENT> {
     pub lhs: Box<EXPR>,
-    pub element: ELEMENT,
+    pub element: Box<ELEMENT>,
     pub src_ref: SrcRef,
 }
 
-impl<T: Serialize, EXPR: Serialize, ELEMENT: Serialize> CastInto<ElementAccess<T, ELEMENT>>
-    for ElementAccess<EXPR, ELEMENT>
+impl<A: Serialize, B: Serialize, ElementA: Serialize, ElementB: Serialize>
+    CastInto<ElementAccess<A, ElementA>> for ElementAccess<B, ElementB>
 where
-    EXPR: CastInto<T>,
+    B: CastInto<A>,
+    ElementB: CastInto<ElementA>,
 {
-    fn cast_into(self) -> ElementAccess<T, ELEMENT> {
+    fn cast_into(self) -> ElementAccess<A, ElementA> {
         ElementAccess {
             lhs: Box::new(self.lhs.cast_into()),
-            element: self.element,
+            element: Box::new(self.element.cast_into()),
             src_ref: self.src_ref,
         }
     }
@@ -255,6 +264,7 @@ where
 
 pub trait ExpressionKind: Serialize {
     type Name;
+    type Body;
 }
 
 /// An expression that can be evaluated during `resolve` phase.
@@ -274,16 +284,21 @@ pub enum ConstantExpression<NAME: Serialize = ir::SymbolPath> {
     UnaryOp(ir::UnaryOp<ConstantExpression<NAME>>),
 }
 
+impl<NAME: Serialize> ExpressionKind for ConstantExpression<NAME> {
+    type Name = NAME;
+    type Body = (); // Constant expressions have no body.
+}
+
 impl<T: Serialize, NAME: Serialize> CastInto<ConstantExpression<T>> for ConstantExpression<NAME>
 where
-    NAME: CastInto<T>,
+    NAME: Into<T>,
 {
     fn cast_into(self) -> ConstantExpression<T> {
         use ConstantExpression::*;
         match self {
             Invalid => Invalid,
             Literal(literal) => Literal(literal),
-            Name(name) => Name(name.cast_into()),
+            Name(name) => Name(name.into()),
             FormatString(format_string) => FormatString(format_string.cast_into()),
             ArrayExpression(array_expression) => ArrayExpression(array_expression.cast_into()),
             TupleExpression(tuple_expression) => TupleExpression(tuple_expression.cast_into()),
@@ -291,10 +306,6 @@ where
             UnaryOp(unary_op) => UnaryOp(unary_op.cast_into()),
         }
     }
-}
-
-impl<NAME: Serialize> ExpressionKind for ConstantExpression<NAME> {
-    type Name = NAME;
 }
 
 impl<NAME: Serialize> std::fmt::Display for ConstantExpression<NAME>

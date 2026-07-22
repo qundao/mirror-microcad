@@ -157,7 +157,7 @@ where
 impl<T: ir::ExpressionKind, EXPR: ir::ExpressionKind> CastInto<Call<T>> for Call<EXPR>
 where
     EXPR: crate::CastInto<T>,
-    T::Name: From<EXPR::Name>,
+    EXPR::Name: Into<T::Name>,
 {
     fn cast_into(self) -> Call<T> {
         Call {

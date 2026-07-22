@@ -8,7 +8,6 @@ use crate::{CastInto, ir};
 use microcad_lang_base::{Identifier, Refer, SrcRef};
 use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
 
-use derive_more::Deref;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
@@ -45,7 +44,7 @@ where
 
 impl<T: Serialize, NAME: Serialize> CastInto<Parameter<T>> for Parameter<NAME>
 where
-    NAME: CastInto<T>,
+    NAME: Into<T>,
 {
     fn cast_into(self) -> Parameter<T> {
         Parameter {
@@ -59,13 +58,13 @@ where
 }
 
 /// Parameter list, sorted by id.
-#[derive(Debug, Clone, Deref, SrcReferrer, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, SrcReferrer, Hash, PartialEq, Serialize, Deserialize)]
 pub struct ParameterList<NAME: Serialize = ir::SymbolPath>(pub Refer<Box<[ir::Parameter<NAME>]>>);
 
 impl<NAME: Serialize> ParameterList<NAME> {
     /// Return ids of all parameters
     pub fn ids(&self) -> impl Iterator<Item = Identifier> {
-        self.iter().map(|param| param.id.clone())
+        self.0.iter().map(|param| param.id.clone())
     }
 
     /// Return if given identifier is in parameter list
@@ -88,5 +87,14 @@ where
                 .collect::<Vec<_>>()
                 .join(", ")
         )
+    }
+}
+
+impl<T: Serialize, NAME: Serialize> CastInto<ParameterList<T>> for ParameterList<NAME>
+where
+    NAME: Into<T>,
+{
+    fn cast_into(self) -> ParameterList<T> {
+        ParameterList(self.0.cast_into())
     }
 }

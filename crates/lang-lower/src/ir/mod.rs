@@ -30,18 +30,11 @@ pub use workbench::*;
 pub use microcad_lang_base::{Identifier, element::Visibility};
 pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Ty, Type, Unit};
 
-impl_cast_into!(identity Unit);
-impl_cast_into!(identity Type);
-impl_cast_into!(identity TupleType);
-impl_cast_into!(identity QuantityType);
-impl_cast_into!(identity MatrixType);
-impl_cast_into!(identity Identifier);
-
 use microcad_lang_base::{IsDefault, Refer, SrcRef, is_default};
 use microcad_lang_proc_macros::SrcReferrer;
 use serde::{Deserialize, Serialize};
 
-use crate::{impl_cast_into, ir};
+use crate::ir;
 
 /// Type within source code.
 #[derive(Clone, Debug, Hash, PartialEq, SrcReferrer, Serialize, Deserialize)]

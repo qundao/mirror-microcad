@@ -102,17 +102,17 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
                     Ok(match &element.inner {
                         Attribute(a) => Self::MetaAccess(ir::ElementAccess {
                             lhs,
-                            element: ir::Identifier::lower(a, context)?,
+                            element: Box::new(ir::Identifier::lower(a, context)?),
                             src_ref,
                         }),
                         Tuple(t) => Self::PropertyAccess(ir::ElementAccess {
                             lhs,
-                            element: ir::Identifier::lower(t, context)?,
+                            element: Box::new(ir::Identifier::lower(t, context)?),
                             src_ref,
                         }),
                         Method(m) => Self::MethodCall(ir::ElementAccess {
                             lhs,
-                            element: ir::Call::lower(m, context)?,
+                            element: Box::new(ir::Call::lower(m, context)?),
                             src_ref,
                         }),
                         ArrayElement(e) => Self::ArrayAccess(ir::ElementAccess {

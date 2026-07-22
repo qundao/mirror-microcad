@@ -1,7 +1,10 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Lower, LowerContext, LowerError, LowerResult, ir};
+use crate::{
+    Lower, LowerContext, LowerError, LowerResult,
+    ir::{self, ExpressionKind},
+};
 
 mod call;
 mod format_string;
@@ -132,16 +135,16 @@ impl Lower<ast::Identifier> for ir::Marker {
     }
 }
 
-impl<EXPR, BODY> Lower<ast::If> for ir::If<EXPR, BODY>
+impl<EXPR: ExpressionKind> Lower<ast::If> for ir::If<EXPR>
 where
     EXPR: Lower<ast::Expression>,
-    BODY: Lower<ast::Body>,
+    EXPR::Body: Lower<ast::Body>,
 {
     fn lower(node: &ast::If, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::If {
             if_ref: context.span_to_src_ref(&node.if_span),
             cond: Box::new(EXPR::lower(node.condition.as_ref(), context)?),
-            body: BODY::lower(&node.body, context)?.into(),
+            body: EXPR::Body::lower(&node.body, context)?.into(),
             next_if_ref: node
                 .next_if_span
                 .as_ref()
@@ -159,7 +162,7 @@ where
             body_else: node
                 .else_body
                 .as_ref()
-                .map(|body| BODY::lower(body, context))
+                .map(|body| EXPR::Body::lower(body, context))
                 .transpose()?
                 .map(|body| Box::new(body)),
             src_ref: context.span_to_src_ref(&node.span),

@@ -3,7 +3,7 @@
 
 //! Workbench definition syntax element
 
-use crate::ir;
+use crate::{CastInto, ir};
 
 use microcad_lang_base::{Identifier, IsDefault, Refer, SrcRef, SrcReferrer, is_default};
 use microcad_lang_proc_macros::Identifiable;
@@ -16,35 +16,64 @@ use serde_with::skip_serializing_none;
 #[skip_serializing_none]
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
 pub struct WorkbenchStatement<NAME: Serialize = ir::SymbolPath> {
-    pub attr: ir::OuterAttributes,
-    #[serde(skip_serializing_if = "is_default", default)]
+    pub attr: ir::OuterAttributes<NAME>,
     pub src_ref: SrcRef,
     pub visibility: ir::Visibility, // public = property
-    #[serde(skip_serializing_if = "is_default", default)]
     pub keyword_src_ref: SrcRef,
     pub id: Option<ir::Identifier>,
     pub ty: Option<ir::TypeAnnotation>,
     pub expression: WorkbenchExpression<NAME>,
 }
 
+impl<NameA: Serialize, NameB: Serialize> CastInto<WorkbenchStatement<NameA>>
+    for WorkbenchStatement<NameB>
+where
+    NameB: Into<NameA>,
+{
+    fn cast_into(self) -> WorkbenchStatement<NameA> {
+        WorkbenchStatement {
+            attr: self.attr.cast_into(),
+            src_ref: self.src_ref,
+            visibility: self.visibility,
+            keyword_src_ref: self.keyword_src_ref,
+            id: self.id,
+            ty: self.ty,
+            expression: self.expression.cast_into(),
+        }
+    }
+}
+
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
-pub struct Group {
+pub struct Group<NAME: Serialize = ir::SymbolPath> {
     pub src_ref: SrcRef,
-    pub attr: ir::InnerAttributes,
-    pub statements: Box<[WorkbenchStatement]>,
+    pub attr: ir::InnerAttributes<NAME>,
+    pub statements: Box<[WorkbenchStatement<NAME>]>,
+}
+
+impl<Src: Serialize, Dst: Serialize> CastInto<Group<Dst>> for Group<Src>
+where
+    Src: Into<Dst>,
+{
+    fn cast_into(self) -> Group<Dst> {
+        Group {
+            src_ref: self.src_ref,
+            attr: self.attr.cast_into(),
+            statements: self.statements.cast_into(),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Init {
+pub struct Init<NAME: Serialize = ir::SymbolPath> {
     /// SrcRef of the `init` keyword
     pub keyword_ref: SrcRef,
     /// Outer attributes.
-    pub attr: ir::OuterAttributes,
+    pub attr: ir::OuterAttributes<NAME>,
     /// Parameter list for this init definition
     pub parameters: ir::ParameterList,
     /// Body if the init definition
     #[serde(skip_serializing_if = "is_default", default)]
-    pub statements: Box<[WorkbenchStatement]>,
+    pub statements: Box<[WorkbenchStatement<NAME>]>,
     /// Source reference
     pub src_ref: SrcRef,
 }
@@ -82,20 +111,49 @@ pub enum WorkbenchExpression<NAME: Serialize = ir::SymbolPath> {
     FormatString(ir::FormatString<NAME>),
     ArrayExpression(ir::ArrayExpression<WorkbenchExpression<NAME>>),
     TupleExpression(ir::TupleExpression<WorkbenchExpression<NAME>>),
-    Group(ir::Group),
-    If(ir::If<WorkbenchExpression<NAME>, ir::Group>),
+    Group(ir::Group<NAME>),
+    If(ir::If<WorkbenchExpression<NAME>>),
     Call(ir::Call<WorkbenchExpression<NAME>>),
     Marker(Marker),
     BinaryOp(ir::BinaryOp<WorkbenchExpression<NAME>>),
     UnaryOp(ir::UnaryOp<WorkbenchExpression<NAME>>),
     MetaAccess(Access<Identifier, NAME>),
-    ArrayAccess(Access<Box<ir::ConstantExpression<NAME>>, NAME>),
+    ArrayAccess(Access<ir::ConstantExpression<NAME>, NAME>),
     PropertyAccess(Access<Identifier, NAME>),
     MethodCall(MethodCall<NAME>),
 }
 
 impl<NAME: Serialize> ir::ExpressionKind for WorkbenchExpression<NAME> {
     type Name = NAME;
+    type Body = Group<NAME>;
+}
+
+impl<NameA: Serialize, NameB: Serialize> CastInto<WorkbenchExpression<NameA>>
+    for WorkbenchExpression<NameB>
+where
+    NameB: Into<NameA>,
+{
+    fn cast_into(self) -> WorkbenchExpression<NameA> {
+        use WorkbenchExpression::*;
+        match self {
+            Invalid => Invalid,
+            Literal(literal) => Literal(literal),
+            Name(name) => Name(name.into()),
+            FormatString(format_string) => FormatString(format_string.cast_into()),
+            ArrayExpression(array_expression) => ArrayExpression(array_expression.cast_into()),
+            TupleExpression(tuple_expression) => TupleExpression(tuple_expression.cast_into()),
+            Group(group) => Group(group.cast_into()),
+            If(if_) => If(if_.cast_into()),
+            Call(call) => Call(call.cast_into()),
+            Marker(marker) => Marker(marker),
+            BinaryOp(binary_op) => BinaryOp(binary_op.cast_into()),
+            UnaryOp(unary_op) => UnaryOp(unary_op.cast_into()),
+            MetaAccess(element_access) => MetaAccess(element_access.cast_into()),
+            ArrayAccess(element_access) => ArrayAccess(element_access.cast_into()),
+            PropertyAccess(element_access) => PropertyAccess(element_access.cast_into()),
+            MethodCall(element_access) => MethodCall(element_access.cast_into()),
+        }
+    }
 }
 
 /// Workbench items that will be resolved into Symbols

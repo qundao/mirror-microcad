@@ -30,13 +30,13 @@ impl<NAME: Serialize> SrcReferrer for FormatStringInner<NAME> {
 
 impl<T: Serialize, NAME: Serialize> CastInto<FormatStringInner<T>> for FormatStringInner<NAME>
 where
-    NAME: CastInto<T>,
+    NAME: Into<T>,
 {
     fn cast_into(self) -> FormatStringInner<T> {
         match self {
             FormatStringInner::String(s) => FormatStringInner::String(s),
             FormatStringInner::FormatExpression(expr) => {
-                FormatStringInner::FormatExpression(Box::new(expr.cast_into()))
+                FormatStringInner::FormatExpression(Box::new((*expr).cast_into()))
             }
         }
     }
@@ -48,7 +48,7 @@ pub struct FormatString<NAME: Serialize = ir::SymbolPath>(pub Refer<Vec<FormatSt
 
 impl<T: Serialize, NAME: Serialize> CastInto<FormatString<T>> for FormatString<NAME>
 where
-    NAME: CastInto<T>,
+    NAME: Into<T>,
 {
     fn cast_into(self) -> FormatString<T> {
         let src_ref = self.src_ref();
@@ -145,7 +145,7 @@ impl<NAME: Serialize> SrcReferrer for FormatExpression<NAME> {
 
 impl<T: Serialize, NAME: Serialize> CastInto<FormatExpression<T>> for FormatExpression<NAME>
 where
-    NAME: CastInto<T>,
+    NAME: Into<T>,
 {
     fn cast_into(self) -> FormatExpression<T> {
         FormatExpression {

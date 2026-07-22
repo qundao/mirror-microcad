@@ -3,23 +3,26 @@
 
 //! Function definition syntax element
 
-use crate::ir;
+use crate::{CastInto, ir};
 
 use microcad_lang_base::{IsDefault, Refer, SrcRef, SrcReferrer, is_default};
 use serde::{Deserialize, Serialize};
 
 /// Parameters and return type of a function
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
-pub struct FunctionSignature {
+pub struct FunctionSignature<NAME: Serialize = ir::SymbolPath> {
     /// Function's parameters
-    pub parameters: ir::ParameterList,
+    pub parameters: ir::ParameterList<NAME>,
     /// Function's return type
     pub return_type: Option<ir::TypeAnnotation>,
     /// Source code reference
     pub src_ref: SrcRef,
 }
 
-impl std::fmt::Display for FunctionSignature {
+impl<NAME: Serialize> std::fmt::Display for FunctionSignature<NAME>
+where
+    NAME: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
@@ -34,10 +37,32 @@ impl std::fmt::Display for FunctionSignature {
     }
 }
 
+impl<T: Serialize, NAME: Serialize> CastInto<FunctionSignature<T>> for FunctionSignature<NAME>
+where
+    NAME: Into<T>,
+{
+    fn cast_into(self) -> FunctionSignature<T> {
+        FunctionSignature {
+            parameters: self.parameters.cast_into(),
+            return_type: self.return_type,
+            src_ref: self.src_ref,
+        }
+    }
+}
+
 /// A function scope `{}`
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
 pub struct Scope<NAME: Serialize>(pub Refer<Box<[FunctionStatement<NAME>]>>);
+
+impl<T: Serialize, NAME: Serialize> CastInto<Scope<T>> for Scope<NAME>
+where
+    NAME: Into<T>,
+{
+    fn cast_into(self) -> Scope<T> {
+        Scope(self.0.cast_into())
+    }
+}
 
 /// Generic Access
 type Access<ELEMENT, NAME> = ir::ElementAccess<FunctionExpression<NAME>, ELEMENT>;
@@ -55,12 +80,12 @@ pub enum FunctionExpression<NAME: Serialize = ir::SymbolPath> {
     ArrayExpression(ir::ArrayExpression<FunctionExpression<NAME>>),
     TupleExpression(ir::TupleExpression<FunctionExpression<NAME>>),
     Scope(Scope<NAME>),
-    If(ir::If<FunctionExpression<NAME>, Scope<NAME>>),
+    If(ir::If<FunctionExpression<NAME>>),
     Call(ir::Call<FunctionExpression<NAME>>),
     BinaryOp(ir::BinaryOp<FunctionExpression<NAME>>),
     UnaryOp(ir::UnaryOp<FunctionExpression<NAME>>),
     /// Access an element of an array (`a[0]`)
-    ArrayAccess(Access<Box<FunctionExpression<NAME>>, NAME>),
+    ArrayAccess(Access<FunctionExpression<NAME>, NAME>),
     TupleAccess(Access<ir::Identifier, NAME>),
     /// Call to a method: `[2,3].len()`
     MethodCall(MethodCall<NAME>),
@@ -68,6 +93,32 @@ pub enum FunctionExpression<NAME: Serialize = ir::SymbolPath> {
 
 impl<NAME: Serialize> ir::ExpressionKind for FunctionExpression<NAME> {
     type Name = NAME;
+    type Body = Scope<NAME>;
+}
+
+impl<T: Serialize, NAME: Serialize> CastInto<FunctionExpression<T>> for FunctionExpression<NAME>
+where
+    NAME: Into<T>,
+{
+    fn cast_into(self) -> FunctionExpression<T> {
+        use FunctionExpression::*;
+        match self {
+            Invalid => todo!(),
+            Literal(literal) => Literal(literal),
+            Name(name) => Name(name.into()),
+            FormatString(format_string) => FormatString(format_string.cast_into()),
+            ArrayExpression(array_expression) => ArrayExpression(array_expression.cast_into()),
+            TupleExpression(tuple_expression) => TupleExpression(tuple_expression.cast_into()),
+            Scope(scope) => Scope(scope.cast_into()),
+            If(if_) => If(if_.cast_into()),
+            Call(call) => Call(call.cast_into()),
+            BinaryOp(binary_op) => BinaryOp(binary_op.cast_into()),
+            UnaryOp(unary_op) => UnaryOp(unary_op.cast_into()),
+            ArrayAccess(element_access) => ArrayAccess(element_access.cast_into()),
+            TupleAccess(element_access) => TupleAccess(element_access.cast_into()),
+            MethodCall(element_access) => MethodCall(element_access.cast_into()),
+        }
+    }
 }
 
 impl<NAME: Serialize> SrcReferrer for FunctionExpression<NAME>
@@ -102,6 +153,19 @@ pub struct ReturnStatement<NAME: Serialize> {
     pub src_ref: SrcRef,
 }
 
+impl<T: Serialize, NAME: Serialize> CastInto<ReturnStatement<T>> for ReturnStatement<NAME>
+where
+    NAME: Into<T>,
+{
+    fn cast_into(self) -> ReturnStatement<T> {
+        ReturnStatement {
+            value: self.value.map(|value| value.cast_into()),
+            keyword_src_ref: self.keyword_src_ref,
+            src_ref: self.src_ref,
+        }
+    }
+}
+
 #[derive(Debug, Clone, derive_more::From, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
 pub enum FunctionStatement<NAME: Serialize> {
@@ -112,6 +176,21 @@ pub enum FunctionStatement<NAME: Serialize> {
     /// `return 42;`
     /// Possibly lowered from the tail expression of an `ast::StatementList`
     Return(ReturnStatement<NAME>),
+}
+
+impl<NameA: Serialize, NameB: Serialize> CastInto<FunctionStatement<NameA>>
+    for FunctionStatement<NameB>
+where
+    NameB: Into<NameA>,
+{
+    fn cast_into(self) -> FunctionStatement<NameA> {
+        use FunctionStatement::*;
+        match self {
+            Local(local_assignment) => Local(local_assignment.cast_into()),
+            Expression(function_expression) => Expression(function_expression.cast_into()),
+            Return(return_statement) => Return(return_statement.cast_into()),
+        }
+    }
 }
 
 impl<NAME: Serialize + SrcReferrer> SrcReferrer for FunctionStatement<NAME> {

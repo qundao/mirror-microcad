@@ -102,12 +102,12 @@ where
                         Attribute(_) => panic!("Attribute access not allowed"),
                         Tuple(t) => Self::TupleAccess(ir::ElementAccess {
                             lhs,
-                            element: ir::Identifier::lower(t, context)?,
+                            element: Box::new(ir::Identifier::lower(t, context)?),
                             src_ref,
                         }),
                         Method(m) => Self::MethodCall(ir::ElementAccess {
                             lhs,
-                            element: ir::Call::lower(m, context)?,
+                            element: Box::new(ir::Call::lower(m, context)?),
                             src_ref,
                         }),
                         ArrayElement(e) => Self::ArrayAccess(ir::ElementAccess {

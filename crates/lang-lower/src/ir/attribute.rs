@@ -76,7 +76,7 @@ pub struct Meta<NAME: Serialize = ir::SymbolPath> {
 
 impl<T: Serialize, NAME: Serialize> CastInto<Meta<T>> for Meta<NAME>
 where
-    NAME: CastInto<T>,
+    NAME: Into<T>,
 {
     fn cast_into(self) -> Meta<T> {
         Meta {
@@ -95,7 +95,7 @@ pub struct Command<NAME: Serialize = ir::SymbolPath> {
 
 impl<T: Serialize, NAME: Serialize> CastInto<Command<T>> for Command<NAME>
 where
-    NAME: CastInto<T>,
+    NAME: Into<T>,
 {
     fn cast_into(self) -> Command<T> {
         Command {
@@ -140,7 +140,7 @@ impl<NAME: Serialize> IsDefault for Attributes<NAME> {
 
 impl<T: Serialize, NAME: Serialize> CastInto<Attributes<T>> for Attributes<NAME>
 where
-    NAME: CastInto<T>,
+    NAME: Into<T>,
 {
     fn cast_into(self) -> Attributes<T> {
         Attributes {
@@ -165,7 +165,7 @@ impl<NAME: Serialize> InnerAttributes<NAME> {
 
 impl<T: Serialize, NAME: Serialize> CastInto<InnerAttributes<T>> for InnerAttributes<NAME>
 where
-    NAME: CastInto<T>,
+    NAME: Into<T>,
 {
     fn cast_into(self) -> InnerAttributes<T> {
         InnerAttributes(self.0.cast_into())
@@ -191,7 +191,7 @@ impl<NAME: Serialize> OuterAttributes<NAME> {
 
 impl<T: Serialize, NAME: Serialize> CastInto<OuterAttributes<T>> for OuterAttributes<NAME>
 where
-    NAME: CastInto<T>,
+    NAME: Into<T>,
 {
     fn cast_into(self) -> OuterAttributes<T> {
         OuterAttributes(self.0.cast_into())
