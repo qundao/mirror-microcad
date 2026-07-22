@@ -38,6 +38,7 @@ impl Lower<ast::Source> for ir::Source {
         let statements = &node.statements;
 
         Ok(Self {
+            id: context.source.file_module_name(),
             attr: ir::InnerAttributes::lower(statements, context)?,
             items: ir::SourceItems::lower(statements, context)?,
             statements: Box::lower(statements, context)?,

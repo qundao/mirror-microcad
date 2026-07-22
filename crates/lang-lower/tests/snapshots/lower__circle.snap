@@ -10,8 +10,9 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0x7cd65a945030702d",
-        output_hash: "0xe52f69268644a03f",
+        output_hash: "0xa13333f965ff300a",
         tree: (
+            id: Some("circle"),
             attr: ((
                 doc: ((
                     value: [],
@@ -22,6 +23,11 @@ expression: "ir.to_ron().expect(\"No error\")"
                 tags: [],
             )),
             items: (
+                file_modules: [],
+                inline_modules: [],
+                aliases: (),
+                constants: [],
+                functions: [],
                 workbenches: [
                     (
                         keyword_ref: "6:5 @ 0x5b5b0d75574ec6c6 (152..158)",
@@ -411,6 +417,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                     ),
                 ],
             ),
+            statements: [],
         ),
     ),
 )
