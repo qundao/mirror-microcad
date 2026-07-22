@@ -4,24 +4,38 @@
 //! Mid-level intermediate representation (MIR).
 
 use derive_more::From;
-use microcad_lang_base::{HashId, Refer};
+use microcad_lang_base::{HashId, Id, Refer};
 use microcad_lang_proc_macros::Artifact;
 use serde::{Deserialize, Serialize};
 
 use microcad_lang_lower::ir;
 
-pub use crate::tree::SymbolMetadata;
+pub use crate::tree::{SymbolHandle, SymbolMetadata};
 
+pub type SymbolPath = ir::SymbolPath;
 pub type Type = ir::Type;
 pub type TypeAnnotation = Option<ir::TypeAnnotation>;
 
-pub type UnresolvedName = ir::QualifiedName;
+/// The name of a symbol in an unresolved tree
+#[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
+pub enum Name {
+    /// This name
+    Local(Id),
+    Symbol(SymbolHandle),
+    ToBeResolved(ir::SymbolPath),
+}
 
-pub type DocBlock = crate::tree::symbol::meta::DocBlock;
+pub type ConstantExpression = ir::ConstantExpression<Name>;
 
-pub type ConstantExpression = ir::ConstantExpression<UnresolvedName>;
+pub type ArrayExpression = ir::ArrayExpression<ConstantExpression>;
 
-pub use ir::{Attributes, FunctionSignature, Identifier, Parameter, ParameterList, Visibility};
+pub type Attributes = ir::Attributes<Name>;
+
+pub type FunctionSignature = ir::FunctionSignature<Name>;
+pub type Parameter = ir::Parameter<Name>;
+pub type ParameterList = ir::ParameterList<Name>;
+
+pub use ir::{Identifier, Visibility};
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Constant {
@@ -30,8 +44,8 @@ pub struct Constant {
     pub expr: ConstantExpression,
 }
 
-pub type FunctionExpression = ir::FunctionExpression<UnresolvedName>;
-pub type FunctionStatement = ir::FunctionStatement<UnresolvedName>;
+pub type FunctionExpression = ir::FunctionExpression<Name>;
+pub type FunctionStatement = ir::FunctionStatement<Name>;
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Function {
@@ -41,8 +55,8 @@ pub struct Function {
     pub statements: Box<[FunctionStatement]>,
 }
 
-pub type WorkbenchExpression = ir::WorkbenchExpression<UnresolvedName>;
-pub type WorkbenchStatement = ir::WorkbenchStatement<UnresolvedName>;
+pub type WorkbenchExpression = ir::WorkbenchExpression<Name>;
+pub type WorkbenchStatement = ir::WorkbenchStatement<Name>;
 pub type WorkbenchKind = ir::WorkbenchKind;
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
@@ -76,10 +90,10 @@ pub struct Workbench {
 }
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
-pub struct Alias(pub UnresolvedName);
+pub struct Alias(pub Name);
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
-pub struct Wildcard(pub UnresolvedName);
+pub struct Wildcard(pub Name);
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SourceFile {
