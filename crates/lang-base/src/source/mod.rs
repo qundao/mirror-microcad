@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{GetSourceByHash, LineCol, LineIndex, SpanToSrcRef, SrcRef, SrcReferrer};
+use crate::{GetSourceByHash, Id, LineCol, LineIndex, SpanToSrcRef, SrcRef, SrcReferrer};
 use microcad_hash::{HashId, Hashed, ToHash};
 use serde::Serialize;
 
@@ -132,6 +132,11 @@ impl Source {
         }
 
         edits
+    }
+
+    /// Return file module name for this source.
+    pub fn file_module_name(&self) -> Option<Id> {
+        self.location.kind.file_module_name()
     }
 }
 

@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::Url;
+use crate::{Id, Url};
 use serde::Serialize;
 
 /// Kind of the source file
@@ -72,11 +72,22 @@ impl SourceKind {
         self.path().is_some()
     }
 
-    /// The source name
-    pub fn source_name(&self) -> String {
+    /// The relative path of the source file to displayed
+    pub fn display_name(&self) -> String {
         self.relative_path()
             .map(|s| s.to_string_lossy().to_string())
             .unwrap_or(self.url().path().to_string())
+    }
+
+    /// Extracts "bar" from "foo/bar.mu")
+    pub fn file_module_name(&self) -> Option<Id> {
+        let path = self
+            .relative_path()
+            .unwrap_or_else(|| std::path::PathBuf::from(self.url().path()));
+
+        path.file_stem()
+            .and_then(|s| s.to_str())
+            .map(|s| Id::from(s.to_string()))
     }
 }
 
@@ -91,7 +102,7 @@ pub struct SourceLocation {
 impl std::fmt::Display for SourceLocation {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // 1. Get the path string or URL string via your existing helper
-        let base = self.kind.source_name();
+        let base = self.kind.display_name();
 
         // 2. Format with or without the suffix based on line_offset presence
         if let Some(offset) = self.line_offset {
