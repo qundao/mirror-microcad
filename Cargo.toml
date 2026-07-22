@@ -48,7 +48,7 @@ version = "0.6.0"
 edition = "2024"
 homepage = "https://microcad.xyz"
 repository = "https://codeberg.org/microcad/microcad"
-rust-version = "1.85"
+rust-version = "1.91"
 license = "AGPL-3.0-or-later"
 keywords = ["cad", "geometry", "3d", "cnc", "openscad"]
 
