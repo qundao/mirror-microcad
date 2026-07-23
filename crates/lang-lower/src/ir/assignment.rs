@@ -15,7 +15,7 @@ use serde_with::skip_serializing_none;
 #[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct LocalAssignment<EXPR> {
     /// Assignee
-    pub(crate) id: Identifier,
+    pub id: Identifier,
     /// Type of the assignee
     #[serde(skip_serializing_if = "Option::is_none", default)]
     pub specified_type: Option<ir::TypeAnnotation>,
