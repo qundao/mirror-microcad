@@ -7,66 +7,25 @@ mod path_resolver;
 mod scaffoldable;
 mod tree_builder;
 
-use microcad_lang_base::{
-    CompilationResult, Diagnostics, Source, SourceLocation, SrcRef, SrcReferrer,
+use crate::{
+    Mir, ResolveContext, mir, resolve::ResolveError, scaffold::scaffoldable::Scaffoldables,
+    tree::SymbolMetadata,
 };
-use miette::Diagnostic;
-use thiserror::Error;
+use microcad_lang_base::{CompilationResult, Diagnostics, Identifier, Refer, SrcRef, SrcReferrer};
 
-use crate::{Mir, mir, scaffold::scaffoldable::Scaffoldables, tree::SymbolMetadata};
-
-pub use path_resolver::{DefaultPathResolver, PathResolver};
+pub use path_resolver::PathResolver;
 pub use tree_builder::TreeBuilder;
 
 use microcad_lang_lower::{CastInto, Ir, ir};
 
-#[derive(Debug, Error, Diagnostic)]
-pub enum ScaffoldError {
-    #[error("Source has no file path: {loc}")]
-    SourceHasNoPath {
-        loc: SourceLocation,
-        #[label("The source code")]
-        src_ref: SrcRef,
-    },
-}
-
-impl SrcReferrer for ScaffoldError {
-    fn src_ref(&self) -> SrcRef {
-        match &self {
-            ScaffoldError::SourceHasNoPath { src_ref, .. } => *src_ref,
-        }
-    }
-}
-
-pub struct ScaffoldContext<'source> {
-    pub(crate) path_resolver: Box<dyn PathResolver<'source> + 'source>,
-    pub(crate) diags: Vec<ScaffoldError>,
-    // pub(crate) path_resolver: Box<dyn FileModulePathResolver>>
-}
-
-impl<'source> ScaffoldContext<'source> {
-    pub fn diag(&mut self, err: ScaffoldError) {
-        self.diags.push(err);
-    }
-}
-
-impl<'source> From<&'source Source> for ScaffoldContext<'source> {
-    fn from(source: &'source Source) -> Self {
-        ScaffoldContext {
-            path_resolver: Box::new(DefaultPathResolver { source }),
-            diags: vec![],
-        }
-    }
-}
-
-pub type ScaffoldResult = Result<mir::UnresolvedSymbolTree, ScaffoldError>;
+pub type ScaffoldResult = Result<mir::UnresolvedSymbolTree, ResolveError>;
 
 pub trait Scaffold {
-    fn scaffold(&self, context: &mut ScaffoldContext) -> ScaffoldResult;
+    fn scaffold(&self, context: &mut ResolveContext) -> ScaffoldResult;
 }
 
 impl Scaffold for ir::FileModule {
-    fn scaffold(&self, context: &mut ScaffoldContext) -> ScaffoldResult {
+    fn scaffold(&self, context: &mut ResolveContext) -> ScaffoldResult {
         Ok(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: Some(self.id.clone()),
@@ -76,7 +35,7 @@ impl Scaffold for ir::FileModule {
             },
             mir::UnresolvedSymbolDef::FileModule(mir::FileModule {
                 attr: self.attr.0.clone().cast_into(),
-                path: context.path_resolver.file_module_path_as_string(&self.id)?,
+                //path: context.path_resolver.file_module_path_as_string(&self.id)?,
             }), // TODO Resolve file name already here.
         )
         .into())
@@ -84,7 +43,7 @@ impl Scaffold for ir::FileModule {
 }
 
 impl Scaffold for ir::ExplicitAlias {
-    fn scaffold(&self, _context: &mut ScaffoldContext) -> ScaffoldResult {
+    fn scaffold(&self, _context: &mut ResolveContext) -> ScaffoldResult {
         Ok(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: Some(self.id.clone()),
@@ -99,7 +58,7 @@ impl Scaffold for ir::ExplicitAlias {
 }
 
 impl Scaffold for ir::WildcardAlias {
-    fn scaffold(&self, _context: &mut ScaffoldContext) -> ScaffoldResult {
+    fn scaffold(&self, _context: &mut ResolveContext) -> ScaffoldResult {
         Ok(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: None,
@@ -114,7 +73,7 @@ impl Scaffold for ir::WildcardAlias {
 }
 
 impl Scaffold for ir::Constant {
-    fn scaffold(&self, _context: &mut ScaffoldContext) -> ScaffoldResult {
+    fn scaffold(&self, _context: &mut ResolveContext) -> ScaffoldResult {
         Ok(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: Some(self.id.clone()),
@@ -133,13 +92,13 @@ impl Scaffold for ir::Constant {
 }
 
 impl Scaffold for ir::InlineModule {
-    fn scaffold(&self, context: &mut ScaffoldContext) -> ScaffoldResult {
+    fn scaffold(&self, context: &mut ResolveContext) -> ScaffoldResult {
         let mut builder = TreeBuilder::new(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: Some(self.id.clone()),
-                visibility: ir::Visibility::Public,
-                src_ref: SrcRef::none(),
-                keyword_src_ref: SrcRef::none(),
+                visibility: self.visibility.clone(),
+                src_ref: self.src_ref,
+                keyword_src_ref: self.keyword_src_ref,
             },
             mir::UnresolvedSymbolDef::InlineModule(mir::InlineModule {
                 attr: self
@@ -156,7 +115,7 @@ impl Scaffold for ir::InlineModule {
 }
 
 impl Scaffold for ir::Function {
-    fn scaffold(&self, context: &mut ScaffoldContext) -> ScaffoldResult {
+    fn scaffold(&self, context: &mut ResolveContext) -> ScaffoldResult {
         let mut builder = TreeBuilder::new(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: Some(self.id.clone()),
@@ -183,13 +142,13 @@ impl Scaffold for ir::Function {
 }
 
 impl Scaffold for ir::Workbench {
-    fn scaffold(&self, context: &mut ScaffoldContext) -> ScaffoldResult {
+    fn scaffold(&self, context: &mut ResolveContext) -> ScaffoldResult {
         let mut builder = TreeBuilder::new(mir::UnresolvedSymbol::new(
             SymbolMetadata {
                 id: Some(self.id.clone()),
-                visibility: ir::Visibility::Public,
-                src_ref: SrcRef::none(),
-                keyword_src_ref: SrcRef::none(),
+                visibility: self.visibility.clone(),
+                src_ref: self.src_ref(),
+                keyword_src_ref: self.keyword_ref,
             },
             mir::Workbench {
                 kind: self.kind.clone(),
@@ -214,10 +173,13 @@ impl Scaffold for ir::Workbench {
 }
 
 impl Scaffold for ir::Source {
-    fn scaffold(&self, context: &mut ScaffoldContext) -> ScaffoldResult {
+    fn scaffold(&self, context: &mut ResolveContext) -> ScaffoldResult {
         let mut builder = TreeBuilder::new(mir::UnresolvedSymbol::new(
             SymbolMetadata {
-                id: Some(context.path_resolver.module_name_from_source()?),
+                id: self
+                    .id
+                    .as_ref()
+                    .map(|id| Identifier(Refer::none(id.clone()))),
                 visibility: mir::Visibility::Public,
                 src_ref: SrcRef::none(),
                 keyword_src_ref: SrcRef::none(),
@@ -234,21 +196,18 @@ impl Scaffold for ir::Source {
 }
 
 impl Scaffold for Ir {
-    fn scaffold(&self, context: &mut ScaffoldContext) -> ScaffoldResult {
+    fn scaffold(&self, context: &mut ResolveContext) -> ScaffoldResult {
         self.tree.scaffold(context)
     }
 }
 
-pub fn scaffold<'source>(
-    ir: &Ir,
-    context: impl Into<ScaffoldContext<'source>>,
-) -> CompilationResult<Mir> {
+pub fn scaffold(ir: &Ir, context: impl Into<ResolveContext>) -> CompilationResult<Mir> {
     use microcad_lang_base::ToHash;
     let mut context = context.into();
 
     match ir.scaffold(&mut context) {
         Ok(tree) => {
-            let diagnostics: Diagnostics = context.diags.into();
+            let diagnostics: Diagnostics = context.diagnostics.into();
             if diagnostics.has_errors() {
                 Err(diagnostics)
             } else {
@@ -264,8 +223,8 @@ pub fn scaffold<'source>(
         }
         Err(fatal_error) => {
             // Ensure the fatal error is logged in the diagnostics
-            context.diag(fatal_error);
-            Err(context.diags.into())
+            // context.diag(fatal_error);
+            Err(context.diagnostics.into())
         }
     }
 }

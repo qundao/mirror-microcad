@@ -66,7 +66,8 @@ fn scaffold_file(file: &str) -> CompilationResult<Mir> {
     let ron = std::fs::read_to_string(format!("tests/test_cases/{file}.µcad.ir"))
         .expect("Error reading RON");
     let ir = microcad_lang_lower::Ir::from_ron(ron.as_str()).expect("Error parsing RON to IR");
-    microcad_lang_resolve::scaffold(&ir, &source)
+    // microcad_lang_resolve::scaffold(&ir, &source)
+    todo!()
 }
 
 #[test]

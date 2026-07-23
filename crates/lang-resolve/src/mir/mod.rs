@@ -4,12 +4,13 @@
 //! Mid-level intermediate representation (MIR).
 
 use derive_more::From;
-use microcad_lang_base::{HashId, Id, Refer};
+use microcad_lang_base::{HashId, Id, Manifest, Refer, SrcRef};
 use microcad_lang_proc_macros::Artifact;
 use serde::{Deserialize, Serialize};
 
 use microcad_lang_lower::ir;
 
+use crate::Rst;
 pub use crate::tree::{SymbolHandle, SymbolMetadata};
 
 pub type SymbolPath = ir::SymbolPath;
@@ -110,15 +111,49 @@ pub struct InlineModule {
 pub struct FileModule {
     /// Attributes for this file module
     pub attr: Attributes,
-    /// The path of the file module to be loaded.
-    ///
-    /// We use `String` here as type instead of `PathBuf` for platform-independent serialization.
-    pub path: String,
+}
+
+#[derive(Debug, Hash, From, PartialEq, Serialize, Deserialize)]
+pub struct External {
+    //pub rst: Rst,
+}
+
+#[derive(Debug, Hash, From, PartialEq, Serialize, Deserialize)]
+pub struct Workspace {
+    name: Option<Id>,
+}
+
+impl From<Option<Manifest>> for Workspace {
+    fn from(manifest: Option<Manifest>) -> Self {
+        todo!()
+    }
+}
+
+impl From<Workspace> for UnresolvedSymbolTree {
+    fn from(workspace: Workspace) -> Self {
+        UnresolvedSymbol::new(
+            SymbolMetadata {
+                id: None,
+                visibility: Visibility::Public,
+                src_ref: SrcRef::none(),
+                keyword_src_ref: SrcRef::none(),
+            },
+            workspace,
+        )
+        .into()
+    }
 }
 
 /// Symbol definition
 #[derive(Debug, Hash, From, PartialEq, Serialize, Deserialize)]
 pub enum UnresolvedSymbolDef {
+    /// The workspace
+    Workspace(Workspace),
+    /// The `mu` node
+    Externals,
+
+    External(External),
+
     /// Source file symbol.
     SourceFile(SourceFile),
     /// Inline Module symbol: `mod foo {}`

@@ -1,9 +1,10 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::mir;
-use crate::scaffold::{Scaffold, ScaffoldContext, ScaffoldError};
+use crate::resolve::ResolveError;
+use crate::scaffold::Scaffold;
 use crate::tree::SymbolHandle;
+use crate::{ResolveContext, mir};
 
 pub struct TreeBuilder {
     pub tree: mir::UnresolvedSymbolTree,
@@ -28,9 +29,9 @@ impl TreeBuilder {
 
     pub fn scaffold<'a>(
         &mut self,
-        context: &mut ScaffoldContext,
+        context: &mut ResolveContext,
         mut items: impl Iterator<Item = &'a dyn Scaffold>,
-    ) -> Result<(), ScaffoldError> {
+    ) -> Result<(), ResolveError> {
         items.try_for_each(|item| {
             self.add(item.scaffold(context)?);
             Ok(())

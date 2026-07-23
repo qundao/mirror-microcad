@@ -10,14 +10,11 @@ pub(crate) mod tree;
 pub mod mir;
 pub mod rst;
 
-use microcad_lang_base::{CompilationResult, Source};
-use microcad_lang_lower::Ir;
-
 /// The mid-level intermediat
 pub use mir::Mir;
 
 pub use rst::Rst;
 
-pub use resolve::{Resolve, ResolveContext, ResolveResult, resolve, scaffold};
+pub use resolve::{ResolveContext, ResolveResult, resolve, scaffold};
 
 pub use scaffold::scaffold;

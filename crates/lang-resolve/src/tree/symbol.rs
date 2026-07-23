@@ -64,14 +64,8 @@ impl FromIterator<SymbolHandle> for SymbolIndex {
 }
 
 pub mod meta {
-    use microcad_lang_base::Refer;
-
-    use microcad_lang_lower::ir;
-
     pub use microcad_lang_base::SrcRef;
-    use serde::{Deserialize, Serialize};
-
-    pub type Visibility = ir::Visibility;
+    pub type Visibility = microcad_lang_lower::ir::Visibility;
 }
 
 /// Symbol content
