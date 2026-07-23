@@ -5,6 +5,10 @@
 //!
 //! It consists of the following steps:
 //! 1) `scaffold`: Build the symbol tree.
+//!     a) Load built-in library.
+//!     b) Load external dependencies (like `std`).
+//!     c) Load source files inside workspace.
+//!
 //! 2) `bind`: Resolve [`mir::SymbolPath`] to [`SymbolId`]s/[`LocalId`]s.
 //! 3) `case_check`: Validate identifier casing rules.
 //! 4) `type_check`: Verify expression types.
@@ -15,6 +19,7 @@
 
 pub mod scaffold;
 
+mod bind;
 mod case_check;
 mod error;
 mod resolver;
