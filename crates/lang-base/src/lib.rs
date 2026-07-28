@@ -13,7 +13,6 @@ mod artifact;
 mod diag;
 pub mod element;
 mod fs;
-mod manifest;
 mod ord_map;
 mod output;
 mod rc;
@@ -54,8 +53,6 @@ pub use src_ref::{LineCol, LineIndex, Refer, Span, SpanToSrcRef, Spanned, SrcRef
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
 pub use source::{Source, SourceKind, SourceLocation, SourceMap, TextEdit};
-
-pub use manifest::{Manifest, ManifestError};
 
 pub use fs::{FileSystem, VirtualFileSystem};
 
