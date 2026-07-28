@@ -4,34 +4,18 @@
 //! Array expressions
 
 use crate::{CastInto, ir};
-use derive_more::Deref;
+use derive_more::{Deref, Display};
 use microcad_lang_base::{SrcRef, SrcReferrer};
 use serde::{Deserialize, Serialize};
 
 /// Inner of an [`ArrayExpression`].
-#[derive(Clone, Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Display, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub enum ArrayExpressionInner<EXPR> {
     /// List: `a,b,c`.
     List(ir::ListExpression<EXPR>),
     /// Range: `a..b`.
     Range(ir::RangeExpression<EXPR>),
-}
-
-impl<EXPR> std::fmt::Display for ArrayExpressionInner<EXPR>
-where
-    EXPR: std::fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            match &self {
-                ArrayExpressionInner::List(expressions) => expressions.to_string(),
-                ArrayExpressionInner::Range(range_expression) => range_expression.to_string(),
-            }
-        )
-    }
 }
 
 impl<T, EXPR> CastInto<ArrayExpressionInner<T>> for ArrayExpressionInner<EXPR>
@@ -71,25 +55,17 @@ where
 }
 
 /// Array of expressions with common result unit, e.g. `[1+2,4,9]mm`.
-#[derive(Clone, Debug, Deref, Hash, PartialEq, Serialize, Deserialize)]
-#[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
-pub struct ArrayExpression<EXPR> {
+#[derive(Clone, Debug, Display, Deref, Hash, PartialEq, Serialize, Deserialize)]
+#[display("[{}]{}", inner, unit)]
+#[serde(bound(serialize = "Expr: Serialize", deserialize = "Expr: Deserialize<'de>"))]
+pub struct ArrayExpression<Expr> {
     /// Expression list.
     #[deref]
-    pub inner: ArrayExpressionInner<EXPR>,
+    pub inner: ArrayExpressionInner<Expr>,
     /// Unit.
     pub unit: ir::Unit,
     /// Source code reference.
     pub src_ref: SrcRef,
-}
-
-impl<EXPR> std::fmt::Display for ArrayExpression<EXPR>
-where
-    EXPR: std::fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "[{}]{}", self.inner, self.unit)
-    }
 }
 
 impl<T, EXPR> CastInto<ArrayExpression<T>> for ArrayExpression<EXPR>

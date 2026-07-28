@@ -20,6 +20,7 @@ pub use assignment::*;
 pub use attribute::*;
 pub use cast_into::*;
 pub use constant::*;
+use derive_more::Display;
 pub use expression::*;
 pub use function::*;
 pub use module::*;
@@ -37,14 +38,9 @@ use serde::{Deserialize, Serialize};
 use crate::ir;
 
 /// Type within source code.
-#[derive(Clone, Debug, Hash, PartialEq, SrcReferrer, Serialize, Deserialize)]
+#[derive(Clone, Display, Debug, Hash, PartialEq, SrcReferrer, Serialize, Deserialize)]
+#[display("{_0}")]
 pub struct TypeAnnotation(pub Refer<Type>);
-
-impl std::fmt::Display for TypeAnnotation {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        self.0.fmt(f)
-    }
-}
 
 impl Ty for TypeAnnotation {
     fn ty(&self) -> Type {

@@ -5,27 +5,19 @@
 
 use crate::{CastInto, ir};
 
+use derive_more::Display;
 use microcad_lang_base::SrcRef;
 use serde::{Deserialize, Serialize};
 
 /// Tuple expression, e.g. `(x=1+2,4,z=9)`.
-#[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Display, Clone, PartialEq, Hash, Serialize, Deserialize)]
+#[display("({})", args)]
 #[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct TupleExpression<EXPR> {
     /// List of tuple members.
     pub args: ir::ArgumentList<EXPR>,
     /// Source code reference
     pub src_ref: SrcRef,
-}
-
-impl<EXPR> std::fmt::Display for TupleExpression<EXPR>
-where
-    EXPR: std::fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "({})", self.args)?;
-        Ok(())
-    }
 }
 
 impl<T, EXPR> CastInto<TupleExpression<T>> for TupleExpression<EXPR>

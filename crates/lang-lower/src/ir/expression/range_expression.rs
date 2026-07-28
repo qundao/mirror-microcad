@@ -3,25 +3,17 @@
 
 //! Range expression
 
-use derive_more::Deref;
+use derive_more::{Deref, Display};
 use microcad_lang_base::SrcRef;
 use serde::{Deserialize, Serialize};
 
 use crate::CastInto;
 
 /// Range start.
-#[derive(Clone, Debug, Default, Deref, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Display, Debug, Default, Deref, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
+#[display("{_0}")]
 pub struct RangeFirst<EXPR>(pub Box<EXPR>);
-
-impl<EXPR> std::fmt::Display for RangeFirst<EXPR>
-where
-    EXPR: std::fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
 
 impl<T, EXPR: Serialize> CastInto<RangeFirst<T>> for RangeFirst<EXPR>
 where
@@ -33,18 +25,10 @@ where
 }
 
 /// Range end.
-#[derive(Clone, Debug, Default, Deref, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Display, Debug, Default, Deref, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
+#[display("{_0}")]
 pub struct RangeLast<EXPR>(pub Box<EXPR>);
-
-impl<EXPR> std::fmt::Display for RangeLast<EXPR>
-where
-    EXPR: std::fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
 
 impl<T, EXPR: Serialize> CastInto<RangeLast<T>> for RangeLast<EXPR>
 where
@@ -56,8 +40,9 @@ where
 }
 
 /// Range expression, e.g. `a..b`.
-#[derive(Clone, Debug, Default, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Display, Default, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
+#[display("{}..{}", first, last)]
 pub struct RangeExpression<EXPR> {
     /// First value in the range.
     pub first: RangeFirst<EXPR>,
@@ -65,15 +50,6 @@ pub struct RangeExpression<EXPR> {
     pub last: RangeLast<EXPR>,
     /// Source code reference.
     pub src_ref: SrcRef,
-}
-
-impl<EXPR> std::fmt::Display for RangeExpression<EXPR>
-where
-    EXPR: std::fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}..{}", self.first, self.last)
-    }
 }
 
 impl<T, EXPR: Serialize> CastInto<RangeExpression<T>> for RangeExpression<EXPR>

@@ -3,12 +3,14 @@
 
 //! µcad literal syntax elements
 
+use derive_more::Display;
 use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 use microcad_lang_types::{Type, Value, ty};
 use serde::{Deserialize, Serialize};
 
 /// Literal of any kind.
-#[derive(Clone, Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Display, Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[display("{}", self.value())]
 pub struct Literal(pub Refer<Value>);
 
 impl Literal {
@@ -27,11 +29,5 @@ impl SrcReferrer for Literal {
 impl ty::Ty for Literal {
     fn ty(&self) -> Type {
         self.value().ty()
-    }
-}
-
-impl std::fmt::Display for Literal {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self.value())
     }
 }

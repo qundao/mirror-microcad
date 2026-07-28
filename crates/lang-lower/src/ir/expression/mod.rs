@@ -13,6 +13,7 @@ mod tuple_expression;
 
 pub use array_expression::*;
 pub use call::*;
+use derive_more::Display;
 pub use format_string::*;
 pub use literal::*;
 pub use range_expression::*;
@@ -119,8 +120,9 @@ where
 }
 
 /// A binary operation: `a + b`
-#[derive(Clone, Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Display, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
+#[display("{lhs} {op} {rhs}")]
 pub struct BinaryOp<EXPR> {
     /// Left-hand side
     pub lhs: Box<EXPR>,
@@ -172,24 +174,10 @@ where
     }
 }
 
-impl<EXPR> std::fmt::Display for BinaryOp<EXPR>
-where
-    EXPR: std::fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{lhs} {op} {rhs}",
-            lhs = self.lhs,
-            op = self.op,
-            rhs = self.rhs
-        )
-    }
-}
-
 /// A unary operation: !a
-#[derive(Clone, Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Display, Debug, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
+#[display("{op}{rhs}")]
 pub struct UnaryOp<EXPR> {
     /// Operator ('+', '-', '!')
     pub op: Refer<String>,
@@ -224,15 +212,6 @@ where
 {
     fn single_identifier(&self) -> Option<&Identifier> {
         self.rhs.single_identifier()
-    }
-}
-
-impl<EXPR> std::fmt::Display for UnaryOp<EXPR>
-where
-    EXPR: std::fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{op}{rhs}", op = self.op, rhs = self.rhs)
     }
 }
 
@@ -284,14 +263,14 @@ pub enum ConstantExpression<NAME: Serialize = ir::SymbolPath> {
     UnaryOp(ir::UnaryOp<ConstantExpression<NAME>>),
 }
 
-impl<NAME: Serialize> ExpressionKind for ConstantExpression<NAME> {
-    type Name = NAME;
+impl<Name: Serialize> ExpressionKind for ConstantExpression<Name> {
+    type Name = Name;
     type Body = (); // Constant expressions have no body.
 }
 
-impl<T: Serialize, NAME: Serialize> CastInto<ConstantExpression<T>> for ConstantExpression<NAME>
+impl<T: Serialize, Name: Serialize> CastInto<ConstantExpression<T>> for ConstantExpression<Name>
 where
-    NAME: Into<T>,
+    Name: Into<T>,
 {
     fn cast_into(self) -> ConstantExpression<T> {
         use ConstantExpression::*;

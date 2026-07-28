@@ -5,6 +5,7 @@
 
 use crate::{CastInto, ir};
 
+use derive_more::Display;
 use microcad_lang_base::{Identifier, IsDefault, Refer, SrcRef, SrcReferrer, is_default};
 use microcad_lang_proc_macros::Identifiable;
 
@@ -79,7 +80,8 @@ pub struct Init<NAME: Serialize = ir::SymbolPath> {
 }
 
 /// Node marker, e.g. `@input`.
-#[derive(Debug, Clone, PartialEq, Serialize, Hash, Deserialize)]
+#[derive(Debug, Display, Clone, PartialEq, Serialize, Hash, Deserialize)]
+#[display("@{}", id)]
 pub struct Marker {
     /// Marker name, e.g. `input`
     pub id: ir::Identifier,
@@ -91,12 +93,6 @@ impl Marker {
     /// Returns true if the marker is an input placeholder
     pub fn is_input_placeholder(&self) -> bool {
         &self.id == "input"
-    }
-}
-
-impl std::fmt::Display for Marker {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "@{}", self.id)
     }
 }
 

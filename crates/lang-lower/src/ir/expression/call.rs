@@ -4,6 +4,7 @@
 //! Syntax elements related to calls.
 
 use crate::{CastInto, ir};
+use derive_more::Display;
 use microcad_lang_base::{Identifiable, Identifier, SrcRef, SrcReferrer, is_default};
 
 use serde::{Deserialize, Serialize};
@@ -55,22 +56,14 @@ impl<EXPR> SrcReferrer for NamedArgument<EXPR> {
 }
 
 /// Unnamed argument in a [`Call`].
-#[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Display, Clone, PartialEq, Hash, Serialize, Deserialize)]
+#[display("{}", expression)]
 #[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
 pub struct UnnamedArgument<EXPR> {
     /// Value of the argument
     pub expression: EXPR,
     /// Source code reference
     pub src_ref: SrcRef,
-}
-
-impl<EXPR> std::fmt::Display for UnnamedArgument<EXPR>
-where
-    EXPR: std::fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", self.expression)
-    }
 }
 
 impl<T, EXPR> CastInto<UnnamedArgument<T>> for UnnamedArgument<EXPR>
@@ -87,17 +80,17 @@ where
 
 /// *Ordered map* of arguments in a [`Call`].
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
-#[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
-pub struct ArgumentList<EXPR> {
+#[serde(bound(serialize = "Expr: Serialize", deserialize = "Expr: Deserialize<'de>"))]
+pub struct ArgumentList<Expr> {
     /// Source code reference
     pub src_ref: SrcRef,
 
     /// The unnamed arguments.
     #[serde(skip_serializing_if = "is_default", default)]
-    pub unnamed_args: Box<[ir::UnnamedArgument<EXPR>]>,
+    pub unnamed_args: Box<[ir::UnnamedArgument<Expr>]>,
     /// Named arguments, sorted by name.
     #[serde(skip_serializing_if = "is_default", default)]
-    pub named_args: Box<[ir::NamedArgument<EXPR>]>,
+    pub named_args: Box<[ir::NamedArgument<Expr>]>,
 }
 
 impl<EXPR> std::fmt::Display for ArgumentList<EXPR>
@@ -130,7 +123,8 @@ where
 }
 
 /// Call of a *workbench* or *function*.
-#[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Display, Clone, PartialEq, Hash, Serialize, Deserialize)]
+#[display("{}({})", name, argument_list)]
 #[serde(bound(
     serialize = "EXPR: Serialize, EXPR::Name: Serialize",
     deserialize = "EXPR: Deserialize<'de>, EXPR::Name: Deserialize<'de>"
@@ -142,16 +136,6 @@ pub struct Call<EXPR: ir::ExpressionKind> {
     pub argument_list: ir::ArgumentList<EXPR>,
     /// Source code reference.
     pub src_ref: SrcRef,
-}
-
-impl<EXPR> std::fmt::Display for Call<EXPR>
-where
-    EXPR: ir::ExpressionKind + std::fmt::Display,
-    EXPR::Name: std::fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}({})", self.name, self.argument_list)
-    }
 }
 
 impl<T: ir::ExpressionKind, EXPR: ir::ExpressionKind> CastInto<Call<T>> for Call<EXPR>
