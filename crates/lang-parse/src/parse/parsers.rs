@@ -37,9 +37,8 @@ impl_parser!(ast::Literal => {
     let single_value = select_ref! {
         Token::LiteralFloat(x) = e => {
             match f64::from_str(x) {
-                Ok(value) => ast::LiteralKind::Float(ast::FloatLiteral {
-                    value,
-                    raw: x.to_compact_string(),
+                Ok(_) => ast::LiteralKind::Float(ast::FloatLiteral {
+                    value: x.to_compact_string(),
                     span: e.span(),
                 }),
                 Err(err) => ast::LiteralKind::Error(ast::LiteralError {
@@ -50,9 +49,8 @@ impl_parser!(ast::Literal => {
         },
         Token::LiteralInt(x) = e => {
             match i64::from_str(x) {
-                Ok(value) => ast::LiteralKind::Integer(ast::IntegerLiteral {
-                value,
-                raw: x.to_compact_string(),
+                Ok(_) => ast::LiteralKind::Integer(ast::IntegerLiteral {
+                value: x.to_compact_string(),
                 span: e.span(),
             }),
                 Err(err) => ast::LiteralKind::Error(ast::LiteralError {
@@ -85,15 +83,13 @@ impl_parser!(ast::Literal => {
                     ast::LiteralKind::Quantity(ast::QuantityLiteral {
                         span: e.span(),
                         value: float.value,
-                        raw: float.raw,
                         unit,
                     })
                 }
                 (ast::LiteralKind::Integer(int), Some(unit)) => {
                     ast::LiteralKind::Quantity(ast::QuantityLiteral {
                         span: e.span(),
-                        value: int.value as f64,
-                        raw: int.raw,
+                        value: int.value,
                         unit,
                     })
                 }

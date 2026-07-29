@@ -69,8 +69,7 @@ pub struct BoolLiteral {
 #[visit(default)]
 pub struct IntegerLiteral {
     pub span: Span,
-    pub value: i64,
-    pub raw: CompactString,
+    pub value: CompactString,
 }
 
 /// An float literal without type
@@ -79,13 +78,12 @@ pub struct IntegerLiteral {
 #[visit(default)]
 pub struct FloatLiteral {
     pub span: Span,
-    pub value: f64,
-    pub raw: CompactString,
+    pub value: CompactString,
 }
 
 impl std::hash::Hash for FloatLiteral {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.raw.hash(state);
+        self.value.hash(state);
     }
 }
 
@@ -95,14 +93,13 @@ impl std::hash::Hash for FloatLiteral {
 #[visit(default)]
 pub struct QuantityLiteral {
     pub span: Span,
-    pub value: f64,
-    pub raw: CompactString,
+    pub value: CompactString,
     pub unit: Unit,
 }
 
 impl std::hash::Hash for QuantityLiteral {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.raw.hash(state);
+        self.value.hash(state);
         self.unit.hash(state);
     }
 }

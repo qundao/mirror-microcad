@@ -16,8 +16,7 @@ Ok(
         literal: Quantity(
             QuantityLiteral {
                 span: 0..4,
-                value: 42.0,
-                raw: "42",
+                value: "42",
                 unit: Unit {
                     span: 2..4,
                     name: "mm",
