@@ -71,7 +71,7 @@ impl Array {
                 items.sort_by(|a, b| {
                     assert_eq!(a.ty(), b.ty());
                     match (a, b) {
-                        (Value::Quantity(a), Value::Quantity(b)) => a.value.total_cmp(&b.value),
+                        (Value::Quantity(a), Value::Quantity(b)) => a.value.cmp(&b.value),
                         (Value::Integer(a), Value::Integer(b)) => a.cmp(b),
                         (Value::Bool(a), Value::Bool(b)) => a.cmp(b),
                         (Value::String(a), Value::String(b)) => a.cmp(b),

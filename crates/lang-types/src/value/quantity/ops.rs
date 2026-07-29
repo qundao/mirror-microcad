@@ -3,7 +3,7 @@
 
 //! Quantity binary operators module.
 
-use crate::{Integer, Quantity, Scalar, Type, ValueResult};
+use crate::{Integer, Quantity, Type, ValueResult};
 
 impl std::ops::Neg for Quantity {
     type Output = Quantity;
@@ -29,7 +29,7 @@ impl std::ops::Add<Integer> for Quantity {
     type Output = ValueResult;
 
     fn add(self, rhs: Integer) -> Self::Output {
-        Quantity::scalar(rhs as Scalar) + self
+        Quantity::from(rhs) + self
     }
 }
 
@@ -37,7 +37,7 @@ impl std::ops::Add<Quantity> for Integer {
     type Output = ValueResult;
 
     fn add(self, rhs: Quantity) -> Self::Output {
-        Quantity::scalar(self as Scalar) + rhs
+        Quantity::from(self) + rhs
     }
 }
 
@@ -57,7 +57,7 @@ impl std::ops::Sub<Integer> for Quantity {
     type Output = ValueResult;
 
     fn sub(self, rhs: Integer) -> Self::Output {
-        self - Quantity::scalar(rhs as Scalar)
+        self - Quantity::from(rhs)
     }
 }
 
@@ -65,7 +65,7 @@ impl std::ops::Sub<Quantity> for Integer {
     type Output = ValueResult;
 
     fn sub(self, rhs: Quantity) -> Self::Output {
-        Quantity::scalar(self as Scalar) - rhs
+        Quantity::from(self) - rhs
     }
 }
 
@@ -85,7 +85,7 @@ impl std::ops::Mul<Integer> for Quantity {
     type Output = ValueResult;
 
     fn mul(self, rhs: Integer) -> Self::Output {
-        self * Quantity::scalar(rhs as Scalar)
+        self * Quantity::from(rhs)
     }
 }
 
@@ -93,7 +93,7 @@ impl std::ops::Mul<Quantity> for Integer {
     type Output = ValueResult;
 
     fn mul(self, rhs: Quantity) -> Self::Output {
-        Quantity::scalar(self as Scalar) * rhs
+        Quantity::from(self) * rhs
     }
 }
 
@@ -113,7 +113,7 @@ impl std::ops::Div<Integer> for Quantity {
     type Output = ValueResult;
 
     fn div(self, rhs: Integer) -> Self::Output {
-        self / Quantity::scalar(rhs as Scalar)
+        self / Quantity::from(rhs)
     }
 }
 
@@ -121,6 +121,6 @@ impl std::ops::Div<Quantity> for Integer {
     type Output = ValueResult;
 
     fn div(self, rhs: Quantity) -> Self::Output {
-        Quantity::scalar(self as Scalar) / rhs
+        Quantity::from(self) / rhs
     }
 }

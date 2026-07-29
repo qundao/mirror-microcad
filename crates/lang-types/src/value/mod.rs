@@ -23,7 +23,7 @@ pub use value_access::*;
 pub use value_error::*;
 pub use value_list::*;
 
-use crate::{Angle, Color, Integer, Length, Mat3, Scalar, Size2, Vec2, Vec3, ty::*};
+use crate::{Angle, Color, Integer, Length, Mat3, QuantityType, Scalar, Type, Vec2, Vec3};
 
 use derive_more::From;
 use microcad_lang_base::SrcRef;
@@ -64,7 +64,7 @@ impl Value {
         match (&self, rhs) {
             (Value::Quantity(lhs), Value::Quantity(rhs)) => Ok(Value::Quantity(lhs.pow(rhs))),
             (Value::Quantity(lhs), Value::Integer(rhs)) => Ok(Value::Quantity(lhs.pow_int(rhs))),
-            (Value::Integer(lhs), Value::Integer(rhs)) => Ok(Value::Integer(lhs.pow(*rhs as u32))),
+            (Value::Integer(_lhs), Value::Integer(_rhs)) => todo!(),
             _ => Err(ValueError::InvalidOperator("^".to_string())),
         }
     }
@@ -78,17 +78,6 @@ impl Value {
         }
 
         Err(ValueError::CannotConvert(self.to_string(), "String".into()))
-    }
-
-    /// Try to convert to [`Scalar`].
-    pub fn try_scalar(&self) -> Result<Scalar, ValueError> {
-        match self {
-            Value::Quantity(q) => return Ok(q.value),
-            Value::Integer(i) => return Ok((*i) as f64),
-            _ => {}
-        }
-
-        Err(ValueError::CannotConvert(self.to_string(), "Scalar".into()))
     }
 }
 
@@ -105,7 +94,7 @@ impl PartialOrd for Value {
                     ..
                 }),
                 Value::Integer(rhs),
-            ) => value.partial_cmp(&(*rhs as Scalar)),
+            ) => value.partial_cmp(&Scalar::from(*rhs)),
             _ => {
                 log::warn!("unhandled type mismatch between {self} and {other}");
                 None
@@ -171,49 +160,18 @@ macro_rules! impl_try_from {
                 }
             }
         }
-
-        impl TryFrom<&Value> for $ty {
-            type Error = ValueError;
-
-            fn try_from(value: &Value) -> std::result::Result<Self, Self::Error> {
-                match value {
-                    $(Value::$variant(v) => Ok(v.clone().into()),)*
-                    value => Err(ValueError::CannotConvert(value.to_string(), stringify!($ty).into())),
-                }
-            }
-        }
     };
 }
 
-impl_try_from!(Integer => i64);
 impl_try_from!(Bool => bool);
 impl_try_from!(String => String);
-
-impl TryFrom<&Value> for Scalar {
-    type Error = ValueError;
-
-    fn try_from(value: &Value) -> Result<Self, Self::Error> {
-        match value {
-            Value::Integer(i) => Ok(*i as Scalar),
-            Value::Quantity(Quantity {
-                value,
-                quantity_type: QuantityType::Scalar,
-                ..
-            }) => Ok(*value),
-            _ => Err(ValueError::CannotConvert(
-                value.to_string(),
-                "Scalar".into(),
-            )),
-        }
-    }
-}
 
 impl TryFrom<Value> for Scalar {
     type Error = ValueError;
 
     fn try_from(value: Value) -> Result<Self, Self::Error> {
         match value {
-            Value::Integer(i) => Ok(i as Scalar),
+            Value::Integer(i) => Ok(Scalar::from(i)),
             Value::Quantity(Quantity {
                 value,
                 quantity_type: QuantityType::Scalar,
@@ -260,17 +218,6 @@ impl TryFrom<&Value> for Length {
     }
 }
 
-impl TryFrom<&Value> for Size2 {
-    type Error = ValueError;
-
-    fn try_from(value: &Value) -> Result<Self, Self::Error> {
-        match value {
-            Value::Tuple(tuple) => Ok(tuple.as_ref().try_into()?),
-            _ => Err(ValueError::CannotConvert(value.to_string(), "Size2".into())),
-        }
-    }
-}
-
 impl TryFrom<&Value> for Mat3 {
     type Error = ValueError;
 
@@ -290,13 +237,13 @@ impl TryFrom<&Value> for Mat3 {
 
 impl From<usize> for Value {
     fn from(value: usize) -> Self {
-        Value::Integer(value as Integer)
+        Value::Integer(Integer::from_num(value))
     }
 }
 
 impl From<f32> for Value {
     fn from(f: f32) -> Self {
-        Value::Quantity((f as Scalar).into())
+        Value::Quantity((Scalar::from_num(f)).into())
     }
 }
 
@@ -309,12 +256,6 @@ impl From<Scalar> for Value {
 impl From<Length> for Value {
     fn from(length: Length) -> Self {
         Value::Quantity(length.into())
-    }
-}
-
-impl From<Size2> for Value {
-    fn from(value: Size2) -> Self {
-        Self::Tuple(Box::new(value.into()))
     }
 }
 

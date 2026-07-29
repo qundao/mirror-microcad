@@ -1,11 +1,11 @@
 use microcad_lang_types::{Integer, Scalar, Value, ValueResult};
 
-fn integer(value: Integer) -> Value {
-    value.into()
+fn integer(value: i64) -> Value {
+    Integer::from_num(value).into()
 }
 
-fn scalar(value: Scalar) -> Value {
-    value.into()
+fn scalar(value: f64) -> Value {
+    Scalar::from_num(value).into()
 }
 
 fn check(result: ValueResult, value: Value) {
@@ -27,9 +27,9 @@ fn test_value_integer() {
     check(-u(), integer(-2));
 
     // asymmetric operations
-    check(u() + w(), scalar(2 as Scalar + 5.0));
-    check(u() - w(), scalar(2 as Scalar - 5.0));
-    check(u() * w(), scalar(2 as Scalar * 5.0));
+    check(u() + w(), scalar(2.0 + 5.0));
+    check(u() - w(), scalar(2.0 - 5.0));
+    check(u() * w(), scalar(2.0 * 5.0));
     check(u() / w(), scalar(2.0 / 5.0));
 }
 

@@ -7,6 +7,7 @@ pub mod ops;
 
 use crate::ty::*;
 
+use derive_more::Display;
 use serde::{Deserialize, Serialize};
 
 use crate::{Integer, Length, Scalar};
@@ -14,7 +15,12 @@ use crate::{Integer, Length, Scalar};
 const OUTPUT_PRECISION: i32 = 14;
 
 /// A numeric value
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Display, Serialize, Deserialize)]
+#[display(
+    "{:.PRECISION$}{unit}",
+    unit.denormalize(*value).to_num::<f64>(),
+    PRECISION = OUTPUT_PRECISION as usize
+)]
 pub struct Quantity {
     /// The numeric value of the quantity.
     pub value: Scalar,
@@ -58,43 +64,14 @@ impl Quantity {
         }
     }
 
-    /// Create a new Scalar quantity.
-    pub fn scalar(value: Scalar) -> Self {
-        Quantity::new(value, QuantityType::Scalar)
-    }
-
-    /// Create a new Length quantity in millimeters.
-    pub fn length(length: Scalar) -> Self {
-        Quantity::new(length, QuantityType::Length)
-    }
-
     /// Calculate the power of quantity.
-    ///
-    /// *Note: This function has not been implemented completely.*
-    pub fn pow(&self, rhs: &Quantity) -> Self {
-        match (&self.quantity_type, &rhs.quantity_type) {
-            (QuantityType::Scalar, QuantityType::Scalar) => {
-                Quantity::new(self.value.powf(rhs.value), QuantityType::Scalar)
-            }
-            _ => todo!(),
-        }
+    pub fn pow(&self, _rhs: &Quantity) -> Self {
+        todo!()
     }
 
     /// Calculate the power of quantity and an integer.
-    ///
-    /// *Note: This function has not been implemented completely.*
-    pub fn pow_int(&self, rhs: &Integer) -> Self {
-        match &self.quantity_type {
-            QuantityType::Scalar => {
-                Quantity::new(self.value.powi(*rhs as i32), QuantityType::Scalar)
-            }
-            QuantityType::Length => todo!(),
-            QuantityType::Area => todo!(),
-            QuantityType::Volume => todo!(),
-            QuantityType::Density => todo!(),
-            QuantityType::Angle => todo!(),
-            QuantityType::Weight => todo!(),
-        }
+    pub fn pow_int(&self, _rhs: &Integer) -> Self {
+        todo!()
     }
 }
 
@@ -116,30 +93,19 @@ impl From<Scalar> for Quantity {
 
 impl From<Integer> for Quantity {
     fn from(value: Integer) -> Self {
-        Self::new(value as Scalar, QuantityType::Scalar)
+        Self::new(Scalar::from(value), QuantityType::Scalar)
     }
 }
 
 impl From<Length> for Quantity {
     fn from(length: Length) -> Self {
-        Self::new(*length, QuantityType::Length)
+        Self::new(length.0, QuantityType::Length)
     }
 }
 
 impl Ty for Quantity {
     fn ty(&self) -> Type {
         Type::Quantity(self.quantity_type.clone())
-    }
-}
-
-impl std::fmt::Display for Quantity {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}{}",
-            round::round(self.unit.denormalize(self.value), OUTPUT_PRECISION),
-            self.unit
-        )
     }
 }
 

@@ -5,7 +5,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::ty::*;
+use crate::{QuantityType, Scalar, Ty, Type, TypeError};
 
 /// Definition of type & scale of numbers.
 #[derive(
@@ -204,8 +204,8 @@ impl Unit {
         }
     }
 
-    pub fn factor(&self) -> f64 {
-        match &self {
+    pub fn factor(&self) -> Scalar {
+        Scalar::from_num(match &self {
             // Scalar
             Self::None => 1.0,
             Self::Percent => 0.01_f64,
@@ -256,16 +256,16 @@ impl Unit {
             // Densities
             Self::GramPerMeter3 => 1_000_000_000_f64,
             Self::GramPerMillimeter3 => 1_f64,
-        }
+        })
     }
 
     /// Normalize value to base unit.
-    pub fn normalize(self, x: f64) -> f64 {
+    pub fn normalize(self, x: Scalar) -> Scalar {
         x * self.factor()
     }
 
     /// Denormalize value to unit
-    pub fn denormalize(self, x: f64) -> f64 {
+    pub fn denormalize(self, x: Scalar) -> Scalar {
         x / self.factor()
     }
 }

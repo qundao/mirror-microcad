@@ -15,9 +15,27 @@ pub use value::{Array, Quantity, Tuple, Value, ValueError, ValueList, ValueResul
 
 pub use microcad_lang_base::element::{BinaryOperator, UnaryOperator};
 
-pub use microcad_core::{
-    Angle, Integer, Length, Mat2, Mat3, Mat4, Scalar, Size2, Vec2, Vec3, Vec4,
-}; // TODO Move these typedefs into this crate.
+pub type Integer = fixed::FixedI64<fixed::types::extra::U0>;
+
+pub type Scalar = fixed::FixedI128<fixed::types::extra::U32>;
+
+/// 2D vector type.
+pub type Vec2 = cgmath::Vector2<Scalar>;
+/// 3D vector type.
+pub type Vec3 = cgmath::Vector3<Scalar>;
+/// 4D vector type.
+pub type Vec4 = cgmath::Vector4<Scalar>;
+/// 2D matrix type.
+pub type Mat2 = cgmath::Matrix2<Scalar>;
+/// 3D matrix type.
+pub type Mat3 = cgmath::Matrix3<Scalar>;
+/// 4D matrix type.
+pub type Mat4 = cgmath::Matrix4<Scalar>;
+/// Primitive angle type in radians.
+pub type Angle = cgmath::Rad<Scalar>;
+
+/// A length in mm
+pub struct Length(pub Scalar);
 
 /// A trait to implement binary and operators for [`Type`] and [`Value`].
 pub trait Operators: Sized {

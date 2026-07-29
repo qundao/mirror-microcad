@@ -302,15 +302,6 @@ impl From<Color> for Tuple {
     }
 }
 
-impl From<Size2> for Tuple {
-    fn from(size: Size2) -> Self {
-        create_tuple!(
-            width = Value::from(Quantity::length(size.width)),
-            height = Value::from(Quantity::length(size.height))
-        )
-    }
-}
-
 impl From<Tuple> for Value {
     fn from(tuple: Tuple) -> Self {
         Value::Tuple(Box::new(tuple))
@@ -353,78 +344,6 @@ impl<'a> TryFrom<&'a Value> for &'a Tuple {
                 value.to_string(),
                 "Tuple".to_string(),
             )),
-        }
-    }
-}
-
-impl TryFrom<&Tuple> for Color {
-    type Error = ValueError;
-
-    fn try_from(tuple: &Tuple) -> Result<Self, Self::Error> {
-        let (r, g, b, a) = (
-            tuple.by_id(&Identifier::no_ref("r")),
-            tuple.by_id(&Identifier::no_ref("g")),
-            tuple.by_id(&Identifier::no_ref("b")),
-            tuple
-                .by_id(&Identifier::no_ref("a"))
-                .unwrap_or(&Value::Quantity(Quantity::new(1.0, QuantityType::Scalar)))
-                .clone(),
-        );
-
-        match (r, g, b, a) {
-            (
-                Some(Value::Quantity(Quantity {
-                    value: r,
-                    quantity_type: QuantityType::Scalar,
-                    ..
-                })),
-                Some(Value::Quantity(Quantity {
-                    value: g,
-                    quantity_type: QuantityType::Scalar,
-                    ..
-                })),
-                Some(Value::Quantity(Quantity {
-                    value: b,
-                    quantity_type: QuantityType::Scalar,
-                    ..
-                })),
-                Value::Quantity(Quantity {
-                    value: a,
-                    quantity_type: QuantityType::Scalar,
-                    ..
-                }),
-            ) => Ok(Color::new(*r as f32, *g as f32, *b as f32, a as f32)),
-            _ => Err(ValueError::CannotConvertToColor(tuple.to_string())),
-        }
-    }
-}
-
-impl TryFrom<&Tuple> for Size2 {
-    type Error = ValueError;
-
-    fn try_from(tuple: &Tuple) -> Result<Self, Self::Error> {
-        let (width, height) = (
-            tuple.by_id(&Identifier::no_ref("width")),
-            tuple.by_id(&Identifier::no_ref("height")),
-        );
-
-        match (width, height) {
-            (
-                Some(Value::Quantity(Quantity {
-                    value: width,
-                    quantity_type: QuantityType::Length,
-                    ..
-                })),
-                Some(Value::Quantity(Quantity {
-                    value: height,
-                    quantity_type: QuantityType::Length,
-                    ..
-                })),
-            ) => Ok(Size2 {
-                width: *width,
-                height: *height,
-            }),
-            _ => Err(ValueError::CannotConvert(tuple.to_string(), "Size2".into())),
         }
     }
 }

@@ -170,13 +170,13 @@ impl std::ops::Mul<Unit> for Value {
         match (self, unit.ty()) {
             (value, Type::Quantity(QuantityType::Scalar)) | (value, Type::Integer) => Ok(value),
             (Value::Integer(i), Type::Quantity(quantity_type)) => Ok(Value::Quantity(
-                Quantity::new(unit.normalize(i as Scalar), quantity_type),
+                Quantity::new(unit.normalize(Scalar::from(i)), quantity_type),
             )),
             (Value::Quantity(quantity), Type::Quantity(quantity_type)) => {
-                quantity * Quantity::new(unit.normalize(1.0), quantity_type)
+                quantity * Quantity::new(unit.factor(), quantity_type)
             }
             (Value::Array(array), Type::Quantity(quantity_type)) => {
-                Ok((array * Value::Quantity(Quantity::new(unit.normalize(1.0), quantity_type)))?)
+                Ok((array * Value::Quantity(Quantity::new(unit.factor(), quantity_type)))?)
             }
             (value, _) => Err(ValueError::CannotAddUnitToValueWithUnit(value.to_string())),
         }
@@ -190,9 +190,9 @@ impl std::ops::Div for Value {
     fn div(self, rhs: Self) -> Self::Output {
         match (self, rhs) {
             // Division with scalar result
-            (Value::Integer(lhs), Value::Integer(rhs)) => {
-                Ok(Value::Quantity((lhs as Scalar / rhs as Scalar).into()))
-            }
+            (Value::Integer(lhs), Value::Integer(rhs)) => Ok(Value::Quantity(
+                (Scalar::from(lhs) / Scalar::from(rhs)).into(),
+            )),
             (Value::Quantity(lhs), Value::Integer(rhs)) => lhs / rhs,
             (Value::Integer(lhs), Value::Quantity(rhs)) => lhs / rhs,
             (Value::Quantity(lhs), Value::Quantity(rhs)) => lhs / rhs,

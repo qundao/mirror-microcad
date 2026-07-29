@@ -14,13 +14,14 @@ version.workspace = true
 
 [dependencies]
 bytemuck = "1.24.0"
-cgmath = "0.18"
+cgmath = { version = "0.18", features = ["serde"] }
 derive_more = { version = "2.0.1", features = [
     "deref",
     "deref_mut",
     "display",
     "debug",
 ] }
+fixed = { version = "1.31", features = ["serde"] }
 log = "0.4"
 miette = { version = "7.6.0", features = ["derive", "fancy"] }
 round = "0.1.2"
@@ -30,7 +31,6 @@ serde = { version = "1.0", features = ["derive"] }
 
 thiserror = "2.0.17"
 
-microcad-core = { workspace = true }
 microcad-hash = { workspace = true }
 microcad-lang-base = { workspace = true }
 microcad-lang-proc-macros = { workspace = true }
