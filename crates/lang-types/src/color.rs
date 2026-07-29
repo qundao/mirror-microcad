@@ -5,9 +5,10 @@
 
 use derive_more::Display;
 use miette::Diagnostic;
+use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 
-#[derive(Copy, Clone, Display, Debug, PartialEq)]
+#[derive(Copy, Display, Hash, Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[display("{:.2}", *_0 as f32 / u16::MAX as f32)]
 pub struct ColorChannel(u16);
 
@@ -42,7 +43,7 @@ impl From<ColorChannel> for u8 {
 }
 
 /// A color with RGBA channels
-#[derive(Copy, Display, Clone, Debug, PartialEq)]
+#[derive(Copy, Display, Hash, Serialize, Deserialize, Clone, Debug, PartialEq)]
 #[display("rgba({r}, {g}, {b}, {a})")]
 pub struct Color {
     /// red value
