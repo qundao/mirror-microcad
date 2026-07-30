@@ -10,6 +10,8 @@ mod color;
 
 pub use color::Color;
 
+use derive_more::{Deref, DerefMut, Display};
+use serde::{Deserialize, Serialize};
 pub use ty::{MatrixType, QuantityType, Ty, Type, TypeError, TypeResult, Unit};
 pub use value::{Array, Quantity, Tuple, Value, ValueError, ValueList, ValueResult};
 
@@ -35,7 +37,31 @@ pub type Mat4 = cgmath::Matrix4<Scalar>;
 pub type Angle = cgmath::Rad<Scalar>;
 
 /// A length in mm
+#[derive(
+    Clone,
+    Debug,
+    Display,
+    Copy,
+    Default,
+    Hash,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Deref,
+    DerefMut,
+    Serialize,
+    Deserialize,
+)]
+#[display("{_0}mm")]
 pub struct Length(pub Scalar);
+
+impl Length {
+    /// Return a new length from millimeters.
+    pub fn mm(mm: impl Into<Scalar>) -> Self {
+        Self(mm.into())
+    }
+}
 
 /// A trait to implement binary and operators for [`Type`] and [`Value`].
 pub trait Operators: Sized {
