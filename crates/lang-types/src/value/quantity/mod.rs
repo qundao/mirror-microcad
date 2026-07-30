@@ -8,14 +8,14 @@ pub mod ops;
 use crate::ty::*;
 
 use derive_more::Display;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{Integer, Length, Scalar};
 
 const OUTPUT_PRECISION: i32 = 14;
 
 /// A numeric value
-#[derive(Clone, Debug, Display, Serialize, Deserialize)]
+#[derive(Clone, Debug, Display)]
 #[display(
     "{:.PRECISION$}{unit}",
     unit.denormalize(*value).to_num::<f64>(),
@@ -113,5 +113,129 @@ impl std::hash::Hash for Quantity {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         bytemuck::bytes_of(&self.value).hash(state);
         self.quantity_type.hash(state)
+    }
+}
+
+impl Serialize for Quantity {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        if serializer.is_human_readable() {
+            // Human-readable format (RON, JSON, etc.): Serialize as string "{value}{unit}"
+            // denormalize converts standard base units back to original unit scale
+            let denormalized_val = self.unit.denormalize(self.value).to_num::<f64>();
+            serializer.serialize_str(&format!("{}{}", denormalized_val, self.unit))
+        } else {
+            // Binary format: Serialize as a 3-field tuple struct
+            use serde::ser::SerializeTupleStruct;
+            let mut state = serializer.serialize_tuple_struct("Quantity", 3)?;
+            state.serialize_field(&self.value)?;
+            state.serialize_field(&self.quantity_type)?;
+            state.serialize_field(&self.unit)?;
+            state.end()
+        }
+    }
+}
+
+impl<'de> Deserialize<'de> for Quantity {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        if deserializer.is_human_readable() {
+            deserializer.deserialize_str(QuantityVisitor)
+        } else {
+            deserializer.deserialize_tuple_struct("Quantity", 3, BinaryQuantityVisitor)
+        }
+    }
+}
+
+/// Visitor for Human-Readable String parsing
+struct QuantityVisitor;
+
+impl<'de> serde::de::Visitor<'de> for QuantityVisitor {
+    type Value = Quantity;
+
+    fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter.write_str("a string representing a quantity with unit, e.g., '10.5mm'")
+    }
+
+    fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+    where
+        E: serde::de::Error,
+    {
+        let v = v.trim();
+
+        // Find index where unit string begins (first non-numeric/sign/decimal character)
+        let split_idx = v
+            .find(|c: char| {
+                !c.is_numeric() && c != '.' && c != '-' && c != '+' && c != 'e' && c != 'E'
+            })
+            .unwrap_or(v.len());
+
+        let (num_str, unit_str) = v.split_at(split_idx);
+        let unit_str = unit_str.trim();
+
+        if num_str.is_empty() {
+            return Err(serde::de::Error::custom(format!(
+                "missing numeric value in quantity string: '{v}'"
+            )));
+        }
+
+        // 1. Parse number as f64 (or directly into Scalar)
+        let num_f64: f64 = num_str.parse().map_err(|_| {
+            serde::de::Error::custom(format!("failed to parse float from '{num_str}'"))
+        })?;
+
+        // Convert parsed value into your fixed-point Scalar
+        let raw_val = Scalar::from_num(num_f64);
+
+        use std::str::FromStr;
+
+        // 2. Parse Unit via FromStr (default to Unit::None if unit component is empty)
+        let unit = Unit::from_str(unit_str).map_err(|_| {
+            serde::de::Error::custom(format!("unknown or invalid unit '{unit_str}'"))
+        })?;
+
+        // 3. Infer QuantityType from unit
+        let quantity_type = unit.quantity_type();
+
+        // 4. Normalize value to standard base unit if needed
+        let value = unit.normalize(raw_val);
+
+        Ok(Quantity {
+            value,
+            quantity_type,
+            unit,
+        })
+    }
+}
+
+/// Visitor for Binary deserialization
+struct BinaryQuantityVisitor;
+
+impl<'de> serde::de::Visitor<'de> for BinaryQuantityVisitor {
+    type Value = Quantity;
+
+    fn expecting(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        formatter.write_str("a tuple struct Quantity")
+    }
+
+    fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+    where
+        A: serde::de::SeqAccess<'de>,
+    {
+        Ok(Quantity {
+            value: seq
+                .next_element()?
+                .ok_or_else(|| serde::de::Error::invalid_length(0, &self))?,
+            quantity_type: seq
+                .next_element()?
+                .ok_or_else(|| serde::de::Error::invalid_length(1, &self))?,
+            unit: seq
+                .next_element()?
+                .ok_or_else(|| serde::de::Error::invalid_length(2, &self))?,
+        })
     }
 }
