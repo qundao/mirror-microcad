@@ -1,0 +1,37 @@
+# Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+[package]
+name = "microcad-package"
+description = "µcad package API"
+authors = ["Michael Winkelmann (michael@winkelmann.site)"]
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[dependencies]
+custom_debug = "0.6"
+derive_more = { version = "2.0.1", features = ["deref", "deref_mut"] }
+log = "0.4"
+miette = { version = "7.6.0", features = ["derive", "fancy"] }
+postcard = { version = "1.1", features = ["alloc"] }
+semver = { version = "1.0", features = ["serde"] }
+serde = { version = "1.0", features = ["derive"] }
+thiserror = "2.0.17"
+toml = { version = "1.1.2", optional = true }
+
+microcad-lang-base = { workspace = true }
+microcad-lang-types = { workspace = true }
+microcad-lang-lower = { workspace = true }
+microcad-lang-proc-macros = { workspace = true }
+
+[dev-dependencies]
+test-that = "0.5"
+insta = "1.45.0"
+
+[features]
+default = ["io"]
+io = ["dep:toml"]
