@@ -38,18 +38,18 @@ impl Format for ast::BoolLiteral {
 
 impl Format for ast::IntegerLiteral {
     fn format(&self, _: &FormatConfig) -> Node {
-        self.raw.clone().into()
+        self.value.clone().into()
     }
 }
 
 impl Format for ast::FloatLiteral {
     fn format(&self, _: &FormatConfig) -> Node {
-        self.raw.clone().into()
+        self.value.clone().into()
     }
 }
 
 impl Format for ast::QuantityLiteral {
     fn format(&self, _: &FormatConfig) -> Node {
-        format!("{}{}", self.raw, self.unit.name).into()
+        format!("{}{}", self.value, self.unit.name).into()
     }
 }
