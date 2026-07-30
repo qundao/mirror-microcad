@@ -5,7 +5,7 @@ use crate::{Lower, LowerContext, LowerError, LowerResult, ir};
 
 use microcad_lang_base::{Refer, SpanToSrcRef};
 use microcad_lang_parse::ast;
-use microcad_lang_types::value;
+use microcad_lang_types::{Integer, Quantity, Scalar};
 
 impl Lower<ast::Literal> for ir::Literal {
     fn lower(node: &ast::Literal, context: &mut LowerContext) -> LowerResult<Self> {
@@ -15,18 +15,22 @@ impl Lower<ast::Literal> for ir::Literal {
                 context.span_to_src_ref(&lit.span),
             )),
             ast::LiteralKind::Integer(lit) => ir::Literal(Refer::new(
-                lit.value.into(),
+                Integer::from_str(lit.value.as_str()).expect(
+                    "No error expected, this string already has been checked in the parse stage.",
+                ).into(),
                 context.span_to_src_ref(&lit.span),
             )),
             ast::LiteralKind::Float(lit) => ir::Literal(Refer::new(
-                lit.value.into(),
+                Scalar::from_str(lit.value.as_str()).expect(
+                    "No error expected, this string already has been checked in the parse stage.",
+                ).into(),
                 context.span_to_src_ref(&lit.span),
             )),
             ast::LiteralKind::Quantity(lit) => {
                 let unit = ir::Unit::lower(&lit.unit, context)?;
                 ir::Literal(Refer::new(
-                    value::Quantity {
-                        value: unit.normalize(lit.value),
+                    Quantity {
+                        value: unit.normalize(Scalar::from_str(lit.value.as_str()).expect("No error expected, this string already has been checked in the parse stage.")),
                         quantity_type: unit.quantity_type(),
                         unit,
                     }
