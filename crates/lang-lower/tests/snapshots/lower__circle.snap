@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0x7cd65a945030702d",
-        output_hash: "0xa13333f965ff300a",
+        output_hash: "0xa6afa192fdb7b219",
         tree: (
             id: Some("circle"),
             attr: ((
@@ -81,11 +81,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                         src_ref: "6:45 @ 0x5b5b0d75574ec6c6 (192..193)",
                                                     )),
                                                     expression: Literal(((
-                                                        value: Quantity((
-                                                            value: 0.0,
-                                                            quantity_type: Length,
-                                                            unit: Millimeter,
-                                                        )),
+                                                        value: Quantity("0mm"),
                                                         src_ref: "6:49 @ 0x5b5b0d75574ec6c6 (196..201)",
                                                     ))),
                                                     src_ref: "6:45 @ 0x5b5b0d75574ec6c6 (192..201)",
@@ -96,11 +92,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                         src_ref: "6:56 @ 0x5b5b0d75574ec6c6 (203..204)",
                                                     )),
                                                     expression: Literal(((
-                                                        value: Quantity((
-                                                            value: 0.0,
-                                                            quantity_type: Length,
-                                                            unit: Millimeter,
-                                                        )),
+                                                        value: Quantity("0mm"),
                                                         src_ref: "6:60 @ 0x5b5b0d75574ec6c6 (207..212)",
                                                     ))),
                                                     src_ref: "6:56 @ 0x5b5b0d75574ec6c6 (203..212)",
@@ -181,11 +173,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                 src_ref: "7:38 @ 0x5b5b0d75574ec6c6 (254..255)",
                                                             )),
                                                             expression: Literal(((
-                                                                value: Quantity((
-                                                                    value: 0.0,
-                                                                    quantity_type: Length,
-                                                                    unit: Millimeter,
-                                                                )),
+                                                                value: Quantity("0mm"),
                                                                 src_ref: "7:42 @ 0x5b5b0d75574ec6c6 (258..263)",
                                                             ))),
                                                             src_ref: "7:38 @ 0x5b5b0d75574ec6c6 (254..263)",
@@ -196,11 +184,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                 src_ref: "7:49 @ 0x5b5b0d75574ec6c6 (265..266)",
                                                             )),
                                                             expression: Literal(((
-                                                                value: Quantity((
-                                                                    value: 0.0,
-                                                                    quantity_type: Length,
-                                                                    unit: Millimeter,
-                                                                )),
+                                                                value: Quantity("0mm"),
                                                                 src_ref: "7:53 @ 0x5b5b0d75574ec6c6 (269..274)",
                                                             ))),
                                                             src_ref: "7:49 @ 0x5b5b0d75574ec6c6 (265..274)",
@@ -268,11 +252,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                 src_ref: "8:27 @ 0x5b5b0d75574ec6c6 (305..306)",
                                             ),
                                             rhs: Literal(((
-                                                value: Quantity((
-                                                    value: 2.0,
-                                                    quantity_type: Scalar,
-                                                    unit: r#None,
-                                                )),
+                                                value: Quantity("2"),
                                                 src_ref: "8:29 @ 0x5b5b0d75574ec6c6 (307..310)",
                                             ))),
                                             src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..310)",
