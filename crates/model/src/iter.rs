@@ -3,62 +3,78 @@
 
 //! Model tree iterators
 
-use super::*;
+use microcad_lang_base::HashId;
+
+use crate::{ModelRef, element::ElementKind};
 
 /// Children iterator struct.
-pub struct Children {
-    model: Model,
-    index: usize,
+pub struct Children<'tree> {
+    model: ModelRef<'tree>,
+    head: usize,
+    tail: usize,
 }
 
-impl Children {
-    /// Create new [`Children`] iterator
-    pub fn new(model: Model) -> Self {
-        Self { model, index: 0 }
-    }
-}
-
-impl Iterator for Children {
-    type Item = Model;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let model = self.model.borrow();
-        let child = model.children.get(self.index);
-        self.index += 1;
-        child.cloned()
-    }
-}
-
-/// Iterator over all descendants.
-pub struct Descendants {
-    stack: Models,
-}
-
-impl Descendants {
-    /// Create new descendants iterator
-    pub fn new(root: Model) -> Self {
+impl<'tree> Children<'tree> {
+    /// Create children iterator from symbol.
+    pub fn new(model: ModelRef<'tree>) -> Self {
+        let len = model.children.items.len();
         Self {
-            stack: root
-                .borrow()
-                .children
-                .iter()
-                .rev()
-                .cloned()
-                .collect::<Vec<_>>()
-                .into(),
+            model,
+            head: 0,
+            tail: len,
         }
     }
 }
 
-impl Iterator for Descendants {
-    type Item = Model;
+impl<'tree> Iterator for Children<'tree> {
+    type Item = ModelRef<'tree>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.head < self.tail {
+            let hash = self.model.children.items[self.head];
+            self.head += 1;
+            self.model.tree().get(hash)
+        } else {
+            None
+        }
+    }
+}
+
+// Implement DoubleEndedIterator for .rev() support
+impl<'tree> DoubleEndedIterator for Children<'tree> {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        if self.head < self.tail {
+            self.tail -= 1;
+            let hash = self.model.children.items[self.tail];
+            self.model.tree().get(hash)
+        } else {
+            None
+        }
+    }
+}
+
+/// Iterator over all descendants.
+pub struct UnnamedDescendants<'tree> {
+    stack: Vec<ModelRef<'tree>>,
+}
+
+impl<'tree> UnnamedDescendants<'tree> {
+    /// Create new descendants iterator
+    pub fn new(model: ModelRef<'tree>) -> Self {
+        Self {
+            stack: vec![model].into(),
+        }
+    }
+}
+
+impl<'tree> Iterator for UnnamedDescendants<'tree> {
+    type Item = ModelRef<'tree>;
 
     fn next(&mut self) -> Option<Self::Item> {
         if let Some(model) = self.stack.pop() {
-            let children = model.borrow().children.clone();
-            for child in children.iter().rev() {
-                self.stack.push(child.clone());
-            }
+            self.stack
+                .extend(model.children().filter(|model| !model.has_name()).rev());
+
             Some(model)
         } else {
             None
@@ -67,35 +83,28 @@ impl Iterator for Descendants {
 }
 
 /// Iterator over all descendants of multiplicities.
-pub struct MultiplicityDescendants {
-    stack: Models,
+pub struct UnnamedMultiplicityDescendants<'tree> {
+    stack: Vec<ModelRef<'tree>>,
 }
 
-impl MultiplicityDescendants {
+impl<'tree> UnnamedMultiplicityDescendants<'tree> {
     /// Create new descendants iterator
-    pub fn new(root: Model) -> Self {
+    pub fn new(model: ModelRef<'tree>) -> Self {
         Self {
-            stack: root
-                .borrow()
-                .children
-                .iter()
-                .rev()
-                .cloned()
-                .collect::<Vec<_>>()
-                .into(),
+            stack: vec![model].into(),
         }
     }
 }
 
-impl Iterator for MultiplicityDescendants {
-    type Item = Model;
+impl<'tree> Iterator for UnnamedMultiplicityDescendants<'tree> {
+    type Item = ModelRef<'tree>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        while let Some(ref model) = self.stack.pop() {
-            let model_ = model.borrow();
-            if matches!(model_.element(), Element::Multiplicity) {
+        while let Some(model) = self.stack.pop() {
+            if matches!(model.element().kind(), ElementKind::Multiplicity) {
                 // Expand but don't yield this node itself
-                self.stack.extend(model_.children.iter().rev().cloned());
+                self.stack
+                    .extend(model.children().filter(|model| !model.has_name()).rev());
                 continue;
             }
             // Return only non-multiplicity elements
@@ -106,24 +115,24 @@ impl Iterator for MultiplicityDescendants {
 }
 
 /// Iterator over all parents of a [`Model`].
-pub struct Parents {
-    model: Option<Model>,
+pub struct Parents<'tree> {
+    model: Option<ModelRef<'tree>>,
 }
 
-impl Parents {
+impl<'tree> Parents<'tree> {
     /// New parents iterator
-    pub fn new(model: Model) -> Self {
+    pub fn new(model: ModelRef<'tree>) -> Self {
         Self { model: Some(model) }
     }
 }
 
-impl Iterator for Parents {
-    type Item = Model;
+impl<'tree> Iterator for Parents<'tree> {
+    type Item = ModelRef<'tree>;
 
     fn next(&mut self) -> Option<Self::Item> {
         match &self.model {
             Some(model) => {
-                let parent = model.borrow().parent.clone();
+                let parent = model.parent();
                 self.model = parent;
                 self.model.clone()
             }
@@ -133,19 +142,19 @@ impl Iterator for Parents {
 }
 
 /// Iterator over all ancestors (this model and its parents)
-pub struct Ancestors {
-    model: Option<Model>,
+pub struct Ancestors<'tree> {
+    model: Option<ModelRef<'tree>>,
 }
 
-impl Ancestors {
+impl<'tree> Ancestors<'tree> {
     /// New parents iterator
-    pub fn new(model: Model) -> Self {
+    pub fn new(model: ModelRef<'tree>) -> Self {
         Self { model: Some(model) }
     }
 }
 
-impl Iterator for Ancestors {
-    type Item = Model;
+impl<'tree> Iterator for Ancestors<'tree> {
+    type Item = ModelRef<'tree>;
 
     fn next(&mut self) -> Option<Self::Item> {
         let model = match &self.model {
@@ -153,21 +162,22 @@ impl Iterator for Ancestors {
             None => return None,
         };
 
-        self.model = model.borrow().parent.clone();
+        self.model = model.parent();
         Some(model.clone())
     }
 }
 
 /// Iterator over all descendants.
-pub struct SourceFileDescendants {
-    stack: Models,
-    source_hash: u64,
+pub struct SourceFileDescendants<'tree> {
+    _stack: Vec<ModelRef<'tree>>,
+    _source_hash_id: HashId,
 }
 
-impl SourceFileDescendants {
+/*
+impl<'tree> SourceFileDescendants<'tree> {
     /// Create a new source file descendants.
-    pub fn new(root: Model) -> Self {
-        let source_hash = root.source_hash();
+    pub fn new(model: ModelRef<'tree>) -> Self {
+        let source_hash = model.element().source_hash();
 
         Self {
             stack: root
@@ -202,3 +212,4 @@ impl Iterator for SourceFileDescendants {
         }
     }
 }
+*/

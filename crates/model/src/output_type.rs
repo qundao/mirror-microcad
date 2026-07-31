@@ -3,20 +3,20 @@
 
 //! Model output type.
 
-use crate::lower::ir::WorkbenchKind;
+use microcad_lang_base::element::WorkbenchKind;
 
-/// The output type of the [`crate::model::Model`].
+/// The output type of the [`crateModel`].
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub enum OutputType {
     /// The output type has not yet been determined.
     #[default]
     NotDetermined,
-    /// The [`crate::model::Model`] outputs a 2d geometry.
+    /// The [`Model`] outputs a 2d geometry.
     Geometry2D,
-    /// The [`crate::model::Model`] outputs a 3d geometry.
+    /// The [`Model`] outputs a 3d geometry.
     Geometry3D,
-    /// The [`crate::model::Model`] is invalid, you cannot mix 2d and 3d geometry.
-    InvalidMixed,
+    /// The [`Model`] contains both 2D and 3D geometry.
+    Mixed,
 }
 
 impl OutputType {
@@ -30,9 +30,9 @@ impl OutputType {
             | (OutputType::Geometry3D, OutputType::Geometry3D) => *self,
             (OutputType::Geometry2D, OutputType::Geometry3D)
             | (OutputType::Geometry3D, OutputType::Geometry2D)
-            | (OutputType::Geometry2D, OutputType::InvalidMixed)
-            | (OutputType::Geometry3D, OutputType::InvalidMixed)
-            | (OutputType::InvalidMixed, _) => OutputType::InvalidMixed,
+            | (OutputType::Geometry2D, OutputType::Mixed)
+            | (OutputType::Geometry3D, OutputType::Mixed)
+            | (OutputType::Mixed, _) => OutputType::Mixed,
         }
     }
 }
@@ -46,7 +46,7 @@ impl std::fmt::Display for OutputType {
                 Self::NotDetermined => "Undetermined",
                 Self::Geometry2D => "2D",
                 Self::Geometry3D => "3D",
-                Self::InvalidMixed => "NO OUTPUT",
+                Self::Mixed => "2D/3D",
             }
         )
     }
@@ -57,7 +57,7 @@ impl From<WorkbenchKind> for OutputType {
         match kind {
             WorkbenchKind::Sketch => Self::Geometry2D,
             WorkbenchKind::Part => Self::Geometry3D,
-            WorkbenchKind::Operation => Self::NotDetermined,
+            WorkbenchKind::Op => Self::NotDetermined,
         }
     }
 }

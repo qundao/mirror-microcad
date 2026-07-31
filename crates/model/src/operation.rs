@@ -3,28 +3,7 @@
 
 //! Operation trait.
 
-use crate::{model::*, render::*};
-use microcad_core::*;
-
-/// Operation trait.
-pub trait Operation {
-    /// The output type of this operation.
-    ///
-    /// By default, the output type is undetermined.
-    fn output_type(&self) -> OutputType {
-        OutputType::NotDetermined
-    }
-
-    /// Process the model and output a 2D geometry.
-    fn process_2d(&self, _context: &mut RenderContext) -> RenderResult<Geometry2DOutput> {
-        unimplemented!()
-    }
-
-    /// Process the model and output a 3D geometry.
-    fn process_3d(&self, _context: &mut RenderContext) -> RenderResult<Geometry3DOutput> {
-        unimplemented!()
-    }
-}
+use microcad_lang_types::{Mat3, Scalar, Vec3};
 
 /// Transformation matrix
 #[derive(Clone, Debug)]
@@ -40,7 +19,7 @@ pub enum AffineTransform {
 }
 
 impl AffineTransform {
-    /// Get the 2D transformation matrix
+    /*/// Get the 2D transformation matrix
     pub fn mat2d(&self) -> Mat3 {
         match self {
             AffineTransform::Translation(v) => Mat3::from_translation(Vec2::new(v.x, v.y)),
@@ -67,5 +46,5 @@ impl AffineTransform {
             AffineTransform::Scale(v) => Mat4::from_nonuniform_scale(v.x, v.y, v.z),
             AffineTransform::UniformScale(s) => Mat4::from_scale(*s),
         }
-    }
+    }*/
 }

@@ -3,38 +3,26 @@
 
 //! Creator of work pieces.
 
-use crate::{symbol::Symbol, value::Tuple};
+//use microcad_package::SymbolId;
 
-/// A creator is the origin  
-#[derive(Debug, Clone)]
+use microcad_lang_base::HashId;
+use microcad_lang_types::Tuple;
+use serde::{Deserialize, Serialize};
+
+/// Symbol id (TODO Move this `microcad-package`)
+#[derive(Debug, Hash, PartialEq, Clone, Serialize, Deserialize)]
+pub struct SymbolId {
+    library_hash: HashId,
+    symbol_id: u64,
+}
+
+/// A creator is the symbol
+#[derive(Debug, Hash, PartialEq, Clone, Serialize, Deserialize)]
 pub struct Creator {
     /// Symbol.
-    pub symbol: Symbol,
+    pub symbol: SymbolId,
     /// Workpiece arguments.
     pub arguments: Tuple,
-}
-
-impl Creator {
-    /// New creator.
-    pub fn new(symbol: Symbol, arguments: Tuple) -> Self {
-        Self { symbol, arguments }
-    }
-}
-
-impl std::fmt::Display for Creator {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{symbol}{arguments}",
-            symbol = self.symbol.full_name(),
-            arguments = self.arguments
-        )
-    }
-}
-
-impl std::hash::Hash for Creator {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.symbol.full_name().hash(state);
-        self.arguments.hash(state);
-    }
+    /// Hash id
+    pub hash_id: HashId,
 }

@@ -3,9 +3,9 @@
 
 //! Work piece element
 
-use microcad_lang_base::{Hashed, Identifier};
+use microcad_lang_base::{Hashed, element::WorkbenchKind};
 
-use crate::{model::*, value::*};
+use crate::creator::Creator;
 
 /// A workpiece is an element produced by a workbench.
 #[derive(Debug, Clone)]
@@ -13,37 +13,5 @@ pub struct Workpiece {
     /// Workpiece kind: `op`, `sketch`, `part`.
     pub kind: WorkbenchKind,
     /// Workpiece properties.
-    pub properties: Properties,
-    /// Creator symbol.
     pub creator: Hashed<Creator>,
-}
-
-impl std::fmt::Display for Workpiece {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Workpiece({}) {}", self.kind, *self.creator)
-    }
-}
-
-impl ComputedHash for Workpiece {
-    fn computed_hash(&self) -> HashId {
-        self.creator.computed_hash()
-    }
-}
-
-impl PropertiesAccess for Workpiece {
-    fn get_property(&self, id: &Identifier) -> Option<&Value> {
-        self.properties.get(id)
-    }
-
-    fn set_property(&mut self, id: Identifier, value: Value) -> Option<Value> {
-        self.properties.insert(id, value)
-    }
-    fn get_properties(&self) -> Option<&Properties> {
-        Some(&self.properties)
-    }
-
-    fn add_properties(&mut self, props: Properties) {
-        self.properties
-            .extend(props.iter().map(|(id, prop)| (id.clone(), prop.clone())));
-    }
 }

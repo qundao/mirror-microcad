@@ -3,15 +3,14 @@
 
 //! Resolution attribute.
 
-use microcad_core::Scalar;
-
-use crate::{ty::QuantityType, value::*};
+use microcad_lang_types::{Length, Quantity, QuantityType, Scalar, Value};
+use serde::{Deserialize, Serialize};
 
 /// Render resolution when rendering things e.g. to polygons or meshes.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Hash, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub enum ResolutionAttribute {
     /// Linear resolution in millimeters (Default = 0.1mm)
-    Absolute(Scalar),
+    Absolute(Length),
 
     /// Relative resolution.
     Relative(Scalar),
@@ -19,43 +18,18 @@ pub enum ResolutionAttribute {
 
 impl Default for ResolutionAttribute {
     fn default() -> Self {
-        Self::Absolute(0.1)
+        Self::Absolute(Length::mm(Scalar::from_num(0.1)))
     }
 }
 
 impl From<ResolutionAttribute> for Value {
     fn from(resolution_attribute: ResolutionAttribute) -> Self {
-        match resolution_attribute {
-            ResolutionAttribute::Absolute(linear) => {
-                Self::Quantity(Quantity::new(linear, QuantityType::Length))
-            }
+        Self::Quantity(match resolution_attribute {
+            ResolutionAttribute::Absolute(linear) => Quantity::from(*linear),
             ResolutionAttribute::Relative(relative) => {
-                Self::Quantity(Quantity::new(relative, QuantityType::Scalar))
+                Quantity::new(relative, QuantityType::Scalar)
             }
-        }
-    }
-}
-
-impl TryFrom<Value> for ResolutionAttribute {
-    type Error = ValueError;
-
-    fn try_from(value: Value) -> Result<Self, Self::Error> {
-        match value {
-            Value::Quantity(Quantity {
-                value,
-                quantity_type: QuantityType::Scalar,
-                ..
-            }) => Ok(ResolutionAttribute::Relative(value)),
-            Value::Quantity(Quantity {
-                value,
-                quantity_type: QuantityType::Length,
-                ..
-            }) => Ok(ResolutionAttribute::Absolute(value)),
-            _ => Err(ValueError::CannotConvert(
-                value.to_string(),
-                "ResolutionAttribute".to_string(),
-            )),
-        }
+        })
     }
 }
 

@@ -3,12 +3,41 @@
 
 //! Element of a [`Model`].
 
-use crate::{builtin::*, model::*, value::*};
-use strum::IntoStaticStr;
+use derive_more::{Display, From};
+use microcad_lang_base::{SrcRef, SrcReferrer, element::WorkbenchKind};
+use microcad_lang_types::Value;
+use serde::{Deserialize, Serialize};
+
+use crate::{creator::Creator, output_type::OutputType};
+
+/// The kind of the built-in workbench determines its output.
+#[derive(Debug, Copy, Clone, Hash, Display, PartialEq, Serialize, Deserialize)]
+pub enum BuiltinWorkbenchKind {
+    /// A parametric 2D primitive.
+    Primitive2D,
+    /// A parametric 3D primitive.
+    Primitive3D,
+    /// An affine transformation.
+    Transform,
+    /// An operation on a model.
+    Operation,
+}
+
+impl From<BuiltinWorkbenchKind> for OutputType {
+    fn from(kind: BuiltinWorkbenchKind) -> Self {
+        match kind {
+            BuiltinWorkbenchKind::Primitive2D => Self::Geometry2D,
+            BuiltinWorkbenchKind::Primitive3D => Self::Geometry3D,
+            BuiltinWorkbenchKind::Operation | BuiltinWorkbenchKind::Transform => {
+                Self::NotDetermined
+            }
+        }
+    }
+}
 
 /// An element defines the entity of a [`Model`].
-#[derive(Clone, IntoStaticStr, Debug, Default, derive_more::From)]
-pub enum Element {
+#[derive(Clone, Debug, Hash, PartialEq, Default, From, Serialize, Deserialize)]
+pub enum ElementKind {
     #[default]
     /// A group element is created by a body `{}`.
     Group,
@@ -16,15 +45,11 @@ pub enum Element {
     /// An element containing a value.
     Value(Value),
 
-    /// A workpiece that holds properties.
-    ///
-    /// A workpiece is created by workbenches.
-    Workpiece(Workpiece),
+    /// A workpiece which is created by workbenches.
+    Workpiece(WorkbenchKind),
 
-    /// A built-in workpiece.
-    ///
-    /// A workpiece is created by workbenches.
-    BuiltinWorkpiece(BuiltinWorkpiece),
+    /// A built-in workpiece which created by built-in workbenches.
+    BuiltinWorkpiece(BuiltinWorkbenchKind),
 
     /// Multiplicity.
     Multiplicity,
@@ -33,91 +58,42 @@ pub enum Element {
     InputPlaceholder,
 }
 
-impl Element {
-    /// Creator.
-    pub fn creator(&self) -> Option<&Creator> {
-        match self {
-            Element::Workpiece(workpiece) => Some(&workpiece.creator),
-            Element::BuiltinWorkpiece(builtin_workpiece) => Some(&builtin_workpiece.creator),
-            _ => None,
+impl ElementKind {
+    fn output_type(&self) -> OutputType {
+        use ElementKind::*;
+        match &self {
+            Workpiece(workpiece) => (*workpiece).into(),
+            BuiltinWorkpiece(builtin_workpiece) => (*builtin_workpiece).into(),
+            Group | Multiplicity | InputPlaceholder | Value(_) => OutputType::NotDetermined,
         }
+    }
+}
+
+#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
+pub struct Element {
+    kind: ElementKind,
+    src_ref: SrcRef,
+    creator: Option<Creator>,
+}
+
+impl SrcReferrer for Element {
+    fn src_ref(&self) -> SrcRef {
+        self.src_ref
+    }
+}
+
+impl Element {
+    pub fn kind(&self) -> &ElementKind {
+        &self.kind
+    }
+
+    /// Creator.
+    pub fn creator(&self) -> &Option<Creator> {
+        &self.creator
     }
 
     /// Get output type of element.
     pub fn output_type(&self) -> OutputType {
-        match self {
-            Element::Workpiece(workpiece) => workpiece.kind.into(),
-            Element::BuiltinWorkpiece(builtin_workpiece) => match builtin_workpiece.kind {
-                BuiltinWorkbenchKind::Primitive2D => OutputType::Geometry2D,
-                BuiltinWorkbenchKind::Primitive3D => OutputType::Geometry3D,
-                BuiltinWorkbenchKind::Transform | BuiltinWorkbenchKind::Operation => {
-                    builtin_workpiece.output_type
-                }
-            },
-            Element::Group
-            | Element::Multiplicity
-            | Element::InputPlaceholder
-            | Element::Value(_) => OutputType::NotDetermined,
-        }
-    }
-}
-
-impl std::fmt::Display for Element {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let name: &'static str = self.into();
-        match &self {
-            Element::Workpiece(workpiece) => write!(f, "{workpiece}"),
-            Element::BuiltinWorkpiece(builtin_workpiece) => write!(f, "{builtin_workpiece}"),
-            _ => write!(f, "{name}"),
-        }
-    }
-}
-
-impl std::hash::Hash for Element {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        match self {
-            Element::Group => std::mem::discriminant(&Element::Group).hash(state),
-            Element::Multiplicity => std::mem::discriminant(&Element::Multiplicity).hash(state),
-            Element::InputPlaceholder => {
-                std::mem::discriminant(&Element::InputPlaceholder).hash(state)
-            }
-            Element::Workpiece(workpiece) => workpiece.computed_hash().hash(state),
-            Element::BuiltinWorkpiece(builtin_workpiece) => {
-                builtin_workpiece.computed_hash().hash(state)
-            }
-            Element::Value(value) => value.computed_hash().hash(state),
-        }
-    }
-}
-
-impl PropertiesAccess for Element {
-    fn get_property(&self, id: &Identifier) -> Option<&Value> {
-        match self {
-            Self::Workpiece(workpiece) => workpiece.get_property(id),
-            _ => unreachable!("not a workpiece element"),
-        }
-    }
-
-    fn set_property(&mut self, id: Identifier, value: Value) -> Option<Value> {
-        match self {
-            Self::Workpiece(workpiece) => workpiece.set_property(id, value),
-            _ => unreachable!("not a workpiece element"),
-        }
-    }
-
-    fn get_properties(&self) -> Option<&Properties> {
-        match self {
-            Self::Workpiece(workpiece) => workpiece.get_properties(),
-            _ => None,
-        }
-    }
-
-    fn add_properties(&mut self, props: Properties) {
-        match self {
-            Self::Workpiece(workpiece) => {
-                workpiece.add_properties(props);
-            }
-            _ => unreachable!("not a workpiece element"),
-        }
+        self.kind.output_type()
     }
 }

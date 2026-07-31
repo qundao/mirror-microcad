@@ -3,13 +3,8 @@
 
 //! `std::ops` impls for Model
 
-use microcad_core::{BooleanOp, Integer};
+/* TODO
 use microcad_lang_base::SrcRef;
-
-use crate::{
-    eval::EvalResult,
-    model::{Model, Models},
-};
 
 pub type ModelResult = EvalResult<Model>;
 
@@ -47,3 +42,4 @@ impl std::ops::BitAnd for Model {
         Ok(self.boolean_op(BooleanOp::Intersect, rhs))
     }
 }
+*/

@@ -3,106 +3,205 @@
 
 //! Model tree module
 
+use derive_more::Deref;
+
 pub mod attribute;
-pub mod builder;
 pub mod creator;
 pub mod element;
-mod inner;
 pub mod iter;
-pub mod models;
 pub mod operation;
 pub mod ops;
 pub mod output_type;
-pub mod properties;
 pub mod workpiece;
 
-pub use attribute::*;
-pub use builder::*;
-pub use creator::*;
-pub use element::*;
-pub use inner::*;
-pub use iter::*;
-pub use models::*;
-pub use operation::*;
-pub use output_type::*;
-pub use properties::*;
-pub use workpiece::*;
+use microcad_lang_base::{Identifier, element::Visibility};
+use serde::{Deserialize, Serialize};
 
-use derive_more::{Deref, DerefMut};
-use microcad_core::{
-    BooleanOp, Integer,
-    hash::{ComputedHash, HashId},
-};
-use microcad_lang_base::{
-    Identifier, RcMut, SrcRef, SrcReferrer, TreeDisplay, TreeState, WriteToFile,
-};
+use crate::{attribute::Attributes, element::Element};
 
-use crate::{lower::ir::WorkbenchKind, value::Value};
+#[derive(Debug, PartialEq, Clone, Copy, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct ModelHandle(pub usize);
 
-/// A reference counted, mutable [`Model`].
-#[derive(Clone, Deref, DerefMut)]
-pub struct Model(RcMut<ModelInner>);
+impl ModelHandle {
+    pub fn root() -> Self {
+        Self(0)
+    }
 
+    pub fn index(&self) -> usize {
+        self.0
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ModelTree {
+    nodes: Vec<Model>,
+}
+
+impl ModelTree {
+    /// Create an empty [`SymbolTree`].
+    pub fn new() -> Self {
+        Self {
+            nodes: Default::default(),
+        }
+    }
+
+    /// Helper to access the root directly
+    pub fn root(&'_ self) -> Option<ModelRef<'_>> {
+        self.get(ModelHandle::root())
+    }
+
+    /// Return the handle of the last node in this tree.
+    pub fn last_handle(&'_ self) -> Option<ModelHandle> {
+        if !self.nodes.is_empty() {
+            Some(ModelHandle(self.nodes.len() - 1))
+        } else {
+            None
+        }
+    }
+
+    pub fn insert(&mut self, parent: Option<ModelHandle>, tree: impl Into<ModelTree>) {
+        let tree = tree.into();
+
+        let base_index = self.nodes.len();
+        let handle = ModelHandle(base_index);
+
+        let nodes = tree.nodes.into_iter().map(|model| Model {
+            inner: model.inner,
+            parent: model
+                .parent
+                .map(|ModelHandle(index)| ModelHandle(index + base_index))
+                .or(parent),
+            children: Models::from_iter(
+                model
+                    .children
+                    .items
+                    .into_iter()
+                    .map(|ModelHandle(index)| ModelHandle(index + base_index)),
+            ),
+        });
+        self.nodes.extend(nodes.into_iter());
+
+        if let Some(parent) = parent {
+            if let Some(parent_node) = self.get_mut(parent) {
+                parent_node.children.insert(handle);
+            }
+        }
+    }
+
+    pub fn get<'tree>(&'tree self, handle: ModelHandle) -> Option<ModelRef<'tree>> {
+        self.nodes
+            .get(handle.index())
+            .map(|symbol| ModelRef::new(symbol, self, handle))
+    }
+
+    fn get_mut(&mut self, handle: ModelHandle) -> Option<&mut Model> {
+        self.nodes.get_mut(handle.index())
+    }
+}
+
+impl From<Model> for ModelTree {
+    fn from(root: Model) -> Self {
+        Self { nodes: vec![root] }
+    }
+}
+
+#[derive(Debug, Deref, Clone, Copy)]
+pub struct ModelRef<'tree> {
+    #[deref]
+    model: &'tree Model,
+    tree: &'tree ModelTree,
+    handle: ModelHandle,
+}
+
+impl<'tree> ModelRef<'tree> {
+    pub fn new(model: &'tree Model, tree: &'tree ModelTree, handle: ModelHandle) -> Self {
+        Self {
+            model,
+            tree,
+            handle,
+        }
+    }
+
+    pub fn model(&self) -> &'tree Model {
+        self.model
+    }
+
+    pub fn tree(&self) -> &'tree ModelTree {
+        self.tree
+    }
+
+    pub fn handle(&self) -> ModelHandle {
+        self.handle
+    }
+
+    pub fn element(&self) -> &'tree Element {
+        &self.model.inner.element
+    }
+
+    /// Return the parent of this model.
+    pub fn parent(&self) -> Option<ModelRef<'tree>> {
+        self.model()
+            .parent
+            .and_then(|model_handle| self.tree.get(model_handle))
+    }
+
+    /// Returns true if the model as a name
+    pub fn has_name(&self) -> bool {
+        self.model.inner.id.is_some()
+    }
+}
+
+#[derive(Debug, Default, Clone, Hash, PartialEq, Serialize, Deserialize)]
+pub struct Models {
+    pub items: Vec<ModelHandle>,
+}
+impl Models {
+    fn insert(&mut self, handle: ModelHandle) {
+        self.items.push(handle);
+    }
+}
+
+impl FromIterator<ModelHandle> for Models {
+    fn from_iter<T: IntoIterator<Item = ModelHandle>>(iter: T) -> Self {
+        Self {
+            items: iter.into_iter().collect(),
+        }
+    }
+}
+
+#[derive(Debug, PartialEq, Hash, Serialize, Deserialize)]
+pub struct Model {
+    /// Parent of the model
+    pub parent: Option<ModelHandle>,
+
+    /// The actual model content
+    pub inner: ModelInner,
+
+    /// Children of this model
+    pub children: Models,
+}
+
+#[derive(Debug, PartialEq, Hash, Serialize, Deserialize)]
+pub struct ModelInner {
+    /// An optional id
+    pub id: Option<Identifier>,
+
+    /// Visibility
+    pub visibility: Visibility,
+
+    /// Model attributes
+    pub attr: Attributes,
+
+    /// Model elements
+    pub element: Element,
+}
+
+/*
 impl Model {
-    /// Create new model from inner.
-    pub fn new(inner: RcMut<ModelInner>) -> Self {
-        Self(inner)
-    }
-
-    /// Return `true`, if model has no children.
-    pub fn is_empty(&self) -> bool {
-        self.borrow().is_empty()
-    }
-
-    /// Return `true`, if model wont produce any output
-    pub fn has_no_output(&self) -> bool {
-        let self_ = self.borrow();
-        match self_.element.value {
-            Element::BuiltinWorkpiece(_) | Element::InputPlaceholder => false,
-            _ => self_.is_empty(),
-        }
-    }
-
-    /// Make a deep copy if this model.
-    pub fn make_deep_copy(&self) -> Self {
-        let copy = Self(RcMut::new(self.0.borrow().clone_content()));
-        for child in self.borrow().children.iter() {
-            copy.append(child.make_deep_copy());
-        }
-        copy
-    }
-
-    /// Return address of this model.
-    pub fn addr(&self) -> usize {
-        self.0.as_ptr().addr()
-    }
-
-    /// Append a single model as child.
-    ///
-    /// Also tries to set the output type if it has not been determined yet.
-    pub fn append(&self, model: Model) -> Model {
-        model.borrow_mut().parent = Some(self.clone());
-
-        let mut self_ = self.0.borrow_mut();
-        self_.children.push(model.clone());
-
-        model
-    }
-
-    /// Append multiple models as children.
-    ///
-    /// Return self.
-    pub fn append_children(&self, models: Models) -> Self {
-        for model in models.iter() {
-            self.append(model.clone());
-        }
-        self.clone()
-    }
-
     /// Short cut to generate boolean operator as binary operation with two models.
-    pub fn boolean_op(self, op: BooleanOp, other: Model) -> Model {
+    pub fn boolean_op(self, op: BooleanOp, other: Model) -> ModelTree {
         assert!(self != other, "lhs and rhs must be distinct.");
-        Models::from(vec![self.clone(), other]).boolean_op(op)
+        ModelTree::from(vec![self.clone(), other]).boolean_op(op)
     }
 
     /// Multiply a model n times.
@@ -136,16 +235,6 @@ impl Model {
         output_type
     }
 
-    /// Get render output type. Expects a render output.
-    pub fn render_output_type(&self) -> OutputType {
-        let self_ = self.borrow();
-        self_
-            .output
-            .as_ref()
-            .map(|output| output.output_type)
-            .unwrap_or(OutputType::InvalidMixed)
-    }
-
     /// Return inner group if this model only contains a group as single child.
     ///
     /// This function is used when we evaluate operations like `subtract() {}` or `hull() {}`.
@@ -163,162 +252,39 @@ impl Model {
     pub fn set_id(&self, id: Identifier) {
         self.borrow_mut().id = Some(id);
     }
-}
+}*/
 
 /// Iterator methods.
-impl Model {
+impl<'tree> ModelRef<'tree> {
+    /// Returns an iterator over models children.
+    pub fn children(&self) -> iter::Children<'tree> {
+        iter::Children::new(self.clone())
+    }
+
     /// Returns an iterator of models to this model and its unnamed descendants, in tree order.
     ///
     /// Includes the current model.
-    pub fn descendants(&self) -> Descendants {
-        Descendants::new(self.clone())
+    pub fn unnamed_descendants(&self) -> iter::UnnamedDescendants<'tree> {
+        iter::UnnamedDescendants::new(self.clone())
     }
 
     /// An iterator that descends to multiplicity nodes.
-    pub fn multiplicity_descendants(&self) -> MultiplicityDescendants {
-        MultiplicityDescendants::new(self.clone())
+    pub fn unnamed_multiplicity_descendants(&self) -> iter::UnnamedMultiplicityDescendants<'tree> {
+        iter::UnnamedMultiplicityDescendants::new(self.clone())
     }
 
     /// Returns an iterator of models that belong to the same source file as this one
-    pub fn source_file_descendants(&self) -> SourceFileDescendants {
+    /*pub fn source_file_descendants(&self) -> SourceFileDescendants<'tree> {
         SourceFileDescendants::new(self.clone())
-    }
+    }*/
 
     /// Parents iterator.
-    pub fn parents(&self) -> Parents {
-        Parents::new(self.clone())
+    pub fn parents(&self) -> iter::Parents<'tree> {
+        iter::Parents::new(self.clone())
     }
 
     /// Ancestors iterator.
-    pub fn ancestors(&self) -> Ancestors {
-        Ancestors::new(self.clone())
-    }
-
-    /// Get a property from this model.
-    pub fn get_property(&self, id: &Identifier) -> Option<Value> {
-        self.borrow().element.get_property(id).cloned()
-    }
-
-    /// Set a property in this model.
-    pub fn set_property(&mut self, id: Identifier, value: Value) -> Option<Value> {
-        self.borrow_mut().element.set_property(id, value)
-    }
-
-    /// Add a new property to the model.
-    pub fn add_property(&self, id: Identifier, value: Value) {
-        self.borrow_mut()
-            .element
-            .add_properties([(id, value)].into_iter().collect())
-    }
-}
-
-impl AttributesAccess for Model {
-    fn get_attributes_by_id(&self, id: &Identifier) -> Vec<Attribute> {
-        self.borrow().attributes.get_attributes_by_id(id)
-    }
-}
-
-impl PartialEq for Model {
-    fn eq(&self, other: &Self) -> bool {
-        self.addr() == other.addr()
-    }
-}
-
-impl SrcReferrer for Model {
-    fn src_ref(&self) -> SrcRef {
-        self.borrow().src_ref()
-    }
-}
-
-impl std::fmt::Display for Model {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{id}{element}{is_root} ->",
-            id = match &self.borrow().id {
-                Some(id) => format!("{id}: "),
-                None => String::new(),
-            },
-            element = *self.borrow().element,
-            is_root = if self.parents().next().is_some() {
-                ""
-            } else {
-                " (root)"
-            }
-        )
-    }
-}
-
-impl std::fmt::Debug for Model {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            microcad_lang_base::shorten(
-                &format!(
-                    "{id}{element}{is_root} ->",
-                    id = match &self.borrow().id {
-                        Some(id) => format!("{id:?}: "),
-                        None => String::new(),
-                    },
-                    element = *self.borrow().element,
-                    is_root = if self.parents().next().is_some() {
-                        ""
-                    } else {
-                        " (root)"
-                    }
-                ),
-                140
-            )
-        )
-    }
-}
-
-impl TreeDisplay for Model {
-    fn tree_print(
-        &self,
-        f: &mut std::fmt::Formatter,
-        mut tree_state: TreeState,
-    ) -> std::fmt::Result {
-        let signature = if tree_state.debug {
-            format!("{self:?}")
-        } else {
-            self.to_string()
-        };
-        let self_ = self.borrow();
-        if let Some(output) = &self_.output {
-            writeln!(f, "{:tree_state$}{signature} {output}", "",)?;
-        } else {
-            writeln!(f, "{:tree_state$}{signature}", "",)?;
-        }
-        tree_state.indent();
-        if let Some(props) = self_.get_properties() {
-            props.tree_print(f, tree_state)?;
-        }
-        self_.attributes.tree_print(f, tree_state)?;
-        self_.children.tree_print(f, tree_state)
-    }
-}
-
-impl WriteToFile for Model {}
-
-impl std::hash::Hash for Model {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        let self_ = self.borrow();
-        self_.element().hash(state);
-        self_.children().for_each(|child| child.hash(state));
-    }
-}
-
-impl ComputedHash for Model {
-    fn computed_hash(&self) -> HashId {
-        let self_ = self.borrow();
-        self_.output().computed_hash()
-    }
-}
-
-impl From<Value> for Model {
-    fn from(value: Value) -> Self {
-        Model::new(RcMut::new(ModelInner::new(value.into(), SrcRef::none())))
+    pub fn ancestors(&self) -> iter::Ancestors<'tree> {
+        iter::Ancestors::new(self.clone())
     }
 }
