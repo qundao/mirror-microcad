@@ -3,9 +3,9 @@
 
 //! Argument value evaluation entity
 
-use microcad_lang_base::{PushDiag, SrcRef};
+use microcad_lang_types::{Array, Value};
 
-use crate::{eval::*, lower::ir, model::Model, symbol::SymbolDef};
+use crate::{ArgumentValueList, EvalContext, EvalError, EvalResult};
 
 /// Trait for calling methods of values
 pub trait CallMethod<T = Value> {
@@ -16,7 +16,7 @@ pub trait CallMethod<T = Value> {
     /// - `context`: Evaluation context
     fn call_method(
         &self,
-        id: &ir::QualifiedName,
+        id: &microcad_package::rst::ResolvedName,
         args: &ArgumentValueList,
         context: &mut EvalContext,
     ) -> EvalResult<T>;
@@ -25,11 +25,11 @@ pub trait CallMethod<T = Value> {
 impl CallMethod for Array {
     fn call_method(
         &self,
-        id: &ir::QualifiedName,
+        id: &microcad_package::rst::ResolvedName,
         _: &ArgumentValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Value> {
-        use crate::lower::SingleIdentifier;
+        use microcad_lang_base::SingleIdentifier;
 
         Ok(
             match id.single_identifier().expect("Single id").id().as_str() {
@@ -48,77 +48,5 @@ impl CallMethod for Array {
                 }
             },
         )
-    }
-}
-
-impl CallMethod<Option<Model>> for Model {
-    fn call_method(
-        &self,
-        name: &ir::QualifiedName,
-        args: &ArgumentValueList,
-        context: &mut EvalContext,
-    ) -> EvalResult<Option<Model>> {
-        match context.lookup(name, LookupTarget::Method) {
-            Ok(symbol) => context.scope(
-                StackFrame::Call {
-                    symbol: symbol.clone(),
-                    args: args.clone(),
-                    src_ref: SrcRef::merge(name, args),
-                },
-                |context| {
-                    symbol.with_def(|def| match def {
-                        SymbolDef::Workbench(workbench_definition) => {
-                            let model = workbench_definition.call(
-                                SrcRef::merge(name, args),
-                                symbol.clone(),
-                                args,
-                                context,
-                            )?;
-
-                            Ok::<_, Box<EvalError>>(Some(model.replace_input_placeholders(self)))
-                        }
-                        SymbolDef::Builtin(builtin) => match builtin.call(args, context)? {
-                            Value::Model(model) => Ok(Some(model.replace_input_placeholders(self))),
-                            value => panic!("Builtin call returned {value} but no models."),
-                        },
-                        _ => {
-                            context.error(name, EvalError::SymbolCannotBeCalled(name.clone()))?;
-                            Ok(None)
-                        }
-                    })
-                },
-            ),
-            Err(err) => {
-                context.error(name, err)?;
-                Ok(None)
-            }
-        }
-    }
-}
-
-impl CallMethod for Value {
-    fn call_method(
-        &self,
-        id: &ir::QualifiedName,
-        args: &ArgumentValueList,
-        context: &mut EvalContext,
-    ) -> EvalResult<Value> {
-        match self {
-            Value::Integer(_) => eval_todo!(context, id, "call_method for Integer"),
-            Value::Quantity(_) => eval_todo!(context, id, "call_method for Quantity"),
-            Value::Bool(_) => eval_todo!(context, id, "call_method for Bool"),
-            Value::String(_) => eval_todo!(context, id, "call_method for String"),
-            Value::Tuple(_) => eval_todo!(context, id, "call_method for Tuple"),
-            Value::Matrix(_) => eval_todo!(context, id, "call_method for Matrix"),
-            Value::Array(array) => array.call_method(id, args, context),
-            Value::Model(model) => Ok(model
-                .call_method(id, args, context)?
-                .map(Value::Model)
-                .unwrap_or_default()),
-            _ => {
-                context.error(id, EvalError::UnknownMethod(id.clone()))?;
-                Ok(Value::None)
-            }
-        }
     }
 }

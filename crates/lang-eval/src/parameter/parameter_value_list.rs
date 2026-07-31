@@ -3,45 +3,14 @@
 
 //! Parameter value list evaluation entity
 
-use crate::eval::*;
-
 use derive_more::Deref;
-use microcad_core::hash::HashMap;
-use microcad_lang_base::Identifier;
+use microcad_lang_base::{HashMap, Identifier};
+
+use crate::ParameterValue;
 
 /// List of parameter values
 #[derive(Clone, Debug, Default, Deref)]
 pub struct ParameterValueList(HashMap<Identifier, ParameterValue>);
-
-impl ParameterValueList {
-    /// Push parameter value
-    pub fn insert(
-        &mut self,
-        id: Identifier,
-        parameter: ParameterValue,
-    ) -> std::result::Result<(), ValueError> {
-        assert!(!id.is_empty(), "expecting valid id");
-        if self.0.contains_key(&id) {
-            return Err(ValueError::DuplicateParameter(id.clone()));
-        }
-        self.0.insert(id, parameter);
-        Ok(())
-    }
-}
-
-impl std::fmt::Display for ParameterValueList {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", {
-            let mut v = self
-                .0
-                .iter()
-                .map(|(id, p)| format!("{id}: {p}"))
-                .collect::<Vec<_>>();
-            v.sort();
-            v.join(", ")
-        })
-    }
-}
 
 impl<I, P> FromIterator<(I, P)> for ParameterValueList
 where

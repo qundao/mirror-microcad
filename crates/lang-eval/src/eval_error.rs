@@ -3,17 +3,9 @@
 
 //! Evaluation error
 
-#![allow(unused, unused_assignments)]
-
-use crate::{
-    eval::*,
-    lower::{LowerError, ir},
-    model::OutputType,
-    resolve::*,
-    ty::*,
-    value::*,
-};
-use microcad_lang_base::{DiagError, Identifier, SrcRef};
+use microcad_lang_base::{Identifier, IdentifierList, SrcRef, element::WorkbenchKind};
+use microcad_lang_types::{Type, ty::TypeList};
+use microcad_model::output_type::OutputType;
 use miette::Diagnostic;
 use thiserror::Error;
 
@@ -49,30 +41,6 @@ pub enum EvalError {
     #[error("Array elements have different types: {0}")]
     ArrayElementsDifferentTypes(TypeList),
 
-    /// Symbol not found.
-    #[error("Symbol {0} not found.")]
-    SymbolNotFound(ir::QualifiedName),
-
-    /// The symbol cannot be called, e.g. when it is a source file or a module.
-    #[error("Symbol `{0}` cannot be called.")]
-    SymbolCannotBeCalled(ir::QualifiedName),
-
-    /// Found ambiguous symbols.
-    #[error("Ambiguous symbol {0} might be one of the following: {1}")]
-    AmbiguousSymbol(ir::QualifiedName, ir::QualifiedNames),
-
-    /// Local Symbol not found.
-    #[error("Local symbol not found: {0}")]
-    LocalNotFound(Identifier),
-
-    /// A property of a value was not found.
-    #[error("Property not found: {0}")]
-    PropertyNotFound(Identifier),
-
-    /// A property of a value was not found.
-    #[error("Not a property id: {0}")]
-    NoPropertyId(ir::QualifiedName),
-
     /// Argument count mismatch.
     #[error("Argument count mismatch: expected {expected}, got {found} in {args}")]
     ArgumentCountMismatch {
@@ -97,10 +65,6 @@ pub enum EvalError {
         found: Type,
     },
 
-    /// Diagnostic error
-    #[error("Diagnostic error: {0}")]
-    DiagError(#[from] DiagError),
-
     /// No locals  available on stack.
     #[error("Local stack needed to store {0}")]
     LocalStackEmpty(Identifier),
@@ -109,29 +73,17 @@ pub enum EvalError {
     #[error("Unexpected stack frame of type '{1}' cannot store {0}")]
     WrongStackFrame(Identifier, &'static str),
 
-    /// Value Error.
-    #[error("Value Error: {0}")]
-    ValueError(#[from] ValueError),
-
-    /// Unknown method.
-    #[error("Unknown method `{0}`")]
-    UnknownMethod(ir::QualifiedName),
-
-    /// Parser Error
-    #[error("Parsing error {0}")]
-    LowerError(#[from] LowerError),
-
     /// Unexpected element within expression.
     #[error("Unexpected {0} {1} within expression")]
     UnexpectedNested(&'static str, Identifier),
 
     /// Missing arguments
     #[error("Missing arguments: {0}")]
-    MissingArguments(ir::IdentifierList),
+    MissingArguments(IdentifierList),
 
     /// Missing arguments
     #[error("Too many arguments: {0}")]
-    TooManyArguments(ir::IdentifierList),
+    TooManyArguments(IdentifierList),
 
     /// Arguments match by identifier but have incompatible types
     #[error("Arguments match by identifier but have incompatible types: {0}")]
@@ -143,7 +95,7 @@ pub enum EvalError {
 
     /// Trying to use multiplicity where it is not allowed
     #[error("Multiplicity not allowed '{0}'")]
-    MultiplicityNotAllowed(ir::IdentifierList),
+    MultiplicityNotAllowed(IdentifierList),
 
     /// An error if you try to mix 2d and 3d geometries.
     #[error("Cannot mix 2d and 3d geometries")]
@@ -180,7 +132,7 @@ pub enum EvalError {
 
     /// Initializer missed to set a property from plan
     #[error("Building plan incomplete. Missing properties: {0}")]
-    BuildingPlanIncomplete(ir::IdentifierList),
+    BuildingPlanIncomplete(IdentifierList),
 
     /// This errors happens if the expression is supposed to produce models but did not.
     #[error("This expression statement did not produce any model")]
@@ -189,15 +141,10 @@ pub enum EvalError {
     /// This error happens if the workbench produced a different output type.
     #[error("The {kind} workbench produced a {produced} output, but expected a {expected} output.")]
     WorkbenchInvalidOutput {
-        kind: ir::WorkbenchKind,
+        kind: WorkbenchKind,
         produced: OutputType,
         expected: OutputType,
     },
-
-    /// Resolve Error
-    #[error("Resolve error: {0}")]
-    #[diagnostic(transparent)]
-    ResolveError(ResolveError),
 
     /// Cannot call operation without workpiece, e.g. `op()`.
     #[error("Cannot call operation without workpiece.")]
@@ -226,15 +173,6 @@ pub enum EvalError {
     /// Assignment failed because left side is not an l-value
     #[error("Assignment failed because {0} is not an l-value")]
     NotAnLValue(Identifier),
-
-    /// Found symbol but it's not visible to user
-    #[error("Symbol {what} is private from within {within}")]
-    SymbolIsPrivate {
-        /// what was searched
-        what: ir::QualifiedName,
-        /// where it was searched
-        within: ir::QualifiedName,
-    },
 
     /// Found unused global symbols.
     #[error("Unused global symbol {0}.")]
@@ -266,35 +204,8 @@ pub enum EvalError {
 /// Result type of any evaluation.
 pub type EvalResult<T> = std::result::Result<T, Box<EvalError>>;
 
-impl From<ResolveError> for EvalError {
-    fn from(err: ResolveError) -> Self {
-        match err {
-            ResolveError::SymbolNotFound(name) => EvalError::SymbolNotFound(name),
-            other => EvalError::ResolveError(other),
-        }
-    }
-}
-
 impl From<Box<EvalError>> for miette::Report {
     fn from(value: Box<EvalError>) -> Self {
         miette::Report::new(*value)
-    }
-}
-
-impl From<DiagError> for Box<EvalError> {
-    fn from(value: DiagError) -> Self {
-        Box::new(value.into())
-    }
-}
-
-impl From<ValueError> for Box<EvalError> {
-    fn from(value: ValueError) -> Self {
-        Box::new(value.into())
-    }
-}
-
-impl From<ResolveError> for Box<EvalError> {
-    fn from(value: ResolveError) -> Self {
-        Box::new(value.into())
     }
 }

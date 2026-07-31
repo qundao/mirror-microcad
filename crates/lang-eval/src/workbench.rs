@@ -3,15 +3,7 @@
 
 //! Workbench definition syntax element evaluation
 
-use microcad_core::hash::Hashed;
-use microcad_lang_base::{SrcRef, SrcReferrer};
-
-use crate::{
-    eval::*,
-    lower::{Identifiable, ir},
-    model::*,
-    symbol::Symbol,
-};
+use microcad_lang_base::{Hashed, SrcRef, SrcReferrer};
 
 impl ir::WorkbenchDefinition {
     /// Try to evaluate a single call into a [`Model`].
@@ -26,12 +18,6 @@ impl ir::WorkbenchDefinition {
         init: Option<&'a ir::InitDefinition>,
         context: &mut EvalContext,
     ) -> EvalResult<Model> {
-        log::debug!(
-            "Evaluating model of `{id:?}` {kind}",
-            id = self.id_ref(),
-            kind = self.kind
-        );
-
         let arguments = creator.arguments.clone();
 
         // copy all arguments which are part of the building plan into properties
@@ -50,9 +36,6 @@ impl ir::WorkbenchDefinition {
         missing
             .into_iter()
             .for_each(|id| properties.push((id, Value::None)));
-
-        log::trace!("Properties: {properties:?}");
-        log::trace!("Non-Properties: {non_properties:?}");
 
         // Create model
         let model = ModelBuilder::new(
@@ -112,14 +95,6 @@ impl ir::WorkbenchDefinition {
         arguments: &ArgumentValueList,
         context: &mut EvalContext,
     ) -> EvalResult<Model> {
-        use crate::lower::Initialized;
-        log::debug!(
-            "{call} workbench {kind} {id:?}({arguments:?})",
-            call = microcad_lang_base::mark!(CALL),
-            id = self.id_ref(),
-            kind = self.kind
-        );
-
         // prepare empty result model
         let mut models = Models::default();
 
@@ -139,22 +114,6 @@ impl ir::WorkbenchDefinition {
                     .and_then(|params| ArgumentMatch::find_multi_match(arguments, &params)),
             )
         }))
-        // debug inspection of all matches/non-matches
-        .inspect(|(i, m)| {
-            let result = match m {
-                Ok(m) => format!(
-                    "{match_} [{priority:>10}]",
-                    priority = m.priority,
-                    match_ = microcad_lang_base::mark!(MATCH)
-                ),
-                Err(_) => microcad_lang_base::mark!(NO_MATCH),
-            };
-            if let Some(i) = i {
-                log::debug!("{result} {}::init({})", symbol.full_name(), i.parameters)
-            } else {
-                log::debug!("{result} {}({})", symbol.full_name(), self.parameters)
-            }
-        })
         // filter out non-matching
         .filter_map(|(i, m)| if let Ok(m) = m { Some((i, m)) } else { None })
         .collect();
@@ -191,12 +150,7 @@ impl ir::WorkbenchDefinition {
                         ),
                     })
                     .collect::<Vec<_>>();
-                log::debug!(
-                    "{match_} Ambiguous initialization: {name}({arguments})\nCould be one of:\n{ambiguous}",
-                    name = symbol.full_name(),
-                    ambiguous = ambiguous.join("\n"),
-                    match_ = microcad_lang_base::mark!(AMBIGUOUS)
-                );
+
                 context.error(
                     arguments,
                     EvalError::AmbiguousInitialization {
@@ -207,23 +161,6 @@ impl ir::WorkbenchDefinition {
                     },
                 )?;
             } else if let Some(matched) = matches.pop() {
-                let what = if matched.0.is_none() {
-                    "Building plan"
-                } else {
-                    "Initializer"
-                };
-                log::debug!(
-                    "{match_} {what}: {}",
-                    matched
-                        .1
-                        .args
-                        .iter()
-                        .map(|m| format!("{m:?}"))
-                        .collect::<Vec<_>>()
-                        .join("\n"),
-                    match_ = microcad_lang_base::mark!(MATCH!)
-                );
-
                 // evaluate models for all multiplicity matches
                 for arguments in matched.1.args.iter() {
                     models.push(self.eval_to_model(
@@ -235,10 +172,6 @@ impl ir::WorkbenchDefinition {
                 }
             }
         } else {
-            log::debug!(
-                "{match_} Neither the building plan nor any initializer matches arguments",
-                match_ = microcad_lang_base::mark!(NO_MATCH!)
-            );
             context.error(
                 arguments,
                 EvalError::NoInitializationFound {

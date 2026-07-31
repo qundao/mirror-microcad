@@ -4,35 +4,19 @@
 //! Evaluation of symbols.
 
 mod argument_match;
-mod attribute;
-mod body;
+
 mod call;
 mod eval_context;
 mod eval_error;
 mod expression;
-mod format_string;
-mod function;
-
-mod init;
-mod literal;
-mod locals;
 mod parameter;
-mod source_file;
-mod statements;
-mod tuple;
 mod workbench;
 
 pub use argument_match::*;
-pub use attribute::*;
 pub use call::*;
 pub use eval_context::*;
 pub use eval_error::*;
 pub use parameter::*;
-
-use locals::*;
-use microcad_lang_base::PushDiag;
-
-use crate::{lower::ir, resolve::*, ty::*, value::*};
 
 /// Evaluation trait.
 ///
@@ -72,16 +56,3 @@ impl ir::MethodCall {
         value.call_method(&self.name, &args, context)
     }
 }
-
-/// Like `todo!()` but within a evaluation context
-///
-/// emits a diagnostic error instead of panicking.
-#[macro_export]
-macro_rules! eval_todo {
-    ($context: ident, $refer: ident, $($arg:tt)*) => {{
-        $context.error($refer, EvalError::Todo(format_args!($($arg)*).to_string()))?;
-        Ok(Value::None)
-    }}
-}
-
-pub use eval_todo;

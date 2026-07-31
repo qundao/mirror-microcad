@@ -3,9 +3,13 @@
 
 //! Argument match trait
 
-use crate::{eval::*, lower::ir};
+use microcad_lang_base::{Identifier, IdentifierList, SrcReferrer};
+use microcad_lang_types::{Length, Tuple, Type, ValueAccess, create_tuple};
+use microcad_package::{argument, parameter};
 
-use microcad_lang_base::{Identifier, SrcReferrer};
+use crate::{
+    ArgumentValue, ArgumentValueList, EvalError, EvalResult, ParameterValue, ParameterValueList,
+};
 
 /// Match priorities
 ///
@@ -110,7 +114,7 @@ impl<'a> ArgumentMatch<'a> {
         let mut am = Self {
             arguments: arguments.iter().map(|(id, v)| (id, v)).collect(),
             params: params.iter().collect(),
-            result: Tuple::new_named(microcad_core::hash::HashMap::default(), arguments.src_ref()),
+            result: Tuple::new_named(microcad_lang_base::HashMap::default(), arguments.src_ref()),
             priority: Priority::None,
         };
 
@@ -172,10 +176,7 @@ impl<'a> ArgumentMatch<'a> {
                         }
                     }
                     let (id, _) = self.params.swap_remove(n);
-                    log::trace!(
-                        "{found} parameter by id: {id:?}",
-                        found = microcad_lang_base::mark!(MATCH)
-                    );
+
                     self.priority.set_once(priority);
                     self.result.insert((*id).clone(), arg.value.clone());
                     false
@@ -239,10 +240,6 @@ impl<'a> ArgumentMatch<'a> {
 
             if let Some((n, id, _)) = same_type.next() {
                 if same_type.next().is_none() {
-                    log::trace!(
-                        "{found} parameter by type: {id:?}",
-                        found = microcad_lang_base::mark!(MATCH)
-                    );
                     self.priority.set_once(priority);
                     self.result.insert(id.clone(), arg.value.clone());
                     self.params.swap_remove(n);
@@ -268,10 +265,6 @@ impl<'a> ArgumentMatch<'a> {
             if let Some(def) = &param.default_value {
                 // paranoia check if type is compatible
                 if def.ty() == param.ty() {
-                    log::trace!(
-                        "{found} argument by default: {id:?} = {def}",
-                        found = microcad_lang_base::mark!(MATCH)
-                    );
                     self.priority.set_once(priority);
                     self.result.insert((*id).clone(), def.clone());
                     return false;
@@ -284,12 +277,12 @@ impl<'a> ArgumentMatch<'a> {
     /// Return error if params are missing or arguments are to many
     fn check_missing(&self) -> EvalResult<()> {
         if !self.params.is_empty() {
-            let mut missing: ir::IdentifierList =
+            let mut missing: IdentifierList =
                 self.params.iter().map(|(id, _)| (*id).clone()).collect();
             missing.sort();
             Err(EvalError::MissingArguments(missing).into())
         } else if !self.arguments.is_empty() {
-            let mut too_many: ir::IdentifierList =
+            let mut too_many: IdentifierList =
                 self.arguments.iter().map(|(id, _)| (*id).clone()).collect();
             too_many.sort();
             Err(EvalError::TooManyArguments(too_many).into())
@@ -310,7 +303,7 @@ impl<'a> ArgumentMatch<'a> {
     ///
     /// Return one or many tuples.
     fn multiply(&self, params: &ParameterValueList) -> Vec<Tuple> {
-        let ids: ir::IdentifierList = Self::multipliers(&self.result, params);
+        let ids: IdentifierList = Self::multipliers(&self.result, params);
         if !ids.is_empty() {
             let mut result = Vec::new();
             self.result.multiplicity(ids, |t| result.push(t));
@@ -321,8 +314,8 @@ impl<'a> ArgumentMatch<'a> {
     }
 
     /// Return the multipliers' ids in the arguments.
-    fn multipliers(args: &impl ValueAccess, params: &ParameterValueList) -> ir::IdentifierList {
-        let mut result: ir::IdentifierList = params
+    fn multipliers(args: &impl ValueAccess, params: &ParameterValueList) -> IdentifierList {
+        let mut result: IdentifierList = params
             .iter()
             .filter_map(|(id, param)| {
                 if let Some(a) = args.by_id(id) {
@@ -370,21 +363,19 @@ impl std::fmt::Debug for ArgumentMatch<'_> {
 
 #[test]
 fn argument_matching() {
-    let _ = env_logger::try_init();
-    use microcad_core::Length;
     let params: ParameterValueList = [
-        crate::parameter!(a: Scalar),
-        crate::parameter!(b: Length),
-        crate::parameter!(c: Scalar),
-        crate::parameter!(d: Length = Length::mm(4.0)),
+        parameter!(a: Scalar),
+        parameter!(b: Length),
+        parameter!(c: Scalar),
+        parameter!(d: Length = Length::mm(4.0)),
     ]
     .into_iter()
     .collect();
 
     let arguments: ArgumentValueList = [
-        crate::argument!(a: Scalar = 1.0),
-        crate::argument!(b: Length = Length::mm(2.0)),
-        crate::argument!(Scalar = 3.0),
+        argument!(a: Scalar = 1.0),
+        argument!(b: Length = Length::mm(2.0)),
+        argument!(Scalar = 3.0),
     ]
     .into_iter()
     .collect();
@@ -393,24 +384,22 @@ fn argument_matching() {
 
     assert_eq!(
         result,
-        crate::create_tuple!(a = 1.0, b = Length::mm(2.0), c = 3.0, d = Length::mm(4.0))
+        create_tuple!(a = 1.0, b = Length::mm(2.0), c = 3.0, d = Length::mm(4.0))
     );
 }
 
 #[test]
 fn argument_match_fail() {
-    use microcad_core::Length;
-
     let params: ParameterValueList = [
-        crate::parameter!(x: Scalar),
-        crate::parameter!(y: Length),
-        crate::parameter!(z: Area),
+        parameter!(x: Scalar),
+        parameter!(y: Length),
+        parameter!(z: Area),
     ]
     .into_iter()
     .collect();
     let arguments: ArgumentValueList = [
-        crate::argument!(x: Scalar = 1.0),
-        crate::argument!(Length = Length::mm(1.0)),
+        argument!(x: Scalar = 1.0),
+        argument!(Length = Length::mm(1.0)),
     ]
     .into_iter()
     .collect();

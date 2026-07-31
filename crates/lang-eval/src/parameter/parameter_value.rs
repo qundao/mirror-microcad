@@ -5,8 +5,7 @@
 
 use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
-
-use crate::{ty::*, value::*};
+use microcad_lang_types::{Ty, Type, Value};
 
 /// Parameter value is the result of evaluating a parameter
 #[derive(Clone, Debug, Default, SrcReferrer)]
@@ -44,23 +43,4 @@ impl Ty for ParameterValue {
             Type::Invalid
         }
     }
-}
-
-impl std::fmt::Display for ParameterValue {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if let Some(def) = &self.default_value {
-            write!(f, "{} = {def}", def.ty())?;
-        } else if let Some(ty) = &self.specified_type {
-            write!(f, "= {ty}")?;
-        }
-        Ok(())
-    }
-}
-
-#[test]
-fn test_is_list_of() {
-    assert!(
-        Type::Array(Box::new(QuantityType::Scalar.into()))
-            .is_array_of(&QuantityType::Scalar.into())
-    );
 }

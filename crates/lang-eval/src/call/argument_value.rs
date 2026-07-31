@@ -5,8 +5,7 @@
 
 use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_proc_macros::SrcReferrer;
-
-use crate::{ty::*, value::*};
+use microcad_lang_types::{Ty, Type, Value};
 
 /// Argument value.
 #[derive(Clone, Debug, SrcReferrer)]

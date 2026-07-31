@@ -3,10 +3,12 @@
 
 //! *Argument value list* evaluation entity.
 
-use crate::eval::*;
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;
+use microcad_lang_types::{Type, Value, ValueAccess};
+
+use crate::{ArgumentValue, EvalError, EvalResult};
 
 /// Collection of *argument values* (e.g. `( x=1, y=2 )`).
 ///

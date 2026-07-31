@@ -3,7 +3,9 @@
 
 //! Argument value evaluation entity
 
-use crate::eval::*;
+use microcad_lang_types::Value;
+
+use crate::{ArgumentValueList, EvalContext, EvalResult};
 
 /// Trait for calls with argument list.
 pub trait CallTrait<ReturnType = Value> {

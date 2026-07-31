@@ -1,14 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{PushDiag, SrcReferrer};
-
-use crate::{
-    eval::*,
-    lower::ir,
-    model::*,
-    symbol::{Symbol, SymbolDef},
-};
+use microcad_lang_base::SrcReferrer;
 
 impl Eval for ir::RangeFirst {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
@@ -115,52 +108,6 @@ impl Eval<Option<Symbol>> for ir::QualifiedName {
                 Ok(None)
             }
         }
-    }
-}
-
-impl Eval for ir::QualifiedName {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
-        use crate::lower::Identifiable;
-
-        context
-            .lookup(self, LookupTarget::AnyButMethod)?
-            .with_def(|def| match def {
-                SymbolDef::Root => unreachable!("<ROOT> cannot be looked up"),
-                SymbolDef::Value(.., value) => Ok(value.clone()),
-                SymbolDef::Assignment(a) => a.eval(context),
-                SymbolDef::SourceFile(_) => Ok(Value::None),
-                SymbolDef::Builtin(crate::builtin::Builtin::Constant(c)) => Ok(c.value.clone()),
-                SymbolDef::Module(ns) => {
-                    context.error(self, EvalError::UnexpectedNested("mod", ns.id()))?;
-                    Ok(Value::None)
-                }
-                SymbolDef::Workbench(w) => {
-                    context.error(self, EvalError::UnexpectedNested(w.kind.as_str(), w.id()))?;
-                    Ok(Value::None)
-                }
-                SymbolDef::Function(f) => {
-                    context.error(self, EvalError::UnexpectedNested("function", f.id()))?;
-                    Ok(Value::None)
-                }
-                SymbolDef::Builtin(bm) => {
-                    context.error(self, EvalError::UnexpectedNested("builtin", bm.id()))?;
-                    Ok(Value::None)
-                }
-                SymbolDef::Alias(_, id, _) => {
-                    // Alias should have been resolved within previous lookup()
-                    unreachable!(
-                        "Unexpected alias {id} in value expression at {}",
-                        self.src_ref()
-                    )
-                }
-                SymbolDef::UseAll(_, name) => {
-                    unreachable!("Unexpected use {name} in value expression")
-                }
-                #[cfg(test)]
-                SymbolDef::Tester(..) => {
-                    unreachable!()
-                }
-            })
     }
 }
 
