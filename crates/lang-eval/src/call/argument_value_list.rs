@@ -6,7 +6,7 @@
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::SrcReferrer;
-use microcad_lang_types::{Type, Value, ValueAccess};
+use microcad_lang_types::{Ty, Type, Value, ValueAccess};
 
 use crate::{ArgumentValue, EvalError, EvalResult};
 

@@ -3,18 +3,20 @@
 
 //! Argument match trait
 
+use derive_more::Display;
 use microcad_lang_base::{Identifier, IdentifierList, SrcReferrer};
-use microcad_lang_types::{Length, Tuple, Type, ValueAccess, create_tuple};
-use microcad_package::{argument, parameter};
-
-use crate::{
-    ArgumentValue, ArgumentValueList, EvalError, EvalResult, ParameterValue, ParameterValueList,
+use microcad_lang_types::{Length, Scalar, Tuple, Ty, Type, ValueAccess, create_tuple};
+use microcad_package::{
+    parameter,
+    rst::{Parameter, ParameterList},
 };
+
+use crate::{ArgumentValue, ArgumentValueList, EvalError, EvalResult, argument};
 
 /// Match priorities
 ///
 /// Argument matching in µcad is complex and comes in several priority layers.
-#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Display, Debug, PartialEq, PartialOrd)]
 pub enum Priority {
     /// Matched empty parameter list
     Empty,
@@ -51,24 +53,10 @@ impl Priority {
     }
 }
 
-impl std::fmt::Display for Priority {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::None => write!(f, "<NONE>"),
-            Self::Default => write!(f, "Default"),
-            Self::TypeAuto => write!(f, "TypeAuto"),
-            Self::Type => write!(f, "Type"),
-            Self::Short => write!(f, "Short"),
-            Self::Id => write!(f, "Id"),
-            Self::Empty => write!(f, "Empty"),
-        }
-    }
-}
-
 /// Matching of `ParameterList` with `ArgumentValueList` into Tuple
 pub struct ArgumentMatch<'a> {
     arguments: Vec<(&'a Identifier, &'a ArgumentValue)>,
-    params: Vec<(&'a Identifier, &'a ParameterValue)>,
+    params: Vec<(&'a Identifier, &'a Parameter)>,
     result: Tuple,
     priority: Priority,
 }
@@ -88,7 +76,7 @@ impl<'a> ArgumentMatch<'a> {
     /// Returns `Ok(Tuple)`` if matches or Err() if not
     pub fn find_match(
         arguments: &'a ArgumentValueList,
-        params: &'a ParameterValueList,
+        params: &'a ParameterList,
     ) -> EvalResult<Tuple> {
         let am = Self::new(arguments, params)?;
         am.check_exact_types(params)?;
@@ -100,7 +88,7 @@ impl<'a> ArgumentMatch<'a> {
     /// Returns `Ok(MultiMatchResult)`` if matches or Err() if not
     pub fn find_multi_match(
         arguments: &'a ArgumentValueList,
-        params: &'a ParameterValueList,
+        params: &'a ParameterList,
     ) -> EvalResult<MultiMatchResult> {
         let m = Self::new(arguments, params)?;
         Ok(MultiMatchResult {
@@ -110,7 +98,7 @@ impl<'a> ArgumentMatch<'a> {
     }
 
     /// Create new instance and do matching
-    fn new(arguments: &'a ArgumentValueList, params: &'a ParameterValueList) -> EvalResult<Self> {
+    fn new(arguments: &'a ArgumentValueList, params: &'a ParameterList) -> EvalResult<Self> {
         let mut am = Self {
             arguments: arguments.iter().map(|(id, v)| (id, v)).collect(),
             params: params.iter().collect(),
@@ -169,7 +157,7 @@ impl<'a> ArgumentMatch<'a> {
             match self.params.iter().position(|(i, _)| match_fn(i, id)) {
                 None => true,
                 Some(n) => {
-                    if let Some(ty) = &self.params[n].1.specified_type {
+                    if let Some(ty) = &self.params[n].1.ty {
                         if !arg.ty().is_matching(ty) {
                             type_mismatch.push((id.clone(), arg.ty(), ty));
                             return true;
@@ -216,7 +204,7 @@ impl<'a> ArgumentMatch<'a> {
                 .filter(|(..)| arg_id.is_empty())
                 .filter_map(|(n, (id, param))| {
                     if param.ty() == Type::Invalid
-                        || if let Some(ty) = &param.specified_type {
+                        || if let Some(ty) = &param.ty {
                             match_fn(&arg.ty(), ty)
                         } else {
                             false
@@ -291,7 +279,7 @@ impl<'a> ArgumentMatch<'a> {
         }
     }
 
-    fn check_exact_types(&self, params: &ParameterValueList) -> EvalResult<()> {
+    fn check_exact_types(&self, params: &ParameterList) -> EvalResult<()> {
         let multipliers = Self::multipliers(&self.result, params);
         if multipliers.is_empty() {
             return Ok(());
@@ -302,7 +290,7 @@ impl<'a> ArgumentMatch<'a> {
     /// Process parameter multiplicity
     ///
     /// Return one or many tuples.
-    fn multiply(&self, params: &ParameterValueList) -> Vec<Tuple> {
+    fn multiply(&self, params: &ParameterList) -> Vec<Tuple> {
         let ids: IdentifierList = Self::multipliers(&self.result, params);
         if !ids.is_empty() {
             let mut result = Vec::new();
@@ -314,7 +302,7 @@ impl<'a> ArgumentMatch<'a> {
     }
 
     /// Return the multipliers' ids in the arguments.
-    fn multipliers(args: &impl ValueAccess, params: &ParameterValueList) -> IdentifierList {
+    fn multipliers(args: &impl ValueAccess, params: &ParameterList) -> IdentifierList {
         let mut result: IdentifierList = params
             .iter()
             .filter_map(|(id, param)| {
@@ -363,7 +351,7 @@ impl std::fmt::Debug for ArgumentMatch<'_> {
 
 #[test]
 fn argument_matching() {
-    let params: ParameterValueList = [
+    let params: ParameterList = [
         parameter!(a: Scalar),
         parameter!(b: Length),
         parameter!(c: Scalar),
@@ -373,9 +361,9 @@ fn argument_matching() {
     .collect();
 
     let arguments: ArgumentValueList = [
-        argument!(a: Scalar = 1.0),
+        argument!(a: Scalar = Scalar::from_num(1.0)),
         argument!(b: Length = Length::mm(2.0)),
-        argument!(Scalar = 3.0),
+        argument!(Scalar = Scalar::from_num(3.0)),
     ]
     .into_iter()
     .collect();
@@ -390,7 +378,7 @@ fn argument_matching() {
 
 #[test]
 fn argument_match_fail() {
-    let params: ParameterValueList = [
+    let params: ParameterList = [
         parameter!(x: Scalar),
         parameter!(y: Length),
         parameter!(z: Area),
@@ -398,7 +386,7 @@ fn argument_match_fail() {
     .into_iter()
     .collect();
     let arguments: ArgumentValueList = [
-        argument!(x: Scalar = 1.0),
+        argument!(x: Scalar = Scalar::from_num(1.0)),
         argument!(Length = Length::mm(1.0)),
     ]
     .into_iter()

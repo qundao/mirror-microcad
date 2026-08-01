@@ -3,9 +3,9 @@
 
 //! Argument value evaluation entity
 
-use microcad_lang_types::{Array, Value};
+use microcad_lang_types::Value;
 
-use crate::{ArgumentValueList, EvalContext, EvalError, EvalResult};
+use crate::{ArgumentValueList, EvalContext, EvalResult};
 
 /// Trait for calling methods of values
 pub trait CallMethod<T = Value> {
@@ -22,6 +22,7 @@ pub trait CallMethod<T = Value> {
     ) -> EvalResult<T>;
 }
 
+/*
 impl CallMethod for Array {
     fn call_method(
         &self,
@@ -50,3 +51,5 @@ impl CallMethod for Array {
         )
     }
 }
+
+*/
