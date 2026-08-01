@@ -20,14 +20,6 @@ pub struct Tuple {
     pub(crate) src_ref: SrcRef,
 }
 
-/// Create a Value::Tuple from items
-#[macro_export]
-macro_rules! create_tuple_value {
-    ($($key:ident = $value:expr),*) => {
-        Value::Tuple(Box::new($crate::create_tuple!($( $key = $value ),*)))
-    };
-}
-
 /// Create a Tuple from items
 #[macro_export]
 macro_rules! create_tuple {
