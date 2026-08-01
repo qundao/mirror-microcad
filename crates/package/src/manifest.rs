@@ -31,33 +31,44 @@ pub enum ManifestError {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Manifest {
-    pub lib: LibSection,
+    pub package: PackageSection,
     pub dependencies: HashMap<String, Dependency>,
+    pub lib: Option<LibSection>,
 }
 
-/// Library descriptor.
+/// `package` descriptor.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct LibSection {
+pub struct PackageSection {
+    /// Mandatory package name.
+    pub name: String,
     /// A short description of the library.
     pub description: Option<String>,
-    /// Standard library version.
+    /// Mandatory package version.
     pub version: semver::Version,
     /// Authors of the library.
     pub authors: Option<Vec<String>>,
+    /// Documentation URL
+    pub documentation: Option<Url>,
+    /// License
+    pub license: Option<String>,
+}
+
+/// Library `lib` descriptor.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LibSection {
     /// Do not load the standard library by default.
     pub no_std: Option<bool>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Dependency {
-    pub name: String,
-    pub version: Option<semver::Version>,
-    pub url: Option<Url>,
     pub path: Option<std::path::PathBuf>,
 }
 
 #[cfg(feature = "io")]
 impl Manifest {
+    pub const MANIFEST_FILE_NAME: &str = "mu.toml";
+
     // Load a `manifest.toml` inside a path.
     pub fn load(path: impl AsRef<std::path::Path>) -> Result<Self, ManifestError> {
         let manifest_path = Self::manifest_path(&path);
@@ -80,8 +91,12 @@ impl Manifest {
         Ok(())
     }
 
-    /// Return `manifest.toml` file path.
+    /// Return `mu.toml` file path.
     pub fn manifest_path(path: impl AsRef<std::path::Path>) -> std::path::PathBuf {
-        path.as_ref().join("mu.toml")
+        let path = path.as_ref();
+        match path.file_name() {
+            Some(filename) if filename == Self::MANIFEST_FILE_NAME => path.to_path_buf(),
+            _ => path.join(Self::MANIFEST_FILE_NAME),
+        }
     }
 }

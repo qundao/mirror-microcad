@@ -1,0 +1,14 @@
+# Test manifest file
+[package]
+name = "test-lib"
+description = "A test package"
+version = "0.1.0"
+documentation = "https://mu.xyz/test-lib"
+authors = ["John Doe", "Jane Doe"]
+license = "GPLv3"
+
+[dependencies]
+a = { path = "../std" } # From in a path
+
+[lib]
+no_std = true # Do not load standard library
