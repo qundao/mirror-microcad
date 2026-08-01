@@ -1,0 +1,19 @@
+// Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+use microcad_lang_lower::ir;
+use microcad_lang_types::Type;
+use serde::{Deserialize, Serialize};
+
+use crate::rst::{ParameterList, ResolvedName};
+
+pub type FunctionExpression = ir::FunctionExpression<ResolvedName>;
+pub type FunctionStatement = ir::FunctionStatement<ResolvedName>;
+
+#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
+pub struct Function {
+    // pub attr: FunctionAttributes,
+    pub parameters: ParameterList,
+    pub return_ty: Option<Type>,
+    pub statements: Box<[FunctionStatement]>,
+}

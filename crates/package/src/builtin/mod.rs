@@ -3,26 +3,18 @@
 
 //! Builtin module
 
-#[allow(clippy::module_inception)]
-pub mod builtin;
-
-pub mod export;
-pub mod file_io;
-pub mod import;
-pub mod module_builder;
-pub mod operation;
-pub mod workpiece;
-
-pub use builtin::*;
-pub use export::*;
-pub use file_io::*;
-pub use import::*;
-pub use module_builder::*;
-pub use workpiece::*;
-
-use microcad_core::*;
-
-use crate::{ty::*, value::*};
+// Re-export symbols
+pub use crate::parameter;
+use crate::rst;
+use derive_more::Display;
+pub use microcad_lang_base::Identifier;
+use microcad_lang_types::{
+    Angle, Color, Integer, Length, Quantity, QuantityType, Scalar, Tuple, Type, Value,
+    ty::TupleType,
+};
+use microcad_model::Model;
+use miette::Diagnostic;
+use thiserror::Error;
 
 /// This enum is used to declare parameter list for builtin symbols conveniently.
 ///
@@ -82,16 +74,8 @@ pub enum BuiltinValueHelper {
     Scalar(Scalar),
     /// Length type.
     Length(Length),
-    /// Area type
-    Area(Scalar),
-    /// Volume type
-    Volume(Scalar),
-    /// Density type
-    Density(Scalar),
     /// Angle type
-    Angle(Scalar),
-    /// Weight type
-    Weight(Scalar),
+    Angle(Angle),
     /// String type.
     String(String),
     /// Bool type
@@ -110,16 +94,8 @@ impl From<BuiltinValueHelper> for Value {
             BuiltinValueHelper::Length(v) => {
                 Value::Quantity(Quantity::new(*v, QuantityType::Length))
             }
-            BuiltinValueHelper::Area(v) => Value::Quantity(Quantity::new(v, QuantityType::Area)),
-            BuiltinValueHelper::Volume(v) => {
-                Value::Quantity(Quantity::new(v, QuantityType::Volume))
-            }
-            BuiltinValueHelper::Density(v) => {
-                Value::Quantity(Quantity::new(v, QuantityType::Density))
-            }
-            BuiltinValueHelper::Angle(v) => Value::Quantity(Quantity::new(v, QuantityType::Angle)),
-            BuiltinValueHelper::Weight(v) => {
-                Value::Quantity(Quantity::new(v, QuantityType::Weight))
+            BuiltinValueHelper::Angle(v) => {
+                Value::Quantity(Quantity::new(v.0, QuantityType::Angle))
             }
             BuiltinValueHelper::String(s) => Value::String(s),
             BuiltinValueHelper::Bool(b) => Value::Bool(b),
@@ -128,88 +104,77 @@ impl From<BuiltinValueHelper> for Value {
     }
 }
 
-// Re-export symbols
-pub use crate::parameter;
-pub use microcad_lang_base::Identifier;
+pub trait BuiltinEvalContext {}
 
-/// Shortcut to create a `ParameterValue`
-#[macro_export]
-macro_rules! parameter {
-    ($id:ident) => {
-        (
-            $crate::builtin::Identifier::no_ref(stringify!($id)),
-            $crate::eval::ParameterValue {
-                src_ref: microcad_lang_base::SrcRef::none(),
-                ..Default::default()
-            },
-        )
-    };
-    ($id:ident: $ty:ident) => {
-        (
-            $crate::builtin::Identifier::no_ref(stringify!($id)),
-            $crate::eval::ParameterValue {
-                specified_type: Some($crate::builtin::BuiltinTypeHelper::$ty.into()),
-                src_ref: microcad_lang_base::SrcRef::none(),
-                ..Default::default()
-            },
-        )
-    };
-    ($id:ident: $ty:ident = $value:expr) => {
-        (
-            $crate::builtin::Identifier::no_ref(stringify!($id)),
-            $crate::eval::ParameterValue {
-                specified_type: Some($crate::builtin::BuiltinTypeHelper::$ty.into()),
-                default_value: Some($crate::builtin::BuiltinValueHelper::$ty($value).into()),
-                src_ref: microcad_lang_base::SrcRef::none(),
-            },
-        )
-    };
-    ($id:ident = $value:expr) => {
-        (
-            $crate::builtin::Identifier::no_ref(stringify!($id)),
-            $crate::eval::ParameterValue {
-                default_value: Some($value),
-                ..Default::default()
-            },
-        )
-    };
-    () => {};
+#[derive(Debug, Error, Diagnostic)]
+pub enum BuiltinError {}
+
+/// Builtin function type
+pub type BuiltinFunctionFn =
+    dyn Fn(&rst::ParameterList, &Tuple, &mut dyn BuiltinEvalContext) -> Result<Value, BuiltinError>;
+
+/// Builtin function struct
+#[derive(Clone)]
+pub struct BuiltinFunction {
+    /// Documentation of this function.
+    pub doc: Option<rst::DocBlock>,
+
+    /// Optional parameter value list to check the builtin signature.
+    pub parameters: rst::ParameterList,
+
+    /// Functor to evaluate this function
+    pub f: &'static BuiltinFunctionFn,
 }
 
-/// Shortcut to create a argument value
-#[macro_export]
-macro_rules! argument {
-    ($id:ident: $ty:ident = $value:expr) => {
-        (
-            $crate::builtin::Identifier::no_ref(stringify!($id)),
-            ArgumentValue::new(
-                $crate::builtin::BuiltinValueHelper::$ty($value).into(),
-                None,
-                microcad_lang_base::SrcRef::none(),
-            ),
-        )
-    };
-    ($ty:ident = $value:expr) => {
-        (
-            Identifier::none(),
-            ArgumentValue::new(
-                $crate::builtin::BuiltinValueHelper::$ty($value).into(),
-                None,
-                microcad_lang_base::SrcRef::none(),
-            ),
-        )
-    };
-    () => {};
+/// Builtin function type
+pub type BuiltinWorkbenchFn =
+    dyn Fn(&rst::ParameterList, &Tuple, &mut dyn BuiltinEvalContext) -> Result<Model, BuiltinError>;
+
+/// Builtin workbench
+#[derive(Clone)]
+pub struct BuiltinWorkbench {
+    /// Documentation of this workbench.
+    pub doc: Option<rst::DocBlock>,
+
+    /// Optional parameter value list to check the builtin signature.
+    pub parameters: rst::ParameterList,
+
+    /// Functor to evaluate this function
+    pub f: &'static BuiltinWorkbenchFn,
+
+    /// Builtin workbench kind.
+    pub kind: BuiltinWorkbenchKind,
 }
 
-/// Create tuple of stringified `Identifier` and a `Value`
-#[macro_export]
-macro_rules! property {
-    ($id:ident : $ty:ident = $value:expr) => {
-        (
-            Identifier::no_ref(stringify!($id)),
-            $crate::builtin::BuiltinValueHelper::$ty($value).into(),
-        )
-    };
-    () => {};
+/// The kind of the built-in workbench determines its output.
+#[derive(Debug, Clone, Display, PartialEq)]
+pub enum BuiltinWorkbenchKind {
+    /// A parametric 2D primitive.
+    Primitive2D,
+    /// A parametric 3D primitive.
+    Primitive3D,
+    /// An affine transformation.
+    Transform,
+    /// An operation on a model.
+    Operation,
+}
+
+/// A builtin constant.
+#[derive(Debug, Clone)]
+pub struct BuiltinConstant {
+    /// Documentation.
+    pub doc: Option<rst::DocBlock>,
+    /// The actual value.
+    pub value: Value,
+}
+
+/// Builtin enum
+#[derive(Clone, derive_more::From)]
+pub enum Builtin {
+    /// Builtin function.
+    Function(BuiltinFunction),
+    /// Builtin workbench.
+    Workbench(BuiltinWorkbench),
+    /// Builtin constant
+    Constant(BuiltinConstant),
 }

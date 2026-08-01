@@ -28,6 +28,9 @@ microcad-lang-types = { workspace = true }
 microcad-lang-lower = { workspace = true }
 microcad-lang-proc-macros = { workspace = true }
 
+microcad-model = { workspace = true }
+
+
 [dev-dependencies]
 test-that = "0.5"
 insta = "1.45.0"
