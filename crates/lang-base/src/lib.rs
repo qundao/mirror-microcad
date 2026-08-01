@@ -29,10 +29,6 @@ pub type Id = CompactString;
 /// URL to locate sources.
 pub use url::Url;
 
-pub fn virtual_url(name: &str) -> Url {
-    Url::from_str(&format!("virtual://{name}")).unwrap()
-}
-
 pub use microcad_hash::{HashId, HashMap, HashSet, Hashed, Hasher, ToHash};
 
 /// List of valid µcad extensions.
