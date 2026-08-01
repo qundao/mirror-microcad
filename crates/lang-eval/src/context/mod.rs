@@ -1,0 +1,117 @@
+// Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+use derive_more::From;
+
+use microcad_lang_base::{HashMap, Identifier};
+use microcad_lang_types::{Tuple, Value};
+
+use crate::EvalError;
+
+/// A map of locals.
+///
+/// The `Vec<SrcRef>` represents the usages of this local.
+#[derive(Debug, Default)]
+pub struct LocalTable(HashMap<Identifier, Value>);
+
+#[derive(Debug, Default)]
+pub struct FunctionFrame {
+    //symbol: mir::SymbolHandle,
+    pub locals: LocalTable,
+}
+
+impl FunctionFrame {
+    pub fn new(args: Tuple) -> Self {
+        let locals = LocalTable(
+            args.named_iter()
+                .map(|(id, value)| (id.clone(), value.clone()))
+                .collect(),
+        );
+
+        Self { locals }
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct FunctionScopeFrame {
+    //symbol: mir::SymbolHandle,
+    pub locals: LocalTable,
+}
+
+impl FunctionScopeFrame {
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
+#[derive(Debug, From)]
+pub enum StackFrame {
+    Function(FunctionFrame),
+    FunctionScope(FunctionScopeFrame),
+}
+
+/// A generic stack.
+pub struct Stack(Vec<StackFrame>);
+
+impl Stack {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    fn push(&mut self, frame: impl Into<StackFrame>) {
+        self.0.push(frame.into());
+    }
+
+    fn pop(&mut self) -> StackFrame {
+        self.0.pop().expect("A stack frame")
+    }
+
+    fn top(&self) -> &StackFrame {
+        self.0.last().expect("A stack frame") // Intentionally no error handling here
+    }
+
+    pub fn top_mut(&mut self) -> &mut StackFrame {
+        self.0.last_mut().expect("A stack frame")
+    }
+}
+
+impl Default for Stack {
+    fn default() -> Self {
+        Self(vec![])
+    }
+}
+
+pub struct EvalContext {
+    stack: Stack,
+
+    diag: Vec<EvalError>,
+}
+
+impl EvalContext {
+    pub fn scope<T>(&mut self, frame: impl Into<StackFrame>, f: impl FnOnce(&mut Self) -> T) -> T {
+        // 1. Temporarily swap out the stack to avoid self-borrow issues
+        let mut stack = std::mem::take(&mut self.stack);
+        stack.push(frame);
+        self.stack = stack;
+
+        // 2. Define a guard that pops the frame on Drop
+        struct PopGuard<'a>(&'a mut EvalContext);
+
+        impl<'a> Drop for PopGuard<'a> {
+            fn drop(&mut self) {
+                self.0.stack.pop();
+            }
+        }
+
+        // 3. Instantiate the guard
+        let _guard = PopGuard(self);
+
+        // 4. Run the closure. When `_guard` goes out of scope right after this,
+        // it will execute `self.stack.pop()` even if `f` panics or short-circuits.
+        f(_guard.0)
+    }
+
+    pub fn diag(&mut self, diag: impl Into<EvalError>) {
+        self.diag.push(diag.into());
+    }
+}

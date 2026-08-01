@@ -18,8 +18,8 @@ use crate::{ArgumentValue, EvalError, EvalResult};
 pub struct ArgumentValueList {
     #[deref]
     #[deref_mut]
-    map: Vec<(Identifier, ArgumentValue)>,
-    src_ref: SrcRef,
+    pub map: Vec<(Identifier, ArgumentValue)>,
+    pub src_ref: SrcRef,
 }
 
 impl ArgumentValueList {

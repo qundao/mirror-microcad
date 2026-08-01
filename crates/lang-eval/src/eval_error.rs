@@ -4,7 +4,7 @@
 //! Evaluation error
 
 use microcad_lang_base::{Identifier, IdentifierList, SrcRef, element::WorkbenchKind};
-use microcad_lang_types::{Type, ty::TypeList};
+use microcad_lang_types::{Integer, Type, ValueError, ty::TypeList};
 use microcad_model::output_type::OutputType;
 use miette::Diagnostic;
 use thiserror::Error;
@@ -13,6 +13,10 @@ use thiserror::Error;
 #[derive(Debug, Error, Diagnostic)]
 #[allow(missing_docs)]
 pub enum EvalError {
+    /// An error occurred during handling values.
+    #[error("Value error: {0}")]
+    ValueError(#[from] ValueError),
+
     /// Can't find a project file by it's qualified name.
     #[error("Not implemented: {0}")]
     Todo(String),
@@ -187,8 +191,13 @@ pub enum EvalError {
     ResolveFailed,
 
     /// Bad range (first > last)
-    #[error("Bad range, first number ({0}) must be smaller than last ({1})")]
-    BadRange(i64, i64),
+    #[error("First number ({first}) must be smaller than last ({last})")]
+    BadRange {
+        first: Integer,
+        last: Integer,
+        #[label("Bad range")]
+        src_ref: SrcRef,
+    },
 
     /// Ambiguous types in tuple
     #[error("Ambiguous type '{ty}' in tuple")]

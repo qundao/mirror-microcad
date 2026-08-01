@@ -6,15 +6,16 @@
 mod argument_match;
 
 mod call;
-mod eval_context;
+mod context;
 mod eval_error;
+mod function;
 mod workbench;
 
 pub use argument_match::*;
 pub use call::*;
 pub use eval_error::*;
 
-pub use eval_context::EvalContext;
+pub use context::EvalContext;
 
 pub use microcad_package::{builtin, rst};
 
@@ -24,6 +25,12 @@ pub use microcad_package::{builtin, rst};
 pub trait Eval<T> {
     /// Evaluate a syntax element into a type `T`.
     fn eval(&self, context: &mut EvalContext) -> EvalResult<T>;
+}
+
+/// Trait for calls with argument list.
+pub trait CallTrait<T> {
+    /// Evaluate call into value (if possible).
+    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<T>;
 }
 
 /// Shortcut to create an argument value
