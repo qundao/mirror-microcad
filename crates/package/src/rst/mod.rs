@@ -5,9 +5,10 @@
 
 mod builtin;
 
-mod function;
+pub mod function;
+pub mod workbench;
+
 mod parameter;
-mod workbench;
 
 pub use parameter::{Parameter, ParameterList};
 
@@ -24,16 +25,30 @@ use std::hash::Hash;
 use serde::{Deserialize, Serialize};
 
 use derive_more::From;
-use microcad_lang_base::{HashId, Id, Refer};
+use microcad_lang_base::{HashId, Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Artifact;
 use microcad_lang_types::Value;
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub enum ResolvedName {
-    Local(Id),
-    Method(Id),
-    Symbol(SymbolHandle),
+    /// Name for local variable in a function or workbench.
+    Local(Identifier),
+    /// Name for a builtin method.
+    Method(Identifier),
+
+    Symbol(Refer<SymbolHandle>),
     Error(SymbolPath),
+}
+
+impl SrcReferrer for ResolvedName {
+    fn src_ref(&self) -> SrcRef {
+        match self {
+            ResolvedName::Local(identifier) => identifier.src_ref(),
+            ResolvedName::Method(identifier) => identifier.src_ref(),
+            ResolvedName::Symbol(refer) => refer.src_ref(),
+            ResolvedName::Error(symbol_path) => symbol_path.src_ref(),
+        }
+    }
 }
 
 #[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
