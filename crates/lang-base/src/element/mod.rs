@@ -93,6 +93,31 @@ pub enum BinaryOperator {
     Xor,
 }
 
+impl BinaryOperator {
+    /// Returns the lower snake_case standard library function name for this operator.
+    pub const fn to_fn_name(&self) -> &'static str {
+        match self {
+            Self::Add => "add",
+            Self::Subtract => "subtract",
+            Self::Multiply => "multiply",
+            Self::Divide => "divide",
+            Self::Union => "union",
+            Self::Intersect => "intersect",
+            Self::PowerXor => "power_xor",
+            Self::GreaterThan => "greater_than",
+            Self::LessThan => "less_than",
+            Self::GreaterEqual => "greater_equal",
+            Self::LessEqual => "less_equal",
+            Self::Equal => "equal",
+            Self::Near => "near",
+            Self::NotEqual => "not_equal",
+            Self::And => "and",
+            Self::Or => "or",
+            Self::Xor => "xor",
+        }
+    }
+}
+
 /// The type of the operator for unary operations
 #[derive(Debug, PartialEq, Hash, Clone, Copy, Display, EnumString, Serialize, Deserialize)]
 #[allow(missing_docs)]
@@ -103,4 +128,15 @@ pub enum UnaryOperator {
     Plus,
     #[strum(serialize = "!")]
     Not,
+}
+
+impl UnaryOperator {
+    /// Returns the lower snake_case standard library function name for this operator.
+    pub const fn to_fn_name(&self) -> &'static str {
+        match self {
+            Self::Minus => "neg",
+            Self::Plus => "plus",
+            Self::Not => "not",
+        }
+    }
 }

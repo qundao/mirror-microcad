@@ -3,8 +3,6 @@
 
 //! µcad language base components for error handling etc.
 
-use std::str::FromStr;
-
 use miette::{MietteError, MietteSpanContents, SourceCode, SourceSpan, SpanContents};
 
 pub use miette::Severity;
