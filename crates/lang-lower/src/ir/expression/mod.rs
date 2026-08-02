@@ -21,7 +21,10 @@ pub use symbol_path::*;
 pub use tuple_expression::*;
 
 use crate::{CastInto, ir};
-use microcad_lang_base::{Identifier, Refer, SingleIdentifier, SrcRef, SrcReferrer};
+use microcad_lang_base::{
+    Identifier, SingleIdentifier, SrcRef, SrcReferrer, element::BinaryOperator,
+    element::UnaryOperator,
+};
 
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
@@ -127,7 +130,7 @@ pub struct BinaryOp<EXPR> {
     /// Left-hand side
     pub lhs: Box<EXPR>,
     /// Operator  ('+', '-', '/', '*', '<', '>', '≤', '≥', '&', '|')
-    pub op: Refer<String>,
+    pub op: BinaryOperator,
     /// Right -hand side
     pub rhs: Box<EXPR>,
     /// Source code reference
@@ -180,7 +183,7 @@ where
 #[display("{op}{rhs}")]
 pub struct UnaryOp<EXPR> {
     /// Operator ('+', '-', '!')
-    pub op: Refer<String>,
+    pub op: UnaryOperator,
     /// Right -hand side
     pub rhs: Box<EXPR>,
     /// Source code reference

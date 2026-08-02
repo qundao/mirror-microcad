@@ -3,7 +3,7 @@
 
 use crate::{
     Lower, LowerContext, LowerError, LowerResult,
-    ir::{self, FunctionExpression},
+    ir::{self, FunctionExpression, FunctionStatement},
     lower::{extract_statements_with_tail, for_each_statement},
 };
 
@@ -46,8 +46,10 @@ where
             Ok(())
         })?;
 
+        let statements: Box<[FunctionStatement<NAME>]> = Box::lower(statements, context)?;
+
         Ok(Self(Refer::new(
-            Box::lower(statements, context)?,
+            statements,
             context.span_to_src_ref(&node.span),
         )))
     }
@@ -141,7 +143,7 @@ where
 {
     fn lower(node: &ast::Return, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            value: Option::<ir::FunctionExpression<NAME>>::lower(&node.expr, context)?,
+            expr: Option::<ir::FunctionExpression<NAME>>::lower(&node.expr, context)?,
             keyword_src_ref: context.span_to_src_ref(&node.keyword_span),
             src_ref: context.span_to_src_ref(&node.span),
         })
@@ -165,12 +167,30 @@ where
                 )?))
             }
             ast::Statement::Expression(expression_statement) => {
-                Some(ir::FunctionStatement::Expression(ir::FunctionExpression::<
-                    NAME,
-                >::lower(
-                    &expression_statement.expr,
-                    context,
-                )?))
+                let src_ref = context.span_to_src_ref(&expression_statement.span);
+                use ast::Expression::*;
+                match &expression_statement.expr {
+                    Literal(_)
+                    | Bracketed(_, _)
+                    | Tuple(_)
+                    | ArrayRange(_)
+                    | ArrayList(_)
+                    | String(_)
+                    | SymbolPath(_)
+                    | BinaryOperation(_)
+                    | UnaryOperation(_)
+                    | ElementAccess(_) => {
+                        context.diag(LowerError::FunctionStatementIgnored(src_ref));
+                        None
+                    }
+                    ast::Expression::Marker(_) | ast::Expression::Error(_) => {
+                        context.diag(LowerError::StatementNotAllowed { src_ref });
+                        None
+                    }
+                    ast::Expression::Call(call) => Some(ir::Call::lower(&call, context)?.into()),
+                    ast::Expression::Body(body) => Some(ir::Scope::lower(&body, context)?.into()),
+                    ast::Expression::If(if_) => Some(ir::If::lower(if_, context)?.into()),
+                }
             }
             _ => None,
         })
@@ -188,11 +208,9 @@ where
             Option::<ir::FunctionStatement<NAME>>::lower,
             // Lower Tail expression to Return statements.
             |tail, context| {
-                Ok(Some(ir::FunctionStatement::Return(ir::ReturnStatement {
-                    value: Some(ir::FunctionExpression::lower(&tail.expr, context)?),
-                    keyword_src_ref: SrcRef::none(),
-                    src_ref: context.span_to_src_ref(&tail.span),
-                })))
+                Ok(Some(ir::FunctionStatement::Tail(
+                    ir::FunctionExpression::lower(&tail.expr, context)?,
+                )))
             },
         )?;
 

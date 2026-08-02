@@ -148,7 +148,7 @@ where
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
 pub struct ReturnStatement<NAME: Serialize> {
-    pub value: Option<FunctionExpression<NAME>>,
+    pub expr: Option<FunctionExpression<NAME>>,
     pub keyword_src_ref: SrcRef,
     pub src_ref: SrcRef,
 }
@@ -159,7 +159,7 @@ where
 {
     fn cast_into(self) -> ReturnStatement<T> {
         ReturnStatement {
-            value: self.value.map(|value| value.cast_into()),
+            expr: self.expr.map(|value| value.cast_into()),
             keyword_src_ref: self.keyword_src_ref,
             src_ref: self.src_ref,
         }
@@ -171,8 +171,14 @@ where
 pub enum FunctionStatement<NAME: Serialize> {
     /// `a = 42`
     Local(ir::LocalAssignment<FunctionExpression<NAME>>),
-    /// `{ a = 23; }`
-    Expression(ir::FunctionExpression<NAME>),
+    /// `{ a = 23; a }`
+    Scope(ir::Scope<NAME>),
+    /// `print("Test");`
+    Call(ir::Call<FunctionExpression<NAME>>),
+    /// `if { a } else { b }`
+    If(ir::If<FunctionExpression<NAME>>),
+    /// Tail expression: `42`
+    Tail(FunctionExpression<NAME>),
     /// `return 42;`
     /// Possibly lowered from the tail expression of an `ast::StatementList`
     Return(ReturnStatement<NAME>),
@@ -187,7 +193,10 @@ where
         use FunctionStatement::*;
         match self {
             Local(local_assignment) => Local(local_assignment.cast_into()),
-            Expression(function_expression) => Expression(function_expression.cast_into()),
+            Call(call) => Call(call.cast_into()),
+            Scope(scope) => Scope(scope.cast_into()),
+            If(if_) => If(if_.cast_into()),
+            Tail(tail) => Tail(tail.cast_into()),
             Return(return_statement) => Return(return_statement.cast_into()),
         }
     }
@@ -195,10 +204,14 @@ where
 
 impl<NAME: Serialize + SrcReferrer> SrcReferrer for FunctionStatement<NAME> {
     fn src_ref(&self) -> SrcRef {
+        use FunctionStatement::*;
         match &self {
-            FunctionStatement::Local(local_assignment) => local_assignment.src_ref,
-            FunctionStatement::Expression(function_expression) => function_expression.src_ref(),
-            FunctionStatement::Return(return_statement) => return_statement.src_ref,
+            Local(local_assignment) => local_assignment.src_ref,
+            Call(call) => call.src_ref,
+            Scope(scope) => scope.0.src_ref(),
+            If(if_) => if_.src_ref,
+            Tail(expr) => expr.src_ref(),
+            Return(return_statement) => return_statement.src_ref,
         }
     }
 }

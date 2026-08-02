@@ -136,6 +136,9 @@ pub enum LowerError {
         #[label("Expression")]
         src_ref: SrcRef,
     },
+
+    #[error("The result of the function statement is ignored")]
+    FunctionStatementIgnored(#[label("Removed this statement")] SrcRef),
 }
 
 /// Result with lower error
@@ -163,6 +166,7 @@ impl SrcReferrer for LowerError {
             LowerError::InvalidConstantExpression { src_ref } => *src_ref,
             LowerError::InnerDocAfterInnerAttribute { src_ref } => *src_ref,
             LowerError::InnerAttributeAfterStatement { src_ref } => *src_ref,
+            LowerError::FunctionStatementIgnored(src_ref) => *src_ref,
         }
     }
 }

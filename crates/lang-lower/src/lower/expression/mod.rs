@@ -10,7 +10,7 @@ mod call;
 mod format_string;
 mod literal;
 
-use microcad_lang_base::{Identifier, Refer, SpanToSrcRef};
+use microcad_lang_base::{Identifier, SpanToSrcRef};
 use microcad_lang_parse::ast;
 use serde::Serialize;
 
@@ -22,10 +22,7 @@ where
         Ok(Self {
             lhs: Box::new(EXPR::lower(node.lhs.as_ref(), context)?),
             rhs: Box::new(EXPR::lower(node.rhs.as_ref(), context)?),
-            op: Refer::new(
-                node.op.as_str().into(),
-                context.span_to_src_ref(&node.op.span),
-            ),
+            op: node.op.value,
             src_ref: context.span_to_src_ref(&node.span),
         })
     }
@@ -38,10 +35,7 @@ where
     fn lower(node: &ast::UnaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::UnaryOp {
             rhs: Box::new(EXPR::lower(&node.rhs, context)?),
-            op: Refer::new(
-                node.op.as_str().into(),
-                context.span_to_src_ref(&node.op.span),
-            ),
+            op: node.op.value,
             src_ref: context.span_to_src_ref(&node.span),
         })
     }
