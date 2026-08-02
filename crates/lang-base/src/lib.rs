@@ -7,6 +7,8 @@ use miette::{MietteError, MietteSpanContents, SourceCode, SourceSpan, SpanConten
 
 pub use miette::Severity;
 
+mod builtin;
+
 mod artifact;
 mod diag;
 pub mod element;
@@ -38,6 +40,7 @@ pub const MICROCAD_EXTENSION: &str = "µcad";
 pub use version::{MICROCAD_VERSION, Version};
 
 pub use artifact::{Artifact, ArtifactKind, StageResult};
+pub use builtin::{__mu, BuiltinId};
 pub use diag::{DiagRenderOptions, Diagnostic, Diagnostics};
 pub use element::{Identifier, IdentifierList};
 pub use ord_map::{OrdMap, OrdMapValue};

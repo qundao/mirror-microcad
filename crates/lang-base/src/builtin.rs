@@ -1,0 +1,43 @@
+// Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+//! lang-base/src/builtin.rs
+
+use serde::{Deserialize, Serialize};
+
+/// Generate a builtin id for a string.
+pub const fn __mu(name: &str) -> BuiltinId {
+    BuiltinId::from_name(name)
+}
+
+/// Strongly-typed wrapper around raw builtin u64 hashes
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+pub struct BuiltinId(pub u64);
+
+impl BuiltinId {
+    /// FNV-1a compile-time hashing function
+    pub const fn from_name(name: &str) -> Self {
+        Self(microcad_hash::fnv1a_hash(name))
+    }
+}
+
+impl<'a> From<&'a str> for BuiltinId {
+    fn from(name: &'a str) -> Self {
+        Self::from_name(name)
+    }
+}
+
+// Allow conversion directly from String
+impl From<String> for BuiltinId {
+    #[inline]
+    fn from(name: String) -> Self {
+        Self::from_name(name.as_str())
+    }
+}
+
+// Print cleanly as hex in debug/format strings (e.g. BuiltinId(0x4A8F...))
+impl std::fmt::Display for BuiltinId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "BuiltinId(0x{:016X})", self.0)
+    }
+}
