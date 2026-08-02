@@ -170,6 +170,10 @@ impl Ty for Unit {
 }
 
 impl Unit {
+    pub fn is_none(&self) -> bool {
+        matches!(self, Self::None)
+    }
+
     pub fn quantity_type(&self) -> QuantityType {
         match self {
             Self::None | Self::Percent => QuantityType::Scalar,
