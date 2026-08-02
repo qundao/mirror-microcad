@@ -55,7 +55,7 @@ pub enum Value {
 
 impl Value {
     /// Check if the value is invalid.
-    pub fn is_invalid(&self) -> bool {
+    pub fn is_none(&self) -> bool {
         matches!(self, Value::None)
     }
 
@@ -66,6 +66,17 @@ impl Value {
             (Value::Quantity(lhs), Value::Integer(rhs)) => Ok(Value::Quantity(lhs.pow_int(rhs))),
             (Value::Integer(_lhs), Value::Integer(_rhs)) => todo!(),
             _ => Err(ValueError::InvalidOperator("^".to_string())),
+        }
+    }
+
+    /// Extract boolean value.
+    ///
+    /// # Panics
+    /// Panics if `self` is not a `Value::Bool`. Assumes resolver validated types.
+    pub fn as_bool_unchecked(&self) -> bool {
+        match self {
+            Value::Bool(b) => *b,
+            other => panic!("Expected Value::Bool from type checker, got {other:?}"),
         }
     }
 
