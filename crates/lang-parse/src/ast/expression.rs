@@ -210,6 +210,18 @@ pub struct SymbolPath {
     pub parts: Vec<ast::Identifier>,
 }
 
+impl From<ast::Identifier> for SymbolPath {
+    fn from(id: ast::Identifier) -> Self {
+        let span = id.span.clone();
+        Self {
+            span,
+            extras: ast::ItemExtras::default(),
+            prefix: None,
+            parts: vec![id],
+        }
+    }
+}
+
 /// A binary operation
 #[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
