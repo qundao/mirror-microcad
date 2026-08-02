@@ -15,8 +15,10 @@ version.workspace = true
 [lib]
 proc-macro = true
 
+
 [dependencies]
 syn = { version = "2.0", features = ["full"] }
 quote = "1.0"
 proc-macro2 = "1.0"
 convert_case = "0.11"
+microcad-hash = { workspace = true }

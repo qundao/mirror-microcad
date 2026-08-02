@@ -51,193 +51,44 @@ pub fn derive_operation3d(input: TokenStream) -> TokenStream {
     derive_workbench_definition(input, "Operation", "Geometry3D")
 }
 
-/// Attribute macro used to declare a µcad builtin module.
-///
-/// It automatically generate its symbol registration function of the same name.
-/// This macro is designed to reduce boilerplate when defining built-in modules in µcad.
-///
-/// # Example
-///
-/// Let's a look a built-in module `math`:
-///
-/// ```rust,ignore
-/// #[builtin_mod]
-/// pub mod math {
-///     pub const PI: Scalar = 3.14;
-///
-///     pub fn int() -> Symbol {
-///         // ...
-///     }
-/// }
-/// ```
-///
-/// The `#[builtin_mod]` will auto-generate a `math` registration function:
-///
-/// ```rust,ignore
-/// pub fn math() -> microcad_lang::resolve::Symbol {
-///     crate::ModuleBuilder::new("math")
-///         .pub_const("PI", math::PI)
-///         .symbol(math::add())
-///         .build()
-/// }
-/// ```
-///
-///
-/// # Conditions
-///
-/// - Private items are ignored.
-/// - Non-const / non-function items are ignored.
-/// - The module must be **inline** (`mod name { ... }`).
+
+
 #[proc_macro_attribute]
 pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
-    use syn::*;
-    let item_mod = parse_macro_input!(item as ItemMod);
-    let mod_name = &item_mod.ident;
-    let mod_name_str = mod_name.to_string();
+    let mut module = parse_macro_input!(item as ItemMod);
 
-    let registrations = item_mod
-        .content
-        .as_ref()
-        .map(|(_, items)| items)
-        .expect("Some inline module")
-        .iter()
-        .filter_map(|item| {
-            match item {
-                // Match only public constants
-                Item::Const(c) if matches!(c.vis, Visibility::Public(_)) => {
-                    let name = &c.ident;
-                    let name_str = name.to_string();
-                    Some(quote! { .pub_const(#name_str, #mod_name::#name) })
-                }
+    let mod_name = module.ident.to_string();
+    let mut keys = Vec::new();
+    let mut fn_paths = Vec::new();
 
-                // Match only public functions
-                Item::Fn(f) if matches!(f.vis, Visibility::Public(_)) => {
-                    let name = &f.sig.ident;
-                    Some(quote! { .symbol(#mod_name::#name()) })
-                }
-                // Match `pub use foo::bar` statements.
-                Item::Use(u) if matches!(u.vis, Visibility::Public(_)) => {
-                    let tree = &u.tree;
-                    Some(quote! { .symbol(#tree()) })
-                }
+    // Inspect the items inside the module block
+    if let Some((_, items)) = &mut module.content {
+        for item in items.iter() {
+            if let Item::Fn(func) = item {
+                let fn_name = func.sig.ident.to_string();
+                
+                // Accumulate namespace: "core" + "::" + "add" => "core::add"
+                let full_path = format!("__mu::{}::{}", mod_name, fn_name);
+                let hash = microcad_hash::fnv1a_hash(&full_path);
 
-                // Skip everything else (Private items or different Item types)
-                _ => None,
+                let fn_ident = &func.sig.ident;
+                let mod_ident = &module.ident;
+
+                keys.push(hash);
+                // Qualified path to function inside module: core::add
+                fn_paths.push(quote! { #mod_ident::#fn_ident });
             }
-        })
-        .collect::<Vec<_>>();
-
-    // Generate the builder function and keep the original module items
-    TokenStream::from(quote! {
-        #item_mod
-
-        #[allow(missing_docs)]
-        pub fn #mod_name() -> microcad_lang::symbol::Symbol {
-            microcad_lang::builtin::ModuleBuilder::new(#mod_name_str)
-                #(#registrations)*
-                .build()
         }
-    })
-}
-
-/// Helper struct to parse `parameters` of `builtin_fn` proc macro.
-struct BuiltinParam {
-    name: Ident,
-    ty: Option<Type>,
-    default_value: Option<Expr>,
-}
-
-impl Parse for BuiltinParam {
-    fn parse(input: ParseStream) -> Result<Self> {
-        // 1. Parse the mandatory name (e.g., 'x')
-        let name: Ident = input.parse()?;
-
-        // 2. Look for an optional ':' followed by a Type
-        let ty = if input.peek(Token![:]) {
-            let _colon: Token![:] = input.parse()?;
-            Some(input.parse::<Type>()?)
-        } else {
-            None
-        };
-
-        // 3. Look for an optional '=' followed by an Expression
-        let default_value = if input.peek(Token![=]) {
-            let _eq: Token![=] = input.parse()?;
-            Some(input.parse::<Expr>()?)
-        } else {
-            None
-        };
-
-        Ok(BuiltinParam { name, ty, default_value })
     }
-}
 
-/// The `#[builtin_fn(...)]` attribute is used to define a built-in function in the `builtin` crate. 
-/// 
-/// It automates the boilerplate of parameter definition and documentation.
-/// 
-/// # Example
-/// 
-/// ```rust,ignore
-/// /// Some function
-/// #[builtin_fn(x)]
-/// pub fn foo_function() -> Symbol {
-///     |_params, args, ctx| { ... } 
-/// }
-/// ```
-/// 
-/// The example above will expand to:
-/// 
-/// ```rust,ignore
-/// /// Some function
-/// pub fn foo_function() -> crate::Symbol {
-///     crate::Symbol::new_builtin_fn(
-///         stringify!(foo_function),
-///         vec![parameter!(x)].into_iter(),
-///         |_params, args, ctx| { ... } ,
-///         Some("Some function"),
-///    )
-/// }
-/// ```
-#[proc_macro_attribute]
-pub fn builtin_fn(attr: TokenStream, item: TokenStream) -> TokenStream {
-    use syn::*;
+    // Generate the original module + a static phf registry table for this module
+    let expanded = quote! {
+        #module
 
-    // Parse builtin_fn attributes.
-    let parser = punctuated::Punctuated::<BuiltinParam, Token![,]>::parse_terminated;
-    let attrs = parse_macro_input!(attr with parser);
+        pub static BUILTIN_REGISTRY: phf::Map<u64, BuiltinFn> = phf::phf_map! {
+            #( #keys => #fn_paths, )*
+        };
+    };
 
-    // Generate the parameter! calls
-    let params = attrs.iter().map(|p| {
-        let name_ident = &p.name;
-        
-        // Handle optional types/defaults in your parameter! macro
-        // Assuming your parameter! macro supports these fields:
-        match (&p.ty, &p.default_value) {
-            (Some(t), Some(d)) => quote! { parameter!(#name_ident: #t = #d) },
-            (Some(t), None)    => quote! { parameter!(#name_ident: #t) },
-            (None, Some(d))    => quote! { parameter!(#name_ident = #d) },
-            (None, None)       => quote! { parameter!(#name_ident) },
-        }
-    });
-
-    // Parse the function
-    let input_fn = parse_macro_input!(item as ItemFn);
-    let fn_name = &input_fn.sig.ident;
-    let fn_vis = &input_fn.vis;
-    let fn_attrs = &input_fn.attrs;
-    let fn_docs = get_doc_block(fn_attrs);
-    let fn_body = &input_fn.block; // This is the closure returned by the user
-
-    TokenStream::from(quote! {
-        #(#fn_attrs)*
-        #fn_vis fn #fn_name() -> crate::Symbol {
-            crate::Symbol::new_builtin_fn(
-                stringify!(#fn_name),
-                vec![#(#params),*].into_iter(),
-                &#fn_body,
-                Some(#fn_docs),
-            )
-        }
-    })
+    TokenStream::from(expanded)
 }
