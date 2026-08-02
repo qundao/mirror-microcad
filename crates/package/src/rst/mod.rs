@@ -10,6 +10,7 @@ pub mod workbench;
 
 mod parameter;
 
+use microcad_lang_lower::ir::NameKind;
 pub use parameter::{Parameter, ParameterList};
 
 pub use function::{Function, FunctionExpression, FunctionStatement};
@@ -50,6 +51,8 @@ impl SrcReferrer for ResolvedName {
         }
     }
 }
+
+impl NameKind for ResolvedName {}
 
 #[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DocBlock(pub Refer<String>);
