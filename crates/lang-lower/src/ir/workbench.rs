@@ -6,7 +6,7 @@
 use crate::{CastInto, ir};
 
 use derive_more::{Display, From};
-use microcad_lang_base::{IsDefault, Refer, SrcRef, SrcReferrer, is_default};
+use microcad_lang_base::{IsDefault, Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Identifiable;
 
 pub use microcad_lang_base::element::WorkbenchKind;
@@ -73,7 +73,6 @@ pub struct Init<NAME: ir::NameKind = ir::SymbolPath> {
     /// Parameter list for this init definition
     pub parameters: ir::ParameterList,
     /// Body if the init definition
-    #[serde(skip_serializing_if = "is_default", default)]
     pub statements: Box<[WorkbenchStatement<NAME>]>,
     /// Source reference
     pub src_ref: SrcRef,
@@ -158,13 +157,10 @@ where
 #[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
 pub struct WorkbenchItems {
     /// `use`
-    #[serde(skip_serializing_if = "is_default", default)]
     pub aliases: ir::Aliases,
     /// `const`
-    #[serde(skip_serializing_if = "is_default", default)]
     pub constants: Box<[ir::Constant]>,
     /// `fn`
-    #[serde(skip_serializing_if = "is_default", default)]
     pub functions: Box<[ir::Function]>,
 }
 
@@ -192,13 +188,10 @@ pub struct Workbench {
     /// Workbench inner attributes
     pub inner_attr: ir::InnerAttributes,
     /// `init`
-    #[serde(skip_serializing_if = "is_default", default)]
     pub inits: Box<[Init]>,
     /// Items that will be resolved into Symbols
-    #[serde(skip_serializing_if = "is_default", default)]
     pub items: ir::WorkbenchItems,
     /// The actual statements to build the Model
-    #[serde(skip_serializing_if = "is_default", default)]
     pub statements: Box<[ir::WorkbenchStatement]>,
 }
 

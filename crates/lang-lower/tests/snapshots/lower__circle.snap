@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0x7cd65a945030702d",
-        output_hash: "0x32cb7ffd377bdbe8",
+        output_hash: "0x5a36a7a540f23b1c",
         tree: (
             id: Some("circle"),
             attr: ((
@@ -237,8 +237,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             src_ref: "8:9 @ 0x5b5b0d75574ec6c6 (287..293)",
                                         ))),
                                         expression: Call((
-                                            name: (
-                                                prefix: None,
+                                            name: Path(
+                                                is_absolute: false,
                                                 parts: [
                                                     ((
                                                         value: "__builtin",
@@ -259,8 +259,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                 src_ref: "None",
                                                 unnamed_args: [
                                                     (
-                                                        expression: Name((
-                                                            prefix: None,
+                                                        expression: Name(Path(
+                                                            is_absolute: false,
                                                             parts: [
                                                                 ((
                                                                     value: "diameter",
@@ -287,6 +287,11 @@ expression: "ir.to_ron().expect(\"No error\")"
                                 src_ref: "7:5 @ 0x5b5b0d75574ec6c6 (221..323)",
                             ),
                         ],
+                        items: (
+                            aliases: (),
+                            constants: [],
+                            functions: [],
+                        ),
                         statements: [
                             (
                                 attr: ((
@@ -302,8 +307,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                 visibility: Public,
                                 keyword_src_ref: "None",
                                 expression: Call((
-                                    name: (
-                                        prefix: None,
+                                    name: Path(
+                                        is_absolute: false,
                                         parts: [
                                             ((
                                                 value: "__builtin",
@@ -325,8 +330,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                         unnamed_args: [
                                             (
                                                 expression: Call((
-                                                    name: (
-                                                        prefix: None,
+                                                    name: Path(
+                                                        is_absolute: false,
                                                         parts: [
                                                             ((
                                                                 value: "__builtin",
@@ -347,8 +352,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                         src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
                                                         unnamed_args: [
                                                             (
-                                                                expression: Name((
-                                                                    prefix: None,
+                                                                expression: Name(Path(
+                                                                    is_absolute: false,
                                                                     parts: [
                                                                         ((
                                                                             value: "radius",
@@ -373,8 +378,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                     src_ref: "12:36 @ 0x5b5b0d75574ec6c6 (391..392)",
                                                 )),
                                                 expression: Call((
-                                                    name: (
-                                                        prefix: None,
+                                                    name: Path(
+                                                        is_absolute: false,
                                                         parts: [
                                                             ((
                                                                 value: "__builtin",
@@ -395,8 +400,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                         src_ref: "None",
                                                         unnamed_args: [
                                                             (
-                                                                expression: Name((
-                                                                    prefix: None,
+                                                                expression: Name(Path(
+                                                                    is_absolute: false,
                                                                     parts: [
                                                                         ((
                                                                             value: "center",
@@ -408,8 +413,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                 src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..401)",
                                                             ),
                                                             (
-                                                                expression: Name((
-                                                                    prefix: None,
+                                                                expression: Name(Path(
+                                                                    is_absolute: false,
                                                                     parts: [
                                                                         ((
                                                                             value: "x",
@@ -432,8 +437,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                     src_ref: "12:50 @ 0x5b5b0d75574ec6c6 (405..406)",
                                                 )),
                                                 expression: Call((
-                                                    name: (
-                                                        prefix: None,
+                                                    name: Path(
+                                                        is_absolute: false,
                                                         parts: [
                                                             ((
                                                                 value: "__builtin",
@@ -454,8 +459,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                         src_ref: "None",
                                                         unnamed_args: [
                                                             (
-                                                                expression: Name((
-                                                                    prefix: None,
+                                                                expression: Name(Path(
+                                                                    is_absolute: false,
                                                                     parts: [
                                                                         ((
                                                                             value: "center",
@@ -467,8 +472,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                 src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..415)",
                                                             ),
                                                             (
-                                                                expression: Name((
-                                                                    prefix: None,
+                                                                expression: Name(Path(
+                                                                    is_absolute: false,
                                                                     parts: [
                                                                         ((
                                                                             value: "y",

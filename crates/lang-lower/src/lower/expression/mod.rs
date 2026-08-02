@@ -74,11 +74,8 @@ where
 
 impl Lower<ast::SymbolPath> for ir::SymbolPath {
     fn lower(node: &ast::SymbolPath, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self {
-            prefix: node
-                .prefix
-                .as_ref()
-                .map(|span| context.span_to_src_ref(span)),
+        Ok(Self::Path {
+            is_absolute: node.prefix.is_some(),
             parts: node
                 .parts
                 .iter()

@@ -1,34 +1,52 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{Identifier, SingleIdentifier, SrcRef, SrcReferrer};
-use microcad_lang_proc_macros::SrcReferrer;
+use derive_more::From;
+use microcad_lang_base::{BuiltinId, Identifier, SingleIdentifier, SrcRef, SrcReferrer};
 use miette::SourceSpan;
 
 use serde::{Deserialize, Serialize};
 
-/// A *qualified name* consists of a list of *identifiers*, separated by `::`,
-/// e.g. `a::b::c`
-#[derive(Default, Clone, Debug, Hash, PartialEq, SrcReferrer, Serialize, Deserialize)]
-pub struct SymbolPath {
-    pub prefix: Option<SrcRef>,
-    pub parts: Box<[Identifier]>,
-    pub src_ref: SrcRef,
+#[derive(Clone, Debug, From, Hash, PartialEq, Serialize, Deserialize)]
+pub enum SymbolPath {
+    Builtin(BuiltinId),
+    Path {
+        is_absolute: bool,
+        parts: Box<[Identifier]>,
+        src_ref: SrcRef,
+    },
 }
 
 impl crate::ir::NameKind for SymbolPath {}
 
+impl SrcReferrer for SymbolPath {
+    fn src_ref(&self) -> SrcRef {
+        match self {
+            SymbolPath::Builtin(_) => SrcRef::none(),
+            SymbolPath::Path { src_ref, .. } => *src_ref,
+        }
+    }
+}
+
 impl SingleIdentifier for SymbolPath {
     fn single_identifier(&self) -> Option<&Identifier> {
-        if self.is_single_identifier() {
-            self.parts.first()
-        } else {
-            None
+        match self {
+            SymbolPath::Path {
+                is_absolute,
+                parts,
+                src_ref,
+            } if self.is_single_identifier() => parts.first(),
+            _ => None,
         }
     }
 
     fn is_single_identifier(&self) -> bool {
-        self.prefix.is_none() && self.parts.len() == 1
+        match self {
+            SymbolPath::Builtin(_) => false,
+            SymbolPath::Path {
+                is_absolute, parts, ..
+            } => !is_absolute && parts.len() == 1,
+        }
     }
 }
 
@@ -46,14 +64,14 @@ impl From<String> for SymbolPath {
 
 impl From<&str> for SymbolPath {
     fn from(s: &str) -> Self {
-        let (prefix, s) = if s.starts_with("::") {
-            (Some(SrcRef::none()), s.strip_prefix("::").unwrap())
+        let (is_absolute, s) = if s.starts_with("::") {
+            (true, s.strip_prefix("::").unwrap())
         } else {
-            (None, s)
+            (false, s)
         };
 
-        Self {
-            prefix,
+        Self::Path {
+            is_absolute,
             parts: s.split("::").map(Identifier::from).collect(),
             src_ref: SrcRef::none(),
         }
@@ -63,8 +81,8 @@ impl From<&str> for SymbolPath {
 impl From<Identifier> for SymbolPath {
     fn from(id: Identifier) -> Self {
         let src_ref = id.src_ref();
-        Self {
-            prefix: None,
+        Self::Path {
+            is_absolute: false,
             parts: vec![id].into_boxed_slice(),
             src_ref,
         }
@@ -73,22 +91,24 @@ impl From<Identifier> for SymbolPath {
 
 impl std::fmt::Display for SymbolPath {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            match self.prefix {
-                Some(_) => "::",
-                None => "",
+        match self {
+            SymbolPath::Builtin(builtin_id) => builtin_id.fmt(f),
+            SymbolPath::Path {
+                is_absolute, parts, ..
+            } => {
+                if *is_absolute {
+                    write!(f, "::")?;
+                }
+                write!(
+                    f,
+                    "{}",
+                    parts
+                        .iter()
+                        .map(|id| format!("{id}"))
+                        .collect::<Vec<_>>()
+                        .join("::")
+                )
             }
-        )?;
-        write!(
-            f,
-            "{}",
-            self.parts
-                .iter()
-                .map(|id| format!("{id}"))
-                .collect::<Vec<_>>()
-                .join("::")
-        )
+        }
     }
 }

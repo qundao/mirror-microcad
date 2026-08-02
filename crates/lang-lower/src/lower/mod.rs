@@ -313,10 +313,7 @@ impl Lower<ast::Identifier> for ir::Identifier {
 
 impl Lower<ast::def::UseName> for ir::SymbolPath {
     fn lower(node: &ast::def::UseName, context: &mut LowerContext) -> LowerResult<Self> {
-        let prefix = node
-            .prefix
-            .as_ref()
-            .map(|span| context.span_to_src_ref(span));
+        let is_absolute = node.prefix.is_some();
         let parts = node
             .parts
             .iter()
@@ -330,8 +327,8 @@ impl Lower<ast::def::UseName> for ir::SymbolPath {
             .collect::<Result<Vec<_>, _>>()?
             .into_boxed_slice();
 
-        Ok(Self {
-            prefix,
+        Ok(Self::Path {
+            is_absolute,
             parts,
             src_ref: context.span_to_src_ref(&node.span),
         })
