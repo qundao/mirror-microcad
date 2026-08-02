@@ -7,21 +7,13 @@ use microcad_lang_parse::ast;
 
 impl Format for ast::BinaryOperator {
     fn format(&self, _: &FormatConfig) -> Node {
-        use ast::BinaryOperator::*;
-        match &self {
-            GreaterEqual => ">=",
-            LessEqual => "<=",
-            And => "and",
-            Or => "or",
-            op => op.as_str(),
-        }
-        .into()
+        self.to_string().into()
     }
 }
 
 impl Format for ast::UnaryOperator {
     fn format(&self, _: &FormatConfig) -> Node {
-        self.as_str().into()
+        self.to_string().into()
     }
 }
 
