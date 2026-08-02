@@ -15,9 +15,9 @@ use crate::{ty::*, value::*};
 /// Names are optional, which means Identifiers can be empty.
 #[derive(Clone, Debug, Default, PartialEq, SrcReferrer, Serialize, Deserialize)]
 pub struct Tuple {
-    pub(crate) named: HashMap<Identifier, Value>,
-    pub(crate) unnamed: HashMap<Type, Value>,
-    pub(crate) src_ref: SrcRef,
+    pub named: HashMap<Identifier, Value>,
+    pub unnamed: HashMap<Type, Value>,
+    pub src_ref: SrcRef,
 }
 
 /// Create a Tuple from items
