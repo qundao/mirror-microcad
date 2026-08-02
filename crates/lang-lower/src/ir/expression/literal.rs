@@ -20,6 +20,12 @@ impl Literal {
     }
 }
 
+impl From<Value> for Literal {
+    fn from(value: Value) -> Self {
+        Self(Refer::none(value))
+    }
+}
+
 impl SrcReferrer for Literal {
     fn src_ref(&self) -> SrcRef {
         self.0.src_ref

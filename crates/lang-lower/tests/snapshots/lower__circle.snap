@@ -71,7 +71,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                         value: "center",
                                         src_ref: "6:35 @ 0x5b5b0d75574ec6c6 (182..188)",
                                     )),
-                                    default_value: Some(TupleExpression((
+                                    default_value: Some(Tuple((
                                         args: (
                                             src_ref: "None",
                                             named_args: [
@@ -163,7 +163,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                 value: "center",
                                                 src_ref: "7:28 @ 0x5b5b0d75574ec6c6 (244..250)",
                                             )),
-                                            default_value: Some(TupleExpression((
+                                            default_value: Some(Tuple((
                                                 args: (
                                                     src_ref: "None",
                                                     named_args: [

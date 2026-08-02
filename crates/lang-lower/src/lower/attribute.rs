@@ -99,7 +99,7 @@ impl Lower<ast::LocalAssignment> for ir::Meta {
     fn lower(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::Meta {
             name: ir::SymbolPath::from(ir::Identifier::lower(&node.id, context)?),
-            expr: ir::ConstantExpression::lower(&node.expr, context)?,
+            expr: ir::ConstantExpression::lower(node.expr.as_ref(), context)?,
         })
     }
 }

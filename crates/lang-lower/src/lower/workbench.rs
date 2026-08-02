@@ -63,26 +63,16 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
             ast::Expression::Call(expr) => Self::Call(ir::Call::lower(expr, context)?),
-            ast::Expression::Bracketed(expr, _) => Self::lower(expr, context)?,
+            ast::Expression::Bracketed(expr, _) => Self::lower(expr.as_ref(), context)?,
             ast::Expression::Literal(ast::Literal {
                 literal: ast::LiteralKind::String(s),
                 ..
             }) => Self::FormatString(ir::FormatString::lower(s, context)?),
             ast::Expression::Literal(expr) => Self::Literal(ir::Literal::lower(expr, context)?),
             ast::Expression::String(s) => Self::FormatString(ir::FormatString::lower(s, context)?),
-            ast::Expression::Tuple(t) => {
-                Self::TupleExpression(ir::TupleExpression::lower(t, context)?)
-            }
-            ast::Expression::ArrayRange(a) => Self::ArrayExpression(ir::ArrayExpression {
-                inner: ir::ArrayExpressionInner::Range(ir::RangeExpression::lower(a, context)?),
-                unit: ir::Unit::lower(&a.unit, context)?,
-                src_ref: context.span_to_src_ref(&a.span),
-            }),
-            ast::Expression::ArrayList(a) => Self::ArrayExpression(ir::ArrayExpression {
-                inner: ir::ArrayExpressionInner::List(ir::ListExpression::lower(a, context)?),
-                unit: ir::Unit::lower(&a.unit, context)?,
-                src_ref: context.span_to_src_ref(&a.span),
-            }),
+            ast::Expression::Tuple(t) => Self::Tuple(ir::TupleExpression::lower(t, context)?),
+            ast::Expression::ArrayRange(a) => Self::lower(a, context)?,
+            ast::Expression::ArrayList(a) => Self::lower(a, context)?,
             ast::Expression::SymbolPath(n) => Self::Name(ir::SymbolPath::lower(n, context)?),
             ast::Expression::BinaryOperation(binop) => Self::Call(ir::Call::lower(binop, context)?),
             ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call::lower(unop, context)?),
@@ -91,7 +81,7 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
             }
             ast::Expression::Body(body) => Self::Group(ir::Group::lower(body, context)?),
             ast::Expression::ElementAccess(access) => access.element_chain.iter().try_fold(
-                Self::lower(&access.expr, context)?,
+                Self::lower(access.expr.as_ref(), context)?,
                 |lhs, element| -> LowerResult<Self> {
                     use ast::ElementInner::*;
                     let src_ref = context.span_to_src_ref(&access.span);
@@ -120,7 +110,10 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
                         }),
                         ArrayElement(e) => Self::Call(ir::Call {
                             name: builtin_fn("array_access"),
-                            args: ir::ArgumentList::from_iter([lhs, Self::lower(e, context)?]),
+                            args: ir::ArgumentList::from_iter([
+                                lhs,
+                                Self::lower(e.as_ref(), context)?,
+                            ]),
                             src_ref,
                         }),
                     })

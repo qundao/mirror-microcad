@@ -5,6 +5,7 @@
 
 use crate::{CastInto, ir};
 
+use derive_more::From;
 use microcad_lang_base::{IsDefault, Refer, SrcRef, SrcReferrer, is_default};
 use serde::{Deserialize, Serialize};
 
@@ -64,15 +65,15 @@ where
     }
 }
 
-#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, From, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
 pub enum FunctionExpression<NAME: ir::NameKind = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
     Name(NAME),
     FormatString(ir::FormatString<NAME>),
-    ArrayExpression(ir::ArrayExpression<FunctionExpression<NAME>>),
-    TupleExpression(ir::TupleExpression<FunctionExpression<NAME>>),
+    List(ir::ListExpression<FunctionExpression<NAME>>),
+    Tuple(ir::TupleExpression<FunctionExpression<NAME>>),
     Scope(Scope<NAME>),
     If(ir::If<FunctionExpression<NAME>>),
     Call(ir::Call<FunctionExpression<NAME>>),
@@ -95,8 +96,8 @@ where
             Literal(literal) => Literal(literal),
             Name(name) => Name(name.into()),
             FormatString(format_string) => FormatString(format_string.cast_into()),
-            ArrayExpression(array_expression) => ArrayExpression(array_expression.cast_into()),
-            TupleExpression(tuple_expression) => TupleExpression(tuple_expression.cast_into()),
+            List(list) => List(list.cast_into()),
+            Tuple(tuple) => Tuple(tuple.cast_into()),
             Scope(scope) => Scope(scope.cast_into()),
             If(if_) => If(if_.cast_into()),
             Call(call) => Call(call.cast_into()),
@@ -111,8 +112,8 @@ impl<NAME: ir::NameKind> SrcReferrer for FunctionExpression<NAME> {
             FunctionExpression::Literal(literal) => literal.src_ref(),
             FunctionExpression::Name(name) => name.src_ref(),
             FunctionExpression::FormatString(format_string) => format_string.src_ref(),
-            FunctionExpression::ArrayExpression(array_expression) => array_expression.src_ref(),
-            FunctionExpression::TupleExpression(tuple_expression) => tuple_expression.src_ref,
+            FunctionExpression::List(array_expression) => array_expression.src_ref(),
+            FunctionExpression::Tuple(tuple_expression) => tuple_expression.src_ref,
             FunctionExpression::Scope(scope) => scope.0.src_ref(),
             FunctionExpression::If(if_expr) => if_expr.src_ref,
             FunctionExpression::Call(call) => call.src_ref,

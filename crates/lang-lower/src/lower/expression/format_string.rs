@@ -12,7 +12,7 @@ impl<NAME: LowerName> Lower<ast::StringExpression> for ir::FormatExpression<NAME
                 .is_some()
                 .then(|| ir::FormatSpec::lower(&node.specification, context))
                 .transpose()?,
-            ir::ConstantExpression::lower(&node.expr, context)?,
+            ir::ConstantExpression::lower(node.expr.as_ref(), context)?,
             context.span_to_src_ref(&node.span),
         ))
     }

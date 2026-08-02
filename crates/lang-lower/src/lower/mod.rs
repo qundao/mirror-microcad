@@ -18,7 +18,7 @@ use microcad_lang_base::{
     Identifiable, Identifier, Refer, SpanToSrcRef, Spanned, SrcRef, SrcReferrer,
 };
 use microcad_lang_parse::ast;
-use microcad_lang_types::ty::TypeError;
+use microcad_lang_types::{ValueError, ty::TypeError};
 use miette::Diagnostic;
 use thiserror::Error;
 
@@ -30,6 +30,9 @@ use crate::{Lower, LowerContext, ir};
 pub enum LowerError {
     #[error("Error parsing integer literal: {0}")]
     ParseIntError(#[label("{0}")] Refer<std::num::ParseIntError>),
+
+    #[error("Value error: {0}")]
+    ValueError(#[from] ValueError),
 
     #[error("Unknown unit: {0}")]
     UnknownUnit(#[label("Unknown unit")] Refer<String>),
@@ -157,6 +160,7 @@ impl<Name: LowerName> LowerExpr for ir::ConstantExpression<Name> {}
 impl SrcReferrer for LowerError {
     fn src_ref(&self) -> SrcRef {
         match self {
+            LowerError::ValueError(_) => SrcRef::none(),
             LowerError::DuplicateArgument { id, .. } => id.src_ref(),
             LowerError::StatementNotAllowed { src_ref }
             | LowerError::InvalidGlobPattern(src_ref)

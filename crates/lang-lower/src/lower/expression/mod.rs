@@ -2,9 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    Lower, LowerContext, LowerError, LowerResult,
-    ir::{self, ExpressionKind},
-    lower::LowerName,
+    Lower, LowerContext, LowerError, LowerResult, ir,
+    lower::{LowerExpr, LowerName, function::builtin_fn},
 };
 
 mod call;
@@ -13,71 +12,7 @@ mod literal;
 
 use microcad_lang_base::{Identifier, SpanToSrcRef};
 use microcad_lang_parse::ast;
-
-impl<EXPR> Lower<ast::ArrayItem> for ir::RangeFirst<EXPR>
-where
-    EXPR: Lower<ast::Expression>,
-{
-    fn lower(node: &ast::ArrayItem, context: &mut LowerContext) -> LowerResult<Self> {
-        if matches!(
-            node.expr,
-            ast::Expression::Literal(
-                ast::Literal {
-                    literal: ast::LiteralKind::Float(_)
-                        | ast::LiteralKind::String(_)
-                        | ast::LiteralKind::Quantity(_)
-                        | ast::LiteralKind::Bool(_),
-                    ..
-                },
-                ..
-            )
-        ) {
-            return Err(LowerError::InvalidRangeType {
-                src_ref: context.span_to_src_ref(&node.expr.span()),
-            });
-        }
-        Ok(ir::RangeFirst(Box::new(EXPR::lower(&node.expr, context)?)))
-    }
-}
-
-impl<EXPR> Lower<ast::ArrayItem> for ir::RangeLast<EXPR>
-where
-    EXPR: Lower<ast::Expression>,
-{
-    fn lower(node: &ast::ArrayItem, context: &mut LowerContext) -> LowerResult<Self> {
-        if matches!(
-            node.expr,
-            ast::Expression::Literal(
-                ast::Literal {
-                    literal: ast::LiteralKind::Float(_)
-                        | ast::LiteralKind::String(_)
-                        | ast::LiteralKind::Quantity(_)
-                        | ast::LiteralKind::Bool(_),
-                    ..
-                },
-                ..
-            )
-        ) {
-            return Err(LowerError::InvalidRangeType {
-                src_ref: context.span_to_src_ref(&node.expr.span()),
-            });
-        }
-        Ok(ir::RangeLast(Box::new(EXPR::lower(&node.expr, context)?)))
-    }
-}
-
-impl<EXPR> Lower<ast::ArrayRangeExpression> for ir::RangeExpression<EXPR>
-where
-    EXPR: Lower<ast::Expression>,
-{
-    fn lower(node: &ast::ArrayRangeExpression, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self {
-            first: ir::RangeFirst::lower(&node.start, context)?,
-            last: ir::RangeLast::lower(&node.end, context)?,
-            src_ref: context.span_to_src_ref(&node.span),
-        })
-    }
-}
+use microcad_lang_types::{BinaryOperator, Scalar, Value};
 
 impl<EXPR> Lower<ast::ArrayListExpression> for ir::ListExpression<EXPR>
 where
@@ -102,7 +37,7 @@ impl Lower<ast::Identifier> for ir::Marker {
     }
 }
 
-impl<EXPR: ExpressionKind> Lower<ast::If> for ir::If<EXPR>
+impl<EXPR: ir::ExpressionKind> Lower<ast::If> for ir::If<EXPR>
 where
     EXPR: Lower<ast::Expression>,
     EXPR::Body: Lower<ast::Body>,
@@ -167,29 +102,78 @@ where
     }
 }
 
+impl<Expr: LowerExpr> Lower<ast::ArrayRangeExpression> for Expr
+where
+    Expr: From<ir::Call<Expr>> + From<ir::Literal>,
+    Expr::Name: LowerName,
+{
+    fn lower(a: &ast::ArrayRangeExpression, context: &mut LowerContext) -> LowerResult<Self> {
+        let unit = ir::Unit::lower(&a.unit, context)?;
+        let range = Expr::from(ir::Call {
+            name: builtin_fn("range"),
+            args: ir::ArgumentList::from_iter([
+                Expr::lower(&a.start.expr, context)?,
+                Expr::lower(&a.end.expr, context)?,
+            ]),
+            src_ref: context.span_to_src_ref(&a.span),
+        });
+
+        Ok(if unit.is_none() {
+            range
+        } else {
+            Expr::from(ir::Call {
+                name: builtin_fn(BinaryOperator::Multiply.to_fn_name()),
+                args: ir::ArgumentList::from_iter([
+                    range,
+                    Expr::from(ir::Literal::from(
+                        (Value::from(Scalar::from_num(1.0)) * unit)?,
+                    )),
+                ]),
+                src_ref: context.span_to_src_ref(&a.span),
+            })
+        })
+    }
+}
+
+impl<Expr: LowerExpr> Lower<ast::ArrayListExpression> for Expr
+where
+    Expr: From<ir::Call<Expr>> + From<ir::ListExpression<Expr>> + From<ir::Literal>,
+    Expr::Name: LowerName,
+{
+    fn lower(a: &ast::ArrayListExpression, context: &mut LowerContext) -> LowerResult<Self> {
+        let unit = ir::Unit::lower(&a.unit, context)?;
+        let list = Expr::from(ir::ListExpression::lower(a, context)?);
+
+        Ok(if unit.is_none() {
+            list
+        } else {
+            Expr::from(ir::Call {
+                name: builtin_fn(BinaryOperator::Multiply.to_fn_name()),
+                args: ir::ArgumentList::from_iter([
+                    list,
+                    Expr::from(ir::Literal::from(
+                        (Value::from(Scalar::from_num(1.0)) * unit)?,
+                    )),
+                ]),
+                src_ref: context.span_to_src_ref(&a.span),
+            })
+        })
+    }
+}
+
 impl<NAME: LowerName> Lower<ast::Expression> for ir::ConstantExpression<NAME> {
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
-            ast::Expression::Bracketed(expr, _) => Self::lower(expr, context)?,
+            ast::Expression::Bracketed(expr, _) => Self::lower(expr.as_ref(), context)?,
             ast::Expression::Literal(ast::Literal {
                 literal: ast::LiteralKind::String(s),
                 ..
             }) => Self::FormatString(ir::FormatString::lower(s, context)?),
             ast::Expression::Literal(expr) => Self::Literal(ir::Literal::lower(expr, context)?),
             ast::Expression::String(s) => Self::FormatString(ir::FormatString::lower(s, context)?),
-            ast::Expression::Tuple(t) => {
-                Self::TupleExpression(ir::TupleExpression::lower(t, context)?)
-            }
-            ast::Expression::ArrayRange(a) => Self::ArrayExpression(ir::ArrayExpression {
-                inner: ir::ArrayExpressionInner::Range(ir::RangeExpression::lower(a, context)?),
-                unit: ir::Unit::lower(&a.unit, context)?,
-                src_ref: context.span_to_src_ref(&a.span),
-            }),
-            ast::Expression::ArrayList(a) => Self::ArrayExpression(ir::ArrayExpression {
-                inner: ir::ArrayExpressionInner::List(ir::ListExpression::lower(a, context)?),
-                unit: ir::Unit::lower(&a.unit, context)?,
-                src_ref: context.span_to_src_ref(&a.span),
-            }),
+            ast::Expression::Tuple(t) => Self::Tuple(ir::TupleExpression::lower(t, context)?),
+            ast::Expression::ArrayRange(a) => Self::lower(a, context)?,
+            ast::Expression::ArrayList(a) => Self::lower(a, context)?,
             ast::Expression::SymbolPath(n) => Self::Name(NAME::lower(n, context)?),
             ast::Expression::BinaryOperation(binop) => Self::Call(ir::Call::lower(binop, context)?),
             ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call::lower(unop, context)?),
