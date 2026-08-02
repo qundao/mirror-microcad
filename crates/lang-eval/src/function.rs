@@ -38,11 +38,6 @@ impl FlowSignal {
             FlowSignal::Continue => Err(EvalError::ExpectedExpression { src_ref }),
         }
     }
-
-    /// Check if the signal is an explicit return.
-    pub fn is_return(&self) -> bool {
-        matches!(self, FlowSignal::Return(_))
-    }
 }
 
 impl Eval<FlowSignal> for rst::function::FormatString {
@@ -51,62 +46,53 @@ impl Eval<FlowSignal> for rst::function::FormatString {
     }
 }
 
-impl Eval<FlowSignal> for rst::function::RangeFirst {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
-        self.0.eval(context)
-    }
-}
+pub fn builtin_range(
+    call: &rst::function::Call,
+    context: &mut EvalContext,
+) -> EvalResult<FlowSignal> {
+    let args = &call.args;
+    let first_arg = args.unnamed_args.first().unwrap();
+    let last_arg = args.unnamed_args.last().unwrap();
 
-impl Eval<FlowSignal> for rst::function::RangeLast {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
-        self.0.eval(context)
-    }
-}
-
-impl Eval<FlowSignal> for rst::function::RangeExpression {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
-        use microcad_lang_base::SrcReferrer;
-
-        match (self.first.eval(context)?, self.last.eval(context)?) {
-            (FlowSignal::Yield(Value::Integer(first)), FlowSignal::Yield(Value::Integer(last))) => {
-                if first > last {
-                    context.diag(EvalError::BadRange {
-                        first,
-                        last,
-                        src_ref: self.src_ref,
-                    });
-                }
-
-                let first: i64 = first.into();
-                let last: i64 = last.into();
-
-                Ok(FlowSignal::Yield(Value::Array(Array::from_values(
-                    (first..last + 1)
-                        .map(|i| Value::Integer(i.into()))
-                        .collect(),
-                    Type::Integer,
-                ))))
+    match (first_arg.eval(context)?, last_arg.eval(context)?) {
+        (FlowSignal::Yield(Value::Integer(first)), FlowSignal::Yield(Value::Integer(last))) => {
+            if first > last {
+                context.diag(EvalError::BadRange {
+                    first,
+                    last,
+                    src_ref: call.src_ref,
+                });
             }
-            (FlowSignal::Yield(first), FlowSignal::Yield(last)) => {
-                if !matches!(first, Value::Integer(_)) {
-                    context.diag(EvalError::InvalidRangeBoundaryType {
-                        src_ref: self.first.0.src_ref(),
-                    });
-                }
-                if !matches!(last, Value::Integer(_)) {
-                    context.diag(EvalError::InvalidRangeBoundaryType {
-                        src_ref: self.last.0.src_ref(),
-                    });
-                }
 
-                Ok(FlowSignal::Continue)
-            }
-            (FlowSignal::Continue, _) | (_, FlowSignal::Continue) => {
-                context.diag(EvalError::InvalidFlow(self.src_ref));
-                Ok(FlowSignal::Continue)
-            }
-            (FlowSignal::Return(v), _) | (_, FlowSignal::Return(v)) => Ok(FlowSignal::Return(v)),
+            let first: i64 = first.into();
+            let last: i64 = last.into();
+
+            Ok(FlowSignal::Yield(Value::Array(Array::from_values(
+                (first..last + 1)
+                    .map(|i| Value::Integer(i.into()))
+                    .collect(),
+                Type::Integer,
+            ))))
         }
+        (FlowSignal::Yield(first), FlowSignal::Yield(last)) => {
+            if !matches!(first, Value::Integer(_)) {
+                context.diag(EvalError::InvalidRangeBoundaryType {
+                    src_ref: first_arg.src_ref,
+                });
+            }
+            if !matches!(last, Value::Integer(_)) {
+                context.diag(EvalError::InvalidRangeBoundaryType {
+                    src_ref: last_arg.src_ref,
+                });
+            }
+
+            Ok(FlowSignal::Continue)
+        }
+        (FlowSignal::Continue, _) | (_, FlowSignal::Continue) => {
+            context.diag(EvalError::InvalidFlow(call.src_ref));
+            Ok(FlowSignal::Continue)
+        }
+        (FlowSignal::Return(v), _) | (_, FlowSignal::Return(v)) => Ok(FlowSignal::Return(v)),
     }
 }
 
@@ -133,28 +119,6 @@ impl Eval<FlowSignal> for rst::function::ListExpression {
                 context.diag(EvalError::ArrayElementsDifferentTypes(value_list.types()));
                 Ok(FlowSignal::Yield(Value::None))
             }
-        }
-    }
-}
-
-impl Eval<FlowSignal> for rst::function::ArrayExpression {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
-        use rst::function::ArrayExpressionInner as Inner;
-        let array = match &self.inner {
-            Inner::Range(range_expression) => range_expression.eval(context),
-            Inner::List(list_expression) => list_expression.eval(context),
-        }?
-        .expect_value(self.src_ref)?;
-
-        match array {
-            Value::Array(array) => match Value::Array(array) * self.unit {
-                Ok(value) => Ok(FlowSignal::Yield(value)),
-                Err(err) => {
-                    context.diag(err);
-                    Ok(FlowSignal::Yield(Value::None))
-                }
-            },
-            _ => unimplemented!("Error handling"),
         }
     }
 }
@@ -320,8 +284,8 @@ impl Eval<FlowSignal> for rst::FunctionExpression {
             Expr::Literal(literal) => Ok(FlowSignal::Yield(literal.value().clone())),
             Expr::Name(name) => name.eval(context),
             Expr::FormatString(f) => f.eval(context),
-            Expr::ArrayExpression(a) => a.eval(context),
-            Expr::TupleExpression(t) => t.eval(context),
+            Expr::List(a) => a.eval(context),
+            Expr::Tuple(t) => t.eval(context),
             Expr::Scope(s) => s.eval(context),
             Expr::If(if_) => if_.eval(context),
             Expr::Call(call) => call.eval(context),
