@@ -6,7 +6,7 @@ use derive_more::From;
 use microcad_lang_base::{HashMap, Identifier};
 use microcad_lang_types::{Tuple, Value};
 
-use crate::EvalError;
+use crate::{Eval, EvalError};
 
 /// A map of locals.
 ///
@@ -50,6 +50,24 @@ pub enum StackFrame {
     FunctionScope(FunctionScopeFrame),
 }
 
+impl StackFrame {
+    pub fn get_local(&self, id: &Identifier) -> Option<&Value> {
+        match self {
+            StackFrame::Function(FunctionFrame { locals })
+            | StackFrame::FunctionScope(FunctionScopeFrame { locals }) => locals.0.get(id),
+        }
+    }
+
+    pub fn put_local(&mut self, id: Identifier, value: Value) {
+        match self {
+            StackFrame::Function(FunctionFrame { locals })
+            | StackFrame::FunctionScope(FunctionScopeFrame { locals }) => {
+                locals.0.insert(id, value);
+            }
+        }
+    }
+}
+
 /// A generic stack.
 pub struct Stack(Vec<StackFrame>);
 
@@ -57,7 +75,21 @@ impl Stack {
     pub fn new() -> Self {
         Self::default()
     }
+}
 
+impl StackRead for Stack {
+    type Frame = StackFrame;
+
+    fn get_local(&self, id: &Identifier) -> Option<&Value> {
+        self.0.iter().rev().find_map(|frame| frame.get_local(id))
+    }
+
+    fn top(&self) -> &StackFrame {
+        self.0.last().expect("A stack frame") // Intentionally no error handling here
+    }
+}
+
+impl StackWrite for Stack {
     fn push(&mut self, frame: impl Into<StackFrame>) {
         self.0.push(frame.into());
     }
@@ -66,11 +98,7 @@ impl Stack {
         self.0.pop().expect("A stack frame")
     }
 
-    fn top(&self) -> &StackFrame {
-        self.0.last().expect("A stack frame") // Intentionally no error handling here
-    }
-
-    pub fn top_mut(&mut self) -> &mut StackFrame {
+    fn top_mut(&mut self) -> &mut StackFrame {
         self.0.last_mut().expect("A stack frame")
     }
 }
@@ -78,6 +106,26 @@ impl Stack {
 impl Default for Stack {
     fn default() -> Self {
         Self(vec![])
+    }
+}
+
+pub trait StackRead {
+    type Frame;
+
+    fn get_local(&self, _id: &Identifier) -> Option<&Value> {
+        None
+    }
+
+    fn top(&self) -> &Self::Frame;
+}
+
+pub trait StackWrite: StackRead {
+    fn top_mut(&mut self) -> &mut Self::Frame;
+    fn pop(&mut self) -> Self::Frame {
+        unimplemented!("Implement stack pop")
+    }
+    fn push(&mut self, _: impl Into<Self::Frame>) {
+        unimplemented!("Implement stack push")
     }
 }
 
@@ -111,7 +159,42 @@ impl EvalContext {
         f(_guard.0)
     }
 
+    /// Push a diagnostic
     pub fn diag(&mut self, diag: impl Into<EvalError>) {
         self.diag.push(diag.into());
+    }
+
+    pub fn top(&self) -> &StackFrame {
+        self.stack.top()
+    }
+
+    pub fn top_mut(&mut self) -> &mut StackFrame {
+        self.stack.top_mut()
+    }
+}
+
+impl StackRead for EvalContext {
+    type Frame = StackFrame;
+
+    fn get_local(&self, id: &Identifier) -> Option<&Value> {
+        self.stack.get_local(id)
+    }
+
+    fn top(&self) -> &Self::Frame {
+        self.stack.top()
+    }
+}
+
+impl StackWrite for EvalContext {
+    fn pop(&mut self) -> Self::Frame {
+        self.stack.pop()
+    }
+
+    fn push(&mut self, frame: impl Into<Self::Frame>) {
+        self.stack.push(frame);
+    }
+
+    fn top_mut(&mut self) -> &mut Self::Frame {
+        self.stack.top_mut()
     }
 }

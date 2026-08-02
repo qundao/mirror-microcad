@@ -6,6 +6,7 @@
 use microcad_lang_base::{Identifier, IdentifierList, SrcRef, element::WorkbenchKind};
 use microcad_lang_types::{Integer, Type, ValueError, ty::TypeList};
 use microcad_model::output_type::OutputType;
+use microcad_package::tree::SymbolPath;
 use miette::Diagnostic;
 use thiserror::Error;
 
@@ -208,6 +209,41 @@ pub enum EvalError {
         )]
         src_ref: SrcRef,
     },
+
+    /// Invalid control flow
+    #[error("Invalid flow")]
+    InvalidFlow(#[label("This statement does not return a value.")] SrcRef),
+
+    #[error("range expression boundaries must be integers")]
+    InvalidRangeBoundaryType {
+        #[label("This expression does not evaluate to an integer")]
+        src_ref: SrcRef,
+    },
+
+    #[error("This expression is expected to return a value.")]
+    ExpectedExpression { src_ref: SrcRef },
+
+    #[error("This call returns a value but it is ignored")]
+    CallReturnValueIgnored(SrcRef),
+
+    #[error("Symbol `{symbol_path}` cannot be called.")]
+    SymbolCanNotBeCalled {
+        symbol_path: SymbolPath,
+
+        #[label("Symbol name")]
+        src_ref: SrcRef,
+    },
+
+    #[error("Local `{id}` will not have a value.")]
+    LocalExpressionDidNotProduceAValue {
+        #[label("Local `{id}` will not be set.")]
+        id: Identifier,
+        src_ref: SrcRef,
+        expr_src_ref: SrcRef,
+    },
+
+    #[error("Local `{0}` not found in scope.")]
+    LocalNotFound(#[label("Name of the local")] Identifier),
 }
 
 /// Result type of any evaluation.
