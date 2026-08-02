@@ -4,8 +4,8 @@
 //! Evaluate function
 
 use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
-use microcad_lang_types::{Array, Integer, Operators, Tuple, Ty, Type, Value, ValueList};
-use microcad_package::rst::{self, Function, ResolvedName};
+use microcad_lang_types::{Array, Tuple, Ty, Type, Value, ValueList};
+use microcad_package::rst::{self, ResolvedName};
 
 use crate::{
     ArgumentMatch, ArgumentValue, ArgumentValueList, CallTrait, Eval, EvalContext, EvalError,
@@ -312,39 +312,6 @@ impl Eval<FlowSignal> for rst::ResolvedName {
     }
 }
 
-impl Eval<FlowSignal> for rst::function::BinaryOp {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
-        let lhs = self.lhs.eval(context)?;
-        let lhs = match lhs {
-            FlowSignal::Continue => {
-                context.diag(EvalError::InvalidFlow(self.src_ref));
-                return Ok(FlowSignal::Continue);
-            }
-            FlowSignal::Yield(value) => value,
-            FlowSignal::Return(value) => {
-                return Ok(FlowSignal::Return(value));
-            }
-        };
-
-        let rhs = self.rhs.eval(context)?;
-        let rhs = match rhs {
-            FlowSignal::Continue => {
-                context.diag(EvalError::InvalidFlow(self.src_ref));
-                return Ok(FlowSignal::Continue);
-            }
-            FlowSignal::Yield(value) => value,
-            FlowSignal::Return(value) => {
-                return Ok(FlowSignal::Return(value));
-            }
-        };
-
-        Ok(FlowSignal::Yield(
-            lhs.binary_op(self.op, rhs)
-                .map_err(|err| Box::new(EvalError::from(err)))?,
-        ))
-    }
-}
-
 impl Eval<FlowSignal> for rst::FunctionExpression {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
         use rst::FunctionExpression as Expr;
@@ -358,7 +325,6 @@ impl Eval<FlowSignal> for rst::FunctionExpression {
             Expr::Scope(s) => s.eval(context),
             Expr::If(if_) => if_.eval(context),
             Expr::Call(call) => call.eval(context),
-            Expr::BinaryOp(binary_op) => binary_op.eval(context),
 
             //Expr::ArrayAccess()
             _ => todo!(),
