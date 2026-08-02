@@ -76,7 +76,7 @@ where
         + Clone
         + 'tokens,
 {
-    use ast::BinaryOperator::*;
+    use microcad_lang_base::element::BinaryOperator::*;
 
     params
         .clone()

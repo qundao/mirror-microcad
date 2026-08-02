@@ -9,75 +9,10 @@ use crate::ast;
 use crate::ast::Span;
 use std::num::ParseIntError;
 
-/// The type of the operator for binary operations
-#[derive(Debug, Hash, PartialEq, Clone, Visit, Serialize)]
-#[allow(missing_docs)]
-#[visit(default)]
-pub enum BinaryOperator {
-    Add,
-    Subtract,
-    Multiply,
-    Divide,
-    Union,
-    Intersect,
-    PowerXor,
-    GreaterThan,
-    LessThan,
-    GreaterEqual,
-    LessEqual,
-    Equal,
-    Near,
-    NotEqual,
-    And,
-    Or,
-    Xor,
-}
+pub use microcad_lang_base::element::{BinaryOperator, UnaryOperator};
 
-impl BinaryOperator {
-    /// Get the symbolic representation for the operator
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::Add => "+",
-            Self::Subtract => "-",
-            Self::Multiply => "*",
-            Self::Divide => "/",
-            Self::Union => "|",
-            Self::Intersect => "&",
-            Self::PowerXor => "^",
-            Self::GreaterThan => ">",
-            Self::LessThan => "<",
-            Self::GreaterEqual => "≥",
-            Self::LessEqual => "≤",
-            Self::Equal => "==",
-            Self::Near => "~",
-            Self::NotEqual => "!=",
-            Self::And => "&",
-            Self::Or => "|",
-            Self::Xor => "^",
-        }
-    }
-}
-
-/// The type of the operator for unary operations
-#[derive(Debug, Hash, PartialEq, Clone, Visit, Serialize)]
-#[allow(missing_docs)]
-#[visit(default)]
-pub enum UnaryOperator {
-    Minus,
-    Plus,
-    Not,
-}
-
-impl UnaryOperator {
-    /// Get the symbolic representation for the operator
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            Self::Minus => "-",
-            Self::Plus => "+",
-            Self::Not => "!",
-        }
-    }
-}
+impl ast::visitor::Visit for BinaryOperator {}
+impl ast::visitor::Visit for UnaryOperator {}
 
 /// Any expression.
 #[derive(Debug, Hash, PartialEq, Visit, Serialize)]
