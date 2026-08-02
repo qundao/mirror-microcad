@@ -164,3 +164,17 @@ impl<T: std::hash::Hash> ToHash for Hashed<T> {
         self.hash
     }
 }
+
+// Simple FNV-1a hash for generating built-in IDs from &str.
+pub const fn fnv1a_hash(s: &str) -> u64 {
+    let bytes = s.as_bytes();
+    let mut hash: u64 = 0xcbf29ce484222325;
+    let mut i = 0;
+    while i < bytes.len() {
+        hash ^= bytes[i] as u64;
+        hash = hash.wrapping_mul(0x100000001b3);
+        i += 1;
+    }
+
+    hash
+}
