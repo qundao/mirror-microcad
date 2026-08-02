@@ -1,15 +1,11 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Lower, LowerContext, LowerError, LowerResult, ir};
+use crate::{Lower, LowerContext, LowerError, LowerResult, ir, lower::LowerName};
 use microcad_lang_base::{Refer, SpanToSrcRef};
 use microcad_lang_parse::ast;
-use serde::Serialize;
 
-impl<NAME> Lower<ast::StringExpression> for ir::FormatExpression<NAME>
-where
-    NAME: Serialize + Lower<ast::SymbolPath>,
-{
+impl<NAME: LowerName> Lower<ast::StringExpression> for ir::FormatExpression<NAME> {
     fn lower(node: &ast::StringExpression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self::new(
             node.specification
@@ -50,10 +46,7 @@ impl Lower<ast::StringFormatSpecification> for ir::FormatSpec {
     }
 }
 
-impl<NAME> Lower<ast::FormatString> for ir::FormatString<NAME>
-where
-    NAME: Serialize + Lower<ast::SymbolPath>,
-{
+impl<NAME: LowerName> Lower<ast::FormatString> for ir::FormatString<NAME> {
     fn lower(node: &ast::FormatString, context: &mut LowerContext) -> LowerResult<Self> {
         let parts = node
             .parts
@@ -67,10 +60,7 @@ where
     }
 }
 
-impl<NAME> Lower<ast::StringPart> for ir::FormatStringInner<NAME>
-where
-    NAME: Serialize + Lower<ast::SymbolPath>,
-{
+impl<NAME: LowerName> Lower<ast::StringPart> for ir::FormatStringInner<NAME> {
     fn lower(node: &ast::StringPart, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
             ast::StringPart::Char(c) => ir::FormatStringInner::String(Refer::new(
@@ -88,10 +78,7 @@ where
     }
 }
 
-impl<NAME> Lower<ast::StringLiteral> for ir::FormatString<NAME>
-where
-    NAME: Serialize + Lower<ast::SymbolPath>,
-{
+impl<NAME: LowerName> Lower<ast::StringLiteral> for ir::FormatString<NAME> {
     fn lower(node: &ast::StringLiteral, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self(Refer::new(
             vec![ir::FormatStringInner::String(Refer::new(

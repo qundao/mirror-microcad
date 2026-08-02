@@ -144,6 +144,16 @@ pub enum LowerError {
 /// Result with lower error
 pub type LowerResult<T> = Result<T, LowerError>;
 
+pub trait LowerName: ir::NameKind + Lower<ast::SymbolPath> + From<String> {}
+
+pub trait LowerExpr: ir::ExpressionKind + Lower<ast::Expression> {}
+
+impl LowerName for ir::SymbolPath {}
+
+impl<Name: LowerName> LowerExpr for ir::FunctionExpression<Name> {}
+impl LowerExpr for ir::WorkbenchExpression {}
+impl<Name: LowerName> LowerExpr for ir::ConstantExpression<Name> {}
+
 impl SrcReferrer for LowerError {
     fn src_ref(&self) -> SrcRef {
         match self {

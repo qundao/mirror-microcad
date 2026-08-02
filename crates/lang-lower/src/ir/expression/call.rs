@@ -93,6 +93,25 @@ pub struct ArgumentList<Expr> {
     pub named_args: Box<[ir::NamedArgument<Expr>]>,
 }
 
+impl<Expr> ArgumentList<Expr> {
+    /// Prepends a positional argument to the front of the argument list.
+    pub fn prepend(&mut self, expression: Expr) {
+        let mut new_args = Vec::with_capacity(self.unnamed_args.len() + 1);
+        new_args.push(ir::UnnamedArgument {
+            expression,
+            src_ref: SrcRef::none(),
+        });
+        new_args.extend(Vec::from(std::mem::take(&mut self.unnamed_args)));
+        self.unnamed_args = new_args.into_boxed_slice();
+    }
+
+    /// Consumes `self` and returns a new `ArgumentList` with `expr` prepended to `unnamed_args`.
+    pub fn prepended(mut self, expr: Expr) -> Self {
+        self.prepend(expr);
+        self
+    }
+}
+
 impl<EXPR> std::fmt::Display for ArgumentList<EXPR>
 where
     EXPR: std::fmt::Display,
@@ -106,6 +125,28 @@ where
                 .collect::<Vec<_>>()
                 .join(", ")
         })
+    }
+}
+
+impl<Expr> FromIterator<Expr> for ArgumentList<Expr>
+where
+    Expr: SrcReferrer,
+{
+    fn from_iter<T: IntoIterator<Item = Expr>>(iter: T) -> Self {
+        let unnamed_args = iter
+            .into_iter()
+            .map(|expression| ir::UnnamedArgument {
+                src_ref: expression.src_ref(),
+                expression,
+            })
+            .collect::<Vec<_>>()
+            .into_boxed_slice();
+
+        Self {
+            src_ref: SrcRef::default(),
+            unnamed_args,
+            named_args: Box::new([]),
+        }
     }
 }
 
@@ -124,7 +165,7 @@ where
 
 /// Call of a *workbench* or *function*.
 #[derive(Debug, Display, Clone, PartialEq, Hash, Serialize, Deserialize)]
-#[display("{}({})", name, argument_list)]
+#[display("{}({})", name, args)]
 #[serde(bound(
     serialize = "EXPR: Serialize, EXPR::Name: Serialize",
     deserialize = "EXPR: Deserialize<'de>, EXPR::Name: Deserialize<'de>"
@@ -133,7 +174,7 @@ pub struct Call<EXPR: ir::ExpressionKind> {
     /// Name of the call.
     pub name: EXPR::Name,
     /// Argument list of the call.
-    pub argument_list: ir::ArgumentList<EXPR>,
+    pub args: ir::ArgumentList<EXPR>,
     /// Source code reference.
     pub src_ref: SrcRef,
 }
@@ -146,7 +187,7 @@ where
     fn cast_into(self) -> Call<T> {
         Call {
             name: self.name.into(),
-            argument_list: self.argument_list.cast_into(),
+            args: self.args.cast_into(),
             src_ref: self.src_ref,
         }
     }

@@ -3,7 +3,9 @@
 
 use crate::{
     Lower, LowerContext, LowerError, LowerResult, ir,
-    lower::{attribute::outer_with_doc, extract_statements, for_each_statement},
+    lower::{
+        attribute::outer_with_doc, extract_statements, for_each_statement, function::builtin_fn,
+    },
 };
 
 use microcad_lang_base::{Refer, SpanToSrcRef, SrcRef};
@@ -82,42 +84,43 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
                 src_ref: context.span_to_src_ref(&a.span),
             }),
             ast::Expression::SymbolPath(n) => Self::Name(ir::SymbolPath::lower(n, context)?),
-            ast::Expression::BinaryOperation(binop) => {
-                Self::BinaryOp(ir::BinaryOp::lower(binop, context)?)
-            }
-            ast::Expression::UnaryOperation(unop) => {
-                Self::UnaryOp(ir::UnaryOp::lower(unop, context)?)
-            }
+            ast::Expression::BinaryOperation(binop) => Self::Call(ir::Call::lower(binop, context)?),
+            ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call::lower(unop, context)?),
             ast::Expression::Marker(identifier) => {
                 Self::Marker(ir::Marker::lower(identifier, context)?)
             }
             ast::Expression::Body(body) => Self::Group(ir::Group::lower(body, context)?),
             ast::Expression::ElementAccess(access) => access.element_chain.iter().try_fold(
                 Self::lower(&access.expr, context)?,
-                |acc, element| -> LowerResult<Self> {
+                |lhs, element| -> LowerResult<Self> {
                     use ast::ElementInner::*;
                     let src_ref = context.span_to_src_ref(&access.span);
-                    let lhs = Box::new(acc);
 
                     Ok(match &element.inner {
-                        Attribute(a) => Self::MetaAccess(ir::ElementAccess {
-                            lhs,
-                            element: Box::new(ir::Identifier::lower(a, context)?),
+                        Attribute(a) => Self::Call(ir::Call {
+                            name: builtin_fn("attribute_access"),
+                            args: ir::ArgumentList::from_iter([
+                                lhs,
+                                Self::Name(ir::SymbolPath::from(a.name.to_string())),
+                            ]),
                             src_ref,
                         }),
-                        Tuple(t) => Self::PropertyAccess(ir::ElementAccess {
-                            lhs,
-                            element: Box::new(ir::Identifier::lower(t, context)?),
+                        Tuple(t) => Self::Call(ir::Call {
+                            name: builtin_fn("property_access"),
+                            args: ir::ArgumentList::from_iter([
+                                lhs,
+                                Self::Name(ir::SymbolPath::from(t.name.to_string())),
+                            ]),
                             src_ref,
                         }),
-                        Method(m) => Self::MethodCall(ir::ElementAccess {
-                            lhs,
-                            element: Box::new(ir::Call::lower(m, context)?),
+                        Method(m) => Self::Call(ir::Call {
+                            name: ir::SymbolPath::lower(&m.name, context)?,
+                            args: ir::ArgumentList::lower(&m.arguments, context)?.prepended(lhs),
                             src_ref,
                         }),
-                        ArrayElement(e) => Self::ArrayAccess(ir::ElementAccess {
-                            lhs,
-                            element: Box::new(ir::ConstantExpression::lower(e, context)?),
+                        ArrayElement(e) => Self::Call(ir::Call {
+                            name: builtin_fn("array_access"),
+                            args: ir::ArgumentList::from_iter([lhs, Self::lower(e, context)?]),
                             src_ref,
                         }),
                     })

@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 
 /// Parameters and return type of a function
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
-pub struct FunctionSignature<NAME: Serialize = ir::SymbolPath> {
+pub struct FunctionSignature<NAME: ir::NameKind = ir::SymbolPath> {
     /// Function's parameters
     pub parameters: ir::ParameterList<NAME>,
     /// Function's return type
@@ -19,7 +19,7 @@ pub struct FunctionSignature<NAME: Serialize = ir::SymbolPath> {
     pub src_ref: SrcRef,
 }
 
-impl<NAME: Serialize> std::fmt::Display for FunctionSignature<NAME>
+impl<NAME: ir::NameKind> std::fmt::Display for FunctionSignature<NAME>
 where
     NAME: std::fmt::Display,
 {
@@ -37,7 +37,7 @@ where
     }
 }
 
-impl<T: Serialize, NAME: Serialize> CastInto<FunctionSignature<T>> for FunctionSignature<NAME>
+impl<T: ir::NameKind, NAME: ir::NameKind> CastInto<FunctionSignature<T>> for FunctionSignature<NAME>
 where
     NAME: Into<T>,
 {
@@ -53,9 +53,9 @@ where
 /// A function scope `{}`
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
-pub struct Scope<NAME: Serialize>(pub Refer<Box<[FunctionStatement<NAME>]>>);
+pub struct Scope<NAME: ir::NameKind>(pub Refer<Box<[FunctionStatement<NAME>]>>);
 
-impl<T: Serialize, NAME: Serialize> CastInto<Scope<T>> for Scope<NAME>
+impl<T: ir::NameKind, NAME: ir::NameKind> CastInto<Scope<T>> for Scope<NAME>
 where
     NAME: Into<T>,
 {
@@ -64,15 +64,9 @@ where
     }
 }
 
-/// Generic Access
-type Access<ELEMENT, NAME> = ir::ElementAccess<FunctionExpression<NAME>, ELEMENT>;
-
-/// A method call
-type MethodCall<NAME> = Access<ir::Call<FunctionExpression<NAME>>, NAME>;
-
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
-pub enum FunctionExpression<NAME: Serialize = ir::SymbolPath> {
+pub enum FunctionExpression<NAME: ir::NameKind = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
     Name(NAME),
@@ -82,21 +76,15 @@ pub enum FunctionExpression<NAME: Serialize = ir::SymbolPath> {
     Scope(Scope<NAME>),
     If(ir::If<FunctionExpression<NAME>>),
     Call(ir::Call<FunctionExpression<NAME>>),
-    BinaryOp(ir::BinaryOp<FunctionExpression<NAME>>),
-    UnaryOp(ir::UnaryOp<FunctionExpression<NAME>>),
-    /// Access an element of an array (`a[0]`)
-    ArrayAccess(Access<FunctionExpression<NAME>, NAME>),
-    TupleAccess(Access<ir::Identifier, NAME>),
-    /// Call to a method: `[2,3].len()`
-    MethodCall(MethodCall<NAME>),
 }
 
-impl<NAME: Serialize> ir::ExpressionKind for FunctionExpression<NAME> {
+impl<NAME: ir::NameKind> ir::ExpressionKind for FunctionExpression<NAME> {
     type Name = NAME;
     type Body = Scope<NAME>;
 }
 
-impl<T: Serialize, NAME: Serialize> CastInto<FunctionExpression<T>> for FunctionExpression<NAME>
+impl<T: ir::NameKind, NAME: ir::NameKind> CastInto<FunctionExpression<T>>
+    for FunctionExpression<NAME>
 where
     NAME: Into<T>,
 {
@@ -112,19 +100,11 @@ where
             Scope(scope) => Scope(scope.cast_into()),
             If(if_) => If(if_.cast_into()),
             Call(call) => Call(call.cast_into()),
-            BinaryOp(binary_op) => BinaryOp(binary_op.cast_into()),
-            UnaryOp(unary_op) => UnaryOp(unary_op.cast_into()),
-            ArrayAccess(element_access) => ArrayAccess(element_access.cast_into()),
-            TupleAccess(element_access) => TupleAccess(element_access.cast_into()),
-            MethodCall(element_access) => MethodCall(element_access.cast_into()),
         }
     }
 }
 
-impl<NAME: Serialize> SrcReferrer for FunctionExpression<NAME>
-where
-    NAME: SrcReferrer,
-{
+impl<NAME: ir::NameKind> SrcReferrer for FunctionExpression<NAME> {
     fn src_ref(&self) -> SrcRef {
         match &self {
             FunctionExpression::Invalid => SrcRef::none(),
@@ -136,24 +116,19 @@ where
             FunctionExpression::Scope(scope) => scope.0.src_ref(),
             FunctionExpression::If(if_expr) => if_expr.src_ref,
             FunctionExpression::Call(call) => call.src_ref,
-            FunctionExpression::BinaryOp(binary_op) => binary_op.src_ref,
-            FunctionExpression::UnaryOp(unary_op) => unary_op.src_ref,
-            FunctionExpression::ArrayAccess(element_access) => element_access.src_ref,
-            FunctionExpression::TupleAccess(element_access) => element_access.src_ref,
-            FunctionExpression::MethodCall(element_access) => element_access.src_ref,
         }
     }
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
-pub struct ReturnStatement<NAME: Serialize> {
+pub struct ReturnStatement<NAME: ir::NameKind> {
     pub expr: Option<FunctionExpression<NAME>>,
     pub keyword_src_ref: SrcRef,
     pub src_ref: SrcRef,
 }
 
-impl<T: Serialize, NAME: Serialize> CastInto<ReturnStatement<T>> for ReturnStatement<NAME>
+impl<T: ir::NameKind, NAME: ir::NameKind> CastInto<ReturnStatement<T>> for ReturnStatement<NAME>
 where
     NAME: Into<T>,
 {
@@ -168,7 +143,7 @@ where
 
 #[derive(Debug, Clone, derive_more::From, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
-pub enum FunctionStatement<NAME: Serialize> {
+pub enum FunctionStatement<NAME: ir::NameKind> {
     /// `a = 42`
     Local(ir::LocalAssignment<FunctionExpression<NAME>>),
     /// `{ a = 23; a }`
@@ -184,7 +159,7 @@ pub enum FunctionStatement<NAME: Serialize> {
     Return(ReturnStatement<NAME>),
 }
 
-impl<NameA: Serialize, NameB: Serialize> CastInto<FunctionStatement<NameA>>
+impl<NameA: ir::NameKind, NameB: ir::NameKind> CastInto<FunctionStatement<NameA>>
     for FunctionStatement<NameB>
 where
     NameB: Into<NameA>,
@@ -202,7 +177,7 @@ where
     }
 }
 
-impl<NAME: Serialize + SrcReferrer> SrcReferrer for FunctionStatement<NAME> {
+impl<NAME: ir::NameKind> SrcReferrer for FunctionStatement<NAME> {
     fn src_ref(&self) -> SrcRef {
         use FunctionStatement::*;
         match &self {

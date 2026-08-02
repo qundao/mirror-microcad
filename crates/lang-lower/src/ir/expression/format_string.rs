@@ -12,14 +12,14 @@ use serde_with::skip_serializing_none;
 
 /// Format string item.
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
-pub enum FormatStringInner<NAME: Serialize = ir::SymbolPath> {
+pub enum FormatStringInner<NAME: ir::NameKind = ir::SymbolPath> {
     /// String literal.
     String(Refer<String>),
     /// Format expression.
     FormatExpression(Box<FormatExpression<NAME>>),
 }
 
-impl<NAME: Serialize> SrcReferrer for FormatStringInner<NAME> {
+impl<NAME: ir::NameKind> SrcReferrer for FormatStringInner<NAME> {
     fn src_ref(&self) -> SrcRef {
         match self {
             FormatStringInner::String(s) => s.src_ref(),
@@ -28,7 +28,7 @@ impl<NAME: Serialize> SrcReferrer for FormatStringInner<NAME> {
     }
 }
 
-impl<T: Serialize, NAME: Serialize> CastInto<FormatStringInner<T>> for FormatStringInner<NAME>
+impl<T: ir::NameKind, NAME: ir::NameKind> CastInto<FormatStringInner<T>> for FormatStringInner<NAME>
 where
     NAME: Into<T>,
 {
@@ -44,9 +44,11 @@ where
 
 /// Format string.
 #[derive(Default, Clone, Debug, PartialEq, Hash, Serialize, Deserialize)]
-pub struct FormatString<NAME: Serialize = ir::SymbolPath>(pub Refer<Vec<FormatStringInner<NAME>>>);
+pub struct FormatString<NAME: ir::NameKind = ir::SymbolPath>(
+    pub Refer<Vec<FormatStringInner<NAME>>>,
+);
 
-impl<T: Serialize, NAME: Serialize> CastInto<FormatString<T>> for FormatString<NAME>
+impl<T: ir::NameKind, NAME: ir::NameKind> CastInto<FormatString<T>> for FormatString<NAME>
 where
     NAME: Into<T>,
 {
@@ -59,13 +61,13 @@ where
     }
 }
 
-impl<NAME: Serialize> SrcReferrer for FormatString<NAME> {
+impl<NAME: ir::NameKind> SrcReferrer for FormatString<NAME> {
     fn src_ref(&self) -> SrcRef {
         self.0.src_ref
     }
 }
 
-impl<NAME: Serialize> FormatString<NAME> {
+impl<NAME: ir::NameKind> FormatString<NAME> {
     /// Insert a string.
     pub fn push_string(&mut self, s: String, src_ref: SrcRef) {
         self.0
@@ -84,7 +86,7 @@ impl<NAME: Serialize> FormatString<NAME> {
     }
 }
 
-impl<NAME: Serialize> From<Refer<String>> for FormatString<NAME> {
+impl<NAME: ir::NameKind> From<Refer<String>> for FormatString<NAME> {
     fn from(value: Refer<String>) -> Self {
         FormatString(Refer {
             src_ref: value.src_ref,
@@ -93,7 +95,7 @@ impl<NAME: Serialize> From<Refer<String>> for FormatString<NAME> {
     }
 }
 
-impl<NAME: Serialize> std::fmt::Display for FormatString<NAME>
+impl<NAME: ir::NameKind> std::fmt::Display for FormatString<NAME>
 where
     NAME: std::fmt::Display,
 {
@@ -113,7 +115,7 @@ where
 /// Format expression including format specification.
 #[skip_serializing_none]
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
-pub struct FormatExpression<NAME: Serialize> {
+pub struct FormatExpression<NAME: ir::NameKind> {
     /// Format specifier
     pub spec: Option<ir::FormatSpec>,
     /// Expression to format
@@ -122,7 +124,7 @@ pub struct FormatExpression<NAME: Serialize> {
     src_ref: SrcRef,
 }
 
-impl<NAME: Serialize> FormatExpression<NAME> {
+impl<NAME: ir::NameKind> FormatExpression<NAME> {
     /// Create new format expression.
     pub fn new(
         spec: Option<ir::FormatSpec>,
@@ -137,13 +139,13 @@ impl<NAME: Serialize> FormatExpression<NAME> {
     }
 }
 
-impl<NAME: Serialize> SrcReferrer for FormatExpression<NAME> {
+impl<NAME: ir::NameKind> SrcReferrer for FormatExpression<NAME> {
     fn src_ref(&self) -> SrcRef {
         self.src_ref
     }
 }
 
-impl<T: Serialize, NAME: Serialize> CastInto<FormatExpression<T>> for FormatExpression<NAME>
+impl<T: ir::NameKind, NAME: ir::NameKind> CastInto<FormatExpression<T>> for FormatExpression<NAME>
 where
     NAME: Into<T>,
 {
@@ -156,7 +158,7 @@ where
     }
 }
 
-impl<NAME: Serialize> std::fmt::Display for FormatExpression<NAME>
+impl<NAME: ir::NameKind> std::fmt::Display for FormatExpression<NAME>
 where
     NAME: std::fmt::Display,
 {

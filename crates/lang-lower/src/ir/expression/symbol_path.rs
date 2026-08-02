@@ -16,6 +16,8 @@ pub struct SymbolPath {
     pub src_ref: SrcRef,
 }
 
+impl crate::ir::NameKind for SymbolPath {}
+
 impl SingleIdentifier for SymbolPath {
     fn single_identifier(&self) -> Option<&Identifier> {
         if self.is_single_identifier() {
@@ -33,6 +35,28 @@ impl SingleIdentifier for SymbolPath {
 impl From<SymbolPath> for SourceSpan {
     fn from(value: SymbolPath) -> Self {
         value.src_ref().into()
+    }
+}
+
+impl From<String> for SymbolPath {
+    fn from(value: String) -> Self {
+        Self::from(value.as_str())
+    }
+}
+
+impl From<&str> for SymbolPath {
+    fn from(s: &str) -> Self {
+        let (prefix, s) = if s.starts_with("::") {
+            (Some(SrcRef::none()), s.strip_prefix("::").unwrap())
+        } else {
+            (None, s)
+        };
+
+        Self {
+            prefix,
+            parts: s.split("::").map(Identifier::from).collect(),
+            src_ref: SrcRef::none(),
+        }
     }
 }
 
@@ -66,21 +90,5 @@ impl std::fmt::Display for SymbolPath {
                 .collect::<Vec<_>>()
                 .join("::")
         )
-    }
-}
-
-impl From<&str> for SymbolPath {
-    fn from(s: &str) -> Self {
-        let (prefix, s) = if s.starts_with("::") {
-            (Some(SrcRef::none()), s.strip_prefix("::").unwrap())
-        } else {
-            (None, s)
-        };
-
-        Self {
-            prefix,
-            parts: s.split("::").map(Identifier::from).collect(),
-            src_ref: SrcRef::none(),
-        }
     }
 }

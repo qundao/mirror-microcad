@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0x7cd65a945030702d",
-        output_hash: "0x9405aaa529b0999f",
+        output_hash: "0x32cb7ffd377bdbe8",
         tree: (
             id: Some("circle"),
             attr: ((
@@ -236,22 +236,50 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             value: "radius",
                                             src_ref: "8:9 @ 0x5b5b0d75574ec6c6 (287..293)",
                                         ))),
-                                        expression: BinaryOp((
-                                            lhs: Name((
+                                        expression: Call((
+                                            name: (
                                                 prefix: None,
                                                 parts: [
                                                     ((
-                                                        value: "diameter",
-                                                        src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..304)",
+                                                        value: "__builtin",
+                                                        src_ref: "None",
+                                                    )),
+                                                    ((
+                                                        value: "op",
+                                                        src_ref: "None",
+                                                    )),
+                                                    ((
+                                                        value: "divide",
+                                                        src_ref: "None",
                                                     )),
                                                 ],
-                                                src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..305)",
-                                            )),
-                                            op: Divide,
-                                            rhs: Literal(((
-                                                value: Quantity("2"),
-                                                src_ref: "8:29 @ 0x5b5b0d75574ec6c6 (307..310)",
-                                            ))),
+                                                src_ref: "None",
+                                            ),
+                                            args: (
+                                                src_ref: "None",
+                                                unnamed_args: [
+                                                    (
+                                                        expression: Name((
+                                                            prefix: None,
+                                                            parts: [
+                                                                ((
+                                                                    value: "diameter",
+                                                                    src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..304)",
+                                                                )),
+                                                            ],
+                                                            src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..305)",
+                                                        )),
+                                                        src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..305)",
+                                                    ),
+                                                    (
+                                                        expression: Literal(((
+                                                            value: Quantity("2"),
+                                                            src_ref: "8:29 @ 0x5b5b0d75574ec6c6 (307..310)",
+                                                        ))),
+                                                        src_ref: "8:29 @ 0x5b5b0d75574ec6c6 (307..310)",
+                                                    ),
+                                                ],
+                                            ),
                                             src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..310)",
                                         )),
                                     ),
@@ -273,119 +301,191 @@ expression: "ir.to_ron().expect(\"No error\")"
                                 src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..418)",
                                 visibility: Public,
                                 keyword_src_ref: "None",
-                                expression: MethodCall((
-                                    lhs: Call((
-                                        name: (
-                                            prefix: None,
-                                            parts: [
-                                                ((
-                                                    value: "__builtin",
-                                                    src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..332)",
-                                                )),
-                                                ((
-                                                    value: "geo2d",
-                                                    src_ref: "11:16 @ 0x5b5b0d75574ec6c6 (334..339)",
-                                                )),
-                                                ((
-                                                    value: "Circle",
-                                                    src_ref: "11:23 @ 0x5b5b0d75574ec6c6 (341..347)",
-                                                )),
-                                            ],
-                                            src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..347)",
-                                        ),
-                                        argument_list: (
-                                            src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
-                                            unnamed_args: [
-                                                (
-                                                    expression: Name((
+                                expression: Call((
+                                    name: (
+                                        prefix: None,
+                                        parts: [
+                                            ((
+                                                value: "__builtin",
+                                                src_ref: "12:10 @ 0x5b5b0d75574ec6c6 (365..374)",
+                                            )),
+                                            ((
+                                                value: "ops",
+                                                src_ref: "12:21 @ 0x5b5b0d75574ec6c6 (376..379)",
+                                            )),
+                                            ((
+                                                value: "translate",
+                                                src_ref: "12:26 @ 0x5b5b0d75574ec6c6 (381..390)",
+                                            )),
+                                        ],
+                                        src_ref: "12:10 @ 0x5b5b0d75574ec6c6 (365..390)",
+                                    ),
+                                    args: (
+                                        src_ref: "12:36 @ 0x5b5b0d75574ec6c6 (391..417)",
+                                        unnamed_args: [
+                                            (
+                                                expression: Call((
+                                                    name: (
                                                         prefix: None,
                                                         parts: [
                                                             ((
-                                                                value: "radius",
-                                                                src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
+                                                                value: "__builtin",
+                                                                src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..332)",
+                                                            )),
+                                                            ((
+                                                                value: "geo2d",
+                                                                src_ref: "11:16 @ 0x5b5b0d75574ec6c6 (334..339)",
+                                                            )),
+                                                            ((
+                                                                value: "Circle",
+                                                                src_ref: "11:23 @ 0x5b5b0d75574ec6c6 (341..347)",
                                                             )),
                                                         ],
+                                                        src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..347)",
+                                                    ),
+                                                    args: (
                                                         src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
-                                                    )),
-                                                    src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
-                                                ),
-                                            ],
-                                        ),
-                                        src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..364)",
-                                    )),
-                                    element: (
-                                        name: (
-                                            prefix: None,
-                                            parts: [
-                                                ((
-                                                    value: "__builtin",
-                                                    src_ref: "12:10 @ 0x5b5b0d75574ec6c6 (365..374)",
+                                                        unnamed_args: [
+                                                            (
+                                                                expression: Name((
+                                                                    prefix: None,
+                                                                    parts: [
+                                                                        ((
+                                                                            value: "radius",
+                                                                            src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
+                                                                        )),
+                                                                    ],
+                                                                    src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
+                                                                )),
+                                                                src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
+                                                            ),
+                                                        ],
+                                                    ),
+                                                    src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..364)",
                                                 )),
-                                                ((
-                                                    value: "ops",
-                                                    src_ref: "12:21 @ 0x5b5b0d75574ec6c6 (376..379)",
+                                                src_ref: "None",
+                                            ),
+                                        ],
+                                        named_args: [
+                                            (
+                                                id: ((
+                                                    value: "x",
+                                                    src_ref: "12:36 @ 0x5b5b0d75574ec6c6 (391..392)",
                                                 )),
-                                                ((
-                                                    value: "translate",
-                                                    src_ref: "12:26 @ 0x5b5b0d75574ec6c6 (381..390)",
-                                                )),
-                                            ],
-                                            src_ref: "12:10 @ 0x5b5b0d75574ec6c6 (365..390)",
-                                        ),
-                                        argument_list: (
-                                            src_ref: "12:36 @ 0x5b5b0d75574ec6c6 (391..417)",
-                                            named_args: [
-                                                (
-                                                    id: ((
-                                                        value: "x",
-                                                        src_ref: "12:36 @ 0x5b5b0d75574ec6c6 (391..392)",
-                                                    )),
-                                                    expression: PropertyAccess((
-                                                        lhs: Name((
-                                                            prefix: None,
-                                                            parts: [
-                                                                ((
-                                                                    value: "center",
+                                                expression: Call((
+                                                    name: (
+                                                        prefix: None,
+                                                        parts: [
+                                                            ((
+                                                                value: "__builtin",
+                                                                src_ref: "None",
+                                                            )),
+                                                            ((
+                                                                value: "op",
+                                                                src_ref: "None",
+                                                            )),
+                                                            ((
+                                                                value: "property_access",
+                                                                src_ref: "None",
+                                                            )),
+                                                        ],
+                                                        src_ref: "None",
+                                                    ),
+                                                    args: (
+                                                        src_ref: "None",
+                                                        unnamed_args: [
+                                                            (
+                                                                expression: Name((
+                                                                    prefix: None,
+                                                                    parts: [
+                                                                        ((
+                                                                            value: "center",
+                                                                            src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..401)",
+                                                                        )),
+                                                                    ],
                                                                     src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..401)",
                                                                 )),
-                                                            ],
-                                                            src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..401)",
-                                                        )),
-                                                        element: ((
-                                                            value: "x",
-                                                            src_ref: "12:47 @ 0x5b5b0d75574ec6c6 (402..403)",
-                                                        )),
-                                                        src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..403)",
-                                                    )),
-                                                    src_ref: "12:36 @ 0x5b5b0d75574ec6c6 (391..403)",
-                                                ),
-                                                (
-                                                    id: ((
-                                                        value: "y",
-                                                        src_ref: "12:50 @ 0x5b5b0d75574ec6c6 (405..406)",
-                                                    )),
-                                                    expression: PropertyAccess((
-                                                        lhs: Name((
-                                                            prefix: None,
-                                                            parts: [
-                                                                ((
-                                                                    value: "center",
+                                                                src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..401)",
+                                                            ),
+                                                            (
+                                                                expression: Name((
+                                                                    prefix: None,
+                                                                    parts: [
+                                                                        ((
+                                                                            value: "x",
+                                                                            src_ref: "None",
+                                                                        )),
+                                                                    ],
+                                                                    src_ref: "None",
+                                                                )),
+                                                                src_ref: "None",
+                                                            ),
+                                                        ],
+                                                    ),
+                                                    src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..403)",
+                                                )),
+                                                src_ref: "12:36 @ 0x5b5b0d75574ec6c6 (391..403)",
+                                            ),
+                                            (
+                                                id: ((
+                                                    value: "y",
+                                                    src_ref: "12:50 @ 0x5b5b0d75574ec6c6 (405..406)",
+                                                )),
+                                                expression: Call((
+                                                    name: (
+                                                        prefix: None,
+                                                        parts: [
+                                                            ((
+                                                                value: "__builtin",
+                                                                src_ref: "None",
+                                                            )),
+                                                            ((
+                                                                value: "op",
+                                                                src_ref: "None",
+                                                            )),
+                                                            ((
+                                                                value: "property_access",
+                                                                src_ref: "None",
+                                                            )),
+                                                        ],
+                                                        src_ref: "None",
+                                                    ),
+                                                    args: (
+                                                        src_ref: "None",
+                                                        unnamed_args: [
+                                                            (
+                                                                expression: Name((
+                                                                    prefix: None,
+                                                                    parts: [
+                                                                        ((
+                                                                            value: "center",
+                                                                            src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..415)",
+                                                                        )),
+                                                                    ],
                                                                     src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..415)",
                                                                 )),
-                                                            ],
-                                                            src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..415)",
-                                                        )),
-                                                        element: ((
-                                                            value: "y",
-                                                            src_ref: "12:61 @ 0x5b5b0d75574ec6c6 (416..417)",
-                                                        )),
-                                                        src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..417)",
-                                                    )),
-                                                    src_ref: "12:50 @ 0x5b5b0d75574ec6c6 (405..417)",
-                                                ),
-                                            ],
-                                        ),
-                                        src_ref: "12:10 @ 0x5b5b0d75574ec6c6 (365..418)",
+                                                                src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..415)",
+                                                            ),
+                                                            (
+                                                                expression: Name((
+                                                                    prefix: None,
+                                                                    parts: [
+                                                                        ((
+                                                                            value: "y",
+                                                                            src_ref: "None",
+                                                                        )),
+                                                                    ],
+                                                                    src_ref: "None",
+                                                                )),
+                                                                src_ref: "None",
+                                                            ),
+                                                        ],
+                                                    ),
+                                                    src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..417)",
+                                                )),
+                                                src_ref: "12:50 @ 0x5b5b0d75574ec6c6 (405..417)",
+                                            ),
+                                        ],
                                     ),
                                     src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..418)",
                                 )),

@@ -1,21 +1,23 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Lower, LowerContext, LowerResult, ir, lower::sort_and_check};
+use crate::{
+    Lower, LowerContext, LowerResult, ir,
+    lower::{LowerExpr, LowerName, function::builtin_fn, sort_and_check},
+};
 
 use microcad_lang_base::{SpanToSrcRef, SrcRef};
 use microcad_lang_parse::ast;
 
-impl<EXPR> Lower<ast::Call> for ir::Call<EXPR>
+impl<EXPR: LowerExpr> Lower<ast::Call> for ir::Call<EXPR>
 where
-    EXPR: ir::ExpressionKind + Lower<ast::Expression>,
-    EXPR::Name: Lower<ast::SymbolPath>,
+    EXPR::Name: LowerName,
 {
     fn lower(node: &ast::Call, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::Call {
             src_ref: context.span_to_src_ref(&node.span),
             name: EXPR::Name::lower(&node.name, context)?,
-            argument_list: ir::ArgumentList::lower(&node.arguments, context)?,
+            args: ir::ArgumentList::lower(&node.arguments, context)?,
         })
     }
 }
@@ -83,6 +85,35 @@ where
             src_ref: context.span_to_src_ref(&node.span),
             unnamed_args: unnamed.into_boxed_slice(),
             named_args: sort_and_check(named, context)?,
+        })
+    }
+}
+
+impl<Expr: LowerExpr> Lower<ast::UnaryOperation> for ir::Call<Expr>
+where
+    Expr::Name: LowerName,
+{
+    fn lower(node: &ast::UnaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
+            name: builtin_fn(node.op.to_fn_name()),
+            args: ir::ArgumentList::from_iter([Expr::lower(&node.rhs, context)?]),
+            src_ref: context.span_to_src_ref(&node.span),
+        })
+    }
+}
+
+impl<Expr: LowerExpr> Lower<ast::BinaryOperation> for ir::Call<Expr>
+where
+    Expr::Name: LowerName,
+{
+    fn lower(node: &ast::BinaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
+            name: builtin_fn(node.op.to_fn_name()),
+            args: ir::ArgumentList::from_iter([
+                Expr::lower(&node.lhs, context)?,
+                Expr::lower(&node.rhs, context)?,
+            ]),
+            src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }

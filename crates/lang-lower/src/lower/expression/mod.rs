@@ -4,6 +4,7 @@
 use crate::{
     Lower, LowerContext, LowerError, LowerResult,
     ir::{self, ExpressionKind},
+    lower::LowerName,
 };
 
 mod call;
@@ -12,34 +13,6 @@ mod literal;
 
 use microcad_lang_base::{Identifier, SpanToSrcRef};
 use microcad_lang_parse::ast;
-use serde::Serialize;
-
-impl<EXPR> Lower<ast::BinaryOperation> for ir::BinaryOp<EXPR>
-where
-    EXPR: Lower<ast::Expression>,
-{
-    fn lower(node: &ast::BinaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self {
-            lhs: Box::new(EXPR::lower(node.lhs.as_ref(), context)?),
-            rhs: Box::new(EXPR::lower(node.rhs.as_ref(), context)?),
-            op: node.op.value,
-            src_ref: context.span_to_src_ref(&node.span),
-        })
-    }
-}
-
-impl<EXPR> Lower<ast::UnaryOperation> for ir::UnaryOp<EXPR>
-where
-    EXPR: Lower<ast::Expression>,
-{
-    fn lower(node: &ast::UnaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(ir::UnaryOp {
-            rhs: Box::new(EXPR::lower(&node.rhs, context)?),
-            op: node.op.value,
-            src_ref: context.span_to_src_ref(&node.span),
-        })
-    }
-}
 
 impl<EXPR> Lower<ast::ArrayItem> for ir::RangeFirst<EXPR>
 where
@@ -194,10 +167,7 @@ where
     }
 }
 
-impl<NAME: Serialize> Lower<ast::Expression> for ir::ConstantExpression<NAME>
-where
-    NAME: Lower<ast::SymbolPath>,
-{
+impl<NAME: LowerName> Lower<ast::Expression> for ir::ConstantExpression<NAME> {
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
             ast::Expression::Bracketed(expr, _) => Self::lower(expr, context)?,
@@ -221,12 +191,8 @@ where
                 src_ref: context.span_to_src_ref(&a.span),
             }),
             ast::Expression::SymbolPath(n) => Self::Name(NAME::lower(n, context)?),
-            ast::Expression::BinaryOperation(binop) => {
-                Self::BinaryOp(ir::BinaryOp::lower(binop, context)?)
-            }
-            ast::Expression::UnaryOperation(unop) => {
-                Self::UnaryOp(ir::UnaryOp::lower(unop, context)?)
-            }
+            ast::Expression::BinaryOperation(binop) => Self::Call(ir::Call::lower(binop, context)?),
+            ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call::lower(unop, context)?),
             expr => {
                 context.diag(LowerError::InvalidConstantExpression {
                     src_ref: context.span_to_src_ref(&expr.span()),

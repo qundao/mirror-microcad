@@ -6,7 +6,7 @@
 use crate::{CastInto, ir};
 
 use derive_more::Display;
-use microcad_lang_base::{Identifier, IsDefault, Refer, SrcRef, SrcReferrer, is_default};
+use microcad_lang_base::{IsDefault, Refer, SrcRef, SrcReferrer, is_default};
 use microcad_lang_proc_macros::Identifiable;
 
 pub use microcad_lang_base::element::WorkbenchKind;
@@ -16,7 +16,7 @@ use serde_with::skip_serializing_none;
 /// Each WorkbenchStatement eventually evals into a [`Models`]
 #[skip_serializing_none]
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
-pub struct WorkbenchStatement<NAME: Serialize = ir::SymbolPath> {
+pub struct WorkbenchStatement<NAME: ir::NameKind = ir::SymbolPath> {
     pub attr: ir::OuterAttributes<NAME>,
     pub src_ref: SrcRef,
     pub visibility: ir::Visibility, // public = property
@@ -26,7 +26,7 @@ pub struct WorkbenchStatement<NAME: Serialize = ir::SymbolPath> {
     pub expression: WorkbenchExpression<NAME>,
 }
 
-impl<NameA: Serialize, NameB: Serialize> CastInto<WorkbenchStatement<NameA>>
+impl<NameA: ir::NameKind, NameB: ir::NameKind> CastInto<WorkbenchStatement<NameA>>
     for WorkbenchStatement<NameB>
 where
     NameB: Into<NameA>,
@@ -45,13 +45,13 @@ where
 }
 
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
-pub struct Group<NAME: Serialize = ir::SymbolPath> {
+pub struct Group<NAME: ir::NameKind = ir::SymbolPath> {
     pub src_ref: SrcRef,
     pub attr: ir::InnerAttributes<NAME>,
     pub statements: Box<[WorkbenchStatement<NAME>]>,
 }
 
-impl<Src: Serialize, Dst: Serialize> CastInto<Group<Dst>> for Group<Src>
+impl<Src: ir::NameKind, Dst: ir::NameKind> CastInto<Group<Dst>> for Group<Src>
 where
     Src: Into<Dst>,
 {
@@ -65,7 +65,7 @@ where
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Init<NAME: Serialize = ir::SymbolPath> {
+pub struct Init<NAME: ir::NameKind = ir::SymbolPath> {
     /// SrcRef of the `init` keyword
     pub keyword_ref: SrcRef,
     /// Outer attributes.
@@ -96,35 +96,43 @@ impl Marker {
     }
 }
 
-type Access<ELEMENT, NAME> = ir::ElementAccess<WorkbenchExpression<NAME>, ELEMENT>;
-type MethodCall<NAME> = Access<ir::Call<WorkbenchExpression<NAME>>, NAME>;
-
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
-pub enum WorkbenchExpression<NAME: Serialize = ir::SymbolPath> {
+pub enum WorkbenchExpression<Name: ir::NameKind = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
-    Name(NAME),
-    FormatString(ir::FormatString<NAME>),
-    ArrayExpression(ir::ArrayExpression<WorkbenchExpression<NAME>>),
-    TupleExpression(ir::TupleExpression<WorkbenchExpression<NAME>>),
-    Group(ir::Group<NAME>),
-    If(ir::If<WorkbenchExpression<NAME>>),
-    Call(ir::Call<WorkbenchExpression<NAME>>),
+    Name(Name),
+    FormatString(ir::FormatString<Name>),
+    ArrayExpression(ir::ArrayExpression<WorkbenchExpression<Name>>),
+    TupleExpression(ir::TupleExpression<WorkbenchExpression<Name>>),
+    Group(ir::Group<Name>),
+    If(ir::If<WorkbenchExpression<Name>>),
+    Call(ir::Call<WorkbenchExpression<Name>>),
     Marker(Marker),
-    BinaryOp(ir::BinaryOp<WorkbenchExpression<NAME>>),
-    UnaryOp(ir::UnaryOp<WorkbenchExpression<NAME>>),
-    MetaAccess(Access<Identifier, NAME>),
-    ArrayAccess(Access<ir::ConstantExpression<NAME>, NAME>),
-    PropertyAccess(Access<Identifier, NAME>),
-    MethodCall(MethodCall<NAME>),
 }
 
-impl<NAME: Serialize> ir::ExpressionKind for WorkbenchExpression<NAME> {
+impl<Name: ir::NameKind> SrcReferrer for WorkbenchExpression<Name> {
+    fn src_ref(&self) -> SrcRef {
+        match &self {
+            WorkbenchExpression::Invalid => SrcRef::none(),
+            WorkbenchExpression::Literal(literal) => literal.src_ref(),
+            WorkbenchExpression::Name(name) => name.src_ref(),
+            WorkbenchExpression::FormatString(format_string) => format_string.src_ref(),
+            WorkbenchExpression::ArrayExpression(array_expression) => array_expression.src_ref(),
+            WorkbenchExpression::TupleExpression(tuple_expression) => tuple_expression.src_ref,
+            WorkbenchExpression::Group(group) => group.src_ref,
+            WorkbenchExpression::If(if_) => if_.src_ref,
+            WorkbenchExpression::Call(call) => call.src_ref,
+            WorkbenchExpression::Marker(marker) => marker.src_ref,
+        }
+    }
+}
+
+impl<NAME: ir::NameKind> ir::ExpressionKind for WorkbenchExpression<NAME> {
     type Name = NAME;
     type Body = Group<NAME>;
 }
 
-impl<NameA: Serialize, NameB: Serialize> CastInto<WorkbenchExpression<NameA>>
+impl<NameA: ir::NameKind, NameB: ir::NameKind> CastInto<WorkbenchExpression<NameA>>
     for WorkbenchExpression<NameB>
 where
     NameB: Into<NameA>,
@@ -142,12 +150,6 @@ where
             If(if_) => If(if_.cast_into()),
             Call(call) => Call(call.cast_into()),
             Marker(marker) => Marker(marker),
-            BinaryOp(binary_op) => BinaryOp(binary_op.cast_into()),
-            UnaryOp(unary_op) => UnaryOp(unary_op.cast_into()),
-            MetaAccess(element_access) => MetaAccess(element_access.cast_into()),
-            ArrayAccess(element_access) => ArrayAccess(element_access.cast_into()),
-            PropertyAccess(element_access) => PropertyAccess(element_access.cast_into()),
-            MethodCall(element_access) => MethodCall(element_access.cast_into()),
         }
     }
 }

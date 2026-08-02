@@ -3,13 +3,12 @@
 
 use crate::{
     Lower, LowerContext, LowerError, LowerResult,
-    ir::{self, FunctionExpression, FunctionStatement},
-    lower::{extract_statements_with_tail, for_each_statement},
+    ir::{self, ArgumentList, FunctionExpression, FunctionStatement},
+    lower::{LowerName, extract_statements_with_tail, for_each_statement},
 };
 
 use microcad_lang_base::{Identifier, Refer, SpanToSrcRef, SrcRef, SrcReferrer};
 use microcad_lang_parse::ast;
-use serde::Serialize;
 
 impl Lower<ast::def::Function> for ir::OuterAttributes {
     fn lower(node: &ast::def::Function, context: &mut LowerContext) -> LowerResult<Self> {
@@ -27,10 +26,7 @@ impl Lower<ast::def::Function> for ir::FunctionSignature {
     }
 }
 
-impl<NAME: Serialize> Lower<ast::Body> for ir::Scope<NAME>
-where
-    NAME: SrcReferrer + Lower<ast::SymbolPath>,
-{
+impl<NAME: LowerName> Lower<ast::Body> for ir::Scope<NAME> {
     fn lower(node: &ast::Body, context: &mut LowerContext) -> LowerResult<Self> {
         let statements = &node.statements;
         for_each_statement(statements, context, |stmt, context| {
@@ -55,10 +51,14 @@ where
     }
 }
 
-impl<NAME: Serialize> Lower<ast::Expression> for ir::FunctionExpression<NAME>
+pub fn builtin_fn<'a, NAME>(s: impl Into<String>) -> NAME
 where
-    NAME: SrcReferrer + Lower<ast::SymbolPath>,
+    NAME: From<String>,
 {
+    format!("__builtin::op::{}", s.into()).into()
+}
+
+impl<NAME: LowerName> Lower<ast::Expression> for ir::FunctionExpression<NAME> {
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
             ast::Expression::Call(expr) => Self::Call(ir::Call::lower(expr, context)?),
@@ -83,38 +83,47 @@ where
                 src_ref: context.span_to_src_ref(&a.span),
             }),
             ast::Expression::SymbolPath(n) => Self::Name(NAME::lower(n, context)?),
-            ast::Expression::BinaryOperation(binop) => {
-                Self::BinaryOp(ir::BinaryOp::lower(binop, context)?)
-            }
-            ast::Expression::UnaryOperation(unop) => {
-                Self::UnaryOp(ir::UnaryOp::lower(unop, context)?)
-            }
+            ast::Expression::BinaryOperation(binop) => Self::Call(ir::Call {
+                name: builtin_fn(binop.op.to_fn_name()),
+                args: ArgumentList::from_iter([
+                    ir::FunctionExpression::lower(&binop.lhs, context)?,
+                    ir::FunctionExpression::lower(&binop.rhs, context)?,
+                ]),
+                src_ref: context.span_to_src_ref(&binop.span),
+            }),
+            ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call {
+                name: builtin_fn(unop.op.to_fn_name()),
+                args: ArgumentList::from_iter([Self::lower(&unop.rhs, context)?]),
+                src_ref: context.span_to_src_ref(&unop.span),
+            }),
             ast::Expression::Marker(_) => {
                 panic!("Marker statement not allowed")
             }
             ast::Expression::Body(body) => Self::Scope(ir::Scope::lower(body, context)?),
             ast::Expression::ElementAccess(access) => access.element_chain.iter().try_fold(
                 Self::lower(&access.expr, context)?,
-                |acc, element| -> LowerResult<Self> {
+                |lhs, element| -> LowerResult<Self> {
                     use ast::ElementInner::*;
                     let src_ref = context.span_to_src_ref(&access.span);
-                    let lhs = Box::new(acc);
 
                     Ok(match &element.inner {
                         Attribute(_) => panic!("Attribute access not allowed"),
-                        Tuple(t) => Self::TupleAccess(ir::ElementAccess {
-                            lhs,
-                            element: Box::new(ir::Identifier::lower(t, context)?),
+                        Tuple(t) => Self::Call(ir::Call {
+                            name: builtin_fn("tuple_access"),
+                            args: ir::ArgumentList::from_iter([
+                                lhs,
+                                Self::Name(NAME::from(t.name.to_string())),
+                            ]),
                             src_ref,
                         }),
-                        Method(m) => Self::MethodCall(ir::ElementAccess {
-                            lhs,
-                            element: Box::new(ir::Call::lower(m, context)?),
+                        Method(m) => Self::Call(ir::Call {
+                            name: NAME::lower(&m.name, context)?,
+                            args: ir::ArgumentList::lower(&m.arguments, context)?.prepended(lhs),
                             src_ref,
                         }),
-                        ArrayElement(e) => Self::ArrayAccess(ir::ElementAccess {
-                            lhs,
-                            element: Box::new(ir::FunctionExpression::lower(e, context)?),
+                        ArrayElement(e) => Self::Call(ir::Call {
+                            name: builtin_fn("array_access"),
+                            args: ir::ArgumentList::from_iter([lhs, Self::lower(e, context)?]),
                             src_ref,
                         }),
                     })
@@ -126,10 +135,7 @@ where
     }
 }
 
-impl<NAME: Serialize> Lower<Option<ast::Expression>> for Option<ir::FunctionExpression<NAME>>
-where
-    NAME: SrcReferrer + Lower<ast::SymbolPath>,
-{
+impl<NAME: LowerName> Lower<Option<ast::Expression>> for Option<ir::FunctionExpression<NAME>> {
     fn lower(node: &Option<ast::Expression>, context: &mut LowerContext) -> LowerResult<Self> {
         node.as_ref()
             .map(|expr| ir::FunctionExpression::lower(expr, context))
@@ -137,10 +143,7 @@ where
     }
 }
 
-impl<NAME: Serialize> Lower<ast::Return> for ir::ReturnStatement<NAME>
-where
-    NAME: SrcReferrer + Lower<ast::SymbolPath>,
-{
+impl<NAME: LowerName> Lower<ast::Return> for ir::ReturnStatement<NAME> {
     fn lower(node: &ast::Return, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             expr: Option::<ir::FunctionExpression<NAME>>::lower(&node.expr, context)?,
@@ -150,10 +153,7 @@ where
     }
 }
 
-impl<NAME: Serialize> Lower<ast::Statement> for Option<ir::FunctionStatement<NAME>>
-where
-    NAME: SrcReferrer + Lower<ast::SymbolPath>,
-{
+impl<NAME: LowerName> Lower<ast::Statement> for Option<ir::FunctionStatement<NAME>> {
     fn lower(stmt: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match stmt {
             ast::Statement::Return(ret) => Some(ir::FunctionStatement::Return(
@@ -187,7 +187,7 @@ where
                         context.diag(LowerError::StatementNotAllowed { src_ref });
                         None
                     }
-                    ast::Expression::Call(call) => Some(ir::Call::lower(&call, context)?.into()),
+                    ast::Expression::Call(call) => Some(ir::Call::lower(call, context)?.into()),
                     ast::Expression::Body(body) => Some(ir::Scope::lower(&body, context)?.into()),
                     ast::Expression::If(if_) => Some(ir::If::lower(if_, context)?.into()),
                 }
@@ -197,10 +197,7 @@ where
     }
 }
 
-impl<NAME> Lower<ast::StatementList> for Box<[ir::FunctionStatement<NAME>]>
-where
-    NAME: SrcReferrer + Serialize + Lower<ast::SymbolPath>,
-{
+impl<NAME: LowerName> Lower<ast::StatementList> for Box<[ir::FunctionStatement<NAME>]> {
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         let statements = extract_statements_with_tail(
             node,
