@@ -10,26 +10,14 @@ rust-version.workspace = true
 version.workspace = true
 license = "AGPL-3.0-or-later"
 
-[lib]
-path = "lib.rs"
-
 [dependencies]
 log = "0.4"
-lazy_static = "1.5"
 cgmath = "0.18"
 dirs = "6"
 geo = "0.33"
-env_logger = "0.11"
-geo_rusttype = "0.3.0"
-rusttype = "0.9.3"
+phf = { version = "0.14", features = ["macros"] }
+thiserror = "2.0"
 
-microcad-builtin-proc-macros = { workspace = true }
 microcad-lang-base = { workspace = true }
-microcad-export = { workspace = true }
-microcad-import = { workspace = true }
-
-[lints.rust]
-missing_docs = "warn"
-
-[lints.clippy]
-unwrap_used = "warn"
+microcad-lang-types = { workspace = true }
+microcad-builtin-proc-macros = { workspace = true }
