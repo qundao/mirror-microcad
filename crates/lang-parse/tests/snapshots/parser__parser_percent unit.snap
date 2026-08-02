@@ -50,8 +50,7 @@ expression: output
                                 start: 0,
                                 end: 2,
                             ),
-                            value: 1.0,
-                            raw: "1",
+                            value: "1",
                             unit: (
                                 span: (
                                     start: 1,

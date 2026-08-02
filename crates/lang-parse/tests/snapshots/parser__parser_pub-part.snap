@@ -146,8 +146,7 @@ expression: output
                                                 start: 40,
                                                 end: 43,
                                             ),
-                                            value: 1.0,
-                                            raw: "1",
+                                            value: "1",
                                             unit: (
                                                 span: (
                                                     start: 41,

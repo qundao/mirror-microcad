@@ -10,7 +10,7 @@ expression: output
     ),
     payload: (
         input_hash: "0xd4f3eeba8a58432b",
-        output_hash: "0xa468cb652709f4cc",
+        output_hash: "0xae205e4ddd487c64",
         tree: (
             span: (
                 start: 0,
@@ -183,8 +183,7 @@ expression: output
                                                         start: 40,
                                                         end: 41,
                                                     ),
-                                                    value: 2,
-                                                    raw: "2",
+                                                    value: "2",
                                                 )),
                                             )),
                                         ))),

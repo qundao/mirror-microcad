@@ -98,8 +98,7 @@ expression: output
                                         start: 16,
                                         end: 19,
                                     ),
-                                    value: 2.0,
-                                    raw: "2",
+                                    value: "2",
                                     unit: (
                                         span: (
                                             start: 17,

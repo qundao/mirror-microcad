@@ -213,8 +213,7 @@ expression: output
                                                                     start: 64,
                                                                     end: 68,
                                                                 ),
-                                                                value: 10.0,
-                                                                raw: "10",
+                                                                value: "10",
                                                                 unit: (
                                                                     span: (
                                                                         start: 66,
@@ -255,8 +254,7 @@ expression: output
                                                                     start: 79,
                                                                     end: 82,
                                                                 ),
-                                                                value: 5.0,
-                                                                raw: "5",
+                                                                value: "5",
                                                                 unit: (
                                                                     span: (
                                                                         start: 80,

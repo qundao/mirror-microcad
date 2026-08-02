@@ -139,8 +139,7 @@ expression: output
                                                 start: 22,
                                                 end: 25,
                                             ),
-                                            value: 3.0,
-                                            raw: "3",
+                                            value: "3",
                                             unit: (
                                                 span: (
                                                     start: 23,

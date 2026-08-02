@@ -77,8 +77,7 @@ expression: output
                                                     start: 0,
                                                     end: 3,
                                                 ),
-                                                value: 0.0,
-                                                raw: "0",
+                                                value: "0",
                                                 unit: (
                                                     span: (
                                                         start: 1,
@@ -111,8 +110,7 @@ expression: output
                                                     start: 5,
                                                     end: 8,
                                                 ),
-                                                value: 1.0,
-                                                raw: "1",
+                                                value: "1",
                                                 unit: (
                                                     span: (
                                                         start: 6,
@@ -151,8 +149,7 @@ expression: output
                                                     start: 10,
                                                     end: 14,
                                                 ),
-                                                value: 2.0,
-                                                raw: "2",
+                                                value: "2",
                                                 unit: (
                                                     span: (
                                                         start: 11,
@@ -185,8 +182,7 @@ expression: output
                                                     start: 16,
                                                     end: 21,
                                                 ),
-                                                value: 3.0,
-                                                raw: "3",
+                                                value: "3",
                                                 unit: (
                                                     span: (
                                                         start: 17,
@@ -226,8 +222,7 @@ expression: output
                                                 start: 23,
                                                 end: 29,
                                             ),
-                                            value: 4.0,
-                                            raw: "4",
+                                            value: "4",
                                             unit: (
                                                 span: (
                                                     start: 24,
@@ -260,8 +255,7 @@ expression: output
                                                 start: 31,
                                                 end: 35,
                                             ),
-                                            value: 1.0,
-                                            raw: "1",
+                                            value: "1",
                                             unit: (
                                                 span: (
                                                     start: 32,
@@ -296,8 +290,7 @@ expression: output
                                         start: 37,
                                         end: 40,
                                     ),
-                                    value: 1.0,
-                                    raw: "1",
+                                    value: "1",
                                     unit: (
                                         span: (
                                             start: 38,
@@ -329,8 +322,7 @@ expression: output
                                     start: 42,
                                     end: 44,
                                 ),
-                                value: 2.0,
-                                raw: "2",
+                                value: "2",
                                 unit: (
                                     span: (
                                         start: 43,
