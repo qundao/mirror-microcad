@@ -26,7 +26,6 @@ pub use value_list::*;
 use crate::{Angle, Color, Integer, Length, Mat3, QuantityType, Scalar, Type, Vec2, Vec3};
 
 use derive_more::From;
-use microcad_lang_base::SrcRef;
 use serde::{Deserialize, Serialize};
 
 pub type ValueResult<Type = Value> = std::result::Result<Type, ValueError>;
@@ -255,6 +254,12 @@ impl From<usize> for Value {
 impl From<f32> for Value {
     fn from(f: f32) -> Self {
         Value::Quantity((Scalar::from_num(f)).into())
+    }
+}
+
+impl From<i64> for Value {
+    fn from(i: i64) -> Self {
+        Value::Integer(Integer::from_num(i))
     }
 }
 

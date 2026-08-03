@@ -3,73 +3,62 @@
 
 //! Named tuple evaluation entity
 
-use microcad_hash::HashMap;
-
-use microcad_lang_base::{Identifier, IdentifierList, SrcReferrer};
-use microcad_lang_proc_macros::SrcReferrer;
+use microcad_lang_base::Identifier;
 
 use crate::{ty::*, value::*};
 
-/// Tuple with named values
-///
-/// Names are optional, which means Identifiers can be empty.
-#[derive(Clone, Debug, Default, PartialEq, SrcReferrer, Serialize, Deserialize)]
+/// Tuple with positional and named values
+#[derive(Clone, Debug, Hash, Default, PartialEq, Serialize, Deserialize)]
 pub struct Tuple {
-    pub named: HashMap<Identifier, Value>,
-    pub unnamed: HashMap<Type, Value>,
-    pub src_ref: SrcRef,
+    pub positional: Vec<Value>,
+    pub named: Vec<(Identifier, Value)>,
 }
 
 /// Create a Tuple from items
 #[macro_export]
 macro_rules! create_tuple {
         ($($key:ident = $value:expr),*) => {
-                [$( (stringify!($key), $crate::value::Value::try_from($value).expect("Valid value")) ),* ]
+                [$( (stringify!($key), $crate::value::Value::from($value)) ),* ]
                     .iter()
                     .into()
     };
 }
 
 impl Tuple {
-    /// Create new named tuple.
-    pub fn new_named(named: microcad_hash::HashMap<Identifier, Value>, src_ref: SrcRef) -> Self {
-        Self {
-            named,
-            unnamed: HashMap::default(),
-            src_ref,
-        }
-    }
-
-    /// Insert new (or overwrite existing) value into tuple
-    pub fn insert(&mut self, id: Identifier, value: Value) {
-        if id.is_empty() {
-            self.unnamed.insert(value.ty(), value);
-        } else {
-            self.named.insert(id, value);
-        }
-    }
-
-    /// Return an iterator over all named values
-    pub fn named_iter(&self) -> std::collections::hash_map::Iter<'_, Identifier, Value> {
-        if !self.unnamed.is_empty() {
-            log::warn!("using named_iter() on a tuple which has unnamed items too")
-        }
-        self.named.iter()
-    }
-
     /// Return the tuple type.
     pub fn tuple_type(&self) -> TupleType {
         TupleType {
+            positional: self.positional.iter().map(|v| v.ty()).collect(),
             named: self
                 .named
                 .iter()
                 .map(|(id, v)| (id.clone(), v.ty()))
                 .collect(),
-            unnamed: self.unnamed.values().map(|v| v.ty()).collect(),
         }
     }
 
-    /// Combine two tuples of the same type with an operation.
+    /// Checks if two tuples have matching structural shapes:
+    /// 1. Same number of positional elements.
+    /// 2. Same set of named field identifiers (in exact sequence).
+    pub fn same_structure(&self, rhs: &Tuple) -> bool {
+        // 1. Positional counts must match
+        if self.positional.len() != rhs.positional.len() {
+            return false;
+        }
+
+        // 2. Named field counts must match
+        if self.named.len() != rhs.named.len() {
+            return false;
+        }
+
+        // 3. Named identifiers must match in order
+        self.named
+            .iter()
+            .zip(rhs.named.iter())
+            .all(|((lhs_id, _), (rhs_id, _))| lhs_id == rhs_id)
+    }
+
+    /// Combine two tuples of the same structure with an operation.
     ///
     /// This function is used for `+` and `-` builtin operators.
     pub fn combine(
@@ -77,33 +66,20 @@ impl Tuple {
         rhs: Tuple,
         op: impl Fn(Value, Value) -> ValueResult,
     ) -> ValueResult<Self> {
-        if self.ty() == rhs.ty() {
-            let mut named = self.named;
-
-            for (key, rhs_val) in rhs.named {
-                named
-                    .entry(key)
-                    .and_modify(|lhs_val| {
-                        *lhs_val = op(lhs_val.clone(), rhs_val.clone()).unwrap_or_default()
-                    })
-                    .or_insert(rhs_val);
-            }
-
-            let mut unnamed = self.unnamed;
-
-            for (key, rhs_val) in rhs.unnamed {
-                unnamed
-                    .entry(key)
-                    .and_modify(|lhs_val| {
-                        *lhs_val = op(lhs_val.clone(), rhs_val.clone()).unwrap_or_default()
-                    })
-                    .or_insert(rhs_val);
-            }
-
+        if self.same_structure(&rhs) {
             Ok(Tuple {
-                named,
-                unnamed,
-                src_ref: self.src_ref,
+                positional: self
+                    .positional
+                    .into_iter()
+                    .zip(rhs.positional.into_iter())
+                    .map(|(lhs, rhs)| op(lhs, rhs))
+                    .collect::<ValueResult<Vec<_>>>()?,
+                named: self
+                    .named
+                    .into_iter()
+                    .zip(rhs.named.into_iter())
+                    .map(|((id, lhs), (_, rhs))| op(lhs, rhs).map(|v| (id, v)))
+                    .collect::<ValueResult<Vec<_>>>()?,
             })
         } else {
             Err(ValueError::TupleTypeMismatch {
@@ -121,157 +97,61 @@ impl Tuple {
         value: Value,
         op: impl Fn(Value, Value) -> ValueResult,
     ) -> ValueResult<Self> {
-        let mut named = HashMap::default();
-        for (key, lhs_val) in self.named {
-            named.insert(key, op(lhs_val, value.clone()).unwrap_or_default());
-        }
-
-        let mut unnamed = HashMap::default();
-        for (key, lhs_val) in self.unnamed {
-            unnamed.insert(key, op(lhs_val, value.clone()).unwrap_or_default());
-        }
-
         Ok(Tuple {
-            named,
-            unnamed,
-            src_ref: self.src_ref,
+            positional: self
+                .positional
+                .into_iter()
+                .map(|lhs| op(lhs, value.clone()))
+                .collect::<ValueResult<Vec<_>>>()?,
+            named: self
+                .named
+                .into_iter()
+                .map(|(id, lhs)| op(lhs, value.clone()).map(|v| (id, v)))
+                .collect::<ValueResult<Vec<_>>>()?,
         })
     }
 
     /// Transform each value in the tuple.
     pub fn transform(self, op: impl Fn(Value) -> ValueResult) -> ValueResult<Self> {
-        let mut named = HashMap::default();
-        for (key, value) in self.named {
-            named.insert(key, op(value).unwrap_or_default());
-        }
-
-        let mut unnamed = HashMap::default();
-        for (key, value) in self.unnamed {
-            unnamed.insert(key, op(value).unwrap_or_default());
-        }
-
         Ok(Tuple {
-            named,
-            unnamed,
-            src_ref: self.src_ref,
+            positional: self
+                .positional
+                .into_iter()
+                .map(|v| op(v))
+                .collect::<ValueResult<Vec<_>>>()?,
+            named: self
+                .named
+                .into_iter()
+                .map(|(id, v)| op(v).map(|v| (id, v)))
+                .collect::<ValueResult<Vec<_>>>()?,
         })
     }
-
-    /// Call a predicate for each tuple multiplicity.
-    ///
-    /// - `ids`: Items to multiply.
-    /// - `p`: Predicate to call for each resulting tuple.
-    ///
-    /// # Example
-    ///
-    /// | Input           | Predicate's Parameters |
-    /// |-----------------|------------------------|
-    /// | `([x₀, x₁], y)` | `(x₀, y)`, `(x₁, y)`   |
-    ///
-    pub fn multiplicity<P: FnMut(Tuple)>(&self, mut ids: IdentifierList, mut p: P) {
-        log::trace!("combining: {ids:?}:");
-
-        // sort ids for persistent order
-        ids.sort();
-
-        // count array indexes for items which shall be multiplied and number of overall combinations
-        let mut combinations = 1;
-        let mut counts: HashMap<Identifier, (_, _)> = ids
-            .into_iter()
-            .map(|id| {
-                let counter = if let Some(Value::Array(array)) = &self.named.get(&id) {
-                    let len = array.len();
-                    combinations *= len;
-                    (0, len)
-                } else {
-                    panic!("{id:?} found in tuple but no list:\n{self:#?}");
-                };
-                (id, counter)
-            })
-            .collect();
-
-        log::trace!("multiplicity: {combinations} combinations:");
-
-        // call predicate for each version of the tuple
-        for _ in 0..combinations {
-            let mut counted = false;
-
-            // sort multiplier ids for persistent order
-            let mut named: Vec<_> = self.named.iter().collect();
-            named.sort_by(|lhs, rhs| lhs.0.cmp(rhs.0));
-
-            let tuple = named
-                .into_iter()
-                .map(|(id, v)| match v {
-                    Value::Array(array) => {
-                        if let Some((count, len)) = counts.get_mut(id) {
-                            let item = (
-                                id.clone(),
-                                array.get(*count).expect("array index not found").clone(),
-                            );
-                            if !counted {
-                                *count += 1;
-                                if *count == *len {
-                                    *count = 0
-                                } else {
-                                    counted = true;
-                                }
-                            }
-                            item
-                        } else {
-                            panic!("{id:?} found in tuple but no list");
-                        }
-                    }
-                    _ => (id.clone(), v.clone()),
-                })
-                .collect();
-            p(tuple);
-        }
-    }
 }
 
-impl ValueAccess for Tuple {
-    fn by_id(&self, id: &Identifier) -> Option<&Value> {
-        self.named.get(id)
-    }
-
-    fn by_ty(&self, ty: &Type) -> Option<&Value> {
-        self.unnamed.get(ty)
-    }
-}
-
-// TODO impl FromIterator instead
 impl<T> From<std::slice::Iter<'_, (&'static str, T)>> for Tuple
 where
     T: Into<Value> + Clone + std::fmt::Debug,
 {
     fn from(iter: std::slice::Iter<'_, (&'static str, T)>) -> Self {
-        let (unnamed, named): (Vec<_>, _) = iter
+        let (positional, named): (Vec<_>, _) = iter
             .map(|(k, v)| (Identifier::no_ref(k), (*v).clone().into()))
             .partition(|(k, _)| k.is_empty());
         Self {
-            src_ref: SrcRef::none(),
+            positional: positional.into_iter().map(|(_, v)| v).collect(),
             named: named.into_iter().collect(),
-            unnamed: unnamed.into_iter().map(|(_, v)| (v.ty(), v)).collect(),
         }
     }
 }
 
 impl FromIterator<(Identifier, Value)> for Tuple {
     fn from_iter<T: IntoIterator<Item = (Identifier, Value)>>(iter: T) -> Self {
-        let (unnamed, named): (Vec<_>, _) = iter
+        let (positional, named): (Vec<_>, _) = iter
             .into_iter()
             .map(|(k, v)| (k, v.clone()))
             .partition(|(k, _)| k.is_empty());
         Self {
-            src_ref: SrcRef::merge_all(
-                named
-                    .iter()
-                    .map(|(id, _)| id.src_ref())
-                    .chain(unnamed.iter().map(|(id, _)| id.src_ref())),
-            ),
+            positional: positional.into_iter().map(|(_, v)| v).collect(),
             named: named.into_iter().collect(),
-            unnamed: unnamed.into_iter().map(|(_, v)| (v.ty(), v)).collect(),
         }
     }
 }
@@ -300,61 +180,17 @@ impl From<Tuple> for Value {
     }
 }
 
-impl FromIterator<Tuple> for Tuple {
-    fn from_iter<T: IntoIterator<Item = Tuple>>(iter: T) -> Self {
-        let tuples: Vec<_> = iter.into_iter().collect();
-        Self {
-            src_ref: SrcRef::merge_all(tuples.iter().map(|t| t.src_ref())),
-            named: Default::default(),
-            unnamed: tuples
-                .into_iter()
-                .map(|t| (Type::Tuple(t.tuple_type().into()), Value::Tuple(t.into())))
-                .collect(),
-        }
-    }
-}
-
-impl IntoIterator for Tuple {
-    type Item = (Identifier, Value);
-    type IntoIter = std::collections::hash_map::IntoIter<Identifier, Value>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        if !self.unnamed.is_empty() {
-            log::warn!("trying to iterate Tuple with unnamed items");
-        }
-        self.named.into_iter()
-    }
-}
-
-impl<'a> TryFrom<&'a Value> for &'a Tuple {
-    type Error = ValueError;
-
-    fn try_from(value: &'a Value) -> Result<Self, Self::Error> {
-        match value {
-            Value::Tuple(tuple) => Ok(tuple),
-            _ => Err(ValueError::CannotConvert(
-                value.to_string(),
-                "Tuple".to_string(),
-            )),
-        }
-    }
-}
-
 impl std::fmt::Display for Tuple {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(
             f,
-            "({items})",
-            items = {
-                let mut items = self
-                    .named
-                    .iter()
-                    .map(|(id, v)| format!("{id}={v}"))
-                    .chain(self.unnamed.values().map(|v| format!("{v}")))
-                    .collect::<Vec<String>>();
-                items.sort();
-                items.join(", ")
-            }
+            "({})",
+            self.positional
+                .iter()
+                .map(|v| v.to_string())
+                .chain(self.named.iter().map(|(id, v)| format!("{id} = {v}")))
+                .collect::<Vec<_>>()
+                .join(", ")
         )
     }
 }
@@ -404,19 +240,6 @@ impl std::ops::Not for Tuple {
 
     fn not(self) -> Self::Output {
         Ok(Value::Tuple(Box::new(self.transform(|value| !value)?)))
-    }
-}
-
-impl std::hash::Hash for Tuple {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.unnamed.iter().for_each(|(ty, value)| {
-            ty.hash(state);
-            value.hash(state);
-        });
-        self.named.iter().for_each(|(id, value)| {
-            id.hash(state);
-            value.hash(state);
-        });
     }
 }
 

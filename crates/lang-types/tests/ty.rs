@@ -18,7 +18,7 @@ fn test_tuple_type_match() {
         ]
         .into_iter()
         .collect(),
-        unnamed: Default::default(),
+        positional: Default::default(),
     };
     let params = TupleType {
         named: [
@@ -27,7 +27,7 @@ fn test_tuple_type_match() {
         ]
         .into_iter()
         .collect(),
-        unnamed: Default::default(),
+        positional: Default::default(),
     };
     assert!(args.is_matching(&params));
 }
