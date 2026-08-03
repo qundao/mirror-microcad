@@ -86,10 +86,6 @@ pub enum EvalError {
     #[error("Missing arguments: {0}")]
     MissingArguments(IdentifierList),
 
-    /// Missing arguments
-    #[error("Too many arguments: {0}")]
-    TooManyArguments(IdentifierList),
-
     /// Arguments match by identifier but have incompatible types
     #[error("Arguments match by identifier but have incompatible types: {0}")]
     IdMatchButNotType(String),
@@ -244,6 +240,18 @@ pub enum EvalError {
 
     #[error("Local `{0}` not found in scope.")]
     LocalNotFound(#[label("Name of the local")] Identifier),
+
+    #[error("Duplicated argument {id}.")]
+    DuplicateArgument {
+        #[label("The argument")]
+        id: Identifier,
+    },
+
+    #[error("Too many arguments: got {given}, expected {expected}")]
+    TooManyArguments { given: usize, expected: usize },
+
+    #[error("Missing required argument {id}")]
+    MissingRequiredArgument { id: Identifier },
 }
 
 /// Result type of any evaluation.

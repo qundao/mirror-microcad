@@ -8,14 +8,12 @@ use microcad_lang_proc_macros::SrcReferrer;
 use microcad_lang_types::{Ty, Type, Value};
 
 /// Argument value.
-#[derive(Clone, Debug, SrcReferrer)]
+#[derive(Clone, Debug)]
 pub struct ArgumentValue {
     /// *value* of the argument.
     pub value: Value,
     /// If expression of value is a single identifier, this item catches it.
-    pub inline_id: Option<Identifier>,
-    /// Source code reference.
-    src_ref: SrcRef,
+    pub id: Option<Identifier>,
 }
 
 impl std::fmt::Display for ArgumentValue {
@@ -32,11 +30,7 @@ impl Ty for ArgumentValue {
 
 impl ArgumentValue {
     /// Create new argument value
-    pub fn new(value: Value, inline_id: Option<Identifier>, src_ref: SrcRef) -> Self {
-        Self {
-            value,
-            inline_id,
-            src_ref,
-        }
+    pub fn new(value: Value, id: Option<Identifier>) -> Self {
+        Self { value, id }
     }
 }

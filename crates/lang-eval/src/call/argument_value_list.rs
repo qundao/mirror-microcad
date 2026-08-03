@@ -4,9 +4,8 @@
 //! *Argument value list* evaluation entity.
 
 use derive_more::{Deref, DerefMut};
-use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
+use microcad_lang_base::SrcRef;
 use microcad_lang_proc_macros::SrcReferrer;
-use microcad_lang_types::{Ty, Type, Value, ValueAccess};
 
 use crate::{ArgumentValue, EvalError, EvalResult};
 
@@ -18,7 +17,7 @@ use crate::{ArgumentValue, EvalError, EvalResult};
 pub struct ArgumentValueList {
     #[deref]
     #[deref_mut]
-    pub map: Vec<(Identifier, ArgumentValue)>,
+    pub args: Vec<ArgumentValue>,
     pub src_ref: SrcRef,
 }
 
@@ -26,74 +25,43 @@ impl ArgumentValueList {
     /// Return a single argument.
     ///
     /// Returns error if there is no or more than one argument available.
-    pub fn get_single(&self) -> EvalResult<(&Identifier, &ArgumentValue)> {
-        if self.map.len() == 1 {
-            if let Some(a) = self.map.first() {
-                return Ok((&a.0, &a.1));
+    pub fn get_single(&self) -> EvalResult<&ArgumentValue> {
+        if self.args.len() == 1 {
+            if let Some(a) = self.args.first() {
+                return Ok(&a);
             }
         }
 
         Err(EvalError::ArgumentCountMismatch {
             args: self.to_string(),
             expected: 1,
-            found: self.map.len(),
+            found: self.args.len(),
         }
         .into())
-    }
-
-    /// Get value by type
-    pub fn get_by_type(&self, ty: &Type) -> Option<(&Identifier, &ArgumentValue)> {
-        let arg = self.map.iter().find(|(_, arg)| arg.value.ty() == *ty);
-        arg.map(|arg| (&arg.0, &arg.1))
-    }
-
-    /// Get value by index.
-    pub fn get_by_index(&self, index: usize) -> Option<&(Identifier, ArgumentValue)> {
-        self.map.get(index)
-    }
-}
-
-impl ValueAccess for ArgumentValueList {
-    fn by_id(&self, id: &Identifier) -> Option<&Value> {
-        self.map
-            .iter()
-            .find(|(i, _)| i == id)
-            .map(|arg| &arg.1.value)
-    }
-
-    fn by_ty(&self, ty: &Type) -> Option<&Value> {
-        self.get_by_type(ty).map(|(_, arg)| &arg.value)
     }
 }
 
 impl std::fmt::Display for ArgumentValueList {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", {
-            let mut v = self
-                .map
+            self.args
                 .iter()
-                .map(|(id, val)| {
-                    if !id.is_empty() {
-                        format!("{id} = {}", val.value)
-                    } else if let Some(id) = &val.inline_id {
-                        format!("{id} = {}", val.value)
-                    } else {
-                        format!("{}", val.value)
-                    }
-                })
-                .collect::<Vec<_>>();
-            v.sort();
-            v.join(", ")
+                .map(|arg| arg.to_string())
+                .collect::<Vec<_>>()
+                .join(", ")
         })
     }
 }
 
-impl FromIterator<(Identifier, ArgumentValue)> for ArgumentValueList {
-    fn from_iter<T: IntoIterator<Item = (Identifier, ArgumentValue)>>(iter: T) -> Self {
-        let map: Vec<_> = iter.into_iter().collect();
+impl<Arg> FromIterator<Arg> for ArgumentValueList
+where
+    Arg: Into<ArgumentValue>,
+{
+    fn from_iter<T: IntoIterator<Item = Arg>>(iter: T) -> Self {
+        let args: Vec<_> = iter.into_iter().map(|a| a.into()).collect();
         Self {
-            src_ref: SrcRef::merge_all(map.iter().map(|(_, v)| v.src_ref())),
-            map,
+            src_ref: SrcRef::none(),
+            args,
         }
     }
 }

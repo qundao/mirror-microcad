@@ -37,23 +37,15 @@ pub trait CallTrait<T> {
 #[macro_export]
 macro_rules! argument {
     ($id:ident: $ty:ident = $value:expr) => {
-        (
-            $crate::rst::Identifier::no_ref(stringify!($id)),
-            ArgumentValue::new(
-                $crate::builtin::BuiltinValueHelper::$ty($value).into(),
-                None,
-                microcad_lang_base::SrcRef::none(),
-            ),
+        ArgumentValue::new(
+            $crate::builtin::BuiltinValueHelper::$ty($value).into(),
+            Some($crate::rst::Identifier::no_ref(stringify!($id))),
         )
     };
     ($ty:ident = $value:expr) => {
-        (
-            Identifier::none(),
-            ArgumentValue::new(
-                $crate::builtin::BuiltinValueHelper::$ty($value).into(),
-                None,
-                microcad_lang_base::SrcRef::none(),
-            ),
+        ArgumentValue::new(
+            $crate::builtin::BuiltinValueHelper::$ty($value).into(),
+            Some($crate::rst::Identifier::no_ref(stringify!($id))),
         )
     };
     () => {};

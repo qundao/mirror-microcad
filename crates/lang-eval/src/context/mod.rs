@@ -23,7 +23,8 @@ pub struct FunctionFrame {
 impl FunctionFrame {
     pub fn new(args: Tuple) -> Self {
         let locals = LocalTable(
-            args.named_iter()
+            args.named
+                .iter()
                 .map(|(id, value)| (id.clone(), value.clone()))
                 .collect(),
         );

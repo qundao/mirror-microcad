@@ -5,7 +5,7 @@
 
 use derive_more::Display;
 use microcad_lang_base::{Identifier, IdentifierList, SrcReferrer};
-use microcad_lang_types::{Length, Scalar, Tuple, Ty, Type, ValueAccess, create_tuple};
+use microcad_lang_types::{Length, Scalar, Tuple, Ty, Type, Value, ValueAccess, create_tuple};
 use microcad_package::{
     parameter,
     rst::{Parameter, ParameterList},
@@ -58,29 +58,82 @@ pub struct ArgumentMatch<'a> {
     arguments: Vec<(&'a Identifier, &'a ArgumentValue)>,
     params: Vec<(&'a Identifier, &'a Parameter)>,
     result: Tuple,
-    priority: Priority,
 }
 
 /// Result of a multi match
 #[derive(Debug)]
-pub struct MultiMatchResult {
-    /// Matching arguments
-    pub args: Vec<Tuple>,
-    /// Match priority
-    pub priority: Priority,
-}
+pub struct MultiMatchResult(Vec<Tuple>);
 
 impl<'a> ArgumentMatch<'a> {
     /// Match a `ParameterList` with an `ArgumentValueList` into a tuple.
     ///
-    /// Returns `Ok(Tuple)`` if matches or Err() if not
+    /// Returns `Ok(Tuple)` if matches or `Err(...)` if matching fails.
     pub fn find_match(
         arguments: &'a ArgumentValueList,
         params: &'a ParameterList,
     ) -> EvalResult<Tuple> {
-        let am = Self::new(arguments, params)?;
-        am.check_exact_types(params)?;
-        Ok(am.result)
+        // Track evaluated values per parameter index
+        let mut bound_values: Vec<Option<Value>> = vec![None; params.len()];
+
+        // -----------------------------------------------------------------
+        // Step 1: Bind caller arguments to parameter slots
+        // -----------------------------------------------------------------
+        for arg in arguments.iter() {
+            let mut target_idx = None;
+
+            // Attempt 1: Named match (arg.id matches param.id)
+            if let Some(ref arg_id) = arg.id {
+                target_idx = params.iter().position(|param| &param.id == arg_id);
+            }
+
+            // Attempt 2: Positional match (first unbound parameter slot)
+            if target_idx.is_none() {
+                target_idx = bound_values.iter().position(|slot| slot.is_none());
+            }
+
+            if let Some(idx) = target_idx {
+                if bound_values[idx].is_some() {
+                    return Err(EvalError::DuplicateArgument {
+                        id: params[idx].id.clone(),
+                    }
+                    .into());
+                }
+                bound_values[idx] = Some(arg.value.clone());
+            } else {
+                return Err(EvalError::TooManyArguments {
+                    given: arguments.len(),
+                    expected: params.len(),
+                }
+                .into());
+            }
+        }
+
+        // -----------------------------------------------------------------
+        // Step 2: Build the final `Tuple.named` list (including defaults)
+        // -----------------------------------------------------------------
+        let mut named = Vec::with_capacity(params.len());
+
+        for (i, param) in params.iter().enumerate() {
+            let value = match bound_values[i].take() {
+                Some(val) => val,
+                None => match param.default_value {
+                    Some(ref default_val) => default_val.clone(),
+                    None => {
+                        return Err(EvalError::MissingRequiredArgument {
+                            id: param.id.clone(),
+                        }
+                        .into());
+                    }
+                },
+            };
+
+            named.push((param.id.clone(), value));
+        }
+
+        Ok(Tuple {
+            positional: vec![],
+            named,
+        })
     }
 
     /// Match a `ParameterList` with an `ArgumentValueList` into an vector of tuples.
@@ -90,262 +143,10 @@ impl<'a> ArgumentMatch<'a> {
         arguments: &'a ArgumentValueList,
         params: &'a ParameterList,
     ) -> EvalResult<MultiMatchResult> {
-        let m = Self::new(arguments, params)?;
-        Ok(MultiMatchResult {
+        todo!()
+        /*Ok(MultiMatchResult {
             args: m.multiply(params),
-            priority: m.priority,
-        })
-    }
-
-    /// Create new instance and do matching
-    fn new(arguments: &'a ArgumentValueList, params: &'a ParameterList) -> EvalResult<Self> {
-        let mut am = Self {
-            arguments: arguments.iter().map(|(id, v)| (id, v)).collect(),
-            params: params.iter().collect(),
-            result: Tuple::new_named(microcad_lang_base::HashMap::default(), arguments.src_ref()),
-            priority: Priority::None,
-        };
-
-        // Try to match all arguments with different strategies.
-        // The highest priority (see [Priority::high_to_low] for order) sets the
-        // result's overall priority which can the be used to select between
-        // available parameter sets (see [WorkbenchDefinition::call}).
-        log::trace!("matching arguments:\n{am:?}");
-        if !am.match_empty(Priority::Empty) {
-            am.match_ids(Priority::Id, |l, r| l == r)?;
-            am.match_ids(Priority::Short, |l, r| &l.short_id() == r)?;
-            am.match_types(Priority::Type, |l, r| l == r, true);
-            am.match_types(Priority::TypeAuto, |l, r| l.is_matching(r), false);
-            am.match_defaults(Priority::Default);
-            // TODO: this extra step is useful (but not documented!)
-            am.match_types(Priority::TypeAuto, |l, r| l.is_matching(r), false);
-
-            am.check_missing()?;
-        }
-        Ok(am)
-    }
-
-    /// Match empty parameters with empty arguments.
-    fn match_empty(&mut self, priority: Priority) -> bool {
-        if self.arguments.is_empty() && self.params.is_empty() {
-            self.priority.set_once(priority);
-            true
-        } else {
-            false
-        }
-    }
-
-    /// Match arguments by id.
-    fn match_ids(
-        &mut self,
-        priority: Priority,
-        match_fn: impl Fn(&Identifier, &Identifier) -> bool,
-    ) -> EvalResult<()> {
-        let mut type_mismatch = Vec::new();
-        if self.arguments.is_empty() {
-            return Ok(());
-        }
-        self.arguments.retain(|(id, arg)| {
-            let id = match (id.is_empty(), &arg.inline_id) {
-                (true, Some(id)) => id,
-                _ => id,
-            };
-
-            if id.is_empty() {
-                return true;
-            }
-            match self.params.iter().position(|(i, _)| match_fn(i, id)) {
-                None => true,
-                Some(n) => {
-                    if let Some(ty) = &self.params[n].1.ty {
-                        if !arg.ty().is_matching(ty) {
-                            type_mismatch.push((id.clone(), arg.ty(), ty));
-                            return true;
-                        }
-                    }
-                    let (id, _) = self.params.swap_remove(n);
-
-                    self.priority.set_once(priority);
-                    self.result.insert((*id).clone(), arg.value.clone());
-                    false
-                }
-            }
-        });
-
-        if type_mismatch.is_empty() {
-            Ok(())
-        } else {
-            let type_mismatch = type_mismatch
-                .iter()
-                .map(|(id, ty1, ty2)| format!("{id}: {ty1} != {ty2}"))
-                .collect::<Vec<_>>()
-                .join(", ");
-            Err(EvalError::IdMatchButNotType(type_mismatch).into())
-        }
-    }
-
-    /// Match arguments by type.
-    fn match_types(
-        &mut self,
-        priority: Priority,
-        match_fn: impl Fn(&Type, &Type) -> bool,
-        mut exclude_defaults: bool,
-    ) {
-        if self.arguments.is_empty() {
-            return;
-        }
-
-        self.arguments.retain(|(arg_id, arg)| {
-            // filter params by type
-            let same_type: Vec<_> = self
-                .params
-                .iter()
-                .enumerate()
-                .filter(|(..)| arg_id.is_empty())
-                .filter_map(|(n, (id, param))| {
-                    if param.ty() == Type::Invalid
-                        || if let Some(ty) = &param.ty {
-                            match_fn(&arg.ty(), ty)
-                        } else {
-                            false
-                        }
-                    {
-                        Some((n, *id, *param))
-                    } else {
-                        None
-                    }
-                })
-                .collect();
-
-            // if type check is exact ignore exclusion
-            if same_type.len() == 1 {
-                exclude_defaults = false;
-            }
-            // ignore params with defaults
-            let mut same_type = same_type
-                .into_iter()
-                .filter(|(.., param)| !exclude_defaults || param.default_value.is_none());
-
-            if let Some((n, id, _)) = same_type.next() {
-                if same_type.next().is_none() {
-                    self.priority.set_once(priority);
-                    self.result.insert(id.clone(), arg.value.clone());
-                    self.params.swap_remove(n);
-                    return false;
-                } else {
-                    log::trace!("more than one parameter with that type")
-                }
-            } else {
-                log::trace!("no parameter with that type (or id mismatch)")
-            }
-            true
-        })
-    }
-
-    /// Match arguments with parameter defaults.
-    fn match_defaults(&mut self, priority: Priority) {
-        if self.params.is_empty() {
-            return;
-        }
-        // remove missing that can be found
-        self.params.retain(|(id, param)| {
-            // check for any default value
-            if let Some(def) = &param.default_value {
-                // paranoia check if type is compatible
-                if def.ty() == param.ty() {
-                    self.priority.set_once(priority);
-                    self.result.insert((*id).clone(), def.clone());
-                    return false;
-                }
-            }
-            true
-        })
-    }
-
-    /// Return error if params are missing or arguments are to many
-    fn check_missing(&self) -> EvalResult<()> {
-        if !self.params.is_empty() {
-            let mut missing: IdentifierList =
-                self.params.iter().map(|(id, _)| (*id).clone()).collect();
-            missing.sort();
-            Err(EvalError::MissingArguments(missing).into())
-        } else if !self.arguments.is_empty() {
-            let mut too_many: IdentifierList =
-                self.arguments.iter().map(|(id, _)| (*id).clone()).collect();
-            too_many.sort();
-            Err(EvalError::TooManyArguments(too_many).into())
-        } else {
-            Ok(())
-        }
-    }
-
-    fn check_exact_types(&self, params: &ParameterList) -> EvalResult<()> {
-        let multipliers = Self::multipliers(&self.result, params);
-        if multipliers.is_empty() {
-            return Ok(());
-        }
-        Err(EvalError::MultiplicityNotAllowed(multipliers).into())
-    }
-
-    /// Process parameter multiplicity
-    ///
-    /// Return one or many tuples.
-    fn multiply(&self, params: &ParameterList) -> Vec<Tuple> {
-        let ids: IdentifierList = Self::multipliers(&self.result, params);
-        if !ids.is_empty() {
-            let mut result = Vec::new();
-            self.result.multiplicity(ids, |t| result.push(t));
-            result
-        } else {
-            vec![self.result.clone()]
-        }
-    }
-
-    /// Return the multipliers' ids in the arguments.
-    fn multipliers(args: &impl ValueAccess, params: &ParameterList) -> IdentifierList {
-        let mut result: IdentifierList = params
-            .iter()
-            .filter_map(|(id, param)| {
-                if let Some(a) = args.by_id(id) {
-                    if a.ty().is_array_of(&param.ty()) {
-                        return Some(id);
-                    }
-                }
-                None
-            })
-            .cloned()
-            .collect();
-        result.sort();
-        result
-    }
-}
-
-impl std::fmt::Debug for ArgumentMatch<'_> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "   Arguments: {args}\n  Parameters: {params}",
-            args = self
-                .arguments
-                .iter()
-                .map(|(id, arg)| format!(
-                    "{id:?} : {val:?}",
-                    id = match (id.is_empty(), &arg.inline_id) {
-                        (_, None) => id,
-                        (true, Some(inline_id)) => inline_id,
-                        (false, Some(_)) => id,
-                    },
-                    val = arg.value
-                ))
-                .collect::<Vec<_>>()
-                .join(", "),
-            params = self
-                .params
-                .iter()
-                .map(|(id, param)| format!("{id:?} {param:?}"))
-                .collect::<Vec<_>>()
-                .join(", "),
-        )
+        })*/
     }
 }
 
