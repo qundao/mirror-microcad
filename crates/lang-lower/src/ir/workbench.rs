@@ -100,7 +100,6 @@ pub enum WorkbenchExpression<Name: ir::NameKind = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
     Name(Name),
-    Tuple(ir::TupleExpression<WorkbenchExpression<Name>>),
     Group(ir::Group<Name>),
     If(ir::If<WorkbenchExpression<Name>>),
     Call(ir::Call<WorkbenchExpression<Name>>),
@@ -113,7 +112,6 @@ impl<Name: ir::NameKind> SrcReferrer for WorkbenchExpression<Name> {
             WorkbenchExpression::Invalid => SrcRef::none(),
             WorkbenchExpression::Literal(literal) => literal.src_ref(),
             WorkbenchExpression::Name(name) => name.src_ref(),
-            WorkbenchExpression::Tuple(tuple_expression) => tuple_expression.src_ref,
             WorkbenchExpression::Group(group) => group.src_ref,
             WorkbenchExpression::If(if_) => if_.src_ref,
             WorkbenchExpression::Call(call) => call.src_ref,
@@ -133,7 +131,6 @@ impl<Name: ir::NameKind> CastInto<ir::WorkbenchExpression<Name>> for ir::Constan
             ir::ConstantExpression::Invalid => ir::WorkbenchExpression::Invalid,
             ir::ConstantExpression::Literal(literal) => ir::WorkbenchExpression::Literal(literal),
             ir::ConstantExpression::Name(name) => ir::WorkbenchExpression::Name(name),
-            ir::ConstantExpression::Tuple(_) => todo!(),
             ir::ConstantExpression::Call(call) => ir::WorkbenchExpression::Call(call.cast_into()),
         }
     }
@@ -150,7 +147,6 @@ where
             Invalid => Invalid,
             Literal(literal) => Literal(literal),
             Name(name) => Name(name.into()),
-            Tuple(tuple_expression) => Tuple(tuple_expression.cast_into()),
             Group(group) => Group(group.cast_into()),
             If(if_) => If(if_.cast_into()),
             Call(call) => Call(call.cast_into()),

@@ -71,7 +71,6 @@ pub enum FunctionExpression<NAME: ir::NameKind = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
     Name(NAME),
-    Tuple(ir::TupleExpression<FunctionExpression<NAME>>),
     Scope(Scope<NAME>),
     If(ir::If<FunctionExpression<NAME>>),
     Call(ir::Call<FunctionExpression<NAME>>),
@@ -88,7 +87,6 @@ impl<Name: LowerName> CastInto<ir::FunctionExpression<Name>> for ir::ConstantExp
             ir::ConstantExpression::Invalid => ir::FunctionExpression::Invalid,
             ir::ConstantExpression::Literal(literal) => ir::FunctionExpression::Literal(literal),
             ir::ConstantExpression::Name(name) => ir::FunctionExpression::Name(name),
-            ir::ConstantExpression::Tuple(_) => todo!(),
             ir::ConstantExpression::Call(call) => ir::FunctionExpression::Call(call.cast_into()),
         }
     }
@@ -102,10 +100,9 @@ where
     fn cast_into(self) -> FunctionExpression<T> {
         use FunctionExpression::*;
         match self {
-            Invalid => todo!(),
+            Invalid => Invalid,
             Literal(literal) => Literal(literal),
             Name(name) => Name(name.into()),
-            Tuple(tuple) => Tuple(tuple.cast_into()),
             Scope(scope) => Scope(scope.cast_into()),
             If(if_) => If(if_.cast_into()),
             Call(call) => Call(call.cast_into()),
@@ -119,7 +116,6 @@ impl<NAME: ir::NameKind> SrcReferrer for FunctionExpression<NAME> {
             FunctionExpression::Invalid => SrcRef::none(),
             FunctionExpression::Literal(literal) => literal.src_ref(),
             FunctionExpression::Name(name) => name.src_ref(),
-            FunctionExpression::Tuple(tuple_expression) => tuple_expression.src_ref,
             FunctionExpression::Scope(scope) => scope.0.src_ref(),
             FunctionExpression::If(if_expr) => if_expr.src_ref,
             FunctionExpression::Call(call) => call.src_ref,

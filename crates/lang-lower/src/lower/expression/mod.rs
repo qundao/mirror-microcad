@@ -154,6 +154,20 @@ where
     }
 }
 
+impl<Expr: LowerExpr> Lower<ast::TupleExpression> for ir::Call<Expr>
+where
+    Expr: From<ir::Call<Expr>> + From<ir::Literal>,
+    Expr::Name: LowerName,
+{
+    fn lower(node: &ast::TupleExpression, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
+            name: __mu("core::tuple").into(),
+            args: ir::ArgumentList::lower(&node.values, context)?,
+            src_ref: context.span_to_src_ref(&node.span),
+        })
+    }
+}
+
 impl<NAME: LowerName> Lower<ast::Expression> for ir::ConstantExpression<NAME> {
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
@@ -164,7 +178,7 @@ impl<NAME: LowerName> Lower<ast::Expression> for ir::ConstantExpression<NAME> {
             }) => Self::Literal(ir::Literal::from_value(s.content.clone())),
             ast::Expression::Literal(expr) => Self::Literal(ir::Literal::lower(expr, context)?),
             ast::Expression::String(s) => Self::Call(ir::Call::lower(s, context)?),
-            ast::Expression::Tuple(t) => Self::Tuple(ir::TupleExpression::lower(t, context)?),
+            ast::Expression::Tuple(t) => Self::Call(ir::Call::lower(t, context)?),
             ast::Expression::ArrayRange(a) => Self::lower(a, context)?,
             ast::Expression::ArrayList(a) => Self::lower(a, context)?,
             ast::Expression::SymbolPath(n) => Self::Name(NAME::lower(n, context)?),

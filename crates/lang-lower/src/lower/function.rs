@@ -62,7 +62,7 @@ impl<NAME: LowerName> Lower<ast::Expression> for ir::FunctionExpression<NAME> {
             }) => Self::Literal(ir::Literal::from_value(s.content.clone())),
             ast::Expression::Literal(expr) => Self::Literal(ir::Literal::lower(expr, context)?),
             ast::Expression::String(s) => Self::Call(ir::Call::lower(s, context)?.cast_into()),
-            ast::Expression::Tuple(t) => Self::Tuple(ir::TupleExpression::lower(t, context)?),
+            ast::Expression::Tuple(t) => Self::Call(ir::Call::lower(t, context)?),
             ast::Expression::ArrayRange(a) => Self::lower(a, context)?,
             ast::Expression::ArrayList(a) => Self::lower(a, context)?,
             ast::Expression::SymbolPath(n) => Self::Name(NAME::lower(n, context)?),
