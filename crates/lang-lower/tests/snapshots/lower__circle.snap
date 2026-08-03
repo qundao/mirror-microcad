@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0x7cd65a945030702d",
-        output_hash: "0x5a36a7a540f23b1c",
+        output_hash: "0xdbddda57900290e0",
         tree: (
             id: Some("circle"),
             attr: ((
@@ -74,6 +74,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     default_value: Some(Tuple((
                                         args: (
                                             src_ref: "None",
+                                            unnamed_args: [],
                                             named_args: [
                                                 (
                                                     id: ((
@@ -166,6 +167,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             default_value: Some(Tuple((
                                                 args: (
                                                     src_ref: "None",
+                                                    unnamed_args: [],
                                                     named_args: [
                                                         (
                                                             id: ((
@@ -237,48 +239,26 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             src_ref: "8:9 @ 0x5b5b0d75574ec6c6 (287..293)",
                                         ))),
                                         expression: Call((
-                                            name: Path(
-                                                is_absolute: false,
-                                                parts: [
-                                                    ((
-                                                        value: "__builtin",
-                                                        src_ref: "None",
-                                                    )),
-                                                    ((
-                                                        value: "op",
-                                                        src_ref: "None",
-                                                    )),
-                                                    ((
-                                                        value: "divide",
-                                                        src_ref: "None",
-                                                    )),
-                                                ],
-                                                src_ref: "None",
-                                            ),
+                                            name: Builtin((15075632792087435312)),
                                             args: (
                                                 src_ref: "None",
                                                 unnamed_args: [
-                                                    (
-                                                        expression: Name(Path(
-                                                            is_absolute: false,
-                                                            parts: [
-                                                                ((
-                                                                    value: "diameter",
-                                                                    src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..304)",
-                                                                )),
-                                                            ],
-                                                            src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..305)",
-                                                        )),
+                                                    Name(Path(
+                                                        is_absolute: false,
+                                                        parts: [
+                                                            ((
+                                                                value: "diameter",
+                                                                src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..304)",
+                                                            )),
+                                                        ],
                                                         src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..305)",
-                                                    ),
-                                                    (
-                                                        expression: Literal(((
-                                                            value: Quantity("2"),
-                                                            src_ref: "8:29 @ 0x5b5b0d75574ec6c6 (307..310)",
-                                                        ))),
+                                                    )),
+                                                    Literal(((
+                                                        value: Quantity("2"),
                                                         src_ref: "8:29 @ 0x5b5b0d75574ec6c6 (307..310)",
-                                                    ),
+                                                    ))),
                                                 ],
+                                                named_args: [],
                                             ),
                                             src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..310)",
                                         )),
@@ -328,48 +308,43 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     args: (
                                         src_ref: "12:36 @ 0x5b5b0d75574ec6c6 (391..417)",
                                         unnamed_args: [
-                                            (
-                                                expression: Call((
-                                                    name: Path(
-                                                        is_absolute: false,
-                                                        parts: [
-                                                            ((
-                                                                value: "__builtin",
-                                                                src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..332)",
-                                                            )),
-                                                            ((
-                                                                value: "geo2d",
-                                                                src_ref: "11:16 @ 0x5b5b0d75574ec6c6 (334..339)",
-                                                            )),
-                                                            ((
-                                                                value: "Circle",
-                                                                src_ref: "11:23 @ 0x5b5b0d75574ec6c6 (341..347)",
-                                                            )),
-                                                        ],
-                                                        src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..347)",
-                                                    ),
-                                                    args: (
-                                                        src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
-                                                        unnamed_args: [
-                                                            (
-                                                                expression: Name(Path(
-                                                                    is_absolute: false,
-                                                                    parts: [
-                                                                        ((
-                                                                            value: "radius",
-                                                                            src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
-                                                                        )),
-                                                                    ],
+                                            Call((
+                                                name: Path(
+                                                    is_absolute: false,
+                                                    parts: [
+                                                        ((
+                                                            value: "__builtin",
+                                                            src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..332)",
+                                                        )),
+                                                        ((
+                                                            value: "geo2d",
+                                                            src_ref: "11:16 @ 0x5b5b0d75574ec6c6 (334..339)",
+                                                        )),
+                                                        ((
+                                                            value: "Circle",
+                                                            src_ref: "11:23 @ 0x5b5b0d75574ec6c6 (341..347)",
+                                                        )),
+                                                    ],
+                                                    src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..347)",
+                                                ),
+                                                args: (
+                                                    src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
+                                                    unnamed_args: [
+                                                        Name(Path(
+                                                            is_absolute: false,
+                                                            parts: [
+                                                                ((
+                                                                    value: "radius",
                                                                     src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
                                                                 )),
-                                                                src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
-                                                            ),
-                                                        ],
-                                                    ),
-                                                    src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..364)",
-                                                )),
-                                                src_ref: "None",
-                                            ),
+                                                            ],
+                                                            src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
+                                                        )),
+                                                    ],
+                                                    named_args: [],
+                                                ),
+                                                src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..364)",
+                                            )),
                                         ],
                                         named_args: [
                                             (
@@ -378,54 +353,32 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                     src_ref: "12:36 @ 0x5b5b0d75574ec6c6 (391..392)",
                                                 )),
                                                 expression: Call((
-                                                    name: Path(
-                                                        is_absolute: false,
-                                                        parts: [
-                                                            ((
-                                                                value: "__builtin",
-                                                                src_ref: "None",
-                                                            )),
-                                                            ((
-                                                                value: "op",
-                                                                src_ref: "None",
-                                                            )),
-                                                            ((
-                                                                value: "property_access",
-                                                                src_ref: "None",
-                                                            )),
-                                                        ],
-                                                        src_ref: "None",
-                                                    ),
+                                                    name: Builtin((3996908473629997019)),
                                                     args: (
                                                         src_ref: "None",
                                                         unnamed_args: [
-                                                            (
-                                                                expression: Name(Path(
-                                                                    is_absolute: false,
-                                                                    parts: [
-                                                                        ((
-                                                                            value: "center",
-                                                                            src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..401)",
-                                                                        )),
-                                                                    ],
-                                                                    src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..401)",
-                                                                )),
+                                                            Name(Path(
+                                                                is_absolute: false,
+                                                                parts: [
+                                                                    ((
+                                                                        value: "center",
+                                                                        src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..401)",
+                                                                    )),
+                                                                ],
                                                                 src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..401)",
-                                                            ),
-                                                            (
-                                                                expression: Name(Path(
-                                                                    is_absolute: false,
-                                                                    parts: [
-                                                                        ((
-                                                                            value: "x",
-                                                                            src_ref: "None",
-                                                                        )),
-                                                                    ],
-                                                                    src_ref: "None",
-                                                                )),
+                                                            )),
+                                                            Name(Path(
+                                                                is_absolute: false,
+                                                                parts: [
+                                                                    ((
+                                                                        value: "x",
+                                                                        src_ref: "None",
+                                                                    )),
+                                                                ],
                                                                 src_ref: "None",
-                                                            ),
+                                                            )),
                                                         ],
+                                                        named_args: [],
                                                     ),
                                                     src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..403)",
                                                 )),
@@ -437,54 +390,32 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                     src_ref: "12:50 @ 0x5b5b0d75574ec6c6 (405..406)",
                                                 )),
                                                 expression: Call((
-                                                    name: Path(
-                                                        is_absolute: false,
-                                                        parts: [
-                                                            ((
-                                                                value: "__builtin",
-                                                                src_ref: "None",
-                                                            )),
-                                                            ((
-                                                                value: "op",
-                                                                src_ref: "None",
-                                                            )),
-                                                            ((
-                                                                value: "property_access",
-                                                                src_ref: "None",
-                                                            )),
-                                                        ],
-                                                        src_ref: "None",
-                                                    ),
+                                                    name: Builtin((3996908473629997019)),
                                                     args: (
                                                         src_ref: "None",
                                                         unnamed_args: [
-                                                            (
-                                                                expression: Name(Path(
-                                                                    is_absolute: false,
-                                                                    parts: [
-                                                                        ((
-                                                                            value: "center",
-                                                                            src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..415)",
-                                                                        )),
-                                                                    ],
-                                                                    src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..415)",
-                                                                )),
+                                                            Name(Path(
+                                                                is_absolute: false,
+                                                                parts: [
+                                                                    ((
+                                                                        value: "center",
+                                                                        src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..415)",
+                                                                    )),
+                                                                ],
                                                                 src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..415)",
-                                                            ),
-                                                            (
-                                                                expression: Name(Path(
-                                                                    is_absolute: false,
-                                                                    parts: [
-                                                                        ((
-                                                                            value: "y",
-                                                                            src_ref: "None",
-                                                                        )),
-                                                                    ],
-                                                                    src_ref: "None",
-                                                                )),
+                                                            )),
+                                                            Name(Path(
+                                                                is_absolute: false,
+                                                                parts: [
+                                                                    ((
+                                                                        value: "y",
+                                                                        src_ref: "None",
+                                                                    )),
+                                                                ],
                                                                 src_ref: "None",
-                                                            ),
+                                                            )),
                                                         ],
+                                                        named_args: [],
                                                     ),
                                                     src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..417)",
                                                 )),
