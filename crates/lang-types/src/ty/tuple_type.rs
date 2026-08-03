@@ -8,13 +8,14 @@ use microcad_lang_base::Identifier;
 
 use serde::{Deserialize, Serialize};
 
-/// (Partially named) tuple (e.g. `(n: Scalar, m: String, Integer)`)
+/// (Partially named) tuple (e.g. `(Integer, m: Scalar, n: String)`)
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct TupleType {
-    /// Named fields
-    pub named: microcad_hash::HashMap<Identifier, Type>,
-    /// Unnamed fields
-    pub unnamed: microcad_hash::HashSet<Type>,
+    /// Ordered positional elements: (val0, val1, val2, ...)
+    pub positional: Vec<Type>,
+
+    /// Ordered named elements: (a = val_a, b = val_b, ...)
+    pub named: Vec<(Identifier, Type)>,
 }
 
 impl TupleType {
@@ -59,13 +60,13 @@ impl TupleType {
     pub fn is_matching(&self, params: &TupleType) -> bool {
         if self == params {
             true
-        } else if self.unnamed.is_empty()
-            && params.unnamed.is_empty()
+        } else if self.positional.is_empty()
+            && params.positional.is_empty()
             && self.named.len() == params.named.len()
         {
             self.named.iter().all(|arg| {
-                if let Some(ty) = params.named.get(arg.0) {
-                    arg.1 == ty || arg.1.is_array_of(ty)
+                if let Some((_, ty)) = params.named.iter().find(|(id, _)| id == &arg.0) {
+                    arg.1 == *ty || arg.1.is_array_of(ty)
                 } else {
                     false
                 }
@@ -77,11 +78,15 @@ impl TupleType {
 
     /// Test if the named tuple has exactly all the given keys
     fn matches_keys(&self, keys: &[&str]) -> bool {
-        if !self.unnamed.is_empty() || self.named.len() != keys.len() {
+        if !self.positional.is_empty() || self.named.len() != keys.len() {
             return false;
         }
-        keys.iter()
-            .all(|k| self.named.contains_key(&Identifier::no_ref(k)))
+        keys.iter().all(|k| {
+            self.named
+                .iter()
+                .map(|(id, _)| id)
+                .any(|id| id == &Identifier::no_ref(k))
+        })
     }
 
     /// Checks if the named tuple type only holds scalar values.
@@ -96,7 +101,10 @@ impl TupleType {
 
     /// Test if all fields have a common type.
     pub(crate) fn common_type(&self) -> Option<&Type> {
-        let mut iter = self.unnamed.iter().chain(self.named.values());
+        let mut iter = self
+            .positional
+            .iter()
+            .chain(self.named.iter().map(|(_, ty)| ty));
         if let Some(first) = iter.next()
             && iter.all(|x| x == first)
         {
@@ -129,33 +137,34 @@ impl TupleType {
 
 impl std::hash::Hash for TupleType {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.positional.iter().for_each(|ty| ty.hash(state));
         self.named.iter().for_each(|(id, ty)| {
             id.hash(state);
             ty.hash(state)
         });
-        self.unnamed.iter().for_each(|ty| ty.hash(state));
     }
 }
 
 impl FromIterator<(Identifier, Type)> for TupleType {
     fn from_iter<T: IntoIterator<Item = (Identifier, Type)>>(iter: T) -> Self {
-        let (unnamed, named) = iter.into_iter().partition(|(id, _)| id.is_empty());
+        let (positional, named): (Vec<(_, _)>, Vec<(_, _)>) =
+            iter.into_iter().partition(|(id, _)| id.is_empty());
         Self {
+            positional: positional.into_iter().map(|(_, ty)| ty).collect(),
             named,
-            unnamed: unnamed.into_values().collect(),
         }
     }
 }
 
 impl<'a> FromIterator<(&'a str, Type)> for TupleType {
     fn from_iter<T: IntoIterator<Item = (&'a str, Type)>>(iter: T) -> Self {
-        let (unnamed, named) = iter
+        let (positional, named): (Vec<(_, _)>, Vec<(_, _)>) = iter
             .into_iter()
             .map(|(id, ty)| (Identifier::no_ref(id), ty))
             .partition(|(id, _)| id.is_empty());
         Self {
+            positional: positional.into_iter().map(|(_, ty)| ty).collect(),
             named,
-            unnamed: unnamed.into_values().collect(),
         }
     }
 }
@@ -177,10 +186,10 @@ impl std::fmt::Display for TupleType {
 
         write!(f, "({})", {
             let mut types = self
-                .named
+                .positional
                 .iter()
-                .map(|(id, ty)| format!("{id}: {ty}"))
-                .chain(self.unnamed.iter().map(|ty| ty.to_string()))
+                .map(|ty| ty.to_string())
+                .chain(self.named.iter().map(|(id, ty)| format!("{id}: {ty}")))
                 .collect::<Vec<_>>();
 
             types.sort();
