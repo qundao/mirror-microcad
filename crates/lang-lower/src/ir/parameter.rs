@@ -15,7 +15,7 @@ use serde_with::skip_serializing_none;
 #[skip_serializing_none]
 #[derive(Debug, Clone, Hash, SrcReferrer, Identifiable, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
-pub struct Parameter<NAME: ir::NameKind = ir::SymbolPath> {
+pub struct Parameter<NAME: ir::NameSpec = ir::SymbolPath> {
     /// Parameter attributes
     pub attr: ir::OuterAttributes<NAME>,
     /// Name of the parameter
@@ -28,7 +28,7 @@ pub struct Parameter<NAME: ir::NameKind = ir::SymbolPath> {
     pub src_ref: SrcRef,
 }
 
-impl<NAME: ir::NameKind> std::fmt::Display for Parameter<NAME>
+impl<NAME: ir::NameSpec> std::fmt::Display for Parameter<NAME>
 where
     NAME: std::fmt::Display,
 {
@@ -42,7 +42,7 @@ where
     }
 }
 
-impl<T: ir::NameKind, NAME: ir::NameKind> CastInto<Parameter<T>> for Parameter<NAME>
+impl<T: ir::NameSpec, NAME: ir::NameSpec> CastInto<Parameter<T>> for Parameter<NAME>
 where
     NAME: Into<T>,
 {
@@ -59,11 +59,11 @@ where
 
 /// Parameter list, sorted by id.
 #[derive(Debug, Clone, SrcReferrer, Hash, PartialEq, Serialize, Deserialize)]
-pub struct ParameterList<NAME: ir::NameKind = ir::SymbolPath>(
+pub struct ParameterList<NAME: ir::NameSpec = ir::SymbolPath>(
     pub Refer<Box<[ir::Parameter<NAME>]>>,
 );
 
-impl<NAME: ir::NameKind> ParameterList<NAME> {
+impl<NAME: ir::NameSpec> ParameterList<NAME> {
     /// Return ids of all parameters
     pub fn ids(&self) -> impl Iterator<Item = Identifier> {
         self.0.iter().map(|param| param.id.clone())
@@ -75,7 +75,7 @@ impl<NAME: ir::NameKind> ParameterList<NAME> {
     }
 }
 
-impl<NAME: ir::NameKind> std::fmt::Display for ParameterList<NAME>
+impl<NAME: ir::NameSpec> std::fmt::Display for ParameterList<NAME>
 where
     NAME: std::fmt::Display,
 {
@@ -92,7 +92,7 @@ where
     }
 }
 
-impl<T: ir::NameKind, NAME: ir::NameKind> CastInto<ParameterList<T>> for ParameterList<NAME>
+impl<T: ir::NameSpec, NAME: ir::NameSpec> CastInto<ParameterList<T>> for ParameterList<NAME>
 where
     NAME: Into<T>,
 {

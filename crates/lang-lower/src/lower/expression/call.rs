@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    Lower, LowerContext, LowerResult, ir,
-    lower::{LowerExpr, LowerName, sort_and_check},
+    Lower, LowerContext, LowerError, LowerResult, ir,
+    lower::{LowerExpr, LowerName},
 };
 
-use microcad_lang_base::{__mu, SpanToSrcRef, SrcRef};
+use microcad_lang_base::{__mu, Identifier, SpanToSrcRef, SrcRef};
 use microcad_lang_parse::ast;
 
 impl<EXPR: LowerExpr> Lower<ast::Call> for ir::Call<EXPR>
@@ -22,63 +22,72 @@ where
     }
 }
 
-impl<EXPR> Lower<Vec<ast::TupleItem>> for ir::ArgumentList<EXPR>
-where
-    EXPR: Lower<ast::Expression>,
-{
+impl<EXPR: LowerExpr> Lower<Vec<ast::TupleItem>> for ir::ArgumentList<EXPR> {
     fn lower(node: &Vec<ast::TupleItem>, context: &mut LowerContext) -> LowerResult<Self> {
-        let mut unnamed = Vec::new();
-        let mut named = Vec::new();
+        let mut args = Vec::new();
+        let mut names: microcad_lang_base::HashSet<Identifier> =
+            microcad_lang_base::HashSet::default();
 
         node.iter().try_for_each(|arg| -> LowerResult<()> {
-            let expression = EXPR::lower(&arg.expr, context)?;
+            let expr = EXPR::lower(&arg.expr, context)?;
             let src_ref = context.span_to_src_ref(&arg.span);
 
-            match &arg.id {
-                Some(name) => named.push(ir::NamedArgument {
-                    id: ir::Identifier::lower(name, context)?,
-                    expression,
+            let arg = match &arg.id {
+                Some(name) => ir::Argument::Named {
+                    name: ir::Identifier::lower(name, context)?,
+                    expr,
                     src_ref,
-                }),
-                None => unnamed.push(expression),
+                },
+                None => ir::Argument::from(expr),
+            };
+
+            if let Some(name) = arg.name() {
+                if names.contains(name) {
+                    context.diag(LowerError::DuplicateArgument {
+                        id: name.clone(),
+                        previous: names.get(name).unwrap().clone(),
+                    });
+                    return Ok(());
+                }
+                names.extend(arg.name().cloned());
             }
+
+            args.push(arg);
+
             Ok(())
         })?;
 
         Ok(Self {
             src_ref: SrcRef::none(),
-            unnamed_args: unnamed.into_boxed_slice(),
-            named_args: sort_and_check(named, context)?,
+            args: args.into_boxed_slice(),
         })
     }
 }
 
-impl<EXPR> Lower<ast::ArgumentList> for ir::ArgumentList<EXPR>
-where
-    EXPR: Lower<ast::Expression>,
-{
+impl<Expr: LowerExpr> Lower<ast::ArgumentList> for ir::ArgumentList<Expr> {
     fn lower(node: &ast::ArgumentList, context: &mut LowerContext) -> LowerResult<Self> {
-        let mut unnamed = Vec::new();
-        let mut named = Vec::new();
+        let mut args = Vec::new();
 
         node.arguments
             .iter()
             .try_for_each(|arg| -> LowerResult<()> {
                 match arg.name() {
-                    Some(name) => named.push(ir::NamedArgument {
-                        id: ir::Identifier::lower(name, context)?,
-                        expression: EXPR::lower(arg.value(), context)?,
+                    Some(name) => args.push(ir::Argument::Named {
+                        name: ir::Identifier::lower(name, context)?,
+                        expr: Expr::lower(arg.value(), context)?,
                         src_ref: context.span_to_src_ref(arg.span()),
                     }),
-                    None => unnamed.push(EXPR::lower(arg.value(), context)?),
+                    None => {
+                        let expr = Expr::lower(arg.value(), context)?;
+                        args.push(ir::Argument::from(expr));
+                    }
                 }
                 Ok(())
             })?;
 
         Ok(Self {
             src_ref: context.span_to_src_ref(&node.span),
-            unnamed_args: unnamed.into_boxed_slice(),
-            named_args: sort_and_check(named, context)?,
+            args: args.into_boxed_slice(),
         })
     }
 }

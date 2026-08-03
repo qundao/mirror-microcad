@@ -148,11 +148,11 @@ pub enum LowerError {
 pub type LowerResult<T> = Result<T, LowerError>;
 
 pub trait LowerName:
-    ir::NameKind + Lower<ast::SymbolPath> + From<BuiltinId> + From<String>
+    ir::NameSpec + Lower<ast::SymbolPath> + From<BuiltinId> + From<String>
 {
 }
 
-pub trait LowerExpr: ir::ExpressionKind + Lower<ast::Expression> {}
+pub trait LowerExpr: ir::ExprSpec + Lower<ast::Expression> {}
 
 impl LowerName for ir::SymbolPath {}
 

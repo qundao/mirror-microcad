@@ -6,7 +6,7 @@
 use crate::{CastInto, ir};
 
 use derive_more::{Display, From};
-use microcad_lang_base::{IsDefault, Refer, SrcRef, SrcReferrer};
+use microcad_lang_base::{IsDefault, Refer, SingleIdentifier, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Identifiable;
 
 pub use microcad_lang_base::element::WorkbenchKind;
@@ -16,7 +16,7 @@ use serde_with::skip_serializing_none;
 /// Each WorkbenchStatement eventually evals into a [`Models`]
 #[skip_serializing_none]
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
-pub struct WorkbenchStatement<NAME: ir::NameKind = ir::SymbolPath> {
+pub struct WorkbenchStatement<NAME: ir::NameSpec = ir::SymbolPath> {
     pub attr: ir::OuterAttributes<NAME>,
     pub src_ref: SrcRef,
     pub visibility: ir::Visibility, // public = property
@@ -26,7 +26,7 @@ pub struct WorkbenchStatement<NAME: ir::NameKind = ir::SymbolPath> {
     pub expression: WorkbenchExpression<NAME>,
 }
 
-impl<NameA: ir::NameKind, NameB: ir::NameKind> CastInto<WorkbenchStatement<NameA>>
+impl<NameA: ir::NameSpec, NameB: ir::NameSpec> CastInto<WorkbenchStatement<NameA>>
     for WorkbenchStatement<NameB>
 where
     NameB: Into<NameA>,
@@ -45,13 +45,13 @@ where
 }
 
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
-pub struct Group<NAME: ir::NameKind = ir::SymbolPath> {
+pub struct Group<NAME: ir::NameSpec = ir::SymbolPath> {
     pub src_ref: SrcRef,
     pub attr: ir::InnerAttributes<NAME>,
     pub statements: Box<[WorkbenchStatement<NAME>]>,
 }
 
-impl<Src: ir::NameKind, Dst: ir::NameKind> CastInto<Group<Dst>> for Group<Src>
+impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<Group<Dst>> for Group<Src>
 where
     Src: Into<Dst>,
 {
@@ -65,7 +65,7 @@ where
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Init<NAME: ir::NameKind = ir::SymbolPath> {
+pub struct Init<NAME: ir::NameSpec = ir::SymbolPath> {
     /// SrcRef of the `init` keyword
     pub keyword_ref: SrcRef,
     /// Outer attributes.
@@ -96,7 +96,7 @@ impl Marker {
 }
 
 #[derive(Debug, Clone, From, PartialEq, Hash, Serialize, Deserialize)]
-pub enum WorkbenchExpression<Name: ir::NameKind = ir::SymbolPath> {
+pub enum WorkbenchExpression<Name: ir::NameSpec = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
     Name(Name),
@@ -106,26 +106,36 @@ pub enum WorkbenchExpression<Name: ir::NameKind = ir::SymbolPath> {
     Marker(Marker),
 }
 
-impl<Name: ir::NameKind> SrcReferrer for WorkbenchExpression<Name> {
+impl<Name: ir::NameSpec> SrcReferrer for WorkbenchExpression<Name> {
     fn src_ref(&self) -> SrcRef {
+        use WorkbenchExpression::*;
         match &self {
-            WorkbenchExpression::Invalid => SrcRef::none(),
-            WorkbenchExpression::Literal(literal) => literal.src_ref(),
-            WorkbenchExpression::Name(name) => name.src_ref(),
-            WorkbenchExpression::Group(group) => group.src_ref,
-            WorkbenchExpression::If(if_) => if_.src_ref,
-            WorkbenchExpression::Call(call) => call.src_ref,
-            WorkbenchExpression::Marker(marker) => marker.src_ref,
+            Invalid => SrcRef::none(),
+            Literal(literal) => literal.src_ref(),
+            Name(name) => name.src_ref(),
+            Group(group) => group.src_ref,
+            If(if_) => if_.src_ref,
+            Call(call) => call.src_ref,
+            Marker(marker) => marker.src_ref,
         }
     }
 }
 
-impl<NAME: ir::NameKind> ir::ExpressionKind for WorkbenchExpression<NAME> {
+impl<NAME: ir::NameSpec> ir::ExprSpec for WorkbenchExpression<NAME> {
     type Name = NAME;
     type Body = Group<NAME>;
 }
 
-impl<Name: ir::NameKind> CastInto<ir::WorkbenchExpression<Name>> for ir::ConstantExpression<Name> {
+impl<Name: ir::NameSpec> SingleIdentifier for WorkbenchExpression<Name> {
+    fn single_identifier(&self) -> Option<&microcad_lang_base::Identifier> {
+        match self {
+            WorkbenchExpression::Name(name) => name.single_identifier(),
+            _ => None,
+        }
+    }
+}
+
+impl<Name: ir::NameSpec> CastInto<ir::WorkbenchExpression<Name>> for ir::ConstantExpression<Name> {
     fn cast_into(self: ir::ConstantExpression<Name>) -> ir::WorkbenchExpression<Name> {
         match self {
             ir::ConstantExpression::Invalid => ir::WorkbenchExpression::Invalid,
@@ -136,12 +146,12 @@ impl<Name: ir::NameKind> CastInto<ir::WorkbenchExpression<Name>> for ir::Constan
     }
 }
 
-impl<NameA: ir::NameKind, NameB: ir::NameKind> CastInto<WorkbenchExpression<NameA>>
-    for WorkbenchExpression<NameB>
+impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<WorkbenchExpression<Dst>>
+    for WorkbenchExpression<Src>
 where
-    NameB: Into<NameA>,
+    Src: Into<Dst>,
 {
-    fn cast_into(self) -> WorkbenchExpression<NameA> {
+    fn cast_into(self) -> WorkbenchExpression<Dst> {
         use WorkbenchExpression::*;
         match self {
             Invalid => Invalid,

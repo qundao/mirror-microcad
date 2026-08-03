@@ -11,19 +11,19 @@ use serde::{Deserialize, Serialize};
 
 /// NamedArgument in a [`Call`].
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
-#[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
-pub struct NamedArgument<EXPR> {
+#[serde(bound(serialize = "Expr: Serialize", deserialize = "Expr: Deserialize<'de>"))]
+pub struct NamedArgument<Expr> {
     /// Name of the argument
     pub id: Identifier,
     /// Value of the argument
-    pub expression: EXPR,
+    pub expression: Expr,
     /// Source code reference
     pub src_ref: SrcRef,
 }
 
-impl<EXPR> std::fmt::Display for NamedArgument<EXPR>
+impl<Expr> std::fmt::Display for NamedArgument<Expr>
 where
-    EXPR: std::fmt::Display,
+    Expr: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{} = {}", self.id, self.expression)
@@ -55,6 +55,92 @@ impl<EXPR> SrcReferrer for NamedArgument<EXPR> {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
+#[serde(bound(serialize = "Expr: Serialize", deserialize = "Expr: Deserialize<'de>"))]
+pub enum Argument<Expr> {
+    /// Explicitly positional: `10` or `x + 1`
+    Unnamed(Expr),
+    /// Explicitly named by caller: `b: 12`
+    Named {
+        name: Identifier,
+        expr: Expr,
+        src_ref: SrcRef,
+    },
+    /// Auto-bind candidate identifier: `b` (needs resolver to check against ParameterList)
+    AutoNamed { name: Identifier, expr: Expr },
+}
+
+impl<Expr> SrcReferrer for Argument<Expr>
+where
+    Expr: SrcReferrer,
+{
+    fn src_ref(&self) -> SrcRef {
+        match self {
+            Argument::Unnamed(expr) | Argument::AutoNamed { expr, .. } => expr.src_ref(),
+            Argument::Named { src_ref, .. } => *src_ref,
+        }
+    }
+}
+
+impl<Expr> Argument<Expr> {
+    pub fn name(&self) -> Option<&Identifier> {
+        match self {
+            Argument::Unnamed(_) => None,
+            Argument::Named { name, .. } | Argument::AutoNamed { name, .. } => Some(name),
+        }
+    }
+}
+
+impl<Src: ir::ExprSpec, Dst: ir::ExprSpec> CastInto<Argument<Dst>> for Argument<Src>
+where
+    Src: CastInto<Dst>,
+    Src::Name: Into<Dst::Name>,
+{
+    fn cast_into(self) -> Argument<Dst> {
+        match self {
+            Argument::Unnamed(pos) => Argument::Unnamed(pos.cast_into()),
+            Argument::Named {
+                name,
+                expr,
+                src_ref,
+            } => Argument::Named {
+                name: name.cast_into(),
+                expr: expr.cast_into(),
+                src_ref,
+            },
+            Argument::AutoNamed { name, expr } => Argument::AutoNamed {
+                name: name.cast_into(),
+                expr: expr.cast_into(),
+            },
+        }
+    }
+}
+
+impl<EXPR> std::fmt::Display for Argument<EXPR>
+where
+    EXPR: std::fmt::Display,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Argument::Unnamed(expr) => write!(f, "{expr}"),
+            Argument::Named { name, expr, .. } => write!(f, "{name} = {expr}"),
+            Argument::AutoNamed { name, expr } => write!(f, "~{name} = {expr}"),
+        }
+    }
+}
+
+impl<Expr: ir::ExprSpec> From<Expr> for Argument<Expr> {
+    fn from(expr: Expr) -> Self {
+        match expr.single_identifier() {
+            Some(name) => Self::AutoNamed {
+                name: name.clone(),
+                expr,
+            },
+            None => Self::Unnamed(expr),
+        }
+    }
+}
+
 /// *Ordered map* of arguments in a [`Call`].
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(bound(serialize = "Expr: Serialize", deserialize = "Expr: Deserialize<'de>"))]
@@ -63,23 +149,21 @@ pub struct ArgumentList<Expr> {
     pub src_ref: SrcRef,
 
     /// The unnamed arguments.
-    pub unnamed_args: Box<[Expr]>,
-    /// Named arguments, sorted by name.
-    pub named_args: Box<[ir::NamedArgument<Expr>]>,
+    pub args: Box<[Argument<Expr>]>,
 }
 
 impl<Expr> ArgumentList<Expr> {
     /// Prepends a positional argument to the front of the argument list.
-    pub fn prepend(&mut self, expression: Expr) {
-        let mut new_args = Vec::with_capacity(self.unnamed_args.len() + 1);
-        new_args.push(expression);
-        new_args.extend(Vec::from(std::mem::take(&mut self.unnamed_args)));
-        self.unnamed_args = new_args.into_boxed_slice();
+    pub fn prepend(&mut self, arg: impl Into<Argument<Expr>>) {
+        let mut new_args = Vec::with_capacity(self.args.len() + 1);
+        new_args.push(arg.into());
+        new_args.extend(Vec::from(std::mem::take(&mut self.args)));
+        self.args = new_args.into_boxed_slice();
     }
 
     /// Consumes `self` and returns a new `ArgumentList` with `expr` prepended to `unnamed_args`.
-    pub fn prepended(mut self, expr: Expr) -> Self {
-        self.prepend(expr);
+    pub fn prepended(mut self, arg: impl Into<Argument<Expr>>) -> Self {
+        self.prepend(arg);
         self
     }
 }
@@ -90,10 +174,9 @@ where
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", {
-            self.unnamed_args
+            self.args
                 .iter()
-                .map(|p| p.to_string())
-                .chain(self.named_args.iter().map(|p| p.to_string()))
+                .map(|arg| arg.to_string())
                 .collect::<Vec<_>>()
                 .join(", ")
         })
@@ -102,28 +185,29 @@ where
 
 impl<Expr> FromIterator<Expr> for ArgumentList<Expr>
 where
-    Expr: SrcReferrer,
+    Expr: Into<Argument<Expr>>,
 {
     fn from_iter<T: IntoIterator<Item = Expr>>(iter: T) -> Self {
-        let unnamed_args = iter.into_iter().collect::<Vec<_>>().into_boxed_slice();
-
         Self {
             src_ref: SrcRef::default(),
-            unnamed_args,
-            named_args: Box::new([]),
+            args: iter
+                .into_iter()
+                .map(|arg| arg.into())
+                .collect::<Vec<_>>()
+                .into_boxed_slice(),
         }
     }
 }
 
-impl<T, EXPR> CastInto<ArgumentList<T>> for ArgumentList<EXPR>
+impl<Src: ir::ExprSpec, Dst: ir::ExprSpec> CastInto<ArgumentList<Dst>> for ArgumentList<Src>
 where
-    EXPR: CastInto<T>,
+    Src: CastInto<Dst>,
+    Src::Name: Into<Dst::Name>,
 {
-    fn cast_into(self) -> ArgumentList<T> {
+    fn cast_into(self) -> ArgumentList<Dst> {
         ArgumentList {
             src_ref: self.src_ref,
-            unnamed_args: self.unnamed_args.cast_into(),
-            named_args: self.named_args.cast_into(),
+            args: self.args.cast_into(),
         }
     }
 }
@@ -135,7 +219,7 @@ where
     serialize = "EXPR: Serialize, EXPR::Name: Serialize",
     deserialize = "EXPR: Deserialize<'de>, EXPR::Name: Deserialize<'de>"
 ))]
-pub struct Call<EXPR: ir::ExpressionKind> {
+pub struct Call<EXPR: ir::ExprSpec> {
     /// Name of the call.
     pub name: EXPR::Name,
     /// Argument list of the call.
@@ -144,12 +228,12 @@ pub struct Call<EXPR: ir::ExpressionKind> {
     pub src_ref: SrcRef,
 }
 
-impl<T: ir::ExpressionKind, EXPR: ir::ExpressionKind> CastInto<Call<T>> for Call<EXPR>
+impl<Src: ir::ExprSpec, Dst: ir::ExprSpec> CastInto<Call<Dst>> for Call<Src>
 where
-    EXPR: crate::CastInto<T>,
-    EXPR::Name: Into<T::Name>,
+    Src: CastInto<Dst>,
+    Src::Name: Into<Dst::Name>,
 {
-    fn cast_into(self) -> Call<T> {
+    fn cast_into(self) -> Call<Dst> {
         Call {
             name: self.name.into(),
             args: self.args.cast_into(),

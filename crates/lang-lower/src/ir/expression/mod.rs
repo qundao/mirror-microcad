@@ -6,16 +6,14 @@
 mod call;
 mod literal;
 mod symbol_path;
-mod tuple_expression;
 
 pub use call::*;
 use derive_more::From;
 pub use literal::*;
 pub use symbol_path::*;
-pub use tuple_expression::*;
 
 use crate::{CastInto, ir};
-use microcad_lang_base::{SrcRef, SrcReferrer};
+use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
 
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
@@ -27,7 +25,7 @@ use serde_with::skip_serializing_none;
     serialize = "EXPR: Serialize, EXPR::Body: Serialize",
     deserialize = "EXPR: Deserialize<'de>, EXPR::Body: Deserialize<'de>"
 ))]
-pub struct If<EXPR: ExpressionKind> {
+pub struct If<EXPR: ExprSpec> {
     /// SrcRef of the `if` keyword.
     pub if_ref: SrcRef,
     /// If condition.
@@ -46,7 +44,7 @@ pub struct If<EXPR: ExpressionKind> {
     pub src_ref: SrcRef,
 }
 
-impl<T: ExpressionKind, EXPR: ExpressionKind> CastInto<If<T>> for If<EXPR>
+impl<T: ExprSpec, EXPR: ExprSpec> CastInto<If<T>> for If<EXPR>
 where
     EXPR: CastInto<T>,
     EXPR::Body: CastInto<T::Body> + Serialize,
@@ -67,7 +65,7 @@ where
 
 impl<EXPR> std::fmt::Display for If<EXPR>
 where
-    EXPR: ExpressionKind + std::fmt::Display,
+    EXPR: ExprSpec + std::fmt::Display,
     EXPR::Body: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -82,24 +80,33 @@ where
     }
 }
 
-pub trait ExpressionKind: Serialize + SrcReferrer {
+pub trait ExprSpec: Serialize + SrcReferrer + SingleIdentifier {
     type Name;
     type Body;
 }
 
-pub trait NameKind: Serialize + SrcReferrer {}
+pub trait NameSpec: Serialize + SrcReferrer + SingleIdentifier {}
 
 /// An expression that can be evaluated during `resolve` phase.
 #[derive(Debug, Clone, From, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
-pub enum ConstantExpression<NAME: NameKind = ir::SymbolPath> {
+pub enum ConstantExpression<NAME: NameSpec = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
     Name(NAME),
     Call(ir::Call<ConstantExpression<NAME>>),
 }
 
-impl<Name: NameKind> SrcReferrer for ConstantExpression<Name> {
+impl<Name: NameSpec> SingleIdentifier for ConstantExpression<Name> {
+    fn single_identifier(&self) -> Option<&microcad_lang_base::Identifier> {
+        match self {
+            ConstantExpression::Name(name) => name.single_identifier(),
+            _ => None,
+        }
+    }
+}
+
+impl<Name: NameSpec> SrcReferrer for ConstantExpression<Name> {
     fn src_ref(&self) -> SrcRef {
         match &self {
             ConstantExpression::Invalid => SrcRef::none(),
@@ -110,12 +117,12 @@ impl<Name: NameKind> SrcReferrer for ConstantExpression<Name> {
     }
 }
 
-impl<Name: NameKind> ExpressionKind for ConstantExpression<Name> {
+impl<Name: NameSpec> ExprSpec for ConstantExpression<Name> {
     type Name = Name;
     type Body = (); // Constant expressions have no body.
 }
 
-impl<T: NameKind, Name: NameKind> CastInto<ConstantExpression<T>> for ConstantExpression<Name>
+impl<T: NameSpec, Name: NameSpec> CastInto<ConstantExpression<T>> for ConstantExpression<Name>
 where
     Name: Into<T>,
 {
@@ -130,7 +137,7 @@ where
     }
 }
 
-impl<NAME: NameKind> std::fmt::Display for ConstantExpression<NAME>
+impl<NAME: NameSpec> std::fmt::Display for ConstantExpression<NAME>
 where
     NAME: std::fmt::Display,
 {

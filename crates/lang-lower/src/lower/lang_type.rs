@@ -17,13 +17,13 @@ impl Lower<ast::TupleType> for ir::TupleType {
                     let value = ty::Type::lower(value, context)?;
                     Ok((name, value))
                 })
-                .collect::<Result<microcad_lang_base::HashMap<_, _>, _>>()?,
-            unnamed: node
+                .collect::<Result<Vec<(_, _)>, _>>()?,
+            positional: node
                 .inner
                 .iter()
                 .filter_map(|(name, value)| name.is_none().then_some(value))
                 .map(|value| ty::Type::lower(value, context))
-                .collect::<Result<microcad_lang_base::HashSet<_>, _>>()?,
+                .collect::<Result<Vec<_>, _>>()?,
         })
     }
 }

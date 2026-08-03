@@ -6,12 +6,12 @@
 use crate::{CastInto, ir, lower::LowerName};
 
 use derive_more::From;
-use microcad_lang_base::{IsDefault, Refer, SrcRef, SrcReferrer, is_default};
+use microcad_lang_base::{IsDefault, Refer, SingleIdentifier, SrcRef, SrcReferrer, is_default};
 use serde::{Deserialize, Serialize};
 
 /// Parameters and return type of a function
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
-pub struct FunctionSignature<NAME: ir::NameKind = ir::SymbolPath> {
+pub struct FunctionSignature<NAME: ir::NameSpec = ir::SymbolPath> {
     /// Function's parameters
     pub parameters: ir::ParameterList<NAME>,
     /// Function's return type
@@ -20,7 +20,7 @@ pub struct FunctionSignature<NAME: ir::NameKind = ir::SymbolPath> {
     pub src_ref: SrcRef,
 }
 
-impl<NAME: ir::NameKind> std::fmt::Display for FunctionSignature<NAME>
+impl<NAME: ir::NameSpec> std::fmt::Display for FunctionSignature<NAME>
 where
     NAME: std::fmt::Display,
 {
@@ -38,7 +38,7 @@ where
     }
 }
 
-impl<T: ir::NameKind, NAME: ir::NameKind> CastInto<FunctionSignature<T>> for FunctionSignature<NAME>
+impl<T: ir::NameSpec, NAME: ir::NameSpec> CastInto<FunctionSignature<T>> for FunctionSignature<NAME>
 where
     NAME: Into<T>,
 {
@@ -54,9 +54,9 @@ where
 /// A function scope `{}`
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
-pub struct Scope<NAME: ir::NameKind>(pub Refer<Box<[FunctionStatement<NAME>]>>);
+pub struct Scope<NAME: ir::NameSpec>(pub Refer<Box<[FunctionStatement<NAME>]>>);
 
-impl<T: ir::NameKind, NAME: ir::NameKind> CastInto<Scope<T>> for Scope<NAME>
+impl<T: ir::NameSpec, NAME: ir::NameSpec> CastInto<Scope<T>> for Scope<NAME>
 where
     NAME: Into<T>,
 {
@@ -67,7 +67,7 @@ where
 
 #[derive(Debug, Clone, Hash, From, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
-pub enum FunctionExpression<NAME: ir::NameKind = ir::SymbolPath> {
+pub enum FunctionExpression<NAME: ir::NameSpec = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
     Name(NAME),
@@ -76,7 +76,16 @@ pub enum FunctionExpression<NAME: ir::NameKind = ir::SymbolPath> {
     Call(ir::Call<FunctionExpression<NAME>>),
 }
 
-impl<NAME: ir::NameKind> ir::ExpressionKind for FunctionExpression<NAME> {
+impl<Name: ir::NameSpec> SingleIdentifier for FunctionExpression<Name> {
+    fn single_identifier(&self) -> Option<&microcad_lang_base::Identifier> {
+        match self {
+            FunctionExpression::Name(name) => name.single_identifier(),
+            _ => None,
+        }
+    }
+}
+
+impl<NAME: ir::NameSpec> ir::ExprSpec for FunctionExpression<NAME> {
     type Name = NAME;
     type Body = Scope<NAME>;
 }
@@ -92,7 +101,7 @@ impl<Name: LowerName> CastInto<ir::FunctionExpression<Name>> for ir::ConstantExp
     }
 }
 
-impl<T: ir::NameKind, NAME: ir::NameKind> CastInto<FunctionExpression<T>>
+impl<T: ir::NameSpec, NAME: ir::NameSpec> CastInto<FunctionExpression<T>>
     for FunctionExpression<NAME>
 where
     NAME: Into<T>,
@@ -110,7 +119,7 @@ where
     }
 }
 
-impl<NAME: ir::NameKind> SrcReferrer for FunctionExpression<NAME> {
+impl<NAME: ir::NameSpec> SrcReferrer for FunctionExpression<NAME> {
     fn src_ref(&self) -> SrcRef {
         match &self {
             FunctionExpression::Invalid => SrcRef::none(),
@@ -125,13 +134,13 @@ impl<NAME: ir::NameKind> SrcReferrer for FunctionExpression<NAME> {
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
-pub struct ReturnStatement<NAME: ir::NameKind> {
+pub struct ReturnStatement<NAME: ir::NameSpec> {
     pub expr: Option<FunctionExpression<NAME>>,
     pub keyword_src_ref: SrcRef,
     pub src_ref: SrcRef,
 }
 
-impl<T: ir::NameKind, NAME: ir::NameKind> CastInto<ReturnStatement<T>> for ReturnStatement<NAME>
+impl<T: ir::NameSpec, NAME: ir::NameSpec> CastInto<ReturnStatement<T>> for ReturnStatement<NAME>
 where
     NAME: Into<T>,
 {
@@ -146,7 +155,7 @@ where
 
 #[derive(Debug, Clone, derive_more::From, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
-pub enum FunctionStatement<NAME: ir::NameKind> {
+pub enum FunctionStatement<NAME: ir::NameSpec> {
     /// `a = 42`
     Local(ir::LocalAssignment<FunctionExpression<NAME>>),
     /// `{ a = 23; a }`
@@ -162,7 +171,7 @@ pub enum FunctionStatement<NAME: ir::NameKind> {
     Return(ReturnStatement<NAME>),
 }
 
-impl<NameA: ir::NameKind, NameB: ir::NameKind> CastInto<FunctionStatement<NameA>>
+impl<NameA: ir::NameSpec, NameB: ir::NameSpec> CastInto<FunctionStatement<NameA>>
     for FunctionStatement<NameB>
 where
     NameB: Into<NameA>,
@@ -180,7 +189,7 @@ where
     }
 }
 
-impl<NAME: ir::NameKind> SrcReferrer for FunctionStatement<NAME> {
+impl<NAME: ir::NameSpec> SrcReferrer for FunctionStatement<NAME> {
     fn src_ref(&self) -> SrcRef {
         use FunctionStatement::*;
         match &self {

@@ -17,7 +17,7 @@ pub enum SymbolPath {
     },
 }
 
-impl crate::ir::NameKind for SymbolPath {}
+impl crate::ir::NameSpec for SymbolPath {}
 
 impl SrcReferrer for SymbolPath {
     fn src_ref(&self) -> SrcRef {

@@ -22,7 +22,7 @@ impl Lower<ast::Identifier> for ir::Marker {
     }
 }
 
-impl<EXPR: ir::ExpressionKind> Lower<ast::If> for ir::If<EXPR>
+impl<EXPR: ir::ExprSpec> Lower<ast::If> for ir::If<EXPR>
 where
     EXPR: Lower<ast::Expression>,
     EXPR::Body: Lower<ast::Body>,
@@ -67,18 +67,6 @@ impl Lower<ast::SymbolPath> for ir::SymbolPath {
                 .map(|ident| ir::Identifier::lower(ident, context))
                 .collect::<Result<Vec<_>, _>>()?
                 .into_boxed_slice(),
-            src_ref: context.span_to_src_ref(&node.span),
-        })
-    }
-}
-
-impl<EXPR> Lower<ast::TupleExpression> for ir::TupleExpression<EXPR>
-where
-    EXPR: Lower<ast::Expression>,
-{
-    fn lower(node: &ast::TupleExpression, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self {
-            args: ir::ArgumentList::lower(&node.values, context)?,
             src_ref: context.span_to_src_ref(&node.span),
         })
     }
