@@ -4,14 +4,12 @@
 //! µcad syntax elements related to expressions
 
 mod call;
-mod format_string;
 mod literal;
 mod symbol_path;
 mod tuple_expression;
 
 pub use call::*;
 use derive_more::From;
-pub use format_string::*;
 pub use literal::*;
 pub use symbol_path::*;
 pub use tuple_expression::*;

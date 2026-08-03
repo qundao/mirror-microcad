@@ -7,7 +7,6 @@ use crate::{
 };
 
 mod call;
-mod format_string;
 mod literal;
 
 use microcad_lang_base::{__mu, Identifier, SpanToSrcRef};
