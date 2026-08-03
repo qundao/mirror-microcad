@@ -37,13 +37,13 @@ pub trait CallTrait<T> {
 #[macro_export]
 macro_rules! argument {
     ($id:ident: $ty:ident = $value:expr) => {
-        ArgumentValue::new(
+        $crate::ArgumentValue::new(
             $crate::builtin::BuiltinValueHelper::$ty($value).into(),
             Some($crate::rst::Identifier::no_ref(stringify!($id))),
         )
     };
     ($ty:ident = $value:expr) => {
-        ArgumentValue::new(
+        $crate::ArgumentValue::new(
             $crate::builtin::BuiltinValueHelper::$ty($value).into(),
             Some($crate::rst::Identifier::no_ref(stringify!($id))),
         )

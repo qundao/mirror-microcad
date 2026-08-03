@@ -70,6 +70,7 @@ impl StackFrame {
 }
 
 /// A generic stack.
+#[derive(Debug)]
 pub struct Stack(Vec<StackFrame>);
 
 impl Stack {
@@ -130,6 +131,7 @@ pub trait StackWrite: StackRead {
     }
 }
 
+#[derive(Debug, Default)]
 pub struct EvalContext {
     stack: Stack,
 

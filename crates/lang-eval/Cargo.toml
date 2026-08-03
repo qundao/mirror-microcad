@@ -24,6 +24,7 @@ microcad-lang-proc-macros = { workspace = true }
 microcad-lang-types = { workspace = true }
 microcad-model = { workspace = true }
 microcad-package = { workspace = true }
+microcad-builtin = { workspace = true }
 
 [dev-dependencies]
 pretty_assertions = "1.4"
