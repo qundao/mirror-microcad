@@ -15,7 +15,7 @@ mod r#type;
 mod workbench;
 
 use microcad_lang_base::{
-    Identifiable, Identifier, Refer, SpanToSrcRef, Spanned, SrcRef, SrcReferrer,
+    BuiltinId, Identifiable, Identifier, Refer, SpanToSrcRef, Spanned, SrcRef, SrcReferrer,
 };
 use microcad_lang_parse::ast;
 use microcad_lang_types::{ValueError, ty::TypeError};
@@ -147,7 +147,10 @@ pub enum LowerError {
 /// Result with lower error
 pub type LowerResult<T> = Result<T, LowerError>;
 
-pub trait LowerName: ir::NameKind + Lower<ast::SymbolPath> + From<String> {}
+pub trait LowerName:
+    ir::NameKind + Lower<ast::SymbolPath> + From<BuiltinId> + From<String>
+{
+}
 
 pub trait LowerExpr: ir::ExpressionKind + Lower<ast::Expression> {}
 

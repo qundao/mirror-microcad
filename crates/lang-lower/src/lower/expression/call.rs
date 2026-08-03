@@ -3,10 +3,10 @@
 
 use crate::{
     Lower, LowerContext, LowerResult, ir,
-    lower::{LowerExpr, LowerName, function::builtin_fn, sort_and_check},
+    lower::{LowerExpr, LowerName, sort_and_check},
 };
 
-use microcad_lang_base::{SpanToSrcRef, SrcRef};
+use microcad_lang_base::{__mu, SpanToSrcRef, SrcRef};
 use microcad_lang_parse::ast;
 
 impl<EXPR: LowerExpr> Lower<ast::Call> for ir::Call<EXPR>
@@ -95,7 +95,7 @@ where
 {
     fn lower(node: &ast::UnaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            name: builtin_fn(node.op.to_fn_name()),
+            name: __mu(node.op.to_fn_name()).into(),
             args: ir::ArgumentList::from_iter([Expr::lower(&node.rhs, context)?]),
             src_ref: context.span_to_src_ref(&node.span),
         })
@@ -108,11 +108,89 @@ where
 {
     fn lower(node: &ast::BinaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            name: builtin_fn(node.op.to_fn_name()),
+            name: __mu(node.op.to_fn_name()).into(),
             args: ir::ArgumentList::from_iter([
                 Expr::lower(&node.lhs, context)?,
                 Expr::lower(&node.rhs, context)?,
             ]),
+            src_ref: context.span_to_src_ref(&node.span),
+        })
+    }
+}
+
+pub fn lower_spec<Name: LowerName>(
+    expr: ir::ConstantExpression<Name>,
+    spec: &ast::StringFormatSpecification,
+    context: &mut LowerContext,
+) -> LowerResult<ir::Call<ir::ConstantExpression<Name>>> {
+    let width = spec
+        .width
+        .as_ref()
+        .and_then(|r| r.as_ref().ok())
+        .copied()
+        .map(|w| ir::ConstantExpression::Literal(ir::Literal::from_value(w as i64)))
+        .unwrap_or(ir::ConstantExpression::Invalid);
+
+    let precision = spec
+        .precision
+        .as_ref()
+        .and_then(|r| r.as_ref().ok())
+        .copied()
+        .map(|p| ir::ConstantExpression::Literal(ir::Literal::from_value(p as i64)))
+        .unwrap_or(ir::ConstantExpression::Invalid);
+
+    Ok(ir::Call {
+        name: __mu("core::format_spec").into(),
+        args: ir::ArgumentList::from_iter([expr, width, precision]),
+        src_ref: context.span_to_src_ref(&spec.span),
+    })
+}
+
+impl<Name: LowerName> Lower<ast::FormatString> for ir::Call<ir::ConstantExpression<Name>> {
+    fn lower(node: &ast::FormatString, context: &mut LowerContext) -> LowerResult<Self> {
+        let mut args_vec = Vec::new();
+        let mut pending_str = String::new();
+
+        for part in &node.parts {
+            match part {
+                ast::StringPart::Char(c) => {
+                    pending_str.push(c.character);
+                }
+                ast::StringPart::Content(lit) => {
+                    pending_str.push_str(&lit.content);
+                }
+                ast::StringPart::Expression(expr_part) => {
+                    // Flush accumulated string literal first
+                    if !pending_str.is_empty() {
+                        args_vec.push(ir::ConstantExpression::Literal(ir::Literal::from_value(
+                            std::mem::take(&mut pending_str),
+                        )));
+                    }
+
+                    let lowered_expr =
+                        ir::ConstantExpression::lower(expr_part.expr.as_ref(), context)?;
+
+                    if expr_part.specification.is_some() {
+                        args_vec.push(
+                            lower_spec(lowered_expr, &expr_part.specification, context)?.into(),
+                        );
+                    } else {
+                        args_vec.push(lowered_expr);
+                    }
+                }
+            }
+        }
+
+        // Flush remaining trailing string content
+        if !pending_str.is_empty() {
+            args_vec.push(ir::ConstantExpression::Literal(ir::Literal::from_value(
+                pending_str,
+            )));
+        }
+
+        Ok(Self {
+            name: __mu("core::format").into(),
+            args: ir::ArgumentList::from_iter(args_vec),
             src_ref: context.span_to_src_ref(&node.span),
         })
     }

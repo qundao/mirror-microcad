@@ -3,14 +3,14 @@
 
 use crate::{
     Lower, LowerContext, LowerError, LowerResult, ir,
-    lower::{LowerExpr, LowerName, function::builtin_fn},
+    lower::{LowerExpr, LowerName},
 };
 
 mod call;
 mod format_string;
 mod literal;
 
-use microcad_lang_base::{Identifier, SpanToSrcRef};
+use microcad_lang_base::{__mu, Identifier, SpanToSrcRef};
 use microcad_lang_parse::ast;
 use microcad_lang_types::{BinaryOperator, Scalar, Value};
 
@@ -107,7 +107,7 @@ where
     fn lower(a: &ast::ArrayRangeExpression, context: &mut LowerContext) -> LowerResult<Self> {
         let unit = ir::Unit::lower(&a.unit, context)?;
         let range = Expr::from(ir::Call {
-            name: builtin_fn("range"),
+            name: __mu("core::range").into(),
             args: ir::ArgumentList::from_iter([
                 Expr::lower(&a.start.expr, context)?,
                 Expr::lower(&a.end.expr, context)?,
@@ -119,7 +119,7 @@ where
             range
         } else {
             Expr::from(ir::Call {
-                name: builtin_fn(BinaryOperator::Multiply.to_fn_name()),
+                name: __mu(BinaryOperator::Multiply.to_fn_name()).into(),
                 args: ir::ArgumentList::from_iter([
                     range,
                     Expr::from(ir::Literal::from(
@@ -145,7 +145,7 @@ where
             list
         } else {
             Expr::from(ir::Call {
-                name: builtin_fn(BinaryOperator::Multiply.to_fn_name()),
+                name: __mu(BinaryOperator::Multiply.to_fn_name()).into(),
                 args: ir::ArgumentList::from_iter([
                     list,
                     Expr::from(ir::Literal::from(
@@ -165,9 +165,9 @@ impl<NAME: LowerName> Lower<ast::Expression> for ir::ConstantExpression<NAME> {
             ast::Expression::Literal(ast::Literal {
                 literal: ast::LiteralKind::String(s),
                 ..
-            }) => Self::FormatString(ir::FormatString::lower(s, context)?),
+            }) => Self::Literal(ir::Literal::from_value(s.content.clone())),
             ast::Expression::Literal(expr) => Self::Literal(ir::Literal::lower(expr, context)?),
-            ast::Expression::String(s) => Self::FormatString(ir::FormatString::lower(s, context)?),
+            ast::Expression::String(s) => Self::Call(ir::Call::lower(s, context)?),
             ast::Expression::Tuple(t) => Self::Tuple(ir::TupleExpression::lower(t, context)?),
             ast::Expression::ArrayRange(a) => Self::lower(a, context)?,
             ast::Expression::ArrayList(a) => Self::lower(a, context)?,

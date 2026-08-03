@@ -7,7 +7,7 @@ use crate::{
     lower::{LowerName, extract_statements_with_tail, for_each_statement},
 };
 
-use microcad_lang_base::{Identifier, Refer, SpanToSrcRef, SrcRef, SrcReferrer};
+use microcad_lang_base::{__mu, Identifier, Refer, SpanToSrcRef, SrcRef, SrcReferrer};
 use microcad_lang_parse::ast;
 
 impl Lower<ast::def::Function> for ir::OuterAttributes {
@@ -51,13 +51,6 @@ impl<NAME: LowerName> Lower<ast::Body> for ir::Scope<NAME> {
     }
 }
 
-pub fn builtin_fn<'a, NAME>(s: impl Into<String>) -> NAME
-where
-    NAME: From<String>,
-{
-    format!("__builtin::op::{}", s.into()).into()
-}
-
 impl<NAME: LowerName> Lower<ast::Expression> for ir::FunctionExpression<NAME> {
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
@@ -74,15 +67,15 @@ impl<NAME: LowerName> Lower<ast::Expression> for ir::FunctionExpression<NAME> {
             ast::Expression::ArrayList(a) => Self::lower(a, context)?,
             ast::Expression::SymbolPath(n) => Self::Name(NAME::lower(n, context)?),
             ast::Expression::BinaryOperation(binop) => Self::Call(ir::Call {
-                name: builtin_fn(binop.op.to_fn_name()),
+                name: __mu(binop.op.to_fn_name()).into(),
                 args: ArgumentList::from_iter([
-                    ir::FunctionExpression::lower(binop.lhs.as_ref(), context)?,
-                    ir::FunctionExpression::lower(binop.rhs.as_ref(), context)?,
+                    Self::lower(binop.lhs.as_ref(), context)?,
+                    Self::lower(binop.rhs.as_ref(), context)?,
                 ]),
                 src_ref: context.span_to_src_ref(&binop.span),
             }),
             ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call {
-                name: builtin_fn(unop.op.to_fn_name()),
+                name: __mu(unop.op.to_fn_name()).into(),
                 args: ArgumentList::from_iter([Self::lower(unop.rhs.as_ref(), context)?]),
                 src_ref: context.span_to_src_ref(&unop.span),
             }),
@@ -99,7 +92,7 @@ impl<NAME: LowerName> Lower<ast::Expression> for ir::FunctionExpression<NAME> {
                     Ok(match &element.inner {
                         Attribute(_) => panic!("Attribute access not allowed"),
                         Tuple(t) => Self::Call(ir::Call {
-                            name: builtin_fn("tuple_access"),
+                            name: __mu("tuple_access").into(),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
                                 Self::Name(NAME::from(t.name.to_string())),
@@ -112,7 +105,7 @@ impl<NAME: LowerName> Lower<ast::Expression> for ir::FunctionExpression<NAME> {
                             src_ref,
                         }),
                         ArrayElement(e) => Self::Call(ir::Call {
-                            name: builtin_fn("array_access"),
+                            name: __mu("array_access").into(),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
                                 Self::lower(e.as_ref(), context)?,

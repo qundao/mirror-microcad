@@ -3,12 +3,10 @@
 
 use crate::{
     Lower, LowerContext, LowerError, LowerResult, ir,
-    lower::{
-        attribute::outer_with_doc, extract_statements, for_each_statement, function::builtin_fn,
-    },
+    lower::{attribute::outer_with_doc, extract_statements, for_each_statement},
 };
 
-use microcad_lang_base::{Refer, SpanToSrcRef, SrcRef};
+use microcad_lang_base::{__mu, Refer, SpanToSrcRef, SrcRef};
 use microcad_lang_parse::ast;
 
 impl Lower<ast::Init> for ir::Init {
@@ -88,7 +86,7 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
 
                     Ok(match &element.inner {
                         Attribute(a) => Self::Call(ir::Call {
-                            name: builtin_fn("attribute_access"),
+                            name: __mu("attribute_access").into(),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
                                 Self::Name(ir::SymbolPath::from(a.name.to_string())),
@@ -96,7 +94,7 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
                             src_ref,
                         }),
                         Tuple(t) => Self::Call(ir::Call {
-                            name: builtin_fn("property_access"),
+                            name: __mu("property_access").into(),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
                                 Self::Name(ir::SymbolPath::from(t.name.to_string())),
@@ -109,7 +107,7 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
                             src_ref,
                         }),
                         ArrayElement(e) => Self::Call(ir::Call {
-                            name: builtin_fn("array_access"),
+                            name: __mu("array_access").into(),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
                                 Self::lower(e.as_ref(), context)?,

@@ -141,14 +141,12 @@ pub trait NameKind: Serialize + SrcReferrer {}
 /// An expression that can be evaluated during `resolve` phase.
 ///
 /// Use for `Constant` and default values for `Parameter`.
-/// TODO: ElementAccess are missing.
 #[derive(Debug, Clone, From, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
 pub enum ConstantExpression<NAME: NameKind = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
     Name(NAME),
-    FormatString(ir::FormatString<NAME>),
     List(ir::ListExpression<ConstantExpression<NAME>>),
     Tuple(ir::TupleExpression<ConstantExpression<NAME>>),
     Call(ir::Call<ConstantExpression<NAME>>),
@@ -160,7 +158,6 @@ impl<Name: NameKind> SrcReferrer for ConstantExpression<Name> {
             ConstantExpression::Invalid => SrcRef::none(),
             ConstantExpression::Literal(literal) => literal.src_ref(),
             ConstantExpression::Name(name) => name.src_ref(),
-            ConstantExpression::FormatString(format_string) => format_string.0.src_ref,
             ConstantExpression::List(list) => list.src_ref(),
             ConstantExpression::Tuple(tuple_expression) => tuple_expression.src_ref,
             ConstantExpression::Call(call) => call.src_ref,
@@ -183,7 +180,6 @@ where
             Invalid => Invalid,
             Literal(literal) => Literal(literal),
             Name(name) => Name(name.into()),
-            FormatString(format_string) => FormatString(format_string.cast_into()),
             List(array_expression) => List(array_expression.cast_into()),
             Tuple(tuple_expression) => Tuple(tuple_expression.cast_into()),
             Call(call) => Call(call.cast_into()),
@@ -199,7 +195,6 @@ where
         match &self {
             ConstantExpression::Literal(literal) => write!(f, "{literal}"),
             ConstantExpression::Name(qualified_name) => write!(f, "{qualified_name}"),
-            ConstantExpression::FormatString(format_string) => write!(f, "{format_string}"),
             ConstantExpression::List(array_expression) => {
                 write!(f, "{array_expression}")
             }
