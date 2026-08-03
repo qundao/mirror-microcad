@@ -12,47 +12,39 @@ pub mod tree;
 #[macro_export]
 macro_rules! parameter {
     ($id:ident) => {
-        (
-            $crate::rst::Identifier::no_ref(stringify!($id)),
             $crate::rst::Parameter {
+                id: $crate::rst::Identifier::no_ref(stringify!($id)),
                 src_ref: microcad_lang_base::SrcRef::none(),
                 ty: None,
                 default_value: None,
                 doc: None,
             },
-        )
     };
     ($id:ident: $ty:ident) => {
-        (
-            $crate::rst::Identifier::no_ref(stringify!($id)),
-            $crate::rst::Parameter {
-                ty: Some($crate::builtin::BuiltinTypeHelper::$ty.into()),
-                src_ref: microcad_lang_base::SrcRef::none(),
-                default_value: None,
-                doc: None,
-            },
-        )
+        $crate::rst::Parameter {
+            id: $crate::rst::Identifier::no_ref(stringify!($id)),
+            ty: Some($crate::builtin::BuiltinTypeHelper::$ty.into()),
+            src_ref: microcad_lang_base::SrcRef::none(),
+            default_value: None,
+            doc: None,
+        }
     };
     ($id:ident: $ty:ident = $value:expr) => {
-        (
-            $crate::rst::Identifier::no_ref(stringify!($id)),
-            $crate::rst::Parameter {
-                doc: None,
-                ty: Some($crate::builtin::BuiltinTypeHelper::$ty.into()),
-                default_value: Some($crate::builtin::BuiltinValueHelper::$ty($value).into()),
-                src_ref: microcad_lang_base::SrcRef::none(),
-            },
-        )
+        $crate::rst::Parameter {
+            id: $crate::rst::Identifier::no_ref(stringify!($id)),
+            doc: None,
+            ty: Some($crate::builtin::BuiltinTypeHelper::$ty.into()),
+            default_value: Some($crate::builtin::BuiltinValueHelper::$ty($value).into()),
+            src_ref: microcad_lang_base::SrcRef::none(),
+        }
     };
     ($id:ident = $value:expr) => {
-        (
-            $crate::rst::Identifier::no_ref(stringify!($id)),
-            $crate::rst::Parameter {
-                doc: None,
-                ty: None,
-                default_value: Some($value),
-                src_ref: microcad_lang_base::SrcRef::none(),
-            },
-        )
+        $crate::rst::Parameter {
+            id: $crate::rst::Identifier::no_ref(stringify!($id)),
+            doc: None,
+            ty: None,
+            default_value: Some($value),
+            src_ref: microcad_lang_base::SrcRef::none(),
+        }
     };
 }

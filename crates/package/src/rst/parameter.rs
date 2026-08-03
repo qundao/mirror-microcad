@@ -4,7 +4,7 @@
 //! Parameter value evaluation entity
 
 use derive_more::Deref;
-use microcad_lang_base::{HashMap, Identifier, SrcRef};
+use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_proc_macros::SrcReferrer;
 use microcad_lang_types::{Ty, Type, Value};
 use serde::{Deserialize, Serialize};
@@ -14,6 +14,9 @@ use crate::rst::DocBlock;
 /// Parameter value is the result of evaluating a parameter
 #[derive(Clone, Debug, Hash, PartialEq, SrcReferrer, Serialize, Deserialize)]
 pub struct Parameter {
+    /// Parameter id
+    pub id: Identifier,
+    /// Documentation
     pub doc: Option<DocBlock>,
     /// Parameter type
     pub ty: Option<Type>,
@@ -40,33 +43,40 @@ impl Ty for Parameter {
 }
 
 /// List of parameter values
-#[derive(Clone, Debug, PartialEq, Default, Deref, Serialize, Deserialize)]
-pub struct ParameterList(HashMap<Identifier, Parameter>);
+#[derive(Clone, Debug, PartialEq, Hash, Default, Deref, Serialize, Deserialize)]
+pub struct ParameterList(Box<[Parameter]>);
 
-impl<I, P> FromIterator<(I, P)> for ParameterList
-where
-    I: Into<Identifier>,
-    P: Into<Parameter>,
-{
-    fn from_iter<T: IntoIterator<Item = (I, P)>>(iter: T) -> Self {
-        Self(
-            iter.into_iter()
-                .map(|(i, p)| (i.into(), p.into()))
-                .collect(),
-        )
+impl ParameterList {
+    /// Positional lookup by index
+    pub fn get_by_index(&self, index: usize) -> Option<&Parameter> {
+        self.0.get(index)
+    }
+
+    /// Named lookup by Identifier
+    pub fn get_by_name(&self, id: &Identifier) -> Option<&Parameter> {
+        self.0.iter().find(|p| &p.id == id)
+    }
+
+    /// Total parameter count
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
     }
 }
 
-impl std::hash::Hash for ParameterList {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        // Collect and sort key-value pairs to guarantee a deterministic hash
-        let mut entries: Vec<_> = self.0.iter().collect();
-        entries.sort_by_key(|(k, _)| *k);
-
-        entries.len().hash(state); // Hash length first
-        for (k, v) in entries {
-            k.hash(state);
-            v.hash(state);
-        }
+impl<P> FromIterator<P> for ParameterList
+where
+    P: Into<Parameter>,
+{
+    fn from_iter<T: IntoIterator<Item = P>>(iter: T) -> Self {
+        Self(
+            iter.into_iter()
+                .map(|p| p.into())
+                .collect::<Vec<_>>()
+                .into_boxed_slice(),
+        )
     }
 }

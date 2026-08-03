@@ -26,7 +26,7 @@ use std::hash::Hash;
 use serde::{Deserialize, Serialize};
 
 use derive_more::From;
-use microcad_lang_base::{HashId, Refer, SrcRef, SrcReferrer};
+use microcad_lang_base::{HashId, Refer, SingleIdentifier, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Artifact;
 use microcad_lang_types::Value;
 
@@ -34,9 +34,6 @@ use microcad_lang_types::Value;
 pub enum ResolvedName {
     /// Name for local variable in a function or workbench.
     Local(Identifier),
-    /// Name for a builtin method.
-    Method(Identifier),
-
     Symbol(Refer<SymbolHandle>),
     Error(SymbolPath),
 }
@@ -45,9 +42,17 @@ impl SrcReferrer for ResolvedName {
     fn src_ref(&self) -> SrcRef {
         match self {
             ResolvedName::Local(identifier) => identifier.src_ref(),
-            ResolvedName::Method(identifier) => identifier.src_ref(),
             ResolvedName::Symbol(refer) => refer.src_ref(),
             ResolvedName::Error(symbol_path) => symbol_path.src_ref(),
+        }
+    }
+}
+
+impl SingleIdentifier for ResolvedName {
+    fn single_identifier(&self) -> Option<&Identifier> {
+        match self {
+            ResolvedName::Local(identifier) => Some(identifier),
+            _ => None,
         }
     }
 }

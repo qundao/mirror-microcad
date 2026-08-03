@@ -11,18 +11,14 @@ pub type FunctionExpression = ir::FunctionExpression<ResolvedName>;
 pub type FunctionStatement = ir::FunctionStatement<ResolvedName>;
 
 pub use ir::Literal;
-pub type FormatString = ir::FormatString<ResolvedName>;
-pub type ListExpression = ir::ListExpression<FunctionExpression>;
-
-pub type TupleExpression = ir::TupleExpression<FunctionExpression>;
 pub type Scope = ir::Scope<ResolvedName>;
 pub type If = ir::If<FunctionExpression>;
 
 /// A call to a function.
 pub type Call = ir::Call<FunctionExpression>;
 
+pub type Argument = ir::Argument<FunctionExpression>;
 pub type ArgumentList = ir::ArgumentList<FunctionExpression>;
-pub type UnnamedArgument = ir::UnnamedArgument<FunctionExpression>;
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Function {
