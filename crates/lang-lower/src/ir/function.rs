@@ -6,7 +6,7 @@
 use crate::{CastInto, ir, lower::LowerName};
 
 use derive_more::From;
-use microcad_lang_base::{IsDefault, Refer, SingleIdentifier, SrcRef, SrcReferrer, is_default};
+use microcad_lang_base::{IsDefault, Refer, SingleIdentifier, SrcRef, SrcReferrer};
 use serde::{Deserialize, Serialize};
 
 /// Parameters and return type of a function
@@ -207,10 +207,8 @@ impl<Name: ir::NameSpec> SrcReferrer for FunctionStatement<Name> {
 #[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
 pub struct FunctionItems {
     /// use ...
-    #[serde(skip_serializing_if = "is_default", default)]
     pub aliases: ir::Aliases,
     /// const FOO =
-    #[serde(skip_serializing_if = "is_default", default)]
     pub constants: Box<[ir::Constant]>,
 }
 
@@ -229,7 +227,6 @@ pub struct Function {
     /// public / private
     pub visibility: ir::Visibility,
     /// SrcRef of the `fn` keyword
-    #[serde(skip_serializing_if = "SrcRef::is_none", default)]
     pub keyword_ref: SrcRef,
     /// Name of the function
     pub id: ir::Identifier,
@@ -238,10 +235,8 @@ pub struct Function {
     /// #![...]
     pub inner_attr: ir::InnerAttributes,
 
-    #[serde(skip_serializing_if = "is_default", default)]
     pub items: ir::FunctionItems,
 
     /// Function statements
-    #[serde(skip_serializing_if = "is_default", default)]
     pub statements: Box<[ir::FunctionStatement<ir::SymbolPath>]>,
 }
