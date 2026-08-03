@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0x7cd65a945030702d",
-        output_hash: "0xdbddda57900290e0",
+        output_hash: "0x468898da48a97943",
         tree: (
             id: Some("circle"),
             attr: ((
@@ -71,7 +71,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                         value: "center",
                                         src_ref: "6:35 @ 0x5b5b0d75574ec6c6 (182..188)",
                                     )),
-                                    default_value: Some(Tuple((
+                                    default_value: Some(Call((
+                                        name: Builtin((5042962997692714852)),
                                         args: (
                                             src_ref: "None",
                                             unnamed_args: [],
@@ -164,7 +165,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                 value: "center",
                                                 src_ref: "7:28 @ 0x5b5b0d75574ec6c6 (244..250)",
                                             )),
-                                            default_value: Some(Tuple((
+                                            default_value: Some(Call((
+                                                name: Builtin((5042962997692714852)),
                                                 args: (
                                                     src_ref: "None",
                                                     unnamed_args: [],
