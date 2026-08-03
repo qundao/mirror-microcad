@@ -14,20 +14,6 @@ use microcad_lang_base::{__mu, Identifier, SpanToSrcRef};
 use microcad_lang_parse::ast;
 use microcad_lang_types::{BinaryOperator, Scalar, Value};
 
-impl<EXPR> Lower<ast::ArrayListExpression> for ir::ListExpression<EXPR>
-where
-    EXPR: Lower<ast::Expression>,
-{
-    fn lower(node: &ast::ArrayListExpression, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self(
-            node.items
-                .iter()
-                .map(|item| EXPR::lower(&item.expr, context))
-                .collect::<Result<Vec<EXPR>, _>>()?,
-        ))
-    }
-}
-
 impl Lower<ast::Identifier> for ir::Marker {
     fn lower(node: &ast::Identifier, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
@@ -134,12 +120,23 @@ where
 
 impl<Expr: LowerExpr> Lower<ast::ArrayListExpression> for Expr
 where
-    Expr: From<ir::Call<Expr>> + From<ir::ListExpression<Expr>> + From<ir::Literal>,
+    Expr: From<ir::Call<Expr>> + From<ir::Literal>,
     Expr::Name: LowerName,
 {
     fn lower(a: &ast::ArrayListExpression, context: &mut LowerContext) -> LowerResult<Self> {
         let unit = ir::Unit::lower(&a.unit, context)?;
-        let list = Expr::from(ir::ListExpression::lower(a, context)?);
+
+        let args = a
+            .items
+            .iter()
+            .map(|item| Expr::lower(&item.expr, context))
+            .collect::<Result<Vec<Expr>, _>>()?;
+
+        let list = Expr::from(ir::Call {
+            name: __mu("core::list").into(),
+            args: ir::ArgumentList::from_iter(args),
+            src_ref: context.span_to_src_ref(&a.span),
+        });
 
         Ok(if unit.is_none() {
             list

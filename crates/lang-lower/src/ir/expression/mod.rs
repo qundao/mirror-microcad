@@ -22,53 +22,6 @@ use microcad_lang_base::{SrcRef, SrcReferrer};
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
-/// List of expressions.
-#[derive(Clone, Debug, Hash, PartialEq, Serialize, Deserialize)]
-#[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
-pub struct ListExpression<EXPR>(pub Vec<EXPR>);
-
-impl<EXPR> SrcReferrer for ir::ListExpression<EXPR>
-where
-    EXPR: SrcReferrer,
-{
-    fn src_ref(&self) -> SrcRef {
-        SrcRef::merge(
-            &self
-                .0
-                .first()
-                .map(|start| start.src_ref())
-                .unwrap_or_default(),
-            &self.0.last().map(|end| end.src_ref()).unwrap_or_default(),
-        )
-    }
-}
-
-impl<EXPR> std::fmt::Display for ListExpression<EXPR>
-where
-    EXPR: std::fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            self.0
-                .iter()
-                .map(|c| c.to_string())
-                .collect::<Vec<_>>()
-                .join(", "),
-        )
-    }
-}
-
-impl<T, EXPR> CastInto<ListExpression<T>> for ListExpression<EXPR>
-where
-    EXPR: CastInto<T> + Serialize,
-{
-    fn cast_into(self) -> ListExpression<T> {
-        ListExpression(self.0.into_iter().map(|e| e.cast_into()).collect())
-    }
-}
-
 /// If statement.
 #[skip_serializing_none]
 #[derive(Clone, Debug, Hash, PartialEq, Serialize, Deserialize)]
@@ -147,7 +100,6 @@ pub enum ConstantExpression<NAME: NameKind = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
     Name(NAME),
-    List(ir::ListExpression<ConstantExpression<NAME>>),
     Tuple(ir::TupleExpression<ConstantExpression<NAME>>),
     Call(ir::Call<ConstantExpression<NAME>>),
 }
@@ -158,7 +110,6 @@ impl<Name: NameKind> SrcReferrer for ConstantExpression<Name> {
             ConstantExpression::Invalid => SrcRef::none(),
             ConstantExpression::Literal(literal) => literal.src_ref(),
             ConstantExpression::Name(name) => name.src_ref(),
-            ConstantExpression::List(list) => list.src_ref(),
             ConstantExpression::Tuple(tuple_expression) => tuple_expression.src_ref,
             ConstantExpression::Call(call) => call.src_ref,
         }
@@ -180,7 +131,6 @@ where
             Invalid => Invalid,
             Literal(literal) => Literal(literal),
             Name(name) => Name(name.into()),
-            List(array_expression) => List(array_expression.cast_into()),
             Tuple(tuple_expression) => Tuple(tuple_expression.cast_into()),
             Call(call) => Call(call.cast_into()),
         }
@@ -195,9 +145,6 @@ where
         match &self {
             ConstantExpression::Literal(literal) => write!(f, "{literal}"),
             ConstantExpression::Name(qualified_name) => write!(f, "{qualified_name}"),
-            ConstantExpression::List(array_expression) => {
-                write!(f, "{array_expression}")
-            }
             ConstantExpression::Tuple(tuple_expression) => {
                 write!(f, "{tuple_expression}")
             }

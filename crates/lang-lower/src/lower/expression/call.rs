@@ -40,10 +40,7 @@ where
                     expression,
                     src_ref,
                 }),
-                None => unnamed.push(ir::UnnamedArgument {
-                    expression,
-                    src_ref,
-                }),
+                None => unnamed.push(expression),
             }
             Ok(())
         })?;
@@ -73,10 +70,7 @@ where
                         expression: EXPR::lower(arg.value(), context)?,
                         src_ref: context.span_to_src_ref(arg.span()),
                     }),
-                    None => unnamed.push(ir::UnnamedArgument {
-                        expression: EXPR::lower(arg.value(), context)?,
-                        src_ref: context.span_to_src_ref(arg.span()),
-                    }),
+                    None => unnamed.push(EXPR::lower(arg.value(), context)?),
                 }
                 Ok(())
             })?;

@@ -3,7 +3,7 @@
 
 //! Function definition syntax element
 
-use crate::{CastInto, ir};
+use crate::{CastInto, ir, lower::LowerName};
 
 use derive_more::From;
 use microcad_lang_base::{IsDefault, Refer, SrcRef, SrcReferrer, is_default};
@@ -72,7 +72,6 @@ pub enum FunctionExpression<NAME: ir::NameKind = ir::SymbolPath> {
     Literal(ir::Literal),
     Name(NAME),
     FormatString(ir::FormatString<NAME>),
-    List(ir::ListExpression<FunctionExpression<NAME>>),
     Tuple(ir::TupleExpression<FunctionExpression<NAME>>),
     Scope(Scope<NAME>),
     If(ir::If<FunctionExpression<NAME>>),
@@ -82,6 +81,38 @@ pub enum FunctionExpression<NAME: ir::NameKind = ir::SymbolPath> {
 impl<NAME: ir::NameKind> ir::ExpressionKind for FunctionExpression<NAME> {
     type Name = NAME;
     type Body = Scope<NAME>;
+}
+
+impl<Name: LowerName> From<ir::ArgumentList<ir::ConstantExpression<Name>>>
+    for ir::ArgumentList<ir::FunctionExpression<Name>>
+{
+    fn from(args: ir::ArgumentList<ir::ConstantExpression<Name>>) -> Self {
+        todo!()
+    }
+}
+
+impl<Name: LowerName> From<ir::Call<ir::ConstantExpression<Name>>>
+    for ir::Call<ir::FunctionExpression<Name>>
+{
+    fn from(call: ir::Call<ir::ConstantExpression<Name>>) -> Self {
+        Self {
+            name: call.name,
+            args: call.args.into(),
+            src_ref: call.src_ref,
+        }
+    }
+}
+
+impl<Name: LowerName> From<ir::ConstantExpression<Name>> for FunctionExpression<Name> {
+    fn from(expr: ir::ConstantExpression<Name>) -> Self {
+        match expr {
+            ir::ConstantExpression::Invalid => ir::FunctionExpression::Invalid,
+            ir::ConstantExpression::Literal(literal) => ir::FunctionExpression::Literal(literal),
+            ir::ConstantExpression::Name(name) => ir::FunctionExpression::Name(name),
+            ir::ConstantExpression::Tuple(tuple_expression) => todo!(),
+            ir::ConstantExpression::Call(call) => ir::FunctionExpression::Call(call.into()),
+        }
+    }
 }
 
 impl<T: ir::NameKind, NAME: ir::NameKind> CastInto<FunctionExpression<T>>
@@ -96,7 +127,6 @@ where
             Literal(literal) => Literal(literal),
             Name(name) => Name(name.into()),
             FormatString(format_string) => FormatString(format_string.cast_into()),
-            List(list) => List(list.cast_into()),
             Tuple(tuple) => Tuple(tuple.cast_into()),
             Scope(scope) => Scope(scope.cast_into()),
             If(if_) => If(if_.cast_into()),
@@ -112,7 +142,6 @@ impl<NAME: ir::NameKind> SrcReferrer for FunctionExpression<NAME> {
             FunctionExpression::Literal(literal) => literal.src_ref(),
             FunctionExpression::Name(name) => name.src_ref(),
             FunctionExpression::FormatString(format_string) => format_string.src_ref(),
-            FunctionExpression::List(array_expression) => array_expression.src_ref(),
             FunctionExpression::Tuple(tuple_expression) => tuple_expression.src_ref,
             FunctionExpression::Scope(scope) => scope.0.src_ref(),
             FunctionExpression::If(if_expr) => if_expr.src_ref,

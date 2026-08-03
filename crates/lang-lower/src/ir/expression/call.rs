@@ -5,7 +5,7 @@
 
 use crate::{CastInto, ir};
 use derive_more::Display;
-use microcad_lang_base::{Identifiable, Identifier, SrcRef, SrcReferrer, is_default};
+use microcad_lang_base::{Identifiable, Identifier, SrcRef, SrcReferrer};
 
 use serde::{Deserialize, Serialize};
 
@@ -55,29 +55,6 @@ impl<EXPR> SrcReferrer for NamedArgument<EXPR> {
     }
 }
 
-/// Unnamed argument in a [`Call`].
-#[derive(Debug, Display, Clone, PartialEq, Hash, Serialize, Deserialize)]
-#[display("{}", expression)]
-#[serde(bound(serialize = "EXPR: Serialize", deserialize = "EXPR: Deserialize<'de>"))]
-pub struct UnnamedArgument<EXPR> {
-    /// Value of the argument
-    pub expression: EXPR,
-    /// Source code reference
-    pub src_ref: SrcRef,
-}
-
-impl<T, EXPR> CastInto<UnnamedArgument<T>> for UnnamedArgument<EXPR>
-where
-    EXPR: CastInto<T>,
-{
-    fn cast_into(self) -> UnnamedArgument<T> {
-        UnnamedArgument {
-            expression: self.expression.cast_into(),
-            src_ref: self.src_ref,
-        }
-    }
-}
-
 /// *Ordered map* of arguments in a [`Call`].
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(bound(serialize = "Expr: Serialize", deserialize = "Expr: Deserialize<'de>"))]
@@ -86,10 +63,8 @@ pub struct ArgumentList<Expr> {
     pub src_ref: SrcRef,
 
     /// The unnamed arguments.
-    #[serde(skip_serializing_if = "is_default", default)]
-    pub unnamed_args: Box<[ir::UnnamedArgument<Expr>]>,
+    pub unnamed_args: Box<[Expr]>,
     /// Named arguments, sorted by name.
-    #[serde(skip_serializing_if = "is_default", default)]
     pub named_args: Box<[ir::NamedArgument<Expr>]>,
 }
 
@@ -97,10 +72,7 @@ impl<Expr> ArgumentList<Expr> {
     /// Prepends a positional argument to the front of the argument list.
     pub fn prepend(&mut self, expression: Expr) {
         let mut new_args = Vec::with_capacity(self.unnamed_args.len() + 1);
-        new_args.push(ir::UnnamedArgument {
-            expression,
-            src_ref: SrcRef::none(),
-        });
+        new_args.push(expression);
         new_args.extend(Vec::from(std::mem::take(&mut self.unnamed_args)));
         self.unnamed_args = new_args.into_boxed_slice();
     }
@@ -133,14 +105,7 @@ where
     Expr: SrcReferrer,
 {
     fn from_iter<T: IntoIterator<Item = Expr>>(iter: T) -> Self {
-        let unnamed_args = iter
-            .into_iter()
-            .map(|expression| ir::UnnamedArgument {
-                src_ref: expression.src_ref(),
-                expression,
-            })
-            .collect::<Vec<_>>()
-            .into_boxed_slice();
+        let unnamed_args = iter.into_iter().collect::<Vec<_>>().into_boxed_slice();
 
         Self {
             src_ref: SrcRef::default(),
