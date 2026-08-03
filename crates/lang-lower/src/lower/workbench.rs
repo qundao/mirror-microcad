@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    Lower, LowerContext, LowerError, LowerResult, ir,
+    CastInto, Lower, LowerContext, LowerError, LowerResult, ir,
     lower::{attribute::outer_with_doc, extract_statements, for_each_statement},
 };
 
@@ -65,9 +65,9 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
             ast::Expression::Literal(ast::Literal {
                 literal: ast::LiteralKind::String(s),
                 ..
-            }) => Self::FormatString(ir::FormatString::lower(s, context)?),
+            }) => Self::Literal(ir::Literal::from_value(s.content.clone())),
             ast::Expression::Literal(expr) => Self::Literal(ir::Literal::lower(expr, context)?),
-            ast::Expression::String(s) => Self::FormatString(ir::FormatString::lower(s, context)?),
+            ast::Expression::String(s) => Self::Call(ir::Call::lower(s, context)?.cast_into()),
             ast::Expression::Tuple(t) => Self::Tuple(ir::TupleExpression::lower(t, context)?),
             ast::Expression::ArrayRange(a) => Self::lower(a, context)?,
             ast::Expression::ArrayList(a) => Self::lower(a, context)?,

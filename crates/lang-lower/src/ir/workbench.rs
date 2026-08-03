@@ -100,7 +100,6 @@ pub enum WorkbenchExpression<Name: ir::NameKind = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
     Name(Name),
-    FormatString(ir::FormatString<Name>),
     Tuple(ir::TupleExpression<WorkbenchExpression<Name>>),
     Group(ir::Group<Name>),
     If(ir::If<WorkbenchExpression<Name>>),
@@ -114,7 +113,6 @@ impl<Name: ir::NameKind> SrcReferrer for WorkbenchExpression<Name> {
             WorkbenchExpression::Invalid => SrcRef::none(),
             WorkbenchExpression::Literal(literal) => literal.src_ref(),
             WorkbenchExpression::Name(name) => name.src_ref(),
-            WorkbenchExpression::FormatString(format_string) => format_string.src_ref(),
             WorkbenchExpression::Tuple(tuple_expression) => tuple_expression.src_ref,
             WorkbenchExpression::Group(group) => group.src_ref,
             WorkbenchExpression::If(if_) => if_.src_ref,
@@ -129,6 +127,18 @@ impl<NAME: ir::NameKind> ir::ExpressionKind for WorkbenchExpression<NAME> {
     type Body = Group<NAME>;
 }
 
+impl<Name: ir::NameKind> CastInto<ir::WorkbenchExpression<Name>> for ir::ConstantExpression<Name> {
+    fn cast_into(self: ir::ConstantExpression<Name>) -> ir::WorkbenchExpression<Name> {
+        match self {
+            ir::ConstantExpression::Invalid => ir::WorkbenchExpression::Invalid,
+            ir::ConstantExpression::Literal(literal) => ir::WorkbenchExpression::Literal(literal),
+            ir::ConstantExpression::Name(name) => ir::WorkbenchExpression::Name(name),
+            ir::ConstantExpression::Tuple(_) => todo!(),
+            ir::ConstantExpression::Call(call) => ir::WorkbenchExpression::Call(call.cast_into()),
+        }
+    }
+}
+
 impl<NameA: ir::NameKind, NameB: ir::NameKind> CastInto<WorkbenchExpression<NameA>>
     for WorkbenchExpression<NameB>
 where
@@ -140,7 +150,6 @@ where
             Invalid => Invalid,
             Literal(literal) => Literal(literal),
             Name(name) => Name(name.into()),
-            FormatString(format_string) => FormatString(format_string.cast_into()),
             Tuple(tuple_expression) => Tuple(tuple_expression.cast_into()),
             Group(group) => Group(group.cast_into()),
             If(if_) => If(if_.cast_into()),

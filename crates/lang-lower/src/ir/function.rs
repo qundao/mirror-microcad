@@ -71,7 +71,6 @@ pub enum FunctionExpression<NAME: ir::NameKind = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
     Name(NAME),
-    FormatString(ir::FormatString<NAME>),
     Tuple(ir::TupleExpression<FunctionExpression<NAME>>),
     Scope(Scope<NAME>),
     If(ir::If<FunctionExpression<NAME>>),
@@ -83,34 +82,14 @@ impl<NAME: ir::NameKind> ir::ExpressionKind for FunctionExpression<NAME> {
     type Body = Scope<NAME>;
 }
 
-impl<Name: LowerName> From<ir::ArgumentList<ir::ConstantExpression<Name>>>
-    for ir::ArgumentList<ir::FunctionExpression<Name>>
-{
-    fn from(args: ir::ArgumentList<ir::ConstantExpression<Name>>) -> Self {
-        todo!()
-    }
-}
-
-impl<Name: LowerName> From<ir::Call<ir::ConstantExpression<Name>>>
-    for ir::Call<ir::FunctionExpression<Name>>
-{
-    fn from(call: ir::Call<ir::ConstantExpression<Name>>) -> Self {
-        Self {
-            name: call.name,
-            args: call.args.into(),
-            src_ref: call.src_ref,
-        }
-    }
-}
-
-impl<Name: LowerName> From<ir::ConstantExpression<Name>> for FunctionExpression<Name> {
-    fn from(expr: ir::ConstantExpression<Name>) -> Self {
-        match expr {
+impl<Name: LowerName> CastInto<ir::FunctionExpression<Name>> for ir::ConstantExpression<Name> {
+    fn cast_into(self: ir::ConstantExpression<Name>) -> ir::FunctionExpression<Name> {
+        match self {
             ir::ConstantExpression::Invalid => ir::FunctionExpression::Invalid,
             ir::ConstantExpression::Literal(literal) => ir::FunctionExpression::Literal(literal),
             ir::ConstantExpression::Name(name) => ir::FunctionExpression::Name(name),
-            ir::ConstantExpression::Tuple(tuple_expression) => todo!(),
-            ir::ConstantExpression::Call(call) => ir::FunctionExpression::Call(call.into()),
+            ir::ConstantExpression::Tuple(_) => todo!(),
+            ir::ConstantExpression::Call(call) => ir::FunctionExpression::Call(call.cast_into()),
         }
     }
 }
@@ -126,7 +105,6 @@ where
             Invalid => todo!(),
             Literal(literal) => Literal(literal),
             Name(name) => Name(name.into()),
-            FormatString(format_string) => FormatString(format_string.cast_into()),
             Tuple(tuple) => Tuple(tuple.cast_into()),
             Scope(scope) => Scope(scope.cast_into()),
             If(if_) => If(if_.cast_into()),
@@ -141,7 +119,6 @@ impl<NAME: ir::NameKind> SrcReferrer for FunctionExpression<NAME> {
             FunctionExpression::Invalid => SrcRef::none(),
             FunctionExpression::Literal(literal) => literal.src_ref(),
             FunctionExpression::Name(name) => name.src_ref(),
-            FunctionExpression::FormatString(format_string) => format_string.src_ref(),
             FunctionExpression::Tuple(tuple_expression) => tuple_expression.src_ref,
             FunctionExpression::Scope(scope) => scope.0.src_ref(),
             FunctionExpression::If(if_expr) => if_expr.src_ref,
