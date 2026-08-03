@@ -69,16 +69,16 @@ impl std::fmt::Display for DocBlock {
 
 /// Metadata for a [`Model`]
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Meta<NAME: ir::NameSpec = ir::SymbolPath> {
+pub struct Meta<Name: ir::NameSpec = ir::SymbolPath> {
     pub name: ir::SymbolPath,
-    pub expr: ir::ConstantExpression<NAME>,
+    pub expr: ir::ConstantExpression<Name>,
 }
 
-impl<T: ir::NameSpec, NAME: ir::NameSpec> CastInto<Meta<T>> for Meta<NAME>
+impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<Meta<Dst>> for Meta<Src>
 where
-    NAME: Into<T>,
+    Src: Into<Dst>,
 {
-    fn cast_into(self) -> Meta<T> {
+    fn cast_into(self) -> Meta<Dst> {
         Meta {
             name: self.name,
             expr: self.expr.cast_into(),
@@ -87,17 +87,17 @@ where
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Command<NAME: ir::NameSpec = ir::SymbolPath> {
+pub struct Command<Name: ir::NameSpec = ir::SymbolPath> {
     pub name: ir::SymbolPath,
-    pub argument_list: ir::ArgumentList<ir::ConstantExpression<NAME>>,
+    pub argument_list: ir::ArgumentList<ir::ConstantExpression<Name>>,
     pub src_ref: SrcRef,
 }
 
-impl<T: ir::NameSpec, NAME: ir::NameSpec> CastInto<Command<T>> for Command<NAME>
+impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<Command<Dst>> for Command<Src>
 where
-    NAME: Into<T>,
+    Src: Into<Dst>,
 {
-    fn cast_into(self) -> Command<T> {
+    fn cast_into(self) -> Command<Dst> {
         Command {
             name: self.name,
             argument_list: self.argument_list.cast_into(),
@@ -112,18 +112,18 @@ pub struct Tag {
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Attributes<NAME: ir::NameSpec = ir::SymbolPath> {
+pub struct Attributes<Name: ir::NameSpec = ir::SymbolPath> {
     /// Documentation
     pub doc: ir::DocBlock,
     /// Metadata: #[color = "red"]
-    pub meta: Box<[Meta<NAME>]>,
+    pub meta: Box<[Meta<Name>]>,
     /// Commands: #[export("file.svg")] #[deprecate(since = "0.2.0")]
-    pub commands: Box<[Command<NAME>]>,
+    pub commands: Box<[Command<Name>]>,
     /// Tags: #[deprecated]
     pub tags: Box<[Tag]>,
 }
 
-impl<NAME: ir::NameSpec> Default for Attributes<NAME> {
+impl<Name: ir::NameSpec> Default for Attributes<Name> {
     fn default() -> Self {
         Self {
             doc: Default::default(),
@@ -134,7 +134,7 @@ impl<NAME: ir::NameSpec> Default for Attributes<NAME> {
     }
 }
 
-impl<NAME: ir::NameSpec> Attributes<NAME> {
+impl<Name: ir::NameSpec> Attributes<Name> {
     pub fn is_empty(&self) -> bool {
         self.doc.is_empty()
             && self.meta.is_empty()
@@ -170,17 +170,17 @@ impl<NAME: ir::NameSpec> Attributes<NAME> {
     }
 }
 
-impl<NAME: ir::NameSpec> IsDefault for Attributes<NAME> {
+impl<Name: ir::NameSpec> IsDefault for Attributes<Name> {
     fn is_default(&self) -> bool {
         self.is_empty()
     }
 }
 
-impl<T: ir::NameSpec, NAME: ir::NameSpec> CastInto<Attributes<T>> for Attributes<NAME>
+impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<Attributes<Dst>> for Attributes<Src>
 where
-    NAME: Into<T>,
+    Src: Into<Dst>,
 {
-    fn cast_into(self) -> Attributes<T> {
+    fn cast_into(self) -> Attributes<Dst> {
         Attributes {
             doc: self.doc,
             meta: self.meta.cast_into(),
@@ -192,25 +192,25 @@ where
 
 /// Inner attributes (`//!`, `#![...]`), usually lowered from a `ast::StatementList`.
 #[derive(Debug, Clone, Deref, DerefMut, PartialEq, Hash, Serialize, Deserialize)]
-pub struct InnerAttributes<NAME: ir::NameSpec = ir::SymbolPath>(pub Attributes<NAME>);
+pub struct InnerAttributes<Name: ir::NameSpec = ir::SymbolPath>(pub Attributes<Name>);
 
-impl<NAME: ir::NameSpec> InnerAttributes<NAME> {
+impl<Name: ir::NameSpec> InnerAttributes<Name> {
     /// Check if inner attributes are empty
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
 }
 
-impl<T: ir::NameSpec, NAME: ir::NameSpec> CastInto<InnerAttributes<T>> for InnerAttributes<NAME>
+impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<InnerAttributes<Dst>> for InnerAttributes<Src>
 where
-    NAME: Into<T>,
+    Src: Into<Dst>,
 {
-    fn cast_into(self) -> InnerAttributes<T> {
+    fn cast_into(self) -> InnerAttributes<Dst> {
         InnerAttributes(self.0.cast_into())
     }
 }
 
-impl<NAME: ir::NameSpec> IsDefault for InnerAttributes<NAME> {
+impl<Name: ir::NameSpec> IsDefault for InnerAttributes<Name> {
     fn is_default(&self) -> bool {
         self.is_empty()
     }
@@ -218,38 +218,38 @@ impl<NAME: ir::NameSpec> IsDefault for InnerAttributes<NAME> {
 
 /// Inner attributes (`///`, `#[...]`), usually lowered from definitions.
 #[derive(Debug, Clone, Deref, DerefMut, Hash, PartialEq, Serialize, Deserialize)]
-pub struct OuterAttributes<NAME: ir::NameSpec = ir::SymbolPath>(pub Attributes<NAME>);
+pub struct OuterAttributes<Name: ir::NameSpec = ir::SymbolPath>(pub Attributes<Name>);
 
-impl<NAME: ir::NameSpec> OuterAttributes<NAME> {
+impl<Name: ir::NameSpec> OuterAttributes<Name> {
     /// Check if outer attributes are empty
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
 }
 
-impl<T: ir::NameSpec, NAME: ir::NameSpec> CastInto<OuterAttributes<T>> for OuterAttributes<NAME>
+impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<OuterAttributes<Dst>> for OuterAttributes<Src>
 where
-    NAME: Into<T>,
+    Src: Into<Dst>,
 {
-    fn cast_into(self) -> OuterAttributes<T> {
+    fn cast_into(self) -> OuterAttributes<Dst> {
         OuterAttributes(self.0.cast_into())
     }
 }
 
-impl<NAME: ir::NameSpec> IsDefault for OuterAttributes<NAME> {
+impl<Name: ir::NameSpec> IsDefault for OuterAttributes<Name> {
     fn is_default(&self) -> bool {
         self.is_empty()
     }
 }
 
-impl<NAME: ir::NameSpec> From<OuterAttributes<NAME>> for Attributes<NAME> {
-    fn from(value: OuterAttributes<NAME>) -> Self {
+impl<Name: ir::NameSpec> From<OuterAttributes<Name>> for Attributes<Name> {
+    fn from(value: OuterAttributes<Name>) -> Self {
         value.0
     }
 }
 
-impl<NAME: ir::NameSpec> From<InnerAttributes<NAME>> for Attributes<NAME> {
-    fn from(value: InnerAttributes<NAME>) -> Self {
+impl<Name: ir::NameSpec> From<InnerAttributes<Name>> for Attributes<Name> {
+    fn from(value: InnerAttributes<Name>) -> Self {
         value.0
     }
 }

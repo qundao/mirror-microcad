@@ -30,11 +30,11 @@ where
     }
 }
 
-impl<T, EXPR> CastInto<NamedArgument<T>> for NamedArgument<EXPR>
+impl<Src, Dst> CastInto<NamedArgument<Dst>> for NamedArgument<Src>
 where
-    EXPR: CastInto<T>,
+    Src: CastInto<Dst>,
 {
-    fn cast_into(self) -> NamedArgument<T> {
+    fn cast_into(self) -> NamedArgument<Dst> {
         NamedArgument {
             id: self.id,
             expression: self.expression.cast_into(),
@@ -43,13 +43,13 @@ where
     }
 }
 
-impl<EXPR> Identifiable for NamedArgument<EXPR> {
+impl<Expr> Identifiable for NamedArgument<Expr> {
     fn id_ref(&self) -> &Identifier {
         &self.id
     }
 }
 
-impl<EXPR> SrcReferrer for NamedArgument<EXPR> {
+impl<Expr> SrcReferrer for NamedArgument<Expr> {
     fn src_ref(&self) -> SrcRef {
         self.src_ref
     }
@@ -116,9 +116,9 @@ where
     }
 }
 
-impl<EXPR> std::fmt::Display for Argument<EXPR>
+impl<Expr> std::fmt::Display for Argument<Expr>
 where
-    EXPR: std::fmt::Display,
+    Expr: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
@@ -168,9 +168,9 @@ impl<Expr> ArgumentList<Expr> {
     }
 }
 
-impl<EXPR> std::fmt::Display for ArgumentList<EXPR>
+impl<Expr> std::fmt::Display for ArgumentList<Expr>
 where
-    EXPR: std::fmt::Display,
+    Expr: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", {
@@ -216,14 +216,14 @@ where
 #[derive(Debug, Display, Clone, PartialEq, Hash, Serialize, Deserialize)]
 #[display("{}({})", name, args)]
 #[serde(bound(
-    serialize = "EXPR: Serialize, EXPR::Name: Serialize",
-    deserialize = "EXPR: Deserialize<'de>, EXPR::Name: Deserialize<'de>"
+    serialize = "Expr: Serialize, Expr::Name: Serialize",
+    deserialize = "Expr: Deserialize<'de>, Expr::Name: Deserialize<'de>"
 ))]
-pub struct Call<EXPR: ir::ExprSpec> {
+pub struct Call<Expr: ir::ExprSpec> {
     /// Name of the call.
-    pub name: EXPR::Name,
+    pub name: Expr::Name,
     /// Argument list of the call.
-    pub args: ir::ArgumentList<EXPR>,
+    pub args: ir::ArgumentList<Expr>,
     /// Source code reference.
     pub src_ref: SrcRef,
 }

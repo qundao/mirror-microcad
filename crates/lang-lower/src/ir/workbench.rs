@@ -16,22 +16,22 @@ use serde_with::skip_serializing_none;
 /// Each WorkbenchStatement eventually evals into a [`Models`]
 #[skip_serializing_none]
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
-pub struct WorkbenchStatement<NAME: ir::NameSpec = ir::SymbolPath> {
-    pub attr: ir::OuterAttributes<NAME>,
+pub struct WorkbenchStatement<Name: ir::NameSpec = ir::SymbolPath> {
+    pub attr: ir::OuterAttributes<Name>,
     pub src_ref: SrcRef,
     pub visibility: ir::Visibility, // public = property
     pub keyword_src_ref: SrcRef,
     pub id: Option<ir::Identifier>,
     pub ty: Option<ir::TypeAnnotation>,
-    pub expression: WorkbenchExpression<NAME>,
+    pub expression: WorkbenchExpression<Name>,
 }
 
-impl<NameA: ir::NameSpec, NameB: ir::NameSpec> CastInto<WorkbenchStatement<NameA>>
-    for WorkbenchStatement<NameB>
+impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<WorkbenchStatement<Dst>>
+    for WorkbenchStatement<Src>
 where
-    NameB: Into<NameA>,
+    Src: Into<Dst>,
 {
-    fn cast_into(self) -> WorkbenchStatement<NameA> {
+    fn cast_into(self) -> WorkbenchStatement<Dst> {
         WorkbenchStatement {
             attr: self.attr.cast_into(),
             src_ref: self.src_ref,
@@ -45,10 +45,10 @@ where
 }
 
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
-pub struct Group<NAME: ir::NameSpec = ir::SymbolPath> {
+pub struct Group<Name: ir::NameSpec = ir::SymbolPath> {
     pub src_ref: SrcRef,
-    pub attr: ir::InnerAttributes<NAME>,
-    pub statements: Box<[WorkbenchStatement<NAME>]>,
+    pub attr: ir::InnerAttributes<Name>,
+    pub statements: Box<[WorkbenchStatement<Name>]>,
 }
 
 impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<Group<Dst>> for Group<Src>
@@ -65,15 +65,15 @@ where
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Init<NAME: ir::NameSpec = ir::SymbolPath> {
+pub struct Init<Name: ir::NameSpec = ir::SymbolPath> {
     /// SrcRef of the `init` keyword
     pub keyword_ref: SrcRef,
     /// Outer attributes.
-    pub attr: ir::OuterAttributes<NAME>,
+    pub attr: ir::OuterAttributes<Name>,
     /// Parameter list for this init definition
     pub parameters: ir::ParameterList,
     /// Body if the init definition
-    pub statements: Box<[WorkbenchStatement<NAME>]>,
+    pub statements: Box<[WorkbenchStatement<Name>]>,
     /// Source reference
     pub src_ref: SrcRef,
 }
@@ -121,9 +121,9 @@ impl<Name: ir::NameSpec> SrcReferrer for WorkbenchExpression<Name> {
     }
 }
 
-impl<NAME: ir::NameSpec> ir::ExprSpec for WorkbenchExpression<NAME> {
-    type Name = NAME;
-    type Body = Group<NAME>;
+impl<Name: ir::NameSpec> ir::ExprSpec for WorkbenchExpression<Name> {
+    type Name = Name;
+    type Body = Group<Name>;
 }
 
 impl<Name: ir::NameSpec> SingleIdentifier for WorkbenchExpression<Name> {

@@ -14,23 +14,23 @@ use serde_with::skip_serializing_none;
 /// A parameter of a parameter list.
 #[skip_serializing_none]
 #[derive(Debug, Clone, Hash, SrcReferrer, Identifiable, PartialEq, Serialize, Deserialize)]
-#[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
-pub struct Parameter<NAME: ir::NameSpec = ir::SymbolPath> {
+#[serde(bound(serialize = "Name: Serialize", deserialize = "Name: Deserialize<'de>"))]
+pub struct Parameter<Name: ir::NameSpec = ir::SymbolPath> {
     /// Parameter attributes
-    pub attr: ir::OuterAttributes<NAME>,
+    pub attr: ir::OuterAttributes<Name>,
     /// Name of the parameter
     pub id: Identifier,
     /// Type of the parameter or `None`
     pub specified_type: Option<ir::TypeAnnotation>,
     /// default value of the parameter or `None`
-    pub default_value: Option<ir::ConstantExpression<NAME>>,
+    pub default_value: Option<ir::ConstantExpression<Name>>,
     /// Source code reference
     pub src_ref: SrcRef,
 }
 
-impl<NAME: ir::NameSpec> std::fmt::Display for Parameter<NAME>
+impl<Name: ir::NameSpec> std::fmt::Display for Parameter<Name>
 where
-    NAME: std::fmt::Display,
+    Name: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match (&self.specified_type, &self.default_value) {
@@ -42,11 +42,11 @@ where
     }
 }
 
-impl<T: ir::NameSpec, NAME: ir::NameSpec> CastInto<Parameter<T>> for Parameter<NAME>
+impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<Parameter<Dst>> for Parameter<Src>
 where
-    NAME: Into<T>,
+    Src: Into<Dst>,
 {
-    fn cast_into(self) -> Parameter<T> {
+    fn cast_into(self) -> Parameter<Dst> {
         Parameter {
             attr: self.attr.cast_into(),
             id: self.id,
@@ -59,11 +59,11 @@ where
 
 /// Parameter list, sorted by id.
 #[derive(Debug, Clone, SrcReferrer, Hash, PartialEq, Serialize, Deserialize)]
-pub struct ParameterList<NAME: ir::NameSpec = ir::SymbolPath>(
-    pub Refer<Box<[ir::Parameter<NAME>]>>,
+pub struct ParameterList<Name: ir::NameSpec = ir::SymbolPath>(
+    pub Refer<Box<[ir::Parameter<Name>]>>,
 );
 
-impl<NAME: ir::NameSpec> ParameterList<NAME> {
+impl<Name: ir::NameSpec> ParameterList<Name> {
     /// Return ids of all parameters
     pub fn ids(&self) -> impl Iterator<Item = Identifier> {
         self.0.iter().map(|param| param.id.clone())
@@ -75,9 +75,9 @@ impl<NAME: ir::NameSpec> ParameterList<NAME> {
     }
 }
 
-impl<NAME: ir::NameSpec> std::fmt::Display for ParameterList<NAME>
+impl<Name: ir::NameSpec> std::fmt::Display for ParameterList<Name>
 where
-    NAME: std::fmt::Display,
+    Name: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
@@ -92,11 +92,11 @@ where
     }
 }
 
-impl<T: ir::NameSpec, NAME: ir::NameSpec> CastInto<ParameterList<T>> for ParameterList<NAME>
+impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<ParameterList<Dst>> for ParameterList<Src>
 where
-    NAME: Into<T>,
+    Src: Into<Dst>,
 {
-    fn cast_into(self) -> ParameterList<T> {
+    fn cast_into(self) -> ParameterList<Dst> {
         ParameterList(self.0.cast_into())
     }
 }

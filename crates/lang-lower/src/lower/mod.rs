@@ -338,15 +338,15 @@ impl Lower<ast::def::UseName> for ir::SymbolPath {
     }
 }
 
-impl<EXPR> Lower<ast::LocalAssignment> for ir::LocalAssignment<EXPR>
+impl<Expr> Lower<ast::LocalAssignment> for ir::LocalAssignment<Expr>
 where
-    EXPR: Lower<ast::Expression>,
+    Expr: Lower<ast::Expression>,
 {
     fn lower(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             id: ir::Identifier::lower(&node.id, context)?,
             specified_type: Option::<ir::TypeAnnotation>::lower(&node.ty, context)?,
-            expression: EXPR::lower(node.expr.as_ref(), context)?,
+            expression: Expr::lower(node.expr.as_ref(), context)?,
             src_ref: context.span_to_src_ref(&node.span),
         })
     }

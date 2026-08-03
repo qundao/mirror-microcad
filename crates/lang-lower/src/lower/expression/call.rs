@@ -9,27 +9,27 @@ use crate::{
 use microcad_lang_base::{__mu, Identifier, SpanToSrcRef, SrcRef};
 use microcad_lang_parse::ast;
 
-impl<EXPR: LowerExpr> Lower<ast::Call> for ir::Call<EXPR>
+impl<Expr: LowerExpr> Lower<ast::Call> for ir::Call<Expr>
 where
-    EXPR::Name: LowerName,
+    Expr::Name: LowerName,
 {
     fn lower(node: &ast::Call, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::Call {
             src_ref: context.span_to_src_ref(&node.span),
-            name: EXPR::Name::lower(&node.name, context)?,
+            name: Expr::Name::lower(&node.name, context)?,
             args: ir::ArgumentList::lower(&node.arguments, context)?,
         })
     }
 }
 
-impl<EXPR: LowerExpr> Lower<Vec<ast::TupleItem>> for ir::ArgumentList<EXPR> {
+impl<Expr: LowerExpr> Lower<Vec<ast::TupleItem>> for ir::ArgumentList<Expr> {
     fn lower(node: &Vec<ast::TupleItem>, context: &mut LowerContext) -> LowerResult<Self> {
         let mut args = Vec::new();
         let mut names: microcad_lang_base::HashSet<Identifier> =
             microcad_lang_base::HashSet::default();
 
         node.iter().try_for_each(|arg| -> LowerResult<()> {
-            let expr = EXPR::lower(&arg.expr, context)?;
+            let expr = Expr::lower(&arg.expr, context)?;
             let src_ref = context.span_to_src_ref(&arg.span);
 
             let arg = match &arg.id {

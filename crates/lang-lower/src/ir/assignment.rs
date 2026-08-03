@@ -37,9 +37,9 @@ impl<T> LocalAssignment<T> {
     }
 }
 
-impl<EXPR> std::fmt::Display for LocalAssignment<EXPR>
+impl<Expr> std::fmt::Display for LocalAssignment<Expr>
 where
-    EXPR: std::fmt::Display,
+    Expr: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         use microcad_lang_types::ty::Ty;

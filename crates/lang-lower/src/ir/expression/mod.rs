@@ -22,34 +22,34 @@ use serde_with::skip_serializing_none;
 #[skip_serializing_none]
 #[derive(Clone, Debug, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(
-    serialize = "EXPR: Serialize, EXPR::Body: Serialize",
-    deserialize = "EXPR: Deserialize<'de>, EXPR::Body: Deserialize<'de>"
+    serialize = "Expr: Serialize, Expr::Body: Serialize",
+    deserialize = "Expr: Deserialize<'de>, Expr::Body: Deserialize<'de>"
 ))]
-pub struct If<EXPR: ExprSpec> {
+pub struct If<Expr: ExprSpec> {
     /// SrcRef of the `if` keyword.
     pub if_ref: SrcRef,
     /// If condition.
-    pub cond: Box<EXPR>,
+    pub cond: Box<Expr>,
     /// Body if `true`.
-    pub body: Box<EXPR::Body>,
+    pub body: Box<Expr::Body>,
     /// SrcRef of the `else` keyword, if present.
     pub else_ref: Option<SrcRef>,
     /// Body if `false`.
-    pub body_else: Option<Box<EXPR::Body>>,
+    pub body_else: Option<Box<Expr::Body>>,
     /// SrcRef of the `else[ if]` keyword, if present.
     pub next_if_ref: Option<SrcRef>,
     /// Next if statement: `else if x == 1`.
-    pub next_if: Option<Box<If<EXPR>>>,
+    pub next_if: Option<Box<If<Expr>>>,
     /// Source code reference.
     pub src_ref: SrcRef,
 }
 
-impl<T: ExprSpec, EXPR: ExprSpec> CastInto<If<T>> for If<EXPR>
+impl<Src: ExprSpec, Dst: ExprSpec> CastInto<If<Dst>> for If<Src>
 where
-    EXPR: CastInto<T>,
-    EXPR::Body: CastInto<T::Body> + Serialize,
+    Src: CastInto<Dst>,
+    Src::Body: CastInto<Dst::Body> + Serialize,
 {
-    fn cast_into(self) -> If<T> {
+    fn cast_into(self) -> If<Dst> {
         If {
             if_ref: self.if_ref,
             cond: Box::new(self.cond.cast_into()),
@@ -63,10 +63,10 @@ where
     }
 }
 
-impl<EXPR> std::fmt::Display for If<EXPR>
+impl<Expr> std::fmt::Display for If<Expr>
 where
-    EXPR: ExprSpec + std::fmt::Display,
-    EXPR::Body: std::fmt::Display,
+    Expr: ExprSpec + std::fmt::Display,
+    Expr::Body: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         writeln!(f, "if {cond} {body}", cond = self.cond, body = self.body)?;
@@ -89,12 +89,12 @@ pub trait NameSpec: Serialize + SrcReferrer + SingleIdentifier {}
 
 /// An expression that can be evaluated during `resolve` phase.
 #[derive(Debug, Clone, From, PartialEq, Hash, Serialize, Deserialize)]
-#[serde(bound(serialize = "NAME: Serialize", deserialize = "NAME: Deserialize<'de>"))]
-pub enum ConstantExpression<NAME: NameSpec = ir::SymbolPath> {
+#[serde(bound(serialize = "Name: Serialize", deserialize = "Name: Deserialize<'de>"))]
+pub enum ConstantExpression<Name: NameSpec = ir::SymbolPath> {
     Invalid,
     Literal(ir::Literal),
-    Name(NAME),
-    Call(ir::Call<ConstantExpression<NAME>>),
+    Name(Name),
+    Call(ir::Call<ConstantExpression<Name>>),
 }
 
 impl<Name: NameSpec> SingleIdentifier for ConstantExpression<Name> {
@@ -137,9 +137,9 @@ where
     }
 }
 
-impl<NAME: NameSpec> std::fmt::Display for ConstantExpression<NAME>
+impl<Name: NameSpec> std::fmt::Display for ConstantExpression<Name>
 where
-    NAME: std::fmt::Display,
+    Name: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {

@@ -22,16 +22,16 @@ impl Lower<ast::Identifier> for ir::Marker {
     }
 }
 
-impl<EXPR: ir::ExprSpec> Lower<ast::If> for ir::If<EXPR>
+impl<Expr: ir::ExprSpec> Lower<ast::If> for ir::If<Expr>
 where
-    EXPR: Lower<ast::Expression>,
-    EXPR::Body: Lower<ast::Body>,
+    Expr: Lower<ast::Expression>,
+    Expr::Body: Lower<ast::Body>,
 {
     fn lower(node: &ast::If, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::If {
             if_ref: context.span_to_src_ref(&node.if_span),
-            cond: Box::new(EXPR::lower(node.condition.as_ref(), context)?),
-            body: EXPR::Body::lower(&node.body, context)?.into(),
+            cond: Box::new(Expr::lower(node.condition.as_ref(), context)?),
+            body: Expr::Body::lower(&node.body, context)?.into(),
             next_if_ref: node
                 .next_if_span
                 .as_ref()
@@ -49,7 +49,7 @@ where
             body_else: node
                 .else_body
                 .as_ref()
-                .map(|body| EXPR::Body::lower(body, context))
+                .map(|body| Expr::Body::lower(body, context))
                 .transpose()?
                 .map(Box::new),
             src_ref: context.span_to_src_ref(&node.span),
@@ -156,7 +156,7 @@ where
     }
 }
 
-impl<NAME: LowerName> Lower<ast::Expression> for ir::ConstantExpression<NAME> {
+impl<Name: LowerName> Lower<ast::Expression> for ir::ConstantExpression<Name> {
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
             ast::Expression::Bracketed(expr, _) => Self::lower(expr.as_ref(), context)?,
@@ -169,7 +169,7 @@ impl<NAME: LowerName> Lower<ast::Expression> for ir::ConstantExpression<NAME> {
             ast::Expression::Tuple(t) => Self::Call(ir::Call::lower(t, context)?),
             ast::Expression::ArrayRange(a) => Self::lower(a, context)?,
             ast::Expression::ArrayList(a) => Self::lower(a, context)?,
-            ast::Expression::SymbolPath(n) => Self::Name(NAME::lower(n, context)?),
+            ast::Expression::SymbolPath(n) => Self::Name(Name::lower(n, context)?),
             ast::Expression::BinaryOperation(binop) => Self::Call(ir::Call::lower(binop, context)?),
             ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call::lower(unop, context)?),
             expr => {
