@@ -18,11 +18,15 @@ impl Literal {
     pub fn value(&self) -> &Value {
         &self.0.value
     }
+
+    pub fn from_value(v: impl Into<Value>) -> Self {
+        Self(Refer::none(v.into()))
+    }
 }
 
 impl From<Value> for Literal {
-    fn from(value: Value) -> Self {
-        Self(Refer::none(value))
+    fn from(v: Value) -> Self {
+        Self::from_value(v)
     }
 }
 
