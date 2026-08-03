@@ -40,22 +40,19 @@ impl FlowSignal {
     }
 }
 
-impl Eval<FlowSignal> for rst::function::FormatString {
-    fn eval(&self, _context: &mut EvalContext) -> EvalResult<FlowSignal> {
-        todo!()
-    }
-}
-
 pub fn builtin_range(
     call: &rst::function::Call,
     context: &mut EvalContext,
 ) -> EvalResult<FlowSignal> {
     let args = &call.args;
-    let first_arg = args.unnamed_args.first().unwrap();
-    let last_arg = args.unnamed_args.last().unwrap();
+    let first_arg = args.args.first().unwrap();
+    let last_arg = args.args.last().unwrap();
 
-    match (first_arg.eval(context)?, last_arg.eval(context)?) {
-        (FlowSignal::Yield(Value::Integer(first)), FlowSignal::Yield(Value::Integer(last))) => {
+    match (
+        first_arg.eval(context)?.value,
+        last_arg.eval(context)?.value,
+    ) {
+        (Value::Integer(first), Value::Integer(last)) => {
             if first > last {
                 context.diag(EvalError::BadRange {
                     first,
@@ -74,135 +71,49 @@ pub fn builtin_range(
                 Type::Integer,
             ))))
         }
-        (FlowSignal::Yield(first), FlowSignal::Yield(last)) => {
+        (first, last) => {
             if !matches!(first, Value::Integer(_)) {
                 context.diag(EvalError::InvalidRangeBoundaryType {
-                    src_ref: first_arg.src_ref,
+                    src_ref: first_arg.src_ref(),
                 });
             }
             if !matches!(last, Value::Integer(_)) {
                 context.diag(EvalError::InvalidRangeBoundaryType {
-                    src_ref: last_arg.src_ref,
+                    src_ref: last_arg.src_ref(),
                 });
             }
 
             Ok(FlowSignal::Continue)
         }
-        (FlowSignal::Continue, _) | (_, FlowSignal::Continue) => {
-            context.diag(EvalError::InvalidFlow(call.src_ref));
-            Ok(FlowSignal::Continue)
-        }
-        (FlowSignal::Return(v), _) | (_, FlowSignal::Return(v)) => Ok(FlowSignal::Return(v)),
     }
 }
 
-impl Eval<FlowSignal> for rst::function::ListExpression {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
-        let value_list = ValueList::new(
-            self.0
-                .iter()
-                .map(|expr| match expr.eval(context) {
-                    Ok(FlowSignal::Continue) => todo!(),
-                    Ok(FlowSignal::Return(_)) => todo!(),
-                    Ok(FlowSignal::Yield(_)) => todo!(),
-                    Err(_) => todo!(),
-                })
-                .collect::<EvalResult<_>>()?,
-        );
-
-        match value_list.types().common_type() {
-            Some(common_type) => Ok(FlowSignal::Yield(Value::Array(Array::from_values(
-                value_list,
-                common_type,
-            )))),
-            None => {
-                context.diag(EvalError::ArrayElementsDifferentTypes(value_list.types()));
-                Ok(FlowSignal::Yield(Value::None))
+impl Eval<ArgumentValue> for rst::function::Argument {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<ArgumentValue> {
+        Ok(match self {
+            rst::function::Argument::Unnamed(expr) => {
+                ArgumentValue::new(expr.eval(context)?.into_value(), None)
             }
-        }
-    }
-}
-
-impl Eval<FlowSignal> for rst::function::UnnamedArgument {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
-        self.expression.eval(context)
+            rst::function::Argument::Named { name, expr, .. }
+            | rst::function::Argument::AutoNamed { name, expr } => {
+                ArgumentValue::new(expr.eval(context)?.into_value(), Some(name.clone()))
+            }
+        })
     }
 }
 
 impl Eval<ArgumentValueList> for rst::function::ArgumentList {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<ArgumentValueList> {
-        let mut map: Vec<(Identifier, ArgumentValue)> = self
-            .unnamed_args
+        let mut map: Vec<ArgumentValue> = self
+            .args
             .iter()
-            .map(|arg| {
-                Ok((
-                    Identifier::none(),
-                    ArgumentValue::new(
-                        arg.eval(context)?.expect_value(arg.src_ref)?,
-                        None,
-                        arg.src_ref,
-                    ),
-                ))
-            })
+            .map(|arg| arg.eval(context))
             .collect::<EvalResult<Vec<_>>>()?;
 
-        map.append(
-            &mut self
-                .named_args
-                .iter()
-                .map(|arg| {
-                    Ok((
-                        arg.id.clone(),
-                        ArgumentValue::new(
-                            arg.expression
-                                .eval(context)?
-                                .expect_value(arg.expression.src_ref())?,
-                            Some(arg.id.clone()),
-                            arg.src_ref,
-                        ),
-                    ))
-                })
-                .collect::<EvalResult<Vec<_>>>()?,
-        );
-
         Ok(ArgumentValueList {
-            map,
+            args: map,
             src_ref: self.src_ref,
         })
-    }
-}
-
-impl Eval<FlowSignal> for rst::function::TupleExpression {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
-        let (unnamed, named): (Vec<_>, _) = Eval::<ArgumentValueList>::eval(&self.args, context)?
-            .iter()
-            .map(|(id, arg)| (id.clone(), arg.value.clone()))
-            .partition(|(id, _)| id.is_empty());
-
-        // check unnamed for ambiguous types
-        let mut h = microcad_lang_base::HashSet::default();
-        unnamed
-            .iter()
-            .map(|(_, value)| value.ty())
-            .try_for_each(|ty| {
-                if h.insert(ty.clone()) {
-                    Ok(())
-                } else {
-                    Err(Box::new(EvalError::AmbiguousType {
-                        ty,
-                        src_ref: self.src_ref,
-                    }))
-                }
-            })?;
-
-        Ok(FlowSignal::Yield(Value::Tuple(
-            Tuple {
-                named: named.into_iter().collect(),
-                unnamed: unnamed.into_iter().map(|(_, v)| (v.ty(), v)).collect(),
-                src_ref: self.src_ref,
-            }
-            .into(),
-        )))
     }
 }
 
@@ -239,9 +150,6 @@ impl Eval<FlowSignal> for rst::function::Call {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
         match &self.name {
             ResolvedName::Local(_) => unimplemented!("Not callable"),
-            ResolvedName::Method(method) => {
-                unimplemented!("context.get_builtin_method(method, self.arguments)")
-            }
             ResolvedName::Symbol(symbol) => {
                 unimplemented!("context.call_symbol(symbol, self.arguments)")
             }
@@ -269,7 +177,6 @@ impl Eval<FlowSignal> for rst::ResolvedName {
                     }
                 }
             }
-            ResolvedName::Method(identifier) => todo!(),
             ResolvedName::Symbol(refer) => todo!(),
             ResolvedName::Error(symbol_path) => todo!(),
         }
@@ -283,15 +190,9 @@ impl Eval<FlowSignal> for rst::FunctionExpression {
             Expr::Invalid => todo!("Error handling"),
             Expr::Literal(literal) => Ok(FlowSignal::Yield(literal.value().clone())),
             Expr::Name(name) => name.eval(context),
-            Expr::FormatString(f) => f.eval(context),
-            Expr::List(a) => a.eval(context),
-            Expr::Tuple(t) => t.eval(context),
             Expr::Scope(s) => s.eval(context),
             Expr::If(if_) => if_.eval(context),
             Expr::Call(call) => call.eval(context),
-
-            //Expr::ArrayAccess()
-            _ => todo!(),
         }
     }
 }
