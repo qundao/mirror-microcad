@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0x7cd65a945030702d",
-        output_hash: "0x9f4520b65a7e119",
+        output_hash: "0x46cced537d68c57d",
         tree: (
             id: Some("circle"),
             attr: ((
@@ -243,10 +243,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             args: (
                                                 src_ref: "None",
                                                 args: [
-                                                    AutoNamed(
+                                                    Named(
                                                         name: ((
-                                                            value: "diameter",
-                                                            src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..304)",
+                                                            value: "lhs",
+                                                            src_ref: "None",
                                                         )),
                                                         expr: Name(Path(
                                                             is_absolute: false,
@@ -258,11 +258,19 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                             ],
                                                             src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..305)",
                                                         )),
+                                                        src_ref: "None",
                                                     ),
-                                                    Unnamed(Literal(((
-                                                        value: Quantity("2"),
-                                                        src_ref: "8:29 @ 0x5b5b0d75574ec6c6 (307..310)",
-                                                    )))),
+                                                    Named(
+                                                        name: ((
+                                                            value: "lhs",
+                                                            src_ref: "None",
+                                                        )),
+                                                        expr: Literal(((
+                                                            value: Quantity("2"),
+                                                            src_ref: "8:29 @ 0x5b5b0d75574ec6c6 (307..310)",
+                                                        ))),
+                                                        src_ref: "None",
+                                                    ),
                                                 ],
                                             ),
                                             src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..310)",

@@ -113,8 +113,16 @@ where
         Ok(Self {
             name: __mu(node.op.to_fn_name()).into(),
             args: ir::ArgumentList::from_iter([
-                Expr::lower(&node.lhs, context)?,
-                Expr::lower(&node.rhs, context)?,
+                ir::Argument::Named {
+                    name: Identifier::no_ref("lhs"),
+                    expr: Expr::lower(&node.lhs, context)?,
+                    src_ref: SrcRef::none(),
+                },
+                ir::Argument::Named {
+                    name: Identifier::no_ref("lhs"),
+                    expr: Expr::lower(&node.rhs, context)?,
+                    src_ref: SrcRef::none(),
+                },
             ]),
             src_ref: context.span_to_src_ref(&node.span),
         })

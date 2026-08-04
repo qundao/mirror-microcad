@@ -183,11 +183,11 @@ where
     }
 }
 
-impl<Expr> FromIterator<Expr> for ArgumentList<Expr>
+impl<S, Expr> FromIterator<S> for ArgumentList<Expr>
 where
-    Expr: Into<Argument<Expr>>,
+    S: Into<Argument<Expr>>,
 {
-    fn from_iter<T: IntoIterator<Item = Expr>>(iter: T) -> Self {
+    fn from_iter<T: IntoIterator<Item = S>>(iter: T) -> Self {
         Self {
             src_ref: SrcRef::default(),
             args: iter

@@ -44,10 +44,10 @@ impl<Name: LowerName> Lower<ast::Body> for ir::Scope<Name> {
 
         let statements: Box<[FunctionStatement<Name>]> = Box::lower(statements, context)?;
 
-        Ok(Self(Refer::new(
+        Ok(Self {
             statements,
-            context.span_to_src_ref(&node.span),
-        )))
+            src_ref: context.span_to_src_ref(&node.span),
+        })
     }
 }
 

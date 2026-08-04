@@ -55,14 +55,20 @@ where
 /// A function scope `{}`
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "Name: Serialize", deserialize = "Name: Deserialize<'de>"))]
-pub struct Scope<Name: ir::NameSpec>(pub Refer<Box<[FunctionStatement<Name>]>>);
+pub struct Scope<Name: ir::NameSpec> {
+    pub statements: Box<[FunctionStatement<Name>]>,
+    pub src_ref: SrcRef,
+}
 
 impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<Scope<Dst>> for Scope<Src>
 where
     Src: Into<Dst>,
 {
     fn cast_into(self) -> Scope<Dst> {
-        Scope(self.0.cast_into())
+        Scope {
+            statements: self.statements.cast_into(),
+            src_ref: self.src_ref,
+        }
     }
 }
 
@@ -126,7 +132,7 @@ impl<Name: ir::NameSpec> SrcReferrer for FunctionExpression<Name> {
             FunctionExpression::Invalid => SrcRef::none(),
             FunctionExpression::Literal(literal) => literal.src_ref(),
             FunctionExpression::Name(name) => name.src_ref(),
-            FunctionExpression::Scope(scope) => scope.0.src_ref(),
+            FunctionExpression::Scope(scope) => scope.src_ref,
             FunctionExpression::If(if_expr) => if_expr.src_ref,
             FunctionExpression::Call(call) => call.src_ref,
         }
@@ -154,7 +160,7 @@ where
     }
 }
 
-#[derive(Debug, Clone, derive_more::From, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "Name: Serialize", deserialize = "Name: Deserialize<'de>"))]
 pub enum FunctionStatement<Name: ir::NameSpec> {
     /// `a = 42`
@@ -196,7 +202,7 @@ impl<Name: ir::NameSpec> SrcReferrer for FunctionStatement<Name> {
         match &self {
             Local(local_assignment) => local_assignment.src_ref,
             Call(call) => call.src_ref,
-            Scope(scope) => scope.0.src_ref(),
+            Scope(scope) => scope.src_ref,
             If(if_) => if_.src_ref,
             Tail(expr) => expr.src_ref(),
             Return(return_statement) => return_statement.src_ref,
