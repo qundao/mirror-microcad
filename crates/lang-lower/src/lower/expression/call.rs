@@ -98,7 +98,7 @@ where
 {
     fn lower(node: &ast::UnaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            name: __mu(node.op.to_fn_name()).into(),
+            name: __mu(node.op.builtin_fn_name()).into(),
             args: ir::ArgumentList::from_iter([Expr::lower(&node.rhs, context)?]),
             src_ref: context.span_to_src_ref(&node.span),
         })
@@ -111,7 +111,7 @@ where
 {
     fn lower(node: &ast::BinaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            name: __mu(node.op.to_fn_name()).into(),
+            name: __mu(node.op.builtin_fn_name()).into(),
             args: ir::ArgumentList::from_iter([
                 ir::Argument::Named {
                     name: Identifier::no_ref("lhs"),

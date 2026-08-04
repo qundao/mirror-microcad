@@ -92,7 +92,7 @@ where
             range
         } else {
             Expr::from(ir::Call {
-                name: __mu(BinaryOperator::Multiply.to_fn_name()).into(),
+                name: __mu(BinaryOperator::Multiply.builtin_fn_name()).into(),
                 args: ir::ArgumentList::from_iter([
                     range,
                     Expr::from(ir::Literal::from(
@@ -129,7 +129,7 @@ where
             list
         } else {
             Expr::from(ir::Call {
-                name: __mu(BinaryOperator::Multiply.to_fn_name()).into(),
+                name: __mu(BinaryOperator::Multiply.builtin_fn_name()).into(),
                 args: ir::ArgumentList::from_iter([
                     list,
                     Expr::from(ir::Literal::from(
