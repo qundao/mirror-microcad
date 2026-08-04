@@ -3,13 +3,14 @@
 
 //! Tests for evaluating functions.
 
-use microcad_lang_base::{Identifier, SrcRef};
+use microcad_lang_base::{__mu, Identifier, SrcRef};
 use microcad_lang_eval::{ArgumentValueList, CallTrait, EvalContext, argument};
 use microcad_lang_types::{Integer, Type, Value};
 use microcad_package::{
     parameter,
     rst::{
-        Function, FunctionExpression, FunctionStatement, ResolvedName, function::ReturnStatement,
+        Function, FunctionExpression, FunctionStatement, ResolvedName,
+        function::{Argument, ArgumentList, Call, If, Literal, ReturnStatement, Scope},
     },
 };
 
@@ -22,6 +23,28 @@ where
         .into_boxed_slice()
 }
 
+fn name_expr(name: &str) -> FunctionExpression {
+    FunctionExpression::Name(ResolvedName::Local(Identifier::no_ref(name)))
+}
+
+fn scope<T>(a: impl Iterator<Item = T>) -> Scope
+where
+    T: Into<FunctionStatement>,
+{
+    microcad_package::rst::function::Scope {
+        statements: statements(a),
+        src_ref: SrcRef::none(),
+    }
+}
+
+fn arg(name: &str, expr: FunctionExpression) -> Argument {
+    Argument::Named {
+        name: Identifier::no_ref(name),
+        expr,
+        src_ref: SrcRef::none(),
+    }
+}
+
 #[test]
 fn return_a() {
     let f = Function {
@@ -29,9 +52,7 @@ fn return_a() {
         return_ty: Some(Type::Integer),
         statements: statements(
             [ReturnStatement {
-                expr: Some(FunctionExpression::Name(ResolvedName::Local(
-                    Identifier::no_ref("a"),
-                ))),
+                expr: Some(name_expr("a")),
                 keyword_src_ref: SrcRef::none(),
                 src_ref: SrcRef::none(),
             }]
@@ -39,10 +60,108 @@ fn return_a() {
         ),
     };
 
-    let mut context = EvalContext::default();
+    let mut context = EvalContext::new();
     let result = f
         .call(
             &ArgumentValueList::from_iter([argument!(a: Integer = Integer::from_num(2.0))]),
+            &mut context,
+        )
+        .expect("No eval error");
+
+    assert_eq!(result, Value::from(2_i64))
+}
+
+#[test]
+fn add() {
+    let f = Function {
+        parameters: [parameter!(a: Integer), parameter!(b: Integer)]
+            .into_iter()
+            .collect(),
+        return_ty: Some(Type::Integer),
+        statements: statements(
+            [FunctionStatement::Tail(
+                Call {
+                    name: __mu("core::add").into(),
+                    args: ArgumentList::from_iter(
+                        [arg("lhs", name_expr("a")), arg("rhs", name_expr("b"))].into_iter(),
+                    ),
+                    src_ref: SrcRef::none(),
+                }
+                .into(),
+            )]
+            .into_iter(),
+        ),
+    };
+
+    let mut context = EvalContext::new();
+    let result = f
+        .call(
+            &ArgumentValueList::from_iter([
+                argument!(a: Integer = Integer::from_num(1)),
+                argument!(b: Integer = Integer::from_num(3)),
+            ]),
+            &mut context,
+        )
+        .expect("No eval error");
+
+    assert_eq!(result, Value::from(4_i64));
+}
+
+#[test]
+fn if_a_greater_than() {
+    let f = Function {
+        parameters: [parameter!(a: Integer), parameter!(b: Integer)]
+            .into_iter()
+            .collect(),
+        return_ty: Some(Type::Integer),
+        statements: statements(
+            [If {
+                src_ref: SrcRef::none(),
+                if_ref: SrcRef::none(),
+                cond: FunctionExpression::Call(Call {
+                    name: __mu("core::greater_than").into(),
+                    args: ArgumentList::from_iter(
+                        [arg("lhs", name_expr("a")), arg("rhs", name_expr("b"))].into_iter(),
+                    ),
+                    src_ref: SrcRef::none(),
+                })
+                .into(),
+                body: scope(
+                    [FunctionStatement::Tail(Literal::from_value(2_i64).into())].into_iter(),
+                )
+                .into(),
+                else_ref: None,
+                body_else: Some(
+                    scope([FunctionStatement::Tail(Literal::from_value(4_i64).into())].into_iter())
+                        .into(),
+                ),
+                next_if_ref: None,
+                next_if: None,
+            }]
+            .into_iter(),
+        ),
+    };
+
+    let mut context = EvalContext::new();
+    let result = f
+        .call(
+            &ArgumentValueList::from_iter([
+                argument!(a: Integer = Integer::from_num(1)),
+                argument!(b: Integer = Integer::from_num(3)),
+            ]),
+            &mut context,
+        )
+        .expect("No eval error");
+
+    assert_eq!(result, Value::from(4_i64));
+
+    let mut context = EvalContext::new();
+    let result = f
+        .call(
+            &ArgumentValueList::from_iter([
+                argument!(a: Integer = Integer::from_num(3)),
+                argument!(b: Integer = Integer::from_num(1)),
+            ]),
             &mut context,
         )
         .expect("No eval error");

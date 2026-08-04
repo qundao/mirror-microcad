@@ -3,7 +3,8 @@
 
 use derive_more::From;
 
-use microcad_lang_base::{HashMap, Identifier};
+use microcad_builtin::BuiltinRegistry;
+use microcad_lang_base::{BuiltinId, HashMap, Identifier};
 use microcad_lang_types::{Tuple, Value};
 
 use crate::{Eval, EvalError};
@@ -136,9 +137,30 @@ pub struct EvalContext {
     stack: Stack,
 
     diag: Vec<EvalError>,
+
+    pub builtins: BuiltinRegistry,
 }
 
 impl EvalContext {
+    pub fn new() -> Self {
+        let mut builtins = BuiltinRegistry::new();
+
+        builtins.register(
+            BuiltinId::from_name("core::greater_than"),
+            microcad_builtin::core::greater_than,
+        );
+
+        builtins.register(
+            BuiltinId::from_name("core::add"),
+            microcad_builtin::core::add,
+        );
+
+        Self {
+            builtins,
+            ..Default::default()
+        }
+    }
+
     pub fn scope<T>(&mut self, frame: impl Into<StackFrame>, f: impl FnOnce(&mut Self) -> T) -> T {
         // 1. Temporarily swap out the stack to avoid self-borrow issues
         let mut stack = std::mem::take(&mut self.stack);

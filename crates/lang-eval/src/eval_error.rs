@@ -3,6 +3,7 @@
 
 //! Evaluation error
 
+use microcad_builtin::BuiltinError;
 use microcad_lang_base::{Identifier, IdentifierList, SrcRef, element::WorkbenchKind};
 use microcad_lang_types::{Integer, Type, ValueError, ty::TypeList};
 use microcad_model::output_type::OutputType;
@@ -17,6 +18,10 @@ pub enum EvalError {
     /// An error occurred during handling values.
     #[error("Value error: {0}")]
     ValueError(#[from] ValueError),
+
+    /// An error occurred during handling values.
+    #[error("Builtin error: {0}")]
+    BuiltinFunctionError(#[from] BuiltinError),
 
     /// Can't find a project file by it's qualified name.
     #[error("Not implemented: {0}")]
@@ -252,6 +257,12 @@ pub enum EvalError {
 
     #[error("Missing required argument {id}")]
     MissingRequiredArgument { id: Identifier },
+}
+
+impl From<BuiltinError> for Box<EvalError> {
+    fn from(err: BuiltinError) -> Self {
+        Box::new(err.into())
+    }
 }
 
 /// Result type of any evaluation.

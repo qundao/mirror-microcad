@@ -67,7 +67,7 @@ impl<Name: LowerName> Lower<ast::Expression> for ir::FunctionExpression<Name> {
             ast::Expression::ArrayList(a) => Self::lower(a, context)?,
             ast::Expression::SymbolPath(n) => Self::Name(Name::lower(n, context)?),
             ast::Expression::BinaryOperation(binop) => Self::Call(ir::Call {
-                name: __mu(binop.op.to_fn_name()).into(),
+                name: __mu(binop.op.builtin_fn_name()).into(),
                 args: ArgumentList::from_iter([
                     Self::lower(binop.lhs.as_ref(), context)?,
                     Self::lower(binop.rhs.as_ref(), context)?,
@@ -75,7 +75,7 @@ impl<Name: LowerName> Lower<ast::Expression> for ir::FunctionExpression<Name> {
                 src_ref: context.span_to_src_ref(&binop.span),
             }),
             ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call {
-                name: __mu(unop.op.to_fn_name()).into(),
+                name: __mu(unop.op.builtin_fn_name()).into(),
                 args: ArgumentList::from_iter([Self::lower(unop.rhs.as_ref(), context)?]),
                 src_ref: context.span_to_src_ref(&unop.span),
             }),

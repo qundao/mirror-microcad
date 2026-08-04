@@ -3,9 +3,13 @@
 
 //! Evaluate function
 
+use microcad_builtin::BuiltinEvalContext;
 use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
 use microcad_lang_types::{Array, Tuple, Ty, Type, Value, ValueList};
-use microcad_package::rst::{self, ResolvedName};
+use microcad_package::{
+    builtin,
+    rst::{self, ResolvedName},
+};
 
 use crate::{
     ArgumentMatch, ArgumentValue, ArgumentValueList, CallTrait, Eval, EvalContext, EvalError,
@@ -119,7 +123,9 @@ impl Eval<ArgumentValueList> for rst::function::ArgumentList {
 
 impl Eval<FlowSignal> for rst::function::Scope {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
-        context.scope(FunctionScopeFrame::new(), |context| self.0.eval(context))
+        context.scope(FunctionScopeFrame::new(), |context| {
+            self.statements.eval(context)
+        })
     }
 }
 
@@ -153,6 +159,24 @@ impl Eval<FlowSignal> for rst::function::Call {
             ResolvedName::Symbol(symbol) => {
                 unimplemented!("context.call_symbol(symbol, self.arguments)")
             }
+            ResolvedName::BuiltinFunction(builtin) => {
+                let args = self.args.eval(context)?;
+
+                let args = ArgumentMatch::find_match(
+                    &args,
+                    &[builtin::parameter!(lhs), builtin::parameter!(rhs)]
+                        .into_iter()
+                        .collect(),
+                )?;
+
+                Ok(FlowSignal::Yield(context.builtins.call(
+                    *builtin,
+                    args,
+                    &mut BuiltinEvalContext {
+                        current_fn: String::from("test"),
+                    },
+                )?))
+            }
             ResolvedName::Error(symbol_path) => {
                 context.diag(EvalError::SymbolCanNotBeCalled {
                     symbol_path: symbol_path.clone(),
@@ -177,6 +201,7 @@ impl Eval<FlowSignal> for rst::ResolvedName {
                     }
                 }
             }
+            ResolvedName::BuiltinFunction(builtin) => todo!(),
             ResolvedName::Symbol(refer) => todo!(),
             ResolvedName::Error(symbol_path) => todo!(),
         }
