@@ -95,25 +95,25 @@ pub enum BinaryOperator {
 
 impl BinaryOperator {
     /// Returns the lower snake_case standard library function name for this operator.
-    pub const fn to_fn_name(&self) -> &'static str {
+    pub const fn builtin_fn_name(&self) -> &'static str {
         match self {
-            Self::Add => "add",
-            Self::Subtract => "subtract",
-            Self::Multiply => "multiply",
-            Self::Divide => "divide",
-            Self::Union => "union",
-            Self::Intersect => "intersect",
-            Self::PowerXor => "power_xor",
-            Self::GreaterThan => "greater_than",
-            Self::LessThan => "less_than",
-            Self::GreaterEqual => "greater_equal",
-            Self::LessEqual => "less_equal",
-            Self::Equal => "equal",
-            Self::Near => "near",
-            Self::NotEqual => "not_equal",
-            Self::And => "and",
-            Self::Or => "or",
-            Self::Xor => "xor",
+            Self::Add => "__mu::core::add",
+            Self::Subtract => "__mu::core::sub",
+            Self::Multiply => "__mu::core::mul",
+            Self::Divide => "__mu::core::div",
+            Self::Union => "__mu::core::union",
+            Self::Intersect => "__mu::core::intersect",
+            Self::PowerXor => "__mu::core::power",
+            Self::GreaterThan => "__mu::core::greater_than",
+            Self::LessThan => "__mu::core::less_than",
+            Self::GreaterEqual => "__mu::core::greater_equal",
+            Self::LessEqual => "__mu::core::less_equal",
+            Self::Equal => "__mu::core::equal",
+            Self::Near => "__mu::core::near",
+            Self::NotEqual => "__mu::core::not_equal",
+            Self::And => "__mu::core::and",
+            Self::Or => "__mu::core::or",
+            Self::Xor => "__mu::core::xor",
         }
     }
 }
@@ -132,11 +132,11 @@ pub enum UnaryOperator {
 
 impl UnaryOperator {
     /// Returns the lower snake_case standard library function name for this operator.
-    pub const fn to_fn_name(&self) -> &'static str {
+    pub const fn builtin_fn_name(&self) -> &'static str {
         match self {
-            Self::Minus => "neg",
-            Self::Plus => "plus",
-            Self::Not => "not",
+            Self::Minus => "__mu::core::neg",
+            Self::Plus => "__mu::core::plus",
+            Self::Not => "__mu::core::not",
         }
     }
 }
