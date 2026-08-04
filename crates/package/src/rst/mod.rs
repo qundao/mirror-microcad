@@ -10,7 +10,7 @@ pub mod workbench;
 
 mod parameter;
 
-use microcad_lang_lower::ir::NameKind;
+use microcad_lang_lower::ir::NameSpec;
 pub use parameter::{Parameter, ParameterList};
 
 pub use function::{Function, FunctionExpression, FunctionStatement};
@@ -26,15 +26,16 @@ use std::hash::Hash;
 use serde::{Deserialize, Serialize};
 
 use derive_more::From;
-use microcad_lang_base::{HashId, Refer, SingleIdentifier, SrcRef, SrcReferrer};
+use microcad_lang_base::{BuiltinId, HashId, Refer, SingleIdentifier, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Artifact;
 use microcad_lang_types::Value;
 
-#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
 pub enum ResolvedName {
     /// Name for local variable in a function or workbench.
     Local(Identifier),
     Symbol(Refer<SymbolHandle>),
+    BuiltinFunction(BuiltinId),
     Error(SymbolPath),
 }
 
@@ -44,6 +45,7 @@ impl SrcReferrer for ResolvedName {
             ResolvedName::Local(identifier) => identifier.src_ref(),
             ResolvedName::Symbol(refer) => refer.src_ref(),
             ResolvedName::Error(symbol_path) => symbol_path.src_ref(),
+            _ => SrcRef::none(),
         }
     }
 }
@@ -57,7 +59,7 @@ impl SingleIdentifier for ResolvedName {
     }
 }
 
-impl NameKind for ResolvedName {}
+impl NameSpec for ResolvedName {}
 
 #[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DocBlock(pub Refer<String>);

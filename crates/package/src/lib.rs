@@ -12,13 +12,13 @@ pub mod tree;
 #[macro_export]
 macro_rules! parameter {
     ($id:ident) => {
-            $crate::rst::Parameter {
-                id: $crate::rst::Identifier::no_ref(stringify!($id)),
-                src_ref: microcad_lang_base::SrcRef::none(),
-                ty: None,
-                default_value: None,
-                doc: None,
-            },
+        $crate::rst::Parameter {
+            id: $crate::rst::Identifier::no_ref(stringify!($id)),
+            src_ref: microcad_lang_base::SrcRef::none(),
+            ty: None,
+            default_value: None,
+            doc: None,
+        }
     };
     ($id:ident: $ty:ident) => {
         $crate::rst::Parameter {

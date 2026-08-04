@@ -10,6 +10,8 @@ use crate::rst::{ParameterList, ResolvedName};
 pub type FunctionExpression = ir::FunctionExpression<ResolvedName>;
 pub type FunctionStatement = ir::FunctionStatement<ResolvedName>;
 
+pub type ReturnStatement = ir::ReturnStatement<ResolvedName>;
+
 pub use ir::Literal;
 pub type Scope = ir::Scope<ResolvedName>;
 pub type If = ir::If<FunctionExpression>;
