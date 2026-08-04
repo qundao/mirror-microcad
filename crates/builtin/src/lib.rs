@@ -5,7 +5,7 @@
 
 use microcad_builtin_proc_macros::builtin_mod;
 use microcad_lang_base::{BuiltinId, HashMap};
-use microcad_lang_types::{Value, ValueError};
+use microcad_lang_types::{Tuple, Value, ValueError, create_tuple};
 use thiserror::Error;
 
 use crate::args::unpack_binary_args;
@@ -13,7 +13,7 @@ use crate::args::unpack_binary_args;
 mod args;
 
 pub struct BuiltinEvalContext {
-    current_fn: String,
+    pub current_fn: String,
 }
 
 impl BuiltinEvalContext {
@@ -46,21 +46,28 @@ pub enum BuiltinError {
 }
 
 pub trait BuiltinHandler: Send + Sync {
-    fn call(&self, args: Value, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError>;
+    fn call(&self, args: Tuple, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError>;
 }
 
 // Allow closures to act as BuiltinHandlers
 impl<F> BuiltinHandler for F
 where
-    F: Fn(Value, &mut BuiltinEvalContext) -> Result<Value, BuiltinError> + Send + Sync,
+    F: Fn(Tuple, &mut BuiltinEvalContext) -> Result<Value, BuiltinError> + Send + Sync,
 {
-    fn call(&self, args: Value, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+    fn call(&self, args: Tuple, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         self(args, ctx)
     }
 }
 
+#[derive(Default)]
 pub struct BuiltinRegistry {
     handlers: HashMap<BuiltinId, Box<dyn BuiltinHandler>>,
+}
+
+impl std::fmt::Debug for BuiltinRegistry {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "BuiltinRegistry")
+    }
 }
 
 impl BuiltinRegistry {
@@ -82,7 +89,7 @@ impl BuiltinRegistry {
     pub fn call(
         &self,
         id: BuiltinId,
-        args: Value,
+        args: Tuple,
         ctx: &mut BuiltinEvalContext,
     ) -> Result<Value, BuiltinError> {
         if let Some(handler) = self.get(id) {
@@ -97,40 +104,119 @@ impl BuiltinRegistry {
 }
 
 /// Built-in execution function signature
-pub type BuiltinFn = fn(Value, &mut BuiltinEvalContext) -> Result<Value, BuiltinError>;
+pub type BuiltinFn = fn(Tuple, &mut BuiltinEvalContext) -> Result<Value, BuiltinError>;
 
-/// A statically compiled built-in definition containing its ID and execution pointer.
-#[derive(Copy, Clone)]
-pub struct Builtin {
-    pub id: BuiltinId,
+/// Metadata for an individual parameter.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct Param {
+    /// Name of the parameter (for named/keyword binding and diagnostics).
     pub name: &'static str,
-    pub func: BuiltinFn,
+    // ty: Type,
 }
 
-impl Builtin {
-    pub const fn new(name: &'static str, func: BuiltinFn) -> Self {
+impl Param {
+    /// Reusable static slice for standard binary operations (lhs, rhs)
+    pub const BINARY: &'static [Param] = &[Param::new("lhs"), Param::new("rhs")];
+
+    /// Reusable static slice for standard unary operations (operand)
+    pub const UNARY: &'static [Param] = &[Param::new("operand")];
+
+    pub const fn new(name: &'static str) -> Self {
+        Self { name }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct BuiltinSignature {
+    /// Expected parameter metadata in order.
+    pub params: &'static [Param],
+    /// Accepts arbitrary positional arguments (e.g. `core::list`, `core::format`).
+    pub variadic: bool,
+}
+
+impl BuiltinSignature {
+    /// Reusable static slice for standard unary operations (operand)
+    pub const EMPTY: &'static [Param] = &[];
+
+    pub const fn bin_op() -> Self {
         Self {
-            id: BuiltinId::from_name(name),
-            name,
-            func,
+            params: Param::BINARY,
+            variadic: false,
+        }
+    }
+
+    pub const fn variadic() -> Self {
+        Self {
+            params: Self::EMPTY,
+            variadic: true,
         }
     }
 }
 
-#[builtin_mod]
-pub mod core {
-    use microcad_lang_types::Value;
+/// A statically compiled built-in definition containing its ID and execution pointer.
+#[derive(Debug, Clone)]
+pub struct Builtin {
+    pub id: BuiltinId,
+    pub name: &'static str,
+    pub signature: BuiltinSignature,
+    pub func: BuiltinFn,
+}
 
-    use crate::{BuiltinError, BuiltinEvalContext, args::unpack_binary_args};
+impl Builtin {
+    pub const fn new(name: &'static str, signature: BuiltinSignature, func: BuiltinFn) -> Self {
+        Self {
+            id: BuiltinId::from_name(name),
+            name,
+            signature,
+            func,
+        }
+    }
+
+    pub const fn hash(&self) -> u64 {
+        self.id.0
+    }
+}
+
+pub mod core {
+    use microcad_lang_base::BuiltinId;
+    use microcad_lang_types::{Tuple, Value};
+
+    use crate::{
+        Builtin, BuiltinError, BuiltinEvalContext, BuiltinSignature, args::unpack_binary_args,
+    };
+
+    // 1. Binary Math Operation: add(lhs, rhs)
+    pub static ADD: Builtin = Builtin::new("core::add", BuiltinSignature::bin_op(), add);
 
     // Individual standalone function implementations
-    pub fn add(args: Value, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+    // #[builtin_fn(lhs, rhs) -> Type]
+    pub fn add(args: Tuple, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = unpack_binary_args(args, ctx)?;
         Ok((lhs + rhs)?)
     }
 
-    pub fn sub(args: Value, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+    pub fn greater_than(args: Tuple, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = unpack_binary_args(args, ctx)?;
+        Ok((lhs > rhs).into())
+    }
+
+    pub fn sub(args: Tuple, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = unpack_binary_args(args, ctx)?;
         Ok((lhs + rhs)?)
     }
+}
+
+#[test]
+fn greater_than() {
+    let mut context = BuiltinEvalContext {
+        current_fn: String::new(),
+    };
+    assert_eq!(
+        core::greater_than(create_tuple!(lhs = 3, rhs = 5), &mut context).unwrap(),
+        Value::from(false)
+    );
+    assert_eq!(
+        core::greater_than(create_tuple!(lhs = 5, rhs = 3), &mut context).unwrap(),
+        Value::from(true)
+    );
 }
