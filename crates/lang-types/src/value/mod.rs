@@ -257,6 +257,12 @@ impl From<f32> for Value {
     }
 }
 
+impl From<i32> for Value {
+    fn from(i: i32) -> Self {
+        Value::Integer(Integer::from_num(i))
+    }
+}
+
 impl From<i64> for Value {
     fn from(i: i64) -> Self {
         Value::Integer(Integer::from_num(i))
