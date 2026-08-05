@@ -5,7 +5,7 @@
 
 use crate::ir;
 
-use microcad_lang_base::{IsDefault, SrcRef, SrcReferrer, is_default};
+use microcad_lang_base::{SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Identifiable;
 
 use serde::Deserialize;
@@ -26,30 +26,15 @@ pub struct FileModule {
 /// Items inside an inline module that will be resolved into Symbols.
 #[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
 pub struct InlineModuleItems {
-    #[serde(skip_serializing_if = "is_default", default)]
     pub modules: Box<[ir::InlineModule]>,
 
-    #[serde(skip_serializing_if = "is_default", default)]
     pub aliases: ir::Aliases,
 
-    #[serde(skip_serializing_if = "is_default", default)]
     pub constants: Box<[ir::Constant]>,
 
-    #[serde(skip_serializing_if = "is_default", default)]
     pub functions: Box<[ir::Function]>,
 
-    #[serde(skip_serializing_if = "is_default", default)]
     pub workbenches: Box<[ir::Workbench]>,
-}
-
-impl IsDefault for InlineModuleItems {
-    fn is_default(&self) -> bool {
-        self.modules.is_default()
-            && self.aliases.is_default()
-            && self.constants.is_default()
-            && self.functions.is_default()
-            && self.workbenches.is_default()
-    }
 }
 
 /// Inline module definition.
@@ -68,7 +53,6 @@ pub struct InlineModule {
 
     pub inner_attr: ir::InnerAttributes,
 
-    #[serde(skip_serializing_if = "is_default", default)]
     pub items: ir::InlineModuleItems,
 }
 

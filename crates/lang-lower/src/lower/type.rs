@@ -19,19 +19,20 @@ impl Lower<ast::Type> for Type {
     }
 }
 
-impl Lower<ast::Type> for ir::TypeAnnotation {
+impl Lower<ast::Type> for ir::Type {
     fn lower(node: &ast::Type, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(ir::TypeAnnotation(Refer::new(
-            Type::lower(node, context)?,
-            context.span_to_src_ref(&node.span()),
-        )))
+        Ok(Self {
+            ty: Type::lower(node, context)?,
+            src_ref: context.span_to_src_ref(&node.span()),
+        })
     }
 }
 
-impl Lower<Option<ast::Type>> for Option<ir::TypeAnnotation> {
+impl Lower<Option<ast::Type>> for ir::Type {
     fn lower(node: &Option<ast::Type>, context: &mut LowerContext) -> LowerResult<Self> {
-        node.as_ref()
-            .map(|ty| ir::TypeAnnotation::lower(ty, context))
-            .transpose()
+        match node {
+            Some(ty) => ir::Type::lower(ty, context),
+            None => Ok(ir::Type::default()),
+        }
     }
 }

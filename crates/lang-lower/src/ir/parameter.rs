@@ -21,7 +21,7 @@ pub struct Parameter<Name: ir::NameSpec = ir::SymbolPath> {
     /// Name of the parameter
     pub id: Identifier,
     /// Type of the parameter or `None`
-    pub specified_type: Option<ir::TypeAnnotation>,
+    pub ty: ir::Type,
     /// default value of the parameter or `None`
     pub default_value: Option<ir::ConstantExpression<Name>>,
     /// Source code reference
@@ -33,10 +33,9 @@ where
     Name: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match (&self.specified_type, &self.default_value) {
-            (Some(t), Some(v)) => write!(f, "{}: {t} = {v}", self.id),
-            (Some(t), None) => write!(f, "{}: {t}", self.id),
-            (None, Some(v)) => write!(f, "{} = {v}", self.id),
+        write!(f, "{id}: {ty}", id = self.id, ty = self.ty)?;
+        match &self.default_value {
+            Some(v) => write!(f, " = {v}"),
             _ => Ok(()),
         }
     }
@@ -50,7 +49,7 @@ where
         Parameter {
             attr: self.attr.cast_into(),
             id: self.id,
-            specified_type: self.specified_type,
+            ty: self.ty,
             default_value: self.default_value.map(|v| v.cast_into()),
             src_ref: self.src_ref,
         }

@@ -18,27 +18,19 @@ pub struct Constant {
     #[serde(skip_serializing_if = "SrcRef::is_none", default)]
     pub keyword_src_ref: SrcRef,
     pub id: ir::Identifier,
-    pub ty: Option<ir::TypeAnnotation>,
+    pub ty: ir::Type,
     pub expr: ir::ConstantExpression,
 }
 
 impl std::fmt::Display for Constant {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self.ty {
-            Some(ty) => write!(
-                f,
-                "{vis}const {id}: {ty} = {expr}",
-                vis = self.visibility,
-                id = self.id,
-                expr = self.expr
-            ),
-            None => write!(
-                f,
-                "{vis}const {id} = {expr}",
-                vis = self.visibility,
-                id = self.id,
-                expr = self.expr
-            ),
-        }
+        write!(
+            f,
+            "{vis}const {id}: {ty} = {expr}",
+            vis = self.visibility,
+            id = self.id,
+            ty = self.ty,
+            expr = self.expr
+        )
     }
 }

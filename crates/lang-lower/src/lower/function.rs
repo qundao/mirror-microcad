@@ -7,7 +7,7 @@ use crate::{
     lower::{LowerName, extract_statements_with_tail, for_each_statement},
 };
 
-use microcad_lang_base::{__mu, Identifier, Refer, SpanToSrcRef, SrcRef, SrcReferrer};
+use microcad_lang_base::{__mu, Identifier, SpanToSrcRef, SrcRef, SrcReferrer};
 use microcad_lang_parse::ast;
 
 impl Lower<ast::def::Function> for ir::OuterAttributes {
@@ -21,7 +21,10 @@ impl Lower<ast::def::Function> for ir::FunctionSignature {
         Ok(Self {
             src_ref: context.span_to_src_ref(&node.span),
             parameters: ir::ParameterList::lower(&node.parameters, context)?,
-            return_type: Option::<ir::TypeAnnotation>::lower(&node.return_type, context)?,
+            return_type: match &node.return_type {
+                Some(ty) => Some(ir::Type::lower(ty, context)?),
+                None => None,
+            },
         })
     }
 }

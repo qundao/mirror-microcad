@@ -191,7 +191,7 @@ impl Lower<ast::LocalAssignment> for ir::WorkbenchStatement {
             visibility: ir::Visibility::Private,
             keyword_src_ref: SrcRef::none(),
             id: Some(ir::Identifier::lower(&node.id, context)?),
-            ty: Option::<ir::TypeAnnotation>::lower(&node.ty, context)?,
+            ty: ir::Type::lower(&node.ty, context)?,
             expression: ir::WorkbenchExpression::lower(node.expr.as_ref(), context)?,
         })
     }
@@ -205,7 +205,7 @@ impl Lower<ast::PropertyAssignment> for ir::WorkbenchStatement {
             visibility: ir::Visibility::Public,
             keyword_src_ref: context.span_to_src_ref(&node.keyword_span),
             id: Some(ir::Identifier::lower(&node.id, context)?),
-            ty: Option::<ir::TypeAnnotation>::lower(&node.ty, context)?,
+            ty: ir::Type::lower(&node.ty, context)?,
             expression: ir::WorkbenchExpression::lower(node.value.as_ref(), context)?,
         })
     }
@@ -219,7 +219,7 @@ impl Lower<ast::ExpressionStatement> for ir::WorkbenchStatement {
             visibility: ir::Visibility::Public,
             keyword_src_ref: SrcRef::none(),
             id: None,
-            ty: None,
+            ty: ir::Type::default(),
             expression: ir::WorkbenchExpression::lower(&node.expr, context)?,
         })
     }

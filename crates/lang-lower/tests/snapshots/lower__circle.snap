@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0x7cd65a945030702d",
-        output_hash: "0x46cced537d68c57d",
+        output_hash: "0xd83bfe98927b9b14",
         tree: (
             id: Some("circle"),
             attr: ((
@@ -25,7 +25,10 @@ expression: "ir.to_ron().expect(\"No error\")"
             items: (
                 file_modules: [],
                 inline_modules: [],
-                aliases: (),
+                aliases: (
+                    explicit_aliases: [],
+                    wildcards: [],
+                ),
                 constants: [],
                 functions: [],
                 workbenches: [
@@ -71,6 +74,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                         value: "center",
                                         src_ref: "6:35 @ 0x5b5b0d75574ec6c6 (182..188)",
                                     )),
+                                    ty: (
+                                        ty: Any,
+                                        src_ref: "None",
+                                    ),
                                     default_value: Some(Call((
                                         name: Builtin((5042962997692714852)),
                                         args: (
@@ -118,10 +125,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                         value: "radius",
                                         src_ref: "6:19 @ 0x5b5b0d75574ec6c6 (166..172)",
                                     )),
-                                    specified_type: Some(((
-                                        value: Quantity(Length),
+                                    ty: (
+                                        ty: Quantity(Length),
                                         src_ref: "6:27 @ 0x5b5b0d75574ec6c6 (174..180)",
-                                    ))),
+                                    ),
                                     src_ref: "6:19 @ 0x5b5b0d75574ec6c6 (166..180)",
                                 ),
                             ],
@@ -164,6 +171,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                 value: "center",
                                                 src_ref: "7:28 @ 0x5b5b0d75574ec6c6 (244..250)",
                                             )),
+                                            ty: (
+                                                ty: Any,
+                                                src_ref: "None",
+                                            ),
                                             default_value: Some(Call((
                                                 name: Builtin((5042962997692714852)),
                                                 args: (
@@ -211,10 +222,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                 value: "diameter",
                                                 src_ref: "7:10 @ 0x5b5b0d75574ec6c6 (226..234)",
                                             )),
-                                            specified_type: Some(((
-                                                value: Quantity(Length),
+                                            ty: (
+                                                ty: Quantity(Length),
                                                 src_ref: "7:20 @ 0x5b5b0d75574ec6c6 (236..242)",
-                                            ))),
+                                            ),
                                             src_ref: "7:10 @ 0x5b5b0d75574ec6c6 (226..242)",
                                         ),
                                     ],
@@ -238,8 +249,12 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             value: "radius",
                                             src_ref: "8:9 @ 0x5b5b0d75574ec6c6 (287..293)",
                                         ))),
+                                        ty: (
+                                            ty: Any,
+                                            src_ref: "None",
+                                        ),
                                         expression: Call((
-                                            name: Builtin((15075632792087435312)),
+                                            name: Builtin((4834721000623606109)),
                                             args: (
                                                 src_ref: "None",
                                                 args: [
@@ -281,7 +296,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                             ),
                         ],
                         items: (
-                            aliases: (),
+                            aliases: (
+                                explicit_aliases: [],
+                                wildcards: [],
+                            ),
                             constants: [],
                             functions: [],
                         ),
@@ -299,6 +317,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                 src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..418)",
                                 visibility: Public,
                                 keyword_src_ref: "None",
+                                ty: (
+                                    ty: Any,
+                                    src_ref: "None",
+                                ),
                                 expression: Call((
                                     name: Path(
                                         is_absolute: false,

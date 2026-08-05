@@ -14,7 +14,7 @@ impl Lower<ast::def::Constant> for ir::Constant {
             visibility: ir::Visibility::lower(&node.vis, context)?,
             keyword_src_ref: context.span_to_src_ref(&node.keyword_span),
             id: ir::Identifier::lower(&node.id, context)?,
-            ty: Option::<ir::TypeAnnotation>::lower(&node.ty, context)?,
+            ty: ir::Type::lower(&node.ty, context)?,
             expr: ir::ConstantExpression::lower(node.expr.as_ref(), context)?,
         })
     }

@@ -20,7 +20,6 @@ pub use assignment::*;
 pub use attribute::*;
 pub use cast_into::*;
 pub use constant::*;
-use derive_more::Display;
 pub use expression::*;
 pub use function::*;
 pub use module::*;
@@ -29,23 +28,20 @@ pub use source::*;
 pub use workbench::*;
 
 pub use microcad_lang_base::{Identifier, element::Visibility};
-pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Ty, Type, Unit};
+pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Ty, Unit};
 
-use microcad_lang_base::{IsDefault, Refer, SrcRef, is_default};
-use microcad_lang_proc_macros::SrcReferrer;
+use derive_more::{Deref, Display};
+use microcad_lang_base::SrcRef;
 use serde::{Deserialize, Serialize};
 
 use crate::ir;
 
-/// Type within source code.
-#[derive(Clone, Display, Debug, Hash, PartialEq, SrcReferrer, Serialize, Deserialize)]
-#[display("{_0}")]
-pub struct TypeAnnotation(pub Refer<Type>);
-
-impl Ty for TypeAnnotation {
-    fn ty(&self) -> Type {
-        self.0.value.clone()
-    }
+#[derive(Debug, Default, Display, Deref, Clone, Hash, PartialEq, Serialize, Deserialize)]
+#[display("{}", ty)]
+pub struct Type {
+    #[deref]
+    pub ty: microcad_lang_types::Type,
+    pub src_ref: SrcRef,
 }
 
 /// `use std::geo2d::Circle as C` => (path = "std::geo2d::Circle", id = "C")
@@ -54,7 +50,6 @@ impl Ty for TypeAnnotation {
 pub struct ExplicitAlias {
     pub attr: ir::OuterAttributes,
     pub visibility: ir::Visibility,
-    #[serde(skip_serializing_if = "SrcRef::is_none", default)]
     pub keyword_src_ref: SrcRef,
     pub path: SymbolPath,
     pub id: Identifier,
@@ -66,7 +61,6 @@ pub struct ExplicitAlias {
 pub struct WildcardAlias {
     pub attr: ir::OuterAttributes,
     pub visibility: ir::Visibility,
-    #[serde(skip_serializing_if = "SrcRef::is_none", default)]
     pub keyword_src_ref: SrcRef,
     pub path: SymbolPath,
     pub src_ref: SrcRef,
@@ -75,14 +69,6 @@ pub struct WildcardAlias {
 /// Aliases lowered from `use` statements.
 #[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Aliases {
-    #[serde(skip_serializing_if = "is_default", default)]
     pub explicit_aliases: Box<[ExplicitAlias]>,
-    #[serde(skip_serializing_if = "is_default", default)]
     pub wildcards: Box<[WildcardAlias]>,
-}
-
-impl IsDefault for Aliases {
-    fn is_default(&self) -> bool {
-        self.explicit_aliases.is_default() && self.wildcards.is_default()
-    }
 }

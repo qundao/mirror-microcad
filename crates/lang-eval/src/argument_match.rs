@@ -34,25 +34,6 @@ pub enum Priority {
     None,
 }
 
-impl Priority {
-    pub(super) fn high_to_low() -> &'static [Priority] {
-        &[
-            Self::Empty,
-            Self::Id,
-            Self::Short,
-            Self::Type,
-            Self::TypeAuto,
-            Self::Default,
-        ]
-    }
-
-    fn set_once(&mut self, with: Self) {
-        if *self == Priority::None {
-            *self = with
-        }
-    }
-}
-
 /// Matching of `ParameterList` with `ArgumentValueList` into Tuple
 pub struct ArgumentMatch<'a> {
     arguments: Vec<(&'a Identifier, &'a ArgumentValue)>,

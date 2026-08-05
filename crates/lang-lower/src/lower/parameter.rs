@@ -12,11 +12,7 @@ impl Lower<ast::Parameter> for ir::Parameter {
             attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
             src_ref: context.span_to_src_ref(&node.span),
             id: ir::Identifier::lower(&node.id, context)?,
-            specified_type: node
-                .ty
-                .as_ref()
-                .map(|ty| ir::TypeAnnotation::lower(ty, context))
-                .transpose()?,
+            ty: ir::Type::lower(&node.ty, context)?,
             default_value: node
                 .default
                 .as_ref()

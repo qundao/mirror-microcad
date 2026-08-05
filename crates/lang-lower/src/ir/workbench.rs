@@ -6,7 +6,7 @@
 use crate::{CastInto, ir};
 
 use derive_more::{Display, From};
-use microcad_lang_base::{IsDefault, Refer, SingleIdentifier, SrcRef, SrcReferrer};
+use microcad_lang_base::{Refer, SingleIdentifier, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Identifiable;
 
 pub use microcad_lang_base::element::WorkbenchKind;
@@ -22,7 +22,7 @@ pub struct WorkbenchStatement<Name: ir::NameSpec = ir::SymbolPath> {
     pub visibility: ir::Visibility, // public = property
     pub keyword_src_ref: SrcRef,
     pub id: Option<ir::Identifier>,
-    pub ty: Option<ir::TypeAnnotation>,
+    pub ty: ir::Type,
     pub expression: WorkbenchExpression<Name>,
 }
 
@@ -174,12 +174,6 @@ pub struct WorkbenchItems {
     pub constants: Box<[ir::Constant]>,
     /// `fn`
     pub functions: Box<[ir::Function]>,
-}
-
-impl IsDefault for WorkbenchItems {
-    fn is_default(&self) -> bool {
-        self.aliases.is_default() && self.constants.is_default()
-    }
 }
 
 /// Workbench definition, e.g `sketch`, `part` or `op`.

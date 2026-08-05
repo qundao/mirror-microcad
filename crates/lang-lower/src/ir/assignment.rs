@@ -17,8 +17,7 @@ pub struct LocalAssignment<Expr> {
     /// Assignee
     pub id: Identifier,
     /// Type of the assignee
-    #[serde(skip_serializing_if = "Option::is_none", default)]
-    pub specified_type: Option<ir::TypeAnnotation>,
+    pub ty: ir::Type,
     /// Value to assign
     pub expression: Expr,
     /// Source code reference
@@ -30,7 +29,7 @@ impl<T> LocalAssignment<T> {
     pub fn map<U>(self, f: impl FnOnce(T) -> U) -> LocalAssignment<U> {
         LocalAssignment {
             id: self.id,
-            specified_type: self.specified_type,
+            ty: self.ty,
             expression: f(self.expression),
             src_ref: self.src_ref,
         }
@@ -42,17 +41,13 @@ where
     Expr: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        use microcad_lang_types::ty::Ty;
-        match &self.specified_type {
-            Some(t) => write!(
-                f,
-                "{id}: {ty} = {expr}",
-                id = self.id,
-                ty = t.ty(),
-                expr = self.expression
-            ),
-            None => write!(f, "{id} = {expr}", id = self.id, expr = self.expression),
-        }
+        write!(
+            f,
+            "{id}: {ty} = {expr}",
+            id = self.id,
+            ty = self.ty,
+            expr = self.expression
+        )
     }
 }
 

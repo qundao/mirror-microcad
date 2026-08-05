@@ -6,7 +6,7 @@
 use crate::{CastInto, ir, lower::LowerName};
 
 use derive_more::From;
-use microcad_lang_base::{IsDefault, Refer, SingleIdentifier, SrcRef, SrcReferrer};
+use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
 use serde::{Deserialize, Serialize};
 
 /// Parameters and return type of a function
@@ -15,7 +15,7 @@ pub struct FunctionSignature<Name: ir::NameSpec = ir::SymbolPath> {
     /// Function's parameters
     pub parameters: ir::ParameterList<Name>,
     /// Function's return type
-    pub return_type: Option<ir::TypeAnnotation>,
+    pub return_type: Option<ir::Type>,
     /// Source code reference
     pub src_ref: SrcRef,
 }
@@ -216,12 +216,6 @@ pub struct FunctionItems {
     pub aliases: ir::Aliases,
     /// const FOO =
     pub constants: Box<[ir::Constant]>,
-}
-
-impl IsDefault for FunctionItems {
-    fn is_default(&self) -> bool {
-        self.aliases.is_default() && self.constants.is_default()
-    }
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]

@@ -345,7 +345,7 @@ where
     fn lower(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             id: ir::Identifier::lower(&node.id, context)?,
-            specified_type: Option::<ir::TypeAnnotation>::lower(&node.ty, context)?,
+            ty: ir::Type::lower(&node.ty, context)?,
             expression: Expr::lower(node.expr.as_ref(), context)?,
             src_ref: context.span_to_src_ref(&node.span),
         })
