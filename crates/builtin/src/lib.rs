@@ -189,7 +189,7 @@ pub mod core {
     pub static ADD: Builtin = Builtin::new("core::add", BuiltinSignature::bin_op(), add);
 
     // Individual standalone function implementations
-    // #[builtin_fn(lhs, rhs) -> Type]
+    // #[builtin_fn(lhs: Any, rhs: Any) -> Any]
     pub fn add(args: Tuple, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = unpack_binary_args(args, ctx)?;
         Ok((lhs + rhs)?)
@@ -202,7 +202,7 @@ pub mod core {
 
     pub fn sub(args: Tuple, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = unpack_binary_args(args, ctx)?;
-        Ok((lhs + rhs)?)
+        Ok((lhs - rhs)?)
     }
 }
 
