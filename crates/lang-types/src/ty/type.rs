@@ -9,8 +9,11 @@ use serde::{Deserialize, Serialize};
 use crate::ty::*;
 
 /// µcad Basic Types
-#[derive(Clone, Debug, PartialEq, From, Eq, Hash, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, PartialEq, From, Eq, Hash, Serialize, Deserialize)]
 pub enum Type {
+    /// Any type allowed.
+    #[default]
+    Any,
     /// Invalid type (used for error handling)
     Invalid,
     /// A 64-bit integer number: `Integer: 10`.
@@ -91,6 +94,7 @@ impl std::str::FromStr for Type {
             "Vec2" => Ok(Type::Tuple(Box::new(TupleType::new_vec2()))),
             "Vec3" => Ok(Type::Tuple(Box::new(TupleType::new_vec3()))),
             "Size2" => Ok(Type::Tuple(Box::new(TupleType::new_size2()))),
+            "Any" => Ok(Type::Any),
             "Integer" => Ok(Type::Integer),
             "Bool" => Ok(Type::Bool),
             "String" => Ok(Type::String),
@@ -111,6 +115,7 @@ impl std::fmt::Display for Type {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
             Self::Invalid => write!(f, "<NO TYPE>"),
+            Self::Any => write!(f, "Any"),
             Self::Integer => write!(f, "Integer"),
             Self::Quantity(quantity) => write!(f, "{quantity}"),
             Self::String => write!(f, "String"),
