@@ -37,6 +37,19 @@ impl Tuple {
         }
     }
 
+    pub fn get_named_unchecked(&self, name: &str) -> &Value {
+        self.named
+            .iter()
+            .find_map(|(id, v)| {
+                if id == &Identifier::no_ref(name) {
+                    Some(v)
+                } else {
+                    None
+                }
+            })
+            .unwrap()
+    }
+
     /// Checks if two tuples have matching structural shapes:
     /// 1. Same number of positional elements.
     /// 2. Same set of named field identifiers (in exact sequence).

@@ -3,6 +3,7 @@
 
 //! µcad language types and values.
 
+pub mod model;
 pub mod ty;
 pub mod value;
 
@@ -14,6 +15,8 @@ use derive_more::{Deref, DerefMut, Display};
 use serde::{Deserialize, Serialize};
 pub use ty::{MatrixType, QuantityType, Ty, Type, TypeError, TypeResult, Unit};
 pub use value::{Array, Quantity, Tuple, Value, ValueAccess, ValueError, ValueList, ValueResult};
+
+pub use model::{Model, ModelRef, ModelTree, Models};
 
 pub use microcad_lang_base::element::{BinaryOperator, UnaryOperator};
 
