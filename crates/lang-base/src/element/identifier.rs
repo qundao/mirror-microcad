@@ -6,7 +6,7 @@ use derive_more::{Deref, DerefMut};
 use miette::SourceSpan;
 use serde::{Deserialize, Serialize};
 
-use crate::{Id, Refer, SrcRef, SrcReferrer, TreeDisplay, TreeState};
+use crate::{Id, Refer, SrcRef, SrcReferrer};
 
 /// µcad identifier
 #[derive(Default, Clone, Debug, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
@@ -187,12 +187,6 @@ impl std::fmt::Display for Identifier {
 impl PartialEq<str> for Identifier {
     fn eq(&self, other: &str) -> bool {
         *self.0 == other
-    }
-}
-
-impl TreeDisplay for Identifier {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
-        writeln!(f, "{:depth$}Identifier: {}", "", self.id())
     }
 }
 
