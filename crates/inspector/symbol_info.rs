@@ -56,7 +56,7 @@ impl From<&mu::ir::Parameter> for ParameterInfo {
     fn from(param: &mu::ir::Parameter) -> Self {
         Self {
             id: param.id().to_string(),
-            ty: param.specified_type.clone().map(|ty| ty.to_string()),
+            ty: param.ty.clone().map(|ty| ty.to_string()),
             def: param.default_value.clone().map(|def| def.to_string()),
         }
     }
