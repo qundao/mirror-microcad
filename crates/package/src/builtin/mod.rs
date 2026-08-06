@@ -9,10 +9,9 @@ use crate::rst;
 use derive_more::Display;
 pub use microcad_lang_base::Identifier;
 use microcad_lang_types::{
-    Angle, Color, Integer, Length, Quantity, QuantityType, Scalar, Tuple, Type, Value,
+    Angle, Color, Integer, Length, Model, Quantity, QuantityType, Scalar, Tuple, Type, Value,
     ty::TupleType,
 };
-use microcad_model::Model;
 use miette::Diagnostic;
 use thiserror::Error;
 
