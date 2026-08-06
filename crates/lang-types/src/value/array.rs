@@ -9,7 +9,7 @@ use derive_more::{Deref, DerefMut};
 use serde::{Deserialize, Serialize};
 
 /// Collection of values of the same type.
-#[derive(Clone, Debug, Deref, DerefMut, Serialize, Deserialize)]
+#[derive(Clone, Debug, Deref, Hash, DerefMut, Serialize, Deserialize)]
 pub struct Array {
     /// List of values
     #[deref]

@@ -3,6 +3,7 @@
 
 //! µcad syntax elements of types
 
+mod function_type;
 mod matrix_type;
 mod ops;
 mod quantity_type;
@@ -18,6 +19,8 @@ pub use tuple_type::*;
 pub use r#type::*;
 pub use type_list::*;
 pub use unit::*;
+
+pub use function_type::FunctionType;
 
 use crate::{BinaryOperator, UnaryOperator};
 
@@ -62,6 +65,15 @@ pub enum TypeError {
         rhs: Box<TupleType>,
         op: BinaryOperator,
     },
+
+    #[error("Non matching signature parameters: {a} != {b}")]
+    NonMatchingSignatureParameterList {
+        a: function_type::FunctionTypeParameters,
+        b: function_type::FunctionTypeParameters,
+    },
+
+    #[error("Non matching signature: {a} != {b}")]
+    NonMatchingSignature { a: FunctionType, b: FunctionType },
 }
 
 pub type TypeResult = Result<Type, TypeError>;

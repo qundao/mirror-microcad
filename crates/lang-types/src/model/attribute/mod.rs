@@ -57,5 +57,19 @@ impl std::fmt::Display for Attribute {
     }
 }
 
-#[derive(Clone, Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Default, Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Attributes(pub Vec<Attribute>);
+
+impl std::fmt::Display for Attributes {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            self.0
+                .iter()
+                .map(|attr| attr.to_string())
+                .collect::<Vec<_>>()
+                .join("\n")
+        )
+    }
+}

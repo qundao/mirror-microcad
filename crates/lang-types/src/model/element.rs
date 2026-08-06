@@ -35,7 +35,7 @@ impl From<BuiltinWorkbenchKind> for OutputType {
 }
 
 /// An element defines the entity of a [`Model`].
-#[derive(Clone, Debug, Hash, PartialEq, Default, From, Serialize, Deserialize)]
+#[derive(Clone, Debug, Display, Hash, PartialEq, Default, From, Serialize, Deserialize)]
 pub enum ElementKind {
     #[default]
     /// A group element is created by a body `{}`.
@@ -68,16 +68,43 @@ impl ElementKind {
     }
 }
 
-#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Element {
     kind: ElementKind,
-    src_ref: SrcRef,
     creator: Option<Creator>,
+}
+
+impl std::fmt::Display for Element {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.kind)?;
+        if let Some(creator) = &self.creator {
+            write!(f, "@ {creator}")?;
+        }
+        Ok(())
+    }
+}
+
+impl From<ElementKind> for Element {
+    fn from(kind: ElementKind) -> Self {
+        Self {
+            kind,
+            creator: None,
+        }
+    }
+}
+
+impl From<Value> for Element {
+    fn from(value: Value) -> Self {
+        Self::from(ElementKind::from(value))
+    }
 }
 
 impl SrcReferrer for Element {
     fn src_ref(&self) -> SrcRef {
-        self.src_ref
+        self.creator
+            .as_ref()
+            .map(|creator| creator.src_ref)
+            .unwrap_or_default()
     }
 }
 

@@ -57,7 +57,7 @@ impl TupleType {
     }
 
     /// Match tuples by id.
-    pub fn is_matching(&self, params: &TupleType) -> bool {
+    pub fn matches_multiplicity(&self, params: &TupleType) -> bool {
         if self == params {
             true
         } else if self.positional.is_empty()
@@ -219,7 +219,7 @@ impl std::ops::Add for TupleType {
 
     fn add(self, rhs: Self) -> Self::Output {
         let lhs = self;
-        if lhs.is_matching(&rhs) {
+        if lhs.matches_multiplicity(&rhs) {
             Ok(Type::from(Box::new(lhs)))
         } else {
             Err(TypeError::IncompatibleTupleTypes {
@@ -236,7 +236,7 @@ impl std::ops::Sub for TupleType {
 
     fn sub(self, rhs: Self) -> Self::Output {
         let lhs = self;
-        if lhs.is_matching(&rhs) {
+        if lhs.matches_multiplicity(&rhs) {
             Ok(Type::from(Box::new(lhs)))
         } else {
             Err(TypeError::IncompatibleTupleTypes {

@@ -6,7 +6,7 @@
 //use microcad_package::SymbolId;
 
 use crate::Tuple;
-use microcad_lang_base::HashId;
+use microcad_lang_base::{HashId, SrcRef};
 use serde::{Deserialize, Serialize};
 
 /// Symbol id (TODO Move this `microcad-package`)
@@ -25,4 +25,12 @@ pub struct Creator {
     pub arguments: Tuple,
     /// Hash id
     pub hash_id: HashId,
+    /// Symbol ref of the creator
+    pub src_ref: SrcRef,
+}
+
+impl std::fmt::Display for Creator {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{} @ {}", self.arguments, self.hash_id)
+    }
 }

@@ -4,9 +4,10 @@
 //! Model output type.
 
 use microcad_lang_base::element::WorkbenchKind;
+use serde::{Deserialize, Serialize};
 
 /// The output type of the [`crateModel`].
-#[derive(Clone, Copy, Debug, Default, PartialEq)]
+#[derive(Clone, Copy, Eq, Hash, PartialEq, Debug, Default, Serialize, Deserialize)]
 pub enum OutputType {
     /// The output type has not yet been determined.
     #[default]
@@ -16,7 +17,7 @@ pub enum OutputType {
     /// The [`Model`] outputs a 3d geometry.
     Geometry3D,
     /// The [`Model`] contains both 2D and 3D geometry.
-    Mixed,
+    Any,
 }
 
 impl OutputType {
@@ -30,9 +31,9 @@ impl OutputType {
             | (OutputType::Geometry3D, OutputType::Geometry3D) => *self,
             (OutputType::Geometry2D, OutputType::Geometry3D)
             | (OutputType::Geometry3D, OutputType::Geometry2D)
-            | (OutputType::Geometry2D, OutputType::Mixed)
-            | (OutputType::Geometry3D, OutputType::Mixed)
-            | (OutputType::Mixed, _) => OutputType::Mixed,
+            | (OutputType::Geometry2D, OutputType::Any)
+            | (OutputType::Geometry3D, OutputType::Any)
+            | (OutputType::Any, _) => OutputType::Any,
         }
     }
 }
@@ -46,7 +47,7 @@ impl std::fmt::Display for OutputType {
                 Self::NotDetermined => "Undetermined",
                 Self::Geometry2D => "2D",
                 Self::Geometry3D => "3D",
-                Self::Mixed => "2D/3D",
+                Self::Any => "2D/3D",
             }
         )
     }

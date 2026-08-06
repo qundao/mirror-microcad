@@ -29,7 +29,7 @@ fn test_tuple_type_match() {
         .collect(),
         positional: Default::default(),
     };
-    assert!(args.is_matching(&params));
+    assert!(args.matches_multiplicity(&params));
 }
 
 #[test]
@@ -45,10 +45,16 @@ fn test_common_type() {
 }
 
 #[test]
-fn type_matching() {
-    assert!(Type::scalar().is_matching(&Type::scalar()));
-    assert!(!Type::scalar().is_matching(&Type::Integer));
-    assert!(Type::Integer.is_matching(&Type::scalar()));
-    assert!(!Type::scalar().is_matching(&Type::String));
-    assert!(!Type::String.is_matching(&Type::scalar()));
+fn type_match() {
+    assert!(Type::scalar().matches(&Type::scalar()));
+    assert!(!Type::scalar().matches(&Type::Integer));
+    assert!(Type::Integer.matches(&Type::scalar()));
+    assert!(!Type::scalar().matches(&Type::String));
+    assert!(!Type::String.matches(&Type::scalar()));
+
+    assert!(Type::Any.matches(&Type::Any));
+    assert!(Type::Any.matches(&Type::scalar()));
+    assert!(Type::scalar().matches(&Type::Any));
+
+    assert!(!Type::Invalid.matches(&Type::Any));
 }

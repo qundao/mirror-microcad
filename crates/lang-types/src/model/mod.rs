@@ -3,7 +3,7 @@
 
 //! Model tree module
 
-use derive_more::Deref;
+use derive_more::{Deref, Display};
 
 pub mod attribute;
 pub mod creator;
@@ -14,7 +14,7 @@ pub mod ops;
 pub mod output_type;
 pub mod workpiece;
 
-use microcad_lang_base::{Identifier, element::Visibility};
+use microcad_lang_base::{Identifier, TreeDisplay, TreeState, element::Visibility};
 use serde::{Deserialize, Serialize};
 
 pub use attribute::Attributes;
@@ -23,6 +23,8 @@ pub use element::{Element, ElementKind};
 
 pub use creator::Creator;
 pub use output_type::OutputType;
+
+use crate::{Ty, Type, Value};
 
 #[derive(Debug, PartialEq, Clone, Copy, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct ModelHandle(pub usize);
@@ -37,7 +39,7 @@ impl ModelHandle {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct ModelTree {
     nodes: Vec<Model>,
 }
@@ -120,9 +122,30 @@ impl ModelTree {
     }
 }
 
+impl Ty for ModelTree {
+    fn ty(&self) -> Type {
+        self.root().map(|n| n.ty()).unwrap_or(Type::Invalid)
+    }
+}
+
 impl From<Model> for ModelTree {
     fn from(root: Model) -> Self {
         Self { nodes: vec![root] }
+    }
+}
+
+impl TreeDisplay for ModelTree {
+    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
+        match self.root() {
+            Some(root) => root.tree_print(f, depth),
+            None => write!(f, "<EMPTY TREE>"),
+        }
+    }
+}
+
+impl std::fmt::Display for ModelTree {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.tree_print(f, TreeState::new_display())
     }
 }
 
@@ -222,7 +245,8 @@ impl FromIterator<ModelHandle> for Models {
     }
 }
 
-#[derive(Debug, PartialEq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Display, Clone, PartialEq, Hash, Serialize, Deserialize)]
+#[display("{inner}")]
 pub struct Model {
     /// Parent of the model
     pub parent: Option<ModelHandle>,
@@ -234,7 +258,49 @@ pub struct Model {
     pub children: Models,
 }
 
-#[derive(Debug, PartialEq, Hash, Serialize, Deserialize)]
+impl Model {
+    pub fn with_name(mut self, id: Identifier) -> Self {
+        self.inner.id = Some(id);
+        self
+    }
+
+    pub fn with_visibility(mut self, vis: Visibility) -> Self {
+        self.inner.visibility = vis;
+        self
+    }
+
+    pub fn with_attr(mut self, attr: Attributes) -> Self {
+        self.inner.attr = attr;
+        self
+    }
+
+    pub fn output_type(&self) -> OutputType {
+        self.inner.element.output_type()
+    }
+}
+
+impl Ty for Model {
+    fn ty(&self) -> crate::Type {
+        Type::Model(self.output_type())
+    }
+}
+
+impl From<Value> for Model {
+    fn from(value: Value) -> Self {
+        Model {
+            parent: None,
+            inner: ModelInner {
+                id: None,
+                visibility: Default::default(),
+                attr: Default::default(),
+                element: Element::from(value),
+            },
+            children: Default::default(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub struct ModelInner {
     /// An optional id
     pub id: Option<Identifier>,
@@ -247,6 +313,20 @@ pub struct ModelInner {
 
     /// Model elements
     pub element: Element,
+}
+
+impl std::fmt::Display for ModelInner {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.attr)?;
+        if Visibility::Public == self.visibility {
+            write!(f, "prop ")?;
+        }
+        if let Some(id) = &self.id {
+            write!(f, "{id} = ")?;
+        }
+
+        write!(f, "{}", self.element)
+    }
 }
 
 /*
@@ -339,5 +419,29 @@ impl<'tree> ModelRef<'tree> {
     /// Ancestors iterator.
     pub fn ancestors(&self) -> iter::Ancestors<'tree> {
         iter::Ancestors::new(self.clone())
+    }
+}
+
+impl<'tree> Ty for ModelRef<'tree> {
+    fn ty(&self) -> Type {
+        self.model().ty()
+    }
+}
+
+impl<'tree> TreeDisplay for ModelRef<'tree> {
+    fn tree_print(
+        &self,
+        f: &mut std::fmt::Formatter,
+        state: microcad_lang_base::TreeState,
+    ) -> std::fmt::Result {
+        writeln!(
+            f,
+            "{:indent$}{}",
+            "",
+            self.model(),
+            indent = state.indent_spaces()
+        )?;
+        self.children()
+            .try_for_each(|m| m.tree_print(f, state.indented()))
     }
 }

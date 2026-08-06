@@ -23,18 +23,21 @@ pub use value_access::*;
 pub use value_error::*;
 pub use value_list::*;
 
-use crate::{Angle, Color, Integer, Length, Mat3, QuantityType, Scalar, Type, Vec2, Vec3};
+use crate::{
+    Angle, Color, Integer, Length, Mat3, ModelTree, QuantityType, Scalar, Type, Vec2, Vec3,
+};
 
-use derive_more::From;
+use derive_more::{Display, From};
 use serde::{Deserialize, Serialize};
 
 pub type ValueResult<Type = Value> = std::result::Result<Type, ValueError>;
 
 /// A variant value with attached source code reference.
-#[derive(Clone, Debug, Default, PartialEq, From, Serialize, Deserialize)]
+#[derive(Clone, Debug, Display, Hash, Default, PartialEq, From, Serialize, Deserialize)]
 pub enum Value {
-    /// Invalid value (used for error handling).
+    /// A None Value.
     #[default]
+    #[display("<NO VALUE>")]
     None,
     /// A quantity value.
     Quantity(Quantity),
@@ -50,6 +53,8 @@ pub enum Value {
     Tuple(Box<Tuple>),
     /// A matrix.
     Matrix(Box<Matrix>),
+    /// A model tree
+    Model(ModelTree),
 }
 
 impl Value {
@@ -124,36 +129,7 @@ impl crate::ty::Ty for Value {
             Value::Array(list) => list.ty(),
             Value::Tuple(tuple) => tuple.ty(),
             Value::Matrix(matrix) => matrix.ty(),
-        }
-    }
-}
-
-impl std::fmt::Display for Value {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Value::None => write!(f, "<NO VALUE>"),
-            Value::Integer(n) => write!(f, "{n}"),
-            Value::Quantity(q) => write!(f, "{q}"),
-            Value::Bool(b) => write!(f, "{b}"),
-            Value::String(s) => write!(f, "{s}"),
-            Value::Array(l) => write!(f, "{l}"),
-            Value::Tuple(t) => write!(f, "{t}"),
-            Value::Matrix(m) => write!(f, "{m}"),
-        }
-    }
-}
-
-impl std::hash::Hash for Value {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        match self {
-            Value::None => std::mem::discriminant(&Value::None).hash(state),
-            Value::Quantity(quantity) => quantity.hash(state),
-            Value::Bool(b) => b.hash(state),
-            Value::Integer(i) => i.hash(state),
-            Value::String(s) => s.hash(state),
-            Value::Array(array) => array.hash(state),
-            Value::Tuple(tuple) => tuple.hash(state),
-            Value::Matrix(matrix) => matrix.hash(state),
+            Value::Model(model) => model.ty(),
         }
     }
 }

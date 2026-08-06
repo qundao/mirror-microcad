@@ -7,7 +7,7 @@ use crate::{ty::*, value::*};
 use derive_more::{Deref, DerefMut};
 
 /// List of values
-#[derive(Clone, Default, Deref, DerefMut, Serialize, Deserialize)]
+#[derive(Clone, Default, Deref, DerefMut, Hash, Serialize, Deserialize)]
 pub struct ValueList(Vec<Value>);
 
 impl ValueList {

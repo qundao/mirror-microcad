@@ -135,7 +135,7 @@ impl std::ops::Sub for Type {
             (Array(lhs), Array(rhs)) => *lhs - *rhs,
             (Tuple(lhs), Tuple(rhs)) => *lhs - *rhs,
             (Matrix(lhs), Matrix(rhs)) => lhs - rhs,
-            (Model, Model) => Ok(Model),
+            (Model(lhs), Model(rhs)) if lhs == rhs => Ok(Model(lhs)),
             (lhs, rhs) => Err(TypeError::UnsupportedBinaryOperator {
                 op: BinaryOperator::Add,
                 lhs,
@@ -195,7 +195,7 @@ impl std::ops::BitOr for Type {
         use Type::*;
         let lhs = self;
         match (lhs, rhs) {
-            (Model, Model) => Ok(Model),
+            (Model(lhs), Model(rhs)) if lhs == rhs => Ok(Model(lhs)),
             (lhs, rhs) => Err(TypeError::UnsupportedBinaryOperator {
                 op: BinaryOperator::Union,
                 lhs,
@@ -212,7 +212,7 @@ impl std::ops::BitAnd for Type {
         use Type::*;
         let lhs = self;
         match (lhs, rhs) {
-            (Model, Model) => Ok(Model),
+            (Model(lhs), Model(rhs)) if lhs == rhs => Ok(Model(lhs)),
             (lhs, rhs) => Err(TypeError::UnsupportedBinaryOperator {
                 op: BinaryOperator::Intersect,
                 lhs,

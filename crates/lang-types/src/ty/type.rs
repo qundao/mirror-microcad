@@ -6,7 +6,7 @@
 use derive_more::From;
 use serde::{Deserialize, Serialize};
 
-use crate::ty::*;
+use crate::{model::OutputType, ty::*};
 
 /// µcad Basic Types
 #[derive(Clone, Debug, Default, PartialEq, From, Eq, Hash, Serialize, Deserialize)]
@@ -30,8 +30,10 @@ pub enum Type {
     Tuple(Box<TupleType>),
     /// Matrix type: `Matrix3x3`.
     Matrix(MatrixType),
+    /// Function type: (x: Length, y: Length) -> Length,
+    Function(FunctionType),
     /// Model.
-    Model,
+    Model(OutputType),
 }
 
 impl Type {
@@ -60,17 +62,17 @@ impl Type {
             || (*rhs == Type::Integer && *self == Type::scalar())
     }
 
-    /// Returns if the given type or it's inner type matches the given parameter type.
-    pub fn is_matching(&self, param_type: &Type) -> bool {
-        match (self, param_type) {
-            (_, Type::Quantity(QuantityType::Scalar)) => {
-                self == &Type::scalar()
-                    || self == &Type::Integer
-                    || self.is_array_of(&Type::scalar())
-                    || self.is_array_of(&Type::Integer)
+    /// Returns if the given type or it's inner type matches the given type.
+    pub fn matches(&self, other: &Type) -> bool {
+        match (self, other) {
+            (lhs, Type::Quantity(QuantityType::Scalar)) if *lhs != Type::Any => {
+                self == &Type::scalar() || self == &Type::Integer
             }
-            (Type::Tuple(ty_s), Type::Tuple(ty_p)) => ty_s.is_matching(ty_p),
-            _ => self == param_type || self.is_array_of(param_type),
+            // Invalid types never match
+            (Type::Tuple(ty_s), Type::Tuple(ty_p)) => ty_s.matches_multiplicity(ty_p),
+            (Type::Invalid, _) | (_, Type::Invalid) => false,
+            (Type::Any, _) | (_, Type::Any) => true,
+            _ => self == other,
         }
     }
 }
@@ -105,7 +107,7 @@ impl std::str::FromStr for Type {
             "Volume" => Ok(Type::Quantity(QuantityType::Volume)),
             "Weight" => Ok(Type::Quantity(QuantityType::Weight)),
             "Density" => Ok(Type::Quantity(QuantityType::Density)),
-            "Model" => Ok(Type::Model),
+            "Model" => Ok(Type::Model(OutputType::Any)),
             _ => Err(TypeError::UnknownType(ty.to_string())),
         }
     }
@@ -123,7 +125,8 @@ impl std::fmt::Display for Type {
             Self::Array(t) => write!(f, "[{t}]"),
             Self::Tuple(t) => write!(f, "{t}"),
             Self::Matrix(t) => write!(f, "{t}"),
-            Self::Model => write!(f, "Model"),
+            Self::Function(t) => write!(f, "{t}"),
+            Self::Model(output_type) => write!(f, "Model({output_type})"),
         }
     }
 }
