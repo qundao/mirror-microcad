@@ -1,78 +1,65 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Display trait for tree like output
+//! Display trait for tree-like output
 
-/// Trait for displaying a tree
+use std::fmt;
+
+/// Trait for displaying a tree hierarchy.
 pub trait TreeDisplay {
-    /// Write item into `f` and use `{:depth$}` syntax in front of your single line
-    /// output to get proper indention.
-    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result;
+    /// Write item into `f` using the current `state` for padding and formatting.
+    fn tree_print(&self, f: &mut fmt::Formatter<'_>, state: TreeState) -> fmt::Result;
 }
 
-/// Indention size
-const INDENT: usize = 2;
+/// Indentation size (number of spaces per depth level)
+const INDENT_SIZE: usize = 2;
 
-/// Indention depth counter
-#[derive(derive_more::Deref, Clone, Copy)]
+/// Formatting state passed down through tree nodes
+#[derive(Clone, Copy, Debug)]
 pub struct TreeState {
-    /// Current depth.
-    #[deref]
-    pub depth: usize,
-    /// Print in debug mode
+    /// Current tree depth (0 = root level).
+    pub level: usize,
+    /// Whether to print in debug mode.
     pub debug: bool,
 }
 
 impl TreeState {
-    /// Create new tree state for std::fmt::Display
     pub fn new_display() -> Self {
         Self {
-            depth: 0,
+            level: 0,
             debug: false,
         }
     }
 
-    /// Create new tree state for std::fmt::Debug
-    pub fn new_debug(depth: usize) -> Self {
-        Self { depth, debug: true }
-    }
-    /// Change indention one step deeper
-    pub fn indent(&mut self) {
-        self.depth += INDENT
+    pub fn new_debug(level: usize) -> Self {
+        Self { level, debug: true }
     }
 
-    /// Return a indention which is one step deeper
+    /// Total spaces required for current level padding.
+    pub fn indent_spaces(&self) -> usize {
+        self.level * INDENT_SIZE
+    }
+
+    /// Returns a new state incremented by one depth level.
     pub fn indented(&self) -> Self {
         Self {
-            depth: self.depth + INDENT,
+            level: self.level + 1,
             debug: self.debug,
         }
     }
 }
 
-/// print syntax via std::fmt::Display
+/// Helper wrapper for formatting a `TreeDisplay` item via `Display` or `Debug`.
 pub struct FormatTree<'a, T: TreeDisplay>(pub &'a T);
 
-impl<T: TreeDisplay> std::fmt::Display for FormatTree<'_, T> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.0.tree_print(
-            f,
-            TreeState {
-                depth: 2,
-                debug: false,
-            },
-        )
+impl<T: TreeDisplay> fmt::Display for FormatTree<'_, T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.tree_print(f, TreeState::new_display())
     }
 }
 
-impl<T: TreeDisplay> std::fmt::Debug for FormatTree<'_, T> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.0.tree_print(
-            f,
-            TreeState {
-                depth: 2,
-                debug: true,
-            },
-        )
+impl<T: TreeDisplay> fmt::Debug for FormatTree<'_, T> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.tree_print(f, TreeState::new_debug(0))
     }
 }
