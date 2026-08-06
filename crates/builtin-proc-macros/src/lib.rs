@@ -8,13 +8,13 @@ mod derive;
 use derive::derive_workbench_definition;
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse::{Parse, ParseStream}, *};
+use syn::*;
 
 /// Get all doc comments as concetenated string.
 fn get_doc_block(attrs: &[Attribute]) -> String {
-    attrs.iter().filter_map(|attr| 
+    attrs.iter().filter_map(|attr|
         // Parse the meta of the attribute
-        if attr.path().is_ident("doc") 
+        if attr.path().is_ident("doc")
             && let syn::Meta::NameValue(nv) = &attr.meta
             && let syn::Expr::Lit(ExprLit{ lit: Lit::Str(lit_str), ..}) = &nv.value {
             // Return the string value, e.g., "Doc test"
@@ -24,7 +24,6 @@ fn get_doc_block(attrs: &[Attribute]) -> String {
         }
     ).collect::<Vec<_>>().join("\n")
 }
-
 
 #[proc_macro_derive(BuiltinPrimitive2D)]
 pub fn derive_primitive2d(input: TokenStream) -> TokenStream {
@@ -51,8 +50,6 @@ pub fn derive_operation3d(input: TokenStream) -> TokenStream {
     derive_workbench_definition(input, "Operation", "Geometry3D")
 }
 
-
-
 #[proc_macro_attribute]
 pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let mut module = parse_macro_input!(item as ItemMod);
@@ -66,7 +63,7 @@ pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
         for item in items.iter() {
             if let Item::Fn(func) = item {
                 let fn_name = func.sig.ident.to_string();
-                
+
                 // Accumulate namespace: "core" + "::" + "add" => "core::add"
                 let full_path = format!("__mu::{}::{}", mod_name, fn_name);
                 let hash = microcad_hash::fnv1a_hash(&full_path);
