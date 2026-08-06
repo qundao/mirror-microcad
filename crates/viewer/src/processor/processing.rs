@@ -58,6 +58,7 @@ impl Processor {
         let compiler_params = CompileParameters {
             resolve: compile::ResolveParameters {
                 search_paths: self.context.search_paths.clone(),
+                no_builtin: false,
             },
         };
         let render_params = RenderParameters {
