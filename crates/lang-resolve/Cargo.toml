@@ -26,9 +26,7 @@ microcad-lang-base = { workspace = true }
 microcad-lang-proc-macros = { workspace = true }
 microcad-lang-lower = { workspace = true }
 microcad-lang-types = { workspace = true }
-
-# Dependent on io feature
-toml = { version = "1.1.2", optional = true }
+microcad-package = { workspace = true }
 
 # Dependent on parse feature
 microcad-lang-parse = { workspace = true, optional = true }
@@ -40,8 +38,7 @@ insta = "1.45.0"
 
 [features]
 default = [
-    "io",    # This feature is supposed to be removed once we have a file handling abstraction.
+    #"io",    # This feature is supposed to be removed once we have a file handling abstraction.
     "parse", # This feature is supposed to removed once we have an abstraction in `microcad-driver` 
 ]
-io = ["dep:toml"]
 parse = ["dep:microcad-lang-parse"]

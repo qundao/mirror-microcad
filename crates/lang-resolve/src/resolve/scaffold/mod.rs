@@ -9,10 +9,10 @@ mod tree_builder;
 
 use crate::{
     Mir, ResolveContext, mir, resolve::ResolveError, scaffold::scaffoldable::Scaffoldables,
-    tree::SymbolMetadata,
 };
 use microcad_lang_base::{CompilationResult, Diagnostics, Identifier, Refer, SrcRef, SrcReferrer};
 
+use microcad_package::tree::SymbolMetadata;
 pub use path_resolver::PathResolver;
 pub use tree_builder::TreeBuilder;
 

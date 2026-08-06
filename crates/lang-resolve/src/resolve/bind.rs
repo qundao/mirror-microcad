@@ -360,27 +360,6 @@ where
     }
 }
 
-impl<'ctx, Expr> Bind<'ctx> for ir::ArrayExpressionInner<Expr>
-where
-    Expr: Bind<'ctx>,
-{
-    fn bind(&mut self, binder: &mut Binder<'ctx>) -> ResolveResult<()> {
-        match self {
-            ir::ArrayExpressionInner::List(list_expression) => list_expression.bind(binder),
-            ir::ArrayExpressionInner::Range(range_expression) => todo!(),
-        }
-    }
-}
-
-impl<'ctx, Expr> Bind<'ctx> for ir::ArrayExpression<Expr>
-where
-    Expr: Bind<'ctx>,
-{
-    fn bind(&mut self, binder: &mut Binder<'ctx>) -> ResolveResult<()> {
-        self.inner.bind(binder)
-    }
-}
-
 impl<'ctx> Bind<'ctx> for mir::ConstantExpression {
     fn bind(&mut self, binder: &mut Binder<'ctx>) -> ResolveResult<()> {
         use mir::ConstantExpression;
@@ -389,10 +368,9 @@ impl<'ctx> Bind<'ctx> for mir::ConstantExpression {
             ConstantExpression::Invalid | ConstantExpression::Literal(_) => {}
             ConstantExpression::Name(name) => name.bind(binder)?,
             ConstantExpression::FormatString(format_string) => todo!(),
-            ConstantExpression::ArrayExpression(array_expression) => todo!(),
-            ConstantExpression::TupleExpression(tuple_expression) => todo!(),
-            ConstantExpression::BinaryOp(binary_op) => todo!(),
-            ConstantExpression::UnaryOp(unary_op) => todo!(),
+            ConstantExpression::List(array_expression) => todo!(),
+            ConstantExpression::Tuple(tuple_expression) => todo!(),
+            ConstantExpression::Call(call) => todo!(),
         })
     }
 }
@@ -406,16 +384,11 @@ impl<'ctx> Bind<'ctx> for mir::FunctionExpression {
             FunctionExpression::Literal(literal) => {}
             FunctionExpression::Name(name) => name.bind(binder)?,
             FunctionExpression::FormatString(format_string) => todo!(),
-            FunctionExpression::ArrayExpression(array_expression) => todo!(),
-            FunctionExpression::TupleExpression(tuple_expression) => todo!(),
+            FunctionExpression::List(array_expression) => todo!(),
+            FunctionExpression::Tuple(tuple_expression) => todo!(),
             FunctionExpression::Scope(scope) => todo!(),
             FunctionExpression::If(_) => todo!(),
             FunctionExpression::Call(call) => todo!(),
-            FunctionExpression::BinaryOp(binary_op) => todo!(),
-            FunctionExpression::UnaryOp(unary_op) => todo!(),
-            FunctionExpression::ArrayAccess(element_access) => todo!(),
-            FunctionExpression::TupleAccess(element_access) => todo!(),
-            FunctionExpression::MethodCall(element_access) => todo!(),
         })
     }
 }
@@ -432,14 +405,15 @@ impl<'ctx> Bind<'ctx> for mir::Function {
                         // Add local *after* we have bound the expression.
                         binder.declare_local(local_assignment.id.clone());
                     }
-                    FunctionStatement::Expression(function_expression) => {
+                    FunctionStatement(function_expression) => {
                         function_expression.bind(binder)?;
                     }
-                    FunctionStatement::Return(return_statement) => match return_statement.value {
+                    FunctionStatement::Return(return_statement) => match return_statement.expr {
                         Some(ref mut value) => {
                             value.bind(binder)?;
+                            return Ok(());
                         }
-                        None => {}
+                        None => return Ok(()),
                     },
                 }
             }

@@ -4,16 +4,15 @@
 //! The resolve compiler stage.
 //!
 //! It consists of the following steps:
-//! 1) `scaffold`: Build the symbol tree.
-//!     a) Load built-in library.
-//!     b) Load external dependencies (like `std`).
-//!     c) Load source files inside workspace.
-//!
-//! 2) `bind`: Resolve [`mir::SymbolPath`] to [`SymbolId`]s/[`LocalId`]s.
-//! 3) `case_check`: Validate identifier casing rules.
-//! 4) `type_check`: Verify expression types.
-//! 5) `normalize`: Canonicalize and simplify expressions.
-//! 6) `reduce`: Lower to RST and evaluate attributes.
+//! 1) Load the (optional) manifest file
+//! 2) Prepare built-in library.
+//! 3) Load all external dependencies, including `std`.
+//! 4) Load source files inside the workspace.
+//! 5) `bind`: Resolve [`mir::SymbolPath`] to [`SymbolId`]s/[`LocalId`]s.
+//! 6) `case_check`: Validate identifier casing rules.
+//! 7) `type_check`: Verify expression types.
+//! 8) `normalize`: Canonicalize and simplify expressions.
+//! 9) `reduce`: Lower to RST and evaluate attributes.
 //!
 //! Each sub-step is implemented in a separate module.
 
@@ -25,12 +24,10 @@ mod error;
 mod resolver;
 mod type_check;
 
-use microcad_lang_base::{CompilationResult, Diagnostics, HashId, Source};
+use microcad_lang_base::{CompilationResult, Diagnostics};
 
 use crate::{
-    Rst,
     mir::{self, UnresolvedSymbolDef, UnresolvedSymbolTree},
-    rst,
     scaffold::TreeBuilder,
 };
 

@@ -3,8 +3,8 @@
 
 use crate::resolve::ResolveError;
 use crate::scaffold::Scaffold;
-use crate::tree::SymbolHandle;
 use crate::{ResolveContext, mir};
+use microcad_package::tree::SymbolHandle;
 
 pub struct TreeBuilder {
     pub tree: mir::UnresolvedSymbolTree,

@@ -5,15 +5,10 @@
 
 mod resolve;
 
-pub(crate) mod tree;
-
 pub mod mir;
-pub mod rst;
 
-/// The mid-level intermediat
+/// The mid-level intermediate represenation (MIR).
 pub use mir::Mir;
-
-pub use rst::Rst;
 
 pub use resolve::{ResolveContext, ResolveResult, resolve, scaffold};
 

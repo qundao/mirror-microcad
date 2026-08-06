@@ -4,14 +4,14 @@
 //! Mid-level intermediate representation (MIR).
 
 use derive_more::From;
-use microcad_lang_base::{HashId, Id, Manifest, Refer, SrcRef};
+use microcad_lang_base::{HashId, Id, Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Artifact;
 use serde::{Deserialize, Serialize};
 
 use microcad_lang_lower::ir;
 
-use crate::Rst;
-pub use crate::tree::{SymbolHandle, SymbolMetadata};
+pub use microcad_package::tree::{SymbolHandle, SymbolMetadata};
+use microcad_package::{manifest::Manifest, rst::Rst};
 
 pub type SymbolPath = ir::SymbolPath;
 pub type Type = ir::Type;
@@ -26,9 +26,15 @@ pub enum Name {
     ToBeResolved(ir::SymbolPath),
 }
 
-pub type ConstantExpression = ir::ConstantExpression<Name>;
+impl ir::NameSpec for Name {}
 
-pub type ArrayExpression = ir::ArrayExpression<ConstantExpression>;
+impl SrcReferrer for Name {
+    fn src_ref(&self) -> SrcRef {
+        SrcRef::none()
+    }
+}
+
+pub type ConstantExpression = ir::ConstantExpression<Name>;
 
 pub type Attributes = ir::Attributes<Name>;
 
@@ -123,12 +129,6 @@ pub struct Workspace {
     name: Option<Id>,
 }
 
-impl From<Option<Manifest>> for Workspace {
-    fn from(manifest: Option<Manifest>) -> Self {
-        todo!()
-    }
-}
-
 impl From<Workspace> for UnresolvedSymbolTree {
     fn from(workspace: Workspace) -> Self {
         UnresolvedSymbol::new(
@@ -172,11 +172,11 @@ pub enum UnresolvedSymbolDef {
     Wildcard(Wildcard),
 }
 
-pub type UnresolvedSymbol = crate::tree::Symbol<UnresolvedSymbolDef>;
+pub type UnresolvedSymbol = microcad_package::tree::Symbol<UnresolvedSymbolDef>;
 
-pub type UnresolvedSymbolRef<'mir> = crate::tree::SymbolRef<'mir, UnresolvedSymbolDef>;
+pub type UnresolvedSymbolRef<'mir> = microcad_package::tree::SymbolRef<'mir, UnresolvedSymbolDef>;
 
-pub type UnresolvedSymbolTree = crate::tree::SymbolTree<UnresolvedSymbolDef>;
+pub type UnresolvedSymbolTree = microcad_package::tree::SymbolTree<UnresolvedSymbolDef>;
 
 #[derive(Debug, PartialEq, Artifact, Serialize, Deserialize)]
 pub struct Mir {

@@ -4,10 +4,9 @@
 //! Errors that occur during resolving symbol trees.
 
 use microcad_lang_base::{HashId, SrcRef, SrcReferrer, element::Case};
+use microcad_lang_types::Type;
 use miette::Diagnostic;
 use thiserror::Error;
-
-use crate::rst;
 
 /// Resolve error.
 #[derive(Debug, Error, Diagnostic)]
@@ -22,10 +21,10 @@ pub enum ResolveError {
     },
     #[error("Type mismatch: {specified} != {actual}")]
     TypeMismatch {
-        specified: rst::Type,
+        specified: Type,
         #[label("Specified type")]
         specified_src_ref: SrcRef,
-        actual: rst::Type,
+        actual: Type,
         #[label("Actual type")]
         actual_src_ref: SrcRef,
     },
