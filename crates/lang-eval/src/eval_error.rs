@@ -5,10 +5,10 @@
 
 use microcad_builtin::BuiltinError;
 use microcad_lang_base::{Identifier, IdentifierList, SrcRef, element::WorkbenchKind};
-use microcad_lang_types::{Integer, Type, ValueError, ty::TypeList};
-use microcad_model::output_type::OutputType;
+use microcad_lang_types::{Integer, Type, ValueError, model::OutputType, ty::TypeList};
 use microcad_package::tree::SymbolPath;
 use miette::Diagnostic;
+
 use thiserror::Error;
 
 /// Evaluation error.
