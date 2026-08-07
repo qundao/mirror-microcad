@@ -5,9 +5,11 @@
 
 use serde::{Deserialize, Serialize};
 
-/// Generate a builtin id for a string.
-pub const fn __mu(name: &str) -> BuiltinId {
-    BuiltinId::from_name(name)
+#[macro_export]
+macro_rules! __mu {
+    ($($path:ident)::+) => {
+        $crate::BuiltinId::from_name(concat!("__mu::", stringify!($($path)::+)))
+    };
 }
 
 /// Strongly-typed wrapper around raw builtin u64 hashes
