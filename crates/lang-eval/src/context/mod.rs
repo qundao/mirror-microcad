@@ -5,9 +5,9 @@ use derive_more::From;
 
 use microcad_builtin::BuiltinRegistry;
 use microcad_lang_base::{BuiltinId, HashMap, Identifier};
-use microcad_lang_types::{Tuple, Value};
+use microcad_lang_types::{Arguments, Value};
 
-use crate::{Eval, EvalError};
+use crate::EvalError;
 
 /// A map of locals.
 ///
@@ -22,10 +22,9 @@ pub struct FunctionFrame {
 }
 
 impl FunctionFrame {
-    pub fn new(args: Tuple) -> Self {
+    pub fn new(args: Arguments) -> Self {
         let locals = LocalTable(
-            args.named
-                .iter()
+            args.iter()
                 .map(|(id, value)| (id.clone(), value.clone()))
                 .collect(),
         );

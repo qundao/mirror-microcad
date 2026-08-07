@@ -20,9 +20,7 @@ pub struct Tuple {
 #[macro_export]
 macro_rules! tuple {
         ($($key:ident = $value:expr),*) => {
-                [$( (stringify!($key), $crate::value::Value::from($value)) ),* ]
-                    .iter()
-                    .into()
+                $crate::Tuple::from_iter([$( ($crate::Identifier::no_ref(stringify!($key)), $crate::Value::from($value)) ),* ].into_iter())
     };
 }
 

@@ -5,15 +5,14 @@
 
 use microcad_builtin::BuiltinEvalContext;
 use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
-use microcad_lang_types::{Array, Tuple, Ty, Type, Value, ValueList};
+use microcad_lang_types::{ArgumentValue, Array, Tuple, Ty, Type, Value, ValueList};
 use microcad_package::{
     builtin,
     rst::{self, ResolvedName},
 };
 
 use crate::{
-    ArgumentMatch, ArgumentValue, ArgumentValueList, CallTrait, Eval, EvalContext, EvalError,
-    EvalResult,
+    ArgumentMatch, ArgumentValueList, CallTrait, Eval, EvalContext, EvalError, EvalResult,
     context::{FunctionFrame, FunctionScopeFrame},
 };
 
@@ -108,7 +107,7 @@ impl Eval<ArgumentValue> for rst::function::Argument {
 
 impl Eval<ArgumentValueList> for rst::function::ArgumentList {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<ArgumentValueList> {
-        let mut map: Vec<ArgumentValue> = self
+        let map: Vec<ArgumentValue> = self
             .args
             .iter()
             .map(|arg| arg.eval(context))
@@ -162,6 +161,7 @@ impl Eval<FlowSignal> for rst::function::Call {
             ResolvedName::BuiltinFunction(builtin) => {
                 let args = self.args.eval(context)?;
 
+                // TODO finish this here.
                 let args = ArgumentMatch::find_match(
                     &args,
                     &[builtin::parameter!(lhs), builtin::parameter!(rhs)]

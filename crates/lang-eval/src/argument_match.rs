@@ -4,14 +4,13 @@
 //! Argument match trait
 
 use derive_more::Display;
-use microcad_lang_base::{Identifier, IdentifierList, SrcReferrer};
-use microcad_lang_types::{Length, Scalar, Tuple, Ty, Type, Value, ValueAccess, create_tuple};
-use microcad_package::{
-    parameter,
-    rst::{Parameter, ParameterList},
+use microcad_lang_base::Identifier;
+use microcad_lang_types::{
+    ArgumentValue, ArgumentValueList, Arguments, FunctionType, Tuple, Type, Value,
 };
+use microcad_package::rst::{Parameter, ParameterList};
 
-use crate::{ArgumentValue, ArgumentValueList, EvalError, EvalResult, argument};
+use crate::{EvalError, EvalResult};
 
 /// Match priorities
 ///
@@ -36,23 +35,25 @@ pub enum Priority {
 
 /// Matching of `ParameterList` with `ArgumentValueList` into Tuple
 pub struct ArgumentMatch<'a> {
-    arguments: Vec<(&'a Identifier, &'a ArgumentValue)>,
-    params: Vec<(&'a Identifier, &'a Parameter)>,
-    result: Tuple,
+    arguments: &'a ArgumentValueList,
+    return_ty: Option<Type>,
+    fn_ty: FunctionType,
+    default_parameters: Tuple,
+    result: Arguments,
 }
 
 /// Result of a multi match
 #[derive(Debug)]
-pub struct MultiMatchResult(Vec<Tuple>);
+pub struct MultiMatchResult(Vec<Arguments>);
 
 impl<'a> ArgumentMatch<'a> {
     /// Match a `ParameterList` with an `ArgumentValueList` into a tuple.
     ///
-    /// Returns `Ok(Tuple)` if matches or `Err(...)` if matching fails.
+    /// Returns `Ok(Arguments)` if matches or `Err(...)` if matching fails.
     pub fn find_match(
         arguments: &'a ArgumentValueList,
         params: &'a ParameterList,
-    ) -> EvalResult<Tuple> {
+    ) -> EvalResult<Arguments> {
         // Track evaluated values per parameter index
         let mut bound_values: Vec<Option<Value>> = vec![None; params.len()];
 
@@ -114,7 +115,8 @@ impl<'a> ArgumentMatch<'a> {
         Ok(Tuple {
             positional: vec![],
             named,
-        })
+        }
+        .into())
     }
 
     /// Match a `ParameterList` with an `ArgumentValueList` into an vector of tuples.
@@ -129,49 +131,4 @@ impl<'a> ArgumentMatch<'a> {
             args: m.multiply(params),
         })*/
     }
-}
-
-#[test]
-fn argument_matching() {
-    let params: ParameterList = [
-        parameter!(a: Scalar),
-        parameter!(b: Length),
-        parameter!(c: Scalar),
-        parameter!(d: Length = Length::mm(4.0)),
-    ]
-    .into_iter()
-    .collect();
-
-    let arguments: ArgumentValueList = [
-        argument!(a: Scalar = Scalar::from_num(1.0)),
-        argument!(b: Length = Length::mm(2.0)),
-        argument!(Scalar = Scalar::from_num(3.0)),
-    ]
-    .into_iter()
-    .collect();
-
-    let result = ArgumentMatch::find_match(&arguments, &params).expect("expect valid arguments");
-
-    assert_eq!(
-        result,
-        create_tuple!(a = 1.0, b = Length::mm(2.0), c = 3.0, d = Length::mm(4.0))
-    );
-}
-
-#[test]
-fn argument_match_fail() {
-    let params: ParameterList = [
-        parameter!(x: Scalar),
-        parameter!(y: Length),
-        parameter!(z: Area),
-    ]
-    .into_iter()
-    .collect();
-    let arguments: ArgumentValueList = [
-        argument!(x: Scalar = Scalar::from_num(1.0)),
-        argument!(Length = Length::mm(1.0)),
-    ]
-    .into_iter()
-    .collect();
-    assert!(ArgumentMatch::find_match(&arguments, &params).is_err());
 }

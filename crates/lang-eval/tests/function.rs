@@ -4,8 +4,8 @@
 //! Tests for evaluating functions.
 
 use microcad_lang_base::{__mu, Identifier, SrcRef};
-use microcad_lang_eval::{ArgumentValueList, CallTrait, EvalContext, argument};
-use microcad_lang_types::{Integer, Type, Value};
+use microcad_lang_eval::{ArgumentValueList, CallTrait, EvalContext, argument_value};
+use microcad_lang_types::{Integer, Type, Value, function_type};
 use microcad_package::{
     parameter,
     rst::{
@@ -48,8 +48,8 @@ fn arg(name: &str, expr: FunctionExpression) -> Argument {
 #[test]
 fn return_a() {
     let f = Function {
-        parameters: [parameter!(a: Integer)].into_iter().collect(),
-        return_ty: Some(Type::Integer),
+        ty: function_type!((a: Type::Integer) -> Type::Integer),
+        default_parameters: tuple(),
         statements: statements(
             [ReturnStatement {
                 expr: Some(name_expr("a")),
@@ -63,7 +63,7 @@ fn return_a() {
     let mut context = EvalContext::new();
     let result = f
         .call(
-            &ArgumentValueList::from_iter([argument!(a: Integer = Integer::from_num(2.0))]),
+            &ArgumentValueList::from_iter([argument_value!(a: Integer = Integer::from_num(2.0))]),
             &mut context,
         )
         .expect("No eval error");
@@ -74,10 +74,8 @@ fn return_a() {
 #[test]
 fn add() {
     let f = Function {
-        parameters: [parameter!(a: Integer), parameter!(b: Integer)]
-            .into_iter()
-            .collect(),
-        return_ty: Some(Type::Integer),
+        ty: function_type!((a: Type::Integer, b: Type::Integer) -> Type::Integer),
+        default_parameters: tuple!(),
         statements: statements(
             [FunctionStatement::Tail(
                 Call {
@@ -97,8 +95,8 @@ fn add() {
     let result = f
         .call(
             &ArgumentValueList::from_iter([
-                argument!(a: Integer = Integer::from_num(1)),
-                argument!(b: Integer = Integer::from_num(3)),
+                argument_value!(a: Integer = Integer::from_num(1)),
+                argument_value!(b: Integer = Integer::from_num(3)),
             ]),
             &mut context,
         )
@@ -110,10 +108,8 @@ fn add() {
 #[test]
 fn if_a_greater_than() {
     let f = Function {
-        parameters: [parameter!(a: Integer), parameter!(b: Integer)]
-            .into_iter()
-            .collect(),
-        return_ty: Some(Type::Integer),
+        ty: function_type!((a: Type::Integer, b: Type::Integer) -> Type::Integer),
+        default_parameters: tuple(),
         statements: statements(
             [If {
                 src_ref: SrcRef::none(),
@@ -146,8 +142,8 @@ fn if_a_greater_than() {
     let result = f
         .call(
             &ArgumentValueList::from_iter([
-                argument!(a: Integer = Integer::from_num(1)),
-                argument!(b: Integer = Integer::from_num(3)),
+                argument_value!(a: Integer = Integer::from_num(1)),
+                argument_value!(b: Integer = Integer::from_num(3)),
             ]),
             &mut context,
         )
@@ -159,8 +155,8 @@ fn if_a_greater_than() {
     let result = f
         .call(
             &ArgumentValueList::from_iter([
-                argument!(a: Integer = Integer::from_num(3)),
-                argument!(b: Integer = Integer::from_num(1)),
+                argument_value!(a: Integer = Integer::from_num(3)),
+                argument_value!(b: Integer = Integer::from_num(1)),
             ]),
             &mut context,
         )
