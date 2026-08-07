@@ -63,8 +63,8 @@ impl BuiltinRegistry {
         registry
     }
 
-    pub fn register(&mut self, id: BuiltinId, builtin: Builtin) {
-        self.handlers.insert(id, builtin);
+    pub fn register(&mut self, builtin: Builtin) {
+        self.handlers.insert(builtin.id(), builtin);
     }
 
     pub fn get(&self, id: BuiltinId) -> Option<&Builtin> {
@@ -77,53 +77,6 @@ pub type BuiltinFunctionFn = fn(Arguments, &mut BuiltinEvalContext) -> Result<Va
 
 /// A type of a function returning a T as builtin.
 pub type BuiltinFn<T> = fn() -> T;
-
-/// Metadata for an individual parameter.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct Param {
-    /// Name of the parameter (for named/keyword binding and diagnostics).
-    pub name: &'static str,
-    // ty: Type,
-}
-
-impl Param {
-    /// Reusable static slice for standard binary operations (lhs, rhs)
-    pub const BINARY: &'static [Param] = &[Param::new("lhs"), Param::new("rhs")];
-
-    /// Reusable static slice for standard unary operations (operand)
-    pub const UNARY: &'static [Param] = &[Param::new("operand")];
-
-    pub const fn new(name: &'static str) -> Self {
-        Self { name }
-    }
-}
-
-#[derive(Debug, Clone)]
-pub struct BuiltinSignature {
-    /// Expected parameter metadata in order.
-    pub params: &'static [Param],
-    /// Accepts arbitrary positional arguments (e.g. `core::list`, `core::format`).
-    pub variadic: bool,
-}
-
-impl BuiltinSignature {
-    /// Reusable static slice for standard unary operations (operand)
-    pub const EMPTY: &'static [Param] = &[];
-
-    pub const fn bin_op() -> Self {
-        Self {
-            params: Param::BINARY,
-            variadic: false,
-        }
-    }
-
-    pub const fn variadic() -> Self {
-        Self {
-            params: Self::EMPTY,
-            variadic: true,
-        }
-    }
-}
 
 #[derive(Debug, Clone, Display)]
 #[debug("{}", name)]
@@ -195,6 +148,13 @@ impl Builtin {
         Self::Constant(c)
     }
 
+    pub fn id(&self) -> BuiltinId {
+        match self {
+            Builtin::Constant(c) => c.info.id,
+            Builtin::Function(f) => f.info.id,
+        }
+    }
+
     pub fn call_fn(
         &self,
         args: Arguments,
@@ -225,6 +185,12 @@ pub mod core {
         let (lhs, rhs) = args.get_binary();
         Ok((lhs + rhs)?)
     }
+
+    pub static GREATER_THAN: Builtin = Builtin::function(BuiltinFunction::new(
+        BuiltinInfo::new("__mu::core::greater_than"),
+        || function_type!((lhs: Type::Any, rhs: Type::Any) -> Type::Bool),
+        greater_than,
+    ));
 
     pub fn greater_than(
         args: Arguments,
