@@ -5,12 +5,8 @@
 
 use microcad_builtin_proc_macros::builtin_mod;
 use microcad_lang_base::{BuiltinId, HashMap};
-use microcad_lang_types::{Tuple, Value, ValueError, create_tuple};
+use microcad_lang_types::{Arguments, Value, ValueError};
 use thiserror::Error;
-
-use crate::args::unpack_binary_args;
-
-mod args;
 
 pub struct BuiltinEvalContext {
     pub current_fn: String,
@@ -46,15 +42,15 @@ pub enum BuiltinError {
 }
 
 pub trait BuiltinHandler: Send + Sync {
-    fn call(&self, args: Tuple, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError>;
+    fn call(&self, args: Arguments, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError>;
 }
 
 // Allow closures to act as BuiltinHandlers
 impl<F> BuiltinHandler for F
 where
-    F: Fn(Tuple, &mut BuiltinEvalContext) -> Result<Value, BuiltinError> + Send + Sync,
+    F: Fn(Arguments, &mut BuiltinEvalContext) -> Result<Value, BuiltinError> + Send + Sync,
 {
-    fn call(&self, args: Tuple, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+    fn call(&self, args: Arguments, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         self(args, ctx)
     }
 }
@@ -89,7 +85,7 @@ impl BuiltinRegistry {
     pub fn call(
         &self,
         id: BuiltinId,
-        args: Tuple,
+        args: Arguments,
         ctx: &mut BuiltinEvalContext,
     ) -> Result<Value, BuiltinError> {
         if let Some(handler) = self.get(id) {
@@ -104,7 +100,7 @@ impl BuiltinRegistry {
 }
 
 /// Built-in execution function signature
-pub type BuiltinFn = fn(Tuple, &mut BuiltinEvalContext) -> Result<Value, BuiltinError>;
+pub type BuiltinFn = fn(Arguments, &mut BuiltinEvalContext) -> Result<Value, BuiltinError>;
 
 /// Metadata for an individual parameter.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -178,30 +174,32 @@ impl Builtin {
 }
 
 pub mod core {
-    use microcad_lang_base::BuiltinId;
-    use microcad_lang_types::{Tuple, Value};
 
-    use crate::{
-        Builtin, BuiltinError, BuiltinEvalContext, BuiltinSignature, args::unpack_binary_args,
-    };
+    use microcad_lang_base::BuiltinId;
+    use microcad_lang_types::{Arguments, Tuple, Value};
+
+    use crate::{Builtin, BuiltinError, BuiltinEvalContext, BuiltinSignature};
 
     // 1. Binary Math Operation: add(lhs, rhs)
     pub static ADD: Builtin = Builtin::new("core::add", BuiltinSignature::bin_op(), add);
 
     // Individual standalone function implementations
     // #[builtin_fn(lhs: Any, rhs: Any) -> Any]
-    pub fn add(args: Tuple, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        let (lhs, rhs) = unpack_binary_args(args, ctx)?;
+    pub fn add(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
         Ok((lhs + rhs)?)
     }
 
-    pub fn greater_than(args: Tuple, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        let (lhs, rhs) = unpack_binary_args(args, ctx)?;
+    pub fn greater_than(
+        args: Arguments,
+        _ctx: &mut BuiltinEvalContext,
+    ) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
         Ok((lhs > rhs).into())
     }
 
-    pub fn sub(args: Tuple, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        let (lhs, rhs) = unpack_binary_args(args, ctx)?;
+    pub fn sub(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
         Ok((lhs - rhs)?)
     }
 }
@@ -212,11 +210,11 @@ fn greater_than() {
         current_fn: String::new(),
     };
     assert_eq!(
-        core::greater_than(create_tuple!(lhs = 3, rhs = 5), &mut context).unwrap(),
+        core::greater_than(tuple!(lhs = 3, rhs = 5), &mut context).unwrap(),
         Value::from(false)
     );
     assert_eq!(
-        core::greater_than(create_tuple!(lhs = 5, rhs = 3), &mut context).unwrap(),
+        core::greater_than(tuple!(lhs = 5, rhs = 3), &mut context).unwrap(),
         Value::from(true)
     );
 }
