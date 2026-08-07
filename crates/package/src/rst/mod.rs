@@ -35,7 +35,7 @@ pub enum ResolvedName {
     /// Name for local variable in a function or workbench.
     Local(Identifier),
     Symbol(Refer<SymbolHandle>),
-    BuiltinFunction(BuiltinId),
+    Builtin(BuiltinId),
     Error(SymbolPath),
 }
 
