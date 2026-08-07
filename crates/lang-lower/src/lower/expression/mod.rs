@@ -9,7 +9,7 @@ use crate::{
 mod call;
 mod literal;
 
-use microcad_lang_base::{__mu, Identifier, SpanToSrcRef};
+use microcad_lang_base::{__mu, BuiltinId, Identifier, SpanToSrcRef};
 use microcad_lang_parse::ast;
 use microcad_lang_types::{BinaryOperator, Scalar, Value};
 
@@ -80,7 +80,7 @@ where
     fn lower(a: &ast::ArrayRangeExpression, context: &mut LowerContext) -> LowerResult<Self> {
         let unit = ir::Unit::lower(&a.unit, context)?;
         let range = Expr::from(ir::Call {
-            name: __mu("core::range").into(),
+            name: __mu!(core::range).into(),
             args: ir::ArgumentList::from_iter([
                 Expr::lower(&a.start.expr, context)?,
                 Expr::lower(&a.end.expr, context)?,
@@ -92,7 +92,7 @@ where
             range
         } else {
             Expr::from(ir::Call {
-                name: __mu(BinaryOperator::Multiply.builtin_fn_name()).into(),
+                name: BuiltinId::from_name(BinaryOperator::Multiply.builtin_fn_name()).into(),
                 args: ir::ArgumentList::from_iter([
                     range,
                     Expr::from(ir::Literal::from(
@@ -120,7 +120,7 @@ where
             .collect::<Result<Vec<Expr>, _>>()?;
 
         let list = Expr::from(ir::Call {
-            name: __mu("core::list").into(),
+            name: __mu!(core::list).into(),
             args: ir::ArgumentList::from_iter(args),
             src_ref: context.span_to_src_ref(&a.span),
         });
@@ -129,7 +129,7 @@ where
             list
         } else {
             Expr::from(ir::Call {
-                name: __mu(BinaryOperator::Multiply.builtin_fn_name()).into(),
+                name: BuiltinId::from_name(BinaryOperator::Multiply.builtin_fn_name()).into(),
                 args: ir::ArgumentList::from_iter([
                     list,
                     Expr::from(ir::Literal::from(
@@ -149,7 +149,7 @@ where
 {
     fn lower(node: &ast::TupleExpression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            name: __mu("core::tuple").into(),
+            name: __mu!(core::tuple).into(),
             args: ir::ArgumentList::lower(&node.values, context)?,
             src_ref: context.span_to_src_ref(&node.span),
         })
