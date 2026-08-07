@@ -3,9 +3,12 @@
 
 //! µcad built-in crate.
 
+use derive_more::{Debug, Display, From};
 use microcad_builtin_proc_macros::builtin_mod;
 use microcad_lang_base::{BuiltinId, HashMap};
-use microcad_lang_types::{Arguments, Value, ValueError};
+use microcad_lang_types::{
+    ArgumentValueList, Arguments, FunctionType, Type, Value, ValueError, arguments, tuple,
+};
 use thiserror::Error;
 
 pub struct BuiltinEvalContext {
@@ -41,23 +44,9 @@ pub enum BuiltinError {
     ExecutionFailed { name: String, message: String },
 }
 
-pub trait BuiltinHandler: Send + Sync {
-    fn call(&self, args: Arguments, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError>;
-}
-
-// Allow closures to act as BuiltinHandlers
-impl<F> BuiltinHandler for F
-where
-    F: Fn(Arguments, &mut BuiltinEvalContext) -> Result<Value, BuiltinError> + Send + Sync,
-{
-    fn call(&self, args: Arguments, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        self(args, ctx)
-    }
-}
-
 #[derive(Default)]
 pub struct BuiltinRegistry {
-    handlers: HashMap<BuiltinId, Box<dyn BuiltinHandler>>,
+    handlers: HashMap<BuiltinId, Builtin>,
 }
 
 impl std::fmt::Debug for BuiltinRegistry {
@@ -68,39 +57,26 @@ impl std::fmt::Debug for BuiltinRegistry {
 
 impl BuiltinRegistry {
     pub fn new() -> Self {
-        let mut registry = Self {
+        let registry = Self {
             handlers: HashMap::default(),
         };
         registry
     }
 
-    pub fn register<H: BuiltinHandler + 'static>(&mut self, id: BuiltinId, handler: H) {
-        self.handlers.insert(id, Box::new(handler));
+    pub fn register(&mut self, id: BuiltinId, builtin: Builtin) {
+        self.handlers.insert(id, builtin);
     }
 
-    pub fn get(&self, id: BuiltinId) -> Option<&dyn BuiltinHandler> {
-        self.handlers.get(&id).map(|b| b.as_ref())
-    }
-
-    pub fn call(
-        &self,
-        id: BuiltinId,
-        args: Arguments,
-        ctx: &mut BuiltinEvalContext,
-    ) -> Result<Value, BuiltinError> {
-        if let Some(handler) = self.get(id) {
-            handler.call(args, ctx)
-        } else {
-            Err(BuiltinError::ExecutionFailed {
-                name: ctx.current_fn.clone(),
-                message: format!("No builtin registered for {:?}", id),
-            })
-        }
+    pub fn get(&self, id: BuiltinId) -> Option<&Builtin> {
+        self.handlers.get(&id)
     }
 }
 
 /// Built-in execution function signature
-pub type BuiltinFn = fn(Arguments, &mut BuiltinEvalContext) -> Result<Value, BuiltinError>;
+pub type BuiltinFunctionFn = fn(Arguments, &mut BuiltinEvalContext) -> Result<Value, BuiltinError>;
+
+/// A type of a function returning a T as builtin.
+pub type BuiltinFn<T> = fn() -> T;
 
 /// Metadata for an individual parameter.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -149,23 +125,27 @@ impl BuiltinSignature {
     }
 }
 
-/// A statically compiled built-in definition containing its ID and execution pointer.
-#[derive(Debug, Clone)]
-pub struct Builtin {
+#[derive(Debug, Clone, Display)]
+#[debug("{}", name)]
+#[display("{}", name)]
+pub struct BuiltinInfo {
     pub id: BuiltinId,
     pub name: &'static str,
-    pub signature: BuiltinSignature,
-    pub func: BuiltinFn,
+    pub doc: Option<&'static str>,
 }
 
-impl Builtin {
-    pub const fn new(name: &'static str, signature: BuiltinSignature, func: BuiltinFn) -> Self {
+impl BuiltinInfo {
+    pub const fn new(name: &'static str) -> Self {
         Self {
             id: BuiltinId::from_name(name),
             name,
-            signature,
-            func,
+            doc: None,
         }
+    }
+
+    pub const fn with_doc(mut self, doc: &'static str) -> Self {
+        self.doc = Some(doc);
+        self
     }
 
     pub const fn hash(&self) -> u64 {
@@ -173,15 +153,71 @@ impl Builtin {
     }
 }
 
+#[derive(Debug, Clone)]
+#[debug("{}", info)]
+pub struct BuiltinFunction {
+    pub info: BuiltinInfo,
+    pub ty: BuiltinFn<FunctionType>,
+    pub f: BuiltinFunctionFn,
+}
+
+impl BuiltinFunction {
+    pub const fn new(info: BuiltinInfo, ty: BuiltinFn<FunctionType>, f: BuiltinFunctionFn) -> Self {
+        Self { info: info, ty, f }
+    }
+}
+
+#[derive(Debug, Clone)]
+#[debug("{}", info)]
+pub struct BuiltinConstant {
+    pub info: BuiltinInfo,
+    pub f: BuiltinFn<Value>,
+}
+
+impl BuiltinConstant {
+    pub const fn new(info: BuiltinInfo, f: BuiltinFn<Value>) -> Self {
+        Self { info: info, f }
+    }
+}
+
+#[derive(Debug, Clone, From)]
+pub enum Builtin {
+    Constant(BuiltinConstant),
+    Function(BuiltinFunction),
+}
+
+impl Builtin {
+    pub const fn function(f: BuiltinFunction) -> Self {
+        Self::Function(f)
+    }
+
+    pub const fn constant(c: BuiltinConstant) -> Self {
+        Self::Constant(c)
+    }
+
+    pub fn call_fn(
+        &self,
+        args: Arguments,
+        ctx: &mut BuiltinEvalContext,
+    ) -> Result<Value, BuiltinError> {
+        match self {
+            Builtin::Constant(_c) => unimplemented!("Cannot call a constant"),
+            Builtin::Function(f) => (f.f)(args, ctx),
+        }
+    }
+}
+
 pub mod core {
+    use microcad_lang_types::{Arguments, Type, Value, function_type};
 
-    use microcad_lang_base::BuiltinId;
-    use microcad_lang_types::{Arguments, Tuple, Value};
-
-    use crate::{Builtin, BuiltinError, BuiltinEvalContext, BuiltinSignature};
+    use crate::{Builtin, BuiltinError, BuiltinEvalContext, BuiltinFunction, BuiltinInfo};
 
     // 1. Binary Math Operation: add(lhs, rhs)
-    pub static ADD: Builtin = Builtin::new("core::add", BuiltinSignature::bin_op(), add);
+    pub static ADD: Builtin = Builtin::function(BuiltinFunction::new(
+        BuiltinInfo::new("__mu::core::add"),
+        || function_type!((lhs: Type::Any, rhs: Type::Any) -> Type::Any),
+        add,
+    ));
 
     // Individual standalone function implementations
     // #[builtin_fn(lhs: Any, rhs: Any) -> Any]
@@ -210,11 +246,11 @@ fn greater_than() {
         current_fn: String::new(),
     };
     assert_eq!(
-        core::greater_than(tuple!(lhs = 3, rhs = 5), &mut context).unwrap(),
+        core::greater_than(arguments!(lhs = 3, rhs = 5), &mut context).unwrap(),
         Value::from(false)
     );
     assert_eq!(
-        core::greater_than(tuple!(lhs = 5, rhs = 3), &mut context).unwrap(),
+        core::greater_than(arguments!(lhs = 5, rhs = 3), &mut context).unwrap(),
         Value::from(true)
     );
 }

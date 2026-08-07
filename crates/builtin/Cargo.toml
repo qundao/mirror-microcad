@@ -13,6 +13,7 @@ license = "AGPL-3.0-or-later"
 [dependencies]
 log = "0.4"
 cgmath = "0.18"
+derive_more = { version = "2", features = ["deref", "deref_mut", "from", "display", "debug"] }
 dirs = "6"
 geo = "0.33"
 phf = { version = "0.14", features = ["macros"] }
