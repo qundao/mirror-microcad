@@ -20,16 +20,13 @@ pub struct Array {
 }
 
 impl Array {
-    /// Create new list
-    pub fn new(ty: Type) -> Self {
-        Self {
-            items: ValueList::default(),
-            ty,
-        }
+    /// Create new list from `ValueList`.
+    pub fn new(items: ValueList, ty: Type) -> Self {
+        Self { items, ty }
     }
 
-    /// Create new list from `ValueList`.
-    pub fn from_values(items: ValueList, ty: Type) -> Self {
+    pub fn from_values(items: ValueList) -> Self {
+        let ty = items.types().common_type().unwrap_or_default();
         Self { items, ty }
     }
 }
@@ -50,7 +47,7 @@ impl Array {
 
     /// Get all elements but the first
     pub fn tail(&self) -> Array {
-        Array::from_values(
+        Array::new(
             self.items.iter().skip(1).cloned().collect(),
             self.ty.clone(),
         )
@@ -58,7 +55,7 @@ impl Array {
 
     /// Return a reversed version of the array.
     pub fn rev(&self) -> Array {
-        Array::from_values(self.items.iter().rev().cloned().collect(), self.ty.clone())
+        Array::new(self.items.iter().rev().cloned().collect(), self.ty.clone())
     }
 
     /// Return a sorted version of this array.
@@ -82,7 +79,7 @@ impl Array {
             _ => {}
         };
 
-        Array::from_values(items, self.ty.clone())
+        Array::new(items, self.ty.clone())
     }
 
     /// Check if all items are equal.
@@ -123,7 +120,7 @@ impl TryFrom<ValueList> for Array {
     type Error = ValueError;
     fn try_from(items: ValueList) -> ValueResult<Array> {
         match items.types().common_type() {
-            Some(ty) => Ok(Array::from_values(items, ty)),
+            Some(ty) => Ok(Array::new(items, ty)),
             None => Err(ValueError::CommonTypeExpected),
         }
     }
@@ -164,15 +161,12 @@ impl std::ops::Add<Value> for Array {
 
     fn add(self, rhs: Value) -> Self::Output {
         if self.ty.is_compatible_to(&rhs.ty()) {
-            Ok(Value::Array(Self::from_values(
-                ValueList::new(
-                    self.items
-                        .iter()
-                        .map(|value| value.clone() + rhs.clone())
-                        .collect::<Result<Vec<_>, _>>()?,
-                ),
-                self.ty,
-            )))
+            Ok(Value::Array(Self::from_values(ValueList::new(
+                self.items
+                    .iter()
+                    .map(|value| value.clone() + rhs.clone())
+                    .collect::<Result<Vec<_>, _>>()?,
+            ))))
         } else {
             Err(ValueError::InvalidOperator("+".into()))
         }
@@ -185,15 +179,12 @@ impl std::ops::Sub<Value> for Array {
 
     fn sub(self, rhs: Value) -> Self::Output {
         if self.ty.is_compatible_to(&rhs.ty()) {
-            Ok(Value::Array(Self::from_values(
-                ValueList::new(
-                    self.items
-                        .iter()
-                        .map(|value| value.clone() - rhs.clone())
-                        .collect::<Result<Vec<_>, _>>()?,
-                ),
-                self.ty,
-            )))
+            Ok(Value::Array(Self::from_values(ValueList::new(
+                self.items
+                    .iter()
+                    .map(|value| value.clone() - rhs.clone())
+                    .collect::<Result<Vec<_>, _>>()?,
+            ))))
         } else {
             Err(ValueError::InvalidOperator("-".into()))
         }
@@ -207,7 +198,7 @@ impl std::ops::Mul<Value> for Array {
     fn mul(self, rhs: Value) -> Self::Output {
         match self.ty {
             // List * Scalar or List * Integer
-            Type::Quantity(_) | Type::Integer => Ok(Value::Array(Array::from_values(
+            Type::Quantity(_) | Type::Integer => Ok(Value::Array(Array::new(
                 ValueList::new({
                     self.iter()
                         .map(|value| value.clone() * rhs.clone())
@@ -233,10 +224,9 @@ impl std::ops::Div<Value> for Array {
 
         match (&self.ty, rhs.ty()) {
             // Integer / Integer => Scalar
-            (Type::Integer, Type::Integer) => Ok(Value::Array(Array::from_values(
-                values,
-                (self.ty / rhs.ty())?,
-            ))),
+            (Type::Integer, Type::Integer) => {
+                Ok(Value::Array(Array::new(values, (self.ty / rhs.ty())?)))
+            }
             (Type::Quantity(_), _) => Ok(Value::Array(values.try_into()?)),
             _ => Err(ValueError::InvalidOperator("/".into())),
         }

@@ -274,3 +274,9 @@ impl FromIterator<Value> for Value {
         Self::Array(iter.into_iter().collect())
     }
 }
+
+impl From<Vec<Value>> for Value {
+    fn from(values: Vec<Value>) -> Self {
+        Self::Array(Array::from_values(ValueList::new(values)))
+    }
+}

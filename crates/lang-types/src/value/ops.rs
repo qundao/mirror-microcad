@@ -99,7 +99,6 @@ impl std::ops::Add for Value {
 
                 Ok(Value::Array(Array::from_values(
                     lhs.iter().chain(rhs.iter()).cloned().collect(),
-                    lhs.ty(),
                 )))
             }
             // Add a value to an array.
