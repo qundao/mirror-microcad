@@ -4,14 +4,11 @@
 //! Tests for evaluating functions.
 
 use microcad_lang_base::{__mu, Identifier, SrcRef};
-use microcad_lang_eval::{ArgumentValueList, CallTrait, EvalContext, argument_value};
-use microcad_lang_types::{Integer, Type, Value, function_type};
-use microcad_package::{
-    parameter,
-    rst::{
-        Function, FunctionExpression, FunctionStatement, ResolvedName,
-        function::{Argument, ArgumentList, Call, If, Literal, ReturnStatement, Scope},
-    },
+use microcad_lang_eval::{CallTrait, EvalContext, argument_value};
+use microcad_lang_types::{ArgumentValueList, Integer, Type, Value, function_type, tuple};
+use microcad_package::rst::{
+    Function, FunctionExpression, FunctionStatement, ResolvedName,
+    function::{Argument, ArgumentList, Call, If, Literal, ReturnStatement, Scope},
 };
 
 fn statements<T>(a: impl Iterator<Item = T>) -> Box<[FunctionStatement]>
@@ -49,7 +46,7 @@ fn arg(name: &str, expr: FunctionExpression) -> Argument {
 fn return_a() {
     let f = Function {
         ty: function_type!((a: Type::Integer) -> Type::Integer),
-        default_parameters: tuple(),
+        default_parameters: tuple!(),
         statements: statements(
             [ReturnStatement {
                 expr: Some(name_expr("a")),
@@ -109,7 +106,7 @@ fn add() {
 fn if_a_greater_than() {
     let f = Function {
         ty: function_type!((a: Type::Integer, b: Type::Integer) -> Type::Integer),
-        default_parameters: tuple(),
+        default_parameters: tuple!(),
         statements: statements(
             [If {
                 src_ref: SrcRef::none(),
