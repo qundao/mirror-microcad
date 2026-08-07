@@ -8,6 +8,8 @@ use microcad_lang_base::Identifier;
 use crate::{ty::*, value::*};
 
 /// Tuple with positional and named values
+///
+/// TODO: Consider splitting this up into `Tuple` (e.g. (0.0mm, 1, 3)) and `Record` (e.g. (x: 0, y: 1, z: 2))
 #[derive(Clone, Debug, Hash, Default, PartialEq, Serialize, Deserialize)]
 pub struct Tuple {
     pub positional: Vec<Value>,
@@ -16,7 +18,7 @@ pub struct Tuple {
 
 /// Create a Tuple from items
 #[macro_export]
-macro_rules! create_tuple {
+macro_rules! tuple {
         ($($key:ident = $value:expr),*) => {
                 [$( (stringify!($key), $crate::value::Value::from($value)) ),* ]
                     .iter()
@@ -35,19 +37,6 @@ impl Tuple {
                 .map(|(id, v)| (id.clone(), v.ty()))
                 .collect(),
         }
-    }
-
-    pub fn get_named_unchecked(&self, name: &str) -> &Value {
-        self.named
-            .iter()
-            .find_map(|(id, v)| {
-                if id == &Identifier::no_ref(name) {
-                    Some(v)
-                } else {
-                    None
-                }
-            })
-            .unwrap()
     }
 
     /// Checks if two tuples have matching structural shapes:
@@ -171,19 +160,19 @@ impl FromIterator<(Identifier, Value)> for Tuple {
 
 impl From<Vec2> for Tuple {
     fn from(v: Vec2) -> Self {
-        create_tuple!(x = v.x, y = v.y)
+        tuple!(x = v.x, y = v.y)
     }
 }
 
 impl From<Vec3> for Tuple {
     fn from(v: Vec3) -> Self {
-        create_tuple!(x = v.x, y = v.y, z = v.z)
+        tuple!(x = v.x, y = v.y, z = v.z)
     }
 }
 
 impl From<Color> for Tuple {
     fn from(color: Color) -> Self {
-        create_tuple!(r = color.r, g = color.g, b = color.b, a = color.a)
+        tuple!(r = color.r, g = color.g, b = color.b, a = color.a)
     }
 }
 
