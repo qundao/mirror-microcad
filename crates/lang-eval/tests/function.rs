@@ -76,7 +76,7 @@ fn add() {
         statements: statements(
             [FunctionStatement::Tail(
                 Call {
-                    name: __mu("core::add").into(),
+                    name: microcad_builtin::core::ADD.id().into(),
                     args: ArgumentList::from_iter(
                         [arg("lhs", name_expr("a")), arg("rhs", name_expr("b"))].into_iter(),
                     ),
@@ -112,7 +112,7 @@ fn if_a_greater_than() {
                 src_ref: SrcRef::none(),
                 if_ref: SrcRef::none(),
                 cond: FunctionExpression::Call(Call {
-                    name: __mu("core::greater_than").into(),
+                    name: microcad_builtin::core::GREATER_THAN.id().into(),
                     args: ArgumentList::from_iter(
                         [arg("lhs", name_expr("a")), arg("rhs", name_expr("b"))].into_iter(),
                     ),

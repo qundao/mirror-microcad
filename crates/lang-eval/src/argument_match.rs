@@ -5,7 +5,7 @@
 
 use derive_more::Display;
 use microcad_lang_base::Identifier;
-use microcad_lang_types::{ArgumentValueList, Arguments, FunctionType, Tuple, Value};
+use microcad_lang_types::{ArgumentValueList, Arguments, FunctionType, Tuple, Type, Value};
 
 use crate::{EvalError, EvalResult};
 
@@ -130,4 +130,69 @@ pub fn find_match(
         named,
     }
     .into())
+}
+
+pub fn find_multi_match(
+    arguments: &ArgumentValueList,
+    fn_ty: &FunctionType,
+    default_parameters: &Tuple,
+) -> EvalResult<Vec<Arguments>> {
+    // Step 1: Bind base arguments and resolve default values
+    let base_args = find_match(arguments, fn_ty, default_parameters)?;
+
+    // Step 2: Extract parameter metadata
+    let params_map = match &fn_ty.parameters {
+        Some(params) => &params.0,
+        None => return Ok(vec![base_args]),
+    };
+
+    // Step 3: Identify which arguments need vectorization
+    let mut resolved_lists: Vec<(Identifier, Vec<Value>)> =
+        Vec::with_capacity(base_args.0.named.len());
+
+    for (id, val) in base_args.0.named {
+        let expected_ty = params_map
+            .iter()
+            .find(|(p_id, _)| p_id == &id)
+            .map(|(_, ty)| ty);
+
+        if let (Some(expected), Value::Array(elements)) = (expected_ty, &val) {
+            if expected.is_array_of(expected) || !expected.is_array_of(&Type::Any) {
+                resolved_lists.push((id, elements.to_vec()));
+            } else {
+                resolved_lists.push((id, vec![val.clone()]));
+            }
+        } else {
+            resolved_lists.push((id, vec![val.clone()]));
+        }
+    }
+
+    // Step 4: Compute Cartesian product across all argument value lists
+    let mut combinations: Vec<Vec<(Identifier, Value)>> = vec![vec![]];
+
+    for (id, values) in resolved_lists {
+        let mut next_combinations = Vec::new();
+        for current_combination in combinations {
+            for val in &values {
+                let mut extended = current_combination.clone();
+                extended.push((id.clone(), val.clone()));
+                next_combinations.push(extended);
+            }
+        }
+        combinations = next_combinations;
+    }
+
+    // Step 5: Convert combinations into Arguments
+    let result = combinations
+        .into_iter()
+        .map(|named| {
+            Tuple {
+                positional: vec![],
+                named,
+            }
+            .into()
+        })
+        .collect();
+
+    Ok(result)
 }

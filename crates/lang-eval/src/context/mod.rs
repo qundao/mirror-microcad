@@ -144,15 +144,8 @@ impl EvalContext {
     pub fn new() -> Self {
         let mut builtins = BuiltinRegistry::new();
 
-        builtins.register(
-            BuiltinId::from_name("core::greater_than"),
-            microcad_builtin::core::greater_than,
-        );
-
-        builtins.register(
-            BuiltinId::from_name("core::add"),
-            microcad_builtin::core::add,
-        );
+        builtins.register(microcad_builtin::core::GREATER_THAN.clone());
+        builtins.register(microcad_builtin::core::ADD.clone());
 
         Self {
             builtins,

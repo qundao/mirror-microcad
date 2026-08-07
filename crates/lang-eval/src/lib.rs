@@ -49,12 +49,3 @@ macro_rules! argument_value {
     };
     () => {};
 }
-
-/// Create a Tuple from items
-#[macro_export]
-macro_rules! arguments {
-    ($($key:ident = $value:expr),*) => {
-            microcad_lang_types::Arguments::from(microcad_lang_types::Tuple::from([$( (stringify!($key), microcad_lang_types::Value::from($value)) ),* ]
-                .iter()))
-    };
-}

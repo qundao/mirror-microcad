@@ -3,17 +3,15 @@
 
 //! Evaluate function
 
-use microcad_builtin::BuiltinEvalContext;
-use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
-use microcad_lang_types::{ArgumentValue, Array, Tuple, Ty, Type, Value, ValueList};
-use microcad_package::{
-    builtin,
-    rst::{self, ResolvedName},
-};
+use microcad_builtin::{Builtin, BuiltinEvalContext};
+use microcad_lang_base::{SrcRef, SrcReferrer};
+use microcad_lang_types::{ArgumentValue, ArgumentValueList, Array, Type, Value, tuple};
+use microcad_package::{builtin, rst};
 
 use crate::{
-    ArgumentMatch, ArgumentValueList, CallTrait, Eval, EvalContext, EvalError, EvalResult,
+    CallTrait, Eval, EvalContext, EvalError, EvalResult,
     context::{FunctionFrame, FunctionScopeFrame},
+    find_match,
 };
 
 pub enum FlowSignal {
@@ -67,7 +65,7 @@ pub fn builtin_range(
             let first: i64 = first.into();
             let last: i64 = last.into();
 
-            Ok(FlowSignal::Yield(Value::Array(Array::from_values(
+            Ok(FlowSignal::Yield(Value::Array(Array::new(
                 (first..last + 1)
                     .map(|i| Value::Integer(i.into()))
                     .collect(),
@@ -154,30 +152,29 @@ impl Eval<FlowSignal> for rst::function::If {
 impl Eval<FlowSignal> for rst::function::Call {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
         match &self.name {
-            ResolvedName::Local(_) => unimplemented!("Not callable"),
-            ResolvedName::Symbol(symbol) => {
+            rst::ResolvedName::Local(_) => unimplemented!("Not callable"),
+            rst::ResolvedName::Symbol(symbol) => {
                 unimplemented!("context.call_symbol(symbol, self.arguments)")
             }
-            ResolvedName::BuiltinFunction(builtin) => {
+            rst::ResolvedName::Builtin(builtin) => {
                 let args = self.args.eval(context)?;
 
-                // TODO finish this here.
-                let args = ArgumentMatch::find_match(
-                    &args,
-                    &[builtin::parameter!(lhs), builtin::parameter!(rhs)]
-                        .into_iter()
-                        .collect(),
-                )?;
+                match context.builtins.get(*builtin) {
+                    Some(Builtin::Function(f)) => {
+                        let args = find_match(&args, &(f.ty)(), &tuple!())?;
 
-                Ok(FlowSignal::Yield(context.builtins.call(
-                    *builtin,
-                    args,
-                    &mut BuiltinEvalContext {
-                        current_fn: String::from("test"),
-                    },
-                )?))
+                        Ok(FlowSignal::Yield((f.f)(
+                            args,
+                            &mut BuiltinEvalContext {
+                                current_fn: String::new(),
+                            },
+                        )?))
+                    }
+                    None => unimplemented!("Function not found"),
+                    _ => todo!(),
+                }
             }
-            ResolvedName::Error(symbol_path) => {
+            rst::ResolvedName::Error(symbol_path) => {
                 context.diag(EvalError::SymbolCanNotBeCalled {
                     symbol_path: symbol_path.clone(),
                     src_ref: self.src_ref,
@@ -191,7 +188,7 @@ impl Eval<FlowSignal> for rst::function::Call {
 impl Eval<FlowSignal> for rst::ResolvedName {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
         match self {
-            ResolvedName::Local(identifier) => {
+            rst::ResolvedName::Local(identifier) => {
                 use crate::context::StackRead;
                 match context.get_local(identifier) {
                     Some(local) => Ok(FlowSignal::Yield(local.clone())),
@@ -201,9 +198,9 @@ impl Eval<FlowSignal> for rst::ResolvedName {
                     }
                 }
             }
-            ResolvedName::BuiltinFunction(builtin) => todo!(),
-            ResolvedName::Symbol(refer) => todo!(),
-            ResolvedName::Error(symbol_path) => todo!(),
+            rst::ResolvedName::Builtin(builtin) => todo!(),
+            rst::ResolvedName::Symbol(refer) => todo!(),
+            rst::ResolvedName::Error(symbol_path) => todo!(),
         }
     }
 }
@@ -229,7 +226,7 @@ impl Eval<FlowSignal> for rst::FunctionStatement {
             Stmt::Scope(scope) => scope.eval(context),
             Stmt::Call(call) => {
                 let value = call.eval(context)?.expect_value(call.src_ref)?;
-                if value.is_none() {
+                if !value.is_none() {
                     context.diag(EvalError::CallReturnValueIgnored(call.src_ref))
                 }
 
