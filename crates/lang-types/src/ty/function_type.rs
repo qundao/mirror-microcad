@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 use crate::Type;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
-pub struct FunctionTypeParameters(Vec<(Identifier, Type)>);
+pub struct FunctionTypeParameters(pub Vec<(Identifier, Type)>);
 
 impl std::fmt::Display for FunctionTypeParameters {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -102,6 +102,7 @@ impl FunctionType {
             (None, Some(_)) => false,
             // A variadic can accept any function
             (Some(lhs), Some(rhs)) if lhs.matches(rhs) => self.match_return_type(other),
+            (Some(lhs), Some(rhs)) if !lhs.matches(rhs) => false,
             _ => self.match_return_type(other),
         }
     }

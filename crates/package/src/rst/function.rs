@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang_lower::ir;
-use microcad_lang_types::Type;
+use microcad_lang_types::{FunctionType, Tuple};
 use serde::{Deserialize, Serialize};
 
-use crate::rst::{ParameterList, ResolvedName};
+use crate::rst::ResolvedName;
 
 pub type FunctionExpression = ir::FunctionExpression<ResolvedName>;
 pub type FunctionStatement = ir::FunctionStatement<ResolvedName>;
@@ -25,7 +25,9 @@ pub type ArgumentList = ir::ArgumentList<FunctionExpression>;
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Function {
     // pub attr: FunctionAttributes,
-    pub parameters: ParameterList,
-    pub return_ty: Option<Type>,
+    pub ty: FunctionType,
+    /// A tuple of default parameters
+    pub default_parameters: Tuple,
+    /// The function statements to be evaluated.
     pub statements: Box<[FunctionStatement]>,
 }

@@ -1,5 +1,5 @@
 use microcad_lang_base::Identifier;
-use microcad_lang_types::ty::*;
+use microcad_lang_types::{function_type, ty::*};
 
 #[test]
 fn test_tuple_type_eq() {
@@ -57,4 +57,80 @@ fn type_match() {
     assert!(Type::scalar().matches(&Type::Any));
 
     assert!(!Type::Invalid.matches(&Type::Any));
+}
+
+#[test]
+fn function_type_macro() {
+    // 1. Variadic with return type
+    let ft = function_type!((*) -> Type::Integer);
+    assert!(ft.is_variadic());
+    assert_eq!(ft.return_ty, Some(Box::new(Type::Integer)));
+
+    // 2. Variadic without return type
+    let ft = function_type!((*));
+    assert!(ft.is_variadic());
+    assert_eq!(ft.return_ty, None);
+
+    // 3. Named parameters with return type
+    let ft = function_type!((lhs: Type::Integer, rhs: Type::Integer) -> Type::Integer);
+    assert!(!ft.is_variadic());
+    assert_eq!(ft.return_ty, Some(Box::new(Type::Integer)));
+    assert_eq!(ft.parameters.as_ref().unwrap().0.len(), 2);
+
+    // 4. Named parameters without return type
+    let ft = function_type!(lhs: Type::Integer, rhs: Type::Integer);
+    assert!(!ft.is_variadic());
+    assert_eq!(ft.return_ty, None);
+}
+
+#[test]
+fn parameter_sorting_canonicalization() {
+    // Constructor sorts parameters alphabetically by identifier name
+    let ft1 = function_type!((a: Type::Integer, b: Type::String) -> Type::Bool);
+    let ft2 = function_type!((b: Type::String, a: Type::Integer) -> Type::Bool);
+
+    // Order-independent equality after sorting
+    assert_eq!(ft1, ft2);
+    assert!(ft1.matches(&ft2));
+}
+
+#[test]
+fn signature_matching() {
+    let sig_a = function_type!((x: Type::Integer, y: Type::scalar()) -> Type::Bool);
+    let sig_b = function_type!((x: Type::Integer, y: Type::scalar()) -> Type::Bool);
+    let sig_diff_return = function_type!((x: Type::Integer, y: Type::scalar()) -> Type::Integer);
+    let sig_diff_param = function_type!((x: Type::Integer, y: Type::String) -> Type::Bool);
+
+    // Identical signatures match
+    assert!(sig_a.matches(&sig_b));
+
+    // Mismatched return types do not match
+    assert!(!sig_a.matches(&sig_diff_return));
+
+    // Mismatched parameter types do not match
+    assert!(!sig_a.matches(&sig_diff_param));
+}
+
+#[test]
+fn variadic_matching() {
+    let variadic = function_type!((*) -> Type::Integer);
+    let concrete = function_type!((x: Type::Integer) -> Type::Integer);
+
+    // Variadic accepting concrete
+    assert!(variadic.matches(&variadic));
+
+    // Non-variadic to variadic matching checks
+    assert!(!variadic.matches(&concrete));
+}
+
+#[test]
+fn display_formatting() {
+    let ft_variadic = function_type!((*) -> Type::Integer);
+    assert_eq!(format!("{ft_variadic}"), "(*) -> Integer");
+
+    let ft_params = function_type!((a: Type::Integer) -> Type::Bool);
+    assert_eq!(format!("{ft_params}"), "(a: Integer) -> Bool");
+
+    let ft_no_ret = function_type!(a: Type::Integer);
+    assert_eq!(format!("{ft_no_ret}"), "(a: Integer)");
 }

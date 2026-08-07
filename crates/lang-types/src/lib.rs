@@ -8,17 +8,24 @@ pub mod ty;
 pub mod value;
 
 mod color;
-
 pub use color::Color;
+
+mod arguments;
+pub use arguments::{ArgumentValue, ArgumentValueList, Arguments};
 
 use derive_more::{Deref, DerefMut, Display};
 use serde::{Deserialize, Serialize};
-pub use ty::{MatrixType, QuantityType, Ty, Type, TypeError, TypeResult, Unit};
+pub use ty::{
+    FunctionType, MatrixType, QuantityType, TupleType, Ty, Type, TypeError, TypeResult, Unit,
+};
 pub use value::{Array, Quantity, Tuple, Value, ValueAccess, ValueError, ValueList, ValueResult};
 
 pub use model::{Model, ModelRef, ModelTree, Models};
 
-pub use microcad_lang_base::element::{BinaryOperator, UnaryOperator};
+pub use microcad_lang_base::{
+    Identifier,
+    element::{BinaryOperator, UnaryOperator},
+};
 
 pub type Integer = fixed::FixedI64<fixed::types::extra::U0>;
 
@@ -75,4 +82,41 @@ pub trait Operators: Sized {
 
     /// Perform a unary operation.
     fn unary_op(self, op: UnaryOperator) -> Result<Self, Self::Err>;
+}
+
+#[macro_export]
+macro_rules! function_type {
+    // 1. Variadic with return type: function_type!(* -> ReturnTy)
+    ((*) -> $ret:expr) => {
+        $crate::FunctionType::new_variadic(Some($ret))
+    };
+
+    // 2. Variadic without return type: function_type!(*)
+    ((*)) => {
+        $crate::FunctionType::new_variadic(None)
+    };
+
+    // 3. Named parameters with return type: function_type!((a: TypeA, b: TypeB) -> ReturnTy)
+    (($( $param:ident : $ty:expr ),*) -> $ret:expr) => {
+        $crate::FunctionType::new(
+            vec![
+                $(
+                    ($crate::Identifier::from(stringify!($param)), $ty)
+                ),*
+            ],
+            Some($ret),
+        )
+    };
+
+    // 4. Named parameters without return type: function_type!(a: TypeA, b: TypeB)
+    ($( $param:ident : $ty:expr ),* $(,)?) => {
+        $crate::FunctionType::new(
+            vec![
+                $(
+                    ($crate::Identifier::from(stringify!($param)), $ty)
+                ),*
+            ],
+            None,
+        )
+    };
 }
