@@ -104,3 +104,13 @@ where
         }
     }
 }
+
+/// Create arguments via macro
+/// arguments!(a = Length::mm(10.0))
+#[macro_export]
+macro_rules! arguments {
+    ($($key:ident = $value:expr),*) => {
+            microcad_lang_types::Arguments::from(microcad_lang_types::Tuple::from([$( (stringify!($key), microcad_lang_types::Value::from($value)) ),* ]
+                .iter()))
+    };
+}
