@@ -6,7 +6,7 @@ use crate::{
     lower::{LowerExpr, LowerName},
 };
 
-use microcad_lang_base::{__mu, BuiltinId, Identifier, SpanToSrcRef, SrcRef};
+use microcad_lang_base::{__mu, Identifier, SpanToSrcRef, SrcRef};
 use microcad_lang_parse::ast;
 
 impl<Expr: LowerExpr> Lower<ast::Call> for ir::Call<Expr>
@@ -98,7 +98,7 @@ where
 {
     fn lower(node: &ast::UnaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            name: BuiltinId::from_name(node.op.builtin_fn_name()).into(),
+            name: node.op.builtin_name().id.into(),
             args: ir::ArgumentList::from_iter([Expr::lower(&node.rhs, context)?]),
             src_ref: context.span_to_src_ref(&node.span),
         })
@@ -111,7 +111,7 @@ where
 {
     fn lower(node: &ast::BinaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            name: BuiltinId::from_name(node.op.builtin_fn_name()).into(),
+            name: node.op.builtin_name().id.into(),
             args: ir::ArgumentList::from_iter([
                 ir::Argument::Named {
                     name: Identifier::no_ref("lhs"),
@@ -151,7 +151,7 @@ pub fn lower_spec<Name: LowerName>(
         .unwrap_or(ir::ConstantExpression::Invalid);
 
     Ok(ir::Call {
-        name: __mu!(core::format_spec).into(),
+        name: __mu!(core::format_spec),
         args: ir::ArgumentList::from_iter([expr, width, precision]),
         src_ref: context.span_to_src_ref(&spec.span),
     })
@@ -200,7 +200,7 @@ impl<Name: LowerName> Lower<ast::FormatString> for ir::Call<ir::ConstantExpressi
         }
 
         Ok(Self {
-            name: __mu!(core::format).into(),
+            name: __mu!(core::format),
             args: ir::ArgumentList::from_iter(args_vec),
             src_ref: context.span_to_src_ref(&node.span),
         })

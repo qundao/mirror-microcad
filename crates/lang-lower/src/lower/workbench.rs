@@ -86,7 +86,7 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
 
                     Ok(match &element.inner {
                         Attribute(a) => Self::Call(ir::Call {
-                            name: __mu!(core::attribute_access).into(),
+                            name: __mu!(core::attribute_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
                                 Self::Name(ir::SymbolPath::from(a.name.to_string())),
@@ -94,7 +94,7 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
                             src_ref,
                         }),
                         Tuple(t) => Self::Call(ir::Call {
-                            name: __mu!(core::property_access).into(),
+                            name: __mu!(core::property_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
                                 Self::Name(ir::SymbolPath::from(t.name.to_string())),
@@ -107,7 +107,7 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
                             src_ref,
                         }),
                         ArrayElement(e) => Self::Call(ir::Call {
-                            name: __mu!(core::array_access).into(),
+                            name: __mu!(core::array_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
                                 Self::lower(e.as_ref(), context)?,
