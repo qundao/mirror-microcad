@@ -6,7 +6,8 @@ use crate::{
     lower::{attribute::outer_with_doc, extract_statements, for_each_statement},
 };
 
-use microcad_lang_base::{__mu, Refer, SpanToSrcRef, SrcRef};
+use microcad_builtin::__mu;
+use microcad_lang_base::{Refer, SpanToSrcRef, SrcRef};
 use microcad_lang_parse::ast;
 
 impl Lower<ast::Init> for ir::Init {

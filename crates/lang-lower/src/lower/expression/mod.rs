@@ -9,7 +9,8 @@ use crate::{
 mod call;
 mod literal;
 
-use microcad_lang_base::{__mu, Identifier, SpanToSrcRef};
+use microcad_builtin::__mu;
+use microcad_lang_base::{Identifier, SpanToSrcRef};
 use microcad_lang_parse::ast;
 use microcad_lang_types::{BinaryOperator, Scalar, Value};
 

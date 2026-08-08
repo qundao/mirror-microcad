@@ -6,7 +6,8 @@ use crate::{
     lower::{LowerExpr, LowerName},
 };
 
-use microcad_lang_base::{__mu, Identifier, SpanToSrcRef, SrcRef};
+use microcad_builtin::__mu;
+use microcad_lang_base::{Identifier, SpanToSrcRef, SrcRef};
 use microcad_lang_parse::ast;
 
 impl<Expr: LowerExpr> Lower<ast::Call> for ir::Call<Expr>
