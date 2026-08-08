@@ -178,9 +178,13 @@ impl Builtin {
     }
 }
 
+/// A macro to generate built-in functions.
 #[macro_export]
 macro_rules! builtin_function_helper {
-    // Syntax: builtin_function!(mod::func(param1: type1, param2: type2, ...) -> return_type; "Doc string")
+    // Syntax: builtin_function_helper!(
+    //      "Doc string"
+    //      mod::func(param1: type1, param2: type2, ...) -> return_type
+    // )
     (
         $doc:literal
         $mod_name:ident::$fn_name:ident ( $( $param:ident : $ty:expr ),* $(,)? ) -> $ret:expr
@@ -201,6 +205,26 @@ macro_rules! builtin_function_helper {
             $crate::BuiltinInfo::new(concat!("__mu::", stringify!($mod_name), "::", stringify!($fn_name))),
             || $crate::function_type!(($( $param : $ty ),*) -> $ret),
             $fn_name,
+        ))
+    };
+}
+
+#[macro_export]
+macro_rules! builtin_constant_helper {
+    // Syntax: builtin_constant_helper!("A constant" math::PI = std::f64::consts::PI)
+    (
+        $doc:literal
+        $mod_name:ident::$fn_name:ident = $value:expr
+    ) => {
+        $crate::Builtin::constant($crate::BuiltinConstant::new(
+            $crate::BuiltinInfo::new(concat!(
+                "__mu::",
+                stringify!($mod_name),
+                "::",
+                stringify!($fn_name)
+            ))
+            .with_doc($doc),
+            || $crate::Value::from($value),
         ))
     };
 }
@@ -259,12 +283,10 @@ pub mod core {
 }
 
 pub mod math {
-    use microcad_lang_types::Value;
+    use crate::Builtin;
 
-    use crate::{Builtin, BuiltinConstant, BuiltinInfo};
-
-    pub static PI: Builtin = Builtin::constant(BuiltinConstant::new(
-        BuiltinInfo::new("__mu::math::PI"),
-        || Value::from(std::f64::consts::PI),
-    ));
+    pub static PI: Builtin = builtin_constant_helper!(
+        "PI"
+        math::PI = std::f64::consts::PI
+    );
 }
