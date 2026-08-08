@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 #[macro_export]
 macro_rules! __mu {
     ($($path:ident)::+) => {
-        $crate::BuiltinName::new(concat!("__mu::", stringify!($($path)::+)))
+        $crate::BuiltinId::from_name(concat!("__mu::", stringify!($($path)::+))).into()
     };
 }
 
