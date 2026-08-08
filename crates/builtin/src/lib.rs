@@ -217,17 +217,33 @@ pub mod core {
         let (lhs, rhs) = args.get_binary();
         Ok((lhs - rhs)?)
     }
+
+    #[cfg(test)]
+    mod tests {
+        use super::super::*;
+
+        #[test]
+        fn greater_than() {
+            let mut context = BuiltinEvalContext::default();
+            assert_eq!(
+                core::greater_than(arguments!(lhs = 3, rhs = 5), &mut context).unwrap(),
+                Value::from(false)
+            );
+            assert_eq!(
+                core::greater_than(arguments!(lhs = 5, rhs = 3), &mut context).unwrap(),
+                Value::from(true)
+            );
+        }
+    }
 }
 
-#[test]
-fn greater_than() {
-    let mut context = BuiltinEvalContext::default();
-    assert_eq!(
-        core::greater_than(arguments!(lhs = 3, rhs = 5), &mut context).unwrap(),
-        Value::from(false)
-    );
-    assert_eq!(
-        core::greater_than(arguments!(lhs = 5, rhs = 3), &mut context).unwrap(),
-        Value::from(true)
-    );
+pub mod math {
+    use microcad_lang_types::Value;
+
+    use crate::{Builtin, BuiltinConstant, BuiltinInfo};
+
+    pub static PI: Builtin = Builtin::constant(BuiltinConstant::new(
+        BuiltinInfo::new("__mu::math::PI"),
+        || Value::from(std::f64::consts::PI),
+    ));
 }
