@@ -3,7 +3,7 @@
 
 //! Tests for evaluating functions.
 
-use microcad_lang_base::{__mu, Identifier, SrcRef};
+use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_eval::{CallTrait, EvalContext, argument_value};
 use microcad_lang_types::{ArgumentValueList, Integer, Type, Value, function_type, tuple};
 use microcad_package::rst::{
@@ -76,7 +76,7 @@ fn add() {
         statements: statements(
             [FunctionStatement::Tail(
                 Call {
-                    name: microcad_builtin::mu::core::ADD.id().into(),
+                    name: __mu!(core::add),
                     args: ArgumentList::from_iter(
                         [arg("lhs", name_expr("a")), arg("rhs", name_expr("b"))].into_iter(),
                     ),
