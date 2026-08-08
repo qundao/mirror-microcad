@@ -41,7 +41,7 @@ pub fn builtin_mod_impl(item: TokenStream) -> TokenStream {
     // Append `pub static ALL_BUILTINS` to the end of the module's item vector
     if let Some((_, items)) = &mut item_mod.content {
         items.push(parse_quote! {
-            pub static ALL_BUILTINS: &[&Builtin] = &[
+            pub static ALL_BUILTINS: &[&'static Builtin] = &[
                 #(&#collected_builtins),*
             ];
         });

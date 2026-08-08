@@ -88,7 +88,7 @@ pub fn test_builtin_fn_impl(attr: TokenStream, item: TokenStream) -> TokenStream
 
     if !has_context {
         input_fn.block.stmts.push(syn::parse_quote! {
-            let mut context = BuiltinEvalContext::default();
+            let mut context = microcad_builtin::BuiltinEvalContext::default();
         });
     }
     // Inject the assertion at the top of the function body
