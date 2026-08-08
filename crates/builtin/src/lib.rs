@@ -4,7 +4,6 @@
 //! µcad built-in crate.
 
 use derive_more::{Debug, Display, From};
-use microcad_builtin_proc_macros::builtin_mod;
 use microcad_lang_base::{BuiltinId, BuiltinName, HashMap};
 use microcad_lang_types::{Arguments, FunctionType, Value, ValueError, arguments, function_type};
 use thiserror::Error;
@@ -230,20 +229,17 @@ macro_rules! builtin_constant_helper {
 }
 
 pub mod core {
+    use microcad_builtin_proc_macros::builtin_fn;
     use microcad_lang_types::{Arguments, Type, Value};
 
     use crate::{Builtin, BuiltinError, BuiltinEvalContext};
 
     /// Calculate the sum of two values
+    #[builtin_fn((lhs: Any, rhs: Any) -> Any)]
     pub fn add(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
         Ok((lhs + rhs)?)
     }
-
-    pub static ADD: Builtin = builtin_function_helper!(
-        "Calculate the sum of two values"
-        core::add(lhs: Type::Any, rhs: Type::Any) -> Type::Any
-    );
 
     pub fn greater_than(
         args: Arguments,
