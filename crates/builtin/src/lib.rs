@@ -6,9 +6,7 @@
 use derive_more::{Debug, Display, From};
 use microcad_builtin_proc_macros::builtin_mod;
 use microcad_lang_base::{BuiltinId, BuiltinName, HashMap};
-use microcad_lang_types::{
-    ArgumentValueList, Arguments, FunctionType, Type, Value, ValueError, arguments, tuple,
-};
+use microcad_lang_types::{Arguments, FunctionType, Value, ValueError, arguments, function_type};
 use thiserror::Error;
 
 #[derive(Debug, Default)]
@@ -180,30 +178,48 @@ impl Builtin {
     }
 }
 
+#[macro_export]
+macro_rules! builtin_function_helper {
+    // Syntax: builtin_function!(mod::func(param1: type1, param2: type2, ...) -> return_type; "Doc string")
+    (
+        $doc:literal
+        $mod_name:ident::$fn_name:ident ( $( $param:ident : $ty:expr ),* $(,)? ) -> $ret:expr
+    ) => {
+        $crate::Builtin::function($crate::BuiltinFunction::new(
+            $crate::BuiltinInfo::new(concat!("__mu::", stringify!($mod_name), "::", stringify!($fn_name)))
+                .with_doc($doc),
+            || $crate::function_type!(($( $param : $ty ),*) -> $ret),
+            $fn_name,
+        ))
+    };
+
+    // Syntax shorthand when the handler function name matches the last path segment (e.g. `add`)
+    (
+        $mod_name:ident::$fn_name:ident ( $( $param:ident : $ty:expr ),* $(,)? ) -> $ret:expr
+    ) => {
+        $crate::Builtin::function($crate::BuiltinFunction::new(
+            $crate::BuiltinInfo::new(concat!("__mu::", stringify!($mod_name), "::", stringify!($fn_name))),
+            || $crate::function_type!(($( $param : $ty ),*) -> $ret),
+            $fn_name,
+        ))
+    };
+}
+
 pub mod core {
-    use microcad_lang_types::{Arguments, Type, Value, function_type};
+    use microcad_lang_types::{Arguments, Type, Value};
 
-    use crate::{Builtin, BuiltinError, BuiltinEvalContext, BuiltinFunction, BuiltinInfo};
+    use crate::{Builtin, BuiltinError, BuiltinEvalContext};
 
-    // 1. Binary Math Operation: add(lhs, rhs)
-    pub static ADD: Builtin = Builtin::function(BuiltinFunction::new(
-        BuiltinInfo::new("__mu::core::add"),
-        || function_type!((lhs: Type::Any, rhs: Type::Any) -> Type::Any),
-        add,
-    ));
-
-    // Individual standalone function implementations
-    // #[builtin_fn(lhs: Any, rhs: Any) -> Any]
+    /// Calculate the sum of two values
     pub fn add(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
         Ok((lhs + rhs)?)
     }
 
-    pub static GREATER_THAN: Builtin = Builtin::function(BuiltinFunction::new(
-        BuiltinInfo::new("__mu::core::greater_than"),
-        || function_type!((lhs: Type::Any, rhs: Type::Any) -> Type::Bool),
-        greater_than,
-    ));
+    pub static ADD: Builtin = builtin_function_helper!(
+        "Calculate the sum of two values"
+        core::add(lhs: Type::Any, rhs: Type::Any) -> Type::Any
+    );
 
     pub fn greater_than(
         args: Arguments,
@@ -212,6 +228,11 @@ pub mod core {
         let (lhs, rhs) = args.get_binary();
         Ok((lhs > rhs).into())
     }
+
+    pub static GREATER_THAN: Builtin = builtin_function_helper!(
+        "Compare to values if they are greater_than"
+        core::greater_than(lhs: Type::Any, rhs: Type::Any) -> Type::Bool
+    );
 
     pub fn sub(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
