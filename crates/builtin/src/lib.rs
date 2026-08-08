@@ -5,20 +5,15 @@
 
 use derive_more::{Debug, Display, From};
 use microcad_builtin_proc_macros::builtin_mod;
-use microcad_lang_base::{BuiltinId, HashMap};
+use microcad_lang_base::{BuiltinId, BuiltinName, HashMap};
 use microcad_lang_types::{
     ArgumentValueList, Arguments, FunctionType, Type, Value, ValueError, arguments, tuple,
 };
 use thiserror::Error;
 
-pub struct BuiltinEvalContext {
-    pub current_fn: String,
-}
-
-impl BuiltinEvalContext {
-    pub fn current_fn(&self) -> String {
-        self.current_fn.clone()
-    }
+#[derive(Debug, Default)]
+pub struct BuiltinEvalContext<'a> {
+    pub current_fn: Option<&'a BuiltinFunction>,
 }
 
 #[derive(Debug, Error)]
@@ -82,16 +77,14 @@ pub type BuiltinFn<T> = fn() -> T;
 #[debug("{}", name)]
 #[display("{}", name)]
 pub struct BuiltinInfo {
-    pub id: BuiltinId,
-    pub name: &'static str,
+    pub name: BuiltinName,
     pub doc: Option<&'static str>,
 }
 
 impl BuiltinInfo {
     pub const fn new(name: &'static str) -> Self {
         Self {
-            id: BuiltinId::from_name(name),
-            name,
+            name: BuiltinName::new(name),
             doc: None,
         }
     }
@@ -102,7 +95,11 @@ impl BuiltinInfo {
     }
 
     pub const fn hash(&self) -> u64 {
-        self.id.0
+        self.id().0
+    }
+
+    pub const fn id(&self) -> BuiltinId {
+        self.name.id
     }
 }
 
@@ -115,8 +112,24 @@ pub struct BuiltinFunction {
 }
 
 impl BuiltinFunction {
+    /// Construct a new BuiltinFunction
     pub const fn new(info: BuiltinInfo, ty: BuiltinFn<FunctionType>, f: BuiltinFunctionFn) -> Self {
         Self { info: info, ty, f }
+    }
+
+    /// Get the function type
+    pub fn ty(&self) -> FunctionType {
+        (self.ty)()
+    }
+
+    /// Call the function with a default context.
+    pub fn call_isolated(&self, args: Arguments) -> Result<Value, BuiltinError> {
+        (self.f)(
+            args,
+            &mut BuiltinEvalContext {
+                current_fn: Some(self),
+            },
+        )
     }
 }
 
@@ -150,8 +163,8 @@ impl Builtin {
 
     pub fn id(&self) -> BuiltinId {
         match self {
-            Builtin::Constant(c) => c.info.id,
-            Builtin::Function(f) => f.info.id,
+            Builtin::Constant(c) => c.info.id(),
+            Builtin::Function(f) => f.info.id(),
         }
     }
 
@@ -208,9 +221,7 @@ pub mod core {
 
 #[test]
 fn greater_than() {
-    let mut context = BuiltinEvalContext {
-        current_fn: String::new(),
-    };
+    let mut context = BuiltinEvalContext::default();
     assert_eq!(
         core::greater_than(arguments!(lhs = 3, rhs = 5), &mut context).unwrap(),
         Value::from(false)
