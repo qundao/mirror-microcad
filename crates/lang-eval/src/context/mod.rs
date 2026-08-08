@@ -144,9 +144,6 @@ impl EvalContext {
     pub fn new() -> Self {
         let mut builtins = BuiltinRegistry::new();
 
-        builtins.register(microcad_builtin::core::GREATER_THAN.clone());
-        builtins.register(microcad_builtin::core::ADD.clone());
-
         Self {
             builtins,
             ..Default::default()

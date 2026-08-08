@@ -161,14 +161,9 @@ impl Eval<FlowSignal> for rst::function::Call {
 
                 match context.builtins.get(*builtin) {
                     Some(Builtin::Function(f)) => {
-                        let args = find_match(&args, &(f.ty)(), &tuple!())?;
+                        let args = find_match(&args, &f.ty(), &tuple!())?;
 
-                        Ok(FlowSignal::Yield((f.f)(
-                            args,
-                            &mut BuiltinEvalContext {
-                                current_fn: String::new(),
-                            },
-                        )?))
+                        Ok(FlowSignal::Yield(f.call_isolated(args)?))
                     }
                     None => unimplemented!("Function not found"),
                     _ => todo!(),
