@@ -351,15 +351,6 @@ impl<'ctx> Bind<'ctx> for mir::Name {
     }
 }
 
-impl<'ctx, Expr> Bind<'ctx> for ir::ListExpression<Expr>
-where
-    Expr: Bind<'ctx>,
-{
-    fn bind(&mut self, binder: &mut Binder<'ctx>) -> ResolveResult<()> {
-        self.0.iter_mut().try_for_each(|expr| expr.bind(binder))
-    }
-}
-
 impl<'ctx> Bind<'ctx> for mir::ConstantExpression {
     fn bind(&mut self, binder: &mut Binder<'ctx>) -> ResolveResult<()> {
         use mir::ConstantExpression;
@@ -367,9 +358,6 @@ impl<'ctx> Bind<'ctx> for mir::ConstantExpression {
         Ok(match self {
             ConstantExpression::Invalid | ConstantExpression::Literal(_) => {}
             ConstantExpression::Name(name) => name.bind(binder)?,
-            ConstantExpression::FormatString(format_string) => todo!(),
-            ConstantExpression::List(array_expression) => todo!(),
-            ConstantExpression::Tuple(tuple_expression) => todo!(),
             ConstantExpression::Call(call) => todo!(),
         })
     }
@@ -383,9 +371,6 @@ impl<'ctx> Bind<'ctx> for mir::FunctionExpression {
             FunctionExpression::Invalid => {}
             FunctionExpression::Literal(literal) => {}
             FunctionExpression::Name(name) => name.bind(binder)?,
-            FunctionExpression::FormatString(format_string) => todo!(),
-            FunctionExpression::List(array_expression) => todo!(),
-            FunctionExpression::Tuple(tuple_expression) => todo!(),
             FunctionExpression::Scope(scope) => todo!(),
             FunctionExpression::If(_) => todo!(),
             FunctionExpression::Call(call) => todo!(),
