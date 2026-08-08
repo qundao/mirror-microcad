@@ -21,21 +21,136 @@ pub mod core {
         Ok((lhs + rhs)?)
     }
 
-    /// Compare to values if they are greater_than
-    #[builtin_fn(core::greater_than(lhs: Any, rhs: Any) -> Any)]
-    pub fn greater_than(
-        args: Arguments,
-        _ctx: &mut BuiltinEvalContext,
-    ) -> Result<Value, BuiltinError> {
-        let (lhs, rhs) = args.get_binary();
-        Ok((lhs > rhs).into())
-    }
-
     /// Calculate the difference of two values.
     #[builtin_fn(core::sub(lhs: Any, rhs: Any) -> Any)]
     pub fn sub(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
         Ok((lhs - rhs)?)
+    }
+
+    /// Calculate the product of two values.
+    #[builtin_fn(core::mul(lhs: Any, rhs: Any) -> Any)]
+    pub fn mul(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
+        Ok((lhs * rhs)?)
+    }
+
+    /// Division of two values.
+    #[builtin_fn(core::div(lhs: Any, rhs: Any) -> Any)]
+    pub fn div(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
+        Ok((lhs / rhs)?)
+    }
+
+    /// Union of two values.
+    #[builtin_fn(core::union(lhs: Any, rhs: Any) -> Any)]
+    pub fn union(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
+        Ok((lhs / rhs)?)
+    }
+
+    /// Union of two values.
+    #[builtin_fn(core::intersect(lhs: Any, rhs: Any) -> Any)]
+    pub fn intersect(
+        args: Arguments,
+        _ctx: &mut BuiltinEvalContext,
+    ) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
+        Ok((lhs / rhs)?)
+    }
+
+    /// Compare to values if they are greater_than
+    #[builtin_fn(core::gt(lhs: Any, rhs: Any) -> Bool)]
+    pub fn gt(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
+        Ok((lhs > rhs).into())
+    }
+
+    /// Compare to values if they are greater_than
+    #[builtin_fn(core::lt(lhs: Any, rhs: Any) -> Bool)]
+    pub fn lt(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
+        Ok((lhs < rhs).into())
+    }
+
+    /// Compare to values if they are greater_than
+    #[builtin_fn(core::ge(lhs: Any, rhs: Any) -> Bool)]
+    pub fn ge(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
+        Ok((lhs >= rhs).into())
+    }
+
+    /// Compare to values if they are greater_than
+    #[builtin_fn(core::le(lhs: Any, rhs: Any) -> Bool)]
+    pub fn le(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
+        Ok((lhs <= rhs).into())
+    }
+
+    /// Compare to values if they are greater_than
+    #[builtin_fn(core::eq(lhs: Any, rhs: Any) -> Bool)]
+    pub fn eq(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
+        Ok((lhs == rhs).into())
+    }
+
+    /// Compare to values if they are greater_than
+    #[builtin_fn(core::near(lhs: Any, rhs: Any) -> Bool)]
+    pub fn near(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
+        Ok((lhs == rhs).into())
+    }
+
+    /// Compare to values if they are greater_than
+    #[builtin_fn(core::not_equal(lhs: Any, rhs: Any) -> Bool)]
+    pub fn not_equal(
+        args: Arguments,
+        _ctx: &mut BuiltinEvalContext,
+    ) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
+        Ok((lhs == rhs).into())
+    }
+
+    /// Compare to values if they are greater_than
+    #[builtin_fn(core::and(lhs: Any, rhs: Any) -> Bool)]
+    pub fn and(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
+        Ok((lhs == rhs).into())
+    }
+
+    /// Compare to values if they are greater_than
+    #[builtin_fn(core::or(lhs: Any, rhs: Any) -> Bool)]
+    pub fn or(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
+        Ok((lhs == rhs).into())
+    }
+
+    /// Compare to values if they are greater_than
+    #[builtin_fn(core::xor(lhs: Any, rhs: Any) -> Bool)]
+    pub fn xor(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
+        Ok((lhs == rhs).into())
+    }
+
+    /// Negative value.
+    #[builtin_fn(core::neg(rhs: Any) -> Any)]
+    pub fn neg(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
+        Ok((lhs / rhs)?)
+    }
+
+    /// Positive value.
+    #[builtin_fn(core::plus(rhs: Any) -> Any)]
+    pub fn plus(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
+        Ok((lhs / rhs)?)
+    }
+
+    /// Logical NOT.
+    #[builtin_fn(core::not(rhs: Any) -> Any)]
+    pub fn not(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let (lhs, rhs) = args.get_binary();
+        Ok((lhs / rhs)?)
     }
 
     #[builtin_fn(core::array_access(lhs: Any, index: Any) -> Any)]
