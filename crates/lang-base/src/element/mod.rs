@@ -7,6 +7,8 @@ pub use identifier::{Case, Identifier, IdentifierList, ShortId};
 use serde::{Deserialize, Serialize};
 use strum::{Display, EnumString};
 
+use crate::BuiltinName;
+
 /// The possible type of workbenches
 #[derive(Debug, PartialEq, Hash, Copy, Clone, Serialize, Deserialize)]
 pub enum WorkbenchKind {
@@ -95,8 +97,8 @@ pub enum BinaryOperator {
 
 impl BinaryOperator {
     /// Returns the lower snake_case standard library function name for this operator.
-    pub const fn builtin_fn_name(&self) -> &'static str {
-        match self {
+    pub const fn builtin_name(&self) -> BuiltinName {
+        BuiltinName::new(match self {
             Self::Add => "__mu::core::add",
             Self::Subtract => "__mu::core::sub",
             Self::Multiply => "__mu::core::mul",
@@ -114,7 +116,7 @@ impl BinaryOperator {
             Self::And => "__mu::core::and",
             Self::Or => "__mu::core::or",
             Self::Xor => "__mu::core::xor",
-        }
+        })
     }
 }
 
@@ -132,11 +134,11 @@ pub enum UnaryOperator {
 
 impl UnaryOperator {
     /// Returns the lower snake_case standard library function name for this operator.
-    pub const fn builtin_fn_name(&self) -> &'static str {
-        match self {
+    pub const fn builtin_name(&self) -> BuiltinName {
+        BuiltinName::new(match self {
             Self::Minus => "__mu::core::neg",
             Self::Plus => "__mu::core::plus",
             Self::Not => "__mu::core::not",
-        }
+        })
     }
 }

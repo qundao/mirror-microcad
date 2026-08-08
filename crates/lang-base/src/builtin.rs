@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 #[macro_export]
 macro_rules! __mu {
     ($($path:ident)::+) => {
-        $crate::BuiltinId::from_name(concat!("__mu::", stringify!($($path)::+)))
+        $crate::BuiltinName::new(concat!("__mu::", stringify!($($path)::+)))
     };
 }
 
@@ -40,6 +40,38 @@ impl From<String> for BuiltinId {
 // Print cleanly as hex in debug/format strings (e.g. BuiltinId(0x4A8F...))
 impl std::fmt::Display for BuiltinId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "BuiltinId(0x{:016X})", self.0)
+        write!(f, "0x{:016X}", self.0)
+    }
+}
+
+/// Builtin name
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct BuiltinName {
+    pub name: &'static str,
+    pub id: BuiltinId,
+}
+
+impl BuiltinName {
+    /// Create a new BuiltinName (const)
+    pub const fn new(name: &'static str) -> Self {
+        Self {
+            name,
+            id: BuiltinId::from_name(name),
+        }
+    }
+}
+
+impl From<&'static str> for BuiltinName {
+    fn from(name: &'static str) -> Self {
+        BuiltinName {
+            name,
+            id: BuiltinId::from_name(name),
+        }
+    }
+}
+
+impl std::fmt::Display for BuiltinName {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}@{}", self.name, self.id)
     }
 }

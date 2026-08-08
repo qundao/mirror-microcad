@@ -40,7 +40,7 @@ pub const MICROCAD_EXTENSION: &str = "µcad";
 pub use version::{MICROCAD_VERSION, Version};
 
 pub use artifact::{Artifact, ArtifactKind, StageResult};
-pub use builtin::BuiltinId;
+pub use builtin::{BuiltinId, BuiltinName};
 pub use diag::{DiagRenderOptions, Diagnostic, Diagnostics};
 pub use element::{Identifier, IdentifierList};
 pub use ord_map::{OrdMap, OrdMapValue};
