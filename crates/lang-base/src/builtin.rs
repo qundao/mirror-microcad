@@ -5,13 +5,6 @@
 
 use serde::{Deserialize, Serialize};
 
-#[macro_export]
-macro_rules! __mu {
-    ($($path:ident)::+) => {
-        $crate::BuiltinId::from_name(concat!("__mu::", stringify!($($path)::+))).into()
-    };
-}
-
 /// Strongly-typed wrapper around raw builtin u64 hashes
 #[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub struct BuiltinId(pub u64);
