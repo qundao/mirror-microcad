@@ -254,28 +254,11 @@ pub mod core {
         Ok((lhs > rhs).into())
     }
 
+    /// Calculate the difference of two values.
+    #[builtin_fn(core::sub(lhs: Any, rhs: Any) -> Any)]
     pub fn sub(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
         Ok((lhs - rhs)?)
-    }
-
-    #[cfg(test)]
-    mod tests {
-        use super::super::*;
-
-        #[test]
-        fn greater_than() {
-            let mut context = BuiltinEvalContext::default();
-
-            assert_eq!(
-                core::greater_than(arguments!(lhs = 3, rhs = 5), &mut context).unwrap(),
-                Value::from(false)
-            );
-            assert_eq!(
-                core::greater_than(arguments!(lhs = 5, rhs = 3), &mut context).unwrap(),
-                Value::from(true)
-            );
-        }
     }
 }
 
@@ -287,4 +270,16 @@ pub mod math {
     /// Pi
     #[builtin_constant(math::PI)]
     pub static PI: Builtin = std::f64::consts::PI;
+}
+
+#[cfg(test)]
+mod tests {
+    use microcad_builtin_proc_macros::test_builtin_fn;
+
+    use super::*;
+
+    #[test]
+    #[test_builtin_fn(core::greater_than(lhs = 3, rhs = 5) => false)]
+    #[test_builtin_fn(core::greater_than(lhs = 5, rhs = 3) => true)]
+    fn greater_than() {}
 }
