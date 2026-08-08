@@ -5,7 +5,7 @@
 
 use crate::prelude::*;
 
-pub fn builtin_mod_impl(item: TokenStream) -> TokenStream {
+pub(crate) fn builtin_mod_impl(item: TokenStream) -> TokenStream {
     let mut item_mod = parse_macro_input!(item as ItemMod);
 
     let mut collected_builtins = Vec::new();

@@ -3,6 +3,7 @@
 
 extern crate proc_macro;
 
+mod __mu;
 mod builtin_constant;
 mod builtin_fn;
 mod builtin_mod;
@@ -13,6 +14,7 @@ pub(crate) mod prelude {
 
     pub use quote::{format_ident, quote};
     pub use syn::parse::{Parse, ParseStream};
+    pub use syn::spanned::Spanned;
     pub use syn::{
         Expr, Ident, ItemFn, ItemMod, ItemStatic, Path, Result, Token, parse_macro_input,
         parse_quote,
@@ -39,4 +41,9 @@ pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
 #[proc_macro_attribute]
 pub fn test_builtin_fn(attr: TokenStream, item: TokenStream) -> TokenStream {
     test_builtin_fn::test_builtin_fn_impl(attr, item)
+}
+
+#[proc_macro]
+pub fn __mu(input: TokenStream) -> TokenStream {
+    __mu::__mu_impl(input)
 }

@@ -24,7 +24,7 @@ impl Parse for BuiltinConstantSig {
     }
 }
 
-pub fn builtin_constant_impl(attr: TokenStream, item: TokenStream) -> TokenStream {
+pub(crate) fn builtin_constant_impl(attr: TokenStream, item: TokenStream) -> TokenStream {
     // Parse the macro attribute syntax
     let BuiltinConstantSig { name, mod_name } = parse_macro_input!(attr as BuiltinConstantSig);
 
