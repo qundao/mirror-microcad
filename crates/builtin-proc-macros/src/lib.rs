@@ -103,12 +103,31 @@ impl Parse for BuiltinFnSig {
         input.parse::<Token![->]>()?;
         let return_type: Ident = input.parse()?;
 
-        Ok(BuiltinFnSig {
+        Ok(Self {
             mod_name,
             name,
             params,
             return_type,
         })
+    }
+}
+
+// Parses the syntax inside #[builtin_fn(#mod_name::#name)]
+struct BuiltinConstantSig {
+    /// E.g. `math`
+    mod_name: Ident,
+    /// E:g. `PI`
+    name: Ident,
+}
+
+impl Parse for BuiltinConstantSig {
+    fn parse(input: ParseStream) -> Result<Self> {
+        // 1. Parse `mod_name::name`
+        let mod_name: Ident = input.parse()?;
+        input.parse::<Token![::]>()?;
+        let name: Ident = input.parse()?;
+
+        Ok(Self { mod_name, name })
     }
 }
 
@@ -177,7 +196,10 @@ pub fn builtin_fn(attr: TokenStream, item: TokenStream) -> TokenStream {
 }
 
 #[proc_macro_attribute]
-pub fn builtin_constant(_attr: TokenStream, item: TokenStream) -> TokenStream {
+pub fn builtin_constant(attr: TokenStream, item: TokenStream) -> TokenStream {
+    // Parse the macro attribute syntax
+    let BuiltinConstantSig { name, mod_name } = parse_macro_input!(attr as BuiltinConstantSig);
+
     // Parse the annotated static item (e.g., `pub static PI: Builtin = std::f64::consts::PI;`)
     let input_static = parse_macro_input!(item as ItemStatic);
 
@@ -196,16 +218,77 @@ pub fn builtin_constant(_attr: TokenStream, item: TokenStream) -> TokenStream {
     }
 
     let static_name = &input_static.ident;
+
+    if name != *static_name {
+        return syn::Error::new_spanned(
+            &name,
+            format!(
+                "builtin constant name name `{}` does not match Rust static name `{}`",
+                name, static_name
+            ),
+        )
+        .to_compile_error()
+        .into();
+    }
+
     let expr = &input_static.expr;
     let vis = &input_static.vis;
 
     // Generate output expansion wrapping inside `builtin_constant_helper!`
-    let expanded = quote! {
+    quote! {
         #vis static #static_name: Builtin = builtin_constant_helper!(
             #doc_comment
-            math::#static_name = #expr
+            #mod_name::#name = #expr
         );
-    };
+    }
+    .into()
+}
 
-    TokenStream::from(expanded)
+#[proc_macro_attribute]
+pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
+    let mut item_mod = parse_macro_input!(item as ItemMod);
+
+    let mut collected_builtins = Vec::new();
+
+    if let Some((_, items)) = &item_mod.content {
+        for item in items {
+            match item {
+                // Scan functions with #[builtin_fn(...)]
+                syn::Item::Fn(ItemFn { attrs, sig, .. }) => {
+                    let has_builtin_fn =
+                        attrs.iter().any(|attr| attr.path().is_ident("builtin_fn"));
+                    if has_builtin_fn {
+                        // Converts Rust fn name `greater_than` -> UPPERCASE static name `GREATER_THAN`
+                        let static_ident =
+                            format_ident!("{}", sig.ident.to_string().to_uppercase());
+                        collected_builtins.push(static_ident);
+                    }
+                }
+                // Scan statics with #[builtin_constant(...)]
+                syn::Item::Static(ItemStatic { attrs, ident, .. }) => {
+                    let has_builtin_constant = attrs
+                        .iter()
+                        .any(|attr| attr.path().is_ident("builtin_constant"));
+                    if has_builtin_constant {
+                        collected_builtins.push(ident.clone());
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
+
+    // Append `pub static ALL_BUILTINS` to the end of the module's item vector
+    if let Some((_, items)) = &mut item_mod.content {
+        items.push(parse_quote! {
+            pub static ALL_BUILTINS: &[&Builtin] = &[
+                #(&#collected_builtins),*
+            ];
+        });
+    }
+
+    quote! {
+        #item_mod
+    }
+    .into()
 }

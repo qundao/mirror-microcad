@@ -8,6 +8,8 @@ use microcad_lang_base::{BuiltinId, BuiltinName, HashMap};
 use microcad_lang_types::{Arguments, FunctionType, Value, ValueError, arguments, function_type};
 use thiserror::Error;
 
+use microcad_builtin_proc_macros::builtin_mod;
+
 #[derive(Debug, Default)]
 pub struct BuiltinEvalContext<'a> {
     pub current_fn: Option<&'a BuiltinFunction>,
@@ -228,6 +230,7 @@ macro_rules! builtin_constant_helper {
     };
 }
 
+#[builtin_mod]
 pub mod core {
     use microcad_builtin_proc_macros::builtin_fn;
     use microcad_lang_types::{Arguments, Type, Value};
@@ -243,7 +246,7 @@ pub mod core {
 
     /// Compare to values if they are greater_than
     #[builtin_fn(core::greater_than(lhs: Any, rhs: Any) -> Any)]
-pub fn greater_than(
+    pub fn greater_than(
         args: Arguments,
         _ctx: &mut BuiltinEvalContext,
     ) -> Result<Value, BuiltinError> {
@@ -263,6 +266,7 @@ pub fn greater_than(
         #[test]
         fn greater_than() {
             let mut context = BuiltinEvalContext::default();
+
             assert_eq!(
                 core::greater_than(arguments!(lhs = 3, rhs = 5), &mut context).unwrap(),
                 Value::from(false)
@@ -281,6 +285,6 @@ pub mod math {
     use crate::Builtin;
 
     /// Pi
-    #[builtin_constant]
+    #[builtin_constant(math::PI)]
     pub static PI: Builtin = std::f64::consts::PI;
 }
