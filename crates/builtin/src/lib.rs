@@ -3,67 +3,20 @@
 
 //! µcad built-in crate.
 
-use derive_more::{Debug, Display, From};
-use microcad_lang_base::{BuiltinId, BuiltinName, HashMap};
-use microcad_lang_types::{Arguments, FunctionType, Value, ValueError, arguments, function_type};
-use thiserror::Error;
+mod error;
+pub use error::BuiltinError;
 
-use microcad_builtin_proc_macros::builtin_mod;
+pub mod mu;
+mod registry;
+pub use registry::BuiltinRegistry;
+
+use derive_more::{Debug, Display, From};
+use microcad_lang_base::{BuiltinId, BuiltinName};
+use microcad_lang_types::{Arguments, FunctionType, Value, function_type};
 
 #[derive(Debug, Default)]
 pub struct BuiltinEvalContext<'a> {
     pub current_fn: Option<&'a BuiltinFunction>,
-}
-
-#[derive(Debug, Error)]
-pub enum BuiltinError {
-    #[error("Value error: {0}")]
-    ValueError(#[from] ValueError),
-
-    #[error("Builtin '{name}' expected at least {expected} arguments, found {found}")]
-    InvalidArgumentCount {
-        name: String,
-        expected: usize,
-        found: usize,
-    },
-
-    #[error("Type mismatch in builtin '{name}': expected {expected}, found {found}")]
-    TypeMismatch {
-        name: String,
-        expected: &'static str,
-        found: &'static str,
-    },
-
-    #[error("Builtin error in '{name}': {message}")]
-    ExecutionFailed { name: String, message: String },
-}
-
-#[derive(Default)]
-pub struct BuiltinRegistry {
-    handlers: HashMap<BuiltinId, Builtin>,
-}
-
-impl std::fmt::Debug for BuiltinRegistry {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "BuiltinRegistry")
-    }
-}
-
-impl BuiltinRegistry {
-    pub fn new() -> Self {
-        let registry = Self {
-            handlers: HashMap::default(),
-        };
-        registry
-    }
-
-    pub fn register(&mut self, builtin: Builtin) {
-        self.handlers.insert(builtin.id(), builtin);
-    }
-
-    pub fn get(&self, id: BuiltinId) -> Option<&Builtin> {
-        self.handlers.get(&id)
-    }
 }
 
 /// Built-in execution function signature
@@ -197,17 +150,6 @@ macro_rules! builtin_function_helper {
             $fn_name,
         ))
     };
-
-    // Syntax shorthand when the handler function name matches the last path segment (e.g. `add`)
-    (
-        $mod_name:ident::$fn_name:ident ( $( $param:ident : $ty:expr ),* $(,)? ) -> $ret:expr
-    ) => {
-        $crate::Builtin::function($crate::BuiltinFunction::new(
-            $crate::BuiltinInfo::new(concat!("__mu::", stringify!($mod_name), "::", stringify!($fn_name))),
-            || $crate::function_type!(($( $param : $ty ),*) -> $ret),
-            $fn_name,
-        ))
-    };
 }
 
 #[macro_export]
@@ -228,58 +170,4 @@ macro_rules! builtin_constant_helper {
             || $crate::Value::from($value),
         ))
     };
-}
-
-#[builtin_mod]
-pub mod core {
-    use microcad_builtin_proc_macros::builtin_fn;
-    use microcad_lang_types::{Arguments, Type, Value};
-
-    use crate::{Builtin, BuiltinError, BuiltinEvalContext};
-
-    /// Calculate the sum of two values
-    #[builtin_fn(core::add(lhs: Any, rhs: Any) -> Any)]
-    pub fn add(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        let (lhs, rhs) = args.get_binary();
-        Ok((lhs + rhs)?)
-    }
-
-    /// Compare to values if they are greater_than
-    #[builtin_fn(core::greater_than(lhs: Any, rhs: Any) -> Any)]
-    pub fn greater_than(
-        args: Arguments,
-        _ctx: &mut BuiltinEvalContext,
-    ) -> Result<Value, BuiltinError> {
-        let (lhs, rhs) = args.get_binary();
-        Ok((lhs > rhs).into())
-    }
-
-    /// Calculate the difference of two values.
-    #[builtin_fn(core::sub(lhs: Any, rhs: Any) -> Any)]
-    pub fn sub(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        let (lhs, rhs) = args.get_binary();
-        Ok((lhs - rhs)?)
-    }
-}
-
-pub mod math {
-    use microcad_builtin_proc_macros::builtin_constant;
-
-    use crate::Builtin;
-
-    /// Pi
-    #[builtin_constant(math::PI)]
-    pub static PI: Builtin = std::f64::consts::PI;
-}
-
-#[cfg(test)]
-mod tests {
-    use microcad_builtin_proc_macros::test_builtin_fn;
-
-    use super::*;
-
-    #[test]
-    #[test_builtin_fn(core::greater_than(lhs = 3, rhs = 5) => false)]
-    #[test_builtin_fn(core::greater_than(lhs = 5, rhs = 3) => true)]
-    fn greater_than() {}
 }
