@@ -241,6 +241,8 @@ pub mod core {
         Ok((lhs + rhs)?)
     }
 
+    /// Compare to values if they are greater_than
+    #[builtin_fn((lhs: Any, rhs: Any) -> Any)]
     pub fn greater_than(
         args: Arguments,
         _ctx: &mut BuiltinEvalContext,
@@ -248,11 +250,6 @@ pub mod core {
         let (lhs, rhs) = args.get_binary();
         Ok((lhs > rhs).into())
     }
-
-    pub static GREATER_THAN: Builtin = builtin_function_helper!(
-        "Compare to values if they are greater_than"
-        core::greater_than(lhs: Type::Any, rhs: Type::Any) -> Type::Bool
-    );
 
     pub fn sub(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
@@ -279,10 +276,11 @@ pub mod core {
 }
 
 pub mod math {
+    use microcad_builtin_proc_macros::builtin_constant;
+
     use crate::Builtin;
 
-    pub static PI: Builtin = builtin_constant_helper!(
-        "PI"
-        math::PI = std::f64::consts::PI
-    );
+    /// Pi
+    #[builtin_constant]
+    pub static PI: Builtin = std::f64::consts::PI;
 }
