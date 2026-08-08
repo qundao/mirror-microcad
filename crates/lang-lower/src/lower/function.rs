@@ -2,8 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    CastInto, Lower, LowerContext, LowerError, LowerResult,
-    ir::{self, ArgumentList, FunctionExpression, FunctionStatement},
+    CastInto, Lower, LowerContext, LowerError, LowerResult, ir,
     lower::{LowerName, extract_statements_with_tail, for_each_statement},
 };
 
@@ -46,7 +45,7 @@ impl<Name: LowerName> Lower<ast::Body> for ir::Scope<Name> {
             Ok(())
         })?;
 
-        let statements: Box<[FunctionStatement<Name>]> = Box::lower(statements, context)?;
+        let statements: Box<[ir::FunctionStatement<Name>]> = Box::lower(statements, context)?;
 
         Ok(Self {
             statements,
@@ -70,19 +69,8 @@ impl<Name: LowerName> Lower<ast::Expression> for ir::FunctionExpression<Name> {
             ast::Expression::ArrayRange(a) => Self::lower(a, context)?,
             ast::Expression::ArrayList(a) => Self::lower(a, context)?,
             ast::Expression::SymbolPath(n) => Self::Name(Name::lower(n, context)?),
-            ast::Expression::BinaryOperation(binop) => Self::Call(ir::Call {
-                name: binop.op.builtin_name().id.into(),
-                args: ArgumentList::from_iter([
-                    Self::lower(binop.lhs.as_ref(), context)?,
-                    Self::lower(binop.rhs.as_ref(), context)?,
-                ]),
-                src_ref: context.span_to_src_ref(&binop.span),
-            }),
-            ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call {
-                name: unop.op.builtin_name().id.into(),
-                args: ArgumentList::from_iter([Self::lower(unop.rhs.as_ref(), context)?]),
-                src_ref: context.span_to_src_ref(&unop.span),
-            }),
+            ast::Expression::BinaryOperation(binop) => Self::Call(ir::Call::lower(binop, context)?),
+            ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call::lower(unop, context)?),
             ast::Expression::Marker(_) => {
                 panic!("Marker statement not allowed")
             }
@@ -151,7 +139,7 @@ impl<Name: LowerName> Lower<ast::Statement> for Option<ir::FunctionStatement<Nam
             )),
             ast::Statement::LocalAssignment(local_assignment) => {
                 Some(ir::FunctionStatement::Local(ir::LocalAssignment::<
-                    FunctionExpression<Name>,
+                    ir::FunctionExpression<Name>,
                 >::lower(
                     local_assignment, context
                 )?))

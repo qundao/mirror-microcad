@@ -99,7 +99,11 @@ where
 {
     fn lower(node: &ast::UnaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            name: node.op.builtin_name().id.into(),
+            name: match node.op.value {
+                ast::UnaryOperator::Minus => __mu!(core::neg),
+                ast::UnaryOperator::Plus => __mu!(core::plus),
+                ast::UnaryOperator::Not => __mu!(core::not),
+            },
             args: ir::ArgumentList::from_iter([Expr::lower(&node.rhs, context)?]),
             src_ref: context.span_to_src_ref(&node.span),
         })
@@ -112,17 +116,34 @@ where
 {
     fn lower(node: &ast::BinaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            name: node.op.builtin_name().id.into(),
+            name: match node.op.value {
+                ast::BinaryOperator::Add => __mu!(core::add),
+                ast::BinaryOperator::Subtract => __mu!(core::sub),
+                ast::BinaryOperator::Multiply => __mu!(core::mul),
+                ast::BinaryOperator::Divide => __mu!(core::div),
+                ast::BinaryOperator::Union => __mu!(core::union),
+                ast::BinaryOperator::Intersect => __mu!(core::intersect),
+                ast::BinaryOperator::GreaterThan => __mu!(core::gt),
+                ast::BinaryOperator::LessThan => __mu!(core::lt),
+                ast::BinaryOperator::GreaterEqual => __mu!(core::ge),
+                ast::BinaryOperator::LessEqual => __mu!(core::le),
+                ast::BinaryOperator::Equal => __mu!(core::eq),
+                ast::BinaryOperator::Near => __mu!(core::near),
+                ast::BinaryOperator::NotEqual => __mu!(core::not_equal),
+                ast::BinaryOperator::And => __mu!(core::and),
+                ast::BinaryOperator::Or => __mu!(core::or),
+                ast::BinaryOperator::Xor | ast::BinaryOperator::PowerXor => __mu!(core::xor),
+            },
             args: ir::ArgumentList::from_iter([
                 ir::Argument::Named {
                     name: Identifier::no_ref("lhs"),
                     expr: Expr::lower(&node.lhs, context)?,
-                    src_ref: SrcRef::none(),
+                    src_ref: context.span_to_src_ref(&node.lhs.span()),
                 },
                 ir::Argument::Named {
-                    name: Identifier::no_ref("lhs"),
+                    name: Identifier::no_ref("rhs"),
                     expr: Expr::lower(&node.rhs, context)?,
-                    src_ref: SrcRef::none(),
+                    src_ref: context.span_to_src_ref(&node.rhs.span()),
                 },
             ]),
             src_ref: context.span_to_src_ref(&node.span),

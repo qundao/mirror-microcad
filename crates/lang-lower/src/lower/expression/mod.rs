@@ -12,7 +12,7 @@ mod literal;
 use microcad_builtin::__mu;
 use microcad_lang_base::{Identifier, SpanToSrcRef};
 use microcad_lang_parse::ast;
-use microcad_lang_types::{BinaryOperator, Scalar, Value};
+use microcad_lang_types::{Scalar, Value};
 
 impl Lower<ast::Identifier> for ir::Marker {
     fn lower(node: &ast::Identifier, context: &mut LowerContext) -> LowerResult<Self> {
@@ -93,7 +93,7 @@ where
             range
         } else {
             Expr::from(ir::Call {
-                name: BinaryOperator::Multiply.builtin_name().id.into(),
+                name: __mu!(core::mul),
                 args: ir::ArgumentList::from_iter([
                     range,
                     Expr::from(ir::Literal::from(
@@ -130,7 +130,7 @@ where
             list
         } else {
             Expr::from(ir::Call {
-                name: BinaryOperator::Multiply.builtin_name().id.into(),
+                name: __mu!(core::mul),
                 args: ir::ArgumentList::from_iter([
                     list,
                     Expr::from(ir::Literal::from(
