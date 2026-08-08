@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0x7cd65a945030702d",
-        output_hash: "0x69b7e7931cfd2a45",
+        output_hash: "0xd103c3e686ba8c52",
         tree: (
             id: Some("circle"),
             attr: ((
@@ -273,18 +273,18 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                             ],
                                                             src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..305)",
                                                         )),
-                                                        src_ref: "None",
+                                                        src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..305)",
                                                     ),
                                                     Named(
                                                         name: ((
-                                                            value: "lhs",
+                                                            value: "rhs",
                                                             src_ref: "None",
                                                         )),
                                                         expr: Literal(((
                                                             value: Quantity("2"),
                                                             src_ref: "8:29 @ 0x5b5b0d75574ec6c6 (307..310)",
                                                         ))),
-                                                        src_ref: "None",
+                                                        src_ref: "8:29 @ 0x5b5b0d75574ec6c6 (307..310)",
                                                     ),
                                                 ],
                                             ),
