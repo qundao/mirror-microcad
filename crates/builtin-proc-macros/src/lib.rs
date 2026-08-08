@@ -147,3 +147,37 @@ pub fn builtin_fn(attr: TokenStream, item: TokenStream) -> TokenStream {
     }
     .into()
 }
+
+#[proc_macro_attribute]
+pub fn builtin_constant(_attr: TokenStream, item: TokenStream) -> TokenStream {
+    // Parse the annotated static item (e.g., `pub static PI: Builtin = std::f64::consts::PI;`)
+    let input_static = parse_macro_input!(item as ItemStatic);
+
+    // Extract doc comment string
+    let mut doc_comment = String::new();
+    for attr in &input_static.attrs {
+        if attr.path().is_ident("doc") {
+            if let Ok(syn::Expr::Lit(syn::ExprLit {
+                lit: syn::Lit::Str(lit_str),
+                ..
+            })) = &attr.meta.require_name_value().map(|nv| &nv.value)
+            {
+                doc_comment.push_str(lit_str.value().trim());
+            }
+        }
+    }
+
+    let static_name = &input_static.ident;
+    let expr = &input_static.expr;
+    let vis = &input_static.vis;
+
+    // Generate output expansion wrapping inside `builtin_constant_helper!`
+    let expanded = quote! {
+        #vis static #static_name: Builtin = builtin_constant_helper!(
+            #doc_comment
+            math::#static_name = #expr
+        );
+    };
+
+    TokenStream::from(expanded)
+}
