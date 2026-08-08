@@ -233,6 +233,12 @@ impl From<f32> for Value {
     }
 }
 
+impl From<f64> for Value {
+    fn from(f: f64) -> Self {
+        Value::Quantity((Scalar::from_num(f)).into())
+    }
+}
+
 impl From<i32> for Value {
     fn from(i: i32) -> Self {
         Value::Integer(Integer::from_num(i))
