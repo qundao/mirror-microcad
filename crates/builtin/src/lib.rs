@@ -235,15 +235,15 @@ pub mod core {
     use crate::{Builtin, BuiltinError, BuiltinEvalContext};
 
     /// Calculate the sum of two values
-    #[builtin_fn((lhs: Any, rhs: Any) -> Any)]
+    #[builtin_fn(core::add(lhs: Any, rhs: Any) -> Any)]
     pub fn add(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
         Ok((lhs + rhs)?)
     }
 
     /// Compare to values if they are greater_than
-    #[builtin_fn((lhs: Any, rhs: Any) -> Any)]
-    pub fn greater_than(
+    #[builtin_fn(core::greater_than(lhs: Any, rhs: Any) -> Any)]
+pub fn greater_than(
         args: Arguments,
         _ctx: &mut BuiltinEvalContext,
     ) -> Result<Value, BuiltinError> {

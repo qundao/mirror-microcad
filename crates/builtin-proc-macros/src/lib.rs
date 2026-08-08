@@ -68,14 +68,24 @@ impl Parse for BuiltinParam {
     }
 }
 
-// Parses the syntax inside #[builtin_fn((arg1: Type1, ...) -> ReturnType)]
+// Parses the syntax inside #[builtin_fn(#mod_name::#name(arg1: Type1, ...) -> #return_type)]
 struct BuiltinFnSig {
+    /// E.g. `core`
+    mod_name: Ident,
+    /// E:g. `add`
+    name: Ident,
     params: Vec<BuiltinParam>,
     return_type: Ident,
 }
 
 impl Parse for BuiltinFnSig {
     fn parse(input: ParseStream) -> Result<Self> {
+        // 1. Parse `mod_name::name`
+        let mod_name: Ident = input.parse()?;
+        input.parse::<Token![::]>()?;
+        let name: Ident = input.parse()?;
+
+        // 2. Parse parenthesized parameter list `(arg1: Type1, ...)`
         let content;
         syn::parenthesized!(content in input);
 
@@ -89,10 +99,13 @@ impl Parse for BuiltinFnSig {
             }
         }
 
+        // 3. Parse `-> return_type`
         input.parse::<Token![->]>()?;
         let return_type: Ident = input.parse()?;
 
         Ok(BuiltinFnSig {
+            mod_name,
+            name,
             params,
             return_type,
         })
@@ -103,6 +116,8 @@ impl Parse for BuiltinFnSig {
 pub fn builtin_fn(attr: TokenStream, item: TokenStream) -> TokenStream {
     // Parse the macro attribute syntax
     let BuiltinFnSig {
+        name,
+        mod_name,
         params,
         return_type,
     } = parse_macro_input!(attr as BuiltinFnSig);
@@ -125,6 +140,19 @@ pub fn builtin_fn(attr: TokenStream, item: TokenStream) -> TokenStream {
     }
 
     let fn_name = &input_fn.sig.ident;
+
+    if name != *fn_name {
+        return syn::Error::new_spanned(
+            &name,
+            format!(
+                "builtin function name `{}` does not match Rust function name `{}`",
+                name, fn_name
+            ),
+        )
+        .to_compile_error()
+        .into();
+    }
+
     // Generate uppercase static name (e.g., `add` -> `ADD`)
     let static_name = format_ident!("{}", fn_name.to_string().to_uppercase());
 
@@ -142,7 +170,7 @@ pub fn builtin_fn(attr: TokenStream, item: TokenStream) -> TokenStream {
 
         pub static #static_name: Builtin = builtin_function_helper!(
             #doc_comment
-            core::#fn_name(#(#formatted_params),*) -> Type::#return_ty_ident
+            #mod_name::#name(#(#formatted_params),*) -> Type::#return_ty_ident
         );
     }
     .into()
