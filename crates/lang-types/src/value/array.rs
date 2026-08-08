@@ -9,7 +9,7 @@ use derive_more::{Deref, DerefMut};
 use serde::{Deserialize, Serialize};
 
 /// Collection of values of the same type.
-#[derive(Clone, Debug, Deref, Hash, DerefMut, Serialize, Deserialize)]
+#[derive(Clone, Debug, Deref, Hash, PartialEq, DerefMut, Serialize, Deserialize)]
 pub struct Array {
     /// List of values
     #[deref]
@@ -98,12 +98,6 @@ impl Array {
     /// Check if all items are sorted in descending order.
     pub fn is_descending(&self) -> bool {
         self.as_slice().windows(2).all(|w| w[0] >= w[1])
-    }
-}
-
-impl PartialEq for Array {
-    fn eq(&self, other: &Self) -> bool {
-        self.ty == other.ty && self.items == other.items
     }
 }
 

@@ -61,9 +61,7 @@ pub struct UnnamedDescendants<'tree> {
 impl<'tree> UnnamedDescendants<'tree> {
     /// Create new descendants iterator
     pub fn new(model: ModelRef<'tree>) -> Self {
-        Self {
-            stack: vec![model].into(),
-        }
+        Self { stack: vec![model] }
     }
 }
 
@@ -90,9 +88,7 @@ pub struct UnnamedMultiplicityDescendants<'tree> {
 impl<'tree> UnnamedMultiplicityDescendants<'tree> {
     /// Create new descendants iterator
     pub fn new(model: ModelRef<'tree>) -> Self {
-        Self {
-            stack: vec![model].into(),
-        }
+        Self { stack: vec![model] }
     }
 }
 
@@ -108,7 +104,7 @@ impl<'tree> Iterator for UnnamedMultiplicityDescendants<'tree> {
                 continue;
             }
             // Return only non-multiplicity elements
-            return Some(model.clone());
+            return Some(model);
         }
         None
     }
@@ -134,7 +130,7 @@ impl<'tree> Iterator for Parents<'tree> {
             Some(model) => {
                 let parent = model.parent();
                 self.model = parent;
-                self.model.clone()
+                self.model
             }
             None => None,
         }
@@ -158,12 +154,12 @@ impl<'tree> Iterator for Ancestors<'tree> {
 
     fn next(&mut self) -> Option<Self::Item> {
         let model = match &self.model {
-            Some(model) => model.clone(),
+            Some(model) => *model,
             None => return None,
         };
 
         self.model = model.parent();
-        Some(model.clone())
+        Some(model)
     }
 }
 

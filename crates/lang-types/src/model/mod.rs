@@ -102,10 +102,10 @@ impl ModelTree {
         self.nodes.extend(mapped_nodes);
 
         // If a parent handle was specified, register the top-level inserted node into parent's children
-        if let Some(parent_handle) = parent {
-            if let Some(parent_node) = self.get_mut(parent_handle) {
-                parent_node.children.insert(first_inserted_handle);
-            }
+        if let Some(parent_handle) = parent
+            && let Some(parent_node) = self.get_mut(parent_handle)
+        {
+            parent_node.children.insert(first_inserted_handle);
         }
 
         Some(first_inserted_handle)
@@ -125,6 +125,12 @@ impl ModelTree {
 impl Ty for ModelTree {
     fn ty(&self) -> Type {
         self.root().map(|n| n.ty()).unwrap_or(Type::Invalid)
+    }
+}
+
+impl Default for ModelTree {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -391,34 +397,29 @@ impl Model {
 impl<'tree> ModelRef<'tree> {
     /// Returns an iterator over models children.
     pub fn children(&self) -> iter::Children<'tree> {
-        iter::Children::new(self.clone())
+        iter::Children::new(*self)
     }
 
     /// Returns an iterator of models to this model and its unnamed descendants, in tree order.
     ///
     /// Includes the current model.
     pub fn unnamed_descendants(&self) -> iter::UnnamedDescendants<'tree> {
-        iter::UnnamedDescendants::new(self.clone())
+        iter::UnnamedDescendants::new(*self)
     }
 
     /// An iterator that descends to multiplicity nodes.
     pub fn unnamed_multiplicity_descendants(&self) -> iter::UnnamedMultiplicityDescendants<'tree> {
-        iter::UnnamedMultiplicityDescendants::new(self.clone())
+        iter::UnnamedMultiplicityDescendants::new(*self)
     }
-
-    /// Returns an iterator of models that belong to the same source file as this one
-    /*pub fn source_file_descendants(&self) -> SourceFileDescendants<'tree> {
-        SourceFileDescendants::new(self.clone())
-    }*/
 
     /// Parents iterator.
     pub fn parents(&self) -> iter::Parents<'tree> {
-        iter::Parents::new(self.clone())
+        iter::Parents::new(*self)
     }
 
     /// Ancestors iterator.
     pub fn ancestors(&self) -> iter::Ancestors<'tree> {
-        iter::Ancestors::new(self.clone())
+        iter::Ancestors::new(*self)
     }
 }
 

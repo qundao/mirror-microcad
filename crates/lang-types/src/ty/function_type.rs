@@ -42,7 +42,7 @@ impl FunctionTypeParameters {
                 .iter()
                 .zip(&other.0)
                 .all(|((lhs_id, lhs_ty), (rhs_id, rhs_ty))| {
-                    lhs_id == rhs_id && lhs_ty.matches(&rhs_ty)
+                    lhs_id == rhs_id && lhs_ty.matches(rhs_ty)
                 })
     }
 
@@ -53,7 +53,7 @@ impl FunctionTypeParameters {
                 .iter()
                 .zip(&other.0)
                 .all(|((lhs_id, lhs_ty), (rhs_id, rhs_ty))| {
-                    lhs_id == rhs_id && (lhs_ty.matches(&rhs_ty) || lhs_ty.is_array_of(&rhs_ty))
+                    lhs_id == rhs_id && (lhs_ty.matches(rhs_ty) || lhs_ty.is_array_of(rhs_ty))
                 })
     }
 }

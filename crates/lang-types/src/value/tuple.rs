@@ -71,13 +71,13 @@ impl Tuple {
                 positional: self
                     .positional
                     .into_iter()
-                    .zip(rhs.positional.into_iter())
+                    .zip(rhs.positional)
                     .map(|(lhs, rhs)| op(lhs, rhs))
                     .collect::<ValueResult<Vec<_>>>()?,
                 named: self
                     .named
                     .into_iter()
-                    .zip(rhs.named.into_iter())
+                    .zip(rhs.named)
                     .map(|((id, lhs), (_, rhs))| op(lhs, rhs).map(|v| (id, v)))
                     .collect::<ValueResult<Vec<_>>>()?,
             })
@@ -117,7 +117,7 @@ impl Tuple {
             positional: self
                 .positional
                 .into_iter()
-                .map(|v| op(v))
+                .map(&op)
                 .collect::<ValueResult<Vec<_>>>()?,
             named: self
                 .named
