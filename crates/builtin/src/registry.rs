@@ -25,7 +25,6 @@ impl BuiltinRegistry {
         };
 
         registry.register_all(crate::mu::core::ALL_BUILTINS);
-
         registry
     }
 

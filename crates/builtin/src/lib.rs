@@ -12,7 +12,9 @@ pub use registry::BuiltinRegistry;
 
 use derive_more::{Debug, Display, From};
 use microcad_lang_base::{BuiltinId, BuiltinName};
-use microcad_lang_types::{Arguments, FunctionType, Value, function_type};
+use microcad_lang_types::{Arguments, FunctionType, Value};
+
+pub use microcad_builtin_proc_macros::__mu;
 
 #[derive(Debug, Default)]
 pub struct BuiltinEvalContext<'a> {
@@ -141,12 +143,17 @@ macro_rules! builtin_function_helper {
     // )
     (
         $doc:literal
-        $mod_name:ident::$fn_name:ident ( $( $param:ident : $ty:expr ),* $(,)? ) -> $ret:expr
+        $mod_name:ident::$fn_name:ident ( $func_ty:expr )
     ) => {
         $crate::Builtin::function($crate::BuiltinFunction::new(
-            $crate::BuiltinInfo::new(concat!("__mu::", stringify!($mod_name), "::", stringify!($fn_name)))
-                .with_doc($doc),
-            || $crate::function_type!(($( $param : $ty ),*) -> $ret),
+            $crate::BuiltinInfo::new(concat!(
+                "__mu::",
+                stringify!($mod_name),
+                "::",
+                stringify!($fn_name)
+            ))
+            .with_doc($doc),
+            || $func_ty,
             $fn_name,
         ))
     };

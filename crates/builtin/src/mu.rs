@@ -4,7 +4,7 @@
 //! µcad built-in library definitions.
 
 use microcad_builtin_proc_macros::{builtin_constant, builtin_fn, builtin_mod};
-use microcad_lang_types::{Arguments, Type, Value};
+use microcad_lang_types::{Arguments, Value};
 
 use crate::{
     Builtin, BuiltinError, BuiltinEvalContext, builtin_constant_helper, builtin_function_helper,
@@ -36,6 +36,66 @@ pub mod core {
     pub fn sub(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
         Ok((lhs - rhs)?)
+    }
+
+    #[builtin_fn(core::array_access(lhs: Any, index: Any) -> Any)]
+    pub fn array_access(
+        _args: Arguments,
+        _ctx: &mut BuiltinEvalContext,
+    ) -> Result<Value, BuiltinError> {
+        todo!()
+    }
+
+    #[builtin_fn(core::property_access(lhs: Any, index: Any) -> Any)]
+    pub fn property_access(
+        _args: Arguments,
+        _ctx: &mut BuiltinEvalContext,
+    ) -> Result<Value, BuiltinError> {
+        todo!()
+    }
+
+    #[builtin_fn(core::tuple_access(lhs: Any, index: String) -> Any)]
+    pub fn tuple_access(
+        _args: Arguments,
+        _ctx: &mut BuiltinEvalContext,
+    ) -> Result<Value, BuiltinError> {
+        todo!()
+    }
+
+    #[builtin_fn(core::format(*) -> String)]
+    pub fn format(_args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        todo!()
+    }
+
+    #[builtin_fn(core::format_spec(expr: Any, width: Integer, precision: Integer) -> String)]
+    pub fn format_spec(
+        _args: Arguments,
+        _ctx: &mut BuiltinEvalContext,
+    ) -> Result<Value, BuiltinError> {
+        todo!()
+    }
+
+    #[builtin_fn(core::range(start: Integer, end: Integer) -> Integer)] // TODO: Return [Integer]
+    pub fn range(_args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        todo!()
+    }
+
+    #[builtin_fn(core::list(*) -> Any)]
+    pub fn list(_args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        todo!()
+    }
+
+    #[builtin_fn(core::tuple(*) -> Any)]
+    pub fn tuple(_args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        todo!()
+    }
+
+    #[builtin_fn(core::attribute_access(lhs: Any, name: String) -> Any)]
+    pub fn attribute_access(
+        _args: Arguments,
+        _ctx: &mut BuiltinEvalContext,
+    ) -> Result<Value, BuiltinError> {
+        todo!()
     }
 }
 
