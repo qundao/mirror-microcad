@@ -7,7 +7,6 @@ mod derive;
 
 use derive::derive_workbench_definition;
 use proc_macro::TokenStream;
-use quote::quote;
 use syn::*;
 
 /// Get all doc comments as concetenated string.
@@ -50,42 +49,101 @@ pub fn derive_operation3d(input: TokenStream) -> TokenStream {
     derive_workbench_definition(input, "Operation", "Geometry3D")
 }
 
+use quote::{format_ident, quote};
+use syn::parse::{Parse, ParseStream};
+use syn::{FnArg, Ident, ItemFn, Result, Token, Type, parse_macro_input};
+
+// Represents a parameter in the macro attribute: `lhs: Any`
+struct BuiltinParam {
+    name: Ident,
+    ty: Ident,
+}
+
+impl Parse for BuiltinParam {
+    fn parse(input: ParseStream) -> Result<Self> {
+        let name: Ident = input.parse()?;
+        input.parse::<Token![:]>()?;
+        let ty: Ident = input.parse()?;
+        Ok(BuiltinParam { name, ty })
+    }
+}
+
+// Parses the syntax inside #[builtin_fn((arg1: Type1, ...) -> ReturnType)]
+struct BuiltinFnSig {
+    params: Vec<BuiltinParam>,
+    return_type: Ident,
+}
+
+impl Parse for BuiltinFnSig {
+    fn parse(input: ParseStream) -> Result<Self> {
+        let content;
+        syn::parenthesized!(content in input);
+
+        let mut params = Vec::new();
+        while !content.is_empty() {
+            params.push(content.parse::<BuiltinParam>()?);
+            if content.peek(Token![,]) {
+                content.parse::<Token![,]>()?;
+            } else {
+                break;
+            }
+        }
+
+        input.parse::<Token![->]>()?;
+        let return_type: Ident = input.parse()?;
+
+        Ok(BuiltinFnSig {
+            params,
+            return_type,
+        })
+    }
+}
+
 #[proc_macro_attribute]
-pub fn builtin_mod(_attr: TokenStream, item: TokenStream) -> TokenStream {
-    let mut module = parse_macro_input!(item as ItemMod);
+pub fn builtin_fn(attr: TokenStream, item: TokenStream) -> TokenStream {
+    // Parse the macro attribute syntax
+    let BuiltinFnSig {
+        params,
+        return_type,
+    } = parse_macro_input!(attr as BuiltinFnSig);
 
-    let mod_name = module.ident.to_string();
-    let mut keys = Vec::new();
-    let mut fn_paths = Vec::new();
+    // Parse the annotated function
+    let input_fn = parse_macro_input!(item as ItemFn);
 
-    // Inspect the items inside the module block
-    if let Some((_, items)) = &mut module.content {
-        for item in items.iter() {
-            if let Item::Fn(func) = item {
-                let fn_name = func.sig.ident.to_string();
-
-                // Accumulate namespace: "core" + "::" + "add" => "core::add"
-                let full_path = format!("__mu::{}::{}", mod_name, fn_name);
-                let hash = microcad_hash::fnv1a_hash(&full_path);
-
-                let fn_ident = &func.sig.ident;
-                let mod_ident = &module.ident;
-
-                keys.push(hash);
-                // Qualified path to function inside module: core::add
-                fn_paths.push(quote! { #mod_ident::#fn_ident });
+    // Get the doc string comment if present
+    let mut doc_comment = String::new();
+    for attr in &input_fn.attrs {
+        if attr.path().is_ident("doc") {
+            if let Ok(syn::Expr::Lit(syn::ExprLit {
+                lit: syn::Lit::Str(lit_str),
+                ..
+            })) = &attr.meta.require_name_value().map(|nv| &nv.value)
+            {
+                doc_comment.push_str(lit_str.value().trim());
             }
         }
     }
 
-    // Generate the original module + a static phf registry table for this module
-    let expanded = quote! {
-        #module
+    let fn_name = &input_fn.sig.ident;
+    // Generate uppercase static name (e.g., `add` -> `ADD`)
+    let static_name = format_ident!("{}", fn_name.to_string().to_uppercase());
 
-        pub static BUILTIN_REGISTRY: phf::Map<u64, BuiltinFn> = phf::phf_map! {
-            #( #keys => #fn_paths, )*
-        };
-    };
+    // Reconstruct param list format: `lhs: Type::Any, rhs: Type::Any`
+    let formatted_params = params.iter().map(|p| {
+        let p_name = &p.name;
+        let p_ty = format_ident!("{}", p.ty);
+        quote! { #p_name: Type::#p_ty }
+    });
 
-    TokenStream::from(expanded)
+    let return_ty_ident = format_ident!("{}", return_type);
+
+    quote! {
+        #input_fn
+
+        pub static #static_name: Builtin = builtin_function_helper!(
+            #doc_comment
+            core::#fn_name(#(#formatted_params),*) -> Type::#return_ty_ident
+        );
+    }
+    .into()
 }
