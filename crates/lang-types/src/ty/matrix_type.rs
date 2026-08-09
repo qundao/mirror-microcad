@@ -37,11 +37,7 @@ impl std::ops::Add for MatrixType {
         if lhs == rhs {
             Ok(lhs.into())
         } else {
-            Err(TypeError::IncompatibleMatrixTypes {
-                lhs,
-                rhs,
-                op: BinaryOperator::Add,
-            })
+            Err(TypeError::binary_op(lhs, rhs, BinaryOperator::Add))
         }
     }
 }
@@ -54,11 +50,7 @@ impl std::ops::Sub for MatrixType {
         if lhs == rhs {
             Ok(lhs.into())
         } else {
-            Err(TypeError::IncompatibleMatrixTypes {
-                lhs,
-                rhs,
-                op: BinaryOperator::Subtract,
-            })
+            Err(TypeError::binary_op(lhs, rhs, BinaryOperator::Subtract))
         }
     }
 }

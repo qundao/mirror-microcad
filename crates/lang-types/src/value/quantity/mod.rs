@@ -5,9 +5,10 @@
 
 pub mod ops;
 
-use crate::ty::*;
+use crate::{ValueResult, ty::*};
 
 use derive_more::Display;
+use microcad_lang_base::element::BinaryOperator;
 use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{Integer, Length, Scalar};
@@ -30,19 +31,6 @@ pub struct Quantity {
     pub unit: Unit,
 }
 
-impl PartialEq for Quantity {
-    fn eq(&self, other: &Self) -> bool {
-        // 1. Ensure the types match first
-        if self.quantity_type != other.quantity_type {
-            return false;
-        }
-
-        // 2. Compare values within the allowed precision
-        let epsilon = 10.0_f64.powi(-OUTPUT_PRECISION);
-        (self.value - other.value).abs() < epsilon
-    }
-}
-
 impl Quantity {
     /// Create a new quantity.
     pub fn new(value: Scalar, quantity_type: QuantityType) -> Self {
@@ -52,6 +40,7 @@ impl Quantity {
             quantity_type,
         }
     }
+
     /// Transforms the internal value using a closure.
     pub fn map<F>(self, f: F) -> Self
     where
@@ -72,6 +61,40 @@ impl Quantity {
     /// Calculate the power of quantity and an integer.
     pub fn pow_int(&self, _rhs: &Integer) -> Self {
         todo!()
+    }
+
+    pub fn cmp(&self, op: BinaryOperator, rhs: &Self) -> ValueResult {
+        let lhs = self;
+        match lhs.quantity_type == rhs.quantity_type {
+            true => Ok(match op {
+                BinaryOperator::GreaterThan => lhs.value > rhs.value,
+                BinaryOperator::LessThan => lhs.value < rhs.value,
+                BinaryOperator::GreaterEqual => lhs.value >= rhs.value,
+                BinaryOperator::LessEqual => lhs.value <= rhs.value,
+                BinaryOperator::Equal => lhs.value == rhs.value,
+                BinaryOperator::Near => todo!(),
+                BinaryOperator::NotEqual => lhs.value != rhs.value,
+                op => unreachable!("No comparison operator: {op}"),
+            }
+            .into()),
+            false => {
+                Err(
+                    TypeError::binary_op(lhs.quantity_type.clone(), rhs.quantity_type.clone(), op)
+                        .into(),
+                )
+            }
+        }
+    }
+}
+
+impl PartialEq for Quantity {
+    fn eq(&self, other: &Self) -> bool {
+        // 1. Ensure the types match first
+        if self.quantity_type != other.quantity_type {
+            return false;
+        }
+
+        self.value == other.value
     }
 }
 

@@ -3,44 +3,40 @@
 
 //! µcad language types and values.
 
-use microcad_lang_base::element::{BinaryOperator, UnaryOperator};
+use microcad_lang_base::element::BinaryOperator;
 
 use crate::{
-    Array, Operators, Quantity, QuantityType, Scalar, Ty, Type, Unit, Value, ValueError,
-    ValueResult,
+    Array, Quantity, QuantityType, Scalar, Ty, Type, Unit, Value, ValueError, ValueResult,
 };
 
-impl Operators for Value {
-    type Err = ValueError;
-
-    /// Binary operation
-    fn binary_op(self, op: BinaryOperator, rhs: Self) -> ValueResult {
-        use BinaryOperator::*;
-        let lhs = self;
-        match op {
-            Add => lhs + rhs,
-            Subtract => lhs - rhs,
-            Multiply => lhs * rhs,
-            Divide => lhs / rhs,
-            Union | Or => lhs | rhs,
-            Intersect | And => lhs & rhs,
-            PowerXor | Xor => lhs.pow(&rhs),
-            GreaterThan => Ok((lhs > rhs).into()),
-            LessThan => Ok((lhs < rhs).into()),
-            GreaterEqual => Ok((lhs >= rhs).into()),
-            LessEqual => Ok((lhs <= rhs).into()),
-            Equal => Ok((lhs == rhs).into()),
-            NotEqual => Ok((lhs != rhs).into()),
-            _ => Err(ValueError::InvalidOperator(op.to_string())),
-        }
-    }
-
-    /// Unary operation.
-    fn unary_op(self, op: UnaryOperator) -> Result<Value, ValueError> {
-        match op {
-            UnaryOperator::Minus => -self,
-            UnaryOperator::Not => !self,
-            UnaryOperator::Plus => Ok(self),
+impl Value {
+    pub fn cmp(&self, op: BinaryOperator, rhs: &Self) -> ValueResult {
+        match (self, rhs) {
+            (Value::Quantity(lhs), Value::Quantity(rhs)) => lhs.cmp(op, rhs),
+            (Value::Integer(lhs), Value::Integer(rhs)) => match op {
+                BinaryOperator::GreaterThan => Ok((lhs > rhs).into()),
+                BinaryOperator::Add => todo!(),
+                BinaryOperator::Subtract => todo!(),
+                BinaryOperator::Multiply => todo!(),
+                BinaryOperator::Divide => todo!(),
+                BinaryOperator::Union => todo!(),
+                BinaryOperator::Intersect => todo!(),
+                BinaryOperator::PowerXor => todo!(),
+                BinaryOperator::LessThan => todo!(),
+                BinaryOperator::GreaterEqual => todo!(),
+                BinaryOperator::LessEqual => todo!(),
+                BinaryOperator::Equal => todo!(),
+                BinaryOperator::Near => todo!(),
+                BinaryOperator::NotEqual => todo!(),
+                BinaryOperator::And => todo!(),
+                BinaryOperator::Or => todo!(),
+                BinaryOperator::Xor => todo!(),
+            },
+            (lhs, rhs) => match op {
+                BinaryOperator::Equal => Ok((lhs == rhs).into()),
+                BinaryOperator::NotEqual => Ok((lhs != rhs).into()),
+                _ => unimplemented!(),
+            },
         }
     }
 }

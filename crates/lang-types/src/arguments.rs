@@ -34,9 +34,11 @@ impl Arguments {
     }
 
     pub fn get_binary(self) -> (Value, Value) {
-        let lhs = self.get("lhs");
-        let rhs = self.get("rhs");
-        (lhs.clone(), rhs.clone())
+        (self.get("lhs").clone(), self.get("rhs").clone())
+    }
+
+    pub fn get_unary(self) -> Value {
+        self.get("rhs").clone()
     }
 }
 

@@ -130,3 +130,9 @@ impl std::fmt::Display for Type {
         }
     }
 }
+
+impl From<TupleType> for Type {
+    fn from(ty: TupleType) -> Self {
+        Self::Tuple(Box::new(ty))
+    }
+}

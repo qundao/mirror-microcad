@@ -222,11 +222,7 @@ impl std::ops::Add for TupleType {
         if lhs.matches_multiplicity(&rhs) {
             Ok(Type::from(Box::new(lhs)))
         } else {
-            Err(TypeError::IncompatibleTupleTypes {
-                lhs: Box::new(lhs),
-                rhs: Box::new(rhs),
-                op: BinaryOperator::Add,
-            })
+            Err(TypeError::binary_op(lhs, rhs, BinaryOperator::Add))
         }
     }
 }
@@ -239,11 +235,7 @@ impl std::ops::Sub for TupleType {
         if lhs.matches_multiplicity(&rhs) {
             Ok(Type::from(Box::new(lhs)))
         } else {
-            Err(TypeError::IncompatibleTupleTypes {
-                lhs: Box::new(lhs),
-                rhs: Box::new(rhs),
-                op: BinaryOperator::Subtract,
-            })
+            Err(TypeError::binary_op(lhs, rhs, BinaryOperator::Subtract))
         }
     }
 }

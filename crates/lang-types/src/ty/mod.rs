@@ -52,20 +52,6 @@ pub enum TypeError {
     #[error("Invalid type")]
     InvalidType,
 
-    #[error("Incompatible matrix types '{lhs}' and '{rhs}' for binary operation {op}")]
-    IncompatibleMatrixTypes {
-        lhs: MatrixType,
-        rhs: MatrixType,
-        op: BinaryOperator,
-    },
-
-    #[error("Incompatible tuple types '{lhs}' and '{rhs}' for binary operation {op}")]
-    IncompatibleTupleTypes {
-        lhs: Box<TupleType>,
-        rhs: Box<TupleType>,
-        op: BinaryOperator,
-    },
-
     #[error("Non matching signature parameters: {a} != {b}")]
     NonMatchingSignatureParameterList {
         a: function_type::FunctionTypeParameters,
@@ -74,6 +60,27 @@ pub enum TypeError {
 
     #[error("Non matching signature: {a} != {b}")]
     NonMatchingSignature { a: FunctionType, b: FunctionType },
+
+    #[error("Incompatible types '{lhs}' and '{rhs}'")]
+    BinaryOpIncompatibleTypes {
+        lhs: Type,
+        rhs: Type,
+        op: BinaryOperator,
+    },
+}
+
+impl TypeError {
+    pub(crate) fn binary_op(
+        lhs: impl Into<Type>,
+        rhs: impl Into<Type>,
+        op: BinaryOperator,
+    ) -> Self {
+        Self::BinaryOpIncompatibleTypes {
+            lhs: lhs.into(),
+            rhs: rhs.into(),
+            op,
+        }
+    }
 }
 
 pub type TypeResult = Result<Type, TypeError>;

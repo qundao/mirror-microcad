@@ -83,17 +83,6 @@ impl Value {
             other => panic!("Expected Value::Bool from type checker, got {other:?}"),
         }
     }
-
-    /// Try to convert to [`String`].
-    pub fn try_string(&self) -> Result<String, ValueError> {
-        match self {
-            Value::String(s) => return Ok(s.clone()),
-            Value::Integer(i) => return Ok(i.to_string()),
-            _ => {}
-        }
-
-        Err(ValueError::CannotConvert(self.to_string(), "String".into()))
-    }
 }
 
 impl PartialOrd for Value {
