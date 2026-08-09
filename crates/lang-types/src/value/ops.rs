@@ -13,25 +13,27 @@ impl Value {
     pub fn cmp(&self, op: BinaryOperator, rhs: &Self) -> ValueResult {
         match (self, rhs) {
             (Value::Quantity(lhs), Value::Quantity(rhs)) => lhs.cmp(op, rhs),
-            (Value::Integer(lhs), Value::Integer(rhs)) => match op {
-                BinaryOperator::GreaterThan => Ok((lhs > rhs).into()),
-                BinaryOperator::Add => todo!(),
-                BinaryOperator::Subtract => todo!(),
-                BinaryOperator::Multiply => todo!(),
-                BinaryOperator::Divide => todo!(),
-                BinaryOperator::Union => todo!(),
-                BinaryOperator::Intersect => todo!(),
-                BinaryOperator::PowerXor => todo!(),
-                BinaryOperator::LessThan => todo!(),
-                BinaryOperator::GreaterEqual => todo!(),
-                BinaryOperator::LessEqual => todo!(),
-                BinaryOperator::Equal => todo!(),
-                BinaryOperator::Near => todo!(),
-                BinaryOperator::NotEqual => todo!(),
-                BinaryOperator::And => todo!(),
-                BinaryOperator::Or => todo!(),
-                BinaryOperator::Xor => todo!(),
-            },
+            (Value::Integer(lhs), Value::Integer(rhs)) => {
+                let res = match op {
+                    BinaryOperator::Equal => lhs == rhs,
+                    BinaryOperator::NotEqual => lhs != rhs,
+                    BinaryOperator::GreaterThan => lhs > rhs,
+                    BinaryOperator::GreaterEqual => lhs >= rhs,
+                    BinaryOperator::LessThan => lhs < rhs,
+                    BinaryOperator::LessEqual => lhs <= rhs,
+                    BinaryOperator::Near => lhs == rhs, // Integers are exact
+                    _ => unreachable!(),
+                };
+                Ok(Value::Bool(res))
+            }
+            (Value::Integer(lhs), Value::Quantity(rhs)) => {
+                let lhs_q = Quantity::from(*lhs);
+                lhs_q.cmp(op, rhs)
+            }
+            (Value::Quantity(lhs), Value::Integer(rhs)) => {
+                let rhs_q = Quantity::from(*rhs);
+                lhs.cmp(op, &rhs_q)
+            }
             (lhs, rhs) => match op {
                 BinaryOperator::Equal => Ok((lhs == rhs).into()),
                 BinaryOperator::NotEqual => Ok((lhs != rhs).into()),
