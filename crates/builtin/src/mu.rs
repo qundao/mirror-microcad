@@ -12,6 +12,8 @@ use crate::{
 
 #[builtin_mod]
 pub mod core {
+    use microcad_lang_types::{BinaryOperator, Integer};
+
     use super::*;
 
     /// Calculate the sum of two values
@@ -46,7 +48,7 @@ pub mod core {
     #[builtin_fn(core::union(lhs: Any, rhs: Any) -> Any)]
     pub fn union(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
-        Ok((lhs / rhs)?)
+        Ok((lhs | rhs)?)
     }
 
     /// Union of two values.
@@ -56,49 +58,49 @@ pub mod core {
         _ctx: &mut BuiltinEvalContext,
     ) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
-        Ok((lhs / rhs)?)
+        Ok((lhs & rhs)?)
     }
 
     /// Compare to values if they are greater_than
     #[builtin_fn(core::gt(lhs: Any, rhs: Any) -> Bool)]
     pub fn gt(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
-        Ok((lhs > rhs).into())
+        Ok(lhs.cmp(BinaryOperator::GreaterThan, &rhs)?)
     }
 
     /// Compare to values if they are greater_than
     #[builtin_fn(core::lt(lhs: Any, rhs: Any) -> Bool)]
     pub fn lt(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
-        Ok((lhs < rhs).into())
+        Ok(lhs.cmp(BinaryOperator::LessThan, &rhs)?)
     }
 
     /// Compare to values if they are greater_than
     #[builtin_fn(core::ge(lhs: Any, rhs: Any) -> Bool)]
     pub fn ge(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
-        Ok((lhs >= rhs).into())
+        Ok(lhs.cmp(BinaryOperator::GreaterEqual, &rhs)?)
     }
 
     /// Compare to values if they are greater_than
     #[builtin_fn(core::le(lhs: Any, rhs: Any) -> Bool)]
     pub fn le(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
-        Ok((lhs <= rhs).into())
+        Ok(lhs.cmp(BinaryOperator::LessEqual, &rhs)?)
     }
 
     /// Compare to values if they are greater_than
     #[builtin_fn(core::eq(lhs: Any, rhs: Any) -> Bool)]
     pub fn eq(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
-        Ok((lhs == rhs).into())
+        Ok(lhs.cmp(BinaryOperator::Equal, &rhs)?)
     }
 
     /// Compare to values if they are greater_than
     #[builtin_fn(core::near(lhs: Any, rhs: Any) -> Bool)]
     pub fn near(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
-        Ok((lhs == rhs).into())
+        Ok(lhs.cmp(BinaryOperator::Near, &rhs)?)
     }
 
     /// Compare to values if they are greater_than
@@ -108,7 +110,7 @@ pub mod core {
         _ctx: &mut BuiltinEvalContext,
     ) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
-        Ok((lhs == rhs).into())
+        Ok(lhs.cmp(BinaryOperator::NotEqual, &rhs)?)
     }
 
     /// Compare to values if they are greater_than
@@ -122,43 +124,55 @@ pub mod core {
     #[builtin_fn(core::or(lhs: Any, rhs: Any) -> Bool)]
     pub fn or(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
-        Ok((lhs == rhs).into())
+        Ok((lhs | rhs)?)
     }
 
     /// Compare to values if they are greater_than
     #[builtin_fn(core::xor(lhs: Any, rhs: Any) -> Bool)]
     pub fn xor(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
-        Ok((lhs == rhs).into())
+        Ok(lhs.pow(&rhs)?)
     }
 
     /// Negative value.
     #[builtin_fn(core::neg(rhs: Any) -> Any)]
     pub fn neg(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        let (lhs, rhs) = args.get_binary();
-        Ok((lhs / rhs)?)
+        let rhs = args.get_unary();
+        Ok((-rhs)?)
     }
 
     /// Positive value.
     #[builtin_fn(core::plus(rhs: Any) -> Any)]
     pub fn plus(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        let (lhs, rhs) = args.get_binary();
-        Ok((lhs / rhs)?)
+        let rhs = args.get_unary();
+        Ok(rhs)
     }
 
     /// Logical NOT.
     #[builtin_fn(core::not(rhs: Any) -> Any)]
     pub fn not(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        let (lhs, rhs) = args.get_binary();
-        Ok((lhs / rhs)?)
+        let rhs = args.get_unary();
+        Ok((!rhs)?)
     }
 
-    #[builtin_fn(core::array_access(lhs: Any, index: Any) -> Any)]
+    #[builtin_fn(core::array_access(lhs: Any, index: Integer) -> Any)]
     pub fn array_access(
-        _args: Arguments,
+        args: Arguments,
         _ctx: &mut BuiltinEvalContext,
     ) -> Result<Value, BuiltinError> {
-        todo!()
+        let lhs = args.get("lhs");
+        let index: Integer = match args.get("index") {
+            Value::Integer(i) => *i,
+            _ => unreachable!(),
+        };
+
+        match lhs {
+            Value::Array(arr) => match arr.get(index.to_num::<usize>()) {
+                Some(value) => Ok(value.clone()),
+                None => Err(BuiltinError::ValueError(todo!())),
+            },
+            _ => unreachable!(),
+        }
     }
 
     #[builtin_fn(core::property_access(lhs: Any, index: Any) -> Any)]
