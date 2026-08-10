@@ -4,7 +4,7 @@
 //! µcad built-in library definitions.
 
 use microcad_builtin_proc_macros::{builtin_constant, builtin_fn, builtin_mod};
-use microcad_lang_types::{Arguments, Value};
+use microcad_lang_types::{Arguments, BinaryOperator, Integer, Value};
 
 use crate::{
     Builtin, BuiltinError, BuiltinEvalContext, builtin_constant_helper, builtin_function_helper,
@@ -12,8 +12,6 @@ use crate::{
 
 #[builtin_mod]
 pub mod core {
-    use microcad_lang_types::{BinaryOperator, Integer};
-
     use super::*;
 
     /// Calculate the sum of two values
@@ -166,10 +164,15 @@ pub mod core {
             _ => unreachable!(),
         };
 
+        let index = index.to_num::<usize>();
+
         match lhs {
-            Value::Array(arr) => match arr.get(index.to_num::<usize>()) {
+            Value::Array(arr) => match arr.get(index) {
                 Some(value) => Ok(value.clone()),
-                None => Err(BuiltinError::ValueError(todo!())),
+                None => Err(BuiltinError::BadArrayIndex {
+                    index,
+                    len: arr.len(),
+                }),
             },
             _ => unreachable!(),
         }
@@ -204,7 +207,7 @@ pub mod core {
         todo!()
     }
 
-    #[builtin_fn(core::range(start: Integer, end: Integer) -> Integer)] // TODO: Return [Integer]
+    #[builtin_fn(core::range(start: Integer, end: Integer) -> Any)] // TODO: Return [Integer]
     pub fn range(_args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         todo!()
     }
@@ -235,4 +238,29 @@ pub mod math {
     /// Pi
     #[builtin_constant(math::PI)]
     pub static PI: Builtin = std::f64::consts::PI;
+}
+
+#[builtin_mod]
+pub mod debug {
+    use super::*;
+
+    #[builtin_fn(core::assert(cond: Bool, cond_message: String, message: String))]
+    pub fn assert(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let cond = args.get_cond()?;
+        let cond_message: String = args.get_as("cond_message")?;
+        let message: String = args.get_as("message")?;
+
+        if cond {
+            // assertion ok, return None.
+            Ok(Value::None)
+        } else {
+            let message = if message.is_empty() {
+                cond_message
+            } else {
+                format!("{cond_message}: {message}")
+            };
+
+            Err(BuiltinError::AssertionFailed(message))
+        }
+    }
 }

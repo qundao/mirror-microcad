@@ -13,4 +13,12 @@ pub enum BuiltinError {
 
     #[error("Builtin error in '{name}': {message}")]
     ExecutionFailed { name: String, message: String },
+
+    #[error("Assertion failed: {0}")]
+    AssertionFailed(String),
+
+    #[error(
+        "array index out of bounds: index is {index}, but array length is {len} (valid indices: 0..{len})"
+    )]
+    BadArrayIndex { index: usize, len: usize },
 }

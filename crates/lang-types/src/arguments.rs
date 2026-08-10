@@ -5,7 +5,7 @@ use derive_more::{Deref, DerefMut, Display, From};
 use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_proc_macros::SrcReferrer;
 
-use crate::{Tuple, Ty, Type, Value};
+use crate::{Tuple, Ty, Type, Value, ValueError, ValueResult};
 
 #[derive(Clone, Display, From, Debug, PartialEq)]
 pub struct Arguments(pub Tuple);
@@ -33,12 +33,21 @@ impl Arguments {
             .unwrap()
     }
 
+    /// Get `lhs` and `rhs` from binary arguments.
     pub fn get_binary(self) -> (Value, Value) {
         (self.get("lhs").clone(), self.get("rhs").clone())
     }
 
     pub fn get_unary(self) -> Value {
         self.get("rhs").clone()
+    }
+
+    pub fn get_cond(&self) -> ValueResult<bool> {
+        self.get_as("cond")
+    }
+
+    pub fn get_as<T: TryFrom<Value, Error = ValueError>>(&self, name: &str) -> ValueResult<T> {
+        Ok(T::try_from(self.get(name).clone())?)
     }
 }
 

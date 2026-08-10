@@ -28,7 +28,7 @@ struct BuiltinFnSig {
     name: Ident,
     is_variadic: bool,
     params: Vec<BuiltinParam>,
-    return_type: Ident,
+    return_type: Option<Ident>,
 }
 
 impl Parse for BuiltinFnSig {
@@ -45,9 +45,13 @@ impl Parse for BuiltinFnSig {
         if content.peek(Token![*]) {
             content.parse::<Token![*]>()?;
 
-            // 3. Parse `-> return_type`
-            input.parse::<Token![->]>()?;
-            let return_type: Ident = input.parse()?;
+            // 3. Optionally Parse `-> return_type`
+            let return_type = if input.peek(Token![->]) {
+                input.parse::<Token![->]>()?;
+                Some(input.parse()?)
+            } else {
+                None
+            };
 
             Ok(Self {
                 mod_name,
@@ -67,9 +71,13 @@ impl Parse for BuiltinFnSig {
                 }
             }
 
-            // 3. Parse `-> return_type`
-            input.parse::<Token![->]>()?;
-            let return_type: Ident = input.parse()?;
+            // 3. Optionally Parse `-> return_type`
+            let return_type = if input.peek(Token![->]) {
+                input.parse::<Token![->]>()?;
+                Some(input.parse()?)
+            } else {
+                None
+            };
 
             Ok(Self {
                 mod_name,
@@ -139,14 +147,22 @@ pub(crate) fn builtin_fn_impl(attr: TokenStream, item: TokenStream) -> TokenStre
         quote! { (#(#formatted_params),*) }
     };
 
-    let return_ty_ident = format_ident!("{}", return_type);
+    let return_type = match return_type {
+        Some(return_type) => {
+            let return_type = format_ident!("{}", return_type);
+            quote! { -> microcad_lang_types::Type::#return_type  }
+        }
+        None => {
+            quote! {}
+        }
+    };
 
     quote! {
         #input_fn
 
         pub static #static_name: Builtin = builtin_function_helper!(
             #doc_comment
-            #mod_name::#name( microcad_lang_types::function_type!(#formatted_params -> microcad_lang_types::Type::#return_ty_ident))
+            #mod_name::#name( microcad_lang_types::function_type!(#formatted_params #return_type))
         );
     }
     .into()

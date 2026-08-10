@@ -108,8 +108,8 @@ macro_rules! function_type {
         )
     };
 
-    // 4. Named parameters without return type: function_type!(a: TypeA, b: TypeB)
-    ($( $param:ident : $ty:expr ),* $(,)?) => {
+    // 4. Named parameters without return type: function_type!((a: TypeA, b: TypeB))
+    (($( $param:ident : $ty:expr ),* $(,)?)) => {
         $crate::FunctionType::new(
             vec![
                 $(
