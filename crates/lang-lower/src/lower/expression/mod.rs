@@ -121,7 +121,7 @@ where
             .collect::<Result<Vec<Expr>, _>>()?;
 
         let list = Expr::from(ir::Call {
-            name: __mu!(core::list),
+            name: __mu!(core::array),
             args: ir::ArgumentList::from_iter(args),
             src_ref: context.span_to_src_ref(&a.span),
         });

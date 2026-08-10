@@ -95,7 +95,7 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
                             src_ref,
                         }),
                         Tuple(t) => Self::Call(ir::Call {
-                            name: __mu!(core::property_access),
+                            name: __mu!(core::member_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
                                 Self::Name(ir::SymbolPath::from(t.name.to_string())),

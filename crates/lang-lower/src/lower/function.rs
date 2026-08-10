@@ -84,7 +84,7 @@ impl<Name: LowerName> Lower<ast::Expression> for ir::FunctionExpression<Name> {
                     Ok(match &element.inner {
                         Attribute(_) => panic!("Attribute access not allowed"),
                         Tuple(t) => Self::Call(ir::Call {
-                            name: __mu!(core::tuple_access),
+                            name: __mu!(core::member_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
                                 Self::Name(Name::from(t.name.to_string())),
