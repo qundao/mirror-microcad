@@ -11,7 +11,11 @@ use crate::{Tuple, Ty, Type, Value, ValueError, ValueResult};
 pub struct Arguments(pub Tuple);
 
 impl Arguments {
-    pub fn iter(&self) -> impl Iterator<Item = (&Identifier, &Value)> {
+    pub fn positional_iter(&self) -> impl Iterator<Item = &Value> {
+        self.0.positional.iter()
+    }
+
+    pub fn named_iter(&self) -> impl Iterator<Item = (&Identifier, &Value)> {
         self.0.named.iter().map(|(k, v)| (k, v))
     }
 
@@ -22,7 +26,7 @@ impl Arguments {
     /// Panics if the argument key is not present.
     #[track_caller]
     pub fn get(&self, name: &str) -> &Value {
-        self.iter()
+        self.named_iter()
             .find_map(|(id, v)| {
                 if id == &Identifier::no_ref(name) {
                     Some(v)

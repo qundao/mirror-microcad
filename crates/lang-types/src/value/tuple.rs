@@ -37,6 +37,12 @@ impl Tuple {
         }
     }
 
+    pub fn get_field(&self, field: &Identifier) -> Option<&Value> {
+        self.named
+            .iter()
+            .find_map(|(k, v)| if k == field { Some(v) } else { None })
+    }
+
     /// Checks if two tuples have matching structural shapes:
     /// 1. Same number of positional elements.
     /// 2. Same set of named field identifiers (in exact sequence).
