@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 /// The output type of the [`crateModel`].
 #[derive(Clone, Copy, Eq, Hash, PartialEq, Debug, Default, Serialize, Deserialize)]
-pub enum OutputType {
+pub enum ModelOutputType {
     /// The output type has not yet been determined.
     #[default]
     NotDetermined,
@@ -20,25 +20,25 @@ pub enum OutputType {
     Any,
 }
 
-impl OutputType {
+impl ModelOutputType {
     /// Merge this output type with another.
-    pub fn merge(&self, other: &Self) -> OutputType {
+    pub fn merge(&self, other: &Self) -> ModelOutputType {
         match (self, other) {
-            (OutputType::NotDetermined, output_type) => *output_type,
-            (OutputType::Geometry2D, OutputType::NotDetermined)
-            | (OutputType::Geometry2D, OutputType::Geometry2D)
-            | (OutputType::Geometry3D, OutputType::NotDetermined)
-            | (OutputType::Geometry3D, OutputType::Geometry3D) => *self,
-            (OutputType::Geometry2D, OutputType::Geometry3D)
-            | (OutputType::Geometry3D, OutputType::Geometry2D)
-            | (OutputType::Geometry2D, OutputType::Any)
-            | (OutputType::Geometry3D, OutputType::Any)
-            | (OutputType::Any, _) => OutputType::Any,
+            (ModelOutputType::NotDetermined, output_type) => *output_type,
+            (ModelOutputType::Geometry2D, ModelOutputType::NotDetermined)
+            | (ModelOutputType::Geometry2D, ModelOutputType::Geometry2D)
+            | (ModelOutputType::Geometry3D, ModelOutputType::NotDetermined)
+            | (ModelOutputType::Geometry3D, ModelOutputType::Geometry3D) => *self,
+            (ModelOutputType::Geometry2D, ModelOutputType::Geometry3D)
+            | (ModelOutputType::Geometry3D, ModelOutputType::Geometry2D)
+            | (ModelOutputType::Geometry2D, ModelOutputType::Any)
+            | (ModelOutputType::Geometry3D, ModelOutputType::Any)
+            | (ModelOutputType::Any, _) => ModelOutputType::Any,
         }
     }
 }
 
-impl std::fmt::Display for OutputType {
+impl std::fmt::Display for ModelOutputType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
@@ -53,7 +53,7 @@ impl std::fmt::Display for OutputType {
     }
 }
 
-impl From<WorkbenchKind> for OutputType {
+impl From<WorkbenchKind> for ModelOutputType {
     fn from(kind: WorkbenchKind) -> Self {
         match kind {
             WorkbenchKind::Sketch => Self::Geometry2D,

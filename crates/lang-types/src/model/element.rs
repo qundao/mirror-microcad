@@ -4,10 +4,13 @@
 //! Element of a [`Model`].
 
 use derive_more::{Display, From};
-use microcad_lang_base::{SrcRef, SrcReferrer, element::WorkbenchKind};
+use microcad_lang_base::{BuiltinName, SrcRef, SrcReferrer, element::WorkbenchKind};
 use serde::{Deserialize, Serialize};
 
-use crate::{Value, model::Creator, model::OutputType};
+use crate::{
+    Value,
+    model::{BooleanOp, Creator, ModelOutputType, operation::AffineTransform},
+};
 
 /// The kind of the built-in workbench determines its output.
 #[derive(Debug, Copy, Clone, Hash, Display, PartialEq, Serialize, Deserialize)]
@@ -22,7 +25,24 @@ pub enum BuiltinWorkbenchKind {
     Operation,
 }
 
-impl From<BuiltinWorkbenchKind> for OutputType {
+/// Trait to implement a Primitive2D
+pub trait Primitive2D {
+    /// Get the builtin name for this primitive.
+    fn builtin_name(&self) -> BuiltinName;
+
+    /// Get a property of this model
+    fn get_property(&self, s: &str) -> Value;
+}
+
+pub enum BuiltinWorkpiece {
+    Primitive2D(Box<dyn Primitive2D>),
+    //Primitive3D(Box<dyn Primitive3D>),
+    //Operation(Box<dyn Operation>),
+    Transform(AffineTransform),
+    BooleanOp(BooleanOp),
+}
+
+impl From<BuiltinWorkbenchKind> for ModelOutputType {
     fn from(kind: BuiltinWorkbenchKind) -> Self {
         match kind {
             BuiltinWorkbenchKind::Primitive2D => Self::Geometry2D,
@@ -58,12 +78,12 @@ pub enum ElementKind {
 }
 
 impl ElementKind {
-    fn output_type(&self) -> OutputType {
+    fn output_type(&self) -> ModelOutputType {
         use ElementKind::*;
         match &self {
             Workpiece(workpiece) => (*workpiece).into(),
             BuiltinWorkpiece(builtin_workpiece) => (*builtin_workpiece).into(),
-            Group | Multiplicity | InputPlaceholder | Value(_) => OutputType::NotDetermined,
+            Group | Multiplicity | InputPlaceholder | Value(_) => ModelOutputType::NotDetermined,
         }
     }
 }
@@ -119,7 +139,7 @@ impl Element {
     }
 
     /// Get output type of element.
-    pub fn output_type(&self) -> OutputType {
+    pub fn output_type(&self) -> ModelOutputType {
         self.kind.output_type()
     }
 }

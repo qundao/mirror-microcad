@@ -6,7 +6,7 @@
 use derive_more::From;
 use serde::{Deserialize, Serialize};
 
-use crate::{model::OutputType, ty::*};
+use crate::{model::ModelOutputType, ty::*};
 
 /// µcad Basic Types
 #[derive(Clone, Debug, Default, PartialEq, From, Eq, Hash, Serialize, Deserialize)]
@@ -33,7 +33,7 @@ pub enum Type {
     /// Function type: (x: Length, y: Length) -> Length,
     Function(FunctionType),
     /// Model.
-    Model(OutputType),
+    Model(ModelOutputType),
 }
 
 impl Type {
@@ -107,7 +107,7 @@ impl std::str::FromStr for Type {
             "Volume" => Ok(Type::Quantity(QuantityType::Volume)),
             "Weight" => Ok(Type::Quantity(QuantityType::Weight)),
             "Density" => Ok(Type::Quantity(QuantityType::Density)),
-            "Model" => Ok(Type::Model(OutputType::Any)),
+            "Model" => Ok(Type::Model(ModelOutputType::Any)),
             _ => Err(TypeError::UnknownType(ty.to_string())),
         }
     }

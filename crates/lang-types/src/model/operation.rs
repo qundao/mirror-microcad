@@ -18,6 +18,17 @@ pub enum AffineTransform {
     UniformScale(Scalar),
 }
 
+/// Boolean operations
+#[derive(Debug, Clone, Copy)]
+pub enum BooleanOp {
+    /// Computes the union R = P ∪ Q
+    Union,
+    /// computes the difference R = P ∖ Q
+    Subtract,
+    /// computes the intersection R = P ∩ Q
+    Intersect,
+}
+
 impl AffineTransform {
     /*/// Get the 2D transformation matrix
     pub fn mat2d(&self) -> Mat3 {
