@@ -3,13 +3,20 @@
 
 //! µcad built-in errors.
 
-use microcad_lang_types::ValueError;
+use microcad_lang_types::{TypeError, ValueError};
+use miette::{Diagnostic, Severity};
 use thiserror::Error;
 
-#[derive(Debug, Error)]
+#[derive(Debug, Error, Diagnostic)]
 pub enum BuiltinError {
-    #[error("Value error: {0}")]
+    #[error(transparent)]
     ValueError(#[from] ValueError),
+
+    #[error(transparent)]
+    TypeError(#[from] TypeError),
+
+    #[error("Format error: {0}")]
+    FormatError(#[from] std::fmt::Error),
 
     #[error("Builtin error in '{name}': {message}")]
     ExecutionFailed { name: String, message: String },
@@ -21,4 +28,25 @@ pub enum BuiltinError {
         "array index out of bounds: index is {index}, but array length is {len} (valid indices: 0..{len})"
     )]
     BadArrayIndex { index: usize, len: usize },
+
+    #[error("Evaluation aborted. Panic: {0}")]
+    Panic(String),
+
+    #[error("Expected {0}")]
+    Expected(String),
+
+    /// A custom error message.
+    #[error("{0}")]
+    #[diagnostic(severity(Error))]
+    Error(String),
+
+    /// A custom warning message.
+    #[error("{0}")]
+    #[diagnostic(severity(Warning))]
+    Warning(String),
+
+    /// A custom info message.
+    #[error("{0}")]
+    #[diagnostic(severity(Advice))]
+    Info(String),
 }

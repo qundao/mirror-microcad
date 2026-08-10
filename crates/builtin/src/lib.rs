@@ -18,7 +18,17 @@ pub use microcad_builtin_proc_macros::__mu;
 
 #[derive(Debug, Default)]
 pub struct BuiltinEvalContext<'a> {
+    /// Current function being evaluated.
     pub current_fn: Option<&'a BuiltinFunction>,
+
+    /// Diagnostics.
+    pub diags: Vec<BuiltinError>,
+}
+
+impl<'a> BuiltinEvalContext<'a> {
+    pub fn diag(&mut self, err: impl Into<BuiltinError>) {
+        self.diags.push(err.into())
+    }
 }
 
 /// Built-in execution function signature
@@ -82,6 +92,7 @@ impl BuiltinFunction {
             args,
             &mut BuiltinEvalContext {
                 current_fn: Some(self),
+                diags: vec![],
             },
         )
     }

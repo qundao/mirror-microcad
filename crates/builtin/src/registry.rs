@@ -24,7 +24,10 @@ impl BuiltinRegistry {
             builtins: HashMap::default(),
         };
 
-        registry.register_all(crate::mu::core::ALL_BUILTINS);
+        use crate::mu;
+        registry.register_all(mu::core::ALL_BUILTINS);
+        registry.register_all(mu::math::ALL_BUILTINS);
+        registry.register_all(mu::debug::ALL_BUILTINS);
         registry
     }
 

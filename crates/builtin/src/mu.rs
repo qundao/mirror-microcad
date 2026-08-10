@@ -12,6 +12,9 @@ use crate::{
 
 #[builtin_mod]
 pub mod core {
+    use microcad_lang_base::Identifier;
+    use microcad_lang_types::{Array, Ty, TypeError};
+
     use super::*;
 
     /// Calculate the sum of two values
@@ -159,11 +162,7 @@ pub mod core {
         _ctx: &mut BuiltinEvalContext,
     ) -> Result<Value, BuiltinError> {
         let lhs = args.get("lhs");
-        let index: Integer = match args.get("index") {
-            Value::Integer(i) => *i,
-            _ => unreachable!(),
-        };
-
+        let index: Integer = args.get_as("index")?;
         let index = index.to_num::<usize>();
 
         match lhs {
@@ -174,52 +173,103 @@ pub mod core {
                     len: arr.len(),
                 }),
             },
-            _ => unreachable!(),
+            value => Err(BuiltinError::TypeError(TypeError::NoArrayType(value.ty()))),
         }
     }
 
-    #[builtin_fn(core::property_access(lhs: Any, index: Any) -> Any)]
-    pub fn property_access(
-        _args: Arguments,
+    #[builtin_fn(core::member_access(lhs: Any, name: String) -> Any)]
+    pub fn member_access(
+        args: Arguments,
         _ctx: &mut BuiltinEvalContext,
     ) -> Result<Value, BuiltinError> {
-        todo!()
-    }
+        let lhs = args.get("lhs");
+        let name: String = args.get_as("name")?;
 
-    #[builtin_fn(core::tuple_access(lhs: Any, index: String) -> Any)]
-    pub fn tuple_access(
-        _args: Arguments,
-        _ctx: &mut BuiltinEvalContext,
-    ) -> Result<Value, BuiltinError> {
-        todo!()
+        match lhs {
+            // Get field of a Tuple
+            Value::Tuple(tuple) => match tuple.get_field(&Identifier::from(name.as_str())) {
+                Some(value) => Ok(value.clone()),
+                None => Err(TypeError::TupleHasNoField {
+                    field: name,
+                    ty: tuple.ty(),
+                }
+                .into()),
+            },
+            Value::Model(model) => todo!(
+                "match model.get_child(name)
+                Some(prop) => Ok(Value::from(prop)),
+                None => Err(ModelError::ChildNotFound "
+            ),
+            value => Err(BuiltinError::TypeError(TypeError::NoArrayType(value.ty()))),
+        }
     }
 
     #[builtin_fn(core::format(*) -> String)]
-    pub fn format(_args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        todo!()
+    pub fn format(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        Ok(Value::from(
+            args.positional_iter()
+                .map(|arg| arg.to_string())
+                .collect::<Vec<_>>()
+                .join(""),
+        ))
     }
 
     #[builtin_fn(core::format_spec(expr: Any, width: Integer, precision: Integer) -> String)]
     pub fn format_spec(
-        _args: Arguments,
+        args: Arguments,
         _ctx: &mut BuiltinEvalContext,
     ) -> Result<Value, BuiltinError> {
-        todo!()
+        use std::fmt::Write;
+
+        let expr = args.get("expr");
+        let width: i64 = args.get_as("width")?;
+        let precision: i64 = args.get_as("precision")?;
+
+        let mut formatted = String::new();
+
+        // Dynamically apply precision and width using standard format specifiers
+        match (width, precision) {
+            (w, p) if w >= 0 && p >= 0 => {
+                write!(
+                    formatted,
+                    "{:width$.precision$}",
+                    expr,
+                    width = w as usize,
+                    precision = p as usize
+                )?;
+            }
+            (w, _) if w >= 0 => {
+                write!(formatted, "{:width$}", expr, width = w as usize)?;
+            }
+            (_, p) if p >= 0 => {
+                write!(formatted, "{:.precision$}", expr, precision = p as usize)?;
+            }
+            _ => {
+                write!(formatted, "{}", expr)?;
+            }
+        }
+
+        Ok(Value::String(formatted))
     }
 
     #[builtin_fn(core::range(start: Integer, end: Integer) -> Any)] // TODO: Return [Integer]
-    pub fn range(_args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        todo!()
+    pub fn range(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let start: i64 = args.get_as("start")?;
+        let end: i64 = args.get_as("end")?;
+        let array = Array::from_iter((start..=end).into_iter().map(|i| Value::from(i)));
+        Ok(array.into())
     }
 
     #[builtin_fn(core::list(*) -> Any)]
-    pub fn list(_args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        todo!()
+    pub fn list(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        Ok(Value::Array(Array::from_iter(
+            args.positional_iter().cloned(),
+        )))
     }
 
     #[builtin_fn(core::tuple(*) -> Any)]
-    pub fn tuple(_args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        todo!()
+    pub fn tuple(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        Ok(args.0.into())
     }
 
     #[builtin_fn(core::attribute_access(lhs: Any, name: String) -> Any)]
@@ -244,23 +294,68 @@ pub mod math {
 pub mod debug {
     use super::*;
 
-    #[builtin_fn(core::assert(cond: Bool, cond_message: String, message: String))]
+    #[builtin_fn(core::assert(cond: Bool, message: String))]
     pub fn assert(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let cond = args.get_cond()?;
-        let cond_message: String = args.get_as("cond_message")?;
         let message: String = args.get_as("message")?;
 
         if cond {
-            // assertion ok, return None.
+            // assertion ok: return None.
             Ok(Value::None)
         } else {
-            let message = if message.is_empty() {
-                cond_message
-            } else {
-                format!("{cond_message}: {message}")
-            };
-
+            // assertion failed: stop eval and return Err.
             Err(BuiltinError::AssertionFailed(message))
         }
+    }
+
+    #[builtin_fn(core::expect(cond: Bool, message: String))]
+    pub fn expect(args: Arguments, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let cond = args.get_cond()?;
+        let message: String = args.get_as("message")?;
+        if !cond {
+            ctx.diag(BuiltinError::Expected(message));
+        }
+        Ok(Value::None)
+    }
+
+    #[builtin_fn(core::panic(message: String))]
+    pub fn panic(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let message: String = args.get_as("message")?;
+        Err(BuiltinError::Panic(message))
+    }
+
+    #[builtin_fn(core::error(message: String))]
+    pub fn error(args: Arguments, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let message: String = args.get_as("message")?;
+        ctx.diag(BuiltinError::Error(message));
+        Ok(Value::None)
+    }
+
+    #[builtin_fn(core::warning(message: String))]
+    pub fn warning(args: Arguments, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let message: String = args.get_as("message")?;
+        ctx.diag(BuiltinError::Warning(message));
+        Ok(Value::None)
+    }
+
+    #[builtin_fn(core::info(message: String))]
+    pub fn info(args: Arguments, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let message: String = args.get_as("message")?;
+        ctx.diag(BuiltinError::Info(message));
+        Ok(Value::None)
+    }
+
+    /// Print all variables
+    #[builtin_fn(core::print(*))]
+    pub fn print(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        println!(
+            "{}",
+            args.positional_iter()
+                .map(|arg| arg.to_string())
+                .chain(args.named_iter().map(|(id, arg)| format!("{id} = {arg}")))
+                .collect::<Vec<_>>()
+                .join(", ")
+        );
+        Ok(Value::None)
     }
 }
