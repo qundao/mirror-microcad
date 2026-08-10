@@ -67,6 +67,12 @@ pub enum TypeError {
         rhs: Type,
         op: BinaryOperator,
     },
+
+    #[error("Expected array type, got {0}")]
+    NoArrayType(Type),
+
+    #[error("Tuple {ty} has no field `{field}`")]
+    TupleHasNoField { field: String, ty: Type },
 }
 
 impl TypeError {
