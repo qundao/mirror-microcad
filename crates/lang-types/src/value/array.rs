@@ -252,3 +252,10 @@ impl std::ops::Not for Array {
         Ok(Value::Array(items.try_into()?))
     }
 }
+
+#[macro_export]
+macro_rules! array {
+        ($($value:expr),*) => {
+                $crate::Array::from_iter([$( $crate::Value::from($value)),* ].into_iter())
+        }
+}
