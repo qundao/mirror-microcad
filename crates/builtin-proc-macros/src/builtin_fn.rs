@@ -94,14 +94,13 @@ pub(crate) fn builtin_fn_impl(attr: TokenStream, item: TokenStream) -> TokenStre
     // Get the doc string comment if present
     let mut doc_comment = String::new();
     for attr in &input_fn.attrs {
-        if attr.path().is_ident("doc") {
-            if let Ok(syn::Expr::Lit(syn::ExprLit {
+        if attr.path().is_ident("doc")
+            && let Ok(syn::Expr::Lit(syn::ExprLit {
                 lit: syn::Lit::Str(lit_str),
                 ..
             })) = &attr.meta.require_name_value().map(|nv| &nv.value)
-            {
-                doc_comment.push_str(lit_str.value().trim());
-            }
+        {
+            doc_comment.push_str(lit_str.value().trim());
         }
     }
 

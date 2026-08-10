@@ -34,14 +34,13 @@ pub(crate) fn builtin_constant_impl(attr: TokenStream, item: TokenStream) -> Tok
     // Extract doc comment string
     let mut doc_comment = String::new();
     for attr in &input_static.attrs {
-        if attr.path().is_ident("doc") {
-            if let Ok(syn::Expr::Lit(syn::ExprLit {
+        if attr.path().is_ident("doc")
+            && let Ok(syn::Expr::Lit(syn::ExprLit {
                 lit: syn::Lit::Str(lit_str),
                 ..
             })) = &attr.meta.require_name_value().map(|nv| &nv.value)
-            {
-                doc_comment.push_str(lit_str.value().trim());
-            }
+        {
+            doc_comment.push_str(lit_str.value().trim());
         }
     }
 
