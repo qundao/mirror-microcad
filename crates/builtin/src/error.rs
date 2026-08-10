@@ -4,7 +4,7 @@
 //! µcad built-in errors.
 
 use microcad_lang_types::{TypeError, ValueError};
-use miette::{Diagnostic, Severity};
+use miette::Diagnostic;
 use thiserror::Error;
 
 #[derive(Debug, Error, Diagnostic)]

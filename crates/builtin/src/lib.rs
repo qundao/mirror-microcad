@@ -78,7 +78,7 @@ pub struct BuiltinFunction {
 impl BuiltinFunction {
     /// Construct a new BuiltinFunction
     pub const fn new(info: BuiltinInfo, ty: BuiltinFn<FunctionType>, f: BuiltinFunctionFn) -> Self {
-        Self { info: info, ty, f }
+        Self { info, ty, f }
     }
 
     /// Get the function type
@@ -107,7 +107,7 @@ pub struct BuiltinConstant {
 
 impl BuiltinConstant {
     pub const fn new(info: BuiltinInfo, f: BuiltinFn<Value>) -> Self {
-        Self { info: info, f }
+        Self { info, f }
     }
 }
 

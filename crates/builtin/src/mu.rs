@@ -12,10 +12,9 @@ use crate::{
 
 #[builtin_mod]
 pub mod core {
+    use super::*;
     use microcad_lang_base::Identifier;
     use microcad_lang_types::{Array, Ty, TypeError};
-
-    use super::*;
 
     /// Calculate the sum of two values
     #[builtin_fn(core::add(lhs: Any, rhs: Any) -> Any)]
@@ -162,7 +161,7 @@ pub mod core {
         _ctx: &mut BuiltinEvalContext,
     ) -> Result<Value, BuiltinError> {
         let lhs = args.get("lhs");
-        let index: Integer = args.get_as("index")?;
+        let index: Integer = args.try_get("index")?;
         let index = index.to_num::<usize>();
 
         match lhs {
@@ -183,7 +182,7 @@ pub mod core {
         _ctx: &mut BuiltinEvalContext,
     ) -> Result<Value, BuiltinError> {
         let lhs = args.get("lhs");
-        let name: String = args.get_as("name")?;
+        let name: String = args.try_get("name")?;
 
         match lhs {
             // Get field of a Tuple
@@ -195,7 +194,7 @@ pub mod core {
                 }
                 .into()),
             },
-            Value::Model(model) => todo!(
+            Value::Model(_model) => todo!(
                 "match model.get_child(name)
                 Some(prop) => Ok(Value::from(prop)),
                 None => Err(ModelError::ChildNotFound "
@@ -222,8 +221,8 @@ pub mod core {
         use std::fmt::Write;
 
         let expr = args.get("expr");
-        let width: i64 = args.get_as("width")?;
-        let precision: i64 = args.get_as("precision")?;
+        let width: i64 = args.try_get("width")?;
+        let precision: i64 = args.try_get("precision")?;
 
         let mut formatted = String::new();
 
@@ -254,14 +253,14 @@ pub mod core {
 
     #[builtin_fn(core::range(start: Integer, end: Integer) -> Any)] // TODO: Return [Integer]
     pub fn range(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        let start: i64 = args.get_as("start")?;
-        let end: i64 = args.get_as("end")?;
-        let array = Array::from_iter((start..=end).into_iter().map(|i| Value::from(i)));
+        let start: i64 = args.try_get("start")?;
+        let end: i64 = args.try_get("end")?;
+        let array = Array::from_iter((start..=end).map(Value::from));
         Ok(array.into())
     }
 
-    #[builtin_fn(core::list(*) -> Any)]
-    pub fn list(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+    #[builtin_fn(core::array(*) -> Any)]
+    pub fn array(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         Ok(Value::Array(Array::from_iter(
             args.positional_iter().cloned(),
         )))
@@ -282,22 +281,13 @@ pub mod core {
 }
 
 #[builtin_mod]
-pub mod math {
-    use super::*;
-
-    /// Pi
-    #[builtin_constant(math::PI)]
-    pub static PI: Builtin = std::f64::consts::PI;
-}
-
-#[builtin_mod]
 pub mod debug {
     use super::*;
 
-    #[builtin_fn(core::assert(cond: Bool, message: String))]
+    #[builtin_fn(debug::assert(cond: Bool, message: String))]
     pub fn assert(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let cond = args.get_cond()?;
-        let message: String = args.get_as("message")?;
+        let message: String = args.try_get("message")?;
 
         if cond {
             // assertion ok: return None.
@@ -308,45 +298,45 @@ pub mod debug {
         }
     }
 
-    #[builtin_fn(core::expect(cond: Bool, message: String))]
+    #[builtin_fn(debug::expect(cond: Bool, message: String))]
     pub fn expect(args: Arguments, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let cond = args.get_cond()?;
-        let message: String = args.get_as("message")?;
+        let message: String = args.try_get("message")?;
         if !cond {
             ctx.diag(BuiltinError::Expected(message));
         }
         Ok(Value::None)
     }
 
-    #[builtin_fn(core::panic(message: String))]
+    #[builtin_fn(debug::panic(message: String))]
     pub fn panic(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        let message: String = args.get_as("message")?;
+        let message: String = args.try_get("message")?;
         Err(BuiltinError::Panic(message))
     }
 
-    #[builtin_fn(core::error(message: String))]
+    #[builtin_fn(debug::error(message: String))]
     pub fn error(args: Arguments, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        let message: String = args.get_as("message")?;
+        let message: String = args.try_get("message")?;
         ctx.diag(BuiltinError::Error(message));
         Ok(Value::None)
     }
 
-    #[builtin_fn(core::warning(message: String))]
+    #[builtin_fn(debug::warning(message: String))]
     pub fn warning(args: Arguments, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        let message: String = args.get_as("message")?;
+        let message: String = args.try_get("message")?;
         ctx.diag(BuiltinError::Warning(message));
         Ok(Value::None)
     }
 
-    #[builtin_fn(core::info(message: String))]
+    #[builtin_fn(debug::info(message: String))]
     pub fn info(args: Arguments, ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        let message: String = args.get_as("message")?;
+        let message: String = args.try_get("message")?;
         ctx.diag(BuiltinError::Info(message));
         Ok(Value::None)
     }
 
     /// Print all variables
-    #[builtin_fn(core::print(*))]
+    #[builtin_fn(debug::print(*))]
     pub fn print(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         println!(
             "{}",
@@ -357,5 +347,48 @@ pub mod debug {
                 .join(", ")
         );
         Ok(Value::None)
+    }
+}
+
+#[builtin_mod]
+pub mod math {
+    use super::*;
+    use microcad_lang_types::{MathOps, tuple};
+
+    /// Pi
+    #[builtin_constant(math::PI)]
+    pub static PI: Builtin = std::f64::consts::PI;
+
+    #[builtin_constant(math::X)]
+    pub static X: Builtin = tuple!(x = 1.0, y = 0.0, z = 0.0);
+
+    #[builtin_constant(math::Y)]
+    pub static Y: Builtin = tuple!(x = 0.0, y = 1.0, z = 0.0);
+
+    #[builtin_constant(math::Z)]
+    pub static Z: Builtin = tuple!(x = 0.0, y = 0.0, z = 1.0);
+
+    #[builtin_fn(math::abs(x: Any) -> Any)]
+    pub fn abs(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let x = args.get("x");
+        Ok(x.abs()?)
+    }
+
+    #[builtin_fn(math::sqrt(x: Any) -> Any)]
+    pub fn sqrt(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let x = args.get("x");
+        Ok(x.sqrt()?)
+    }
+
+    #[builtin_fn(math::sin(x: Any) -> Any)]
+    pub fn sin(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let x = args.get("x");
+        Ok(x.sin()?)
+    }
+
+    #[builtin_fn(math::cos(x: Any) -> Any)]
+    pub fn cos(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
+        let x = args.get("x");
+        Ok(x.cos()?)
     }
 }

@@ -1,5 +1,7 @@
-use microcad_builtin::mu::*;
+use microcad_builtin::{BuiltinEvalContext, mu::*};
 use microcad_builtin_proc_macros::test_builtin_fn;
+
+use microcad_lang_types::{Value, arguments, array, tuple};
 
 // --- Arithmetic Operators ---
 
@@ -89,3 +91,73 @@ fn and() {}
 fn or() {}
 
 // --- Data Structure Access ---
+// --- Data Structure Access & Construction ---
+
+#[test]
+#[test_builtin_fn(core::array_access(lhs = array![10, 20, 30], index = 1) => 20)]
+#[test_builtin_fn(core::array_access(lhs = array![10, 20, 30], index = 0) => 10)]
+fn array_access() {}
+
+#[test]
+#[test_builtin_fn(core::member_access(lhs = tuple!(a = 42, b = "hello"), name = "a") => 42)]
+#[test_builtin_fn(core::member_access(lhs = tuple!(a = 42, b = "hello"), name = "b") => "hello")]
+fn member_access() {}
+
+#[test]
+//#[test_builtin_fn(core::list(1, 2, 3) => list(1, 2, 3))]
+fn array() {
+    let mut ctx = BuiltinEvalContext::default();
+    match core::array(arguments!(1, 2, 3, 4), &mut ctx) {
+        Ok(Value::Array(a)) => assert_eq!(a, array![1, 2, 3, 4]),
+        _ => panic!("Formatting failed"),
+    }
+}
+
+#[test]
+#[test_builtin_fn(core::tuple(x = 10, y = 20) => tuple!(x = 10, y = 20))]
+fn tuple() {}
+
+#[test]
+#[test_builtin_fn(core::range(start = 1, end = 4) => array![1, 2, 3, 4])]
+#[test_builtin_fn(core::range(start = 0, end = 0) => array![0])]
+fn range() {}
+
+// --- String Formatting ---
+
+#[test]
+fn format() {
+    let mut ctx = BuiltinEvalContext::default();
+    match core::format(arguments!("Hello, ", "World!", " ", 2026), &mut ctx) {
+        Ok(Value::String(s)) => assert_eq!(s.as_str(), "Hello, World! 2026"),
+        _ => panic!("Formatting failed"),
+    }
+}
+
+#[test]
+#[test_builtin_fn(core::format_spec(expr = 3.14159, width = 8, precision = 2) => "    3.14")]
+#[test_builtin_fn(core::format_spec(expr = 42, width = 5, precision = -1) => "   42")]
+#[test_builtin_fn(core::format_spec(expr = 3.14159, width = -1, precision = 3) => "3.142")]
+fn format_spec() {}
+
+// --- Debug & Diagnostic Functions ---
+
+#[test]
+#[test_builtin_fn(debug::assert(cond = true, message = "ok") => ())]
+fn assert_pass() {}
+
+#[test]
+#[test_builtin_fn(debug::expect(cond = true, message = "ok") => ())]
+#[test_builtin_fn(debug::expect(cond = false, message = "warning") => ())]
+fn expect() {}
+
+#[test]
+#[test_builtin_fn(debug::error(message = "custom error") => ())]
+fn debug_error() {}
+
+#[test]
+#[test_builtin_fn(debug::warning(message = "custom warning") => ())]
+fn debug_warning() {}
+
+#[test]
+#[test_builtin_fn(debug::info(message = "custom info") => ())]
+fn debug_info() {}
