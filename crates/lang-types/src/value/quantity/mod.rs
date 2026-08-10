@@ -3,11 +3,11 @@
 
 //! Matrix value type
 
+mod math;
 pub mod ops;
 
 use crate::{ValueResult, ty::*};
 
-use derive_more::Display;
 use microcad_lang_base::element::BinaryOperator;
 use serde::{Deserialize, Deserializer, Serialize};
 
@@ -16,12 +16,7 @@ use crate::{Integer, Length, Scalar};
 const OUTPUT_PRECISION: i32 = 14;
 
 /// A numeric value
-#[derive(Clone, Debug, Display)]
-#[display(
-    "{:.PRECISION$}{unit}",
-    unit.denormalize(*value).to_num::<f64>(),
-    PRECISION = OUTPUT_PRECISION as usize
-)]
+#[derive(Clone, Debug)]
 pub struct Quantity {
     /// The numeric value of the quantity.
     pub value: Scalar,
@@ -83,6 +78,34 @@ impl Quantity {
                         .into(),
                 )
             }
+        }
+    }
+}
+
+impl std::fmt::Display for Quantity {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let display_value = self.unit.denormalize(self.value);
+        let precision = f.precision().unwrap_or(OUTPUT_PRECISION as usize);
+        let num_str = format!("{:.precision$}", display_value, precision = precision);
+
+        let full_str = if self.unit.is_none() {
+            num_str
+        } else {
+            format!("{num_str} {}", self.unit)
+        };
+
+        // 3. Handle width and alignment
+        if let Some(width) = f.width() {
+            // Default to Right alignment for numbers unless explicitly set left/center
+            let align = f.align().unwrap_or(std::fmt::Alignment::Right);
+
+            match align {
+                std::fmt::Alignment::Left => write!(f, "{:<width$}", full_str, width = width),
+                std::fmt::Alignment::Right => write!(f, "{:>width$}", full_str, width = width),
+                std::fmt::Alignment::Center => write!(f, "{:^width$}", full_str, width = width),
+            }
+        } else {
+            f.write_str(&full_str)
         }
     }
 }

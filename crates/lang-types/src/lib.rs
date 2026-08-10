@@ -7,6 +7,8 @@ pub mod model;
 pub mod ty;
 pub mod value;
 
+mod math_ops;
+
 mod color;
 pub use color::Color;
 
@@ -21,6 +23,8 @@ pub use ty::{
 pub use value::{Array, Quantity, Tuple, Value, ValueAccess, ValueError, ValueList, ValueResult};
 
 pub use model::{Model, ModelRef, ModelTree, Models};
+
+pub use math_ops::MathOps;
 
 pub use microcad_lang_base::{
     Identifier,

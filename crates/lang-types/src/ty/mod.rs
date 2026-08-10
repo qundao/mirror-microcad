@@ -49,8 +49,8 @@ pub enum TypeError {
     #[error("Unary operator '{op}' is not supported for type '{ty}'")]
     UnsupportedUnaryOperator { op: UnaryOperator, ty: Type },
 
-    #[error("Invalid type")]
-    InvalidType,
+    #[error("Invalid type: {0}")]
+    InvalidType(Type),
 
     #[error("Non matching signature parameters: {a} != {b}")]
     NonMatchingSignatureParameterList {

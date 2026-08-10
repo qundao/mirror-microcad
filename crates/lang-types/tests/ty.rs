@@ -78,7 +78,7 @@ fn function_type_macro() {
     assert_eq!(ft.parameters.as_ref().unwrap().0.len(), 2);
 
     // 4. Named parameters without return type
-    let ft = function_type!(lhs: Type::Integer, rhs: Type::Integer);
+    let ft = function_type!((lhs: Type::Integer, rhs: Type::Integer));
     assert!(!ft.is_variadic());
     assert_eq!(ft.return_ty, None);
 }
@@ -131,6 +131,6 @@ fn display_formatting() {
     let ft_params = function_type!((a: Type::Integer) -> Type::Bool);
     assert_eq!(format!("{ft_params}"), "(a: Integer) -> Bool");
 
-    let ft_no_ret = function_type!(a: Type::Integer);
+    let ft_no_ret = function_type!((a: Type::Integer));
     assert_eq!(format!("{ft_no_ret}"), "(a: Integer)");
 }

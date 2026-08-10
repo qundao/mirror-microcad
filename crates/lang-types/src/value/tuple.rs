@@ -136,7 +136,7 @@ impl Tuple {
 
 impl<T> From<std::slice::Iter<'_, (&'static str, T)>> for Tuple
 where
-    T: Into<Value> + Clone + std::fmt::Debug,
+    T: Into<Value> + Clone,
 {
     fn from(iter: std::slice::Iter<'_, (&'static str, T)>) -> Self {
         let (positional, named): (Vec<_>, _) = iter
@@ -145,6 +145,18 @@ where
         Self {
             positional: positional.into_iter().map(|(_, v)| v).collect(),
             named: named.into_iter().collect(),
+        }
+    }
+}
+
+impl<T> From<std::slice::Iter<'_, T>> for Tuple
+where
+    T: Into<Value> + Clone,
+{
+    fn from(iter: std::slice::Iter<'_, T>) -> Self {
+        Self {
+            positional: iter.map(|v| v.clone().into()).collect::<Vec<_>>(),
+            named: vec![],
         }
     }
 }

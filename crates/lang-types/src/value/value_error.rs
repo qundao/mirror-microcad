@@ -57,4 +57,10 @@ pub enum ValueError {
     /// Expected a common type, e.g. for a [`ValueList`].
     #[error("Common type expected")]
     CommonTypeExpected,
+
+    #[error("Domain error: {0}")]
+    DomainError(String),
+
+    #[error("Invalid type: {0}")]
+    InvalidMathOperand(Type),
 }

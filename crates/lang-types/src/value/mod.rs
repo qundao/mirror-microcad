@@ -7,6 +7,7 @@
 //! to process or ends up as the overall evaluation result.
 
 mod array;
+mod math;
 mod matrix;
 pub mod ops;
 mod quantity;
@@ -266,6 +267,17 @@ impl From<Vec3> for Value {
     }
 }
 
+impl From<&str> for Value {
+    fn from(value: &str) -> Self {
+        Self::String(value.to_string())
+    }
+}
+
+impl From<()> for Value {
+    fn from(_: ()) -> Self {
+        Value::None
+    }
+}
 impl FromIterator<Value> for Value {
     fn from_iter<T: IntoIterator<Item = Value>>(iter: T) -> Self {
         Self::Array(iter.into_iter().collect())

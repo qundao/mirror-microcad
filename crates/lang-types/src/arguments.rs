@@ -47,11 +47,11 @@ impl Arguments {
     }
 
     pub fn get_cond(&self) -> ValueResult<bool> {
-        self.get_as("cond")
+        self.try_get("cond")
     }
 
-    pub fn get_as<T: TryFrom<Value, Error = ValueError>>(&self, name: &str) -> ValueResult<T> {
-        Ok(T::try_from(self.get(name).clone())?)
+    pub fn try_get<T: TryFrom<Value, Error = ValueError>>(&self, name: &str) -> ValueResult<T> {
+        T::try_from(self.get(name).clone())
     }
 }
 
@@ -126,6 +126,11 @@ where
 macro_rules! arguments {
     ($($key:ident = $value:expr),*) => {
             microcad_lang_types::Arguments::from(microcad_lang_types::Tuple::from([$( (stringify!($key), microcad_lang_types::Value::from($value)) ),* ]
+                .iter()))
+    };
+
+    ($($value:expr),*) => {
+            microcad_lang_types::Arguments::from(microcad_lang_types::Tuple::from([$( microcad_lang_types::Value::from($value)),* ]
                 .iter()))
     };
 }
