@@ -130,7 +130,7 @@ macro_rules! impl_try_from {
 
             fn try_from(value: Value) -> std::result::Result<Self, Self::Error> {
                 match value {
-                    $(Value::$variant(v) => Ok(v),)*
+                    $(Value::$variant(v) => Ok(v.into()),)*
                     value => Err(ValueError::CannotConvert(value.to_string(), stringify!($ty).into())),
                 }
             }
@@ -140,6 +140,8 @@ macro_rules! impl_try_from {
 
 impl_try_from!(Bool => bool);
 impl_try_from!(String => String);
+impl_try_from!(Integer => Integer);
+impl_try_from!(Integer => i64);
 
 impl TryFrom<Value> for Scalar {
     type Error = ValueError;
