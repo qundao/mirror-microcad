@@ -42,51 +42,39 @@ impl Parse for BuiltinFnSig {
         let content;
         syn::parenthesized!(content in input);
 
-        if content.peek(Token![*]) {
-            content.parse::<Token![*]>()?;
+        let mut params = Vec::new();
+        let mut is_variadic = false;
 
-            // 3. Optionally Parse `-> return_type`
-            let return_type = if input.peek(Token![->]) {
-                input.parse::<Token![->]>()?;
-                Some(input.parse()?)
-            } else {
-                None
-            };
-
-            Ok(Self {
-                mod_name,
-                name,
-                is_variadic: true,
-                params: vec![],
-                return_type,
-            })
-        } else {
-            let mut params = Vec::new();
-            while !content.is_empty() {
-                params.push(content.parse::<BuiltinParam>()?);
-                if content.peek(Token![,]) {
-                    content.parse::<Token![,]>()?;
-                } else {
-                    break;
-                }
+        while !content.is_empty() {
+            if content.peek(syn::token::Star) {
+                is_variadic = true;
+                content.parse::<Token![*]>()?;
+                break;
             }
+            params.push(content.parse::<BuiltinParam>()?);
 
-            // 3. Optionally Parse `-> return_type`
-            let return_type = if input.peek(Token![->]) {
-                input.parse::<Token![->]>()?;
-                Some(input.parse()?)
+            if content.peek(Token![,]) {
+                content.parse::<Token![,]>()?;
             } else {
-                None
-            };
-
-            Ok(Self {
-                mod_name,
-                name,
-                params,
-                return_type,
-                is_variadic: false,
-            })
+                break;
+            }
         }
+
+        // 3. Optionally Parse `-> return_type`
+        let return_type = if input.peek(Token![->]) {
+            input.parse::<Token![->]>()?;
+            Some(input.parse()?)
+        } else {
+            None
+        };
+
+        Ok(Self {
+            mod_name,
+            name,
+            params,
+            return_type,
+            is_variadic,
+        })
     }
 }
 
