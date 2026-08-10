@@ -168,6 +168,14 @@ impl From<&str> for Identifier {
     }
 }
 
+impl From<String> for Identifier {
+    fn from(value: String) -> Self {
+        let identifier = Identifier::no_ref(&value);
+        assert!(identifier.is_valid());
+        identifier
+    }
+}
+
 impl<'a> From<&'a Identifier> for &'a str {
     fn from(value: &'a Identifier) -> Self {
         &value.0
