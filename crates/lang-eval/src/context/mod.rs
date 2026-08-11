@@ -4,7 +4,7 @@
 use derive_more::From;
 
 use microcad_builtin::BuiltinRegistry;
-use microcad_lang_base::{HashMap, Identifier};
+use microcad_lang_base::{HashMap, Name, ToCompactString};
 use microcad_lang_types::{Arguments, Value};
 
 use crate::EvalError;
@@ -13,7 +13,7 @@ use crate::EvalError;
 ///
 /// The `Vec<SrcRef>` represents the usages of this local.
 #[derive(Debug, Default)]
-pub struct LocalTable(HashMap<Identifier, Value>);
+pub struct LocalTable(HashMap<Name, Value>);
 
 #[derive(Debug, Default)]
 pub struct FunctionFrame {
@@ -25,7 +25,7 @@ impl FunctionFrame {
     pub fn new(args: Arguments) -> Self {
         let locals = LocalTable(
             args.named_iter()
-                .map(|(id, value)| (id.clone(), value.clone()))
+                .map(|(id, value)| (id.to_compact_string(), value.clone()))
                 .collect(),
         );
 
@@ -52,18 +52,18 @@ pub enum StackFrame {
 }
 
 impl StackFrame {
-    pub fn get_local(&self, id: &Identifier) -> Option<&Value> {
+    pub fn get_local(&self, name: &Name) -> Option<&Value> {
         match self {
             StackFrame::Function(FunctionFrame { locals })
-            | StackFrame::FunctionScope(FunctionScopeFrame { locals }) => locals.0.get(id),
+            | StackFrame::FunctionScope(FunctionScopeFrame { locals }) => locals.0.get(name),
         }
     }
 
-    pub fn put_local(&mut self, id: Identifier, value: Value) {
+    pub fn put_local(&mut self, name: Name, value: Value) {
         match self {
             StackFrame::Function(FunctionFrame { locals })
             | StackFrame::FunctionScope(FunctionScopeFrame { locals }) => {
-                locals.0.insert(id, value);
+                locals.0.insert(name, value);
             }
         }
     }
@@ -82,8 +82,8 @@ impl Stack {
 impl StackRead for Stack {
     type Frame = StackFrame;
 
-    fn get_local(&self, id: &Identifier) -> Option<&Value> {
-        self.0.iter().rev().find_map(|frame| frame.get_local(id))
+    fn get_local(&self, name: &Name) -> Option<&Value> {
+        self.0.iter().rev().find_map(|frame| frame.get_local(name))
     }
 
     fn top(&self) -> &StackFrame {
@@ -114,7 +114,7 @@ impl Default for Stack {
 pub trait StackRead {
     type Frame;
 
-    fn get_local(&self, _id: &Identifier) -> Option<&Value> {
+    fn get_local(&self, _name: &Name) -> Option<&Value> {
         None
     }
 
@@ -142,7 +142,7 @@ pub struct EvalContext {
 
 impl EvalContext {
     pub fn new() -> Self {
-        let mut builtins = BuiltinRegistry::new();
+        let builtins = BuiltinRegistry::new();
 
         Self {
             builtins,
@@ -190,8 +190,8 @@ impl EvalContext {
 impl StackRead for EvalContext {
     type Frame = StackFrame;
 
-    fn get_local(&self, id: &Identifier) -> Option<&Value> {
-        self.stack.get_local(id)
+    fn get_local(&self, name: &Name) -> Option<&Value> {
+        self.stack.get_local(name)
     }
 
     fn top(&self) -> &Self::Frame {

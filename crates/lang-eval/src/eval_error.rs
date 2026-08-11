@@ -227,9 +227,9 @@ pub enum EvalError {
     #[error("This call returns a value but it is ignored")]
     CallReturnValueIgnored(SrcRef),
 
-    #[error("Symbol `{symbol_path}` cannot be called.")]
-    SymbolCanNotBeCalled {
-        symbol_path: Name,
+    #[error("Symbol `{path}` cannot be called.")]
+    SymbolCannotBeCalled {
+        path: String,
 
         #[label("Symbol name")]
         src_ref: SrcRef,
@@ -244,7 +244,7 @@ pub enum EvalError {
     },
 
     #[error("Local `{0}` not found in scope.")]
-    LocalNotFound(#[label("Name of the local")] Identifier),
+    LocalNotFound(Name),
 
     #[error("Duplicated argument {id}.")]
     DuplicateArgument {

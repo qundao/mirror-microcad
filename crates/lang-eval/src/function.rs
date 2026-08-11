@@ -4,7 +4,7 @@
 //! Evaluate function
 
 use microcad_builtin::Builtin;
-use microcad_lang_base::{SrcRef, SrcReferrer};
+use microcad_lang_base::{SrcRef, SrcReferrer, ToCompactString};
 use microcad_lang_types::{ArgumentValue, ArgumentValueList, Value, tuple};
 use microcad_package::rst;
 
@@ -104,14 +104,10 @@ impl Eval<FlowSignal> for rst::function::If {
 impl Eval<FlowSignal> for rst::function::Call {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
         match &self.path {
-            rst::ResolvedName::Local(_) => unimplemented!("Not callable"),
-            rst::ResolvedName::Symbol(symbol) => {
-                unimplemented!("context.call_symbol(symbol, self.arguments)")
-            }
-            rst::ResolvedName::Builtin(builtin) => {
+            rst::Path::Resolved(rst::SymbolId::Builtin(builtin_id)) => {
                 let args = self.args.eval(context)?;
 
-                match context.builtins.get(*builtin) {
+                match context.builtins.get(*builtin_id) {
                     Some(Builtin::Function(f)) => {
                         let args = find_match(&args, &f.ty(), &tuple!())?;
 
@@ -121,9 +117,9 @@ impl Eval<FlowSignal> for rst::function::Call {
                     _ => todo!(),
                 }
             }
-            rst::ResolvedName::Error(symbol_path) => {
-                context.diag(EvalError::SymbolCanNotBeCalled {
-                    symbol_path: symbol_path.clone(),
+            path => {
+                context.diag(EvalError::SymbolCannotBeCalled {
+                    path: path.to_string(),
                     src_ref: self.src_ref,
                 });
                 Ok(FlowSignal::Continue)
@@ -132,10 +128,10 @@ impl Eval<FlowSignal> for rst::function::Call {
     }
 }
 
-impl Eval<FlowSignal> for rst::ResolvedName {
+impl Eval<FlowSignal> for rst::Path {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
         match self {
-            rst::ResolvedName::Local(identifier) => {
+            rst::Path::Resolved(rst::SymbolId::Local(identifier)) => {
                 use crate::context::StackRead;
                 match context.get_local(identifier) {
                     Some(local) => Ok(FlowSignal::Yield(local.clone())),
@@ -145,9 +141,13 @@ impl Eval<FlowSignal> for rst::ResolvedName {
                     }
                 }
             }
-            rst::ResolvedName::Builtin(builtin) => todo!(),
-            rst::ResolvedName::Symbol(refer) => todo!(),
-            rst::ResolvedName::Error(symbol_path) => todo!(),
+            rst::Path::Resolved(rst::SymbolId::Builtin(builtin)) => {
+                match context.builtins.get(*builtin) {
+                    Some(Builtin::Constant(c)) => Ok(FlowSignal::Yield(c.value())),
+                    _ => todo!("Error handling"),
+                }
+            }
+            _ => todo!("Error handling"),
         }
     }
 }
@@ -162,6 +162,7 @@ impl Eval<FlowSignal> for rst::FunctionExpression {
             Expr::Scope(s) => s.eval(context),
             Expr::If(if_) => if_.eval(context),
             Expr::Call(call) => call.eval(context),
+            _ => todo!(),
         }
     }
 }
@@ -200,7 +201,7 @@ impl Eval<FlowSignal> for rst::FunctionStatement {
                     }
                     // Save yielded value in local table
                     FlowSignal::Yield(value) => {
-                        context.top_mut().put_local(l.id.clone(), value);
+                        context.top_mut().put_local(l.id.to_compact_string(), value);
 
                         Ok(FlowSignal::Continue)
                     }
@@ -208,6 +209,7 @@ impl Eval<FlowSignal> for rst::FunctionStatement {
                     FlowSignal::Return(value) => Ok(FlowSignal::Return(value)),
                 }
             }
+            _ => todo!(),
         }
     }
 }

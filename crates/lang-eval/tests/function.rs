@@ -4,11 +4,11 @@
 //! Tests for evaluating functions.
 
 use microcad_builtin::__mu;
-use microcad_lang_base::{Identifier, SrcRef};
+use microcad_lang_base::{Identifier, SrcRef, SymbolId, ToCompactString};
 use microcad_lang_eval::{CallTrait, EvalContext, argument_value};
 use microcad_lang_types::{ArgumentValueList, Integer, Type, Value, function_type, tuple};
 use microcad_package::rst::{
-    Function, FunctionExpression, FunctionStatement, ResolvedName,
+    Function, FunctionExpression, FunctionStatement, Path,
     function::{Argument, ArgumentList, Call, If, Literal, ReturnStatement, Scope},
 };
 
@@ -22,7 +22,7 @@ where
 }
 
 fn name_expr(name: &str) -> FunctionExpression {
-    FunctionExpression::Path(ResolvedName::Local(Identifier::no_ref(name)))
+    FunctionExpression::Path(Path::Resolved(SymbolId::Local(name.to_compact_string())))
 }
 
 fn scope<T>(a: impl Iterator<Item = T>) -> Scope

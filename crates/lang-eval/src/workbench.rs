@@ -3,8 +3,6 @@
 
 //! Workbench definition syntax element evaluation
 
-use microcad_lang_base::{Hashed, SrcRef, SrcReferrer};
-
 /*
 impl ir::WorkbenchDefinition {
     /// Try to evaluate a single call into a [`Model`].
