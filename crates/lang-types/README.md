@@ -3,7 +3,7 @@
 [![Crates.io](https://img.shields.io/crates/v/microcad-lang-types.svg)](https://crates.io/crates/microcad-lang-types)
 [![Documentation](https://docs.rs/microcad-lang-types/badge.svg)](https://docs.rs/microcad-lang-types/)
 
-This crates contains the type system for the microcad language.
+This crates contains the type system for the µcad language.
 
 ## ❤️ Support the project
 

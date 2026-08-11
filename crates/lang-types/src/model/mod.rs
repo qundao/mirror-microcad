@@ -3,7 +3,7 @@
 
 //! Model tree module
 
-use derive_more::{Deref, Display};
+use derive_more::Display;
 
 pub mod attribute;
 pub mod creator;
@@ -22,26 +22,26 @@ pub use operation::{AffineTransform, BooleanOp};
 mod tree;
 pub use tree::{ModelHandle, ModelTree};
 
-use microcad_lang_base::{Identifier, element::Visibility};
+use microcad_lang_base::{BuiltinId, Identifier, element::Visibility};
 use serde::{Deserialize, Serialize};
 
 pub use attribute::Attributes;
 
-pub use element::{Element, ElementKind};
+pub use element::Element;
 
 pub use creator::Creator;
 pub use output_type::ModelOutputType;
 
-use crate::{Ty, Type, Value};
+use crate::{Arguments, Ty, Type, Value};
 
 #[derive(Debug, Display, Clone, PartialEq, Hash, Serialize, Deserialize)]
-#[display("{inner}")]
+#[display("{content}")]
 pub struct Model {
     /// Parent of the model
     pub parent: Option<ModelHandle>,
 
     /// The actual model content
-    pub inner: ModelInner,
+    pub content: ModelContent,
 
     /// Children of this model
     pub children: Models,
@@ -49,22 +49,32 @@ pub struct Model {
 
 impl Model {
     pub fn with_name(mut self, id: Identifier) -> Self {
-        self.inner.id = Some(id);
+        self.content.id = Some(id);
         self
     }
 
     pub fn with_visibility(mut self, vis: Visibility) -> Self {
-        self.inner.visibility = vis;
+        self.content.visibility = vis;
         self
     }
 
     pub fn with_attr(mut self, attr: Attributes) -> Self {
-        self.inner.attr = attr;
+        self.content.attr = attr;
         self
     }
 
     pub fn output_type(&self) -> ModelOutputType {
-        self.inner.element.output_type()
+        self.content.element.output_type()
+    }
+}
+
+impl From<ModelContent> for Model {
+    fn from(content: ModelContent) -> Self {
+        Self {
+            parent: None,
+            content,
+            children: Models::default(),
+        }
     }
 }
 
@@ -78,11 +88,12 @@ impl From<Value> for Model {
     fn from(value: Value) -> Self {
         Model {
             parent: None,
-            inner: ModelInner {
+            content: ModelContent {
                 id: None,
                 visibility: Default::default(),
                 attr: Default::default(),
                 element: Element::from(value),
+                creator: None,
             },
             children: Default::default(),
         }
@@ -90,7 +101,7 @@ impl From<Value> for Model {
 }
 
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
-pub struct ModelInner {
+pub struct ModelContent {
     /// An optional id
     pub id: Option<Identifier>,
 
@@ -100,11 +111,26 @@ pub struct ModelInner {
     /// Model attributes
     pub attr: Attributes,
 
-    /// Model elements
+    /// Model element
     pub element: Element,
+
+    /// The call that created this model
+    pub creator: Option<Creator>,
 }
 
-impl std::fmt::Display for ModelInner {
+impl ModelContent {
+    pub fn primitive2d(builtin_id: BuiltinId, arguments: Arguments) -> ModelContent {
+        ModelContent {
+            id: None,
+            visibility: Visibility::Private,
+            attr: Attributes::default(),
+            element: Element::BuiltinWorkpiece(element::BuiltinWorkbenchKind::Primitive2D),
+            creator: Some(Creator::builtin(builtin_id, arguments)),
+        }
+    }
+}
+
+impl std::fmt::Display for ModelContent {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.attr)?;
         if Visibility::Public == self.visibility {

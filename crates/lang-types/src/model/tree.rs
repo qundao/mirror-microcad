@@ -6,7 +6,7 @@
 use microcad_lang_base::{TreeDisplay, TreeState};
 use serde::{Deserialize, Serialize};
 
-use crate::{Model, ModelRef, Models, Ty, Type};
+use crate::{Model, ModelRef, Models, Ty, Type, model::ModelContent};
 
 #[derive(Debug, PartialEq, Clone, Copy, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct ModelHandle(pub usize);
@@ -65,7 +65,7 @@ impl ModelTree {
 
         // Map every node from the incoming tree with adjusted index handles
         let mapped_nodes = tree.nodes.into_iter().map(|model| Model {
-            inner: model.inner,
+            content: model.content,
             // If the node was a root in the source tree (parent == None), re-parent it to `parent`.
             // Otherwise, offset its existing parent index by base_index.
             parent: match model.parent {
@@ -119,6 +119,12 @@ impl Default for ModelTree {
 impl From<Model> for ModelTree {
     fn from(root: Model) -> Self {
         Self { nodes: vec![root] }
+    }
+}
+
+impl From<ModelContent> for ModelTree {
+    fn from(content: ModelContent) -> Self {
+        Self::from(Model::from(content))
     }
 }
 

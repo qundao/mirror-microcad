@@ -8,7 +8,7 @@ use microcad_lang_base::TreeDisplay;
 
 use crate::{
     Model, ModelTree, Ty, Type,
-    model::{Element, ElementKind, ModelHandle, ModelOutputType, iter},
+    model::{Element, ModelHandle, ModelOutputType, iter},
 };
 
 #[derive(Debug, Deref, Clone, Copy)]
@@ -41,7 +41,7 @@ impl<'tree> ModelRef<'tree> {
     }
 
     pub fn element(&self) -> &'tree Element {
-        &self.model.inner.element
+        &self.model.content.element
     }
 
     /// Return the parent of this model.
@@ -53,7 +53,7 @@ impl<'tree> ModelRef<'tree> {
 
     /// Returns true if the model as a name
     pub fn has_name(&self) -> bool {
-        self.model.inner.id.is_some()
+        self.model.content.id.is_some()
     }
 
     /// Deduce output type from element or children.
@@ -81,7 +81,7 @@ impl<'tree> ModelRef<'tree> {
         let first_child = children.next()?;
 
         // Ensure it's the ONLY child
-        if children.next().is_none() && matches!(first_child.element().kind(), ElementKind::Group) {
+        if children.next().is_none() && matches!(first_child.element(), Element::Group) {
             Some(first_child)
         } else {
             None

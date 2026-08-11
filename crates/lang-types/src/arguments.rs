@@ -4,10 +4,11 @@
 use derive_more::{Deref, DerefMut, Display, From};
 use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_proc_macros::SrcReferrer;
+use serde::{Deserialize, Serialize};
 
 use crate::{Tuple, Ty, Type, Value, ValueError, ValueResult};
 
-#[derive(Clone, Display, From, Debug, PartialEq)]
+#[derive(Clone, Display, From, Hash, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Arguments(pub Tuple);
 
 impl Arguments {

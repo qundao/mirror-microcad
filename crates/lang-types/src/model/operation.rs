@@ -3,10 +3,13 @@
 
 //! Operation trait.
 
+use derive_more::Display;
+use serde::{Deserialize, Serialize};
+
 use crate::{Mat3, Scalar, Vec3};
 
 /// Transformation matrix
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub enum AffineTransform {
     /// Translation.
     Translation(Vec3),
@@ -19,7 +22,7 @@ pub enum AffineTransform {
 }
 
 /// Boolean operations
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, Debug, Display, Hash, PartialEq, Serialize, Deserialize)]
 pub enum BooleanOp {
     /// Computes the union R = P ∪ Q
     Union,

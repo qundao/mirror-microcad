@@ -5,7 +5,7 @@
 
 use microcad_lang_base::HashId;
 
-use crate::{ModelRef, model::ElementKind};
+use crate::{ModelRef, model::Element};
 
 /// Children iterator struct.
 pub struct Children<'tree> {
@@ -97,7 +97,7 @@ impl<'tree> Iterator for UnnamedMultiplicityDescendants<'tree> {
 
     fn next(&mut self) -> Option<Self::Item> {
         while let Some(model) = self.stack.pop() {
-            if matches!(model.element().kind(), ElementKind::Multiplicity) {
+            if matches!(model.element(), Element::Multiplicity) {
                 // Expand but don't yield this node itself
                 self.stack
                     .extend(model.children().filter(|model| !model.has_name()).rev());
