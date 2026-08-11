@@ -166,7 +166,7 @@ impl<T: std::hash::Hash> ToHash for Hashed<T> {
 }
 
 // Simple FNV-1a hash for generating built-in IDs from &str.
-pub const fn fnv1a_hash(s: &str) -> u64 {
+pub const fn compile_time_hash(s: &str) -> u64 {
     let bytes = s.as_bytes();
     let mut hash: u64 = 0xcbf29ce484222325;
     let mut i = 0;
@@ -177,4 +177,17 @@ pub const fn fnv1a_hash(s: &str) -> u64 {
     }
 
     hash
+}
+
+/// Macro to calculate hashes conveniently.
+#[macro_export]
+macro_rules! hash_id {
+    ($($arg:expr),+ $(,)?) => {{
+        use ::std::hash::{Hash, Hasher};
+        let mut hasher = $crate::Hasher::default();
+        $(
+            $arg.hash(&mut hasher);
+        )+
+        $crate::HashId::new(hasher.finish())
+    }};
 }
