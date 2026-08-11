@@ -4,12 +4,12 @@
 //! Module to handle and demangle IDs use in µcad language.
 
 mod builtin;
-mod demangle;
+mod unresolve;
 
 use derive_more::From;
 pub use microcad_hash::{HashId, hash_id};
 
-pub use demangle::{Demangle, Demangler};
+pub use unresolve::{Unresolve, Unresolver};
 
 pub use builtin::{BuiltinId, BuiltinName};
 
