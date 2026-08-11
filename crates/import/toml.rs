@@ -3,7 +3,7 @@
 
 //! Import values from TOML
 
-use microcad_lang_base::{Id, Identifier, SrcRef};
+use microcad_lang_base::{Name, Identifier, SrcRef};
 use microcad_lang_types::*;
 
 /// Import TOML files into a tuple.
