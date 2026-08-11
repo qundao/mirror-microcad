@@ -277,8 +277,3 @@ pub fn derive_artifact(input: TokenStream) -> TokenStream {
     }
     .into()
 }
-
-#[proc_macro_derive(AstNode, attributes(ast))]
-pub fn derive_ast_node(input: TokenStream) -> TokenStream {
-    ast_node::derive_ast_node_impl(input)
-}
