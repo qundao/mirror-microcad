@@ -1,23 +1,17 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{
-    Lower, LowerContext, LowerError, LowerResult, ir,
-    lower::{LowerExpr, LowerPath},
-};
+use crate::{Lower, LowerContext, LowerError, LowerResult, ir, lower::LowerExpr};
 
 use microcad_builtin::__mu;
 use microcad_lang_base::{Identifier, SpanToSrcRef, SrcRef};
 use microcad_lang_parse::ast;
 
-impl<Expr: LowerExpr> Lower<ast::Call> for ir::Call<Expr>
-where
-    Expr::Path: LowerPath,
-{
+impl<Expr: LowerExpr> Lower<ast::Call> for ir::Call<Expr> {
     fn lower(node: &ast::Call, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::Call {
             src_ref: context.span_to_src_ref(&node.span),
-            path: Expr::Path::lower(&node.path, context)?,
+            path: ir::Path::lower(&node.path, context)?,
             args: ir::ArgumentList::lower(&node.arguments, context)?,
         })
     }
@@ -93,10 +87,7 @@ impl<Expr: LowerExpr> Lower<ast::ArgumentList> for ir::ArgumentList<Expr> {
     }
 }
 
-impl<Expr: LowerExpr> Lower<ast::UnaryOperation> for ir::Call<Expr>
-where
-    Expr::Path: LowerPath,
-{
+impl<Expr: LowerExpr> Lower<ast::UnaryOperation> for ir::Call<Expr> {
     fn lower(node: &ast::UnaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             path: match node.op.value {
@@ -110,10 +101,7 @@ where
     }
 }
 
-impl<Expr: LowerExpr> Lower<ast::BinaryOperation> for ir::Call<Expr>
-where
-    Expr::Path: LowerPath,
-{
+impl<Expr: LowerExpr> Lower<ast::BinaryOperation> for ir::Call<Expr> {
     fn lower(node: &ast::BinaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             path: match node.op.value {
@@ -151,11 +139,11 @@ where
     }
 }
 
-pub fn lower_spec<Path: LowerPath>(
-    expr: ir::ConstantExpression<Path>,
+pub fn lower_spec(
+    expr: ir::ConstantExpression,
     spec: &ast::StringFormatSpecification,
     context: &mut LowerContext,
-) -> LowerResult<ir::Call<ir::ConstantExpression<Path>>> {
+) -> LowerResult<ir::Call<ir::ConstantExpression>> {
     let width = spec
         .width
         .as_ref()
@@ -179,7 +167,7 @@ pub fn lower_spec<Path: LowerPath>(
     })
 }
 
-impl<Path: LowerPath> Lower<ast::FormatString> for ir::Call<ir::ConstantExpression<Path>> {
+impl Lower<ast::FormatString> for ir::Call<ir::ConstantExpression> {
     fn lower(node: &ast::FormatString, context: &mut LowerContext) -> LowerResult<Self> {
         let mut args_vec = Vec::new();
         let mut pending_str = String::new();

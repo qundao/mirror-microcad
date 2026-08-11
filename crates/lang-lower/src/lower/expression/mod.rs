@@ -1,16 +1,12 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{
-    Lower, LowerContext, LowerError, LowerResult,
-    ir::{self, path::UnresolvedPath},
-    lower::{LowerExpr, LowerPath},
-};
+use crate::{Lower, LowerContext, LowerError, LowerResult, ir, lower::LowerExpr};
 
 mod call;
 mod literal;
 
-use microcad_builtin::__mu;
+use microcad_builtin::{__mu, BuiltinError};
 use microcad_lang_base::{Identifier, SpanToSrcRef};
 use microcad_lang_parse::ast;
 use microcad_lang_types::{Scalar, Value};
@@ -61,26 +57,35 @@ where
 
 impl Lower<ast::SymbolPath> for ir::Path {
     fn lower(node: &ast::SymbolPath, context: &mut LowerContext) -> LowerResult<Self> {
-        let is_absolute = node.prefix.is_some();
-        let parts = node
-            .parts
-            .iter()
-            .map(|ident| ir::Identifier::lower(ident, context))
-            .collect::<Result<Vec<_>, _>>()?
-            .into_boxed_slice();
-
-        Ok(Self::UnresolvedPath(ir::UnresolvedPath {
-            is_absolute,
-            parts,
+        let path = ir::UnresolvedPath {
+            is_absolute: node.prefix.is_some(),
+            parts: node
+                .parts
+                .iter()
+                .map(|ident| ir::Identifier::lower(ident, context))
+                .collect::<Result<Vec<_>, _>>()?
+                .into_boxed_slice(),
             src_ref: context.span_to_src_ref(&node.span),
-        }))
+        };
+
+        if let Some(id) = path.builtin_id() {
+            if context.builtins.get(id).is_some() {
+                return Ok(id.into());
+            } else {
+                context.diag(BuiltinError::NoBuiltin {
+                    full_name: path.to_string(),
+                    id,
+                });
+            }
+        }
+
+        Ok(Self::Unresolved(path))
     }
 }
 
 impl<Expr: LowerExpr> Lower<ast::ArrayRangeExpression> for Expr
 where
     Expr: From<ir::Call<Expr>> + From<ir::Literal>,
-    Expr::Path: LowerPath,
 {
     fn lower(a: &ast::ArrayRangeExpression, context: &mut LowerContext) -> LowerResult<Self> {
         let unit = ir::Unit::lower(&a.unit, context)?;
@@ -113,7 +118,6 @@ where
 impl<Expr: LowerExpr> Lower<ast::ArrayListExpression> for Expr
 where
     Expr: From<ir::Call<Expr>> + From<ir::Literal>,
-    Expr::Path: LowerPath,
 {
     fn lower(a: &ast::ArrayListExpression, context: &mut LowerContext) -> LowerResult<Self> {
         let unit = ir::Unit::lower(&a.unit, context)?;
@@ -150,7 +154,6 @@ where
 impl<Expr: LowerExpr> Lower<ast::TupleExpression> for ir::Call<Expr>
 where
     Expr: From<ir::Call<Expr>> + From<ir::Literal>,
-    Expr::Path: LowerPath,
 {
     fn lower(node: &ast::TupleExpression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
@@ -161,7 +164,7 @@ where
     }
 }
 
-impl<Path: LowerPath> Lower<ast::Expression> for ir::ConstantExpression<Path> {
+impl Lower<ast::Expression> for ir::ConstantExpression {
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
             ast::Expression::Bracketed(expr, _) => Self::lower(expr.as_ref(), context)?,
@@ -174,7 +177,7 @@ impl<Path: LowerPath> Lower<ast::Expression> for ir::ConstantExpression<Path> {
             ast::Expression::Tuple(t) => Self::Call(ir::Call::lower(t, context)?),
             ast::Expression::ArrayRange(a) => Self::lower(a, context)?,
             ast::Expression::ArrayList(a) => Self::lower(a, context)?,
-            ast::Expression::SymbolPath(n) => Self::Path(Path::lower(n, context)?),
+            ast::Expression::SymbolPath(n) => Self::Path(ir::Path::lower(n, context)?),
             ast::Expression::BinaryOperation(binop) => Self::Call(ir::Call::lower(binop, context)?),
             ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call::lower(unop, context)?),
             expr => {

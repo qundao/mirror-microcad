@@ -12,9 +12,9 @@ use serde::Deserialize;
 use serde::Serialize;
 
 #[derive(Debug, Clone, Hash, Identifiable, PartialEq, Serialize, Deserialize)]
-pub struct FileModule<Path: ir::PathSpec = ir::Path> {
+pub struct FileModule {
     pub src_ref: SrcRef,
-    pub attr: ir::OuterAttributes<Path>,
+    pub attr: ir::OuterAttributes,
 
     pub visibility: ir::Visibility,
 
@@ -25,25 +25,25 @@ pub struct FileModule<Path: ir::PathSpec = ir::Path> {
 
 /// Items inside an inline module that will be resolved into Symbols.
 #[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
-pub struct InlineModuleItems<Path: ir::PathSpec = ir::Path> {
-    pub modules: Box<[ir::InlineModule<Path>]>,
+pub struct InlineModuleItems {
+    pub modules: Box<[ir::InlineModule]>,
 
-    pub aliases: ir::Aliases<Path>,
+    pub aliases: ir::Aliases,
 
-    pub constants: Box<[ir::Constant<Path>]>,
+    pub constants: Box<[ir::Constant]>,
 
-    pub functions: Box<[ir::Function<Path>]>,
+    pub functions: Box<[ir::Function]>,
 
-    pub workbenches: Box<[ir::Workbench<Path>]>,
+    pub workbenches: Box<[ir::Workbench]>,
 }
 
 /// Inline module definition.
 #[derive(Debug, Clone, Identifiable, Hash, PartialEq, Serialize, Deserialize)]
-pub struct InlineModule<Path: ir::PathSpec = ir::Path> {
+pub struct InlineModule {
     pub src_ref: SrcRef,
 
     /// Outer attributes.
-    pub outer_attr: ir::OuterAttributes<Path>,
+    pub outer_attr: ir::OuterAttributes,
     /// Visibility of the module.
     pub visibility: ir::Visibility,
     /// SrcRef of the `mod` keyword
@@ -51,18 +51,18 @@ pub struct InlineModule<Path: ir::PathSpec = ir::Path> {
     /// Name of the module.
     pub id: ir::Identifier,
 
-    pub inner_attr: ir::InnerAttributes<Path>,
+    pub inner_attr: ir::InnerAttributes,
 
-    pub items: ir::InlineModuleItems<Path>,
+    pub items: ir::InlineModuleItems,
 }
 
-impl<Path: ir::PathSpec> SrcReferrer for InlineModule<Path> {
+impl SrcReferrer for InlineModule {
     fn src_ref(&self) -> SrcRef {
         self.id.src_ref()
     }
 }
 
-impl<Path: ir::PathSpec> std::fmt::Display for InlineModule<Path> {
+impl std::fmt::Display for InlineModule {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,

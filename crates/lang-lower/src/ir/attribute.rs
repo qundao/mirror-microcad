@@ -3,7 +3,7 @@
 
 //! Attribute syntax entities.
 
-use crate::{CastInto, ir};
+use crate::ir;
 
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{Refer, SrcRef};
@@ -63,41 +63,16 @@ impl std::fmt::Display for DocBlock {
 
 /// Metadata for a [`Model`]
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Meta<Path: ir::PathSpec = ir::Path> {
+pub struct Meta {
     pub name: ir::Path,
-    pub expr: ir::ConstantExpression<Path>,
-}
-
-impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<Meta<Dst>> for Meta<Src>
-where
-    Src: Into<Dst>,
-{
-    fn cast_into(self) -> Meta<Dst> {
-        Meta {
-            name: self.name,
-            expr: self.expr.cast_into(),
-        }
-    }
+    pub expr: ir::ConstantExpression,
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Command<Path: ir::PathSpec = ir::Path> {
+pub struct Command {
     pub name: ir::Path,
-    pub argument_list: ir::ArgumentList<ir::ConstantExpression<Path>>,
+    pub argument_list: ir::ArgumentList<ir::ConstantExpression>,
     pub src_ref: SrcRef,
-}
-
-impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<Command<Dst>> for Command<Src>
-where
-    Src: Into<Dst>,
-{
-    fn cast_into(self) -> Command<Dst> {
-        Command {
-            name: self.name,
-            argument_list: self.argument_list.cast_into(),
-            src_ref: self.src_ref,
-        }
-    }
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
@@ -105,30 +80,19 @@ pub struct Tag {
     pub name: ir::Identifier,
 }
 
-#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Attributes<Path: ir::PathSpec = ir::Path> {
+#[derive(Debug, Default, Clone, Hash, PartialEq, Serialize, Deserialize)]
+pub struct Attributes {
     /// Documentation
     pub doc: ir::DocBlock,
     /// Metadata: #[color = "red"]
-    pub meta: Box<[Meta<Path>]>,
+    pub meta: Box<[Meta]>,
     /// Commands: #[export("file.svg")] #[deprecate(since = "0.2.0")]
-    pub commands: Box<[Command<Path>]>,
+    pub commands: Box<[Command]>,
     /// Tags: #[deprecated]
     pub tags: Box<[Tag]>,
 }
 
-impl<Path: ir::PathSpec> Default for Attributes<Path> {
-    fn default() -> Self {
-        Self {
-            doc: Default::default(),
-            meta: Default::default(),
-            commands: Default::default(),
-            tags: Default::default(),
-        }
-    }
-}
-
-impl<Path: ir::PathSpec> Attributes<Path> {
+impl Attributes {
     pub fn is_empty(&self) -> bool {
         self.doc.is_empty()
             && self.meta.is_empty()
@@ -164,68 +128,22 @@ impl<Path: ir::PathSpec> Attributes<Path> {
     }
 }
 
-impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<Attributes<Dst>> for Attributes<Src>
-where
-    Src: Into<Dst>,
-{
-    fn cast_into(self) -> Attributes<Dst> {
-        Attributes {
-            doc: self.doc,
-            meta: self.meta.cast_into(),
-            commands: self.commands.cast_into(),
-            tags: self.tags,
-        }
-    }
-}
-
 /// Inner attributes (`//!`, `#![...]`), usually lowered from a `ast::StatementList`.
 #[derive(Debug, Clone, Deref, DerefMut, PartialEq, Hash, Serialize, Deserialize)]
-pub struct InnerAttributes<Path: ir::PathSpec = ir::Path>(pub Attributes<Path>);
-
-impl<Path: ir::PathSpec> InnerAttributes<Path> {
-    /// Check if inner attributes are empty
-    pub fn is_empty(&self) -> bool {
-        self.0.is_empty()
-    }
-}
-
-impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<InnerAttributes<Dst>> for InnerAttributes<Src>
-where
-    Src: Into<Dst>,
-{
-    fn cast_into(self) -> InnerAttributes<Dst> {
-        InnerAttributes(self.0.cast_into())
-    }
-}
+pub struct InnerAttributes(pub Attributes);
 
 /// Outer attributes (`///`, `#[...]`), usually lowered from definitions.
 #[derive(Debug, Clone, Deref, DerefMut, Hash, PartialEq, Serialize, Deserialize)]
-pub struct OuterAttributes<Path: ir::PathSpec = ir::Path>(pub Attributes<Path>);
+pub struct OuterAttributes(pub Attributes);
 
-impl<Path: ir::PathSpec> OuterAttributes<Path> {
-    /// Check if outer attributes are empty
-    pub fn is_empty(&self) -> bool {
-        self.0.is_empty()
-    }
-}
-
-impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<OuterAttributes<Dst>> for OuterAttributes<Src>
-where
-    Src: Into<Dst>,
-{
-    fn cast_into(self) -> OuterAttributes<Dst> {
-        OuterAttributes(self.0.cast_into())
-    }
-}
-
-impl<Path: ir::PathSpec> From<OuterAttributes<Path>> for Attributes<Path> {
-    fn from(value: OuterAttributes<Path>) -> Self {
+impl From<OuterAttributes> for Attributes {
+    fn from(value: OuterAttributes) -> Self {
         value.0
     }
 }
 
-impl<Path: ir::PathSpec> From<InnerAttributes<Path>> for Attributes<Path> {
-    fn from(value: InnerAttributes<Path>) -> Self {
+impl From<InnerAttributes> for Attributes {
+    fn from(value: InnerAttributes) -> Self {
         value.0
     }
 }

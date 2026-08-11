@@ -14,8 +14,9 @@ mod source;
 mod r#type;
 mod workbench;
 
+use microcad_builtin::BuiltinError;
 use microcad_lang_base::{
-    BuiltinId, Identifiable, Identifier, Refer, SpanToSrcRef, Spanned, SrcRef, SrcReferrer,
+    Identifiable, Identifier, Refer, SpanToSrcRef, Spanned, SrcRef, SrcReferrer,
 };
 use microcad_lang_parse::ast;
 use microcad_lang_types::{ValueError, ty::TypeError};
@@ -33,6 +34,9 @@ pub enum LowerError {
 
     #[error("Value error: {0}")]
     ValueError(#[from] ValueError),
+
+    #[error("Built-in error: {0}")]
+    BuiltinError(#[from] BuiltinError),
 
     #[error("Unknown unit: {0}")]
     UnknownUnit(#[label("Unknown unit")] Refer<String>),
@@ -147,23 +151,16 @@ pub enum LowerError {
 /// Result with lower error
 pub type LowerResult<T> = Result<T, LowerError>;
 
-pub trait LowerPath:
-    ir::PathSpec + Lower<ast::SymbolPath> + From<BuiltinId> + From<String>
-{
-}
-
 pub trait LowerExpr: ir::ExprSpec + Lower<ast::Expression> {}
 
-impl LowerPath for ir::Path {}
-
-impl<Path: LowerPath> LowerExpr for ir::FunctionExpression<Path> {}
+impl LowerExpr for ir::FunctionExpression {}
 impl LowerExpr for ir::WorkbenchExpression {}
-impl<Path: LowerPath> LowerExpr for ir::ConstantExpression<Path> {}
+impl LowerExpr for ir::ConstantExpression {}
 
 impl SrcReferrer for LowerError {
     fn src_ref(&self) -> SrcRef {
         match self {
-            LowerError::ValueError(_) => SrcRef::none(),
+            LowerError::ValueError(_) | LowerError::BuiltinError(_) => SrcRef::none(),
             LowerError::DuplicateArgument { id, .. } => id.src_ref(),
             LowerError::StatementNotAllowed { src_ref }
             | LowerError::InvalidGlobPattern(src_ref)
@@ -316,25 +313,35 @@ impl Lower<ast::Identifier> for ir::Identifier {
 
 impl Lower<ast::def::UseName> for ir::Path {
     fn lower(node: &ast::def::UseName, context: &mut LowerContext) -> LowerResult<Self> {
-        let is_absolute = node.prefix.is_some();
-        let parts = node
-            .parts
-            .iter()
-            .filter_map(|part| match part {
-                ast::def::UseStatementPart::Identifier(ident) => {
-                    Some(ir::Identifier::lower(ident, context))
-                }
-                ast::def::UseStatementPart::Glob(_) => None,
-                ast::def::UseStatementPart::Error(_) => None,
-            })
-            .collect::<Result<Vec<_>, _>>()?
-            .into_boxed_slice();
-
-        Ok(Self::UnresolvedPath(ir::UnresolvedPath {
-            is_absolute,
-            parts,
+        let path = ir::UnresolvedPath {
+            is_absolute: node.prefix.is_some(),
+            parts: node
+                .parts
+                .iter()
+                .filter_map(|part| match part {
+                    ast::def::UseStatementPart::Identifier(ident) => {
+                        Some(ir::Identifier::lower(ident, context))
+                    }
+                    ast::def::UseStatementPart::Glob(_) => None,
+                    ast::def::UseStatementPart::Error(_) => None,
+                })
+                .collect::<Result<Vec<_>, _>>()?
+                .into_boxed_slice(),
             src_ref: context.span_to_src_ref(&node.span),
-        }))
+        };
+
+        if let Some(id) = path.builtin_id() {
+            if context.builtins.get(id).is_none() {
+                context.diag(BuiltinError::NoBuiltin {
+                    full_name: path.to_string(),
+                    id,
+                });
+            } else {
+                return Ok(id.into());
+            }
+        }
+
+        Ok(path.into())
     }
 }
 

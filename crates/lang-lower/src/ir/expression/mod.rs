@@ -79,21 +79,20 @@ where
 }
 
 pub trait ExprSpec: Serialize + SrcReferrer + SingleIdentifier {
-    type Path;
     type Body;
 }
 
 /// An expression that can be evaluated during `resolve` phase.
 #[derive(Debug, Clone, From, PartialEq, Hash, Serialize, Deserialize)]
-#[serde(bound(serialize = "Path: Serialize", deserialize = "Path: Deserialize<'de>"))]
-pub enum ConstantExpression<Path: ir::PathSpec = ir::Path> {
+
+pub enum ConstantExpression {
     Invalid,
     Literal(ir::Literal),
-    Path(Path),
-    Call(ir::Call<ConstantExpression<Path>>),
+    Path(ir::Path),
+    Call(ir::Call<ConstantExpression>),
 }
 
-impl<Path: ir::PathSpec> SingleIdentifier for ConstantExpression<Path> {
+impl SingleIdentifier for ConstantExpression {
     fn single_identifier(&self) -> Option<&microcad_lang_base::Identifier> {
         match self {
             ConstantExpression::Path(name) => name.single_identifier(),
@@ -102,7 +101,7 @@ impl<Path: ir::PathSpec> SingleIdentifier for ConstantExpression<Path> {
     }
 }
 
-impl<Path: ir::PathSpec> SrcReferrer for ConstantExpression<Path> {
+impl SrcReferrer for ConstantExpression {
     fn src_ref(&self) -> SrcRef {
         match &self {
             ConstantExpression::Invalid => SrcRef::none(),
@@ -113,31 +112,11 @@ impl<Path: ir::PathSpec> SrcReferrer for ConstantExpression<Path> {
     }
 }
 
-impl<Path: ir::PathSpec> ExprSpec for ConstantExpression<Path> {
-    type Path = Path;
+impl ExprSpec for ConstantExpression {
     type Body = (); // Constant expressions have no body.
 }
 
-impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<ConstantExpression<Dst>>
-    for ConstantExpression<Src>
-where
-    Src: Into<Dst>,
-{
-    fn cast_into(self) -> ConstantExpression<Dst> {
-        use ConstantExpression::*;
-        match self {
-            Invalid => Invalid,
-            Literal(literal) => Literal(literal),
-            Path(name) => Path(name.into()),
-            Call(call) => Call(call.cast_into()),
-        }
-    }
-}
-
-impl<Path: ir::PathSpec> std::fmt::Display for ConstantExpression<Path>
-where
-    Path: std::fmt::Display,
-{
+impl std::fmt::Display for ConstantExpression {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {
             ConstantExpression::Literal(literal) => write!(f, "{literal}"),

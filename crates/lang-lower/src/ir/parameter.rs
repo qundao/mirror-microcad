@@ -3,7 +3,7 @@
 
 //! µcad parameter syntax elements
 
-use crate::{CastInto, ir};
+use crate::ir;
 
 use microcad_lang_base::{Identifier, Refer, SrcRef};
 use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
@@ -14,24 +14,21 @@ use serde_with::skip_serializing_none;
 /// A parameter of a parameter list.
 #[skip_serializing_none]
 #[derive(Debug, Clone, Hash, SrcReferrer, Identifiable, PartialEq, Serialize, Deserialize)]
-#[serde(bound(serialize = "Path: Serialize", deserialize = "Path: Deserialize<'de>"))]
-pub struct Parameter<Path: ir::PathSpec = ir::Path> {
+
+pub struct Parameter {
     /// Parameter attributes
-    pub attr: ir::OuterAttributes<Path>,
+    pub attr: ir::OuterAttributes,
     /// Name of the parameter
     pub id: Identifier,
     /// Type of the parameter or `None`
     pub ty: ir::Type,
     /// default value of the parameter or `None`
-    pub default_value: Option<ir::ConstantExpression<Path>>,
+    pub default_value: Option<ir::ConstantExpression>,
     /// Source code reference
     pub src_ref: SrcRef,
 }
 
-impl<Path: ir::PathSpec> std::fmt::Display for Parameter<Path>
-where
-    Path: std::fmt::Display,
-{
+impl std::fmt::Display for Parameter {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{id}: {ty}", id = self.id, ty = self.ty)?;
         match &self.default_value {
@@ -41,41 +38,11 @@ where
     }
 }
 
-impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<Parameter<Dst>> for Parameter<Src>
-where
-    Src: Into<Dst>,
-{
-    fn cast_into(self) -> Parameter<Dst> {
-        Parameter {
-            attr: self.attr.cast_into(),
-            id: self.id,
-            ty: self.ty,
-            default_value: self.default_value.map(|v| v.cast_into()),
-            src_ref: self.src_ref,
-        }
-    }
-}
-
 /// Parameter list, sorted by id.
 #[derive(Debug, Clone, SrcReferrer, Hash, PartialEq, Serialize, Deserialize)]
-pub struct ParameterList<Path: ir::PathSpec = ir::Path>(pub Refer<Box<[ir::Parameter<Path>]>>);
+pub struct ParameterList(pub Refer<Box<[ir::Parameter]>>);
 
-impl<Path: ir::PathSpec> ParameterList<Path> {
-    /// Return ids of all parameters
-    pub fn ids(&self) -> impl Iterator<Item = Identifier> {
-        self.0.iter().map(|param| param.id.clone())
-    }
-
-    /// Return if given identifier is in parameter list
-    pub fn contains_key(&self, id: &Identifier) -> bool {
-        self.ids().any(|p_id| *id == p_id)
-    }
-}
-
-impl<Path: ir::PathSpec> std::fmt::Display for ParameterList<Path>
-where
-    Path: std::fmt::Display,
-{
+impl std::fmt::Display for ParameterList {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
@@ -86,14 +53,5 @@ where
                 .collect::<Vec<_>>()
                 .join(", ")
         )
-    }
-}
-
-impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<ParameterList<Dst>> for ParameterList<Src>
-where
-    Src: Into<Dst>,
-{
-    fn cast_into(self) -> ParameterList<Dst> {
-        ParameterList(self.0.cast_into())
     }
 }

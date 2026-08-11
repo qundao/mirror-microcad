@@ -205,6 +205,7 @@ unit_test!(inline_module => |ir, diag| {
 });
 
 snapshot_test!(circle => ok);
+snapshot_test!(builtin => ok);
 
 test_diagnostic!(unexpected_statements);
 test_diagnostic!(init);

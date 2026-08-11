@@ -16,64 +16,33 @@ use serde_with::skip_serializing_none;
 /// Each WorkbenchStatement eventually evals into a [`Models`]
 #[skip_serializing_none]
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
-pub struct WorkbenchStatement<Path: ir::PathSpec = ir::Path> {
-    pub attr: ir::OuterAttributes<Path>,
+pub struct WorkbenchStatement {
+    pub attr: ir::OuterAttributes,
     pub src_ref: SrcRef,
     pub visibility: ir::Visibility, // public = property
     pub keyword_src_ref: SrcRef,
     pub id: Option<ir::Identifier>,
     pub ty: ir::Type,
-    pub expression: WorkbenchExpression<Path>,
-}
-
-impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<WorkbenchStatement<Dst>>
-    for WorkbenchStatement<Src>
-where
-    Src: Into<Dst>,
-{
-    fn cast_into(self) -> WorkbenchStatement<Dst> {
-        WorkbenchStatement {
-            attr: self.attr.cast_into(),
-            src_ref: self.src_ref,
-            visibility: self.visibility,
-            keyword_src_ref: self.keyword_src_ref,
-            id: self.id,
-            ty: self.ty,
-            expression: self.expression.cast_into(),
-        }
-    }
+    pub expression: WorkbenchExpression,
 }
 
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
-pub struct Group<Path: ir::PathSpec = ir::Path> {
+pub struct Group {
     pub src_ref: SrcRef,
-    pub attr: ir::InnerAttributes<Path>,
-    pub statements: Box<[WorkbenchStatement<Path>]>,
-}
-
-impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<Group<Dst>> for Group<Src>
-where
-    Src: Into<Dst>,
-{
-    fn cast_into(self) -> Group<Dst> {
-        Group {
-            src_ref: self.src_ref,
-            attr: self.attr.cast_into(),
-            statements: self.statements.cast_into(),
-        }
-    }
+    pub attr: ir::InnerAttributes,
+    pub statements: Box<[WorkbenchStatement]>,
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Init<Path: ir::PathSpec = ir::Path> {
+pub struct Init {
     /// SrcRef of the `init` keyword
     pub keyword_ref: SrcRef,
     /// Outer attributes.
-    pub attr: ir::OuterAttributes<Path>,
+    pub attr: ir::OuterAttributes,
     /// Parameter list for this init definition
     pub parameters: ir::ParameterList,
     /// Body if the init definition
-    pub statements: Box<[WorkbenchStatement<Path>]>,
+    pub statements: Box<[WorkbenchStatement]>,
     /// Source reference
     pub src_ref: SrcRef,
 }
@@ -96,17 +65,17 @@ impl Marker {
 }
 
 #[derive(Debug, Clone, From, PartialEq, Hash, Serialize, Deserialize)]
-pub enum WorkbenchExpression<Path: ir::PathSpec = ir::Path> {
+pub enum WorkbenchExpression {
     Invalid,
     Literal(ir::Literal),
-    Path(Path),
-    Group(ir::Group<Path>),
-    If(ir::If<WorkbenchExpression<Path>>),
-    Call(ir::Call<WorkbenchExpression<Path>>),
+    Path(ir::Path),
+    Group(ir::Group),
+    If(ir::If<WorkbenchExpression>),
+    Call(ir::Call<WorkbenchExpression>),
     Marker(Marker),
 }
 
-impl<Path: ir::PathSpec> SrcReferrer for WorkbenchExpression<Path> {
+impl SrcReferrer for WorkbenchExpression {
     fn src_ref(&self) -> SrcRef {
         use WorkbenchExpression::*;
         match &self {
@@ -121,22 +90,21 @@ impl<Path: ir::PathSpec> SrcReferrer for WorkbenchExpression<Path> {
     }
 }
 
-impl<Path: ir::PathSpec> ir::ExprSpec for WorkbenchExpression<Path> {
-    type Path = Path;
-    type Body = Group<Path>;
+impl ir::ExprSpec for WorkbenchExpression {
+    type Body = Group;
 }
 
-impl<Path: ir::PathSpec> SingleIdentifier for WorkbenchExpression<Path> {
+impl SingleIdentifier for WorkbenchExpression {
     fn single_identifier(&self) -> Option<&microcad_lang_base::Identifier> {
         match self {
-            WorkbenchExpression::Path(name) => name.single_identifier(),
+            WorkbenchExpression::Path(path) => path.single_identifier(),
             _ => None,
         }
     }
 }
 
-impl<Path: ir::PathSpec> CastInto<ir::WorkbenchExpression<Path>> for ir::ConstantExpression<Path> {
-    fn cast_into(self: ir::ConstantExpression<Path>) -> ir::WorkbenchExpression<Path> {
+impl CastInto<ir::WorkbenchExpression> for ir::ConstantExpression {
+    fn cast_into(self: ir::ConstantExpression) -> ir::WorkbenchExpression {
         match self {
             ir::ConstantExpression::Invalid => ir::WorkbenchExpression::Invalid,
             ir::ConstantExpression::Literal(literal) => ir::WorkbenchExpression::Literal(literal),
@@ -146,43 +114,24 @@ impl<Path: ir::PathSpec> CastInto<ir::WorkbenchExpression<Path>> for ir::Constan
     }
 }
 
-impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<WorkbenchExpression<Dst>>
-    for WorkbenchExpression<Src>
-where
-    Src: Into<Dst>,
-{
-    fn cast_into(self) -> WorkbenchExpression<Dst> {
-        use WorkbenchExpression::*;
-        match self {
-            Invalid => Invalid,
-            Literal(literal) => Literal(literal),
-            Path(name) => Path(name.into()),
-            Group(group) => Group(group.cast_into()),
-            If(if_) => If(if_.cast_into()),
-            Call(call) => Call(call.cast_into()),
-            Marker(marker) => Marker(marker),
-        }
-    }
-}
-
 /// Workbench items that will be resolved into Symbols
 #[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
-pub struct WorkbenchItems<Path: ir::PathSpec = ir::Path> {
+pub struct WorkbenchItems {
     /// `use`
-    pub aliases: ir::Aliases<Path>,
+    pub aliases: ir::Aliases,
     /// `const`
-    pub constants: Box<[ir::Constant<Path>]>,
+    pub constants: Box<[ir::Constant]>,
     /// `fn`
-    pub functions: Box<[ir::Function<Path>]>,
+    pub functions: Box<[ir::Function]>,
 }
 
 /// Workbench definition, e.g `sketch`, `part` or `op`.
 #[derive(Debug, Clone, Identifiable, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Workbench<Path: ir::PathSpec = ir::Path> {
+pub struct Workbench {
     /// SrcRef of the `sketch`/`part`/`op` keyword
     pub keyword_ref: SrcRef,
     /// Workbench outer attributes.
-    pub outer_attr: ir::OuterAttributes<Path>,
+    pub outer_attr: ir::OuterAttributes,
     /// Visibility from outside modules.
     pub visibility: ir::Visibility,
     /// Workbench kind.
@@ -190,27 +139,24 @@ pub struct Workbench<Path: ir::PathSpec = ir::Path> {
     /// Workbench name.
     pub id: ir::Identifier,
     /// Workbench's building plan.
-    pub parameters: ir::ParameterList<Path>,
+    pub parameters: ir::ParameterList,
     /// Workbench inner attributes
-    pub inner_attr: ir::InnerAttributes<Path>,
+    pub inner_attr: ir::InnerAttributes,
     /// `init`
-    pub inits: Box<[Init<Path>]>,
+    pub inits: Box<[Init]>,
     /// Items that will be resolved into Symbols
-    pub items: ir::WorkbenchItems<Path>,
+    pub items: ir::WorkbenchItems,
     /// The actual statements to build the Model
-    pub statements: Box<[ir::WorkbenchStatement<Path>]>,
+    pub statements: Box<[ir::WorkbenchStatement]>,
 }
 
-impl<Path: ir::PathSpec> SrcReferrer for Workbench<Path> {
+impl SrcReferrer for Workbench {
     fn src_ref(&self) -> SrcRef {
         self.id.src_ref()
     }
 }
 
-impl<Path: ir::PathSpec> std::fmt::Display for Workbench<Path>
-where
-    Path: std::fmt::Display,
-{
+impl std::fmt::Display for Workbench {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,

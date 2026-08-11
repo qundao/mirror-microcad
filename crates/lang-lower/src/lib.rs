@@ -7,6 +7,7 @@ pub mod ir;
 
 mod lower;
 
+use microcad_builtin::BuiltinRegistry;
 use microcad_lang_base::{
     CompilationResult, Diagnostics, HashId, Source, Span, SpanToSrcRef, SrcRef, ToHash,
 };
@@ -41,12 +42,13 @@ impl Lower<Ast> for Ir {
 
 pub struct LowerContext<'source> {
     pub source: &'source Source,
+    pub builtins: BuiltinRegistry,
     pub errors: Vec<LowerError>,
 }
 
 impl<'source> LowerContext<'source> {
-    pub fn diag(&mut self, err: LowerError) {
-        self.errors.push(err);
+    pub fn diag(&mut self, err: impl Into<LowerError>) {
+        self.errors.push(err.into());
     }
 }
 
@@ -55,6 +57,7 @@ impl<'source> From<&'source Source> for LowerContext<'source> {
         Self {
             source,
             errors: Vec::default(),
+            builtins: BuiltinRegistry::new(),
         }
     }
 }
