@@ -8,7 +8,7 @@ mod statement;
 mod ty;
 pub mod visitor;
 
-use microcad_lang_base::{Id, Span};
+use microcad_lang_base::{Name, Span};
 
 pub use expression::*;
 pub use literal::*;
@@ -25,14 +25,14 @@ pub use visitor::Visitor;
 #[visit(default)]
 pub struct Identifier {
     pub span: Span,
-    pub name: Id,
+    pub name: Name,
 }
 
 impl Dummy for Identifier {
     fn dummy(span: Span) -> Self {
         Self {
             span,
-            name: Id::default(),
+            name: Name::default(),
         }
     }
 }

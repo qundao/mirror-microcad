@@ -3,7 +3,7 @@
 
 use crate::ast;
 
-use microcad_lang_base::{Id, Span};
+use microcad_lang_base::{Name, Span};
 use microcad_lang_proc_macros::Visit;
 use serde::Serialize;
 
@@ -31,7 +31,7 @@ impl ast::Dummy for Type {
     fn dummy(span: Span) -> Self {
         Type::Single(SingleType {
             span,
-            name: Id::default(),
+            name: Name::default(),
         })
     }
 }
@@ -42,7 +42,7 @@ impl ast::Dummy for Type {
 #[visit(default)]
 pub struct SingleType {
     pub span: Span,
-    pub name: Id,
+    pub name: Name,
 }
 
 /// An array type
@@ -68,5 +68,5 @@ pub struct TupleType {
 #[visit(default)]
 pub struct Unit {
     pub span: Span,
-    pub name: Id,
+    pub name: Name,
 }
