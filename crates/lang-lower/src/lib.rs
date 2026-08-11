@@ -9,7 +9,7 @@ mod lower;
 
 use microcad_builtin::BuiltinRegistry;
 use microcad_lang_base::{
-    CompilationResult, Diagnostics, HashId, Source, Span, SpanToSrcRef, SrcRef, ToHash,
+    CompilationResult, Diagnostics, HashId, Source, Span, SpanToSrcRef, SrcRef, SymbolId, ToHash,
 };
 
 pub use ir::CastInto;
@@ -26,6 +26,44 @@ pub struct Ir {
     pub input_hash: HashId,
     pub output_hash: HashId,
     pub tree: ir::Source,
+}
+
+pub trait Unresolver {
+    fn unresolve(&self, id: impl Into<SymbolId>) -> String;
+}
+
+pub trait MakeHumanReadable {
+    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U);
+}
+
+impl<T> MakeHumanReadable for Box<T>
+where
+    T: MakeHumanReadable,
+{
+    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
+        self.as_mut().make_human_readable(unresolver);
+    }
+}
+
+impl<T> MakeHumanReadable for Box<[T]>
+where
+    T: MakeHumanReadable,
+{
+    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
+        self.iter_mut()
+            .for_each(|expr| expr.make_human_readable(unresolver));
+    }
+}
+
+impl<T> MakeHumanReadable for Option<T>
+where
+    T: MakeHumanReadable,
+{
+    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
+        if let Some(s) = self.as_mut() {
+            s.make_human_readable(unresolver);
+        }
+    }
 }
 
 impl Lower<Ast> for Ir {

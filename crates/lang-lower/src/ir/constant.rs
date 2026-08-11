@@ -6,7 +6,7 @@ use microcad_lang_proc_macros::SrcReferrer;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
-use crate::ir;
+use crate::{MakeHumanReadable, Unresolver, ir};
 
 /// A constant definition: `const FOO: Length = 32mm`.
 #[skip_serializing_none]
@@ -20,6 +20,13 @@ pub struct Constant {
     pub id: ir::Identifier,
     pub ty: ir::Type,
     pub expr: ir::ConstantExpression,
+}
+
+impl MakeHumanReadable for Constant {
+    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
+        self.attr.make_human_readable(unresolver);
+        self.expr.make_human_readable(unresolver);
+    }
 }
 
 impl std::fmt::Display for Constant {

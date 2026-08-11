@@ -36,7 +36,7 @@ use derive_more::{Deref, Display};
 use microcad_lang_base::SrcRef;
 use serde::{Deserialize, Serialize};
 
-use crate::ir;
+use crate::{MakeHumanReadable, Unresolver, ir};
 
 #[derive(Debug, Default, Display, Deref, Clone, Hash, PartialEq, Serialize, Deserialize)]
 #[display("{}", ty)]
@@ -58,6 +58,13 @@ pub struct ExplicitAlias {
     pub src_ref: SrcRef,
 }
 
+impl MakeHumanReadable for ExplicitAlias {
+    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
+        self.attr.make_human_readable(unresolver);
+        self.path.make_human_readable(unresolver);
+    }
+}
+
 /// `use std::geo2d::*`
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct WildcardAlias {
@@ -68,9 +75,23 @@ pub struct WildcardAlias {
     pub src_ref: SrcRef,
 }
 
+impl MakeHumanReadable for WildcardAlias {
+    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
+        self.attr.make_human_readable(unresolver);
+        self.path.make_human_readable(unresolver);
+    }
+}
+
 /// Aliases lowered from `use` statements.
 #[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Aliases {
     pub explicit_aliases: Box<[ExplicitAlias]>,
     pub wildcards: Box<[WildcardAlias]>,
+}
+
+impl MakeHumanReadable for Aliases {
+    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
+        self.explicit_aliases.make_human_readable(unresolver);
+        self.wildcards.make_human_readable(unresolver);
+    }
 }

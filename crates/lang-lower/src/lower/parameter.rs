@@ -3,7 +3,7 @@
 
 use crate::{Lower, LowerContext, LowerResult, ir, lower::sort_and_check};
 
-use microcad_lang_base::{Refer, SpanToSrcRef};
+use microcad_lang_base::SpanToSrcRef;
 use microcad_lang_parse::ast;
 
 impl Lower<ast::Parameter> for ir::Parameter {
@@ -30,9 +30,9 @@ impl Lower<ast::ParameterList> for ir::ParameterList {
             parameters.push(ir::Parameter::lower(param, context)?);
         }
 
-        Ok(ir::ParameterList(Refer::new(
-            sort_and_check(parameters, context)?,
-            context.span_to_src_ref(&node.span),
-        )))
+        Ok(ir::ParameterList {
+            parameters: sort_and_check(parameters, context)?,
+            src_ref: context.span_to_src_ref(&node.span),
+        })
     }
 }

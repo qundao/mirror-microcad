@@ -3,7 +3,7 @@
 
 //! Workbench definition syntax element
 
-use crate::{CastInto, ir};
+use crate::{CastInto, MakeHumanReadable, ir};
 
 use derive_more::{Display, From};
 use microcad_lang_base::{Refer, SingleIdentifier, SrcRef, SrcReferrer};
@@ -26,11 +26,25 @@ pub struct WorkbenchStatement {
     pub expression: WorkbenchExpression,
 }
 
+impl MakeHumanReadable for WorkbenchStatement {
+    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
+        self.attr.make_human_readable(unresolver);
+        self.expression.make_human_readable(unresolver);
+    }
+}
+
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
 pub struct Group {
     pub src_ref: SrcRef,
     pub attr: ir::InnerAttributes,
     pub statements: Box<[WorkbenchStatement]>,
+}
+
+impl MakeHumanReadable for Group {
+    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
+        self.attr.make_human_readable(unresolver);
+        self.statements.make_human_readable(unresolver);
+    }
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
@@ -45,6 +59,14 @@ pub struct Init {
     pub statements: Box<[WorkbenchStatement]>,
     /// Source reference
     pub src_ref: SrcRef,
+}
+
+impl MakeHumanReadable for Init {
+    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
+        self.attr.make_human_readable(unresolver);
+        self.parameters.make_human_readable(unresolver);
+        self.statements.make_human_readable(unresolver);
+    }
 }
 
 /// Node marker, e.g. `@input`.
@@ -64,6 +86,7 @@ impl Marker {
     }
 }
 
+#[non_exhaustive]
 #[derive(Debug, Clone, From, PartialEq, Hash, Serialize, Deserialize)]
 pub enum WorkbenchExpression {
     Invalid,
@@ -73,6 +96,18 @@ pub enum WorkbenchExpression {
     If(ir::If<WorkbenchExpression>),
     Call(ir::Call<WorkbenchExpression>),
     Marker(Marker),
+}
+
+impl MakeHumanReadable for WorkbenchExpression {
+    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
+        match self {
+            WorkbenchExpression::Path(path) => path.make_human_readable(unresolver),
+            WorkbenchExpression::Group(group) => group.make_human_readable(unresolver),
+            WorkbenchExpression::If(if_) => if_.make_human_readable(unresolver),
+            WorkbenchExpression::Call(call) => call.make_human_readable(unresolver),
+            _ => {}
+        }
+    }
 }
 
 impl SrcReferrer for WorkbenchExpression {
@@ -125,6 +160,14 @@ pub struct WorkbenchItems {
     pub functions: Box<[ir::Function]>,
 }
 
+impl MakeHumanReadable for WorkbenchItems {
+    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
+        self.aliases.make_human_readable(unresolver);
+        self.constants.make_human_readable(unresolver);
+        self.functions.make_human_readable(unresolver);
+    }
+}
+
 /// Workbench definition, e.g `sketch`, `part` or `op`.
 #[derive(Debug, Clone, Identifiable, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Workbench {
@@ -148,6 +191,17 @@ pub struct Workbench {
     pub items: ir::WorkbenchItems,
     /// The actual statements to build the Model
     pub statements: Box<[ir::WorkbenchStatement]>,
+}
+
+impl MakeHumanReadable for Workbench {
+    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
+        self.outer_attr.make_human_readable(unresolver);
+        self.parameters.make_human_readable(unresolver);
+        self.inner_attr.make_human_readable(unresolver);
+        self.inits.make_human_readable(unresolver);
+        self.items.make_human_readable(unresolver);
+        self.statements.make_human_readable(unresolver);
+    }
 }
 
 impl SrcReferrer for Workbench {

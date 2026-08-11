@@ -3,6 +3,8 @@
 
 //! Module definition syntax element.
 
+use crate::MakeHumanReadable;
+use crate::Unresolver;
 use crate::ir;
 
 use microcad_lang_base::{SrcRef, SrcReferrer};
@@ -23,6 +25,12 @@ pub struct FileModule {
     pub id: ir::Identifier,
 }
 
+impl MakeHumanReadable for FileModule {
+    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
+        self.attr.make_human_readable(unresolver);
+    }
+}
+
 /// Items inside an inline module that will be resolved into Symbols.
 #[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
 pub struct InlineModuleItems {
@@ -35,6 +43,16 @@ pub struct InlineModuleItems {
     pub functions: Box<[ir::Function]>,
 
     pub workbenches: Box<[ir::Workbench]>,
+}
+
+impl MakeHumanReadable for InlineModuleItems {
+    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
+        self.modules.make_human_readable(unresolver);
+        self.aliases.make_human_readable(unresolver);
+        self.constants.make_human_readable(unresolver);
+        self.functions.make_human_readable(unresolver);
+        self.workbenches.make_human_readable(unresolver);
+    }
 }
 
 /// Inline module definition.
@@ -59,6 +77,14 @@ pub struct InlineModule {
 impl SrcReferrer for InlineModule {
     fn src_ref(&self) -> SrcRef {
         self.id.src_ref()
+    }
+}
+
+impl MakeHumanReadable for InlineModule {
+    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
+        self.outer_attr.make_human_readable(unresolver);
+        self.inner_attr.make_human_readable(unresolver);
+        self.items.make_human_readable(unresolver);
     }
 }
 

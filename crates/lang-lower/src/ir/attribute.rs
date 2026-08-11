@@ -3,7 +3,7 @@
 
 //! Attribute syntax entities.
 
-use crate::ir;
+use crate::{MakeHumanReadable, Unresolver, ir};
 
 use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{Refer, SrcRef};
@@ -68,11 +68,24 @@ pub struct Meta {
     pub expr: ir::ConstantExpression,
 }
 
+impl MakeHumanReadable for Meta {
+    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
+        self.expr.make_human_readable(unresolver);
+    }
+}
+
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Command {
-    pub name: ir::Path,
+    pub path: ir::Path,
     pub argument_list: ir::ArgumentList<ir::ConstantExpression>,
     pub src_ref: SrcRef,
+}
+
+impl MakeHumanReadable for Command {
+    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
+        self.path.make_human_readable(unresolver);
+        self.argument_list.make_human_readable(unresolver);
+    }
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
@@ -90,6 +103,13 @@ pub struct Attributes {
     pub commands: Box<[Command]>,
     /// Tags: #[deprecated]
     pub tags: Box<[Tag]>,
+}
+
+impl MakeHumanReadable for Attributes {
+    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
+        self.meta.make_human_readable(unresolver);
+        self.commands.make_human_readable(unresolver);
+    }
 }
 
 impl Attributes {
@@ -132,9 +152,21 @@ impl Attributes {
 #[derive(Debug, Clone, Deref, DerefMut, PartialEq, Hash, Serialize, Deserialize)]
 pub struct InnerAttributes(pub Attributes);
 
+impl MakeHumanReadable for InnerAttributes {
+    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
+        self.0.make_human_readable(unresolver);
+    }
+}
+
 /// Outer attributes (`///`, `#[...]`), usually lowered from definitions.
 #[derive(Debug, Clone, Deref, DerefMut, Hash, PartialEq, Serialize, Deserialize)]
 pub struct OuterAttributes(pub Attributes);
+
+impl MakeHumanReadable for OuterAttributes {
+    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
+        self.0.make_human_readable(unresolver);
+    }
+}
 
 impl From<OuterAttributes> for Attributes {
     fn from(value: OuterAttributes) -> Self {

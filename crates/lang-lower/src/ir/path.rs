@@ -6,6 +6,8 @@ use microcad_lang_base::{BuiltinId, Identifier, SingleIdentifier, SrcRef, SrcRef
 use miette::SourceSpan;
 use serde::{Deserialize, Serialize};
 
+use crate::MakeHumanReadable;
+
 #[derive(Clone, Debug, From, Hash, PartialEq, Serialize, Deserialize)]
 pub struct UnresolvedPath {
     pub is_absolute: bool,
@@ -72,6 +74,20 @@ pub enum Path {
 impl From<BuiltinId> for Path {
     fn from(id: BuiltinId) -> Self {
         Self::Resolved(SymbolId::Builtin(id))
+    }
+}
+
+impl MakeHumanReadable for Path {
+    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
+        match self {
+            Path::Resolved(id) => {
+                *self = Path::HumanReadable {
+                    path: unresolver.unresolve(id.clone()),
+                    id: Some(id.clone()),
+                };
+            }
+            _ => {}
+        }
     }
 }
 

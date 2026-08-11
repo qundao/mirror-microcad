@@ -3,7 +3,7 @@
 
 //! µcad assignment syntax element
 
-use crate::{CastInto, ir};
+use crate::{CastInto, MakeHumanReadable, ir};
 
 use microcad_lang_base::{Identifier, SrcRef};
 use serde::{Deserialize, Serialize};
@@ -33,6 +33,12 @@ impl<T> LocalAssignment<T> {
             expression: f(self.expression),
             src_ref: self.src_ref,
         }
+    }
+}
+
+impl<Expr: ir::ExprSpec> MakeHumanReadable for LocalAssignment<Expr> {
+    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
+        self.expression.make_human_readable(unresolver);
     }
 }
 

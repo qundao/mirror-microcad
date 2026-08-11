@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0x7cd65a945030702d",
-        output_hash: "0xecdcfc448ae3bc0b",
+        output_hash: "0x26d7ce939899d671",
         tree: (
             id: Some("circle"),
             attr: ((
@@ -58,8 +58,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                             value: "Circle",
                             src_ref: "6:12 @ 0x5b5b0d75574ec6c6 (159..165)",
                         )),
-                        parameters: ((
-                            value: [
+                        parameters: (
+                            parameters: [
                                 (
                                     attr: ((
                                         doc: ((
@@ -79,7 +79,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                         src_ref: "None",
                                     ),
                                     default_value: Some(Call((
-                                        path: Builtin(("0x8546b16eecadcdcc")),
+                                        path: Resolved(Builtin(("0x8546b16eecadcdcc"))),
                                         args: (
                                             src_ref: "None",
                                             args: [
@@ -133,7 +133,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                 ),
                             ],
                             src_ref: "6:19 @ 0x5b5b0d75574ec6c6 (166..213)",
-                        )),
+                        ),
                         inner_attr: ((
                             doc: ((
                                 value: [],
@@ -155,8 +155,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     commands: [],
                                     tags: [],
                                 )),
-                                parameters: ((
-                                    value: [
+                                parameters: (
+                                    parameters: [
                                         (
                                             attr: ((
                                                 doc: ((
@@ -176,7 +176,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                 src_ref: "None",
                                             ),
                                             default_value: Some(Call((
-                                                path: Builtin(("0x8546b16eecadcdcc")),
+                                                path: Resolved(Builtin(("0x8546b16eecadcdcc"))),
                                                 args: (
                                                     src_ref: "None",
                                                     args: [
@@ -230,7 +230,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                         ),
                                     ],
                                     src_ref: "7:10 @ 0x5b5b0d75574ec6c6 (226..275)",
-                                )),
+                                ),
                                 statements: [
                                     (
                                         attr: ((
@@ -254,7 +254,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             src_ref: "None",
                                         ),
                                         expression: Call((
-                                            path: Builtin(("0x43186122764a895d")),
+                                            path: Resolved(Builtin(("0x43186122764a895d"))),
                                             args: (
                                                 src_ref: "None",
                                                 args: [
@@ -263,7 +263,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                             value: "lhs",
                                                             src_ref: "None",
                                                         )),
-                                                        expr: Path(UnresolvedPath((
+                                                        expr: Path(Unresolved((
                                                             is_absolute: false,
                                                             parts: [
                                                                 ((
@@ -322,7 +322,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     src_ref: "None",
                                 ),
                                 expression: Call((
-                                    path: UnresolvedPath((
+                                    path: Unresolved((
                                         is_absolute: false,
                                         parts: [
                                             ((
@@ -344,7 +344,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                         src_ref: "12:36 @ 0x5b5b0d75574ec6c6 (391..417)",
                                         args: [
                                             Unnamed(Call((
-                                                path: UnresolvedPath((
+                                                path: Unresolved((
                                                     is_absolute: false,
                                                     parts: [
                                                         ((
@@ -365,7 +365,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                 args: (
                                                     src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
                                                     args: [
-                                                        Unnamed(Path(UnresolvedPath((
+                                                        Unnamed(Path(Unresolved((
                                                             is_absolute: false,
                                                             parts: [
                                                                 ((
@@ -385,11 +385,11 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                     src_ref: "12:36 @ 0x5b5b0d75574ec6c6 (391..392)",
                                                 )),
                                                 expr: Call((
-                                                    path: Builtin(("0x27c18356c4cfecef")),
+                                                    path: Resolved(Builtin(("0x27c18356c4cfecef"))),
                                                     args: (
                                                         src_ref: "None",
                                                         args: [
-                                                            Unnamed(Path(UnresolvedPath((
+                                                            Unnamed(Path(Unresolved((
                                                                 is_absolute: false,
                                                                 parts: [
                                                                     ((
@@ -399,7 +399,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                 ],
                                                                 src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..401)",
                                                             )))),
-                                                            Unnamed(Path(UnresolvedPath((
+                                                            Unnamed(Path(Unresolved((
                                                                 is_absolute: false,
                                                                 parts: [
                                                                     ((
@@ -421,11 +421,11 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                     src_ref: "12:50 @ 0x5b5b0d75574ec6c6 (405..406)",
                                                 )),
                                                 expr: Call((
-                                                    path: Builtin(("0x27c18356c4cfecef")),
+                                                    path: Resolved(Builtin(("0x27c18356c4cfecef"))),
                                                     args: (
                                                         src_ref: "None",
                                                         args: [
-                                                            Unnamed(Path(UnresolvedPath((
+                                                            Unnamed(Path(Unresolved((
                                                                 is_absolute: false,
                                                                 parts: [
                                                                     ((
@@ -435,7 +435,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                 ],
                                                                 src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..415)",
                                                             )))),
-                                                            Unnamed(Path(UnresolvedPath((
+                                                            Unnamed(Path(Unresolved((
                                                                 is_absolute: false,
                                                                 parts: [
                                                                     ((

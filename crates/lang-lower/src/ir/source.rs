@@ -3,8 +3,11 @@
 
 //! Function definition syntax element
 
+use crate::MakeHumanReadable;
+
 use super::ir;
 
+use microcad_lang_base::Name;
 use serde::{Deserialize, Serialize};
 
 /// Items of a source file that will become symbols.
@@ -24,15 +27,34 @@ pub struct SourceItems {
     pub workbenches: Box<[ir::Workbench]>,
 }
 
+impl MakeHumanReadable for SourceItems {
+    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
+        self.file_modules.make_human_readable(unresolver);
+        self.inline_modules.make_human_readable(unresolver);
+        self.aliases.make_human_readable(unresolver);
+        self.constants.make_human_readable(unresolver);
+        self.functions.make_human_readable(unresolver);
+        self.workbenches.make_human_readable(unresolver);
+    }
+}
+
 /// IR of a µcad source file
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Source {
     /// The module id of the source file, extracted from [`Source`].
-    pub id: Option<microcad_lang_base::Name>,
+    pub id: Option<Name>,
     /// Inner attributes.
     pub attr: ir::InnerAttributes,
     /// Items that will become Symbols
     pub items: ir::SourceItems,
     /// Workbench statements
     pub statements: Box<[ir::WorkbenchStatement]>,
+}
+
+impl MakeHumanReadable for Source {
+    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
+        self.attr.make_human_readable(unresolver);
+        self.items.make_human_readable(unresolver);
+        self.statements.make_human_readable(unresolver);
+    }
 }
