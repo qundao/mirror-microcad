@@ -3,7 +3,7 @@
 
 use crate::{
     Lower, LowerContext, LowerError, LowerResult, ir,
-    lower::{LowerExpr, LowerName},
+    lower::{LowerExpr, LowerPath},
 };
 
 use microcad_builtin::__mu;
@@ -12,12 +12,12 @@ use microcad_lang_parse::ast;
 
 impl<Expr: LowerExpr> Lower<ast::Call> for ir::Call<Expr>
 where
-    Expr::Name: LowerName,
+    Expr::Path: LowerPath,
 {
     fn lower(node: &ast::Call, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::Call {
             src_ref: context.span_to_src_ref(&node.span),
-            name: Expr::Name::lower(&node.name, context)?,
+            path: Expr::Path::lower(&node.path, context)?,
             args: ir::ArgumentList::lower(&node.arguments, context)?,
         })
     }
@@ -95,11 +95,11 @@ impl<Expr: LowerExpr> Lower<ast::ArgumentList> for ir::ArgumentList<Expr> {
 
 impl<Expr: LowerExpr> Lower<ast::UnaryOperation> for ir::Call<Expr>
 where
-    Expr::Name: LowerName,
+    Expr::Path: LowerPath,
 {
     fn lower(node: &ast::UnaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            name: match node.op.value {
+            path: match node.op.value {
                 ast::UnaryOperator::Minus => __mu!(core::neg),
                 ast::UnaryOperator::Plus => __mu!(core::plus),
                 ast::UnaryOperator::Not => __mu!(core::not),
@@ -112,11 +112,11 @@ where
 
 impl<Expr: LowerExpr> Lower<ast::BinaryOperation> for ir::Call<Expr>
 where
-    Expr::Name: LowerName,
+    Expr::Path: LowerPath,
 {
     fn lower(node: &ast::BinaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            name: match node.op.value {
+            path: match node.op.value {
                 ast::BinaryOperator::Add => __mu!(core::add),
                 ast::BinaryOperator::Subtract => __mu!(core::sub),
                 ast::BinaryOperator::Multiply => __mu!(core::mul),
@@ -151,11 +151,11 @@ where
     }
 }
 
-pub fn lower_spec<Name: LowerName>(
-    expr: ir::ConstantExpression<Name>,
+pub fn lower_spec<Path: LowerPath>(
+    expr: ir::ConstantExpression<Path>,
     spec: &ast::StringFormatSpecification,
     context: &mut LowerContext,
-) -> LowerResult<ir::Call<ir::ConstantExpression<Name>>> {
+) -> LowerResult<ir::Call<ir::ConstantExpression<Path>>> {
     let width = spec
         .width
         .as_ref()
@@ -173,13 +173,13 @@ pub fn lower_spec<Name: LowerName>(
         .unwrap_or(ir::ConstantExpression::Invalid);
 
     Ok(ir::Call {
-        name: __mu!(core::format_spec),
+        path: __mu!(core::format_spec),
         args: ir::ArgumentList::from_iter([expr, width, precision]),
         src_ref: context.span_to_src_ref(&spec.span),
     })
 }
 
-impl<Name: LowerName> Lower<ast::FormatString> for ir::Call<ir::ConstantExpression<Name>> {
+impl<Path: LowerPath> Lower<ast::FormatString> for ir::Call<ir::ConstantExpression<Path>> {
     fn lower(node: &ast::FormatString, context: &mut LowerContext) -> LowerResult<Self> {
         let mut args_vec = Vec::new();
         let mut pending_str = String::new();
@@ -222,7 +222,7 @@ impl<Name: LowerName> Lower<ast::FormatString> for ir::Call<ir::ConstantExpressi
         }
 
         Ok(Self {
-            name: __mu!(core::format),
+            path: __mu!(core::format),
             args: ir::ArgumentList::from_iter(args_vec),
             src_ref: context.span_to_src_ref(&node.span),
         })

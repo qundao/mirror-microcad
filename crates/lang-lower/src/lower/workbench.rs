@@ -72,7 +72,7 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
             ast::Expression::Tuple(t) => Self::Call(ir::Call::lower(t, context)?),
             ast::Expression::ArrayRange(a) => Self::lower(a, context)?,
             ast::Expression::ArrayList(a) => Self::lower(a, context)?,
-            ast::Expression::SymbolPath(n) => Self::Name(ir::Name::lower(n, context)?),
+            ast::Expression::SymbolPath(n) => Self::Path(ir::Path::lower(n, context)?),
             ast::Expression::BinaryOperation(binop) => Self::Call(ir::Call::lower(binop, context)?),
             ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call::lower(unop, context)?),
             ast::Expression::Marker(identifier) => {
@@ -87,28 +87,28 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
 
                     Ok(match &element.inner {
                         Attribute(a) => Self::Call(ir::Call {
-                            name: __mu!(core::attribute_access),
+                            path: __mu!(core::attribute_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
-                                Self::Name(ir::Name::from(a.name.to_string())),
+                                Self::Path(ir::Path::from(a.name.to_string())),
                             ]),
                             src_ref,
                         }),
                         Tuple(t) => Self::Call(ir::Call {
-                            name: __mu!(core::member_access),
+                            path: __mu!(core::member_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
-                                Self::Name(ir::Name::from(t.name.to_string())),
+                                Self::Path(ir::Path::from(t.name.to_string())),
                             ]),
                             src_ref,
                         }),
                         Method(m) => Self::Call(ir::Call {
-                            name: ir::Name::lower(&m.name, context)?,
+                            path: ir::Path::lower(&m.path, context)?,
                             args: ir::ArgumentList::lower(&m.arguments, context)?.prepended(lhs),
                             src_ref,
                         }),
                         ArrayElement(e) => Self::Call(ir::Call {
-                            name: __mu!(core::array_access),
+                            path: __mu!(core::array_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
                                 Self::lower(e.as_ref(), context)?,

@@ -3,7 +3,7 @@
 
 use crate::{
     CastInto, Lower, LowerContext, LowerError, LowerResult, ir,
-    lower::{LowerName, extract_statements_with_tail, for_each_statement},
+    lower::{LowerPath, extract_statements_with_tail, for_each_statement},
 };
 
 use microcad_builtin::__mu;
@@ -29,7 +29,7 @@ impl Lower<ast::def::Function> for ir::FunctionSignature {
     }
 }
 
-impl<Name: LowerName> Lower<ast::Body> for ir::Scope<Name> {
+impl<Path: LowerPath> Lower<ast::Body> for ir::Scope<Path> {
     fn lower(node: &ast::Body, context: &mut LowerContext) -> LowerResult<Self> {
         let statements = &node.statements;
         for_each_statement(statements, context, |stmt, context| {
@@ -45,7 +45,7 @@ impl<Name: LowerName> Lower<ast::Body> for ir::Scope<Name> {
             Ok(())
         })?;
 
-        let statements: Box<[ir::FunctionStatement<Name>]> = Box::lower(statements, context)?;
+        let statements: Box<[ir::FunctionStatement<Path>]> = Box::lower(statements, context)?;
 
         Ok(Self {
             statements,
@@ -54,7 +54,7 @@ impl<Name: LowerName> Lower<ast::Body> for ir::Scope<Name> {
     }
 }
 
-impl<Name: LowerName> Lower<ast::Expression> for ir::FunctionExpression<Name> {
+impl<Path: LowerPath> Lower<ast::Expression> for ir::FunctionExpression<Path> {
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
             ast::Expression::Call(expr) => Self::Call(ir::Call::lower(expr, context)?),
@@ -68,7 +68,7 @@ impl<Name: LowerName> Lower<ast::Expression> for ir::FunctionExpression<Name> {
             ast::Expression::Tuple(t) => Self::Call(ir::Call::lower(t, context)?),
             ast::Expression::ArrayRange(a) => Self::lower(a, context)?,
             ast::Expression::ArrayList(a) => Self::lower(a, context)?,
-            ast::Expression::SymbolPath(n) => Self::Name(Name::lower(n, context)?),
+            ast::Expression::SymbolPath(n) => Self::Path(Path::lower(n, context)?),
             ast::Expression::BinaryOperation(binop) => Self::Call(ir::Call::lower(binop, context)?),
             ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call::lower(unop, context)?),
             ast::Expression::Marker(_) => {
@@ -84,20 +84,20 @@ impl<Name: LowerName> Lower<ast::Expression> for ir::FunctionExpression<Name> {
                     Ok(match &element.inner {
                         Attribute(_) => panic!("Attribute access not allowed"),
                         Tuple(t) => Self::Call(ir::Call {
-                            name: __mu!(core::member_access),
+                            path: __mu!(core::member_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
-                                Self::Name(Name::from(t.name.to_string())),
+                                Self::Path(Path::from(t.name.to_string())),
                             ]),
                             src_ref,
                         }),
                         Method(m) => Self::Call(ir::Call {
-                            name: Name::lower(&m.name, context)?,
+                            path: Path::lower(&m.path, context)?,
                             args: ir::ArgumentList::lower(&m.arguments, context)?.prepended(lhs),
                             src_ref,
                         }),
                         ArrayElement(e) => Self::Call(ir::Call {
-                            name: __mu!(core::array_access),
+                            path: __mu!(core::array_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
                                 Self::lower(e.as_ref(), context)?,
@@ -113,7 +113,7 @@ impl<Name: LowerName> Lower<ast::Expression> for ir::FunctionExpression<Name> {
     }
 }
 
-impl<Name: LowerName> Lower<Option<ast::Expression>> for Option<ir::FunctionExpression<Name>> {
+impl<Path: LowerPath> Lower<Option<ast::Expression>> for Option<ir::FunctionExpression<Path>> {
     fn lower(node: &Option<ast::Expression>, context: &mut LowerContext) -> LowerResult<Self> {
         node.as_ref()
             .map(|expr| ir::FunctionExpression::lower(expr, context))
@@ -121,17 +121,17 @@ impl<Name: LowerName> Lower<Option<ast::Expression>> for Option<ir::FunctionExpr
     }
 }
 
-impl<Name: LowerName> Lower<ast::Return> for ir::ReturnStatement<Name> {
+impl<Path: LowerPath> Lower<ast::Return> for ir::ReturnStatement<Path> {
     fn lower(node: &ast::Return, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            expr: Option::<ir::FunctionExpression<Name>>::lower(&node.expr, context)?,
+            expr: Option::<ir::FunctionExpression<Path>>::lower(&node.expr, context)?,
             keyword_src_ref: context.span_to_src_ref(&node.keyword_span),
             src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
 
-impl<Name: LowerName> Lower<ast::Statement> for Option<ir::FunctionStatement<Name>> {
+impl<Path: LowerPath> Lower<ast::Statement> for Option<ir::FunctionStatement<Path>> {
     fn lower(stmt: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match stmt {
             ast::Statement::Return(ret) => Some(ir::FunctionStatement::Return(
@@ -139,7 +139,7 @@ impl<Name: LowerName> Lower<ast::Statement> for Option<ir::FunctionStatement<Nam
             )),
             ast::Statement::LocalAssignment(local_assignment) => {
                 Some(ir::FunctionStatement::Local(ir::LocalAssignment::<
-                    ir::FunctionExpression<Name>,
+                    ir::FunctionExpression<Path>,
                 >::lower(
                     local_assignment, context
                 )?))
@@ -175,12 +175,12 @@ impl<Name: LowerName> Lower<ast::Statement> for Option<ir::FunctionStatement<Nam
     }
 }
 
-impl<Name: LowerName> Lower<ast::StatementList> for Box<[ir::FunctionStatement<Name>]> {
+impl<Path: LowerPath> Lower<ast::StatementList> for Box<[ir::FunctionStatement<Path>]> {
     fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         let statements = extract_statements_with_tail(
             node,
             context,
-            Option::<ir::FunctionStatement<Name>>::lower,
+            Option::<ir::FunctionStatement<Path>>::lower,
             // Lower Tail expression to Return statements.
             |tail, context| {
                 Ok(Some(ir::FunctionStatement::Tail(

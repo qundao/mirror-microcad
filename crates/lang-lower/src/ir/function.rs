@@ -3,7 +3,7 @@
 
 //! Function definition syntax element
 
-use crate::{CastInto, ir, lower::LowerName};
+use crate::{CastInto, ir, lower::LowerPath};
 
 use derive_more::From;
 use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
@@ -11,18 +11,18 @@ use serde::{Deserialize, Serialize};
 
 /// Parameters and return type of a function
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
-pub struct FunctionSignature<Name: ir::NameSpec = ir::Name> {
+pub struct FunctionSignature<Path: ir::PathSpec = ir::Path> {
     /// Function's parameters
-    pub parameters: ir::ParameterList<Name>,
+    pub parameters: ir::ParameterList<Path>,
     /// Function's return type
     pub return_type: Option<ir::Type>,
     /// Source code reference
     pub src_ref: SrcRef,
 }
 
-impl<Name: ir::NameSpec> std::fmt::Display for FunctionSignature<Name>
+impl<Path: ir::PathSpec> std::fmt::Display for FunctionSignature<Path>
 where
-    Name: std::fmt::Display,
+    Path: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
@@ -38,7 +38,7 @@ where
     }
 }
 
-impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<FunctionSignature<Dst>>
+impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<FunctionSignature<Dst>>
     for FunctionSignature<Src>
 where
     Src: Into<Dst>,
@@ -54,13 +54,13 @@ where
 
 /// A function scope `{}`
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-#[serde(bound(serialize = "Name: Serialize", deserialize = "Name: Deserialize<'de>"))]
-pub struct Scope<Name: ir::NameSpec> {
-    pub statements: Box<[FunctionStatement<Name>]>,
+#[serde(bound(serialize = "Path: Serialize", deserialize = "Path: Deserialize<'de>"))]
+pub struct Scope<Path: ir::PathSpec> {
+    pub statements: Box<[FunctionStatement<Path>]>,
     pub src_ref: SrcRef,
 }
 
-impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<Scope<Dst>> for Scope<Src>
+impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<Scope<Dst>> for Scope<Src>
 where
     Src: Into<Dst>,
 {
@@ -73,52 +73,52 @@ where
 }
 
 #[derive(Debug, Clone, Hash, From, PartialEq, Serialize, Deserialize)]
-#[serde(bound(serialize = "Name: Serialize", deserialize = "Name: Deserialize<'de>"))]
-pub enum FunctionExpression<Name: ir::NameSpec = ir::Name> {
+#[serde(bound(serialize = "Path: Serialize", deserialize = "Path: Deserialize<'de>"))]
+pub enum FunctionExpression<Path: ir::PathSpec = ir::Path> {
     Invalid,
     Literal(ir::Literal),
-    Name(Name),
-    Scope(Scope<Name>),
-    If(ir::If<FunctionExpression<Name>>),
-    Call(ir::Call<FunctionExpression<Name>>),
+    Path(Path),
+    Scope(Scope<Path>),
+    If(ir::If<FunctionExpression<Path>>),
+    Call(ir::Call<FunctionExpression<Path>>),
 }
 
-impl<Name: ir::NameSpec> SingleIdentifier for FunctionExpression<Name> {
+impl<Path: ir::PathSpec> SingleIdentifier for FunctionExpression<Path> {
     fn single_identifier(&self) -> Option<&microcad_lang_base::Identifier> {
         match self {
-            FunctionExpression::Name(name) => name.single_identifier(),
+            FunctionExpression::Path(name) => name.single_identifier(),
             _ => None,
         }
     }
 }
 
-impl<Name: ir::NameSpec> ir::ExprSpec for FunctionExpression<Name> {
-    type Name = Name;
-    type Body = Scope<Name>;
+impl<Path: ir::PathSpec> ir::ExprSpec for FunctionExpression<Path> {
+    type Path = Path;
+    type Body = Scope<Path>;
 }
 
-impl<Name: LowerName> CastInto<ir::FunctionExpression<Name>> for ir::ConstantExpression<Name> {
-    fn cast_into(self: ir::ConstantExpression<Name>) -> ir::FunctionExpression<Name> {
+impl<Path: LowerPath> CastInto<ir::FunctionExpression<Path>> for ir::ConstantExpression<Path> {
+    fn cast_into(self: ir::ConstantExpression<Path>) -> ir::FunctionExpression<Path> {
         match self {
             ir::ConstantExpression::Invalid => ir::FunctionExpression::Invalid,
             ir::ConstantExpression::Literal(literal) => ir::FunctionExpression::Literal(literal),
-            ir::ConstantExpression::Name(name) => ir::FunctionExpression::Name(name),
+            ir::ConstantExpression::Path(path) => ir::FunctionExpression::Path(path),
             ir::ConstantExpression::Call(call) => ir::FunctionExpression::Call(call.cast_into()),
         }
     }
 }
 
-impl<T: ir::NameSpec, Name: ir::NameSpec> CastInto<FunctionExpression<T>>
-    for FunctionExpression<Name>
+impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<FunctionExpression<Dst>>
+    for FunctionExpression<Src>
 where
-    Name: Into<T>,
+    Src: Into<Dst>,
 {
-    fn cast_into(self) -> FunctionExpression<T> {
+    fn cast_into(self) -> FunctionExpression<Dst> {
         use FunctionExpression::*;
         match self {
             Invalid => Invalid,
             Literal(literal) => Literal(literal),
-            Name(name) => Name(name.into()),
+            Path(name) => Path(name.into()),
             Scope(scope) => Scope(scope.cast_into()),
             If(if_) => If(if_.cast_into()),
             Call(call) => Call(call.cast_into()),
@@ -126,12 +126,12 @@ where
     }
 }
 
-impl<Name: ir::NameSpec> SrcReferrer for FunctionExpression<Name> {
+impl<Path: ir::PathSpec> SrcReferrer for FunctionExpression<Path> {
     fn src_ref(&self) -> SrcRef {
         match &self {
             FunctionExpression::Invalid => SrcRef::none(),
             FunctionExpression::Literal(literal) => literal.src_ref(),
-            FunctionExpression::Name(name) => name.src_ref(),
+            FunctionExpression::Path(name) => name.src_ref(),
             FunctionExpression::Scope(scope) => scope.src_ref,
             FunctionExpression::If(if_expr) => if_expr.src_ref,
             FunctionExpression::Call(call) => call.src_ref,
@@ -140,14 +140,14 @@ impl<Name: ir::NameSpec> SrcReferrer for FunctionExpression<Name> {
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-#[serde(bound(serialize = "Name: Serialize", deserialize = "Name: Deserialize<'de>"))]
-pub struct ReturnStatement<Name: ir::NameSpec> {
-    pub expr: Option<FunctionExpression<Name>>,
+#[serde(bound(serialize = "Path: Serialize", deserialize = "Path: Deserialize<'de>"))]
+pub struct ReturnStatement<Path: ir::PathSpec> {
+    pub expr: Option<FunctionExpression<Path>>,
     pub keyword_src_ref: SrcRef,
     pub src_ref: SrcRef,
 }
 
-impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<ReturnStatement<Dst>> for ReturnStatement<Src>
+impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<ReturnStatement<Dst>> for ReturnStatement<Src>
 where
     Src: Into<Dst>,
 {
@@ -161,23 +161,23 @@ where
 }
 
 #[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
-#[serde(bound(serialize = "Name: Serialize", deserialize = "Name: Deserialize<'de>"))]
-pub enum FunctionStatement<Name: ir::NameSpec> {
+#[serde(bound(serialize = "Path: Serialize", deserialize = "Path: Deserialize<'de>"))]
+pub enum FunctionStatement<Path: ir::PathSpec> {
     /// `a = 42`
-    Local(ir::LocalAssignment<FunctionExpression<Name>>),
+    Local(ir::LocalAssignment<FunctionExpression<Path>>),
     /// `{ a = 23; a }`
-    Scope(ir::Scope<Name>),
+    Scope(ir::Scope<Path>),
     /// `print("Test");`
-    Call(ir::Call<FunctionExpression<Name>>),
+    Call(ir::Call<FunctionExpression<Path>>),
     /// `if { a } else { b }`
-    If(ir::If<FunctionExpression<Name>>),
+    If(ir::If<FunctionExpression<Path>>),
     /// Tail expression: `42`
-    Tail(FunctionExpression<Name>),
+    Tail(FunctionExpression<Path>),
     /// A return statement: `return 42;`
-    Return(ReturnStatement<Name>),
+    Return(ReturnStatement<Path>),
 }
 
-impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<FunctionStatement<Dst>>
+impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<FunctionStatement<Dst>>
     for FunctionStatement<Src>
 where
     Src: Into<Dst>,
@@ -195,7 +195,7 @@ where
     }
 }
 
-impl<Name: ir::NameSpec> SrcReferrer for FunctionStatement<Name> {
+impl<Path: ir::PathSpec> SrcReferrer for FunctionStatement<Path> {
     fn src_ref(&self) -> SrcRef {
         use FunctionStatement::*;
         match &self {
@@ -210,19 +210,19 @@ impl<Name: ir::NameSpec> SrcReferrer for FunctionStatement<Name> {
 }
 
 #[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
-pub struct FunctionItems<Name: ir::NameSpec = ir::Name> {
+pub struct FunctionItems<Path: ir::PathSpec = ir::Path> {
     /// use ...
-    pub aliases: ir::Aliases<Name>,
+    pub aliases: ir::Aliases<Path>,
     /// const FOO =
-    pub constants: Box<[ir::Constant<Name>]>,
+    pub constants: Box<[ir::Constant<Path>]>,
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Function<Name: ir::NameSpec = ir::Name> {
+pub struct Function<Path: ir::PathSpec = ir::Path> {
     /// Source ref for the whole definition
     pub src_ref: SrcRef,
     /// Outer attributes
-    pub outer_attr: ir::OuterAttributes<Name>,
+    pub outer_attr: ir::OuterAttributes<Path>,
     /// public / private
     pub visibility: ir::Visibility,
     /// SrcRef of the `fn` keyword
@@ -230,12 +230,12 @@ pub struct Function<Name: ir::NameSpec = ir::Name> {
     /// Name of the function
     pub id: ir::Identifier,
     /// Function signature
-    pub signature: ir::FunctionSignature<Name>,
+    pub signature: ir::FunctionSignature<Path>,
     /// #![...]
-    pub inner_attr: ir::InnerAttributes<Name>,
+    pub inner_attr: ir::InnerAttributes<Path>,
 
-    pub items: ir::FunctionItems<Name>,
+    pub items: ir::FunctionItems<Path>,
 
     /// Function statements
-    pub statements: Box<[ir::FunctionStatement<Name>]>,
+    pub statements: Box<[ir::FunctionStatement<Path>]>,
 }

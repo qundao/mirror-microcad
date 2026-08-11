@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    Lower, LowerContext, LowerError, LowerResult, ir,
-    lower::{LowerExpr, LowerName},
+    Lower, LowerContext, LowerError, LowerResult,
+    ir::{self, path::UnresolvedPath},
+    lower::{LowerExpr, LowerPath},
 };
 
 mod call;
@@ -58,30 +59,33 @@ where
     }
 }
 
-impl Lower<ast::SymbolPath> for ir::Name {
+impl Lower<ast::SymbolPath> for ir::Path {
     fn lower(node: &ast::SymbolPath, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self::Path {
-            is_absolute: node.prefix.is_some(),
-            parts: node
-                .parts
-                .iter()
-                .map(|ident| ir::Identifier::lower(ident, context))
-                .collect::<Result<Vec<_>, _>>()?
-                .into_boxed_slice(),
+        let is_absolute = node.prefix.is_some();
+        let parts = node
+            .parts
+            .iter()
+            .map(|ident| ir::Identifier::lower(ident, context))
+            .collect::<Result<Vec<_>, _>>()?
+            .into_boxed_slice();
+
+        Ok(Self::UnresolvedPath(ir::UnresolvedPath {
+            is_absolute,
+            parts,
             src_ref: context.span_to_src_ref(&node.span),
-        })
+        }))
     }
 }
 
 impl<Expr: LowerExpr> Lower<ast::ArrayRangeExpression> for Expr
 where
     Expr: From<ir::Call<Expr>> + From<ir::Literal>,
-    Expr::Name: LowerName,
+    Expr::Path: LowerPath,
 {
     fn lower(a: &ast::ArrayRangeExpression, context: &mut LowerContext) -> LowerResult<Self> {
         let unit = ir::Unit::lower(&a.unit, context)?;
         let range = Expr::from(ir::Call {
-            name: __mu!(core::range),
+            path: __mu!(core::range),
             args: ir::ArgumentList::from_iter([
                 Expr::lower(&a.start.expr, context)?,
                 Expr::lower(&a.end.expr, context)?,
@@ -93,7 +97,7 @@ where
             range
         } else {
             Expr::from(ir::Call {
-                name: __mu!(core::mul),
+                path: __mu!(core::mul),
                 args: ir::ArgumentList::from_iter([
                     range,
                     Expr::from(ir::Literal::from(
@@ -109,7 +113,7 @@ where
 impl<Expr: LowerExpr> Lower<ast::ArrayListExpression> for Expr
 where
     Expr: From<ir::Call<Expr>> + From<ir::Literal>,
-    Expr::Name: LowerName,
+    Expr::Path: LowerPath,
 {
     fn lower(a: &ast::ArrayListExpression, context: &mut LowerContext) -> LowerResult<Self> {
         let unit = ir::Unit::lower(&a.unit, context)?;
@@ -121,7 +125,7 @@ where
             .collect::<Result<Vec<Expr>, _>>()?;
 
         let list = Expr::from(ir::Call {
-            name: __mu!(core::array),
+            path: __mu!(core::array),
             args: ir::ArgumentList::from_iter(args),
             src_ref: context.span_to_src_ref(&a.span),
         });
@@ -130,7 +134,7 @@ where
             list
         } else {
             Expr::from(ir::Call {
-                name: __mu!(core::mul),
+                path: __mu!(core::mul),
                 args: ir::ArgumentList::from_iter([
                     list,
                     Expr::from(ir::Literal::from(
@@ -146,18 +150,18 @@ where
 impl<Expr: LowerExpr> Lower<ast::TupleExpression> for ir::Call<Expr>
 where
     Expr: From<ir::Call<Expr>> + From<ir::Literal>,
-    Expr::Name: LowerName,
+    Expr::Path: LowerPath,
 {
     fn lower(node: &ast::TupleExpression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            name: __mu!(core::tuple),
+            path: __mu!(core::tuple),
             args: ir::ArgumentList::lower(&node.values, context)?,
             src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
 
-impl<Name: LowerName> Lower<ast::Expression> for ir::ConstantExpression<Name> {
+impl<Path: LowerPath> Lower<ast::Expression> for ir::ConstantExpression<Path> {
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
             ast::Expression::Bracketed(expr, _) => Self::lower(expr.as_ref(), context)?,
@@ -170,7 +174,7 @@ impl<Name: LowerName> Lower<ast::Expression> for ir::ConstantExpression<Name> {
             ast::Expression::Tuple(t) => Self::Call(ir::Call::lower(t, context)?),
             ast::Expression::ArrayRange(a) => Self::lower(a, context)?,
             ast::Expression::ArrayList(a) => Self::lower(a, context)?,
-            ast::Expression::SymbolPath(n) => Self::Name(Name::lower(n, context)?),
+            ast::Expression::SymbolPath(n) => Self::Path(Path::lower(n, context)?),
             ast::Expression::BinaryOperation(binop) => Self::Call(ir::Call::lower(binop, context)?),
             ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call::lower(unop, context)?),
             expr => {

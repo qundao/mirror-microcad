@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0x7cd65a945030702d",
-        output_hash: "0x77fc11541c3514eb",
+        output_hash: "0xecdcfc448ae3bc0b",
         tree: (
             id: Some("circle"),
             attr: ((
@@ -79,7 +79,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                         src_ref: "None",
                                     ),
                                     default_value: Some(Call((
-                                        name: Builtin((9603558345389493708)),
+                                        path: Builtin(("0x8546b16eecadcdcc")),
                                         args: (
                                             src_ref: "None",
                                             args: [
@@ -176,7 +176,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                 src_ref: "None",
                                             ),
                                             default_value: Some(Call((
-                                                name: Builtin((9603558345389493708)),
+                                                path: Builtin(("0x8546b16eecadcdcc")),
                                                 args: (
                                                     src_ref: "None",
                                                     args: [
@@ -254,7 +254,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             src_ref: "None",
                                         ),
                                         expression: Call((
-                                            name: Builtin((4834721000623606109)),
+                                            path: Builtin(("0x43186122764a895d")),
                                             args: (
                                                 src_ref: "None",
                                                 args: [
@@ -263,7 +263,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                             value: "lhs",
                                                             src_ref: "None",
                                                         )),
-                                                        expr: Name(Path(
+                                                        expr: Path(UnresolvedPath((
                                                             is_absolute: false,
                                                             parts: [
                                                                 ((
@@ -272,7 +272,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                 )),
                                                             ],
                                                             src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..305)",
-                                                        )),
+                                                        ))),
                                                         src_ref: "8:18 @ 0x5b5b0d75574ec6c6 (296..305)",
                                                     ),
                                                     Named(
@@ -322,7 +322,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     src_ref: "None",
                                 ),
                                 expression: Call((
-                                    name: Path(
+                                    path: UnresolvedPath((
                                         is_absolute: false,
                                         parts: [
                                             ((
@@ -339,12 +339,12 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             )),
                                         ],
                                         src_ref: "12:10 @ 0x5b5b0d75574ec6c6 (365..390)",
-                                    ),
+                                    )),
                                     args: (
                                         src_ref: "12:36 @ 0x5b5b0d75574ec6c6 (391..417)",
                                         args: [
                                             Unnamed(Call((
-                                                name: Path(
+                                                path: UnresolvedPath((
                                                     is_absolute: false,
                                                     parts: [
                                                         ((
@@ -361,26 +361,20 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                         )),
                                                     ],
                                                     src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..347)",
-                                                ),
+                                                )),
                                                 args: (
                                                     src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
                                                     args: [
-                                                        AutoNamed(
-                                                            name: ((
-                                                                value: "radius",
-                                                                src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
-                                                            )),
-                                                            expr: Name(Path(
-                                                                is_absolute: false,
-                                                                parts: [
-                                                                    ((
-                                                                        value: "radius",
-                                                                        src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
-                                                                    )),
-                                                                ],
-                                                                src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
-                                                            )),
-                                                        ),
+                                                        Unnamed(Path(UnresolvedPath((
+                                                            is_absolute: false,
+                                                            parts: [
+                                                                ((
+                                                                    value: "radius",
+                                                                    src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
+                                                                )),
+                                                            ],
+                                                            src_ref: "11:30 @ 0x5b5b0d75574ec6c6 (348..354)",
+                                                        )))),
                                                     ],
                                                 ),
                                                 src_ref: "11:5 @ 0x5b5b0d75574ec6c6 (323..364)",
@@ -391,42 +385,30 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                     src_ref: "12:36 @ 0x5b5b0d75574ec6c6 (391..392)",
                                                 )),
                                                 expr: Call((
-                                                    name: Builtin((2864715246676733167)),
+                                                    path: Builtin(("0x27c18356c4cfecef")),
                                                     args: (
                                                         src_ref: "None",
                                                         args: [
-                                                            AutoNamed(
-                                                                name: ((
-                                                                    value: "center",
-                                                                    src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..401)",
-                                                                )),
-                                                                expr: Name(Path(
-                                                                    is_absolute: false,
-                                                                    parts: [
-                                                                        ((
-                                                                            value: "center",
-                                                                            src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..401)",
-                                                                        )),
-                                                                    ],
-                                                                    src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..401)",
-                                                                )),
-                                                            ),
-                                                            AutoNamed(
-                                                                name: ((
-                                                                    value: "x",
-                                                                    src_ref: "None",
-                                                                )),
-                                                                expr: Name(Path(
-                                                                    is_absolute: false,
-                                                                    parts: [
-                                                                        ((
-                                                                            value: "x",
-                                                                            src_ref: "None",
-                                                                        )),
-                                                                    ],
-                                                                    src_ref: "None",
-                                                                )),
-                                                            ),
+                                                            Unnamed(Path(UnresolvedPath((
+                                                                is_absolute: false,
+                                                                parts: [
+                                                                    ((
+                                                                        value: "center",
+                                                                        src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..401)",
+                                                                    )),
+                                                                ],
+                                                                src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..401)",
+                                                            )))),
+                                                            Unnamed(Path(UnresolvedPath((
+                                                                is_absolute: false,
+                                                                parts: [
+                                                                    ((
+                                                                        value: "x",
+                                                                        src_ref: "None",
+                                                                    )),
+                                                                ],
+                                                                src_ref: "None",
+                                                            )))),
                                                         ],
                                                     ),
                                                     src_ref: "12:40 @ 0x5b5b0d75574ec6c6 (395..403)",
@@ -439,42 +421,30 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                     src_ref: "12:50 @ 0x5b5b0d75574ec6c6 (405..406)",
                                                 )),
                                                 expr: Call((
-                                                    name: Builtin((2864715246676733167)),
+                                                    path: Builtin(("0x27c18356c4cfecef")),
                                                     args: (
                                                         src_ref: "None",
                                                         args: [
-                                                            AutoNamed(
-                                                                name: ((
-                                                                    value: "center",
-                                                                    src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..415)",
-                                                                )),
-                                                                expr: Name(Path(
-                                                                    is_absolute: false,
-                                                                    parts: [
-                                                                        ((
-                                                                            value: "center",
-                                                                            src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..415)",
-                                                                        )),
-                                                                    ],
-                                                                    src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..415)",
-                                                                )),
-                                                            ),
-                                                            AutoNamed(
-                                                                name: ((
-                                                                    value: "y",
-                                                                    src_ref: "None",
-                                                                )),
-                                                                expr: Name(Path(
-                                                                    is_absolute: false,
-                                                                    parts: [
-                                                                        ((
-                                                                            value: "y",
-                                                                            src_ref: "None",
-                                                                        )),
-                                                                    ],
-                                                                    src_ref: "None",
-                                                                )),
-                                                            ),
+                                                            Unnamed(Path(UnresolvedPath((
+                                                                is_absolute: false,
+                                                                parts: [
+                                                                    ((
+                                                                        value: "center",
+                                                                        src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..415)",
+                                                                    )),
+                                                                ],
+                                                                src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..415)",
+                                                            )))),
+                                                            Unnamed(Path(UnresolvedPath((
+                                                                is_absolute: false,
+                                                                parts: [
+                                                                    ((
+                                                                        value: "y",
+                                                                        src_ref: "None",
+                                                                    )),
+                                                                ],
+                                                                src_ref: "None",
+                                                            )))),
                                                         ],
                                                     ),
                                                     src_ref: "12:54 @ 0x5b5b0d75574ec6c6 (409..417)",

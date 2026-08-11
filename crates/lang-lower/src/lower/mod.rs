@@ -147,18 +147,18 @@ pub enum LowerError {
 /// Result with lower error
 pub type LowerResult<T> = Result<T, LowerError>;
 
-pub trait LowerName:
-    ir::NameSpec + Lower<ast::SymbolPath> + From<BuiltinId> + From<String>
+pub trait LowerPath:
+    ir::PathSpec + Lower<ast::SymbolPath> + From<BuiltinId> + From<String>
 {
 }
 
 pub trait LowerExpr: ir::ExprSpec + Lower<ast::Expression> {}
 
-impl LowerName for ir::Name {}
+impl LowerPath for ir::Path {}
 
-impl<Name: LowerName> LowerExpr for ir::FunctionExpression<Name> {}
+impl<Path: LowerPath> LowerExpr for ir::FunctionExpression<Path> {}
 impl LowerExpr for ir::WorkbenchExpression {}
-impl<Name: LowerName> LowerExpr for ir::ConstantExpression<Name> {}
+impl<Path: LowerPath> LowerExpr for ir::ConstantExpression<Path> {}
 
 impl SrcReferrer for LowerError {
     fn src_ref(&self) -> SrcRef {
@@ -314,7 +314,7 @@ impl Lower<ast::Identifier> for ir::Identifier {
     }
 }
 
-impl Lower<ast::def::UseName> for ir::Name {
+impl Lower<ast::def::UseName> for ir::Path {
     fn lower(node: &ast::def::UseName, context: &mut LowerContext) -> LowerResult<Self> {
         let is_absolute = node.prefix.is_some();
         let parts = node
@@ -330,11 +330,11 @@ impl Lower<ast::def::UseName> for ir::Name {
             .collect::<Result<Vec<_>, _>>()?
             .into_boxed_slice();
 
-        Ok(Self::Path {
+        Ok(Self::UnresolvedPath(ir::UnresolvedPath {
             is_absolute,
             parts,
             src_ref: context.span_to_src_ref(&node.span),
-        })
+        }))
     }
 }
 
@@ -362,7 +362,7 @@ impl Lower<ast::StatementList> for ir::Aliases {
                             attr: ir::OuterAttributes::lower(&use_statement.attr, context)?,
                             keyword_src_ref: context.span_to_src_ref(&use_statement.keyword_span),
                             visibility: ir::Visibility::lower(&use_statement.vis, context)?,
-                            path: ir::Name::lower(&use_statement.name, context)?,
+                            path: ir::Path::lower(&use_statement.name, context)?,
                             id: ir::Identifier::lower(
                                 match &use_statement.use_as {
                                     // Use id `C` from `as C`
@@ -386,7 +386,7 @@ impl Lower<ast::StatementList> for ir::Aliases {
                         attr: ir::OuterAttributes::lower(&use_statement.attr, context)?,
                         keyword_src_ref: context.span_to_src_ref(&use_statement.keyword_span),
                         visibility: ir::Visibility::lower(&use_statement.vis, context)?,
-                        path: ir::Name::lower(&use_statement.name, context)?,
+                        path: ir::Path::lower(&use_statement.name, context)?,
                         src_ref: context.span_to_src_ref(&use_statement.span),
                     })),
                     None => unreachable!(),

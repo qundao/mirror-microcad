@@ -14,23 +14,23 @@ use serde_with::skip_serializing_none;
 /// A parameter of a parameter list.
 #[skip_serializing_none]
 #[derive(Debug, Clone, Hash, SrcReferrer, Identifiable, PartialEq, Serialize, Deserialize)]
-#[serde(bound(serialize = "Name: Serialize", deserialize = "Name: Deserialize<'de>"))]
-pub struct Parameter<Name: ir::NameSpec = ir::Name> {
+#[serde(bound(serialize = "Path: Serialize", deserialize = "Path: Deserialize<'de>"))]
+pub struct Parameter<Path: ir::PathSpec = ir::Path> {
     /// Parameter attributes
-    pub attr: ir::OuterAttributes<Name>,
+    pub attr: ir::OuterAttributes<Path>,
     /// Name of the parameter
     pub id: Identifier,
     /// Type of the parameter or `None`
     pub ty: ir::Type,
     /// default value of the parameter or `None`
-    pub default_value: Option<ir::ConstantExpression<Name>>,
+    pub default_value: Option<ir::ConstantExpression<Path>>,
     /// Source code reference
     pub src_ref: SrcRef,
 }
 
-impl<Name: ir::NameSpec> std::fmt::Display for Parameter<Name>
+impl<Path: ir::PathSpec> std::fmt::Display for Parameter<Path>
 where
-    Name: std::fmt::Display,
+    Path: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{id}: {ty}", id = self.id, ty = self.ty)?;
@@ -41,7 +41,7 @@ where
     }
 }
 
-impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<Parameter<Dst>> for Parameter<Src>
+impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<Parameter<Dst>> for Parameter<Src>
 where
     Src: Into<Dst>,
 {
@@ -58,11 +58,9 @@ where
 
 /// Parameter list, sorted by id.
 #[derive(Debug, Clone, SrcReferrer, Hash, PartialEq, Serialize, Deserialize)]
-pub struct ParameterList<Name: ir::NameSpec = ir::Name>(
-    pub Refer<Box<[ir::Parameter<Name>]>>,
-);
+pub struct ParameterList<Path: ir::PathSpec = ir::Path>(pub Refer<Box<[ir::Parameter<Path>]>>);
 
-impl<Name: ir::NameSpec> ParameterList<Name> {
+impl<Path: ir::PathSpec> ParameterList<Path> {
     /// Return ids of all parameters
     pub fn ids(&self) -> impl Iterator<Item = Identifier> {
         self.0.iter().map(|param| param.id.clone())
@@ -74,9 +72,9 @@ impl<Name: ir::NameSpec> ParameterList<Name> {
     }
 }
 
-impl<Name: ir::NameSpec> std::fmt::Display for ParameterList<Name>
+impl<Path: ir::PathSpec> std::fmt::Display for ParameterList<Path>
 where
-    Name: std::fmt::Display,
+    Path: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
@@ -91,7 +89,7 @@ where
     }
 }
 
-impl<Src: ir::NameSpec, Dst: ir::NameSpec> CastInto<ParameterList<Dst>> for ParameterList<Src>
+impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<ParameterList<Dst>> for ParameterList<Src>
 where
     Src: Into<Dst>,
 {

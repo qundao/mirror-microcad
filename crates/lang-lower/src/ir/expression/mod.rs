@@ -5,12 +5,10 @@
 
 mod call;
 mod literal;
-mod symbol_path;
 
 pub use call::*;
 use derive_more::From;
 pub use literal::*;
-pub use symbol_path::*;
 
 use crate::{CastInto, ir};
 use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
@@ -81,70 +79,69 @@ where
 }
 
 pub trait ExprSpec: Serialize + SrcReferrer + SingleIdentifier {
-    type Name;
+    type Path;
     type Body;
 }
 
-pub trait NameSpec: Serialize + SrcReferrer + SingleIdentifier {}
-
 /// An expression that can be evaluated during `resolve` phase.
 #[derive(Debug, Clone, From, PartialEq, Hash, Serialize, Deserialize)]
-#[serde(bound(serialize = "Name: Serialize", deserialize = "Name: Deserialize<'de>"))]
-pub enum ConstantExpression<Name: NameSpec = ir::Name> {
+#[serde(bound(serialize = "Path: Serialize", deserialize = "Path: Deserialize<'de>"))]
+pub enum ConstantExpression<Path: ir::PathSpec = ir::Path> {
     Invalid,
     Literal(ir::Literal),
-    Name(Name),
-    Call(ir::Call<ConstantExpression<Name>>),
+    Path(Path),
+    Call(ir::Call<ConstantExpression<Path>>),
 }
 
-impl<Name: NameSpec> SingleIdentifier for ConstantExpression<Name> {
+impl<Path: ir::PathSpec> SingleIdentifier for ConstantExpression<Path> {
     fn single_identifier(&self) -> Option<&microcad_lang_base::Identifier> {
         match self {
-            ConstantExpression::Name(name) => name.single_identifier(),
+            ConstantExpression::Path(name) => name.single_identifier(),
             _ => None,
         }
     }
 }
 
-impl<Name: NameSpec> SrcReferrer for ConstantExpression<Name> {
+impl<Path: ir::PathSpec> SrcReferrer for ConstantExpression<Path> {
     fn src_ref(&self) -> SrcRef {
         match &self {
             ConstantExpression::Invalid => SrcRef::none(),
             ConstantExpression::Literal(literal) => literal.src_ref(),
-            ConstantExpression::Name(name) => name.src_ref(),
+            ConstantExpression::Path(name) => name.src_ref(),
             ConstantExpression::Call(call) => call.src_ref,
         }
     }
 }
 
-impl<Name: NameSpec> ExprSpec for ConstantExpression<Name> {
-    type Name = Name;
+impl<Path: ir::PathSpec> ExprSpec for ConstantExpression<Path> {
+    type Path = Path;
     type Body = (); // Constant expressions have no body.
 }
 
-impl<T: NameSpec, Name: NameSpec> CastInto<ConstantExpression<T>> for ConstantExpression<Name>
+impl<Src: ir::PathSpec, Dst: ir::PathSpec> CastInto<ConstantExpression<Dst>>
+    for ConstantExpression<Src>
 where
-    Name: Into<T>,
+    Src: Into<Dst>,
 {
-    fn cast_into(self) -> ConstantExpression<T> {
+    fn cast_into(self) -> ConstantExpression<Dst> {
         use ConstantExpression::*;
         match self {
             Invalid => Invalid,
             Literal(literal) => Literal(literal),
-            Name(name) => Name(name.into()),
+            Path(name) => Path(name.into()),
             Call(call) => Call(call.cast_into()),
         }
     }
 }
 
-impl<Name: NameSpec> std::fmt::Display for ConstantExpression<Name>
+impl<Path: ir::PathSpec> std::fmt::Display for ConstantExpression<Path>
 where
-    Name: std::fmt::Display,
+    Path: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {
             ConstantExpression::Literal(literal) => write!(f, "{literal}"),
-            ConstantExpression::Name(qualified_name) => write!(f, "{qualified_name}"),
+            ConstantExpression::Path(path) => write!(f, "{path}"),
             _ => unimplemented!(),
         }
     }

@@ -48,7 +48,7 @@ impl<Expr> Argument<Expr> {
 impl<Src: ir::ExprSpec, Dst: ir::ExprSpec> CastInto<Argument<Dst>> for Argument<Src>
 where
     Src: CastInto<Dst>,
-    Src::Name: Into<Dst::Name>,
+    Src::Path: Into<Dst::Path>,
 {
     fn cast_into(self) -> Argument<Dst> {
         match self {
@@ -156,7 +156,7 @@ where
 impl<Src: ir::ExprSpec, Dst: ir::ExprSpec> CastInto<ArgumentList<Dst>> for ArgumentList<Src>
 where
     Src: CastInto<Dst>,
-    Src::Name: Into<Dst::Name>,
+    Src::Path: Into<Dst::Path>,
 {
     fn cast_into(self) -> ArgumentList<Dst> {
         ArgumentList {
@@ -168,14 +168,14 @@ where
 
 /// Call of a *workbench* or *function*.
 #[derive(Debug, Display, Clone, PartialEq, Hash, Serialize, Deserialize)]
-#[display("{}({})", name, args)]
+#[display("{path}({args})")]
 #[serde(bound(
-    serialize = "Expr: Serialize, Expr::Name: Serialize",
-    deserialize = "Expr: Deserialize<'de>, Expr::Name: Deserialize<'de>"
+    serialize = "Expr: Serialize, Expr::Path: Serialize",
+    deserialize = "Expr: Deserialize<'de>, Expr::Path: Deserialize<'de>"
 ))]
 pub struct Call<Expr: ir::ExprSpec> {
-    /// Name of the call.
-    pub name: Expr::Name,
+    /// Path of the call.
+    pub path: Expr::Path,
     /// Argument list of the call.
     pub args: ir::ArgumentList<Expr>,
     /// Source code reference.
@@ -185,11 +185,11 @@ pub struct Call<Expr: ir::ExprSpec> {
 impl<Src: ir::ExprSpec, Dst: ir::ExprSpec> CastInto<Call<Dst>> for Call<Src>
 where
     Src: CastInto<Dst>,
-    Src::Name: Into<Dst::Name>,
+    Src::Path: Into<Dst::Path>,
 {
     fn cast_into(self) -> Call<Dst> {
         Call {
-            name: self.name.into(),
+            path: self.path.into(),
             args: self.args.cast_into(),
             src_ref: self.src_ref,
         }
