@@ -103,7 +103,7 @@ impl Eval<FlowSignal> for rst::function::If {
 
 impl Eval<FlowSignal> for rst::function::Call {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
-        match &self.name {
+        match &self.path {
             rst::ResolvedName::Local(_) => unimplemented!("Not callable"),
             rst::ResolvedName::Symbol(symbol) => {
                 unimplemented!("context.call_symbol(symbol, self.arguments)")
@@ -158,7 +158,7 @@ impl Eval<FlowSignal> for rst::FunctionExpression {
         match self {
             Expr::Invalid => todo!("Error handling"),
             Expr::Literal(literal) => Ok(FlowSignal::Yield(literal.value().clone())),
-            Expr::Name(name) => name.eval(context),
+            Expr::Path(name) => name.eval(context),
             Expr::Scope(s) => s.eval(context),
             Expr::If(if_) => if_.eval(context),
             Expr::Call(call) => call.eval(context),

@@ -6,7 +6,7 @@
 use microcad_builtin::BuiltinError;
 use microcad_lang_base::{Identifier, IdentifierList, SrcRef, element::WorkbenchKind};
 use microcad_lang_types::{Integer, Type, ValueError, model::ModelOutputType, ty::TypeList};
-use microcad_package::tree::SymbolPath;
+use microcad_package::tree::Name;
 use miette::Diagnostic;
 
 use thiserror::Error;
@@ -229,7 +229,7 @@ pub enum EvalError {
 
     #[error("Symbol `{symbol_path}` cannot be called.")]
     SymbolCanNotBeCalled {
-        symbol_path: SymbolPath,
+        symbol_path: Name,
 
         #[label("Symbol name")]
         src_ref: SrcRef,

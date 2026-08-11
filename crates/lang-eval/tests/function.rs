@@ -22,7 +22,7 @@ where
 }
 
 fn name_expr(name: &str) -> FunctionExpression {
-    FunctionExpression::Name(ResolvedName::Local(Identifier::no_ref(name)))
+    FunctionExpression::Path(ResolvedName::Local(Identifier::no_ref(name)))
 }
 
 fn scope<T>(a: impl Iterator<Item = T>) -> Scope
@@ -77,7 +77,7 @@ fn add() {
         statements: statements(
             [FunctionStatement::Tail(
                 Call {
-                    name: __mu!(core::add),
+                    path: __mu!(core::add),
                     args: ArgumentList::from_iter(
                         [arg("lhs", name_expr("a")), arg("rhs", name_expr("b"))].into_iter(),
                     ),
@@ -113,7 +113,7 @@ fn if_a_greater_than() {
                 src_ref: SrcRef::none(),
                 if_ref: SrcRef::none(),
                 cond: FunctionExpression::Call(Call {
-                    name: __mu!(core::gt),
+                    path: __mu!(core::gt),
                     args: ArgumentList::from_iter(
                         [arg("lhs", name_expr("a")), arg("rhs", name_expr("b"))].into_iter(),
                     ),
