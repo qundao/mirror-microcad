@@ -457,10 +457,10 @@ fn parser<'tokens>()
                 )),
         )
         .with_extras()
-        .map_with(|((name, arguments), extras), e| ast::Call {
+        .map_with(|((path, arguments), extras), e| ast::Call {
             span: e.span(),
             extras,
-            name,
+            path,
             arguments,
         })
         .boxed();

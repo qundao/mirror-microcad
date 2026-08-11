@@ -248,7 +248,7 @@ pub struct UnaryOperation {
 pub struct Call {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub name: SymbolPath,
+    pub path: SymbolPath,
     pub arguments: ArgumentList,
 }
 
