@@ -4,7 +4,7 @@
 use derive_more::From;
 
 use microcad_builtin::BuiltinRegistry;
-use microcad_lang_base::{BuiltinId, HashMap, Identifier};
+use microcad_lang_base::{HashMap, Identifier};
 use microcad_lang_types::{Arguments, Value};
 
 use crate::EvalError;
@@ -24,7 +24,7 @@ pub struct FunctionFrame {
 impl FunctionFrame {
     pub fn new(args: Arguments) -> Self {
         let locals = LocalTable(
-            args.iter()
+            args.named_iter()
                 .map(|(id, value)| (id.clone(), value.clone()))
                 .collect(),
         );

@@ -5,7 +5,7 @@
 
 use microcad_builtin::BuiltinError;
 use microcad_lang_base::{Identifier, IdentifierList, SrcRef, element::WorkbenchKind};
-use microcad_lang_types::{Integer, Type, ValueError, model::OutputType, ty::TypeList};
+use microcad_lang_types::{Integer, Type, ValueError, model::ModelOutputType, ty::TypeList};
 use microcad_package::tree::SymbolPath;
 use miette::Diagnostic;
 
@@ -148,8 +148,8 @@ pub enum EvalError {
     #[error("The {kind} workbench produced a {produced} output, but expected a {expected} output.")]
     WorkbenchInvalidOutput {
         kind: WorkbenchKind,
-        produced: OutputType,
-        expected: OutputType,
+        produced: ModelOutputType,
+        expected: ModelOutputType,
     },
 
     /// Cannot call operation without workpiece, e.g. `op()`.
@@ -261,6 +261,12 @@ pub enum EvalError {
 
 impl From<BuiltinError> for Box<EvalError> {
     fn from(err: BuiltinError) -> Self {
+        Box::new(err.into())
+    }
+}
+
+impl From<ValueError> for Box<EvalError> {
+    fn from(err: ValueError) -> Self {
         Box::new(err.into())
     }
 }

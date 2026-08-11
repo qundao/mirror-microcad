@@ -10,8 +10,7 @@ use microcad_lang_types::{
 
 #[test]
 fn argument_matching() {
-    let ty =
-        function_type!(a: Type::scalar(), b: Type::length(), c: Type::scalar(), d: Type::length());
+    let ty = function_type!((a: Type::scalar(), b: Type::length(), c: Type::scalar(), d: Type::length()));
     let defaults = tuple!(d = Length::mm(4.0));
 
     let arguments: ArgumentValueList = [
@@ -33,7 +32,7 @@ fn argument_matching() {
 
 #[test]
 fn argument_match_fail() {
-    let ty = function_type!(x: Type::scalar(), y: Type::scalar(), z: Type::scalar());
+    let ty = function_type!((x: Type::scalar(), y: Type::scalar(), z: Type::scalar()));
     let arguments: ArgumentValueList = [
         argument_value!(x: Scalar = Scalar::from_num(1.0)),
         argument_value!(Length = Length::mm(1.0)),

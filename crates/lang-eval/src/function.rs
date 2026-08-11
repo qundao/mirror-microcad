@@ -3,10 +3,10 @@
 
 //! Evaluate function
 
-use microcad_builtin::{Builtin, BuiltinEvalContext};
+use microcad_builtin::Builtin;
 use microcad_lang_base::{SrcRef, SrcReferrer};
-use microcad_lang_types::{ArgumentValue, ArgumentValueList, Array, Type, Value, tuple};
-use microcad_package::{builtin, rst};
+use microcad_lang_types::{ArgumentValue, ArgumentValueList, Value, tuple};
+use microcad_package::rst;
 
 use crate::{
     CallTrait, Eval, EvalContext, EvalError, EvalResult,
@@ -37,54 +37,6 @@ impl FlowSignal {
         match self {
             FlowSignal::Yield(val) | FlowSignal::Return(val) => Ok(val),
             FlowSignal::Continue => Err(EvalError::ExpectedExpression { src_ref }),
-        }
-    }
-}
-
-pub fn builtin_range(
-    call: &rst::function::Call,
-    context: &mut EvalContext,
-) -> EvalResult<FlowSignal> {
-    let args = &call.args;
-    let first_arg = args.args.first().unwrap();
-    let last_arg = args.args.last().unwrap();
-
-    match (
-        first_arg.eval(context)?.value,
-        last_arg.eval(context)?.value,
-    ) {
-        (Value::Integer(first), Value::Integer(last)) => {
-            if first > last {
-                context.diag(EvalError::BadRange {
-                    first,
-                    last,
-                    src_ref: call.src_ref,
-                });
-            }
-
-            let first: i64 = first.into();
-            let last: i64 = last.into();
-
-            Ok(FlowSignal::Yield(Value::Array(Array::new(
-                (first..last + 1)
-                    .map(|i| Value::Integer(i.into()))
-                    .collect(),
-                Type::Integer,
-            ))))
-        }
-        (first, last) => {
-            if !matches!(first, Value::Integer(_)) {
-                context.diag(EvalError::InvalidRangeBoundaryType {
-                    src_ref: first_arg.src_ref(),
-                });
-            }
-            if !matches!(last, Value::Integer(_)) {
-                context.diag(EvalError::InvalidRangeBoundaryType {
-                    src_ref: last_arg.src_ref(),
-                });
-            }
-
-            Ok(FlowSignal::Continue)
         }
     }
 }
@@ -130,10 +82,10 @@ impl Eval<FlowSignal> for rst::function::If {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
         // 1. Evaluate condition expression
         let cond_signal = self.cond.eval(context)?;
-        let cond_val = cond_signal.expect_value(self.src_ref)?;
+        let cond_val: bool = cond_signal.expect_value(self.src_ref)?.try_into()?;
 
         // 2. Dispatch based on condition boolean
-        if cond_val.as_bool_unchecked() {
+        if cond_val {
             self.body.eval(context)
         } else if let Some(next_if) = &self.next_if {
             // Handle `else if ...` chain

@@ -3,6 +3,7 @@
 
 //! Tests for evaluating functions.
 
+use microcad_builtin::__mu;
 use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_eval::{CallTrait, EvalContext, argument_value};
 use microcad_lang_types::{ArgumentValueList, Integer, Type, Value, function_type, tuple};
@@ -112,7 +113,7 @@ fn if_a_greater_than() {
                 src_ref: SrcRef::none(),
                 if_ref: SrcRef::none(),
                 cond: FunctionExpression::Call(Call {
-                    name: microcad_builtin::mu::core::GREATER_THAN.id().into(),
+                    name: __mu!(core::gt),
                     args: ArgumentList::from_iter(
                         [arg("lhs", name_expr("a")), arg("rhs", name_expr("b"))].into_iter(),
                     ),
