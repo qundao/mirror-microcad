@@ -12,7 +12,7 @@ pub struct BuiltinId(pub u64);
 impl BuiltinId {
     /// FNV-1a compile-time hashing function
     pub const fn from_name(name: &str) -> Self {
-        Self(microcad_hash::fnv1a_hash(name))
+        Self(microcad_hash::compile_time_hash(name))
     }
 }
 

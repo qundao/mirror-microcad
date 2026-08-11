@@ -147,7 +147,8 @@ pub(crate) fn builtin_fn_impl(attr: TokenStream, item: TokenStream) -> TokenStre
     quote! {
         #input_fn
 
-        pub static #static_name: Builtin = builtin_function_helper!(
+        pub static #static_name: Builtin = builtin!(
+            Function
             #doc_comment
             #mod_name::#name( microcad_lang_types::function_type!(#formatted_params #return_type))
         );

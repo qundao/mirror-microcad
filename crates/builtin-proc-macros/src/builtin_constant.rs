@@ -63,7 +63,8 @@ pub(crate) fn builtin_constant_impl(attr: TokenStream, item: TokenStream) -> Tok
 
     // Generate output expansion wrapping inside `builtin_constant_helper!`
     quote! {
-        #vis static #static_name: Builtin = builtin_constant_helper!(
+        #vis static #static_name: Builtin = builtin!(
+            Constant
             #doc_comment
             #mod_name::#name = #expr
         );

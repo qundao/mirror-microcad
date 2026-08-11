@@ -12,7 +12,7 @@ pub use registry::BuiltinRegistry;
 
 use derive_more::{Debug, Display, From};
 use microcad_lang_base::{BuiltinId, BuiltinName};
-use microcad_lang_types::{Arguments, FunctionType, Value};
+use microcad_lang_types::{Arguments, FunctionType, Model, ModelTree, Value};
 
 pub use microcad_builtin_proc_macros::__mu;
 
@@ -32,7 +32,8 @@ impl<'a> BuiltinEvalContext<'a> {
 }
 
 /// Built-in execution function signature
-pub type BuiltinFunctionFn = fn(Arguments, &mut BuiltinEvalContext) -> Result<Value, BuiltinError>;
+pub type BuiltinEvalFn<T = Value> =
+    fn(Arguments, &mut BuiltinEvalContext) -> Result<T, BuiltinError>;
 
 /// A type of a function returning a T as builtin.
 pub type BuiltinFn<T> = fn() -> T;
@@ -72,12 +73,12 @@ impl BuiltinInfo {
 pub struct BuiltinFunction {
     pub info: BuiltinInfo,
     pub ty: BuiltinFn<FunctionType>,
-    pub f: BuiltinFunctionFn,
+    pub f: BuiltinEvalFn,
 }
 
 impl BuiltinFunction {
     /// Construct a new BuiltinFunction
-    pub const fn new(info: BuiltinInfo, ty: BuiltinFn<FunctionType>, f: BuiltinFunctionFn) -> Self {
+    pub const fn new(info: BuiltinInfo, ty: BuiltinFn<FunctionType>, f: BuiltinEvalFn) -> Self {
         Self { info, ty, f }
     }
 
@@ -111,25 +112,52 @@ impl BuiltinConstant {
     }
 }
 
+/// A primitive is a function that can produce a single model node.
+#[derive(Debug, Clone)]
+#[debug("{}", info)]
+pub struct BuiltinPrimitive {
+    pub info: BuiltinInfo,
+    pub ty: BuiltinFn<FunctionType>,
+    pub f: BuiltinEvalFn<Model>,
+}
+
+impl BuiltinPrimitive {
+    pub const fn new(
+        info: BuiltinInfo,
+        ty: BuiltinFn<FunctionType>,
+        f: BuiltinEvalFn<Model>,
+    ) -> Self {
+        Self { info, ty, f }
+    }
+}
+
+#[derive(Debug, Clone)]
+#[debug("{}", info)]
+pub struct BuiltinOperation {
+    pub info: BuiltinInfo,
+    pub ty: BuiltinFn<FunctionType>,
+    pub f: BuiltinEvalFn<ModelTree>,
+}
+
 #[derive(Debug, Clone, From)]
 pub enum Builtin {
+    /// Produces a constant Value
     Constant(BuiltinConstant),
+    /// A function computing a Value
     Function(BuiltinFunction),
+    /// A function computing a single model node
+    Primitive(BuiltinPrimitive),
+    /// A function computing a model tree from an existing one
+    Operation(BuiltinOperation),
 }
 
 impl Builtin {
-    pub const fn function(f: BuiltinFunction) -> Self {
-        Self::Function(f)
-    }
-
-    pub const fn constant(c: BuiltinConstant) -> Self {
-        Self::Constant(c)
-    }
-
     pub fn id(&self) -> BuiltinId {
         match self {
             Builtin::Constant(c) => c.info.id(),
             Builtin::Function(f) => f.info.id(),
+            Builtin::Primitive(p) => p.info.id(),
+            Builtin::Operation(o) => o.info.id(),
         }
     }
 
@@ -139,52 +167,75 @@ impl Builtin {
         ctx: &mut BuiltinEvalContext,
     ) -> Result<Value, BuiltinError> {
         match self {
-            Builtin::Constant(_c) => unimplemented!("Cannot call a constant"),
             Builtin::Function(f) => (f.f)(args, ctx),
+            _ => unreachable!("Only functions can be called."),
+        }
+    }
+
+    pub fn call_primitive(
+        &self,
+        args: Arguments,
+        ctx: &mut BuiltinEvalContext,
+    ) -> Result<Model, BuiltinError> {
+        match self {
+            Builtin::Primitive(p) => (p.f)(args, ctx),
+            _ => unreachable!("Only functions can be called."),
+        }
+    }
+
+    pub fn call_op(
+        &self,
+        args: Arguments,
+        ctx: &mut BuiltinEvalContext,
+    ) -> Result<ModelTree, BuiltinError> {
+        match self {
+            Builtin::Operation(o) => (o.f)(args, ctx),
+            _ => unreachable!("Only functions can be called."),
         }
     }
 }
 
 /// A macro to generate built-in functions.
 #[macro_export]
-macro_rules! builtin_function_helper {
-    // Syntax: builtin_function_helper!(
+macro_rules! builtin {
+    (
+        @info
+        $doc:literal
+        $mod_name:ident::$fn_name:ident
+    ) => {
+        $crate::BuiltinInfo::new(concat!(
+            "__mu::",
+            stringify!($mod_name),
+            "::",
+            stringify!($fn_name)
+        ))
+        .with_doc($doc)
+    };
+
+    // Syntax: builtin!(
+    //      Function
     //      "Doc string"
     //      mod::func(param1: type1, param2: type2, ...) -> return_type
     // )
     (
+        Function
         $doc:literal
         $mod_name:ident::$fn_name:ident ( $func_ty:expr )
     ) => {
-        $crate::Builtin::function($crate::BuiltinFunction::new(
-            $crate::BuiltinInfo::new(concat!(
-                "__mu::",
-                stringify!($mod_name),
-                "::",
-                stringify!($fn_name)
-            ))
-            .with_doc($doc),
+        $crate::Builtin::Function($crate::BuiltinFunction::new(
+            $crate::builtin!(@info $doc $mod_name::$fn_name),
             || $func_ty,
             $fn_name,
         ))
     };
-}
-
-#[macro_export]
-macro_rules! builtin_constant_helper {
-    // Syntax: builtin_constant_helper!("A constant" math::PI = std::f64::consts::PI)
+    // Syntax: builtin!(Constant "A constant" math::PI = std::f64::consts::PI)
     (
+        Constant
         $doc:literal
         $mod_name:ident::$fn_name:ident = $value:expr
     ) => {
-        $crate::Builtin::constant($crate::BuiltinConstant::new(
-            $crate::BuiltinInfo::new(concat!(
-                "__mu::",
-                stringify!($mod_name),
-                "::",
-                stringify!($fn_name)
-            ))
-            .with_doc($doc),
+        $crate::Builtin::Constant($crate::BuiltinConstant::new(
+            $crate::builtin!(@info $doc $mod_name::$fn_name),
             || $crate::Value::from($value),
         ))
     };

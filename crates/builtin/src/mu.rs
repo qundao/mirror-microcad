@@ -6,9 +6,9 @@
 use microcad_builtin_proc_macros::{builtin_constant, builtin_fn, builtin_mod};
 use microcad_lang_types::{Arguments, BinaryOperator, Integer, Value};
 
-use crate::{
-    Builtin, BuiltinError, BuiltinEvalContext, builtin_constant_helper, builtin_function_helper,
-};
+use crate::{Builtin, BuiltinError, BuiltinEvalContext, builtin};
+
+use serde::{Deserialize, Serialize};
 
 #[builtin_mod]
 pub mod core {
@@ -390,5 +390,44 @@ pub mod math {
     pub fn cos(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let x = args.get("x");
         Ok(x.cos()?)
+    }
+}
+
+#[builtin_mod]
+pub mod geo2d {
+    use microcad_lang_base::BuiltinName;
+    use microcad_lang_types::{Length, Model, Tuple, model::element::Primitive2D, tuple};
+
+    use super::*;
+
+    /// A circle with a radius.
+    #[derive(Serialize, Deserialize, Debug)]
+    pub struct Circle {
+        /// Radius in mm.
+        pub radius: Length,
+    }
+
+    impl Circle {
+        fn properties(&self) -> Tuple {
+            tuple!(radius = self.radius)
+        }
+
+        fn model(&self) -> Model {
+            todo!()
+        }
+    }
+
+    #[typetag::serde]
+    impl Primitive2D for Circle {
+        fn builtin_name(&self) -> BuiltinName {
+            BuiltinName::new("__mu::geo2d::Circle")
+        }
+
+        fn get_property(&self, name: &str) -> Value {
+            match name {
+                "radius" => Value::from(self.radius),
+                _ => Value::None,
+            }
+        }
     }
 }

@@ -29,7 +29,7 @@ pub type Id = CompactString;
 /// URL to locate sources.
 pub use url::Url;
 
-pub use microcad_hash::{HashId, HashMap, HashSet, Hashed, Hasher, ToHash};
+pub use microcad_hash::{HashId, HashMap, HashSet, Hashed, Hasher, ToHash, hash_id};
 
 /// List of valid µcad extensions.
 pub const MICROCAD_EXTENSIONS: &[&str] = &["mu", "µcad", "mcad", "ucad"];
