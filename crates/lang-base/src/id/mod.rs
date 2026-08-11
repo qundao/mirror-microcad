@@ -4,12 +4,9 @@
 //! Module to handle and demangle IDs use in µcad language.
 
 mod builtin;
-mod unresolve;
 
 use derive_more::{Display, From};
 pub use microcad_hash::{HashId, hash_id};
-
-pub use unresolve::{SymbolName, Unresolve, Unresolver};
 
 pub use builtin::{BuiltinId, BuiltinName};
 
@@ -23,11 +20,11 @@ pub type Name = crate::CompactString;
 pub enum SymbolId {
     /// A builtin symbol.
     Builtin(BuiltinId),
+    /// A name of a local variable in the current scope.
+    Local(Name),
     /// A definition within the current package/module (e.g. a workbench or function).
     Item(HashId),
     /// A symbol in an external package (e.g. `std`)
     #[display("{package_name}@{id}")]
     External { package_name: Name, id: HashId },
-    /// Unresolved id
-    Unresolved(Name),
 }
