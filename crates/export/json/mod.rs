@@ -9,7 +9,7 @@ use microcad_lang::{
     value::Value,
 };
 
-use microcad_lang_base::Id;
+use microcad_lang_base::Name;
 
 /// STL Exporter.
 pub struct JsonExporter;
@@ -29,7 +29,7 @@ impl Exporter for JsonExporter {
 }
 
 impl FileIoInterface for JsonExporter {
-    fn id(&self) -> Id {
-        Id::new("json")
+    fn id(&self) -> Name {
+        Name::new("json")
     }
 }

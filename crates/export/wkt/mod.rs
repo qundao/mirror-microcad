@@ -12,7 +12,7 @@ use microcad_lang::{
     model::{Model, OutputType},
     value::Value,
 };
-use microcad_lang_base::Id;
+use microcad_lang_base::Name;
 
 use wkt::ToWkt;
 
@@ -95,7 +95,7 @@ impl Exporter for WktExporter {
 }
 
 impl FileIoInterface for WktExporter {
-    fn id(&self) -> Id {
-        Id::new("wkt")
+    fn id(&self) -> Name {
+        Name::new("wkt")
     }
 }

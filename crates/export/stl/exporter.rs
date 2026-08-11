@@ -9,7 +9,7 @@ use microcad_lang::{
     value::Value,
 };
 
-use microcad_lang_base::Id;
+use microcad_lang_base::Name;
 
 use crate::stl::{StlWriter, WriteStl};
 
@@ -30,7 +30,7 @@ impl Exporter for StlExporter {
 }
 
 impl FileIoInterface for StlExporter {
-    fn id(&self) -> Id {
-        Id::new("stl")
+    fn id(&self) -> Name {
+        Name::new("stl")
     }
 }

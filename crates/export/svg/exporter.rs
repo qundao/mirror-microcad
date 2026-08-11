@@ -5,7 +5,7 @@
 
 use microcad_core::{Color, Scalar};
 use microcad_lang::{builtin::*, model::*, parameter, render::RenderError, value::*};
-use microcad_lang_base::Id;
+use microcad_lang_base::Name;
 
 /// SVG Exporter.
 pub struct SvgExporter;
@@ -79,7 +79,7 @@ impl SvgExporter {
             stroke_width: Scalar,
         ) -> String {
             format!(
-                r#" 
+                r#"
         .{class_name} {{
             fill: {fill_color};
             stroke: {stroke_color};
@@ -93,7 +93,7 @@ impl SvgExporter {
 
         fn fill_style(class_name: &str, fill: Color) -> String {
             format!(
-                r#" 
+                r#"
         .{class_name}-fill {{
             fill: {fill};
             stroke: none;
@@ -105,7 +105,7 @@ impl SvgExporter {
 
         fn stroke_style(class_name: &str, stroke: Color, stroke_width: Scalar) -> String {
             format!(
-                r#" 
+                r#"
         .{class_name}-stroke {{
             fill: none;
             stroke: {stroke};
@@ -187,7 +187,7 @@ impl Exporter for SvgExporter {
 }
 
 impl FileIoInterface for SvgExporter {
-    fn id(&self) -> Id {
-        Id::new("svg")
+    fn id(&self) -> Name {
+        Name::new("svg")
     }
 }
