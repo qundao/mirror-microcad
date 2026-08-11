@@ -51,7 +51,7 @@ pub struct ExplicitAlias {
     pub attr: ir::OuterAttributes,
     pub visibility: ir::Visibility,
     pub keyword_src_ref: SrcRef,
-    pub path: SymbolPath,
+    pub path: Name,
     pub id: Identifier,
     pub src_ref: SrcRef,
 }
@@ -62,7 +62,7 @@ pub struct WildcardAlias {
     pub attr: ir::OuterAttributes,
     pub visibility: ir::Visibility,
     pub keyword_src_ref: SrcRef,
-    pub path: SymbolPath,
+    pub path: Name,
     pub src_ref: SrcRef,
 }
 

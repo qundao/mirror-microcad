@@ -5,55 +5,9 @@
 
 use crate::{CastInto, ir};
 use derive_more::Display;
-use microcad_lang_base::{Identifiable, Identifier, SrcRef, SrcReferrer};
+use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
 
 use serde::{Deserialize, Serialize};
-
-/// NamedArgument in a [`Call`].
-#[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
-#[serde(bound(serialize = "Expr: Serialize", deserialize = "Expr: Deserialize<'de>"))]
-pub struct NamedArgument<Expr> {
-    /// Name of the argument
-    pub id: Identifier,
-    /// Value of the argument
-    pub expression: Expr,
-    /// Source code reference
-    pub src_ref: SrcRef,
-}
-
-impl<Expr> std::fmt::Display for NamedArgument<Expr>
-where
-    Expr: std::fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{} = {}", self.id, self.expression)
-    }
-}
-
-impl<Src, Dst> CastInto<NamedArgument<Dst>> for NamedArgument<Src>
-where
-    Src: CastInto<Dst>,
-{
-    fn cast_into(self) -> NamedArgument<Dst> {
-        NamedArgument {
-            id: self.id,
-            expression: self.expression.cast_into(),
-            src_ref: self.src_ref,
-        }
-    }
-}
-
-impl<Expr> Identifiable for NamedArgument<Expr> {
-    fn id_ref(&self) -> &Identifier {
-        &self.id
-    }
-}
-
-impl<Expr> SrcReferrer for NamedArgument<Expr> {
-    fn src_ref(&self) -> SrcRef {
-        self.src_ref
-    }
-}
 
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(bound(serialize = "Expr: Serialize", deserialize = "Expr: Deserialize<'de>"))]

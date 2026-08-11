@@ -90,7 +90,7 @@ pub trait NameSpec: Serialize + SrcReferrer + SingleIdentifier {}
 /// An expression that can be evaluated during `resolve` phase.
 #[derive(Debug, Clone, From, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(bound(serialize = "Name: Serialize", deserialize = "Name: Deserialize<'de>"))]
-pub enum ConstantExpression<Name: NameSpec = ir::SymbolPath> {
+pub enum ConstantExpression<Name: NameSpec = ir::Name> {
     Invalid,
     Literal(ir::Literal),
     Name(Name),

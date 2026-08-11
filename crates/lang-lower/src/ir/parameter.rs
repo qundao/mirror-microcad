@@ -15,7 +15,7 @@ use serde_with::skip_serializing_none;
 #[skip_serializing_none]
 #[derive(Debug, Clone, Hash, SrcReferrer, Identifiable, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "Name: Serialize", deserialize = "Name: Deserialize<'de>"))]
-pub struct Parameter<Name: ir::NameSpec = ir::SymbolPath> {
+pub struct Parameter<Name: ir::NameSpec = ir::Name> {
     /// Parameter attributes
     pub attr: ir::OuterAttributes<Name>,
     /// Name of the parameter
@@ -58,7 +58,7 @@ where
 
 /// Parameter list, sorted by id.
 #[derive(Debug, Clone, SrcReferrer, Hash, PartialEq, Serialize, Deserialize)]
-pub struct ParameterList<Name: ir::NameSpec = ir::SymbolPath>(
+pub struct ParameterList<Name: ir::NameSpec = ir::Name>(
     pub Refer<Box<[ir::Parameter<Name>]>>,
 );
 

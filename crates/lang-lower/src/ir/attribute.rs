@@ -69,8 +69,8 @@ impl std::fmt::Display for DocBlock {
 
 /// Metadata for a [`Model`]
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Meta<Name: ir::NameSpec = ir::SymbolPath> {
-    pub name: ir::SymbolPath,
+pub struct Meta<Name: ir::NameSpec = ir::Name> {
+    pub name: ir::Name,
     pub expr: ir::ConstantExpression<Name>,
 }
 
@@ -87,8 +87,8 @@ where
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Command<Name: ir::NameSpec = ir::SymbolPath> {
-    pub name: ir::SymbolPath,
+pub struct Command<Name: ir::NameSpec = ir::Name> {
+    pub name: ir::Name,
     pub argument_list: ir::ArgumentList<ir::ConstantExpression<Name>>,
     pub src_ref: SrcRef,
 }
@@ -112,7 +112,7 @@ pub struct Tag {
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Attributes<Name: ir::NameSpec = ir::SymbolPath> {
+pub struct Attributes<Name: ir::NameSpec = ir::Name> {
     /// Documentation
     pub doc: ir::DocBlock,
     /// Metadata: #[color = "red"]
@@ -192,7 +192,7 @@ where
 
 /// Inner attributes (`//!`, `#![...]`), usually lowered from a `ast::StatementList`.
 #[derive(Debug, Clone, Deref, DerefMut, PartialEq, Hash, Serialize, Deserialize)]
-pub struct InnerAttributes<Name: ir::NameSpec = ir::SymbolPath>(pub Attributes<Name>);
+pub struct InnerAttributes<Name: ir::NameSpec = ir::Name>(pub Attributes<Name>);
 
 impl<Name: ir::NameSpec> InnerAttributes<Name> {
     /// Check if inner attributes are empty
@@ -218,7 +218,7 @@ impl<Name: ir::NameSpec> IsDefault for InnerAttributes<Name> {
 
 /// Inner attributes (`///`, `#[...]`), usually lowered from definitions.
 #[derive(Debug, Clone, Deref, DerefMut, Hash, PartialEq, Serialize, Deserialize)]
-pub struct OuterAttributes<Name: ir::NameSpec = ir::SymbolPath>(pub Attributes<Name>);
+pub struct OuterAttributes<Name: ir::NameSpec = ir::Name>(pub Attributes<Name>);
 
 impl<Name: ir::NameSpec> OuterAttributes<Name> {
     /// Check if outer attributes are empty

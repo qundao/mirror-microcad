@@ -16,7 +16,7 @@ use serde_with::skip_serializing_none;
 /// Each WorkbenchStatement eventually evals into a [`Models`]
 #[skip_serializing_none]
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
-pub struct WorkbenchStatement<Name: ir::NameSpec = ir::SymbolPath> {
+pub struct WorkbenchStatement<Name: ir::NameSpec = ir::Name> {
     pub attr: ir::OuterAttributes<Name>,
     pub src_ref: SrcRef,
     pub visibility: ir::Visibility, // public = property
@@ -45,7 +45,7 @@ where
 }
 
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
-pub struct Group<Name: ir::NameSpec = ir::SymbolPath> {
+pub struct Group<Name: ir::NameSpec = ir::Name> {
     pub src_ref: SrcRef,
     pub attr: ir::InnerAttributes<Name>,
     pub statements: Box<[WorkbenchStatement<Name>]>,
@@ -65,7 +65,7 @@ where
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Init<Name: ir::NameSpec = ir::SymbolPath> {
+pub struct Init<Name: ir::NameSpec = ir::Name> {
     /// SrcRef of the `init` keyword
     pub keyword_ref: SrcRef,
     /// Outer attributes.
@@ -96,7 +96,7 @@ impl Marker {
 }
 
 #[derive(Debug, Clone, From, PartialEq, Hash, Serialize, Deserialize)]
-pub enum WorkbenchExpression<Name: ir::NameSpec = ir::SymbolPath> {
+pub enum WorkbenchExpression<Name: ir::NameSpec = ir::Name> {
     Invalid,
     Literal(ir::Literal),
     Name(Name),

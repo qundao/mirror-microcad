@@ -8,7 +8,7 @@ use miette::SourceSpan;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, From, Hash, PartialEq, Serialize, Deserialize)]
-pub enum SymbolPath {
+pub enum Name {
     Builtin(BuiltinId),
     Path {
         is_absolute: bool,
@@ -17,21 +17,21 @@ pub enum SymbolPath {
     },
 }
 
-impl crate::ir::NameSpec for SymbolPath {}
+impl crate::ir::NameSpec for Name {}
 
-impl SrcReferrer for SymbolPath {
+impl SrcReferrer for Name {
     fn src_ref(&self) -> SrcRef {
         match self {
-            SymbolPath::Builtin(_) => SrcRef::none(),
-            SymbolPath::Path { src_ref, .. } => *src_ref,
+            Name::Builtin(_) => SrcRef::none(),
+            Name::Path { src_ref, .. } => *src_ref,
         }
     }
 }
 
-impl SingleIdentifier for SymbolPath {
+impl SingleIdentifier for Name {
     fn single_identifier(&self) -> Option<&Identifier> {
         match self {
-            SymbolPath::Path {
+            Name::Path {
                 is_absolute,
                 parts,
                 src_ref,
@@ -42,27 +42,27 @@ impl SingleIdentifier for SymbolPath {
 
     fn is_single_identifier(&self) -> bool {
         match self {
-            SymbolPath::Builtin(_) => false,
-            SymbolPath::Path {
+            Name::Builtin(_) => false,
+            Name::Path {
                 is_absolute, parts, ..
             } => !is_absolute && parts.len() == 1,
         }
     }
 }
 
-impl From<SymbolPath> for SourceSpan {
-    fn from(value: SymbolPath) -> Self {
+impl From<Name> for SourceSpan {
+    fn from(value: Name) -> Self {
         value.src_ref().into()
     }
 }
 
-impl From<String> for SymbolPath {
+impl From<String> for Name {
     fn from(value: String) -> Self {
         Self::from(value.as_str())
     }
 }
 
-impl From<&str> for SymbolPath {
+impl From<&str> for Name {
     fn from(s: &str) -> Self {
         let (is_absolute, s) = if s.starts_with("::") {
             (true, s.strip_prefix("::").unwrap())
@@ -78,7 +78,7 @@ impl From<&str> for SymbolPath {
     }
 }
 
-impl From<Identifier> for SymbolPath {
+impl From<Identifier> for Name {
     fn from(id: Identifier) -> Self {
         let src_ref = id.src_ref();
         Self::Path {
@@ -89,11 +89,11 @@ impl From<Identifier> for SymbolPath {
     }
 }
 
-impl std::fmt::Display for SymbolPath {
+impl std::fmt::Display for Name {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            SymbolPath::Builtin(builtin_id) => builtin_id.fmt(f),
-            SymbolPath::Path {
+            Name::Builtin(builtin_id) => builtin_id.fmt(f),
+            Name::Path {
                 is_absolute, parts, ..
             } => {
                 if *is_absolute {

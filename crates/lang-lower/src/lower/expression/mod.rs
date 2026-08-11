@@ -58,7 +58,7 @@ where
     }
 }
 
-impl Lower<ast::SymbolPath> for ir::SymbolPath {
+impl Lower<ast::SymbolPath> for ir::Name {
     fn lower(node: &ast::SymbolPath, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self::Path {
             is_absolute: node.prefix.is_some(),

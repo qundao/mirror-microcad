@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 
 /// Parameters and return type of a function
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
-pub struct FunctionSignature<Name: ir::NameSpec = ir::SymbolPath> {
+pub struct FunctionSignature<Name: ir::NameSpec = ir::Name> {
     /// Function's parameters
     pub parameters: ir::ParameterList<Name>,
     /// Function's return type
@@ -74,7 +74,7 @@ where
 
 #[derive(Debug, Clone, Hash, From, PartialEq, Serialize, Deserialize)]
 #[serde(bound(serialize = "Name: Serialize", deserialize = "Name: Deserialize<'de>"))]
-pub enum FunctionExpression<Name: ir::NameSpec = ir::SymbolPath> {
+pub enum FunctionExpression<Name: ir::NameSpec = ir::Name> {
     Invalid,
     Literal(ir::Literal),
     Name(Name),
@@ -238,5 +238,5 @@ pub struct Function {
     pub items: ir::FunctionItems,
 
     /// Function statements
-    pub statements: Box<[ir::FunctionStatement<ir::SymbolPath>]>,
+    pub statements: Box<[ir::FunctionStatement<ir::Name>]>,
 }

@@ -154,7 +154,7 @@ pub trait LowerName:
 
 pub trait LowerExpr: ir::ExprSpec + Lower<ast::Expression> {}
 
-impl LowerName for ir::SymbolPath {}
+impl LowerName for ir::Name {}
 
 impl<Name: LowerName> LowerExpr for ir::FunctionExpression<Name> {}
 impl LowerExpr for ir::WorkbenchExpression {}
@@ -314,7 +314,7 @@ impl Lower<ast::Identifier> for ir::Identifier {
     }
 }
 
-impl Lower<ast::def::UseName> for ir::SymbolPath {
+impl Lower<ast::def::UseName> for ir::Name {
     fn lower(node: &ast::def::UseName, context: &mut LowerContext) -> LowerResult<Self> {
         let is_absolute = node.prefix.is_some();
         let parts = node
@@ -362,7 +362,7 @@ impl Lower<ast::StatementList> for ir::Aliases {
                             attr: ir::OuterAttributes::lower(&use_statement.attr, context)?,
                             keyword_src_ref: context.span_to_src_ref(&use_statement.keyword_span),
                             visibility: ir::Visibility::lower(&use_statement.vis, context)?,
-                            path: ir::SymbolPath::lower(&use_statement.name, context)?,
+                            path: ir::Name::lower(&use_statement.name, context)?,
                             id: ir::Identifier::lower(
                                 match &use_statement.use_as {
                                     // Use id `C` from `as C`
@@ -386,7 +386,7 @@ impl Lower<ast::StatementList> for ir::Aliases {
                         attr: ir::OuterAttributes::lower(&use_statement.attr, context)?,
                         keyword_src_ref: context.span_to_src_ref(&use_statement.keyword_span),
                         visibility: ir::Visibility::lower(&use_statement.vis, context)?,
-                        path: ir::SymbolPath::lower(&use_statement.name, context)?,
+                        path: ir::Name::lower(&use_statement.name, context)?,
                         src_ref: context.span_to_src_ref(&use_statement.span),
                     })),
                     None => unreachable!(),
