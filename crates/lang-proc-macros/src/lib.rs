@@ -3,9 +3,13 @@
 
 extern crate proc_macro;
 
-use proc_macro::TokenStream;
-use quote::quote;
-use syn::*;
+pub(crate) mod prelude {
+    pub use proc_macro::TokenStream;
+    pub use quote::quote;
+    pub use syn::*;
+}
+
+use prelude::*;
 
 /// Derives the `SrcReferrer` trait for structs.
 ///
@@ -132,7 +136,7 @@ pub fn derive_visit(input: TokenStream) -> TokenStream {
     fn has_visit_skip(attrs: &[syn::Attribute]) -> bool {
         attrs.iter().any(|attr| {
             // Check if the attribute path is exactly "visit"
-            attr.path().is_ident("visit") && 
+            attr.path().is_ident("visit") &&
                 // Parse inside the parentheses: #[visit(...)]
                 attr.parse_nested_meta(|meta| {
                     if meta.path.is_ident("skip") {
@@ -272,4 +276,9 @@ pub fn derive_artifact(input: TokenStream) -> TokenStream {
         }
     }
     .into()
+}
+
+#[proc_macro_derive(AstNode, attributes(ast))]
+pub fn derive_ast_node(input: TokenStream) -> TokenStream {
+    ast_node::derive_ast_node_impl(input)
 }
