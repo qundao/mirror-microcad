@@ -4,73 +4,56 @@
 //! Mid-level intermediate representation (MIR).
 
 use derive_more::From;
-use microcad_lang_base::{HashId, Name, Refer, SrcRef, SrcReferrer};
+use microcad_lang_base::{HashId, Name, Refer, SrcRef};
 use microcad_lang_proc_macros::Artifact;
 use serde::{Deserialize, Serialize};
 
 use microcad_lang_lower::ir;
 
 pub use microcad_package::tree::{SymbolHandle, SymbolMetadata};
-use microcad_package::{manifest::Manifest, rst::Rst};
 
-pub type SymbolPath = ir::SymbolPath;
+pub type SymbolPath = ir::Path;
 pub type Type = ir::Type;
-pub type TypeAnnotation = Option<ir::TypeAnnotation>;
 
-/// The name of a symbol in an unresolved tree
-#[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
-pub enum Name {
-    /// This name
-    Local(Name),
-    Symbol(SymbolHandle),
-    ToBeResolved(ir::SymbolPath),
-}
+pub type Path = ir::Path;
 
-impl ir::NameSpec for Name {}
+pub type ConstantExpression = ir::ConstantExpression;
 
-impl SrcReferrer for Name {
-    fn src_ref(&self) -> SrcRef {
-        SrcRef::none()
-    }
-}
+pub type Attributes = ir::Attributes;
 
-pub type ConstantExpression = ir::ConstantExpression<Name>;
-
-pub type Attributes = ir::Attributes<Name>;
-
-pub type FunctionSignature = ir::FunctionSignature<Name>;
-pub type Parameter = ir::Parameter<Name>;
-pub type ParameterList = ir::ParameterList<Name>;
+pub type FunctionSignature = ir::FunctionSignature;
+pub type Parameter = ir::Parameter;
+pub type ParameterList = ir::ParameterList;
 
 pub use ir::{Identifier, Visibility};
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Constant {
     pub attr: Attributes,
-    pub ty: TypeAnnotation,
+    pub ty: Type,
     pub expr: ConstantExpression,
 }
 
-pub type FunctionExpression = ir::FunctionExpression<Name>;
-pub type FunctionStatement = ir::FunctionStatement<Name>;
+pub type FunctionExpression = ir::FunctionExpression;
+pub type FunctionStatement = ir::FunctionStatement;
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Function {
     pub attr: Attributes,
     pub parameters: ParameterList,
-    pub return_ty: TypeAnnotation,
+    pub return_ty: Option<Type>,
     pub statements: Box<[FunctionStatement]>,
 }
 
-pub type WorkbenchExpression = ir::WorkbenchExpression<Name>;
-pub type WorkbenchStatement = ir::WorkbenchStatement<Name>;
+pub type WorkbenchExpression = ir::WorkbenchExpression;
+pub type WorkbenchStatement = ir::WorkbenchStatement;
 pub type WorkbenchKind = ir::WorkbenchKind;
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
 
 pub struct InitStatement {
     pub id: Identifier,
-    pub ty: TypeAnnotation,
+    pub ty: Type,
     pub expression: WorkbenchExpression,
 }
 
@@ -97,10 +80,10 @@ pub struct Workbench {
 }
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
-pub struct Alias(pub Name);
+pub struct Alias(pub Path);
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
-pub struct Wildcard(pub Name);
+pub struct Wildcard(pub Path);
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SourceFile {

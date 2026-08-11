@@ -8,7 +8,7 @@
 //! 2) Prepare built-in library.
 //! 3) Load all external dependencies, including `std`.
 //! 4) Load source files inside the workspace.
-//! 5) `bind`: Resolve [`mir::SymbolPath`] to [`SymbolId`]s/[`LocalId`]s.
+//! 5) `bind`: Resolve [`mir::Path`] to [`SymbolId`]s/[`LocalId`]s.
 //! 6) `case_check`: Validate identifier casing rules.
 //! 7) `type_check`: Verify expression types.
 //! 8) `normalize`: Canonicalize and simplify expressions.
@@ -25,9 +25,10 @@ mod resolver;
 mod type_check;
 
 use microcad_lang_base::{CompilationResult, Diagnostics};
+use microcad_package::rst::Rst;
 
 use crate::{
-    mir::{self, UnresolvedSymbolDef, UnresolvedSymbolTree},
+    mir::{self, UnresolvedSymbolTree},
     scaffold::TreeBuilder,
 };
 
@@ -76,7 +77,9 @@ impl ResolveContext {
         // Try to load on optional `mu.toml` manifest file.
         let manifest /*: Option<Manifest> */ = self.resolver.load_manifest()?;
 
-        let mut builder = TreeBuilder::new(mir::Workspace::from(manifest));
+        todo!();
+
+        //let mut builder = TreeBuilder::new(mir::Workspace::from(manifest));
 
         // Handle loading externals
         /*
@@ -130,7 +133,7 @@ impl ResolveContext {
         // ├── baz # Loaded from `baz.mu`
         // ├── ... # Any file in the workspace directory tree
 
-        Ok(builder.build())
+        // Ok(builder.build())
     }
 }
 

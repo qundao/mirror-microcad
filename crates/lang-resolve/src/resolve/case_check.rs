@@ -3,7 +3,9 @@
 
 use microcad_lang_base::{SrcReferrer, element::Case};
 
-use crate::{ResolveResult, resolve::ResolveError, rst};
+use crate::{ResolveResult, resolve::ResolveError};
+
+use microcad_package::rst;
 
 /// Check case
 pub trait CaseCheck {
@@ -35,7 +37,7 @@ impl CaseCheck for rst::ResolvedSymbolDef {
             SourceFile(_) | InlineModule | Function(_) => Some(Case::LowerSnake),
             Workbench(_) => Some(Case::Pascal),
             Constant(_) => Some(Case::UpperSnake),
-            Builtin(_) | Alias(_) | Wildcard(_) => None,
+            Alias(_) | Wildcard(_) => None,
             _ => None,
         }
     }

@@ -4,8 +4,7 @@
 //! The `bind` sub-step. This binds all `SymbolPath`s to actual SymbolIds and LocalIds
 
 use derive_more::From;
-use microcad_lang_base::{HashMap, Name, Identifier, SrcRef, SrcReferrer};
-use microcad_lang_lower::ir;
+use microcad_lang_base::{HashMap, Identifier, SrcRef, SrcReferrer};
 
 use crate::{ResolveContext, ResolveResult, mir};
 
@@ -341,12 +340,15 @@ trait Bind<'ctx> {
     fn bind(&mut self, binder: &mut Binder<'ctx>) -> ResolveResult<()>;
 }
 
-impl<'ctx> Bind<'ctx> for mir::Name {
+impl<'ctx> Bind<'ctx> for mir::Path {
     fn bind(&mut self, binder: &mut Binder<'ctx>) -> ResolveResult<()> {
         match self {
-            mir::Name::Local(compact_string) => todo!(),
-            mir::Name::Symbol(symbol_handle) => todo!(),
-            mir::Name::ToBeResolved(symbol_path) => todo!(),
+            microcad_package::rst::Path::Unresolved(unresolved_path) => {
+                todo!()
+                //*self = binder.bind(unresolved_path)?;
+                //Ok(())
+            }
+            _ => Ok(()),
         }
     }
 }
@@ -357,7 +359,7 @@ impl<'ctx> Bind<'ctx> for mir::ConstantExpression {
 
         Ok(match self {
             ConstantExpression::Invalid | ConstantExpression::Literal(_) => {}
-            ConstantExpression::Name(name) => name.bind(binder)?,
+            ConstantExpression::Path(name) => name.bind(binder)?,
             ConstantExpression::Call(call) => todo!(),
         })
     }
@@ -370,10 +372,11 @@ impl<'ctx> Bind<'ctx> for mir::FunctionExpression {
         Ok(match self {
             FunctionExpression::Invalid => {}
             FunctionExpression::Literal(literal) => {}
-            FunctionExpression::Name(name) => name.bind(binder)?,
+            FunctionExpression::Path(name) => name.bind(binder)?,
             FunctionExpression::Scope(scope) => todo!(),
             FunctionExpression::If(_) => todo!(),
             FunctionExpression::Call(call) => todo!(),
+            _ => todo!(),
         })
     }
 }
@@ -390,9 +393,6 @@ impl<'ctx> Bind<'ctx> for mir::Function {
                         // Add local *after* we have bound the expression.
                         binder.declare_local(local_assignment.id.clone());
                     }
-                    FunctionStatement(function_expression) => {
-                        function_expression.bind(binder)?;
-                    }
                     FunctionStatement::Return(return_statement) => match return_statement.expr {
                         Some(ref mut value) => {
                             value.bind(binder)?;
@@ -400,6 +400,7 @@ impl<'ctx> Bind<'ctx> for mir::Function {
                         }
                         None => return Ok(()),
                     },
+                    _ => todo!(),
                 }
             }
 

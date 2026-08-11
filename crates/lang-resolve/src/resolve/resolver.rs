@@ -3,7 +3,7 @@
 
 //! Resolver.
 
-use microcad_lang_base::Manifest;
+use microcad_package::Manifest;
 
 use crate::ResolveResult;
 
