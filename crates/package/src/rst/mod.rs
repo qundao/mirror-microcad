@@ -3,63 +3,29 @@
 
 //! µcad resolved symbol tree (RST).
 
-mod builtin;
-
 pub mod function;
 pub mod workbench;
 
 mod parameter;
 
-use microcad_lang_lower::ir::NameSpec;
 pub use parameter::{Parameter, ParameterList};
 
 pub use function::{Function, FunctionExpression, FunctionStatement};
 pub use workbench::{Workbench, WorkbenchExpression, WorkbenchKind, WorkbenchStatement};
 
-pub use microcad_lang_base::Identifier;
+pub use microcad_lang_base::{Identifier, SymbolId};
 
-use builtin::Builtin;
-
-use crate::tree::{SymbolHandle, SymbolPath};
+use crate::tree::SymbolHandle;
 use std::hash::Hash;
 
 use serde::{Deserialize, Serialize};
 
 use derive_more::From;
-use microcad_lang_base::{BuiltinId, HashId, Refer, SingleIdentifier, SrcRef, SrcReferrer};
+use microcad_lang_base::{HashId, Refer};
 use microcad_lang_proc_macros::Artifact;
 use microcad_lang_types::Value;
 
-#[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
-pub enum ResolvedName {
-    /// Name for local variable in a function or workbench.
-    Local(Identifier),
-    Symbol(Refer<SymbolHandle>),
-    Builtin(BuiltinId),
-    Error(SymbolPath),
-}
-
-impl SrcReferrer for ResolvedName {
-    fn src_ref(&self) -> SrcRef {
-        match self {
-            ResolvedName::Local(identifier) => identifier.src_ref(),
-            ResolvedName::Symbol(refer) => refer.src_ref(),
-            ResolvedName::Error(symbol_path) => symbol_path.src_ref(),
-            _ => SrcRef::none(),
-        }
-    }
-}
-
-impl SingleIdentifier for ResolvedName {
-    fn single_identifier(&self) -> Option<&Identifier> {
-        match self {
-            ResolvedName::Local(identifier) => Some(identifier),
-            _ => None,
-        }
-    }
-}
-
-impl NameSpec for ResolvedName {}
+pub use microcad_lang_lower::ir::Path;
 
 #[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct DocBlock(pub Refer<String>);
@@ -86,11 +52,6 @@ pub struct SourceFile {
 /// Symbol definition
 #[derive(Debug, From, Hash, PartialEq, Serialize, Deserialize)]
 pub enum ResolvedSymbolDef {
-    /*/// Workspace root
-    Root(Workspace),
-    /// External dependency
-    External(External),
-    */
     /// Source file symbol.
     SourceFile(SourceFile),
     /// Inline Module symbol: `mod foo {}`
@@ -101,8 +62,6 @@ pub enum ResolvedSymbolDef {
     Function(Function),
     /// Constant.
     Constant(Constant),
-    /// Builtin symbol.
-    Builtin(Builtin),
     /// Alias of a pub use statement.
     Alias(Alias),
     /// Use all available symbols in the module with the given name.

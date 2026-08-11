@@ -2,9 +2,9 @@ use serde::{Deserialize, Serialize};
 
 use super::{SymbolTree, iterators};
 
-pub use microcad_lang_base::{Id, Identifier};
+pub use microcad_lang_base::{Identifier, Name};
 
-pub use microcad_lang_lower::ir::SymbolPath;
+pub use microcad_lang_lower::ir::Path;
 
 #[derive(Debug, PartialEq, Clone, Copy, Eq, Hash, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct SymbolHandle(pub(super) usize);
@@ -36,7 +36,7 @@ impl SymbolIndex {
     pub fn get_by_id<'tree, DEF: Serialize>(
         &self,
         tree: &'tree SymbolTree<DEF>,
-        id: Id,
+        id: Name,
     ) -> Option<SymbolRef<'tree, DEF>> {
         self.items
             .iter()

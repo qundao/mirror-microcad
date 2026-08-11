@@ -5,15 +5,13 @@ use microcad_lang_lower::ir;
 use microcad_lang_types::{FunctionType, Tuple};
 use serde::{Deserialize, Serialize};
 
-use crate::rst::ResolvedName;
+pub type FunctionExpression = ir::FunctionExpression;
+pub type FunctionStatement = ir::FunctionStatement;
 
-pub type FunctionExpression = ir::FunctionExpression<ResolvedName>;
-pub type FunctionStatement = ir::FunctionStatement<ResolvedName>;
-
-pub type ReturnStatement = ir::ReturnStatement<ResolvedName>;
+pub type ReturnStatement = ir::ReturnStatement;
 
 pub use ir::Literal;
-pub type Scope = ir::Scope<ResolvedName>;
+pub type Scope = ir::Scope;
 pub type If = ir::If<FunctionExpression>;
 
 /// A call to a function.

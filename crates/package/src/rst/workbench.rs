@@ -6,10 +6,10 @@ use microcad_lang_lower::ir;
 use microcad_lang_types::Type;
 use serde::{Deserialize, Serialize};
 
-use crate::rst::{ParameterList, ResolvedName};
+use crate::rst::ParameterList;
 
-pub type WorkbenchExpression = ir::WorkbenchExpression<ResolvedName>;
-pub type WorkbenchStatement = ir::WorkbenchStatement<ResolvedName>;
+pub type WorkbenchExpression = ir::WorkbenchExpression;
+pub type WorkbenchStatement = ir::WorkbenchStatement;
 pub type WorkbenchKind = microcad_lang_base::element::WorkbenchKind;
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
