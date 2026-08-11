@@ -5,7 +5,7 @@
 
 use super::ir;
 
-use microcad_lang_base::Id;
+use microcad_lang_base::Name;
 use serde::{Deserialize, Serialize};
 
 /// Items of a source file that will become symbols.
@@ -29,7 +29,7 @@ pub struct SourceItems {
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Source {
     /// The module id of the source file, extracted from [`Source`].
-    pub id: Option<Id>,
+    pub id: Option<Name>,
     /// Inner attributes.
     pub attr: ir::InnerAttributes,
     /// Items that will become Symbols
