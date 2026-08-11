@@ -11,18 +11,21 @@ use crate::ir;
 /// A constant definition: `const FOO: Length = 32mm`.
 #[skip_serializing_none]
 #[derive(Debug, Clone, SrcReferrer, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Constant {
+pub struct Constant<Name: ir::NameSpec = ir::Name> {
     pub src_ref: SrcRef,
-    pub attr: ir::OuterAttributes,
+    pub attr: ir::OuterAttributes<Name>,
     pub visibility: ir::Visibility,
     #[serde(skip_serializing_if = "SrcRef::is_none", default)]
     pub keyword_src_ref: SrcRef,
     pub id: ir::Identifier,
     pub ty: ir::Type,
-    pub expr: ir::ConstantExpression,
+    pub expr: ir::ConstantExpression<Name>,
 }
 
-impl std::fmt::Display for Constant {
+impl<Name: ir::NameSpec> std::fmt::Display for Constant<Name>
+where
+    Name: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,

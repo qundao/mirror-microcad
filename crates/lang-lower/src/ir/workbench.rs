@@ -167,22 +167,22 @@ where
 
 /// Workbench items that will be resolved into Symbols
 #[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
-pub struct WorkbenchItems {
+pub struct WorkbenchItems<Name: ir::NameSpec = ir::Name> {
     /// `use`
-    pub aliases: ir::Aliases,
+    pub aliases: ir::Aliases<Name>,
     /// `const`
-    pub constants: Box<[ir::Constant]>,
+    pub constants: Box<[ir::Constant<Name>]>,
     /// `fn`
-    pub functions: Box<[ir::Function]>,
+    pub functions: Box<[ir::Function<Name>]>,
 }
 
 /// Workbench definition, e.g `sketch`, `part` or `op`.
 #[derive(Debug, Clone, Identifiable, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Workbench {
+pub struct Workbench<Name: ir::NameSpec = ir::Name> {
     /// SrcRef of the `sketch`/`part`/`op` keyword
     pub keyword_ref: SrcRef,
     /// Workbench outer attributes.
-    pub outer_attr: ir::OuterAttributes,
+    pub outer_attr: ir::OuterAttributes<Name>,
     /// Visibility from outside modules.
     pub visibility: ir::Visibility,
     /// Workbench kind.
@@ -190,24 +190,27 @@ pub struct Workbench {
     /// Workbench name.
     pub id: ir::Identifier,
     /// Workbench's building plan.
-    pub parameters: ir::ParameterList,
+    pub parameters: ir::ParameterList<Name>,
     /// Workbench inner attributes
-    pub inner_attr: ir::InnerAttributes,
+    pub inner_attr: ir::InnerAttributes<Name>,
     /// `init`
-    pub inits: Box<[Init]>,
+    pub inits: Box<[Init<Name>]>,
     /// Items that will be resolved into Symbols
-    pub items: ir::WorkbenchItems,
+    pub items: ir::WorkbenchItems<Name>,
     /// The actual statements to build the Model
-    pub statements: Box<[ir::WorkbenchStatement]>,
+    pub statements: Box<[ir::WorkbenchStatement<Name>]>,
 }
 
-impl SrcReferrer for Workbench {
+impl<Name: ir::NameSpec> SrcReferrer for Workbench<Name> {
     fn src_ref(&self) -> SrcRef {
         self.id.src_ref()
     }
 }
 
-impl std::fmt::Display for Workbench {
+impl<Name: ir::NameSpec> std::fmt::Display for Workbench<Name>
+where
+    Name: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,

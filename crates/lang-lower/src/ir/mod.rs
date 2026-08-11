@@ -47,8 +47,8 @@ pub struct Type {
 /// `use std::geo2d::Circle as C` => (path = "std::geo2d::Circle", id = "C")
 /// `use std::geo2d::Circle` => (path = "std::geo2d::Circle", id = "Circle")
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct ExplicitAlias {
-    pub attr: ir::OuterAttributes,
+pub struct ExplicitAlias<Name: ir::NameSpec = ir::Name> {
+    pub attr: ir::OuterAttributes<Name>,
     pub visibility: ir::Visibility,
     pub keyword_src_ref: SrcRef,
     pub path: Name,
@@ -58,8 +58,8 @@ pub struct ExplicitAlias {
 
 /// `use std::geo2d::*`
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct WildcardAlias {
-    pub attr: ir::OuterAttributes,
+pub struct WildcardAlias<Name: ir::NameSpec = ir::Name> {
+    pub attr: ir::OuterAttributes<Name>,
     pub visibility: ir::Visibility,
     pub keyword_src_ref: SrcRef,
     pub path: Name,
@@ -68,7 +68,7 @@ pub struct WildcardAlias {
 
 /// Aliases lowered from `use` statements.
 #[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Aliases {
-    pub explicit_aliases: Box<[ExplicitAlias]>,
-    pub wildcards: Box<[WildcardAlias]>,
+pub struct Aliases<Name: ir::NameSpec = ir::Name> {
+    pub explicit_aliases: Box<[ExplicitAlias<Name>]>,
+    pub wildcards: Box<[WildcardAlias<Name>]>,
 }

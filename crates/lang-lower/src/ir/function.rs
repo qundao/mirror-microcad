@@ -173,8 +173,7 @@ pub enum FunctionStatement<Name: ir::NameSpec> {
     If(ir::If<FunctionExpression<Name>>),
     /// Tail expression: `42`
     Tail(FunctionExpression<Name>),
-    /// `return 42;`
-    /// Possibly lowered from the tail expression of an `ast::StatementList`
+    /// A return statement: `return 42;`
     Return(ReturnStatement<Name>),
 }
 
@@ -211,19 +210,19 @@ impl<Name: ir::NameSpec> SrcReferrer for FunctionStatement<Name> {
 }
 
 #[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
-pub struct FunctionItems {
+pub struct FunctionItems<Name: ir::NameSpec = ir::Name> {
     /// use ...
-    pub aliases: ir::Aliases,
+    pub aliases: ir::Aliases<Name>,
     /// const FOO =
-    pub constants: Box<[ir::Constant]>,
+    pub constants: Box<[ir::Constant<Name>]>,
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Function {
+pub struct Function<Name: ir::NameSpec = ir::Name> {
     /// Source ref for the whole definition
     pub src_ref: SrcRef,
     /// Outer attributes
-    pub outer_attr: ir::OuterAttributes,
+    pub outer_attr: ir::OuterAttributes<Name>,
     /// public / private
     pub visibility: ir::Visibility,
     /// SrcRef of the `fn` keyword
@@ -231,12 +230,12 @@ pub struct Function {
     /// Name of the function
     pub id: ir::Identifier,
     /// Function signature
-    pub signature: ir::FunctionSignature,
+    pub signature: ir::FunctionSignature<Name>,
     /// #![...]
-    pub inner_attr: ir::InnerAttributes,
+    pub inner_attr: ir::InnerAttributes<Name>,
 
-    pub items: ir::FunctionItems,
+    pub items: ir::FunctionItems<Name>,
 
     /// Function statements
-    pub statements: Box<[ir::FunctionStatement<ir::Name>]>,
+    pub statements: Box<[ir::FunctionStatement<Name>]>,
 }
