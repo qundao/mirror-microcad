@@ -21,6 +21,20 @@ impl HashId {
     pub fn is_empty(&self) -> bool {
         self.0 == 0
     }
+
+    // Simple FNV-1a hash for generating built-in IDs from &str.
+    pub const fn compile_time_hash(s: &str) -> Self {
+        let bytes = s.as_bytes();
+        let mut hash: u64 = 0xcbf29ce484222325;
+        let mut i = 0;
+        while i < bytes.len() {
+            hash ^= bytes[i] as u64;
+            hash = hash.wrapping_mul(0x100000001b3);
+            i += 1;
+        }
+
+        Self(hash)
+    }
 }
 
 impl std::str::FromStr for HashId {
@@ -163,20 +177,6 @@ impl<T: std::hash::Hash> ToHash for Hashed<T> {
     fn to_hash(&self) -> HashId {
         self.hash
     }
-}
-
-// Simple FNV-1a hash for generating built-in IDs from &str.
-pub const fn compile_time_hash(s: &str) -> u64 {
-    let bytes = s.as_bytes();
-    let mut hash: u64 = 0xcbf29ce484222325;
-    let mut i = 0;
-    while i < bytes.len() {
-        hash ^= bytes[i] as u64;
-        hash = hash.wrapping_mul(0x100000001b3);
-        i += 1;
-    }
-
-    hash
 }
 
 /// Macro to calculate hashes conveniently.
