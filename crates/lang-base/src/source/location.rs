@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Id, Url};
+use crate::{Name, Url};
 use serde::Serialize;
 
 /// Kind of the source file
@@ -80,14 +80,14 @@ impl SourceKind {
     }
 
     /// Extracts "bar" from "foo/bar.mu")
-    pub fn file_module_name(&self) -> Option<Id> {
+    pub fn file_module_name(&self) -> Option<Name> {
         let path = self
             .relative_path()
             .unwrap_or_else(|| std::path::PathBuf::from(self.url().path()));
 
         path.file_stem()
             .and_then(|s| s.to_str())
-            .map(|s| Id::from(s.to_string()))
+            .map(|s| Name::from(s.to_string()))
     }
 }
 

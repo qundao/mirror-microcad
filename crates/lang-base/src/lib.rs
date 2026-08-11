@@ -7,12 +7,11 @@ use miette::{MietteError, MietteSpanContents, SourceCode, SourceSpan, SpanConten
 
 pub use miette::Severity;
 
-mod builtin;
-
 mod artifact;
 mod diag;
 pub mod element;
 mod fs;
+mod id;
 mod ord_map;
 mod output;
 mod rc;
@@ -23,13 +22,12 @@ mod version;
 
 pub use compact_str::{CompactString, ToCompactString};
 
-/// Id type (base of all identifiers)
-pub type Id = CompactString;
+pub use id::{BuiltinId, BuiltinName, Demangle, Demangler, HashId, Name, SymbolId, hash_id};
 
 /// URL to locate sources.
 pub use url::Url;
 
-pub use microcad_hash::{HashId, HashMap, HashSet, Hashed, Hasher, ToHash, hash_id};
+pub use microcad_hash::{HashMap, HashSet, Hashed, Hasher, ToHash};
 
 /// List of valid µcad extensions.
 pub const MICROCAD_EXTENSIONS: &[&str] = &["mu", "µcad", "mcad", "ucad"];
@@ -40,7 +38,6 @@ pub const MICROCAD_EXTENSION: &str = "µcad";
 pub use version::{MICROCAD_VERSION, Version};
 
 pub use artifact::{Artifact, ArtifactKind, StageResult};
-pub use builtin::{BuiltinId, BuiltinName};
 pub use diag::{DiagRenderOptions, Diagnostic, Diagnostics};
 pub use element::{Identifier, IdentifierList};
 pub use ord_map::{OrdMap, OrdMapValue};

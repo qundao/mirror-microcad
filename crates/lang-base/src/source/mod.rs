@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{GetSourceByHash, Id, LineCol, LineIndex, SpanToSrcRef, SrcRef, SrcReferrer};
+use crate::{GetSourceByHash, LineCol, LineIndex, Name, SpanToSrcRef, SrcRef, SrcReferrer};
 use microcad_hash::{HashId, Hashed, ToHash};
 use serde::Serialize;
 
@@ -23,7 +23,7 @@ pub struct Source {
     pub location: SourceLocation,
     /// The original hashed code
     pub code: Hashed<String>,
-    /// A line index to get lines from spans  
+    /// A line index to get lines from spans
     line_index: LineIndex,
 }
 
@@ -135,7 +135,7 @@ impl Source {
     }
 
     /// Return file module name for this source.
-    pub fn file_module_name(&self) -> Option<Id> {
+    pub fn file_module_name(&self) -> Option<Name> {
         self.location.kind.file_module_name()
     }
 }

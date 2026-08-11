@@ -6,11 +6,11 @@ use derive_more::{Deref, DerefMut};
 use miette::SourceSpan;
 use serde::{Deserialize, Serialize};
 
-use crate::{Id, Refer, SrcRef, SrcReferrer};
+use crate::{Name, Refer, SrcRef, SrcReferrer};
 
 /// µcad identifier
 #[derive(Default, Clone, Debug, Hash, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-pub struct Identifier(pub Refer<Id>);
+pub struct Identifier(pub Refer<Name>);
 
 impl SrcReferrer for Identifier {
     fn src_ref(&self) -> SrcRef {
@@ -35,7 +35,7 @@ impl Identifier {
     }
 
     /// Get the value of the identifier
-    pub fn id(&self) -> &Id {
+    pub fn id(&self) -> &Name {
         &self.0.value
     }
 
