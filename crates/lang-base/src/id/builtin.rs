@@ -3,16 +3,20 @@
 
 //! lang-base/src/builtin.rs
 
+use derive_more::Display;
+use microcad_hash::HashId;
 use serde::{Deserialize, Serialize};
 
 /// Strongly-typed wrapper around raw builtin u64 hashes
-#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
-pub struct BuiltinId(pub u64);
+#[derive(
+    Debug, Copy, Display, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize,
+)]
+pub struct BuiltinId(pub HashId);
 
 impl BuiltinId {
     /// FNV-1a compile-time hashing function
     pub const fn from_name(name: &str) -> Self {
-        Self(microcad_hash::compile_time_hash(name))
+        Self(HashId::compile_time_hash(name))
     }
 }
 
@@ -27,13 +31,6 @@ impl From<String> for BuiltinId {
     #[inline]
     fn from(name: String) -> Self {
         Self::from_name(name.as_str())
-    }
-}
-
-// Print cleanly as hex in debug/format strings (e.g. BuiltinId(0x4A8F...))
-impl std::fmt::Display for BuiltinId {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "0x{:016X}", self.0)
     }
 }
 

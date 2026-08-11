@@ -22,7 +22,9 @@ mod version;
 
 pub use compact_str::{CompactString, ToCompactString};
 
-pub use id::{BuiltinId, BuiltinName, HashId, Name, SymbolId, Unresolve, Unresolver, hash_id};
+pub use id::{
+    BuiltinId, BuiltinName, HashId, Name, SymbolId, SymbolName, Unresolve, Unresolver, hash_id,
+};
 
 /// URL to locate sources.
 pub use url::Url;
@@ -126,27 +128,6 @@ pub trait Identifiable {
     /// Get identifier as string.
     fn id_as_str(&self) -> &str {
         self.id_ref().0.as_str()
-    }
-}
-
-pub trait IsDefault {
-    fn is_default(&self) -> bool;
-}
-
-// The single function you point Serde to
-pub fn is_default<T: IsDefault>(t: &T) -> bool {
-    t.is_default()
-}
-
-impl<T> IsDefault for Box<[T]> {
-    fn is_default(&self) -> bool {
-        self.is_empty() // No PartialEq bound required!
-    }
-}
-
-impl IsDefault for SrcRef {
-    fn is_default(&self) -> bool {
-        self.is_none()
     }
 }
 

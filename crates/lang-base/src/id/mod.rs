@@ -6,10 +6,10 @@
 mod builtin;
 mod unresolve;
 
-use derive_more::From;
+use derive_more::{Display, From};
 pub use microcad_hash::{HashId, hash_id};
 
-pub use unresolve::{Unresolve, Unresolver};
+pub use unresolve::{SymbolName, Unresolve, Unresolver};
 
 pub use builtin::{BuiltinId, BuiltinName};
 
@@ -19,12 +19,15 @@ use serde::{Deserialize, Serialize};
 pub type Name = crate::CompactString;
 
 /// Symbol id
-#[derive(Debug, Hash, PartialEq, From, Clone, Serialize, Deserialize)]
+#[derive(Debug, Display, Hash, PartialEq, From, Clone, Serialize, Deserialize)]
 pub enum SymbolId {
     /// A builtin symbol.
     Builtin(BuiltinId),
     /// A definition within the current package/module (e.g. a workbench or function).
     Item(HashId),
     /// A symbol in an external package (e.g. `std`)
+    #[display("{package_name}@{id}")]
     External { package_name: Name, id: HashId },
+    /// Unresolved id
+    Unresolved(Name),
 }
