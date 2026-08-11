@@ -5,7 +5,7 @@
 
 use crate::{MakeHumanReadable, Unresolver, ir};
 
-use microcad_lang_base::{Identifier, Refer, SrcRef};
+use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
 
 use serde::{Deserialize, Serialize};
