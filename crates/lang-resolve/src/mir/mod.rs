@@ -4,7 +4,7 @@
 //! Mid-level intermediate representation (MIR).
 
 use derive_more::From;
-use microcad_lang_base::{HashId, Id, Refer, SrcRef, SrcReferrer};
+use microcad_lang_base::{HashId, Name, Refer, SrcRef, SrcReferrer};
 use microcad_lang_proc_macros::Artifact;
 use serde::{Deserialize, Serialize};
 
@@ -21,7 +21,7 @@ pub type TypeAnnotation = Option<ir::TypeAnnotation>;
 #[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
 pub enum Name {
     /// This name
-    Local(Id),
+    Local(Name),
     Symbol(SymbolHandle),
     ToBeResolved(ir::SymbolPath),
 }
@@ -126,7 +126,7 @@ pub struct External {
 
 #[derive(Debug, Hash, From, PartialEq, Serialize, Deserialize)]
 pub struct Workspace {
-    name: Option<Id>,
+    name: Option<Name>,
 }
 
 impl From<Workspace> for UnresolvedSymbolTree {

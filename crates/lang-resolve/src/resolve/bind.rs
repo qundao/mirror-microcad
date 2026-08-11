@@ -4,7 +4,7 @@
 //! The `bind` sub-step. This binds all `SymbolPath`s to actual SymbolIds and LocalIds
 
 use derive_more::From;
-use microcad_lang_base::{HashMap, Id, Identifier, SrcRef, SrcReferrer};
+use microcad_lang_base::{HashMap, Name, Identifier, SrcRef, SrcReferrer};
 use microcad_lang_lower::ir;
 
 use crate::{ResolveContext, ResolveResult, mir};

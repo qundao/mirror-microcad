@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{Artifact, CompilationResult, HashId, Id, SrcRef};
+use microcad_lang_base::{Artifact, CompilationResult, HashId, Name, SrcRef};
 use microcad_lang_resolve::{Mir, mir, scaffold};
 
 use test_that::prelude::*;
