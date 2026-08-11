@@ -79,7 +79,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                         src_ref: "None",
                                     ),
                                     default_value: Some(Call((
-                                        path: Resolved(Builtin(("0x8546b16eecadcdcc"))),
+                                        path: HumanReadable(
+                                            path: "__mu::core::tuple",
+                                            id: Some(Builtin(("0x8546b16eecadcdcc"))),
+                                        ),
                                         args: (
                                             src_ref: "None",
                                             args: [
@@ -176,7 +179,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                 src_ref: "None",
                                             ),
                                             default_value: Some(Call((
-                                                path: Resolved(Builtin(("0x8546b16eecadcdcc"))),
+                                                path: HumanReadable(
+                                                    path: "__mu::core::tuple",
+                                                    id: Some(Builtin(("0x8546b16eecadcdcc"))),
+                                                ),
                                                 args: (
                                                     src_ref: "None",
                                                     args: [
@@ -254,7 +260,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             src_ref: "None",
                                         ),
                                         expression: Call((
-                                            path: Resolved(Builtin(("0x43186122764a895d"))),
+                                            path: HumanReadable(
+                                                path: "__mu::core::div",
+                                                id: Some(Builtin(("0x43186122764a895d"))),
+                                            ),
                                             args: (
                                                 src_ref: "None",
                                                 args: [
@@ -385,7 +394,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                     src_ref: "12:36 @ 0x5b5b0d75574ec6c6 (391..392)",
                                                 )),
                                                 expr: Call((
-                                                    path: Resolved(Builtin(("0x27c18356c4cfecef"))),
+                                                    path: HumanReadable(
+                                                        path: "__mu::core::member_access",
+                                                        id: Some(Builtin(("0x27c18356c4cfecef"))),
+                                                    ),
                                                     args: (
                                                         src_ref: "None",
                                                         args: [
@@ -421,7 +433,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                     src_ref: "12:50 @ 0x5b5b0d75574ec6c6 (405..406)",
                                                 )),
                                                 expr: Call((
-                                                    path: Resolved(Builtin(("0x27c18356c4cfecef"))),
+                                                    path: HumanReadable(
+                                                        path: "__mu::core::member_access",
+                                                        id: Some(Builtin(("0x27c18356c4cfecef"))),
+                                                    ),
                                                     args: (
                                                         src_ref: "None",
                                                         args: [

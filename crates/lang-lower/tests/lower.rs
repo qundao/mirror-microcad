@@ -4,7 +4,7 @@
 use microcad_lang_base::{
     Artifact, CompilationResult, DiagRenderOptions, Identifier, MICROCAD_EXTENSION, Source,
 };
-use microcad_lang_lower::{self as lower, Ir, ir};
+use microcad_lang_lower::{self as lower, Ir, LowerContext, ir};
 use microcad_lang_parse::{
     self as parse, Ast, Parse,
     ast::visitor::{ExpectedDiagnostic, ExpectedDiagnostics},
@@ -21,7 +21,8 @@ fn source_from_test_file(name: &str) -> Source {
 /// Get intermediate representation and diagnostics.
 fn ir_from_source(source: &Source) -> CompilationResult<Ir> {
     let ast = parse::parse(source)?.0;
-    lower::lower(source, &ast)
+    let mut context = LowerContext::from(source);
+    lower::lower(&mut context, &ast)
 }
 
 macro_rules! unit_test {
@@ -93,7 +94,8 @@ macro_rules! test_diagnostic {
             let source = source_from_test_file(filename);
             let parse_context = microcad_lang_parse::ParseContext::from(&source);
             let ast = Ast::parse(&parse_context).unwrap();
-            let ir = lower::lower(&source, &ast);
+            let mut context = microcad_lang_lower::LowerContext::new(&source);
+            let ir = lower::lower(&mut context, &ast);
             let expected = ast::visitor::collect_expected_diagnostics(&parse_context, &ast);
 
             match ir {

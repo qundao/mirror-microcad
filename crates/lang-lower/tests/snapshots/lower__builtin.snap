@@ -39,7 +39,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                             )),
                             visibility: Private,
                             keyword_src_ref: "0:1 @ 0xb68464fb05014e73 (0..3)",
-                            path: Resolved(Builtin(("0xa1730e22ab78d7d8"))),
+                            path: HumanReadable(
+                                path: "__mu::core::sub",
+                                id: Some(Builtin(("0xa1730e22ab78d7d8"))),
+                            ),
                             id: ((
                                 value: "sub",
                                 src_ref: "0:17 @ 0xb68464fb05014e73 (16..19)",
@@ -58,7 +61,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                             )),
                             visibility: Private,
                             keyword_src_ref: "1:1 @ 0xb68464fb05014e73 (21..24)",
-                            path: Resolved(Builtin(("0x5da4622536ec034"))),
+                            path: HumanReadable(
+                                path: "__mu::core::mul",
+                                id: Some(Builtin(("0x5da4622536ec034"))),
+                            ),
                             id: ((
                                 value: "multiply",
                                 src_ref: "1:24 @ 0xb68464fb05014e73 (44..52)",
@@ -95,7 +101,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                         src_ref: "None",
                     ),
                     expression: Call((
-                        path: Resolved(Builtin(("0x2a1ad822686b2491"))),
+                        path: HumanReadable(
+                            path: "__mu::core::add",
+                            id: Some(Builtin(("0x2a1ad822686b2491"))),
+                        ),
                         args: (
                             src_ref: "5:21 @ 0xb68464fb05014e73 (117..125)",
                             args: [

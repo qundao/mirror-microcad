@@ -66,6 +66,12 @@ where
     }
 }
 
+impl MakeHumanReadable for Ir {
+    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
+        self.tree.make_human_readable(unresolver);
+    }
+}
+
 impl Lower<Ast> for Ir {
     fn lower(node: &Ast, context: &mut LowerContext) -> LowerResult<Self> {
         let tree = ir::Source::lower(node.tree(), context)?;
@@ -85,6 +91,13 @@ pub struct LowerContext<'source> {
 }
 
 impl<'source> LowerContext<'source> {
+    pub fn new(source: &'source Source) -> Self {
+        Self {
+            source,
+            builtins: BuiltinRegistry::new(),
+            errors: vec![],
+        }
+    }
     pub fn diag(&mut self, err: impl Into<LowerError>) {
         self.errors.push(err.into());
     }
@@ -92,11 +105,7 @@ impl<'source> LowerContext<'source> {
 
 impl<'source> From<&'source Source> for LowerContext<'source> {
     fn from(source: &'source Source) -> Self {
-        Self {
-            source,
-            errors: Vec::default(),
-            builtins: BuiltinRegistry::new(),
-        }
+        Self::new(source)
     }
 }
 
@@ -110,23 +119,39 @@ pub trait Lower<AstNode>: Sized {
     fn lower(node: &AstNode, context: &mut LowerContext) -> LowerResult<Self>;
 }
 
-pub fn lower<'source>(
-    context: impl Into<LowerContext<'source>>,
-    ast: &Ast,
-) -> CompilationResult<Ir> {
-    let mut context = context.into();
+impl Unresolver for BuiltinRegistry {
+    fn unresolve(&self, id: impl Into<SymbolId>) -> String {
+        let id = id.into();
+        match id {
+            SymbolId::Builtin(builtin_id) => {
+                if let Some(builtin) = self.get(builtin_id) {
+                    String::from(builtin.name())
+                } else {
+                    String::new()
+                }
+            }
+            _ => String::new(),
+        }
+    }
+}
 
+pub fn lower<'source>(context: &mut LowerContext<'source>, ast: &Ast) -> CompilationResult<Ir> {
     // Short-circuit on fatal errors
-    let ir = match Ir::lower(ast, &mut context) {
-        Ok(ir) => ir,
+    let ir = match Ir::lower(ast, context) {
+        Ok(mut ir) => {
+            ir.make_human_readable(&context.builtins);
+            ir
+        }
         Err(fatal_error) => {
+            let errors = std::mem::take(&mut context.errors);
             // Ensure the fatal error is logged in the diagnostics
             context.diag(fatal_error);
-            return Err(context.errors.into());
+            return Err(errors.into());
         }
     };
 
-    let diagnostics: Diagnostics = context.errors.into();
+    let errors = std::mem::take(&mut context.errors);
+    let diagnostics: Diagnostics = errors.into();
     if diagnostics.has_errors() {
         Err(diagnostics)
     } else {
