@@ -221,7 +221,7 @@ impl Format for ast::ArgumentList {
 
 impl Format for ast::Call {
     fn format(&self, f: &FormatConfig) -> Node {
-        node!(f, self.extras => self.name self.arguments)
+        node!(f, self.extras => self.path self.arguments)
     }
 }
 
