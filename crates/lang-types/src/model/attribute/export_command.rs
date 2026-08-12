@@ -4,7 +4,7 @@
 //! Export attribute.
 
 use derive_more::Display;
-use microcad_lang_base::Id;
+use microcad_lang_base::Name;
 use serde::{Deserialize, Serialize};
 
 /// Export attribute, e.g. `#[export: "output.svg"]`.
@@ -14,5 +14,5 @@ pub struct ExportCommand {
     /// Filename.
     pub path: std::path::PathBuf,
     /// Exporter id
-    pub id: Id,
+    pub id: Name,
 }

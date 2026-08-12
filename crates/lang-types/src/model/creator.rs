@@ -6,18 +6,8 @@
 //use microcad_package::SymbolId;
 
 use crate::Arguments;
-use derive_more::From;
-use microcad_lang_base::{BuiltinId, HashId, SrcRef, hash_id};
+use microcad_lang_base::{BuiltinId, HashId, SrcRef, SymbolId, hash_id};
 use serde::{Deserialize, Serialize};
-
-/// Symbol id (TODO Move this `microcad-package`)
-#[derive(Debug, Hash, PartialEq, From, Clone, Serialize, Deserialize)]
-pub enum SymbolId {
-    /// A builtin symbol.
-    Builtin(BuiltinId),
-    /// A symbol in the current package.
-    Symbol(HashId),
-}
 
 /// A creator is the symbol
 #[derive(Debug, Hash, PartialEq, Clone, Serialize, Deserialize)]
