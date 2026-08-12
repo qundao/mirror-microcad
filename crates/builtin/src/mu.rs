@@ -408,10 +408,12 @@ pub mod geo2d {
     }
 
     impl Circle {
+        #[allow(unused)]
         fn properties(&self) -> Tuple {
             tuple!(radius = self.radius)
         }
 
+        #[allow(unused)]
         fn model(&self) -> Model {
             todo!()
         }

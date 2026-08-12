@@ -11,7 +11,7 @@ mod registry;
 pub use registry::BuiltinRegistry;
 
 use derive_more::{Debug, Display, From};
-use microcad_lang_base::{BuiltinId, BuiltinName};
+use microcad_lang_base::{BuiltinId, BuiltinName, HashId};
 use microcad_lang_types::{Arguments, FunctionType, Model, ModelTree, Value};
 
 pub use microcad_builtin_proc_macros::__mu;
@@ -59,7 +59,7 @@ impl BuiltinInfo {
         self
     }
 
-    pub const fn hash(&self) -> u64 {
+    pub const fn hash(&self) -> HashId {
         self.id().0
     }
 
@@ -110,6 +110,10 @@ impl BuiltinConstant {
     pub const fn new(info: BuiltinInfo, f: BuiltinFn<Value>) -> Self {
         Self { info, f }
     }
+
+    pub fn value(&self) -> Value {
+        (self.f)()
+    }
 }
 
 /// A primitive is a function that can produce a single model node.
@@ -158,6 +162,15 @@ impl Builtin {
             Builtin::Function(f) => f.info.id(),
             Builtin::Primitive(p) => p.info.id(),
             Builtin::Operation(o) => o.info.id(),
+        }
+    }
+
+    pub fn name(&self) -> &'static str {
+        match self {
+            Builtin::Constant(c) => c.info.name.name,
+            Builtin::Function(f) => f.info.name.name,
+            Builtin::Primitive(p) => p.info.name.name,
+            Builtin::Operation(o) => o.info.name.name,
         }
     }
 

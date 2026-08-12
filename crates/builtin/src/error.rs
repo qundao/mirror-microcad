@@ -3,6 +3,7 @@
 
 //! µcad built-in errors.
 
+use microcad_lang_base::BuiltinId;
 use microcad_lang_types::{TypeError, ValueError};
 use miette::Diagnostic;
 use thiserror::Error;
@@ -14,6 +15,9 @@ pub enum BuiltinError {
 
     #[error(transparent)]
     TypeError(#[from] TypeError),
+
+    #[error("No built-in `{full_name}` with '{id}'")]
+    NoBuiltin { full_name: String, id: BuiltinId },
 
     #[error("Format error: {0}")]
     FormatError(#[from] std::fmt::Error),
