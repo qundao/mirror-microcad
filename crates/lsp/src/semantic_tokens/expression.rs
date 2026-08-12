@@ -108,7 +108,7 @@ impl_tokens!(ast::ArgumentList => |self_, ctx| {
         .for_each(|arg| arg.semantic_tokens(ctx));
 });
 
-impl_tokens!(ast::Call => extras, name, arguments);
+impl_tokens!(ast::Call => extras, path, arguments);
 
 impl_tokens!(ast::Element => extras, inner);
 
