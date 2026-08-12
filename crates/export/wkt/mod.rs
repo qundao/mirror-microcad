@@ -7,14 +7,11 @@ use std::fmt::Write;
 
 use geo::line_string;
 use microcad_core::{Geometries2D, Geometry2D, Transformed2D, mat4_to_mat3};
-use microcad_lang::{
-    builtin::{ExportError, Exporter, FileIoInterface},
-    model::{Model, OutputType},
-    value::Value,
-};
-use microcad_lang_base::Name;
+use microcad_lang_types::{Model, ModelOutputType, ModelRef, Value};
 
 use wkt::ToWkt;
+
+use crate::{ExportError, Exporter, ExporterParameters};
 
 /// WKT Exporter.
 pub struct WktExporter;
@@ -63,10 +60,12 @@ impl WriteWkt for Geometry2D {
 
 impl WriteWkt for Model {
     fn write_wkt(&self, writer: &mut impl Write) -> std::fmt::Result {
+        todo!()
+        /*
         let self_ = self.borrow();
         let output = self_.output();
         match &output.geometry {
-            Some(microcad_lang::render::GeometryOutput::Geometry2D(geometry)) => {
+            Some(microcad_render::GeometryOutput::Geometry2D(geometry)) => {
                 let mat = output.world_matrix.expect("Some matrix");
                 (*geometry.transformed_2d(&mat4_to_mat3(&mat))).write_wkt(writer)
             }
@@ -74,28 +73,26 @@ impl WriteWkt for Model {
                 .children()
                 .try_for_each(|model| model.write_wkt(writer)),
             _ => Ok(()),
-        }
+        }*/
     }
 }
 
-impl Exporter for WktExporter {
-    fn export(&self, model: &Model, filename: &std::path::Path) -> Result<Value, ExportError> {
+impl<'tree> Exporter<'tree> for WktExporter {
+    fn export(
+        &self,
+        model: &ModelRef<'tree>,
+        parameters: &ExporterParameters,
+    ) -> Result<Value, ExportError> {
         use std::io::Write;
 
-        let mut f = std::fs::File::create(filename)?;
+        let mut f = std::fs::File::create(&parameters.path)?;
         let mut buffer = String::new();
         model.write_wkt(&mut buffer)?;
         f.write_all(buffer.as_bytes())?;
         Ok(Value::None)
     }
 
-    fn output_type(&self) -> OutputType {
-        OutputType::Geometry2D
-    }
-}
-
-impl FileIoInterface for WktExporter {
-    fn id(&self) -> Name {
-        Name::new("wkt")
+    fn output_type(&self) -> ModelOutputType {
+        ModelOutputType::Geometry2D
     }
 }

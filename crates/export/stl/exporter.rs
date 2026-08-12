@@ -3,34 +3,30 @@
 
 //! STL exporter.
 
-use microcad_lang::{
-    builtin::{ExportError, Exporter, FileIoInterface},
-    model::{Model, OutputType},
-    value::Value,
-};
+use microcad_lang_types::{ModelOutputType, ModelRef, Value};
 
-use microcad_lang_base::Name;
-
-use crate::stl::{StlWriter, WriteStl};
+use crate::{ExportError, Exporter, ExporterParameters};
 
 /// STL Exporter.
 pub struct StlExporter;
 
-impl Exporter for StlExporter {
-    fn export(&self, model: &Model, filename: &std::path::Path) -> Result<Value, ExportError> {
-        let mut f = std::fs::File::create(filename)?;
+impl<'tree> Exporter<'tree> for StlExporter {
+    fn export(
+        &self,
+        _model: &ModelRef<'tree>,
+        _parameters: &ExporterParameters,
+    ) -> Result<Value, ExportError> {
+        todo!()
+        /*
+        use crate stl::{StlWriter, WriteStl};
+        let mut f = std::fs::File::create(parameters.path)?;
         let mut writer = StlWriter::new(&mut f)?;
+
         model.write_stl(&mut writer)?;
-        Ok(Value::None)
+        Ok(Value::None)*/
     }
 
-    fn output_type(&self) -> OutputType {
-        OutputType::Geometry3D
-    }
-}
-
-impl FileIoInterface for StlExporter {
-    fn id(&self) -> Name {
-        Name::new("stl")
+    fn output_type(&self) -> ModelOutputType {
+        ModelOutputType::Geometry3D
     }
 }

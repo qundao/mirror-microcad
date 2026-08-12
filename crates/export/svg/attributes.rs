@@ -5,11 +5,6 @@
 
 use derive_more::Deref;
 use microcad_core::{Color, Mat3, Scalar};
-use microcad_lang::{
-    model::{AttributesAccess, Model},
-    value::{Value, ValueAccess},
-};
-use microcad_lang_base::Identifier;
 
 #[derive(Debug, Clone)]
 pub enum SvgTagAttribute {
@@ -136,7 +131,7 @@ impl SvgTagAttributes {
         self
     }
 
-    /// Apply SVG attributes from model attributes
+    /*/// Apply SVG attributes from model attributes
     pub fn apply_from_model(mut self, model: &Model) -> Self {
         if let Some(color) = model.get_color() {
             self = self.insert(SvgTagAttribute::Style {
@@ -162,7 +157,7 @@ impl SvgTagAttributes {
                 }
             });
         self
-    }
+    }*/
 }
 
 impl std::fmt::Display for SvgTagAttributes {

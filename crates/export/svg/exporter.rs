@@ -4,8 +4,9 @@
 //! Scalable Vector Graphics (SVG) export
 
 use microcad_core::{Color, Scalar};
-use microcad_lang::{builtin::*, model::*, parameter, render::RenderError, value::*};
-use microcad_lang_base::Name;
+use microcad_lang_types::{ModelOutputType, ModelRef, Value};
+
+use crate::{ExportError, Exporter, ExporterParameters};
 
 /// SVG Exporter.
 pub struct SvgExporter;
@@ -58,13 +59,13 @@ impl Default for Theme {
 /// Settings for this exporter.
 pub struct SvgExporterSettings {
     /// Relative padding (e.g. 0.05 = 5% = padding on each side).
-    padding_factor: Scalar,
+    _padding_factor: Scalar,
 }
 
 impl Default for SvgExporterSettings {
     fn default() -> Self {
         Self {
-            padding_factor: 0.05, // 5% padding on each side.
+            _padding_factor: 0.05, // 5% padding on each side.
         }
     }
 }
@@ -143,18 +144,14 @@ impl SvgExporter {
     }
 }
 
-impl Exporter for SvgExporter {
-    fn model_parameters(&self) -> microcad_lang::eval::ParameterValueList {
-        [
-            parameter!(style: String = String::new()),
-            parameter!(fill: String = String::new()),
-        ]
-        .into_iter()
-        .collect()
-    }
-
-    fn export(&self, model: &Model, filename: &std::path::Path) -> Result<Value, ExportError> {
-        use crate::svg::*;
+impl<'tree> Exporter<'tree> for SvgExporter {
+    fn export(
+        &self,
+        _model: &ModelRef<'tree>,
+        _parameters: &ExporterParameters,
+    ) -> Result<Value, ExportError> {
+        todo!()
+        /*use crate::svg::*;
         use microcad_core::CalcBounds2D;
         let settings = SvgExporterSettings::default();
         let bounds = model.calc_bounds_2d();
@@ -164,8 +161,9 @@ impl Exporter for SvgExporter {
                 .enlarge(2.0 * settings.padding_factor)
                 .rect()
                 .expect("Rect");
-            log::debug!("Exporting into SVG file {filename:?}");
-            let f = std::fs::File::create(filename)?;
+            let path = parameters.path.as_path();
+            log::debug!("Exporting into SVG file {path:?}");
+            let f = std::fs::File::create(path)?;
             let mut writer = SvgWriter::new_canvas(
                 Box::new(std::io::BufWriter::new(f)),
                 model.get_size(),
@@ -178,16 +176,10 @@ impl Exporter for SvgExporter {
             Ok(Value::None)
         } else {
             Err(ExportError::RenderError(RenderError::NothingToRender))
-        }
+        }*/
     }
 
-    fn output_type(&self) -> OutputType {
-        OutputType::Geometry2D
-    }
-}
-
-impl FileIoInterface for SvgExporter {
-    fn id(&self) -> Name {
-        Name::new("svg")
+    fn output_type(&self) -> ModelOutputType {
+        ModelOutputType::Geometry2D
     }
 }

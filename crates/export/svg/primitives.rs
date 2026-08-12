@@ -6,7 +6,6 @@
 use cgmath::{Deg, InnerSpace};
 use geo::{CoordsIter as _, Point, Rect, Translate};
 use microcad_core::*;
-use microcad_lang::{model::Model, render::GeometryOutput};
 
 use crate::svg::{attributes::SvgTagAttribute, *};
 
@@ -145,6 +144,7 @@ impl WriteSvg for Geometry2D {
 
 impl WriteSvgMapped for Geometry2D {}
 
+/*
 impl WriteSvg for Model {
     fn write_svg(&self, writer: &mut SvgWriter, attr: &SvgTagAttributes) -> std::io::Result<()> {
         let node_attr = attr
@@ -174,7 +174,7 @@ impl WriteSvg for Model {
             _ => Ok(()),
         }
     }
-}
+}*/
 
 /// A struct for drawing a centered text.
 pub struct CenteredText {
