@@ -8,6 +8,8 @@ pub mod manifest;
 pub mod rst;
 pub mod tree;
 
+pub use manifest::{Manifest, ManifestError};
+
 /// Shortcut to create a `Parameter`
 #[macro_export]
 macro_rules! parameter {
