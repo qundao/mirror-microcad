@@ -12,12 +12,11 @@ mod diag;
 pub mod element;
 mod fs;
 mod id;
-mod ord_map;
 mod output;
 mod rc;
 mod source;
 mod src_ref;
-mod tree_display;
+pub mod tree;
 mod version;
 
 pub use compact_str::{CompactString, ToCompactString};
@@ -40,11 +39,10 @@ pub use version::{MICROCAD_VERSION, Version};
 pub use artifact::{Artifact, ArtifactKind, StageResult};
 pub use diag::{DiagRenderOptions, Diagnostic, Diagnostics};
 pub use element::{Identifier, IdentifierList};
-pub use ord_map::{OrdMap, OrdMapValue};
 pub use output::{Capture, Output, Stdout};
 pub use rc::{Rc, RcMut};
 pub use src_ref::{LineCol, LineIndex, Refer, Span, SpanToSrcRef, Spanned, SrcRef, SrcReferrer};
-pub use tree_display::{FormatTree, TreeDisplay, TreeState};
+pub use tree::{FormatTree, TreeDisplay, TreeState};
 
 pub use source::{Source, SourceKind, SourceLocation, SourceMap, TextEdit};
 

@@ -25,7 +25,8 @@ derive_more = { version = "2.1.1", features = [
     "from",
     "from_str",
 ] }
-dissimilar = "1.0.7"
+dissimilar = "1.0.11"
+indextree = { version = "4.8", features = ["serde"] }
 log = "0.4"
 miette = { version = "7.6.0", features = ["derive", "fancy"] }
 pathdiff = "0.2"
