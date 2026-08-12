@@ -186,3 +186,27 @@ impl ir::WorkbenchDefinition {
     }
 }
 */
+
+use microcad_lang_types::{ArgumentValueList, ModelTree};
+use microcad_package::rst;
+
+use crate::{CallTrait, EvalContext, EvalResult};
+
+impl CallTrait<ModelTree> for rst::Workbench {
+    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<ModelTree> {
+        // Find correct inits
+        todo!();
+        /*
+        match crate::find_multi_match(args, &self.ty, &self.default_parameters) {
+            Ok(args) => {
+                for arg in args {
+                    context.scope(WorkbenchFrame::new(args), |context| {
+                        Ok(self.statements.eval(context)?)
+                    })
+                }
+            }
+
+            Err(_) => todo!(),
+        }*/
+    }
+}
