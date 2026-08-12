@@ -4,8 +4,9 @@
 //! Mid-level intermediate representation (MIR).
 
 use derive_more::From;
-use microcad_lang_base::{HashId, Name, Refer, SrcRef};
+use microcad_lang_base::{Artifact, HashId, Name, Refer, Source, SourceLocation, SrcRef};
 use microcad_lang_proc_macros::Artifact;
+use microcad_package::Manifest;
 use serde::{Deserialize, Serialize};
 
 use microcad_lang_lower::ir;
@@ -50,7 +51,6 @@ pub type WorkbenchStatement = ir::WorkbenchStatement;
 pub type WorkbenchKind = ir::WorkbenchKind;
 
 #[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
-
 pub struct InitStatement {
     pub id: Identifier,
     pub ty: Type,
@@ -112,31 +112,9 @@ pub struct Workspace {
     name: Option<Name>,
 }
 
-impl From<Workspace> for UnresolvedSymbolTree {
-    fn from(workspace: Workspace) -> Self {
-        UnresolvedSymbol::new(
-            SymbolMetadata {
-                id: None,
-                visibility: Visibility::Public,
-                src_ref: SrcRef::none(),
-                keyword_src_ref: SrcRef::none(),
-            },
-            workspace,
-        )
-        .into()
-    }
-}
-
 /// Symbol definition
 #[derive(Debug, Hash, From, PartialEq, Serialize, Deserialize)]
 pub enum UnresolvedSymbolDef {
-    /// The workspace
-    Workspace(Workspace),
-    /// The `mu` node
-    Externals,
-
-    External(External),
-
     /// Source file symbol.
     SourceFile(SourceFile),
     /// Inline Module symbol: `mod foo {}`
