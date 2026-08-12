@@ -3,14 +3,17 @@
 
 //! Render output type.
 
-use std::{
-    hash::{Hash, Hasher},
-    rc::Rc,
+use std::rc::Rc;
+
+use cgmath::SquareMatrix;
+use microcad_core::{
+    Bounds2D, Bounds3D, CalcBounds2D, CalcBounds3D, Geometry2D, Geometry3D, Length, Mat4,
+    RenderResolution, Vec2, Vec3, WithBounds2D, WithBounds3D,
 };
+use microcad_hash::{HashId, ToHash, hash_id};
+use microcad_lang_types::{ModelRef, model::ModelOutputType};
 
-use microcad_core::hash::{ComputedHash, HashId};
-
-use crate::{model::*, render::*};
+use crate::{RenderAttributes, RenderResult};
 
 /// Geometry 2D type alias.
 pub type Geometry2DOutput = Rc<WithBounds2D<Geometry2D>>;
@@ -69,7 +72,7 @@ impl From<Geometry3D> for GeometryOutput {
 #[derive(Debug, Clone)]
 pub struct RenderOutput {
     /// The output (2D/3D) this render output is expected to produce.
-    pub output_type: OutputType,
+    pub output_type: ModelOutputType,
     /// Local transformation matrix.
     pub local_matrix: Option<Mat4>,
     /// World transformation matrix.
@@ -86,16 +89,16 @@ pub struct RenderOutput {
 
 impl RenderOutput {
     /// Create new render output for model.
-    pub fn new(model: &Model) -> RenderResult<Self> {
-        let output_type = model.deduce_output_type();
-        let mut hasher = rustc_hash::FxHasher::default();
-        model.hash(&mut hasher);
-        let hash = hasher.finish();
-        let local_matrix = model
-            .borrow()
-            .element
-            .get_affine_transform()?
-            .map(|affine_transform| affine_transform.mat3d());
+    pub fn new<'tree>(model: &ModelRef<'tree>) -> RenderResult<Self> {
+        let output_type = model.output_type();
+        let hash = hash_id!(model);
+        let local_matrix = Some(Mat4::identity()); /*
+        TODO: Get local matrix transform for element
+        model
+        .element()
+        .get_affine_transform()?
+        .map(|affine_transform| affine_transform.mat3d());
+         */
 
         Ok(RenderOutput {
             output_type,
@@ -103,7 +106,7 @@ impl RenderOutput {
             world_matrix: None,
             resolution: None,
             geometry: None,
-            attributes: model.into(),
+            attributes: RenderAttributes::default(), // TODO: Get render attributes from model.into(),
             hash,
         })
     }
@@ -148,20 +151,24 @@ impl RenderOutput {
             .map(|geo| geo.scene_radius())
             .unwrap_or_default()
     }
+
+    pub fn output_type(&self) -> ModelOutputType {
+        self.output_type
+    }
 }
 
 impl std::fmt::Display for RenderOutput {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "{output_type} ({hash:X}): {geo} {resolution}",
+            "{output_type} ({hash}): {geo} {resolution}",
             output_type = match self.output_type {
-                OutputType::Geometry2D => "2D",
-                OutputType::Geometry3D => "3D",
-                OutputType::InvalidMixed => "Mixed",
-                OutputType::NotDetermined => "?",
+                ModelOutputType::Geometry2D => "2D",
+                ModelOutputType::Geometry3D => "3D",
+                ModelOutputType::Any => "Any",
+                ModelOutputType::NotDetermined => "?",
             },
-            hash = self.computed_hash(),
+            hash = self.to_hash(),
             geo = match &self.geometry {
                 Some(GeometryOutput::Geometry2D(geo)) => geo.name(),
                 Some(GeometryOutput::Geometry3D(geo)) => geo.name(),
@@ -176,8 +183,8 @@ impl std::fmt::Display for RenderOutput {
     }
 }
 
-impl ComputedHash for RenderOutput {
-    fn computed_hash(&self) -> HashId {
+impl ToHash for RenderOutput {
+    fn to_hash(&self) -> HashId {
         self.hash
     }
 }

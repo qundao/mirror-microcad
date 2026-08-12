@@ -6,11 +6,10 @@
 use derive_more::Deref;
 use microcad_core::Color;
 
-use crate::model::{Attributes, Model};
-
 /// An attribute that can be used by any renderer.
 ///
 /// *Note: Render color is the only supported attribute for now.*
+#[non_exhaustive]
 #[derive(Clone, Debug)]
 pub enum RenderAttribute {
     /// Color attribute.
@@ -19,10 +18,7 @@ pub enum RenderAttribute {
 
 impl RenderAttribute {
     fn same_variant(&self, other: &Self) -> bool {
-        matches!(
-            (self, other),
-            (RenderAttribute::Color(_), RenderAttribute::Color(_))
-        )
+        std::mem::discriminant(self) == std::mem::discriminant(other)
     }
 }
 
@@ -48,34 +44,5 @@ impl RenderAttributes {
                 RenderAttribute::Color(color) => color,
             })
             .next()
-    }
-}
-
-impl From<&Attributes> for RenderAttributes {
-    fn from(attributes: &Attributes) -> Self {
-        use crate::model::Attribute;
-        let mut render_attributes = RenderAttributes::default();
-        attributes.iter().for_each(|attr| {
-            if let Attribute::Color(color) = attr {
-                render_attributes.insert(RenderAttribute::Color(*color))
-            }
-        });
-
-        render_attributes
-    }
-}
-
-impl From<&Model> for RenderAttributes {
-    fn from(model: &Model) -> Self {
-        let model_ = model.borrow();
-        let mut render_attributes: RenderAttributes = model_.attributes().into();
-
-        if render_attributes.is_empty() {
-            if let Some(child) = model_.children.single_model() {
-                render_attributes = child.borrow().attributes().into();
-            }
-        }
-
-        render_attributes
     }
 }

@@ -5,10 +5,13 @@
 
 use std::sync::mpsc;
 
-use microcad_core::{RenderResolution, hash::ComputedHash};
-use microcad_lang_base::RcMut;
+use microcad_core::{Geometry2D, Geometry3D, RenderResolution, WithBounds2D, WithBounds3D};
 
-use crate::{model::Model, render::*};
+use microcad_hash::ToHash;
+use microcad_lang_base::RcMut;
+use microcad_lang_types::ModelRef;
+
+use crate::{Geometry2DOutput, Geometry3DOutput, GeometryOutput, RenderCache, RenderResult};
 
 /// Our progress sender.
 pub type ProgressTx = mpsc::Sender<f32>;
@@ -17,9 +20,9 @@ pub type ProgressTx = mpsc::Sender<f32>;
 ///
 /// Keeps a stack of model nodes and the render cache.
 #[derive(Default)]
-pub struct RenderContext {
+pub struct RenderContext<'tree> {
     /// Model stack.
-    pub model_stack: Vec<Model>,
+    pub model_stack: Vec<ModelRef<'tree>>,
 
     /// Optional render cache.
     pub cache: Option<RcMut<RenderCache>>,
@@ -34,10 +37,10 @@ pub struct RenderContext {
     pub progress_tx: Option<ProgressTx>,
 }
 
-impl RenderContext {
+impl<'tree> RenderContext<'tree> {
     /// Initialize context with current model and prerender model.
     pub fn new(
-        model: &Model,
+        model: &ModelRef<'tree>,
         resolution: RenderResolution,
         cache: Option<RcMut<RenderCache>>,
         progress_tx: Option<ProgressTx>,
@@ -45,19 +48,23 @@ impl RenderContext {
         Ok(Self {
             model_stack: vec![model.clone()],
             cache,
-            models_to_render: model.prerender(resolution)?,
             models_rendered: 0,
             progress_tx,
+            models_to_render: todo!(), // model.prerender(resolution)?,
         })
     }
 
     /// The current model (panics if it is none).
-    pub fn model(&self) -> Model {
+    pub fn model(&self) -> ModelRef<'tree> {
         self.model_stack.last().expect("A model").clone()
     }
 
     /// Run the closure `f` within the given `model`.
-    pub fn with_model<T>(&mut self, model: Model, f: impl FnOnce(&mut RenderContext) -> T) -> T {
+    pub fn with_model<T>(
+        &mut self,
+        model: ModelRef<'tree>,
+        f: impl FnOnce(&mut RenderContext) -> T,
+    ) -> T {
         self.model_stack.push(model);
         let result = f(self);
         self.model_stack.pop();
@@ -89,10 +96,10 @@ impl RenderContext {
     /// Update a 2D geometry if it is not in cache.
     pub fn update_2d<T: Into<WithBounds2D<Geometry2D>>>(
         &mut self,
-        f: impl FnOnce(&mut RenderContext, Model) -> RenderResult<T>,
+        f: impl FnOnce(&mut RenderContext, ModelRef<'tree>) -> RenderResult<T>,
     ) -> RenderResult<Geometry2DOutput> {
         let model = self.model();
-        let hash = model.computed_hash();
+        let hash = model.to_hash();
 
         match self.cache.clone() {
             Some(cache) => {
@@ -104,23 +111,23 @@ impl RenderContext {
                 }
                 {
                     let (geo, cost) = self.call_with_cost(model, f)?;
-                    let geo: Geometry2DOutput = Rc::new(geo.into());
+                    let geo: Geometry2DOutput = std::rc::Rc::new(geo.into());
                     let mut cache = cache.borrow_mut();
                     cache.insert_with_cost(hash, geo.clone(), cost);
                     Ok(geo)
                 }
             }
-            None => Ok(Rc::new(f(self, model)?.into())),
+            None => Ok(std::rc::Rc::new(f(self, model)?.into())),
         }
     }
 
     /// Update a 3D geometry if it is not in cache.
     pub fn update_3d<T: Into<WithBounds3D<Geometry3D>>>(
         &mut self,
-        f: impl FnOnce(&mut RenderContext, Model) -> RenderResult<T>,
+        f: impl FnOnce(&mut RenderContext, ModelRef<'tree>) -> RenderResult<T>,
     ) -> RenderResult<Geometry3DOutput> {
         let model = self.model();
-        let hash = model.computed_hash();
+        let hash = model.to_hash();
         match self.cache.clone() {
             Some(cache) => {
                 {
@@ -131,26 +138,27 @@ impl RenderContext {
                 }
                 {
                     let (geo, cost) = self.call_with_cost(model, f)?;
-                    let geo: Geometry3DOutput = Rc::new(geo.into());
+                    let geo: Geometry3DOutput = std::rc::Rc::new(geo.into());
                     let mut cache = cache.borrow_mut();
                     cache.insert_with_cost(hash, geo.clone(), cost);
                     Ok(geo)
                 }
             }
-            None => Ok(Rc::new(f(self, model)?.into())),
+            None => Ok(std::rc::Rc::new(f(self, model)?.into())),
         }
     }
 
     /// Return current render resolution.
     pub fn current_resolution(&self) -> RenderResolution {
-        self.model().borrow().resolution()
+        todo!()
+        //        self.model().resolution()
     }
 
     // Return the generated item and the number of milliseconds.
     fn call_with_cost<T>(
         &mut self,
-        model: Model,
-        f: impl FnOnce(&mut RenderContext, Model) -> RenderResult<T>,
+        model: ModelRef<'tree>,
+        f: impl FnOnce(&mut RenderContext, ModelRef<'tree>) -> RenderResult<T>,
     ) -> RenderResult<(T, f64)> {
         use std::time::Instant;
         let start = Instant::now();

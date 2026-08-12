@@ -8,23 +8,14 @@ mod cache;
 mod context;
 mod output;
 
-use std::rc::Rc;
-
 pub use attribute::*;
 pub use cache::*;
 pub use context::*;
-use microcad_lang_base::FormatTree;
+use microcad_lang_types::model::ModelOutputType;
 pub use output::*;
 
-use cgmath::SquareMatrix;
-use microcad_core::*;
 use miette::Diagnostic;
 use thiserror::Error;
-
-use crate::{
-    builtin::{BuiltinWorkbenchKind, BuiltinWorkpiece, BuiltinWorkpieceOutput},
-    model::*,
-};
 
 pub use microcad_core::RenderResolution;
 
@@ -33,7 +24,7 @@ pub use microcad_core::RenderResolution;
 pub enum RenderError {
     /// Invalid output type.
     #[error("Invalid output type: {0}")]
-    InvalidOutputType(OutputType),
+    InvalidOutputType(ModelOutputType),
 
     /// Nothing to render.
     #[error("Nothing to render")]
@@ -49,6 +40,7 @@ pub trait RenderWithContext<T> {
     fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<T>;
 }
 
+/*
 impl Element {
     /// Fetch the local matrix
     pub fn get_affine_transform(&self) -> RenderResult<Option<AffineTransform>> {
@@ -307,7 +299,8 @@ impl RenderWithContext<Geometry3DOutput> for Models {
 
 impl RenderWithContext<Geometry2DOutput> for BuiltinWorkpiece {
     fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Geometry2DOutput> {
-        match self.call()? {
+        todo!()
+        /*match self.call()? {
             BuiltinWorkpieceOutput::Primitive2D(primitive) => {
                 primitive.render_with_context(context)
             }
@@ -319,13 +312,14 @@ impl RenderWithContext<Geometry2DOutput> for BuiltinWorkpiece {
             }
             BuiltinWorkpieceOutput::Operation(operation) => operation.process_2d(context),
             _ => unreachable!(),
-        }
+        }*/
     }
 }
 
 impl RenderWithContext<Geometry3DOutput> for BuiltinWorkpiece {
     fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Geometry3DOutput> {
-        match self.call()? {
+        todo!()
+        /*match self.call()? {
             BuiltinWorkpieceOutput::Primitive3D(primitive) => {
                 primitive.render_with_context(context)
             }
@@ -337,6 +331,7 @@ impl RenderWithContext<Geometry3DOutput> for BuiltinWorkpiece {
             }
             BuiltinWorkpieceOutput::Operation(operation) => operation.process_3d(context),
             _ => unreachable!(),
-        }
+        }*/
     }
 }
+*/

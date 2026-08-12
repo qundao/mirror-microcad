@@ -3,8 +3,8 @@
 
 //! Render cache.
 
-use crate::render::GeometryOutput;
-use microcad_core::hash::{HashId, HashMap};
+use crate::GeometryOutput;
+use microcad_hash::{HashId, HashMap};
 
 /// An item in the [`RenderCache`].
 pub struct RenderCacheItem<T> {
@@ -83,7 +83,7 @@ impl<T> RenderCache<T> {
             let cost = item.cost(self.current_time_stamp);
             let keep = cost > self.max_cost;
             log::trace!(
-                "Item {hash:X} cost = {cost}: {keep}",
+                "Item {hash} cost = {cost}: {keep}",
                 keep = if keep { "🔄" } else { "🗑" }
             );
             keep
@@ -112,7 +112,7 @@ impl<T> RenderCache<T> {
                 self.hits += 1;
                 item.last_access = self.current_time_stamp;
                 log::trace!(
-                    "Cache hit: {hash:X}. Cost: {}",
+                    "Cache hit: {hash}. Cost: {}",
                     item.cost(self.current_time_stamp)
                 );
                 Some(&item.content)
