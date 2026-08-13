@@ -17,46 +17,29 @@ impl Parse for MuInput {
 
 pub(crate) fn __mu_impl(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as MuInput);
-    let mut path = input.path;
+    let path = &input.path;
 
-    // Extract the last path segment (e.g., `greater_than` from `core::greater_than`)
-    let last_segment = match path.segments.pop() {
-        Some(pair) => pair.into_value(),
-        None => {
-            return syn::Error::new(path.span(), "Expected a valid path segment")
-                .to_compile_error()
-                .into();
-        }
-    };
+    if path.segments.len() != 2 {
+        return syn::Error::new_spanned(
+            path,
+            "Please provide a path with exactly two segments (e.g. `core::add`).",
+        )
+        .to_compile_error()
+        .into();
+    }
 
-    let fn_ident = last_segment.ident;
-
-    // Convert to SCREAMING_SNAKE_CASE using case conversion library
-    let screaming_name = fn_ident.to_string().to_uppercase();
-    let screaming_ident = Ident::new(&screaming_name, fn_ident.span());
-
-    // Reconstruct module path leading to the static item
-    let module_path = &path;
-
-    // Full path to static constant: microcad_builtin::mu::core::GREATER_THAN
-    let static_const_path = quote! {
-        microcad_builtin::mu:: #module_path #screaming_ident
-    };
-
-    // Full path to target function for static checking: core::greater_than
-    let fn_path = if module_path.segments.is_empty() {
-        quote! { #fn_ident }
-    } else {
-        quote! { #module_path #fn_ident }
-    };
+    let __mu = quote! { ::microcad_builtin::mu }; // `__mu`
+    let module = &path.segments[0].ident; // `core`
+    let fn_ident = &path.segments[1].ident; // `add`
+    let static_ident = Ident::new(&fn_ident.to_string().to_uppercase(), fn_ident.span()); // `ADD`
 
     quote! {
         {
-            // Verifies function exists at compile time
-            let _check_fn_exists = microcad_builtin::mu:: #fn_path;
+            // 1. Compile-time existence check for function item
+            let _check_fn_exists = #__mu::#module::#fn_ident;
 
-            // Resolves static item ID
-            #static_const_path.id().into()
+            // 2. Resolve static BuiltinId item
+            #__mu::#module::#static_ident.id().into()
         }
     }
     .into()

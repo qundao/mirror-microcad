@@ -45,9 +45,8 @@ impl Parse for TestBuiltinFnAttr {
             }
         }
 
-        // Parse `=> Ok(false)`
-        input.parse::<Token![=>]>()?;
-        let expected: Expr = input.parse()?;
+        // Parse `== expected`
+        let (_, expected) = (input.parse::<Token![==]>()?, input.parse()?);
 
         Ok(TestBuiltinFnAttr {
             func_path,
