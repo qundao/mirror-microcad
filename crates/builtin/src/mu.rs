@@ -4,17 +4,18 @@
 //! µcad built-in library definitions.
 
 use microcad_builtin_proc_macros::{builtin_constant, builtin_fn, builtin_mod};
-use microcad_lang_types::{Arguments, BinaryOperator, Integer, Value};
+use microcad_lang_types::{
+    Arguments, Array, BinaryOperator, Identifier, Integer, Ty, TypeError, Value,
+};
 
 use crate::{Builtin, BuiltinError, BuiltinEvalContext, builtin};
 
 use serde::{Deserialize, Serialize};
 
+/// The built-in core functions.
 #[builtin_mod]
 pub mod core {
     use super::*;
-    use microcad_lang_base::Identifier;
-    use microcad_lang_types::{Array, Ty, TypeError};
 
     /// Calculate the sum of two values
     #[builtin_fn(core::add(lhs: Any, rhs: Any) -> Any)]
