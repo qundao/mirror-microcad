@@ -6,15 +6,16 @@
 mod md;
 mod mdbook;
 
-use std::error::Error;
-
-/// Documentation generator for a symbol.
-pub trait DocGen {
-    fn doc_gen(&self, symbol: &microcad_lang::symbol::Symbol) -> Result<(), Box<dyn Error>>;
-}
-
 /// Single markdown generator.
 pub use md::Md;
 
 /// mdbook Generator.
 pub use mdbook::MdBook;
+
+use microcad_package::SymbolNodeRef;
+use std::error::Error;
+
+/// Documentation generator for a symbol.
+pub trait DocGen<'a> {
+    fn doc_gen(&self, symbol: SymbolNodeRef<'a>) -> Result<(), Box<dyn Error>>;
+}

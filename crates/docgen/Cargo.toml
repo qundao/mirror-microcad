@@ -23,4 +23,4 @@ derive_more = { version = "2", features = ["deref", "deref_mut", "from"] }
 
 microcad-builtin = { workspace = true }
 microcad-lang-markdown = { workspace = true }
-microcad-lang-resolve = { workspace = true }
+microcad-package = { workspace = true }

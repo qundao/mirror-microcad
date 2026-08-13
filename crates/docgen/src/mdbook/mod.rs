@@ -5,8 +5,7 @@
 
 use std::{error::Error, io::Write};
 
-use microcad_builtin::Symbol;
-use microcad_lang::{builtin::Builtin, symbol::SymbolDef};
+use microcad_package::{SymbolDef, SymbolNodeRef, symbol::SymbolNodeExt};
 
 use crate::{DocGen, md::ToMd};
 
@@ -34,7 +33,7 @@ impl MdBook {
             r#"# Copyright © 2026 The µcad authors <info@ucad.xyz>
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# NOTE: Auto-generated code. 
+# NOTE: Auto-generated code.
 # This markdown book has been generated from µcad source via `microcad-docgen`.
 # Changes in the book might be overwritten.
 {str}
@@ -52,27 +51,27 @@ impl MdBook {
     /// Return the path for a symbol.
     ///
     /// For example `std::geo2d::Circle` returns `geo2d/Circle.md`.
-    fn symbol_path(symbol: &Symbol) -> std::path::PathBuf {
+    fn symbol_path<'a>(symbol: SymbolNodeRef<'a>) -> std::path::PathBuf {
         let path: std::path::PathBuf = symbol
-            .full_name()
+            .abs_path()
             .iter()
             .skip(1)
             .map(|id| id.to_string())
             .collect();
-        symbol.with_def(|def| match def {
-            SymbolDef::SourceFile(..) | SymbolDef::Module(..) => path.join("README.md"),
+        match symbol.def {
+            SymbolDef::Source(..) | SymbolDef::InlineModule(..) => path.join("README.md"),
             _ => {
                 let mut path = path.clone();
                 path.set_extension("md");
                 path
             }
-        })
+        }
     }
 
-    fn _generate_summary(
+    fn _generate_summary<'a>(
         &self,
         writer: &mut impl std::fmt::Write,
-        symbol: &Symbol,
+        symbol: SymbolNodeRef<'a>,
         depth: usize,
     ) -> std::fmt::Result {
         fn entry(
@@ -93,7 +92,7 @@ impl MdBook {
         fn recurse<'a>(
             self_: &MdBook,
             writer: &mut impl std::fmt::Write,
-            symbols: impl IntoIterator<Item = &'a Symbol>,
+            symbols: impl IntoIterator<Item = SymbolNodeRef<'a>>,
             depth: usize,
         ) -> std::fmt::Result {
             symbols
@@ -101,74 +100,77 @@ impl MdBook {
                 .try_for_each(|symbol| self_._generate_summary(writer, symbol, depth))
         }
 
-        let path = Self::symbol_path(symbol);
+        let path = Self::symbol_path(symbol.clone());
 
-        entry(writer, symbol.id(), path, depth)?;
-        let depth = depth + 1;
+        if let Some(id) = symbol.id() {
+            entry(writer, id, path, depth)?;
+            let depth = depth + 1;
 
-        let children: Vec<_> = symbol.iter().filter(|symbol| symbol.is_public()).collect();
+            let children: Vec<_> = symbol
+                .children()
+                .filter(|symbol| symbol.is_public())
+                .collect();
 
-        let modules: Vec<_> = children
-            .iter()
-            .filter(|symbol| {
-                symbol.with_def(|def| {
-                    matches!(def, SymbolDef::SourceFile(..) | SymbolDef::Module(..))
-                })
-            })
-            .collect();
-
-        if !modules.is_empty() {
-            recurse(self, writer, modules, depth)?;
-        }
-
-        // All workbenches (including built-ins) are in separate file.
-        let workbenches: Vec<_> = children
-            .iter()
-            .filter(|symbol| {
-                symbol.with_def(|def| {
+            let modules: Vec<_> = children
+                .iter()
+                .filter(|symbol| {
                     matches!(
-                        def,
-                        SymbolDef::Workbench(_) | SymbolDef::Builtin(Builtin::Workbench(_))
+                        symbol.def(),
+                        SymbolDef::Source(..) | SymbolDef::InlineModule(..)
                     )
                 })
-            })
-            .collect();
+                .cloned()
+                .collect();
 
-        if !workbenches.is_empty() {
-            recurse(self, writer, workbenches, depth)?;
+            if !modules.is_empty() {
+                recurse(self, writer, modules, depth)?;
+            }
+
+            // All workbenches including are in separate file.
+            let workbenches: Vec<_> = children
+                .iter()
+                .filter(|symbol| matches!(symbol.def(), SymbolDef::Workbench(_)))
+                .cloned()
+                .collect();
+
+            if !workbenches.is_empty() {
+                recurse(self, writer, workbenches, depth)?;
+            }
         }
 
         Ok(())
     }
 
-    fn generate_summary(
+    fn generate_summary<'a>(
         &self,
         writer: &mut impl std::fmt::Write,
-        symbol: &Symbol,
+        symbol: SymbolNodeRef<'a>,
     ) -> std::fmt::Result {
         writeln!(writer, "# Summary")?;
         writeln!(writer)?;
         self._generate_summary(writer, symbol, 0)
     }
 
-    fn write_symbol(&self, symbol: &Symbol) -> Result<(), Box<dyn Error>> {
+    fn write_symbol<'a>(&self, symbol: SymbolNodeRef<'a>) -> Result<(), Box<dyn Error>> {
         Ok(symbol
-            .riter()
+            .descendants()
             .try_for_each(|symbol| {
-                let path = &self.path.join("src").join(Self::symbol_path(&symbol));
+                let path = &self
+                    .path
+                    .join("src")
+                    .join(Self::symbol_path(symbol.clone()));
                 std::fs::create_dir_all(path.parent().expect("A parent"))?;
-                symbol.with_def(|def| match def {
-                    SymbolDef::SourceFile(_)
-                    | SymbolDef::Module(_)
-                    | SymbolDef::Workbench(_)
-                    | SymbolDef::Builtin(Builtin::Workbench(_)) => symbol.to_md().save(path),
+                match symbol.def() {
+                    SymbolDef::Source(_) | SymbolDef::InlineModule(_) | SymbolDef::Workbench(_) => {
+                        symbol.to_md().save(path)
+                    }
                     _ => Ok(()),
-                })
+                }
             })
             .map_err(Box::new)?)
     }
 
-    fn write_summary(&self, symbol: &Symbol) -> std::io::Result<()> {
+    fn write_summary<'a>(&self, symbol: SymbolNodeRef<'a>) -> std::io::Result<()> {
         // 1. Create the SUMMARY.md file
         let mut file = std::fs::File::create(self.path.join("src").join("SUMMARY.md"))?;
 
@@ -184,12 +186,12 @@ impl MdBook {
     }
 }
 
-impl DocGen for MdBook {
-    fn doc_gen(&self, symbol: &Symbol) -> Result<(), Box<dyn Error>> {
+impl<'a> DocGen<'a> for MdBook {
+    fn doc_gen(&self, symbol: SymbolNodeRef<'a>) -> Result<(), Box<dyn Error>> {
         std::fs::create_dir_all(self.path.join("src"))?;
 
         self.write_book_toml()?;
-        self.write_summary(symbol)?;
+        self.write_summary(symbol.clone())?;
         self.write_symbol(symbol)
     }
 }

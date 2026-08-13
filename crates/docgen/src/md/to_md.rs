@@ -3,38 +3,11 @@
 
 //! Microcad micro markdown parser and writer
 
-use microcad_lang::{
-    builtin::{Builtin, BuiltinWorkbenchKind},
-    doc::Doc,
-    lower::{
-        Identifiable, Initialized,
-        ir::{
-            FunctionDefinition, InitDefinition, ModuleDefinition, ParameterList, Source,
-            Visibility, WorkbenchDefinition,
-        },
-    },
-    symbol::{Symbol, SymbolDef},
-};
 use microcad_lang_markdown::{Markdown, Paragraph, Section};
-
-/// Add an extra `#` to each heading line.
-fn indent_header_lines(lines: Vec<String>) -> Vec<String> {
-    lines
-        .into_iter()
-        .map(|s| {
-            if s.starts_with("#") {
-                format!("#{s}")
-            } else {
-                s
-            }
-        })
-        .collect()
-}
-
-/// Fetch documentation as string with indented headers. (Markdown hack)
-fn fetch_doc(doc: &impl Doc) -> String {
-    indent_header_lines(doc.doc().fetch_lines()).join("\n")
-}
+use microcad_package::{
+    SymbolDef, SymbolNodeRef,
+    symbol::{self, SymbolNodeExt},
+};
 
 /// Helper function to parse markdown from a string, but any occurring parse error will lead to a panic.
 ///
@@ -44,36 +17,12 @@ fn parse(input: String) -> Markdown {
         .expect("Internal Logic Error: Expected valid generated markdown.")
 }
 
-/// Trait to fetch markdown from a syntax element.
+/// Trait to fetch markdown from a symbol definition.
 pub(crate) trait ToMd {
     fn to_md(&self) -> Markdown;
 }
 
-impl ToMd for InitDefinition {
-    fn to_md(&self) -> Markdown {
-        parse(format!("# {}\n{}", self.signature(), fetch_doc(self)))
-    }
-}
-
-impl ToMd for Source {
-    fn to_md(&self) -> Markdown {
-        parse(format!("# {}\n{}", self.id(), fetch_doc(self)))
-    }
-}
-
-impl ToMd for FunctionDefinition {
-    fn to_md(&self) -> Markdown {
-        parse(format!("# {}\n{}", self.id(), fetch_doc(self)))
-    }
-}
-
-impl ToMd for ModuleDefinition {
-    fn to_md(&self) -> Markdown {
-        parse(format!("# {}\n{}", self.id(), fetch_doc(self)))
-    }
-}
-
-impl ToMd for ParameterList {
+impl ToMd for symbol::ParameterList {
     fn to_md(&self) -> Markdown {
         if self.is_empty() {
             Markdown::default()
@@ -81,7 +30,14 @@ impl ToMd for ParameterList {
             parse(format!(
                 "# Parameters\n{}",
                 self.iter()
-                    .map(|param| format!("- {}", param))
+                    .map(|param| format!(
+                        "## {}\n{}",
+                        param.id,
+                        match &param.doc {
+                            Some(doc) => doc,
+                            None => "",
+                        }
+                    ))
                     .collect::<Vec<String>>()
                     .join("\n")
             ))
@@ -89,62 +45,34 @@ impl ToMd for ParameterList {
     }
 }
 
-impl ToMd for WorkbenchDefinition {
-    fn to_md(&self) -> Markdown {
-        let mut md = parse(format!("# {}\n{}", self.id(), fetch_doc(self)));
-        md.nest(self.parameters.to_md(), 1);
-        self.inits().for_each(|init| {
-            md.nest(init.to_md(), 1);
-        });
-
-        md
-    }
-}
-
-impl ToMd for microcad_lang::builtin::Builtin {
-    fn to_md(&self) -> Markdown {
-        parse(format!("# {}\n{}", self.id(), fetch_doc(self)))
-    }
-}
-
-impl ToMd for SymbolDef {
-    fn to_md(&self) -> Markdown {
-        match &self {
-            SymbolDef::SourceFile(source_file) => source_file.to_md(),
-            SymbolDef::Module(module_definition) => module_definition.to_md(),
-            SymbolDef::Workbench(workbench_definition) => workbench_definition.to_md(),
-            SymbolDef::Function(function_definition) => function_definition.to_md(),
-            SymbolDef::Builtin(builtin) => builtin.to_md(),
-            _ => Markdown::default(),
-        }
-    }
-}
-
-impl ToMd for Symbol {
+impl<'a> ToMd for SymbolNodeRef<'a> {
     fn to_md(&self) -> Markdown {
         // Print one line description of a workbench
-        fn symbol_one_line_item(symbol: &Symbol) -> String {
-            let id = symbol.id();
-            let link = format!(
-                "- [`{id}`]({filename})",
-                filename = symbol.with_def(|def| match def {
-                    SymbolDef::Module(_) | SymbolDef::SourceFile(_) => format!("./{id}"),
-                    _ => format!("./{id}.md"),
-                })
-            );
-            match symbol.doc().fetch_lines().first() {
-                Some(line) => format!("{link}: {line}"),
-                None => link,
+        fn symbol_one_line_item<'a>(symbol: SymbolNodeRef<'a>) -> Option<String> {
+            if let Some(id) = symbol.id() {
+                let link = format!(
+                    "- [`{id}`]({filename})",
+                    filename = match symbol.def {
+                        SymbolDef::InlineModule(_) | SymbolDef::Source(_) => format!("./{id}"),
+                        _ => format!("./{id}.md"),
+                    }
+                );
+                symbol
+                    .doc()
+                    .and_then(|doc| doc.lines().next())
+                    .map(|line| format!("{link}: {line}"))
+            } else {
+                None
             }
         }
 
-        use microcad_lang::lower::ir::WorkbenchKind;
-        fn symbol_list<P>(symbol: &Symbol, md: &mut Markdown, heading: &str, p: P)
+        use microcad_package::symbol::WorkbenchKind;
+        fn symbol_list<'a, P>(symbol: SymbolNodeRef<'a>, md: &mut Markdown, heading: &str, p: P)
         where
-            P: FnMut(&Symbol) -> bool,
+            P: FnMut(&SymbolNodeRef<'a>) -> bool,
         {
             let symbols: Vec<_> = symbol
-                .iter()
+                .children()
                 .filter(|symbol| symbol.is_public())
                 .filter(p)
                 .collect();
@@ -154,8 +82,8 @@ impl ToMd for Symbol {
                     level: 2,
                     content: vec![Paragraph::Text(
                         symbols
-                            .iter()
-                            .map(symbol_one_line_item)
+                            .into_iter()
+                            .filter_map(symbol_one_line_item)
                             .collect::<Vec<_>>()
                             .join("\n"),
                     )],
@@ -163,99 +91,61 @@ impl ToMd for Symbol {
             }
         }
 
-        let mut md = self.with_def(|def| def.to_md());
+        let mut md = Markdown::default();
+
+        match (self.id(), self.doc()) {
+            (Some(id), Some(doc)) => {
+                md = parse(format!("# {id}\n{doc}"));
+            }
+            _ => {}
+        };
 
         {
             // Generate list of sub-modules
-            symbol_list(self, &mut md, "Sub-modules", |symbol| {
-                symbol
-                    .with_def(|def| matches!(def, SymbolDef::Module(_) | SymbolDef::SourceFile(_)))
+            symbol_list(*self, &mut md, "Sub-modules", |symbol| {
+                matches!(
+                    symbol.def(),
+                    SymbolDef::InlineModule(_) | SymbolDef::Source(_)
+                )
             });
 
             // Generate list of sketches
-            symbol_list(self, &mut md, "Sketches", |symbol| {
-                symbol.with_def(|def| match def {
-                    SymbolDef::Workbench(workbench_definition) => {
+            symbol_list(*self, &mut md, "Sketches", |symbol| {
+                matches!(
+                    symbol.def(),
+                    SymbolDef::Workbench(workbench_definition) if
                         matches!(&workbench_definition.kind.value, WorkbenchKind::Sketch)
-                    }
-                    _ => false,
-                })
+                )
             });
 
             // Parts
-            symbol_list(self, &mut md, "Parts", |symbol| {
-                symbol.with_def(|def| match def {
-                    SymbolDef::Workbench(workbench_definition) => {
+            symbol_list(*self, &mut md, "Parts", |symbol| {
+                matches!(
+                    symbol.def(),
+                    SymbolDef::Workbench(workbench_definition) if
                         matches!(&workbench_definition.kind.value, WorkbenchKind::Part)
-                    }
-                    _ => false,
-                })
+                )
             });
 
             // Operations
-            symbol_list(self, &mut md, "Operations", |symbol| {
-                symbol.with_def(|def| match def {
-                    SymbolDef::Workbench(workbench_definition) => {
-                        matches!(&workbench_definition.kind.value, WorkbenchKind::Operation)
-                    }
-                    _ => false,
-                })
+            symbol_list(*self, &mut md, "Operations", |symbol| {
+                matches!(
+                    symbol.def(),
+                    SymbolDef::Workbench(workbench_definition) if
+                        matches!(&workbench_definition.kind.value, WorkbenchKind::Op)
+                )
             });
 
-            // Built-in 2D primitives
-            symbol_list(self, &mut md, "Built-in 2D primitives", |symbol| {
-                symbol.with_def(|def| -> bool {
-                    match def {
-                        SymbolDef::Builtin(Builtin::Workbench(wb)) => {
-                            matches!(&wb.kind, BuiltinWorkbenchKind::Primitive2D)
-                        }
-                        _ => false,
-                    }
-                })
-            });
-
-            // Built-in 3D primitives
-            symbol_list(self, &mut md, "Built-in 3D primitives", |symbol| {
-                symbol.with_def(|def| -> bool {
-                    match def {
-                        SymbolDef::Builtin(Builtin::Workbench(wb)) => {
-                            matches!(&wb.kind, BuiltinWorkbenchKind::Primitive3D)
-                        }
-                        _ => false,
-                    }
-                })
-            });
-
-            // Built-in operations
-            symbol_list(self, &mut md, "Built-in operations", |symbol| {
-                symbol.with_def(|def| -> bool {
-                    match def {
-                        SymbolDef::Builtin(Builtin::Workbench(wb)) => {
-                            matches!(&wb.kind, BuiltinWorkbenchKind::Operation)
-                        }
-                        _ => false,
-                    }
-                })
-            });
-
-            // Built-in transformations
-            symbol_list(self, &mut md, "Built-in transformations", |symbol| {
-                symbol.with_def(|def| -> bool {
-                    match def {
-                        SymbolDef::Builtin(Builtin::Workbench(wb)) => {
-                            matches!(&wb.kind, BuiltinWorkbenchKind::Transform)
-                        }
-                        _ => false,
-                    }
-                })
-            });
-
-            fn inline_symbol_md<P>(symbol: &Symbol, md: &mut Markdown, heading: &str, p: P)
-            where
-                P: FnMut(&Symbol) -> bool,
+            fn inline_symbol_md<'a, P>(
+                symbol: SymbolNodeRef<'a>,
+                md: &mut Markdown,
+                heading: &str,
+                p: P,
+            ) where
+                P: FnMut(&SymbolNodeRef<'a>) -> bool,
             {
                 let symbols: Vec<_> = symbol
-                    .iter()
+                    .children()
                     .filter(|symbol| symbol.is_public())
                     .filter(p)
                     .collect();
@@ -270,26 +160,19 @@ impl ToMd for Symbol {
             }
 
             // Functions
-            inline_symbol_md(self, &mut md, "Functions", |symbol| {
-                symbol.with_def(|def| matches!(def, SymbolDef::Function(_)))
-            });
-
-            // Built-in functions
-            inline_symbol_md(self, &mut md, "Built-in functions", |symbol| {
-                symbol.with_def(|def| matches!(def, SymbolDef::Builtin(Builtin::Function(_))))
+            inline_symbol_md(*self, &mut md, "Functions", |symbol| {
+                matches!(symbol.def(), SymbolDef::Function(_))
             });
 
             // Constants
             {
                 let constants: Vec<_> = self
-                    .iter()
-                    .filter_map(|symbol| {
-                        symbol.with_def(|def| match def {
-                            SymbolDef::Value(identifier, value) => {
-                                Some((identifier.clone(), value.clone()))
-                            }
-                            _ => None,
-                        })
+                    .children()
+                    .filter_map(|symbol| match (symbol.id(), symbol.def()) {
+                        (Some(id), SymbolDef::Constant(constant)) => {
+                            Some((id.clone(), constant.value.value.clone()))
+                        }
+                        _ => None,
                     })
                     .collect();
 
@@ -311,14 +194,12 @@ impl ToMd for Symbol {
             // Aliases
             {
                 let aliases: Vec<_> = self
-                    .iter()
-                    .filter_map(|symbol| {
-                        symbol.with_def(|def| match def {
-                            SymbolDef::Alias(Visibility::Public, identifier, name) => {
-                                Some((identifier.clone(), name.clone()))
-                            }
-                            _ => None,
-                        })
+                    .children()
+                    .filter_map(|symbol| match symbol.def() {
+                        SymbolDef::Alias(alias) if symbol.id().is_some() => {
+                            Some((symbol.id().cloned().unwrap(), alias.0.clone()))
+                        }
+                        _ => None,
                     })
                     .collect();
 
