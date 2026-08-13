@@ -188,11 +188,11 @@ impl ir::WorkbenchDefinition {
 */
 
 use microcad_lang_types::{ArgumentValueList, ModelTree};
-use microcad_package::rst;
+use microcad_package::symbol;
 
 use crate::{CallTrait, EvalContext, EvalResult};
 
-impl CallTrait<ModelTree> for rst::Workbench {
+impl CallTrait<ModelTree> for symbol::Workbench {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<ModelTree> {
         // Find correct inits
         todo!();

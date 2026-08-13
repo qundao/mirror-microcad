@@ -7,7 +7,7 @@ use microcad_builtin::__mu;
 use microcad_lang_base::{Identifier, SrcRef, SymbolId, ToCompactString};
 use microcad_lang_eval::{CallTrait, EvalContext, argument_value};
 use microcad_lang_types::{ArgumentValueList, Integer, Type, Value, function_type, tuple};
-use microcad_package::rst::{
+use microcad_package::symbol::{
     Function, FunctionExpression, FunctionStatement, Path,
     function::{Argument, ArgumentList, Call, If, Literal, ReturnStatement, Scope},
 };
@@ -29,7 +29,7 @@ fn scope<T>(a: impl Iterator<Item = T>) -> Scope
 where
     T: Into<FunctionStatement>,
 {
-    microcad_package::rst::function::Scope {
+    microcad_package::symbol::function::Scope {
         statements: statements(a),
         src_ref: SrcRef::none(),
     }

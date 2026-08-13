@@ -6,7 +6,7 @@
 use microcad_builtin::Builtin;
 use microcad_lang_base::{SrcRef, SrcReferrer, ToCompactString};
 use microcad_lang_types::{ArgumentValue, ArgumentValueList, Value, tuple};
-use microcad_package::rst;
+use microcad_package::symbol;
 
 use crate::{
     CallTrait, Eval, EvalContext, EvalError, EvalResult,
@@ -41,21 +41,21 @@ impl FlowSignal {
     }
 }
 
-impl Eval<ArgumentValue> for rst::function::Argument {
+impl Eval<ArgumentValue> for symbol::function::Argument {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<ArgumentValue> {
         Ok(match self {
-            rst::function::Argument::Unnamed(expr) => {
+            symbol::function::Argument::Unnamed(expr) => {
                 ArgumentValue::new(expr.eval(context)?.into_value(), None)
             }
-            rst::function::Argument::Named { name, expr, .. }
-            | rst::function::Argument::AutoNamed { name, expr } => {
+            symbol::function::Argument::Named { name, expr, .. }
+            | symbol::function::Argument::AutoNamed { name, expr } => {
                 ArgumentValue::new(expr.eval(context)?.into_value(), Some(name.clone()))
             }
         })
     }
 }
 
-impl Eval<ArgumentValueList> for rst::function::ArgumentList {
+impl Eval<ArgumentValueList> for symbol::function::ArgumentList {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<ArgumentValueList> {
         let map: Vec<ArgumentValue> = self
             .args
@@ -70,7 +70,7 @@ impl Eval<ArgumentValueList> for rst::function::ArgumentList {
     }
 }
 
-impl Eval<FlowSignal> for rst::function::Scope {
+impl Eval<FlowSignal> for symbol::function::Scope {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
         context.scope(FunctionScopeFrame::new(), |context| {
             self.statements.eval(context)
@@ -78,7 +78,7 @@ impl Eval<FlowSignal> for rst::function::Scope {
     }
 }
 
-impl Eval<FlowSignal> for rst::function::If {
+impl Eval<FlowSignal> for symbol::function::If {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
         // 1. Evaluate condition expression
         let cond_signal = self.cond.eval(context)?;
@@ -101,10 +101,10 @@ impl Eval<FlowSignal> for rst::function::If {
     }
 }
 
-impl Eval<FlowSignal> for rst::function::Call {
+impl Eval<FlowSignal> for symbol::function::Call {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
         match &self.path {
-            rst::Path::Resolved(rst::SymbolId::Builtin(builtin_id)) => {
+            symbol::Path::Resolved(symbol::SymbolId::Builtin(builtin_id)) => {
                 let args = self.args.eval(context)?;
 
                 match context.builtins.get(*builtin_id) {
@@ -128,10 +128,10 @@ impl Eval<FlowSignal> for rst::function::Call {
     }
 }
 
-impl Eval<FlowSignal> for rst::Path {
+impl Eval<FlowSignal> for symbol::Path {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
         match self {
-            rst::Path::Resolved(rst::SymbolId::Local(identifier)) => {
+            symbol::Path::Resolved(symbol::SymbolId::Local(identifier)) => {
                 use crate::context::StackRead;
                 match context.get_local(identifier) {
                     Some(local) => Ok(FlowSignal::Yield(local.clone())),
@@ -141,7 +141,7 @@ impl Eval<FlowSignal> for rst::Path {
                     }
                 }
             }
-            rst::Path::Resolved(rst::SymbolId::Builtin(builtin)) => {
+            symbol::Path::Resolved(symbol::SymbolId::Builtin(builtin)) => {
                 match context.builtins.get(*builtin) {
                     Some(Builtin::Constant(c)) => Ok(FlowSignal::Yield(c.value())),
                     _ => todo!("Error handling"),
@@ -152,9 +152,9 @@ impl Eval<FlowSignal> for rst::Path {
     }
 }
 
-impl Eval<FlowSignal> for rst::FunctionExpression {
+impl Eval<FlowSignal> for symbol::FunctionExpression {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
-        use rst::FunctionExpression as Expr;
+        use symbol::FunctionExpression as Expr;
         match self {
             Expr::Invalid => todo!("Error handling"),
             Expr::Literal(literal) => Ok(FlowSignal::Yield(literal.value().clone())),
@@ -167,9 +167,9 @@ impl Eval<FlowSignal> for rst::FunctionExpression {
     }
 }
 
-impl Eval<FlowSignal> for rst::FunctionStatement {
+impl Eval<FlowSignal> for symbol::FunctionStatement {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
-        use rst::FunctionStatement as Stmt;
+        use symbol::FunctionStatement as Stmt;
         match self {
             Stmt::Scope(scope) => scope.eval(context),
             Stmt::Call(call) => {
@@ -214,7 +214,7 @@ impl Eval<FlowSignal> for rst::FunctionStatement {
     }
 }
 
-impl Eval<FlowSignal> for Box<[rst::FunctionStatement]> {
+impl Eval<FlowSignal> for Box<[symbol::FunctionStatement]> {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
         for stmt in self {
             match stmt.eval(context) {
@@ -231,7 +231,7 @@ impl Eval<FlowSignal> for Box<[rst::FunctionStatement]> {
     }
 }
 
-impl CallTrait<Value> for rst::Function {
+impl CallTrait<Value> for symbol::Function {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Value> {
         match crate::find_match(args, &self.ty, &self.default_parameters) {
             Ok(args) => context.scope(FunctionFrame::new(args), |context| {

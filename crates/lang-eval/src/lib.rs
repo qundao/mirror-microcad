@@ -16,7 +16,7 @@ pub use eval_error::*;
 pub use context::EvalContext;
 
 use microcad_lang_types::ArgumentValueList;
-pub use microcad_package::{builtin, rst};
+pub use microcad_package::symbol;
 
 /// Evaluation trait.
 ///
@@ -37,14 +37,14 @@ pub trait CallTrait<T> {
 macro_rules! argument_value {
     ($id:ident: $ty:ident = $value:expr) => {
         microcad_lang_types::ArgumentValue::new(
-            $crate::builtin::BuiltinValueHelper::$ty($value).into(),
-            Some($crate::rst::Identifier::no_ref(stringify!($id))),
+            $value.into(),
+            Some(microcad_lang_types::Identifier::no_ref(stringify!($id))),
         )
     };
-    ($ty:ident = $value:expr) => {
+    ($id:ident = $value:expr) => {
         microcad_lang_types::ArgumentValue::new(
-            $crate::builtin::BuiltinValueHelper::$ty($value).into(),
-            Some($crate::rst::Identifier::no_ref(stringify!($id))),
+            $value.into(),
+            Some(microcad_lang_types::Identifier::no_ref(stringify!($id))),
         )
     };
     () => {};

@@ -4,9 +4,8 @@
 //! Evaluation error
 
 use microcad_builtin::BuiltinError;
-use microcad_lang_base::{Identifier, IdentifierList, SrcRef, element::WorkbenchKind};
+use microcad_lang_base::{Identifier, IdentifierList, Name, SrcRef, element::WorkbenchKind};
 use microcad_lang_types::{Integer, Type, ValueError, model::ModelOutputType, ty::TypeList};
-use microcad_package::tree::Name;
 use miette::Diagnostic;
 
 use thiserror::Error;
