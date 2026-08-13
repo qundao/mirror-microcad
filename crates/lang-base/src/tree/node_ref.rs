@@ -6,10 +6,19 @@
 pub use crate::tree::{Arena, NodeId};
 
 /// A convenience wrapper pairing a `NodeId` with a borrowed `Arena`.
-#[derive(Clone, Copy)]
 pub struct NodeRef<'a, T> {
     pub id: NodeId,
     pub arena: &'a Arena<T>,
+}
+
+// Manual Copy: T does NOT need to implement Copy!
+impl<'a, T> Copy for NodeRef<'a, T> {}
+
+// Manual Clone (required whenever implementing Copy)
+impl<'a, T> Clone for NodeRef<'a, T> {
+    fn clone(&self) -> Self {
+        *self
+    }
 }
 
 impl<'a, T> NodeRef<'a, T> {
