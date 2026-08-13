@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::symbol::SymbolDef;
+
 use super::{SymbolTree, iterators};
 
 pub use microcad_lang_base::{Identifier, Name};
@@ -24,96 +26,14 @@ pub struct SymbolIndex {
     pub items: Vec<SymbolHandle>,
 }
 
-impl SymbolIndex {
-    pub fn insert(&mut self, hash: SymbolHandle) {
-        self.items.push(hash);
-    }
-
-    pub fn get_by_index(&self, index: usize) -> Option<&SymbolHandle> {
-        self.items.get(index)
-    }
-
-    pub fn get_by_id<'tree, DEF: Serialize>(
-        &self,
-        tree: &'tree SymbolTree<DEF>,
-        id: Name,
-    ) -> Option<SymbolRef<'tree, DEF>> {
-        self.items
-            .iter()
-            .filter_map(|hash| tree.get(*hash))
-            .find(|symbol| match symbol.id() {
-                Some(symbol_id) => &symbol_id.id() == &id,
-                None => false,
-            })
-    }
-
-    pub fn refs<'tree, DATA: Serialize>(
-        &self,
-        tree: &'tree SymbolTree<DATA>,
-    ) -> impl Iterator<Item = SymbolRef<'tree, DATA>> {
-        self.items.iter().filter_map(|hash| tree.get(*hash))
-    }
-}
-
-impl FromIterator<SymbolHandle> for SymbolIndex {
-    fn from_iter<T: IntoIterator<Item = SymbolHandle>>(iter: T) -> Self {
-        Self {
-            items: iter.into_iter().collect(),
-        }
-    }
-}
-
-pub mod meta {
-    pub use microcad_lang_base::SrcRef;
-    pub type Visibility = microcad_lang_lower::ir::Visibility;
-}
-
-/// Symbol content
-#[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
-pub struct SymbolMetadata {
-    pub id: Option<Identifier>,
-
-    /// Visibility
-    pub visibility: meta::Visibility,
-
-    /// Source code reference of the symbol definition
-    pub src_ref: meta::SrcRef,
-
-    /// Source code reference of symbol's keyword
-    pub keyword_src_ref: meta::SrcRef,
-}
-
-#[derive(Debug, PartialEq, Hash, Serialize, Deserialize)]
-
-pub struct Symbol<DEF: Serialize> {
-    pub meta_data: SymbolMetadata,
-    pub def: DEF,
-    pub parent: Option<SymbolHandle>,
-    pub children: SymbolIndex,
-}
-
-impl<DEF: Serialize> Symbol<DEF> {
-    pub fn new(meta_data: impl Into<SymbolMetadata>, def: impl Into<DEF>) -> Self {
-        Self {
-            meta_data: meta_data.into(),
-            def: def.into(),
-            parent: None,
-            children: Default::default(),
-        }
-    }
-}
-
 #[derive(Debug)]
-pub struct SymbolRef<'tree, DEF: Serialize>
-where
-    DEF: 'tree,
-{
-    symbol: &'tree Symbol<DEF>,
-    tree: &'tree SymbolTree<DEF>,
+pub struct SymbolRef<'pkg> {
+    symbol: &'pkg Symbol,
+    tree: &'pkg SymbolTree,
     handle: SymbolHandle,
 }
 
-impl<'tree, DEF: Serialize> Clone for SymbolRef<'tree, DEF> {
+impl<'tree> Clone for SymbolRef<'tree> {
     fn clone(&self) -> Self {
         Self {
             symbol: self.symbol,
@@ -123,10 +43,10 @@ impl<'tree, DEF: Serialize> Clone for SymbolRef<'tree, DEF> {
     }
 }
 
-impl<'tree, DEF: Serialize> Copy for SymbolRef<'tree, DEF> {}
+impl<'pkg> Copy for SymbolRef<'pkg> {}
 
-impl<'tree, DEF: Serialize> std::ops::Deref for SymbolRef<'tree, DEF> {
-    type Target = Symbol<DEF>;
+impl<'pkg> std::ops::Deref for SymbolRef<'pkg> {
+    type Target = Symbol;
 
     fn deref(&self) -> &Self::Target {
         self.symbol

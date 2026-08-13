@@ -20,7 +20,7 @@ pub type Call = ir::Call<FunctionExpression>;
 pub type Argument = ir::Argument<FunctionExpression>;
 pub type ArgumentList = ir::ArgumentList<FunctionExpression>;
 
-#[derive(Debug, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Function {
     // pub attr: FunctionAttributes,
     pub ty: FunctionType,

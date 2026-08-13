@@ -9,15 +9,13 @@ use microcad_lang_proc_macros::SrcReferrer;
 use microcad_lang_types::{Ty, Type, Value};
 use serde::{Deserialize, Serialize};
 
-use crate::rst::DocBlock;
-
 /// Parameter value is the result of evaluating a parameter
 #[derive(Clone, Debug, Hash, PartialEq, SrcReferrer, Serialize, Deserialize)]
 pub struct Parameter {
     /// Parameter id
     pub id: Identifier,
     /// Documentation
-    pub doc: Option<DocBlock>,
+    pub doc: Option<String>,
     /// Parameter type
     pub ty: Option<Type>,
     /// Parameter default

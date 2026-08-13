@@ -11,3 +11,14 @@ pub use indextree::*;
 pub use node_ref::{NodeMut, NodeRef};
 
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
+
+pub struct Tree<T> {
+    root: NodeId,
+    arena: Arena<T>,
+}
+
+impl<T> Tree<T> {
+    pub fn root<'a>(&'a self) -> NodeRef<'a, T> {
+        NodeRef::new(self.root, &self.arena)
+    }
+}

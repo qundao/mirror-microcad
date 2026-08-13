@@ -6,6 +6,7 @@
 mod builtin;
 
 use derive_more::{Display, From};
+use indextree::NodeId;
 pub use microcad_hash::{HashId, hash_id};
 
 pub use builtin::{BuiltinId, BuiltinName};
@@ -23,8 +24,8 @@ pub enum SymbolId {
     /// A name of a local variable in the current scope.
     Local(Name),
     /// A definition within the current package/module (e.g. a workbench or function).
-    Item(HashId),
+    Item(NodeId),
     /// A symbol in an external package (e.g. `std`)
     #[display("{package_name}@{id}")]
-    External { package_name: Name, id: HashId },
+    External { package_name: Name, id: NodeId },
 }
