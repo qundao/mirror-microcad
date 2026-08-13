@@ -22,6 +22,10 @@ impl HashId {
         self.0 == 0
     }
 
+    pub fn raw(&self) -> u64 {
+        self.0
+    }
+
     // Simple FNV-1a hash for generating built-in IDs from &str.
     pub const fn compile_time_hash(s: &str) -> Self {
         let bytes = s.as_bytes();
