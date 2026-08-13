@@ -168,13 +168,9 @@ impl Lower<ast::Expression> for ir::ConstantExpression {
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
             ast::Expression::Bracketed(expr, _) => Self::lower(expr.as_ref(), context)?,
-            ast::Expression::Literal(ast::Literal {
-                literal: ast::LiteralKind::String(s),
-                ..
-            }) => Self::Literal(ir::Literal::from_value(s.content.clone())),
-            ast::Expression::Literal(expr) => Self::Literal(ir::Literal::lower(expr, context)?),
-            ast::Expression::String(s) => Self::Call(ir::Call::lower(s, context)?),
-            ast::Expression::Tuple(t) => Self::Call(ir::Call::lower(t, context)?),
+            ast::Expression::Literal(expr) => ir::Literal::lower(expr, context)?.into(),
+            ast::Expression::String(s) => ir::Call::lower(s, context)?.into(),
+            ast::Expression::Tuple(t) => ir::Call::lower(t, context)?.into(),
             ast::Expression::ArrayRange(a) => Self::lower(a, context)?,
             ast::Expression::ArrayList(a) => Self::lower(a, context)?,
             ast::Expression::SymbolPath(n) => Self::Path(ir::Path::lower(n, context)?),

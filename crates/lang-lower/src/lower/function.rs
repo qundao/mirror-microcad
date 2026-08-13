@@ -54,23 +54,49 @@ impl Lower<ast::Body> for ir::Scope {
     }
 }
 
+impl Lower<ast::FormatString> for ir::FunctionExpression {
+    fn lower(node: &ast::FormatString, context: &mut LowerContext) -> LowerResult<Self> {
+        // Lowering format string must only contain constant expression (without `{}` bodies).
+        // Hence, we need to `cast_into` the resulting `ir::ConstantExpression` into `ir::FunctionExpression`
+        Ok(ir::Call::lower(node, context)?.cast_into().into())
+    }
+}
+
+impl Lower<ast::Call> for ir::FunctionExpression {
+    fn lower(node: &ast::Call, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(ir::Call::lower(node, context)?.into())
+    }
+}
+
+impl Lower<ast::Literal> for ir::FunctionExpression {
+    fn lower(node: &ast::Literal, context: &mut LowerContext) -> LowerResult<Self> {
+        // Lower the literal expression `1m` -> `Length::mm(1000)` (includes unit conversion)
+        Ok(ir::Literal::lower(node, context)?.into())
+    }
+}
+
+impl Lower<ast::BinaryOperation> for ir::FunctionExpression {
+    fn lower(node: &ast::BinaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(ir::Call::lower(node, context)?.into())
+    }
+}
+
 impl Lower<ast::Expression> for ir::FunctionExpression {
     fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
-            ast::Expression::Call(expr) => Self::Call(ir::Call::lower(expr, context)?),
+            // Remove parenthesis ()
             ast::Expression::Bracketed(expr, _) => Self::lower(expr.as_ref(), context)?,
-            ast::Expression::Literal(ast::Literal {
-                literal: ast::LiteralKind::String(s),
-                ..
-            }) => Self::Literal(ir::Literal::from_value(s.content.clone())),
-            ast::Expression::Literal(expr) => Self::Literal(ir::Literal::lower(expr, context)?),
-            ast::Expression::String(s) => Self::Call(ir::Call::lower(s, context)?.cast_into()),
-            ast::Expression::Tuple(t) => Self::Call(ir::Call::lower(t, context)?),
+            // Lower call expression
+            ast::Expression::Call(expr) => Self::lower(expr, context)?,
+            ast::Expression::Literal(expr) => Self::lower(expr, context)?,
+            ast::Expression::BinaryOperation(binop) => Self::lower(binop, context)?,
+            ast::Expression::String(s) => Self::lower(s, context)?,
+            // `(1, 2)` -> `__mu::core::tuple(1, 2)`
+            ast::Expression::Tuple(t) => ir::Call::lower(t, context)?.into(),
             ast::Expression::ArrayRange(a) => Self::lower(a, context)?,
             ast::Expression::ArrayList(a) => Self::lower(a, context)?,
-            ast::Expression::SymbolPath(n) => Self::Path(ir::Path::lower(n, context)?),
-            ast::Expression::BinaryOperation(binop) => Self::Call(ir::Call::lower(binop, context)?),
-            ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call::lower(unop, context)?),
+            ast::Expression::SymbolPath(n) => ir::Path::lower(n, context)?.into(),
+            ast::Expression::UnaryOperation(unop) => ir::Call::lower(unop, context)?.into(),
             ast::Expression::Marker(_) => {
                 panic!("Marker statement not allowed")
             }
