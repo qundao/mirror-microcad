@@ -1,38 +1,23 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Display trait for tree-like output
+//! Display and Debug traits for tree-like output.
 
-use std::fmt;
-
-/// Trait for displaying a tree hierarchy.
-pub trait TreeDisplay {
-    /// Write item into `f` using the current `state` for padding and formatting.
-    fn tree_print(&self, f: &mut fmt::Formatter<'_>, state: TreeState) -> fmt::Result;
-}
+use crate::tree::NodeRef;
 
 /// Indentation size (number of spaces per depth level)
 const INDENT_SIZE: usize = 2;
 
-/// Formatting state passed down through tree nodes
-#[derive(Clone, Copy, Debug)]
+/// Formatting state passed down through tree nodes.
+#[derive(Clone, Copy, Debug, Default)]
 pub struct TreeState {
     /// Current tree depth (0 = root level).
     pub level: usize,
-    /// Whether to print in debug mode.
-    pub debug: bool,
 }
 
 impl TreeState {
-    pub fn new_display() -> Self {
-        Self {
-            level: 0,
-            debug: false,
-        }
-    }
-
-    pub fn new_debug(level: usize) -> Self {
-        Self { level, debug: true }
+    pub fn new() -> Self {
+        Self { level: 0 }
     }
 
     /// Total spaces required for current level padding.
@@ -44,22 +29,104 @@ impl TreeState {
     pub fn indented(&self) -> Self {
         Self {
             level: self.level + 1,
-            debug: self.debug,
         }
     }
 }
 
-/// Helper wrapper for formatting a `TreeDisplay` item via `Display` or `Debug`.
-pub struct FormatTree<'a, T: TreeDisplay>(pub &'a T);
+/// Trait for displaying a user-facing tree hierarchy.
+pub trait TreeDisplay {
+    fn tree_fmt(&self, f: &mut std::fmt::Formatter<'_>, state: TreeState) -> std::fmt::Result;
+}
 
-impl<T: TreeDisplay> fmt::Display for FormatTree<'_, T> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.0.tree_print(f, TreeState::new_display())
+/// Trait for displaying a developer-facing diagnostic tree hierarchy.
+pub trait TreeDebug {
+    fn tree_debug_fmt(&self, f: &mut std::fmt::Formatter<'_>, state: TreeState)
+    -> std::fmt::Result;
+}
+
+// =========================================================================
+// TreeDisplay Implementation
+// =========================================================================
+
+impl<'a, T> TreeDisplay for NodeRef<'a, T>
+where
+    T: std::fmt::Display,
+{
+    fn tree_fmt(&self, f: &mut std::fmt::Formatter<'_>, state: TreeState) -> std::fmt::Result {
+        writeln!(
+            f,
+            "{:indent$}{}",
+            "",
+            self.get(),
+            indent = state.indent_spaces()
+        )?;
+
+        self.children()
+            .try_for_each(|child| child.tree_fmt(f, state.indented()))
     }
 }
 
-impl<T: TreeDisplay> fmt::Debug for FormatTree<'_, T> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.0.tree_print(f, TreeState::new_debug(0))
+impl<'a, T> std::fmt::Display for NodeRef<'a, T>
+where
+    T: std::fmt::Display,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.tree_fmt(f, TreeState::new())
+    }
+}
+
+// =========================================================================
+// TreeDebug Implementation
+// =========================================================================
+
+impl<'a, T> TreeDebug for NodeRef<'a, T>
+where
+    T: std::fmt::Debug,
+{
+    fn tree_debug_fmt(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+        state: TreeState,
+    ) -> std::fmt::Result {
+        // Includes NodeId for deep CAD debugging
+        writeln!(
+            f,
+            "{:indent$}[id: {:?}]{:?}",
+            "",
+            self.id,
+            self.get(),
+            indent = state.indent_spaces()
+        )?;
+
+        self.children()
+            .try_for_each(|child| child.tree_debug_fmt(f, state.indented()))
+    }
+}
+
+impl<'a, T> std::fmt::Debug for NodeRef<'a, T>
+where
+    T: std::fmt::Debug,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.tree_debug_fmt(f, TreeState::new())
+    }
+}
+
+// =========================================================================
+// Format Adapter Wrapper
+// =========================================================================
+
+/// Helper wrapper for formatting a `NodeRef` or tree item via `Display` or `Debug`.
+pub struct FormatTree<'a, T>(pub &'a T);
+
+impl<T: TreeDisplay> std::fmt::Display for FormatTree<'_, T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.0.tree_fmt(f, TreeState::new())
+    }
+}
+
+impl<T: TreeDebug> std::fmt::Debug for FormatTree<'_, T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.0.tree_debug_fmt(f, TreeState::new())
     }
 }
