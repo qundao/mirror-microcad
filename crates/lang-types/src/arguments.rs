@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{Tuple, Ty, Type, Value, ValueError, ValueResult};
 
-#[derive(Clone, Display, From, Hash, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Default, Display, From, Hash, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Arguments(pub Tuple);
 
 impl Arguments {
