@@ -4,7 +4,7 @@
 //! Element of a [`Model`].
 
 use derive_more::{Display, From};
-use microcad_lang_base::{BuiltinId, BuiltinName, element::WorkbenchKind};
+use microcad_lang_base::{BuiltinId, BuiltinInfo, element::WorkbenchKind};
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -31,7 +31,7 @@ pub enum BuiltinWorkbenchKind {
 #[typetag::serde(tag = "primitive2d")]
 pub trait Primitive2D {
     /// Get the builtin name for this primitive.
-    fn builtin_name(&self) -> BuiltinName;
+    fn builtin_info(&self) -> &'static BuiltinInfo;
 
     /// Get a property of this model
     fn get_property(&self, s: &str) -> Value;

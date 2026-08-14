@@ -3,19 +3,49 @@
 
 //! Model properties type.
 
-use microcad_lang_base::{Identifier, SrcRef, element::Visibility};
+use microcad_lang_base::{Identifier, SrcRef};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::ops::Deref;
 
-use crate::{Arguments, Value};
+use crate::{Arguments, Ty, Value};
+
+#[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
+pub enum PropertyType {
+    /// An input property, created from workbenches base parameters.
+    Input,
+    /// An output property, created by each assignment with the `prop` keyword.
+    Output,
+    /// A hidden property that can be displayed in the viewer, but is not accessible.
+    Hidden,
+}
 
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub struct Property {
     pub name: Identifier,
     pub value: Value,
     pub src_ref: SrcRef,
-    pub visibility: Visibility,
+    pub ty: PropertyType,
+}
+
+impl std::fmt::Display for Property {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        // Choose key icon based on visibility
+        let ty = match self.ty {
+            PropertyType::Hidden => "     ",
+            PropertyType::Input => "[in] ",
+            PropertyType::Output => "[out]",
+        };
+
+        // Render as: 🔑 .radius: Length = 5mm
+        write!(
+            f,
+            "{ty} .{}: {} = {}",
+            self.name,
+            self.value.ty(),
+            self.value
+        )
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Hash, Default, Serialize, Deserialize)]
@@ -44,7 +74,7 @@ impl Properties {
         &mut self,
         name: impl Into<Identifier>,
         value: impl Into<Value>,
-        vis: Visibility,
+        ty: PropertyType,
         src_ref: SrcRef,
     ) -> &Property {
         let name = name.into();
@@ -52,7 +82,7 @@ impl Properties {
             name: name.clone(),
             value: value.into(),
             src_ref,
-            visibility: vis,
+            ty,
         };
         self.props.insert(name.clone(), property);
         self.props.get(&name).expect("Property was just inserted")
@@ -110,7 +140,7 @@ impl From<Arguments> for Properties {
             properties.set_property(
                 name.clone(),
                 value.clone(),
-                Visibility::Public,
+                PropertyType::Input,
                 SrcRef::default(),
             );
         }
