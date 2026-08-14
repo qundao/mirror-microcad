@@ -10,9 +10,10 @@ pub mod mu;
 mod registry;
 pub use registry::BuiltinRegistry;
 
-use derive_more::{Debug, Display, From};
-use microcad_lang_base::{BuiltinId, BuiltinName, HashId};
+use derive_more::{Debug, From};
 use microcad_lang_types::{Arguments, FunctionType, Model, ModelTree, Value};
+
+pub use microcad_lang_base::{BuiltinId, BuiltinInfo};
 
 pub use microcad_builtin_proc_macros::__mu;
 
@@ -37,36 +38,6 @@ pub type BuiltinEvalFn<T = Value> =
 
 /// A type of a function returning a T as builtin.
 pub type BuiltinFn<T> = fn() -> T;
-
-#[derive(Debug, Clone, Display)]
-#[debug("{}", name)]
-#[display("{}", name)]
-pub struct BuiltinInfo {
-    pub name: BuiltinName,
-    pub doc: Option<&'static str>,
-}
-
-impl BuiltinInfo {
-    pub const fn new(name: &'static str) -> Self {
-        Self {
-            name: BuiltinName::new(name),
-            doc: None,
-        }
-    }
-
-    pub const fn with_doc(mut self, doc: &'static str) -> Self {
-        self.doc = Some(doc);
-        self
-    }
-
-    pub const fn hash(&self) -> HashId {
-        self.id().0
-    }
-
-    pub const fn id(&self) -> BuiltinId {
-        self.name.id
-    }
-}
 
 #[derive(Debug, Clone)]
 #[debug("{}", info)]
@@ -156,7 +127,7 @@ pub enum Builtin {
 }
 
 impl Builtin {
-    pub fn id(&self) -> BuiltinId {
+    pub const fn id(&self) -> BuiltinId {
         match self {
             Builtin::Constant(c) => c.info.id(),
             Builtin::Function(f) => f.info.id(),
@@ -165,12 +136,12 @@ impl Builtin {
         }
     }
 
-    pub fn name(&self) -> &'static str {
+    pub const fn name(&self) -> &'static str {
         match self {
-            Builtin::Constant(c) => c.info.name.name,
-            Builtin::Function(f) => f.info.name.name,
-            Builtin::Primitive(p) => p.info.name.name,
-            Builtin::Operation(o) => o.info.name.name,
+            Builtin::Constant(c) => c.info.name,
+            Builtin::Function(f) => f.info.name,
+            Builtin::Primitive(p) => p.info.name,
+            Builtin::Operation(o) => o.info.name,
         }
     }
 

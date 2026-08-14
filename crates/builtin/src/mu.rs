@@ -396,8 +396,7 @@ pub mod math {
 
 #[builtin_mod]
 pub mod geo2d {
-    use microcad_lang_base::BuiltinName;
-    use microcad_lang_types::{Length, Model, Tuple, model::element::Primitive2D, tuple};
+    use microcad_lang_types::{Length, Model, Tuple, tuple};
 
     use super::*;
 
@@ -420,9 +419,10 @@ pub mod geo2d {
         }
     }
 
+    /*
     #[typetag::serde]
     impl Primitive2D for Circle {
-        fn builtin_name(&self) -> BuiltinName {
+        fn builtin_info(&self) -> &'static BuiltinInfo {
             BuiltinName::new("__mu::geo2d::Circle")
         }
 
@@ -432,5 +432,5 @@ pub mod geo2d {
                 _ => Value::None,
             }
         }
-    }
+    }*/
 }
