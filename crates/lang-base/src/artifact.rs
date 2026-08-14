@@ -44,10 +44,10 @@ pub enum ArtifactKind {
     Ast,
     /// Intermediate representation
     Ir,
-    /// Mid-level intermediate representation
-    Mir,
-    /// Resolved Symbol Tree (RST)
-    Rst,
+    /// Resolved Symbol Tree
+    SymbolTree,
+    /// Model tree
+    ModelTree,
 }
 
 #[repr(C)]

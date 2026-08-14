@@ -36,7 +36,7 @@ pub const MICROCAD_EXTENSION: &str = "µcad";
 
 pub use version::{MICROCAD_VERSION, Version};
 
-pub use artifact::{Artifact, ArtifactKind, StageResult};
+pub use artifact::{Artifact, ArtifactError, ArtifactHeader, ArtifactKind, StageResult};
 pub use diag::{DiagRenderOptions, Diagnostic, Diagnostics};
 pub use element::{Identifier, IdentifierList};
 pub use output::{Capture, Output, Stdout};

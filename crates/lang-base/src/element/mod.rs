@@ -45,6 +45,13 @@ pub enum Visibility {
     Private,
 }
 
+impl Visibility {
+    /// Returns true if visibility is public.
+    pub fn is_public(&self) -> bool {
+        matches!(self, Visibility::Public)
+    }
+}
+
 impl std::fmt::Display for Visibility {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {

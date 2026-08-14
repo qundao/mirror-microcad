@@ -163,7 +163,7 @@ impl From<&std::ffi::OsStr> for Identifier {
 impl From<&str> for Identifier {
     fn from(value: &str) -> Self {
         let identifier = Identifier::no_ref(value);
-        assert!(identifier.is_valid());
+        assert!(identifier.is_valid(), "Invalid identifier: {identifier}");
         identifier
     }
 }
