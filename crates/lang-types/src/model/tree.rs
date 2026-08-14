@@ -3,6 +3,7 @@
 
 //! Model tree.
 
+use microcad_lang_proc_macros::Artifact;
 use serde::{Deserialize, Serialize};
 
 use crate::{
@@ -13,7 +14,7 @@ use crate::{
 };
 
 /// A model tree with a root node.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Artifact)]
 pub struct ModelTree {
     pub root: ModelNodeId,
     pub arena: ModelArena,
