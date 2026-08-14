@@ -53,6 +53,12 @@ pub struct Properties {
     props: BTreeMap<Identifier, Property>,
 }
 
+impl std::fmt::Display for Properties {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.iter().try_for_each(|(_, prop)| prop.fmt(f))
+    }
+}
+
 impl Properties {
     /// Creates a new, empty set of properties.
     pub fn new() -> Self {

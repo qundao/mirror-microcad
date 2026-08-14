@@ -21,7 +21,7 @@ mod operation;
 
 pub use operation::{AffineTransform, BooleanOp};
 
-use microcad_lang_base::{BuiltinId, Identifier};
+use microcad_lang_base::{BuiltinId, HashId, Identifier, hash_id};
 use serde::{Deserialize, Serialize};
 
 pub use attribute::Attributes;
@@ -45,18 +45,22 @@ pub struct Model {
     /// Model element
     pub element: Element,
 
+    hash_id: HashId,
+
     /// The call that created this model
     pub creator: Option<Creator>,
 }
 
 impl Model {
-    pub fn primitive2d(builtin_id: BuiltinId, arguments: Arguments) -> Model {
-        Model {
+    pub fn primitive2d(builtin_id: BuiltinId, arguments: Arguments) -> Self {
+        let hash_id = hash_id!(builtin_id, arguments);
+        Self {
             name: None,
             properties: Properties::default(),
             attr: Attributes::default(),
             element: Element::BuiltinWorkpiece(element::BuiltinWorkbenchKind::Primitive2D),
             creator: Some(Creator::builtin(builtin_id, arguments)),
+            hash_id,
         }
     }
 
@@ -77,13 +81,12 @@ impl Model {
 
 impl std::fmt::Display for Model {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.attr)?;
-
         if let Some(name) = &self.name {
-            write!(f, "{name} = ")?;
+            write!(f, "{name}: < ")?;
         }
-
-        write!(f, "{}", self.element)
+        write!(f, "{}", self.element)?;
+        write!(f, "{}", self.attr)?;
+        write!(f, "{}", self.properties)
     }
 }
 
