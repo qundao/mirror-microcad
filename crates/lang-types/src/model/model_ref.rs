@@ -4,7 +4,6 @@
 //! Reference to a node in the model tree.
 
 use derive_more::Deref;
-use microcad_lang_base::TreeDisplay;
 
 use crate::{
     Model, ModelTree, Ty, Type,
@@ -122,23 +121,5 @@ impl<'tree> ModelRef<'tree> {
 impl<'tree> Ty for ModelRef<'tree> {
     fn ty(&self) -> Type {
         self.model().ty()
-    }
-}
-
-impl<'tree> TreeDisplay for ModelRef<'tree> {
-    fn tree_print(
-        &self,
-        f: &mut std::fmt::Formatter,
-        state: microcad_lang_base::TreeState,
-    ) -> std::fmt::Result {
-        writeln!(
-            f,
-            "{:indent$}{}",
-            "",
-            self.model(),
-            indent = state.indent_spaces()
-        )?;
-        self.children()
-            .try_for_each(|m| m.tree_print(f, state.indented()))
     }
 }

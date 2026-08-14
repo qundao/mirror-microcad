@@ -3,7 +3,6 @@
 
 //! ModelTree
 
-use microcad_lang_base::{TreeDisplay, TreeState};
 use serde::{Deserialize, Serialize};
 
 use crate::{Model, ModelRef, Models, Ty, Type, model::ModelContent};
@@ -128,17 +127,8 @@ impl From<ModelContent> for ModelTree {
     }
 }
 
-impl TreeDisplay for ModelTree {
-    fn tree_print(&self, f: &mut std::fmt::Formatter, depth: TreeState) -> std::fmt::Result {
-        match self.root() {
-            Some(root) => root.tree_print(f, depth),
-            None => write!(f, "<EMPTY TREE>"),
-        }
-    }
-}
-
 impl std::fmt::Display for ModelTree {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.tree_print(f, TreeState::new_display())
+    fn fmt(&self, _f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        todo!()
     }
 }
