@@ -1,10 +1,11 @@
-use std::collections::BTreeMap;
+// Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang_base::BuiltinId;
 use microcad_lang_types::{
     Arguments, Identifier, Model, ModelOutputType, ModelTree,
     model::{
-        Attributes, BooleanOp, Element, ModelNodeExt,
+        BooleanOp, Element, ModelNodeExt,
         element::{self, BuiltinWorkbenchKind},
     },
 };
@@ -13,10 +14,8 @@ use microcad_lang_types::{
 fn create_test_model(name: &str) -> Model {
     Model {
         name: Some(Identifier::from(name)),
-        properties: BTreeMap::default(),
-        attr: Attributes::default(),
         element: Element::BuiltinWorkpiece(element::BuiltinWorkbenchKind::Primitive2D),
-        creator: None,
+        ..Default::default()
     }
 }
 

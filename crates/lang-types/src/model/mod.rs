@@ -7,16 +7,17 @@ pub mod attribute;
 pub mod creator;
 pub mod element;
 pub mod iter;
-pub mod ops;
 pub mod output_type;
 pub mod workpiece;
+
+mod prop;
+pub use prop::{Properties, Property};
 
 mod tree;
 
 pub use tree::ModelTree;
 
 mod operation;
-use std::collections::BTreeMap;
 
 pub use operation::{AffineTransform, BooleanOp};
 
@@ -28,7 +29,7 @@ pub use creator::Creator;
 pub use element::Element;
 pub use output_type::ModelOutputType;
 
-use crate::{Arguments, Ty, Type, Value};
+use crate::{Arguments, Ty, Type};
 
 #[derive(Debug, Default, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub struct Model {
@@ -39,7 +40,7 @@ pub struct Model {
     pub attr: Attributes,
 
     /// Model properties `-`
-    pub properties: BTreeMap<Identifier, Value>,
+    pub properties: Properties,
 
     /// Model element
     pub element: Element,
@@ -52,7 +53,7 @@ impl Model {
     pub fn primitive2d(builtin_id: BuiltinId, arguments: Arguments) -> Model {
         Model {
             name: None,
-            properties: BTreeMap::default(),
+            properties: Properties::default(),
             attr: Attributes::default(),
             element: Element::BuiltinWorkpiece(element::BuiltinWorkbenchKind::Primitive2D),
             creator: Some(Creator::builtin(builtin_id, arguments)),
