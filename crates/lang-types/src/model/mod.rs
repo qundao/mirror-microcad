@@ -11,6 +11,10 @@ pub mod ops;
 pub mod output_type;
 pub mod workpiece;
 
+mod tree;
+
+pub use tree::ModelTree;
+
 mod operation;
 use std::collections::BTreeMap;
 
@@ -26,7 +30,7 @@ pub use output_type::ModelOutputType;
 
 use crate::{Arguments, Ty, Type, Value};
 
-#[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub struct Model {
     /// An optional name
     pub name: Option<Identifier>,
@@ -98,13 +102,11 @@ impl Ty for Model {
     }
 }
 
-use microcad_lang_base::tree;
-
-pub type ModelArena = tree::Arena<Model>;
-pub type ModelNode = tree::Node<Model>;
-pub type ModelNodeRef<'a> = tree::NodeRef<'a, Model>;
-pub type ModelNodeMut<'a> = tree::NodeMut<'a, Model>;
-pub type ModelNodeId = tree::NodeId;
+pub type ModelArena = microcad_lang_base::tree::Arena<Model>;
+pub type ModelNode = microcad_lang_base::tree::Node<Model>;
+pub type ModelNodeRef<'a> = microcad_lang_base::tree::NodeRef<'a, Model>;
+pub type ModelNodeMut<'a> = microcad_lang_base::tree::NodeMut<'a, Model>;
+pub type ModelNodeId = microcad_lang_base::tree::NodeId;
 
 /// Extension trait for [`SymbolNode`] .
 pub trait ModelNodeExt<'a> {
@@ -165,82 +167,3 @@ impl<'a> ModelNodeExt<'a> for ModelNodeRef<'a> {
         iter::MultiplicityDescendants::new(*self)
     }
 }
-
-/// A model tree with a root node.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct ModelTree {
-    root: ModelNodeId,
-    pub arena: ModelArena,
-}
-
-impl ModelTree {
-    pub fn new(root: Model) -> Self {
-        let mut arena = ModelArena::new();
-
-        Self {
-            root: arena.new_node(root),
-            arena,
-        }
-    }
-
-    pub fn root<'a>(&'a self) -> ModelNodeRef<'a> {
-        ModelNodeRef::new(self.root, &self.arena)
-    }
-}
-
-impl std::hash::Hash for ModelTree {
-    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-        self.root().hash(state);
-    }
-}
-
-impl std::fmt::Display for ModelTree {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.root().fmt(f)
-    }
-}
-
-impl Ty for ModelTree {
-    fn ty(&self) -> Type {
-        Type::Model(self.root().output_type())
-    }
-}
-
-/*
-impl Model {
-    /// Short cut to generate boolean operator as binary operation with two models.
-    pub fn boolean_op(self, op: BooleanOp, other: Model) -> ModelTree {
-        ModelTree::from(vec![self.clone(), other]).boolean_op(op)
-    }
-
-    /// Multiply a model n times.
-    pub fn multiply(&self, n: Integer) -> Vec<Model> {
-        (0..n).map(|_| self.make_deep_copy()).collect()
-    }
-
-    /// Replace each input placeholder with copies of `input_model`.
-    pub fn replace_input_placeholders(&self, input_model: &Model) -> Self {
-        self.descendants().for_each(|model| {
-            let mut model_ = model.borrow_mut();
-            if model_.id.is_none() && matches!(model_.element.value, Element::InputPlaceholder) {
-                let input_model_ = input_model.borrow_mut();
-                *model_ = input_model_.clone_content();
-                model_.parent = Some(self.clone());
-                model_.children = input_model_.children.clone();
-            }
-        });
-        self.clone()
-    }
-
-    /// Deduce output type from children and set it and return it.
-    pub fn deduce_output_type(&self) -> OutputType {
-        let self_ = self.borrow();
-        let mut output_type = self_.element.output_type();
-        if output_type == OutputType::NotDetermined {
-            let children = &self_.children;
-            output_type = children.deduce_output_type();
-        }
-
-        output_type
-    }
-}*/
