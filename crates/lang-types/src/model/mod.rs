@@ -3,8 +3,6 @@
 
 //! Model tree module
 
-use derive_more::Display;
-
 pub mod attribute;
 pub mod creator;
 pub mod element;
@@ -13,97 +11,27 @@ pub mod ops;
 pub mod output_type;
 pub mod workpiece;
 
-mod model_ref;
-pub use model_ref::ModelRef;
-
 mod operation;
-pub use operation::{AffineTransform, BooleanOp};
+use std::collections::BTreeMap;
 
-mod tree;
-pub use tree::{ModelHandle, ModelTree};
+pub use operation::{AffineTransform, BooleanOp};
 
 use microcad_lang_base::{BuiltinId, Identifier, element::Visibility};
 use serde::{Deserialize, Serialize};
 
 pub use attribute::Attributes;
-
-pub use element::Element;
-
 pub use creator::Creator;
+pub use element::Element;
 pub use output_type::ModelOutputType;
 
 use crate::{Arguments, Ty, Type, Value};
 
-#[derive(Debug, Display, Clone, PartialEq, Hash, Serialize, Deserialize)]
-#[display("{content}")]
-pub struct Model {
-    /// Parent of the model
-    pub parent: Option<ModelHandle>,
-
-    /// The actual model content
-    pub content: ModelContent,
-
-    /// Children of this model
-    pub children: Models,
-}
-
-impl Model {
-    pub fn with_name(mut self, id: Identifier) -> Self {
-        self.content.id = Some(id);
-        self
-    }
-
-    pub fn with_visibility(mut self, vis: Visibility) -> Self {
-        self.content.visibility = vis;
-        self
-    }
-
-    pub fn with_attr(mut self, attr: Attributes) -> Self {
-        self.content.attr = attr;
-        self
-    }
-
-    pub fn output_type(&self) -> ModelOutputType {
-        self.content.element.output_type()
-    }
-}
-
-impl From<ModelContent> for Model {
-    fn from(content: ModelContent) -> Self {
-        Self {
-            parent: None,
-            content,
-            children: Models::default(),
-        }
-    }
-}
-
-impl Ty for Model {
-    fn ty(&self) -> crate::Type {
-        Type::Model(self.output_type())
-    }
-}
-
-impl From<Value> for Model {
-    fn from(value: Value) -> Self {
-        Model {
-            parent: None,
-            content: ModelContent {
-                id: None,
-                visibility: Default::default(),
-                attr: Default::default(),
-                element: Element::from(value),
-                creator: None,
-            },
-            children: Default::default(),
-        }
-    }
-}
-
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
-pub struct ModelContent {
-    /// An optional id
-    pub id: Option<Identifier>,
+pub struct Model {
+    /// An optional name
+    pub name: Option<Identifier>,
+
+    pub properties: BTreeMap<Identifier, Value>,
 
     /// Visibility
     pub visibility: Visibility,
@@ -118,29 +46,163 @@ pub struct ModelContent {
     pub creator: Option<Creator>,
 }
 
-impl ModelContent {
-    pub fn primitive2d(builtin_id: BuiltinId, arguments: Arguments) -> ModelContent {
-        ModelContent {
-            id: None,
+impl Model {
+    pub fn primitive2d(builtin_id: BuiltinId, arguments: Arguments) -> Model {
+        Model {
+            name: None,
+            properties: BTreeMap::default(),
             visibility: Visibility::Private,
             attr: Attributes::default(),
             element: Element::BuiltinWorkpiece(element::BuiltinWorkbenchKind::Primitive2D),
             creator: Some(Creator::builtin(builtin_id, arguments)),
         }
     }
+
+    pub fn with_name(mut self, name: Identifier) -> Self {
+        self.name = Some(name);
+        self
+    }
+
+    pub fn with_visibility(mut self, vis: Visibility) -> Self {
+        self.visibility = vis;
+        self
+    }
+
+    pub fn with_attr(mut self, attr: Attributes) -> Self {
+        self.attr = attr;
+        self
+    }
+
+    pub fn output_type(&self) -> ModelOutputType {
+        self.element.output_type()
+    }
 }
 
-impl std::fmt::Display for ModelContent {
+impl std::fmt::Display for Model {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.attr)?;
         if Visibility::Public == self.visibility {
             write!(f, "prop ")?;
         }
-        if let Some(id) = &self.id {
-            write!(f, "{id} = ")?;
+        if let Some(name) = &self.name {
+            write!(f, "{name} = ")?;
         }
 
         write!(f, "{}", self.element)
+    }
+}
+
+impl Ty for Model {
+    fn ty(&self) -> crate::Type {
+        Type::Model(self.output_type())
+    }
+}
+
+use microcad_lang_base::tree;
+
+pub type ModelArena = tree::Arena<Model>;
+pub type ModelNode = tree::Node<Model>;
+pub type ModelNodeRef<'a> = tree::NodeRef<'a, Model>;
+pub type ModelNodeMut<'a> = tree::NodeMut<'a, Model>;
+pub type ModelNodeId = tree::NodeId;
+
+/// Extension trait for [`SymbolNode`] .
+pub trait ModelNodeExt<'a> {
+    fn name(&self) -> Option<&Identifier>;
+
+    fn is_public(&self) -> bool;
+
+    fn deduce_output_type(&self) -> ModelOutputType;
+
+    fn into_group_child(&self) -> Option<ModelNodeRef<'a>>;
+
+    fn multiplicity_descendants(&self) -> iter::MultiplicityDescendants<'a>;
+}
+
+impl<'a> ModelNodeExt<'a> for ModelNodeRef<'a> {
+    fn name(&self) -> Option<&Identifier> {
+        self.name.as_ref()
+    }
+
+    fn is_public(&self) -> bool {
+        self.visibility.is_public()
+    }
+
+    /// Deduce output type from element or children.
+    fn deduce_output_type(&self) -> ModelOutputType {
+        let output_type = self.element.output_type();
+
+        if output_type == ModelOutputType::NotDetermined {
+            // Fallback: iterate over children and deduce
+            for child in self.children() {
+                let child_type = child.deduce_output_type();
+                if child_type != ModelOutputType::NotDetermined {
+                    return child_type;
+                }
+            }
+        }
+
+        output_type
+    }
+
+    /// Return inner group child if this model only contains a single group child.
+    ///
+    /// Useful for operations like `subtract() {}` or `hull() {}` to unwrap nested groups.
+    fn into_group_child(&self) -> Option<ModelNodeRef<'a>> {
+        let mut children = self.children();
+        let first_child = children.next()?;
+
+        // Ensure it's the ONLY child
+        if children.next().is_none() && matches!(first_child.element, Element::Group) {
+            Some(first_child)
+        } else {
+            None
+        }
+    }
+
+    /// An iterator that descends to multiplicity nodes.
+    fn multiplicity_descendants(&self) -> iter::MultiplicityDescendants<'a> {
+        iter::MultiplicityDescendants::new(*self)
+    }
+}
+
+/// A model tree with a root node.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct ModelTree {
+    root: ModelNodeId,
+    pub arena: ModelArena,
+}
+
+impl ModelTree {
+    pub fn new(root: Model) -> Self {
+        let mut arena = ModelArena::new();
+
+        Self {
+            root: arena.new_node(root),
+            arena,
+        }
+    }
+
+    pub fn root<'a>(&'a self) -> ModelNodeRef<'a> {
+        ModelNodeRef::new(self.root, &self.arena)
+    }
+}
+
+impl std::hash::Hash for ModelTree {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.root().hash(state);
+    }
+}
+
+impl std::fmt::Display for ModelTree {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.root().fmt(f)
+    }
+}
+
+impl Ty for ModelTree {
+    fn ty(&self) -> Type {
+        Type::Model(self.root().output_type())
     }
 }
 
@@ -182,21 +244,3 @@ impl Model {
         output_type
     }
 }*/
-
-#[derive(Debug, Default, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Models {
-    pub items: Vec<ModelHandle>,
-}
-impl Models {
-    fn insert(&mut self, handle: ModelHandle) {
-        self.items.push(handle);
-    }
-}
-
-impl FromIterator<ModelHandle> for Models {
-    fn from_iter<T: IntoIterator<Item = ModelHandle>>(iter: T) -> Self {
-        Self {
-            items: iter.into_iter().collect(),
-        }
-    }
-}
