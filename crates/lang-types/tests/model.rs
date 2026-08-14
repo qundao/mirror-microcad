@@ -3,9 +3,9 @@
 
 use microcad_lang_base::BuiltinId;
 use microcad_lang_types::{
-    Arguments, Identifier, Model, ModelOutputType, ModelTree,
+    Arguments, Identifier, Model, ModelOutputType, ModelTree, Value, arguments,
     model::{
-        BooleanOp, Element, ModelNodeExt,
+        BooleanOp, Element, ModelNodeExt, Properties,
         element::{self, BuiltinWorkbenchKind},
     },
 };
@@ -227,4 +227,125 @@ fn test_subtree_adoption_preserves_hierarchy() {
         .collect();
 
     assert_eq!(adopted_subchildren, vec!["child1", "child2"]);
+}
+
+/// Helper to build a `__mu::ops::translate(x, y, z)` transform node
+fn make_translation_node(x_mm: f64, y_mm: f64, z_mm: f64) -> Model {
+    let args = arguments!(x = x_mm, y = y_mm, z = z_mm);
+    Model {
+        name: Some(Identifier::from("translate")),
+        properties: Properties::from(args),
+        attr: Default::default(),
+        element: Element::BuiltinWorkpiece(BuiltinWorkbenchKind::Transform),
+        creator: None,
+    }
+}
+
+/// Helper to build a `__mu::geo2d::Circle(radius = 5.0)` input tree
+fn make_circle_input_tree(radius_mm: f64) -> ModelTree {
+    let args = arguments!(radius = radius_mm);
+    ModelTree::new(Model {
+        name: Some(Identifier::from("Circle")),
+        properties: Properties::from(args),
+        attr: Default::default(),
+        element: Element::BuiltinWorkpiece(BuiltinWorkbenchKind::Primitive2D),
+        creator: None,
+    })
+}
+
+#[test]
+fn test_replace_input_placeholders_multiplicity() {
+    // 1. Build Multiplicity template tree:
+    // Multiplicity
+    //   ├── translate(0, 0, 0)
+    //   │     └── InputPlaceholder
+    //   ├── translate(0, 10, 0)
+    //   │     └── InputPlaceholder
+    //   ├── translate(10, 0, 0)
+    //   │     └── InputPlaceholder
+    //   └── translate(10, 10, 0)
+    //         └── InputPlaceholder
+    let mut template_tree = ModelTree::new(Model {
+        name: Some(Identifier::from("Multiplicity")),
+        properties: Properties::new(),
+        attr: Default::default(),
+        element: Element::Multiplicity,
+        creator: None,
+    });
+
+    let translations = [
+        (0.0, 0.0, 0.0),
+        (0.0, 10.0, 0.0),
+        (10.0, 0.0, 0.0),
+        (10.0, 10.0, 0.0),
+    ];
+
+    for (x, y, z) in translations {
+        let trans_model = make_translation_node(x, y, z);
+        let trans_id = template_tree.arena.new_node(trans_model);
+
+        let placeholder_model = Model {
+            name: None,
+            properties: Properties::new(),
+            attr: Default::default(),
+            element: Element::InputPlaceholder,
+            creator: None,
+        };
+        let placeholder_id = template_tree.arena.new_node(placeholder_model);
+
+        // Attach InputPlaceholder under translation, and translation under Multiplicity
+        trans_id.append(placeholder_id, &mut template_tree.arena);
+        template_tree
+            .root
+            .append(trans_id, &mut template_tree.arena);
+    }
+
+    // 2. Build input tree to replace placeholders (__mu::geo2d::Circle(radius = 5.0))
+    let circle_tree = make_circle_input_tree(5.0);
+
+    // 3. Perform replacement
+    let result_tree = template_tree.replace_input_placeholders(&circle_tree);
+
+    // 4. Assertions
+    let root = result_tree.root();
+    assert_eq!(root.element, Element::Multiplicity);
+
+    let branches: Vec<_> = root.children().collect();
+    assert_eq!(branches.len(), 4, "Should have 4 translation branches");
+
+    for (idx, branch) in branches.iter().enumerate() {
+        // Verify branch is still translate transform
+        assert_eq!(branch.name(), Some(&Identifier::from("translate")));
+        assert!(matches!(
+            branch.element,
+            Element::BuiltinWorkpiece(BuiltinWorkbenchKind::Transform)
+        ));
+
+        // Verify children under translate
+        let branch_children: Vec<_> = branch.children().collect();
+        assert_eq!(
+            branch_children.len(),
+            1,
+            "Branch {idx} should have exactly 1 child"
+        );
+
+        let replaced_child = branch_children[0];
+
+        // Ensure InputPlaceholder is replaced by the Circle model
+        assert_ne!(
+            replaced_child.element,
+            Element::InputPlaceholder,
+            "Placeholder in branch {idx} was not replaced"
+        );
+        assert_eq!(replaced_child.name(), Some(&Identifier::from("Circle")));
+        assert_eq!(
+            replaced_child
+                .properties
+                .get_property("radius")
+                .map(|p| &p.value),
+            Some(&Value::from(5.0))
+        );
+    }
+
+    println!("{result_tree}")
 }
