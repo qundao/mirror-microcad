@@ -40,7 +40,7 @@ impl std::fmt::Display for Property {
         // Render as: 🔑 .radius: Length = 5mm
         write!(
             f,
-            "{ty} .{}: {} = {}",
+            "{ty} {}: {} = {}",
             self.name,
             self.value.ty(),
             self.value
