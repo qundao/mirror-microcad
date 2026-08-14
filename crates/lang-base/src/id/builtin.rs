@@ -3,7 +3,7 @@
 
 //! lang-base/src/builtin.rs
 
-use derive_more::Display;
+use derive_more::{Debug, Display};
 use microcad_hash::HashId;
 use serde::{Deserialize, Serialize};
 
@@ -34,34 +34,37 @@ impl From<String> for BuiltinId {
     }
 }
 
-/// Builtin name
-#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub struct BuiltinName {
+/// Information about a built-in symbol.
+///
+/// Each built-in symbol has a [`BuiltinInfo`] as property.
+#[derive(Debug, Clone, Display)]
+#[debug("{}", name)]
+#[display("{name}@{id}")]
+pub struct BuiltinInfo {
     pub name: &'static str,
     pub id: BuiltinId,
+    pub doc: Option<&'static str>,
 }
 
-impl BuiltinName {
-    /// Create a new BuiltinName (const)
+impl BuiltinInfo {
     pub const fn new(name: &'static str) -> Self {
         Self {
-            name,
             id: BuiltinId::from_name(name),
+            name,
+            doc: None,
         }
     }
-}
 
-impl From<&'static str> for BuiltinName {
-    fn from(name: &'static str) -> Self {
-        BuiltinName {
-            name,
-            id: BuiltinId::from_name(name),
-        }
+    pub const fn with_doc(mut self, doc: &'static str) -> Self {
+        self.doc = Some(doc);
+        self
     }
-}
 
-impl std::fmt::Display for BuiltinName {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}@{}", self.name, self.id)
+    pub const fn hash(&self) -> HashId {
+        self.id().0
+    }
+
+    pub const fn id(&self) -> BuiltinId {
+        self.id
     }
 }

@@ -9,7 +9,7 @@ use derive_more::{Display, From};
 use indextree::NodeId;
 pub use microcad_hash::{HashId, hash_id};
 
-pub use builtin::{BuiltinId, BuiltinName};
+pub use builtin::{BuiltinId, BuiltinInfo};
 
 use serde::{Deserialize, Serialize};
 

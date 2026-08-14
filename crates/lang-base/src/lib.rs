@@ -21,7 +21,7 @@ mod version;
 
 pub use compact_str::{CompactString, ToCompactString};
 
-pub use id::{BuiltinId, BuiltinName, HashId, Name, SymbolId, hash_id};
+pub use id::{BuiltinId, BuiltinInfo, HashId, Name, SymbolId, hash_id};
 
 /// URL to locate sources.
 pub use url::Url;
