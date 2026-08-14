@@ -20,7 +20,7 @@ use std::collections::BTreeMap;
 
 pub use operation::{AffineTransform, BooleanOp};
 
-use microcad_lang_base::{BuiltinId, Identifier, element::Visibility};
+use microcad_lang_base::{BuiltinId, Identifier};
 use serde::{Deserialize, Serialize};
 
 pub use attribute::Attributes;
@@ -35,13 +35,11 @@ pub struct Model {
     /// An optional name
     pub name: Option<Identifier>,
 
-    pub properties: BTreeMap<Identifier, Value>,
-
-    /// Visibility
-    pub visibility: Visibility,
-
-    /// Model attributes
+    /// Model attributes `#`
     pub attr: Attributes,
+
+    /// Model properties `-`
+    pub properties: BTreeMap<Identifier, Value>,
 
     /// Model element
     pub element: Element,
@@ -55,7 +53,6 @@ impl Model {
         Model {
             name: None,
             properties: BTreeMap::default(),
-            visibility: Visibility::Private,
             attr: Attributes::default(),
             element: Element::BuiltinWorkpiece(element::BuiltinWorkbenchKind::Primitive2D),
             creator: Some(Creator::builtin(builtin_id, arguments)),
@@ -64,11 +61,6 @@ impl Model {
 
     pub fn with_name(mut self, name: Identifier) -> Self {
         self.name = Some(name);
-        self
-    }
-
-    pub fn with_visibility(mut self, vis: Visibility) -> Self {
-        self.visibility = vis;
         self
     }
 
@@ -85,9 +77,7 @@ impl Model {
 impl std::fmt::Display for Model {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.attr)?;
-        if Visibility::Public == self.visibility {
-            write!(f, "prop ")?;
-        }
+
         if let Some(name) = &self.name {
             write!(f, "{name} = ")?;
         }
@@ -112,8 +102,6 @@ pub type ModelNodeId = microcad_lang_base::tree::NodeId;
 pub trait ModelNodeExt<'a> {
     fn name(&self) -> Option<&Identifier>;
 
-    fn is_public(&self) -> bool;
-
     fn deduce_output_type(&self) -> ModelOutputType;
 
     fn into_group_child(&self) -> Option<ModelNodeRef<'a>>;
@@ -124,10 +112,6 @@ pub trait ModelNodeExt<'a> {
 impl<'a> ModelNodeExt<'a> for ModelNodeRef<'a> {
     fn name(&self) -> Option<&Identifier> {
         self.name.as_ref()
-    }
-
-    fn is_public(&self) -> bool {
-        self.visibility.is_public()
     }
 
     /// Deduce output type from element or children.

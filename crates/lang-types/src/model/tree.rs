@@ -117,6 +117,58 @@ impl ModelTree {
 
         new_id
     }
+
+    /// Returns a new `ModelTree` where every `Element::InputPlaceholder` node
+    /// (and its descendants) is replaced with a deep copy of `input_model`.
+    pub fn replace_input_placeholders(&self, input_model: &ModelTree) -> Self {
+        let mut new_arena = ModelArena::new();
+
+        // Recursively build the transformed tree starting from root
+        let new_root = Self::replace_placeholders_recursive(
+            self.root,
+            &self.arena,
+            input_model,
+            &mut new_arena,
+        );
+
+        ModelTree {
+            root: new_root,
+            arena: new_arena,
+        }
+    }
+
+    /// Recursive helper to reconstruct the tree, replacing placeholders.
+    fn replace_placeholders_recursive(
+        current_id: ModelNodeId,
+        source_arena: &ModelArena,
+        input_model: &ModelTree,
+        target_arena: &mut ModelArena,
+    ) -> ModelNodeId {
+        let current_node = ModelNodeRef::new(current_id, source_arena);
+
+        // --- MATCH PLACEHOLDER ---
+        if current_node.element == Element::InputPlaceholder {
+            // Replace this node AND its descendants with a full copy of `input_model`
+            return Self::adopt_tree_to_arena(target_arena, input_model.root, &input_model.arena);
+        }
+
+        // --- REGULAR NODE ---
+        // 1. Copy the current node content into the target arena
+        let new_id = target_arena.new_node(current_node.get().clone());
+
+        // 2. Process children recursively and attach them
+        for child in current_node.children() {
+            let new_child_id = Self::replace_placeholders_recursive(
+                child.id,
+                source_arena,
+                input_model,
+                target_arena,
+            );
+            new_id.append(new_child_id, target_arena);
+        }
+
+        new_id
+    }
 }
 
 impl std::hash::Hash for ModelTree {

@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use microcad_lang_base::{BuiltinId, element::Visibility};
+use microcad_lang_base::BuiltinId;
 use microcad_lang_types::{
     Arguments, Identifier, Model, ModelOutputType, ModelTree,
     model::{
@@ -14,7 +14,6 @@ fn create_test_model(name: &str) -> Model {
     Model {
         name: Some(Identifier::from(name)),
         properties: BTreeMap::default(),
-        visibility: Visibility::Public,
         attr: Attributes::default(),
         element: Element::BuiltinWorkpiece(element::BuiltinWorkbenchKind::Primitive2D),
         creator: None,
@@ -29,7 +28,6 @@ fn test_model_tree_creation_and_root() {
     let root_ref = tree.root();
 
     assert_eq!(root_ref.name(), Some(&Identifier::from("root")));
-    assert!(root_ref.is_public());
 }
 
 #[test]
