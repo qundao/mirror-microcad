@@ -13,7 +13,7 @@ pub use node_ref::{NodeMut, NodeRef};
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
 #[macro_export]
-macro_rules! default_tree_type_defs {
+macro_rules! impl_tree_types {
     ($vis:vis $tree:ident<$item:ty>) => {
         impl $tree {
             pub fn new(root: $item) -> Self {
