@@ -29,6 +29,16 @@ impl Array {
         let ty = items.types().common_type().unwrap_or_default();
         Self { items, ty }
     }
+
+    /// Negates all elements in the array in-place.
+    /// Returns an error if any element cannot be negated (e.g., strings or booleans).
+    pub fn neg_in_place(&mut self) -> Result<(), ValueError> {
+        for val in &mut self.items.iter_mut() {
+            // Replaces each element with its negated version
+            *val = val.neg_value()?;
+        }
+        Ok(())
+    }
 }
 
 /// All builtin methods and builtin functions.
@@ -155,12 +165,12 @@ impl std::ops::Add<Value> for Array {
 
     fn add(self, rhs: Value) -> Self::Output {
         if self.ty.is_compatible_to(&rhs.ty()) {
-            Ok(Value::Array(Self::from_values(ValueList::new(
+            Ok(Value::Array(Rc::new(Self::from_values(ValueList::new(
                 self.items
                     .iter()
                     .map(|value| value.clone() + rhs.clone())
                     .collect::<Result<Vec<_>, _>>()?,
-            ))))
+            )))))
         } else {
             Err(ValueError::InvalidOperator("+".into()))
         }
@@ -173,12 +183,13 @@ impl std::ops::Sub<Value> for Array {
 
     fn sub(self, rhs: Value) -> Self::Output {
         if self.ty.is_compatible_to(&rhs.ty()) {
-            Ok(Value::Array(Self::from_values(ValueList::new(
+            Ok(Self::from_iter(
                 self.items
                     .iter()
                     .map(|value| value.clone() - rhs.clone())
                     .collect::<Result<Vec<_>, _>>()?,
-            ))))
+            )
+            .into())
         } else {
             Err(ValueError::InvalidOperator("-".into()))
         }
@@ -192,14 +203,15 @@ impl std::ops::Mul<Value> for Array {
     fn mul(self, rhs: Value) -> Self::Output {
         match self.ty {
             // List * Scalar or List * Integer
-            Type::Quantity(_) | Type::Integer => Ok(Value::Array(Array::new(
-                ValueList::new({
-                    self.iter()
-                        .map(|value| value.clone() * rhs.clone())
-                        .collect::<Result<Vec<_>, _>>()?
-                }),
-                (self.ty * rhs.ty())?,
-            ))),
+            Type::Quantity(_) | Type::Integer => {
+                let values = self
+                    .iter()
+                    .map(|value| value.clone() * rhs.clone())
+                    .collect::<Result<Vec<_>, _>>()?;
+
+                // `from_values` infers `Type` from the actual multiplied element values
+                Ok(Array::from_values(ValueList::new(values)).into())
+            }
             _ => Err(ValueError::InvalidOperator("*".into())),
         }
     }
@@ -210,18 +222,20 @@ impl std::ops::Div<Value> for Array {
     type Output = ValueResult;
 
     fn div(self, rhs: Value) -> Self::Output {
-        let values = ValueList::new(
-            self.iter()
-                .map(|value| value.clone() / rhs.clone())
-                .collect::<Result<Vec<_>, _>>()?,
-        );
+        // 1. Evaluate element-wise division by cloning `rhs` per element (or referencing)
+        let mut divided_values = Vec::with_capacity(self.len());
+        for value in self.iter() {
+            // Evaluates `value / rhs`
+            divided_values.push((value.clone() / rhs.clone())?);
+        }
 
+        let values = ValueList::new(divided_values);
+
+        // 2. Determine resulting Array Type based on element type division
+        // An Array divided by a Scalar preserves an Array structure with transformed element types
         match (&self.ty, rhs.ty()) {
-            // Integer / Integer => Scalar
-            (Type::Integer, Type::Integer) => {
-                Ok(Value::Array(Array::new(values, (self.ty / rhs.ty())?)))
-            }
-            (Type::Quantity(_), _) => Ok(Value::Array(values.try_into()?)),
+            (Type::Integer, Type::Integer) => Ok(Array::new(values, Type::Integer).into()),
+            (Type::Quantity(_), _) => Ok(Array::from_values(values).into()),
             _ => Err(ValueError::InvalidOperator("/".into())),
         }
     }
@@ -231,12 +245,12 @@ impl std::ops::Neg for Array {
     type Output = ValueResult;
 
     fn neg(self) -> Self::Output {
-        let items = ValueList::new(
+        let items = Array::from_values(ValueList::new(
             self.iter()
                 .map(|value| -value.clone())
                 .collect::<Result<Vec<_>, _>>()?,
-        );
-        Ok(Value::Array(items.try_into()?))
+        ));
+        Ok(items.into())
     }
 }
 
@@ -244,12 +258,12 @@ impl std::ops::Not for Array {
     type Output = ValueResult;
 
     fn not(self) -> Self::Output {
-        let items = ValueList::new(
+        let items = Array::from_values(ValueList::new(
             self.iter()
                 .map(|value| !value.clone())
                 .collect::<Result<Vec<_>, _>>()?,
-        );
-        Ok(Value::Array(items.try_into()?))
+        ));
+        Ok(items.into())
     }
 }
 

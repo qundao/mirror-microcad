@@ -132,6 +132,22 @@ impl Tuple {
                 .collect::<ValueResult<Vec<_>>>()?,
         })
     }
+
+    /// Negates all positional and named values in the tuple in-place.
+    /// Returns an error if any value cannot be negated.
+    pub fn neg_in_place(&mut self) -> Result<(), ValueError> {
+        // Negate positional values
+        for val in &mut self.positional {
+            *val = val.neg_value()?;
+        }
+
+        // Negate named parameter values
+        for (_id, val) in &mut self.named {
+            *val = val.neg_value()?;
+        }
+
+        Ok(())
+    }
 }
 
 impl<T> From<std::slice::Iter<'_, (&'static str, T)>> for Tuple
@@ -192,12 +208,6 @@ impl From<Color> for Tuple {
     }
 }
 
-impl From<Tuple> for Value {
-    fn from(tuple: Tuple) -> Self {
-        Value::Tuple(Box::new(tuple))
-    }
-}
-
 impl std::fmt::Display for Tuple {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(
@@ -249,7 +259,7 @@ impl std::ops::Neg for Tuple {
     type Output = ValueResult;
 
     fn neg(self) -> Self::Output {
-        Ok(Value::Tuple(Box::new(self.transform(|value| -value)?)))
+        Ok(self.transform(|value| -value)?.into())
     }
 }
 
@@ -257,7 +267,7 @@ impl std::ops::Not for Tuple {
     type Output = ValueResult;
 
     fn not(self) -> Self::Output {
-        Ok(Value::Tuple(Box::new(self.transform(|value| !value)?)))
+        Ok(self.transform(|value| !value)?.into())
     }
 }
 

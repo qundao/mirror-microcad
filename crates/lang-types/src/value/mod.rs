@@ -16,8 +16,11 @@ mod value_access;
 mod value_error;
 mod value_list;
 
+use std::rc::Rc;
+
 pub use array::*;
 pub use matrix::*;
+use microcad_lang_base::{CompactString, ToCompactString};
 pub use quantity::*;
 pub use tuple::*;
 pub use value_access::*;
@@ -47,15 +50,15 @@ pub enum Value {
     /// An integer value.
     Integer(Integer),
     /// A string value.
-    String(String),
+    String(CompactString),
     /// A list of values with a common type.
-    Array(Array),
+    Array(Rc<Array>),
     /// A tuple of named items.
-    Tuple(Box<Tuple>),
+    Tuple(Rc<Tuple>),
     /// A matrix.
-    Matrix(Box<Matrix>),
+    Matrix(Rc<Matrix>),
     /// A model tree
-    Model(ModelTree),
+    Model(Rc<ModelTree>),
 }
 
 impl Value {
@@ -257,19 +260,31 @@ impl From<Length> for Value {
 
 impl From<Color> for Value {
     fn from(color: Color) -> Self {
-        Self::Tuple(Box::new(color.into()))
+        Self::Tuple(Rc::new(color.into()))
     }
 }
 
 impl From<Vec3> for Value {
     fn from(v: Vec3) -> Self {
-        Self::Tuple(Box::new(v.into()))
+        Self::Tuple(Rc::new(v.into()))
     }
 }
 
-impl From<&str> for Value {
-    fn from(value: &str) -> Self {
-        Self::String(value.to_string())
+impl From<Array> for Value {
+    fn from(array: Array) -> Self {
+        Self::Array(Rc::new(array))
+    }
+}
+
+impl From<Tuple> for Value {
+    fn from(tuple: Tuple) -> Self {
+        Value::Tuple(Rc::new(tuple))
+    }
+}
+
+impl From<String> for Value {
+    fn from(s: String) -> Self {
+        Self::String(s.to_compact_string())
     }
 }
 
@@ -280,12 +295,6 @@ impl From<()> for Value {
 }
 impl FromIterator<Value> for Value {
     fn from_iter<T: IntoIterator<Item = Value>>(iter: T) -> Self {
-        Self::Array(iter.into_iter().collect())
-    }
-}
-
-impl From<Vec<Value>> for Value {
-    fn from(values: Vec<Value>) -> Self {
-        Self::Array(Array::from_values(ValueList::new(values)))
+        Array::from_iter(iter).into()
     }
 }

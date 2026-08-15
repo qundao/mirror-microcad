@@ -41,6 +41,25 @@ impl Value {
             },
         }
     }
+
+    /// Helper method to perform unary negation on a single Value.
+    pub fn neg_value(&self) -> Result<Value, ValueError> {
+        match self {
+            Value::Integer(n) => Ok(Value::Integer(-n)),
+            Value::Quantity(q) => Ok(Value::Quantity(-q.clone())),
+            Value::Array(a) => {
+                let mut mutated = a.clone();
+                std::rc::Rc::make_mut(&mut mutated).neg_in_place()?;
+                Ok(Value::Array(mutated))
+            }
+            Value::Tuple(t) => {
+                let mut mutated = t.clone();
+                std::rc::Rc::make_mut(&mut mutated).neg_in_place()?;
+                Ok(Value::Tuple(mutated))
+            }
+            _ => Err(ValueError::InvalidOperator("-".into())),
+        }
+    }
 }
 
 impl std::ops::Neg for Value {
@@ -50,8 +69,17 @@ impl std::ops::Neg for Value {
         match self {
             Value::Integer(n) => Ok(Value::Integer(-n)),
             Value::Quantity(q) => Ok(Value::Quantity(q.neg())),
-            Value::Array(a) => -a,
-            Value::Tuple(t) => -t.as_ref().clone(),
+            Value::Array(mut a) => {
+                // Mutates in-place if refcount == 1; clones container only if shared.
+                std::rc::Rc::make_mut(&mut a).neg_in_place()?;
+
+                // `a` is already the mutated Rc<Array>!
+                Ok(Value::Array(a))
+            }
+            Value::Tuple(mut t) => {
+                std::rc::Rc::make_mut(&mut t).neg_in_place()?;
+                Ok(Value::Tuple(t))
+            }
             _ => Err(ValueError::InvalidOperator("-".into())),
         }
     }
@@ -63,8 +91,8 @@ impl std::ops::Not for Value {
     fn not(self) -> Self::Output {
         match self {
             Value::Bool(b) => Ok(Value::Bool(!b)),
-            Value::Array(a) => !a,
-            Value::Tuple(t) => !t.as_ref().clone(),
+            Value::Array(a) => !a.as_ref().clone(), // TODO This could be optimized via applying `not` in-place
+            Value::Tuple(t) => !t.as_ref().clone(), // TODO This could be optimized via applying `not` in-place
             _ => Err(ValueError::InvalidOperator("!".into())),
         }
     }
@@ -95,14 +123,14 @@ impl std::ops::Add for Value {
                     ));
                 }
 
-                Ok(Value::Array(Array::from_values(
-                    lhs.iter().chain(rhs.iter()).cloned().collect(),
-                )))
+                Ok(Array::from_iter(lhs.iter().chain(rhs.iter()).cloned()).into())
             }
             // Add a value to an array.
-            (Value::Array(lhs), rhs) => Ok((lhs + rhs)?),
+            (Value::Array(lhs), rhs) => Ok((lhs.as_ref().clone() + rhs)?), // TODO This could be optimized via applying `not` in-place
             // Add two tuples of the same type: (x = 1., y = 2.) + (x = 3., y = 4.)
-            (Value::Tuple(lhs), Value::Tuple(rhs)) => Ok((*lhs + *rhs)?.into()),
+            (Value::Tuple(lhs), Value::Tuple(rhs)) => {
+                Ok((lhs.as_ref().clone() + rhs.as_ref().clone())?.into()) // TODO This could be optimized via applying `not` in-place
+            } // TODO This could be optimized via applying `not` in-place
             (lhs, rhs) => Err(ValueError::InvalidOperator(format!("{lhs} + {rhs}"))),
         }
     }
@@ -123,9 +151,11 @@ impl std::ops::Sub for Value {
             // Subtract two numbers
             (Value::Quantity(lhs), Value::Quantity(rhs)) => lhs - rhs,
             // Subtract value to an array: `[1,2,3] - 1 = [0,1,2]`.
-            (Value::Array(lhs), rhs) => lhs - rhs,
+            (Value::Array(lhs), rhs) => lhs.as_ref().clone() - rhs,
             // Subtract two tuples of the same type: (x = 1., y = 2.) - (x = 3., y = 4.)
-            (Value::Tuple(lhs), Value::Tuple(rhs)) => Ok((*lhs - *rhs)?.into()),
+            (Value::Tuple(lhs), Value::Tuple(rhs)) => {
+                Ok((lhs.as_ref().clone() - rhs.as_ref().clone())?.into())
+            } // TODO This could be optimized via applying `not` in-place
 
             // Boolean difference operator for models
             (lhs, rhs) => Err(ValueError::InvalidOperator(format!("{lhs} - {rhs}"))),
@@ -147,7 +177,9 @@ impl std::ops::Mul for Value {
             (Value::Quantity(lhs), Value::Integer(rhs)) => lhs * rhs,
             // Multiply two scalars
             (Value::Quantity(lhs), Value::Quantity(rhs)) => lhs * rhs,
-            (Value::Array(array), value) | (value, Value::Array(array)) => Ok((array * value)?),
+            (Value::Array(array), value) | (value, Value::Array(array)) => {
+                Ok((array.as_ref().clone() * value)?)
+            }
 
             (Value::Tuple(tuple), value) | (value, Value::Tuple(tuple)) => {
                 Ok((tuple.as_ref().clone() * value)?.into())
@@ -172,9 +204,8 @@ impl std::ops::Mul<Unit> for Value {
             (Value::Quantity(quantity), Type::Quantity(quantity_type)) => {
                 quantity * Quantity::new(unit.factor(), quantity_type)
             }
-            (Value::Array(array), Type::Quantity(quantity_type)) => {
-                Ok((array * Value::Quantity(Quantity::new(unit.factor(), quantity_type)))?)
-            }
+            (Value::Array(array), Type::Quantity(quantity_type)) => Ok((array.as_ref().clone()
+                * Value::Quantity(Quantity::new(unit.factor(), quantity_type)))?),
             (value, _) => Err(ValueError::CannotAddUnitToValueWithUnit(value.to_string())),
         }
     }
@@ -193,7 +224,7 @@ impl std::ops::Div for Value {
             (Value::Quantity(lhs), Value::Integer(rhs)) => lhs / rhs,
             (Value::Integer(lhs), Value::Quantity(rhs)) => lhs / rhs,
             (Value::Quantity(lhs), Value::Quantity(rhs)) => lhs / rhs,
-            (Value::Array(array), value) => Ok((array / value)?),
+            (Value::Array(array), value) => Ok((array.as_ref().clone() / value)?),
             (Value::Tuple(tuple), value) => Ok((tuple.as_ref().clone() / value)?.into()),
             (lhs, rhs) => Err(ValueError::InvalidOperator(format!("{lhs} / {rhs}"))),
         }
