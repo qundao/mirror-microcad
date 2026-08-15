@@ -8,6 +8,7 @@ use microcad_lang_types::{TypeError, ValueError};
 use miette::Diagnostic;
 use thiserror::Error;
 
+#[non_exhaustive]
 #[derive(Debug, Error, Diagnostic)]
 pub enum BuiltinError {
     #[error(transparent)]
