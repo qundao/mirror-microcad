@@ -283,7 +283,7 @@ pub fn derive_scaffold(input: TokenStream) -> TokenStream {
 
     quote! {
         impl crate::Scaffold for #name {
-            fn scaffold(self, context: &mut crate::LowerContext) -> ir::IrNodeId {
+            fn scaffold(self, context: &mut crate::LowerContext) -> ir::NodeId {
                 #(
                     self.#field_idents.scaffold(context);
                 )*
