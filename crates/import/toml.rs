@@ -3,36 +3,28 @@
 
 //! Import values from TOML
 
-use microcad_lang_base::{Name, Identifier, SrcRef};
+use microcad_lang_base::{Identifier, Name, SrcRef};
 use microcad_lang_types::*;
 
 /// Import TOML files into a tuple.
 pub struct TomlImporter;
 
 impl TomlImporter {
-    fn toml_to_value(toml: &toml::Value) -> Value {
+    fn toml_to_value(toml: toml::Value) -> Value {
         match toml {
-            toml::Value::String(s) => Value::String(s.clone()),
-            toml::Value::Integer(i) => Value::Integer(*i),
-            toml::Value::Float(f) => (*f).into(),
-            toml::Value::Boolean(b) => Value::Bool(*b),
+            toml::Value::String(s) => s.into(),
+            toml::Value::Integer(i) => i.into(),
+            toml::Value::Float(f) => f.into(),
+            toml::Value::Boolean(b) => b.into(),
             toml::Value::Datetime(_) => todo!(),
             toml::Value::Array(values) => {
-                let mut list = Vec::new();
-                for toml_value in values {
-                    list.push(Self::toml_to_value(toml_value));
-                }
-                Value::Array(Array::from_values(
-                    ValueList::new(list),
-                    Type::Invalid, // TODO get common type here.
-                ))
+                Array::from_iter(values.into_iter().map(Self::toml_to_value)).into()
             }
-            toml::Value::Table(map) => Value::Tuple(Box::new(Tuple::new_named(
-                map.iter()
-                    .map(|(k, v)| (Identifier::no_ref(k), Self::toml_to_value(v)))
-                    .collect(),
-                SrcRef::none(),
-            ))),
+            toml::Value::Table(map) => Tuple::from_iter(
+                map.into_iter()
+                    .map(|(k, v)| (k.into(), Self::toml_to_value(v))),
+            )
+            .into(),
         }
     }
 }
