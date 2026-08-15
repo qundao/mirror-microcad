@@ -37,3 +37,15 @@ where
         self.root().descendants().for_each(|node| node.hash(state));
     }
 }
+
+#[macro_export]
+macro_rules! tree_type_defs {
+    ($vis:vis $tree:ident<$item:ty>) => {
+        $vis type Arena = $crate::tree::Arena<$item>;
+        $vis type Node = $crate::tree::Node<$item>;
+        $vis type NodeRef<'a> = $crate::tree::NodeRef<'a, $item>;
+        $vis type NodeMut<'a> = $crate::tree::NodeMut<'a, $item>;
+        $vis type Tree = $crate::tree::$tree<$item>;
+        $vis type NodeId = $crate::tree::NodeId;
+    };
+}
