@@ -8,7 +8,6 @@
 pub mod assignment;
 pub mod attribute;
 pub mod cast_into;
-pub mod constant;
 pub mod expression;
 pub mod function;
 pub mod parameter;
@@ -20,7 +19,6 @@ pub mod desugared;
 pub use assignment::*;
 pub use attribute::*;
 pub use cast_into::*;
-pub use constant::*;
 pub use expression::*;
 pub use function::*;
 pub use parameter::*;
@@ -92,6 +90,13 @@ pub struct InlineModule;
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct FileModule;
+
+/// A constant definition: `const FOO: Length = 32mm`.
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
+pub struct Constant {
+    pub ty: ir::Type,
+    pub expr: ir::ConstantExpression,
+}
 
 /// Symbol definition
 #[derive(Debug, Clone, Hash, From, PartialEq, Serialize, Deserialize)]

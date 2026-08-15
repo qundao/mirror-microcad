@@ -3,6 +3,7 @@
 
 //! Function definition syntax element
 
+use microcad_lang_proc_macros::Scaffold;
 use serde::{Deserialize, Serialize};
 
 use crate::ir;
@@ -10,23 +11,23 @@ use crate::ir;
 /// `use std::geo2d::Circle as C` => (path = "std::geo2d::Circle", id = "C")
 /// `use std::geo2d::Circle` => (path = "std::geo2d::Circle", id = "Circle")
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct ExplicitAlias {
+pub struct Alias {
     pub meta: ir::Meta,
     pub path: ir::Path,
 }
 
 /// `use std::geo2d::*`
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct WildcardAlias {
+pub struct Wildcard {
     pub meta: ir::Meta,
     pub path: ir::Path,
 }
 
 /// Aliases lowered from `use` statements.
-#[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize, Scaffold)]
 pub struct Aliases {
-    pub explicit_aliases: Box<[ExplicitAlias]>,
-    pub wildcards: Box<[WildcardAlias]>,
+    pub explicit_aliases: Box<[Alias]>,
+    pub wildcards: Box<[Wildcard]>,
 }
 
 /// A constant definition: `const FOO: Length = 32mm`.
@@ -37,7 +38,7 @@ pub struct Constant {
     pub expr: ir::ConstantExpression,
 }
 
-#[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize, Scaffold)]
 pub struct FunctionItems {
     /// use ...
     pub aliases: Aliases,
@@ -69,7 +70,7 @@ pub struct FileModule {
 }
 
 /// Items inside an inline module that will be resolved into Symbols.
-#[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize, Scaffold)]
 pub struct InlineModuleItems {
     pub modules: Box<[InlineModule]>,
     pub aliases: Aliases,
@@ -79,7 +80,7 @@ pub struct InlineModuleItems {
 }
 
 /// Workbench items that will be resolved into Symbols
-#[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize, Scaffold)]
 pub struct WorkbenchItems {
     /// `use`
     pub aliases: Aliases,
@@ -106,7 +107,7 @@ pub struct Workbench {
 }
 
 /// Items of a source file that will become symbols.
-#[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize, Scaffold)]
 pub struct SourceItems {
     /// List of file modules: `mod foo;`.
     pub file_modules: Box<[FileModule]>,

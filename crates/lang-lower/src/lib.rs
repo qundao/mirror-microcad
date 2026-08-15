@@ -13,8 +13,7 @@ mod scaffold;
 
 use microcad_builtin::BuiltinRegistry;
 use microcad_lang_base::{
-    CompilationResult, Diagnostics, HashId, Source, Span, SpanToSrcRef, SrcRef, SymbolId, ToHash,
-    hash_id,
+    CompilationResult, Diagnostics, HashId, Source, Span, SpanToSrcRef, SrcRef, SymbolId, hash_id,
 };
 
 pub use ir::CastInto;
@@ -87,8 +86,6 @@ pub struct LowerContext<'source> {
 
 impl<'source> LowerContext<'source> {
     pub fn new(source: &'source Source) -> Self {
-        let mut arena = IrArena::new();
-
         Self {
             source,
             arena: IrArena::default(),
@@ -97,8 +94,29 @@ impl<'source> LowerContext<'source> {
             errors: vec![],
         }
     }
+
     pub fn diag(&mut self, err: impl Into<LowerError>) {
         self.errors.push(err.into());
+    }
+
+    pub fn top_node(&self) -> &ir::IrNodeId {
+        self.node_id_stack.last().unwrap()
+    }
+
+    pub fn scaffold_item(&mut self, node: impl Into<ir::IrItem>) -> ir::IrNodeId {
+        self.arena.new_node(node.into())
+    }
+
+    pub fn scaffold_item_with_children(
+        &mut self,
+        node: impl Into<ir::IrItem>,
+        children: impl Scaffold,
+    ) -> ir::IrNodeId {
+        let node_id = self.scaffold_item(node);
+        self.node_id_stack.push(node_id);
+        children.scaffold(self);
+        self.node_id_stack.pop();
+        node_id
     }
 }
 
@@ -137,7 +155,7 @@ impl Unresolver for BuiltinRegistry {
 pub fn lower<'source>(context: &mut LowerContext<'source>, ast: &Ast) -> CompilationResult<Ir> {
     // Short-circuit on fatal errors
     let ir = match ir::desugared::Source::desugar(ast.tree(), context) {
-        Ok(mut ir) => ir,
+        Ok(ir) => ir,
         Err(fatal_error) => {
             let errors = std::mem::take(&mut context.errors);
             // Ensure the fatal error is logged in the diagnostics
@@ -147,10 +165,8 @@ pub fn lower<'source>(context: &mut LowerContext<'source>, ast: &Ast) -> Compila
     };
 
     let root = ir.scaffold(context);
-
     let arena = std::mem::take(&mut context.arena);
     let tree = ir::IrTree::new(root, arena);
-
     let ir = Ir {
         input_hash: ast.output_hash(),
         output_hash: hash_id!(tree),

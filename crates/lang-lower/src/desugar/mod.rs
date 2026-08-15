@@ -206,7 +206,7 @@ impl Desugar<ast::StatementList> for ir::desugared::Aliases {
             explicit_aliases: extract_statements(node, |stmt| match stmt {
                 ast::Statement::Use(use_statement) => match use_statement.name.parts.last() {
                     Some(ast::def::UseStatementPart::Identifier(id)) => {
-                        Ok(Some(ir::desugared::ExplicitAlias {
+                        Ok(Some(ir::desugared::Alias {
                             meta: ir::Meta {
                                 attr: ir::Attributes::desugar(&use_statement.attr, context)?,
                                 keyword_src_ref: context
@@ -234,7 +234,7 @@ impl Desugar<ast::StatementList> for ir::desugared::Aliases {
             wildcards: extract_statements(node, |stmt| match stmt {
                 ast::Statement::Use(use_statement) => match use_statement.name.parts.last() {
                     Some(ast::def::UseStatementPart::Glob(_)) => {
-                        Ok(Some(ir::desugared::WildcardAlias {
+                        Ok(Some(ir::desugared::Wildcard {
                             meta: ir::Meta {
                                 name: None,
                                 attr: ir::Attributes::desugar(&use_statement.attr, context)?,
