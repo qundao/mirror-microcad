@@ -104,7 +104,7 @@ pub trait NodeExt<'a> {
 
     fn deduce_output_type(&self) -> ModelOutputType;
 
-    fn into_group_child(&self) -> Option<NodeRef<'a>>;
+    fn into_group_child(self) -> Option<NodeRef<'a>>;
 
     fn multiplicity_descendants(&self) -> iter::MultiplicityDescendants<'a>;
 }
@@ -134,7 +134,7 @@ impl<'a> NodeExt<'a> for NodeRef<'a> {
     /// Return inner group child if this model only contains a single group child.
     ///
     /// Useful for operations like `subtract() {}` or `hull() {}` to unwrap nested groups.
-    fn into_group_child(&self) -> Option<NodeRef<'a>> {
+    fn into_group_child(self) -> Option<NodeRef<'a>> {
         let mut children = self.children();
         let first_child = children.next()?;
 
