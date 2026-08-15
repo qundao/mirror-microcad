@@ -60,7 +60,7 @@ impl SourceFile {
             ArtifactKind::Ast => self.ast.artifact().map(|ast| ast.emit(path)),
             ArtifactKind::Ir => self.ir.artifact().map(|ir| ir.emit(path)),
             ArtifactKind::Mir => self.mir.artifact().map(|mir| mir.emit(path)),
-            ArtifactKind::Rst => self.rst.artifact().map(|rst| rst.emit(path)),
+            ArtifactKind::Symbol => self.rst.artifact().map(|rst| rst.emit(path)),
         };
 
         Ok(())
