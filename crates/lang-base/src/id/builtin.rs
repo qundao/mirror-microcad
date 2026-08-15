@@ -38,7 +38,7 @@ impl From<String> for BuiltinId {
 ///
 /// Each built-in symbol has a [`BuiltinInfo`] as property.
 #[derive(Debug, Clone, Display)]
-#[debug("{}", name)]
+#[debug("{name}")]
 #[display("{name}@{id}")]
 pub struct BuiltinInfo {
     pub name: &'static str,

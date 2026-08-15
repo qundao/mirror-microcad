@@ -19,6 +19,7 @@ bytemuck = "1.25.0"
 color-print = { version = "0.3", optional = true }
 compact_str = { version = "0.10.0", features = ["serde"] }
 derive_more = { version = "2.1.1", features = [
+    "debug",
     "deref",
     "deref_mut",
     "display",
