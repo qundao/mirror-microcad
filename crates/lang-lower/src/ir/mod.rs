@@ -29,7 +29,7 @@ pub use microcad_lang_base::{Identifier, element::Visibility};
 pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Ty, Unit};
 
 use derive_more::{Deref, Display, From};
-use microcad_lang_base::SrcRef;
+use microcad_lang_base::{SrcRef, tree_type_defs};
 use serde::{Deserialize, Serialize};
 
 use crate::ir;
@@ -128,9 +128,4 @@ pub struct IrItem {
     pub def: Def,
 }
 
-pub type IrArena = microcad_lang_base::tree::Arena<IrItem>;
-pub type IrNode = microcad_lang_base::tree::Node<IrItem>;
-pub type IrNodeRef<'a> = microcad_lang_base::tree::NodeRef<'a, IrItem>;
-pub type IrNodeMut<'a> = microcad_lang_base::tree::NodeMut<'a, IrItem>;
-pub type IrTree = microcad_lang_base::tree::Tree<IrItem>;
-pub type IrNodeId = microcad_lang_base::tree::NodeId;
+tree_type_defs!(pub Tree<IrItem>);

@@ -23,13 +23,13 @@ use microcad_lang_parse::Ast;
 use microcad_lang_proc_macros::Artifact;
 use serde::{Deserialize, Serialize};
 
-use crate::{ir::IrArena, scaffold::Scaffold};
+use crate::{ir::Arena, scaffold::Scaffold};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Artifact)]
 pub struct Ir {
     pub input_hash: HashId,
     pub output_hash: HashId,
-    pub tree: ir::IrTree,
+    pub tree: ir::Tree,
 }
 
 pub trait Unresolver {
@@ -78,8 +78,8 @@ impl Desugar<Ast> for ir::desugared::Source {
 
 pub struct LowerContext<'source> {
     pub source: &'source Source,
-    pub arena: ir::IrArena,
-    pub node_id_stack: Vec<ir::IrNodeId>,
+    pub arena: ir::Arena,
+    pub node_id_stack: Vec<ir::NodeId>,
     pub builtins: BuiltinRegistry,
     pub errors: Vec<LowerError>,
 }
@@ -88,7 +88,7 @@ impl<'source> LowerContext<'source> {
     pub fn new(source: &'source Source) -> Self {
         Self {
             source,
-            arena: IrArena::default(),
+            arena: Arena::default(),
             node_id_stack: vec![],
             builtins: BuiltinRegistry::new(),
             errors: vec![],
@@ -99,11 +99,11 @@ impl<'source> LowerContext<'source> {
         self.errors.push(err.into());
     }
 
-    pub fn top_node(&self) -> &ir::IrNodeId {
+    pub fn top_node(&self) -> &ir::NodeId {
         self.node_id_stack.last().unwrap()
     }
 
-    pub fn scaffold_item(&mut self, node: impl Into<ir::IrItem>) -> ir::IrNodeId {
+    pub fn scaffold_item(&mut self, node: impl Into<ir::IrItem>) -> ir::NodeId {
         self.arena.new_node(node.into())
     }
 
@@ -111,7 +111,7 @@ impl<'source> LowerContext<'source> {
         &mut self,
         node: impl Into<ir::IrItem>,
         children: impl Scaffold,
-    ) -> ir::IrNodeId {
+    ) -> ir::NodeId {
         let node_id = self.scaffold_item(node);
         self.node_id_stack.push(node_id);
         children.scaffold(self);
@@ -166,7 +166,7 @@ pub fn lower<'source>(context: &mut LowerContext<'source>, ast: &Ast) -> Compila
 
     let root = ir.scaffold(context);
     let arena = std::mem::take(&mut context.arena);
-    let tree = ir::IrTree::new(root, arena);
+    let tree = ir::Tree::new(root, arena);
     let ir = Ir {
         input_hash: ast.output_hash(),
         output_hash: hash_id!(tree),

@@ -6,14 +6,14 @@
 use crate::{LowerContext, ir};
 
 pub trait Scaffold: Sized {
-    fn scaffold(self, context: &mut LowerContext) -> ir::IrNodeId;
+    fn scaffold(self, context: &mut LowerContext) -> ir::NodeId;
 }
 
 impl<T> Scaffold for Box<[T]>
 where
     T: Scaffold,
 {
-    fn scaffold(self, context: &mut LowerContext) -> ir::IrNodeId {
+    fn scaffold(self, context: &mut LowerContext) -> ir::NodeId {
         self.into_iter().for_each(|item| {
             context
                 .top_node()
@@ -24,7 +24,7 @@ where
 }
 
 impl Scaffold for ir::desugared::FileModule {
-    fn scaffold(self, context: &mut LowerContext) -> ir::IrNodeId {
+    fn scaffold(self, context: &mut LowerContext) -> ir::NodeId {
         context.scaffold_item(ir::IrItem {
             meta: self.meta,
             def: ir::FileModule.into(),
@@ -33,7 +33,7 @@ impl Scaffold for ir::desugared::FileModule {
 }
 
 impl Scaffold for ir::desugared::Alias {
-    fn scaffold(self, context: &mut LowerContext) -> ir::IrNodeId {
+    fn scaffold(self, context: &mut LowerContext) -> ir::NodeId {
         context.scaffold_item(ir::IrItem {
             meta: self.meta,
             def: ir::Alias(self.path).into(),
@@ -42,7 +42,7 @@ impl Scaffold for ir::desugared::Alias {
 }
 
 impl Scaffold for ir::desugared::Wildcard {
-    fn scaffold(self, context: &mut LowerContext) -> ir::IrNodeId {
+    fn scaffold(self, context: &mut LowerContext) -> ir::NodeId {
         context.scaffold_item(ir::IrItem {
             meta: self.meta,
             def: ir::Wildcard(self.path).into(),
@@ -51,7 +51,7 @@ impl Scaffold for ir::desugared::Wildcard {
 }
 
 impl Scaffold for ir::desugared::Constant {
-    fn scaffold(self, context: &mut LowerContext) -> ir::IrNodeId {
+    fn scaffold(self, context: &mut LowerContext) -> ir::NodeId {
         context.scaffold_item(ir::IrItem {
             meta: self.meta,
             def: ir::Constant {
@@ -64,7 +64,7 @@ impl Scaffold for ir::desugared::Constant {
 }
 
 impl Scaffold for ir::desugared::InlineModule {
-    fn scaffold(self, context: &mut LowerContext) -> ir::IrNodeId {
+    fn scaffold(self, context: &mut LowerContext) -> ir::NodeId {
         context.scaffold_item_with_children(
             ir::IrItem {
                 meta: self.meta,
@@ -76,7 +76,7 @@ impl Scaffold for ir::desugared::InlineModule {
 }
 
 impl Scaffold for ir::desugared::Function {
-    fn scaffold(self, context: &mut LowerContext) -> ir::IrNodeId {
+    fn scaffold(self, context: &mut LowerContext) -> ir::NodeId {
         context.scaffold_item_with_children(
             ir::IrItem {
                 meta: self.meta,
@@ -92,7 +92,7 @@ impl Scaffold for ir::desugared::Function {
 }
 
 impl Scaffold for ir::desugared::Workbench {
-    fn scaffold(self, context: &mut LowerContext) -> ir::IrNodeId {
+    fn scaffold(self, context: &mut LowerContext) -> ir::NodeId {
         context.scaffold_item_with_children(
             ir::IrItem {
                 meta: self.meta,
@@ -110,7 +110,7 @@ impl Scaffold for ir::desugared::Workbench {
 }
 
 impl Scaffold for ir::desugared::Source {
-    fn scaffold(self, context: &mut LowerContext) -> ir::IrNodeId {
+    fn scaffold(self, context: &mut LowerContext) -> ir::NodeId {
         context.scaffold_item_with_children(
             ir::IrItem {
                 meta: self.meta,
