@@ -129,15 +129,21 @@ pub struct IrItem {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct Tree<T> {
+pub struct Tree {
     root: NodeId,
-    arena: Arena<T>,
+    arena: Arena,
 }
 
-impl<T> std::hash::Hash for Tree<T>
-where
-    T: std::hash::Hash,
-{
+impl From<(NodeId, Arena)> for Tree {
+    fn from(value: (NodeId, Arena)) -> Self {
+        Self {
+            root: value.0,
+            arena: value.1,
+        }
+    }
+}
+
+impl std::hash::Hash for Tree {
     fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
         self.root().descendants().for_each(|node| node.hash(state));
     }

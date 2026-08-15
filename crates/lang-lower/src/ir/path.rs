@@ -79,14 +79,11 @@ impl From<BuiltinId> for Path {
 
 impl MakeHumanReadable for Path {
     fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
-        match self {
-            Path::Resolved(id) => {
-                *self = Path::HumanReadable {
-                    path: unresolver.unresolve(id.clone()),
-                    id: Some(id.clone()),
-                };
-            }
-            _ => {}
+        if let Path::Resolved(id) = self {
+            *self = Path::HumanReadable {
+                path: unresolver.unresolve(id.clone()),
+                id: Some(id.clone()),
+            };
         }
     }
 }

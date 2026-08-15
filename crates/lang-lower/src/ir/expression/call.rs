@@ -57,12 +57,12 @@ where
                 expr,
                 src_ref,
             } => Argument::Named {
-                name: name,
+                name,
                 expr: expr.cast_into(),
                 src_ref,
             },
             Argument::AutoNamed { name, expr } => Argument::AutoNamed {
-                name: name,
+                name,
                 expr: expr.cast_into(),
             },
         }
@@ -183,7 +183,7 @@ where
 {
     fn cast_into(self) -> Call<Dst> {
         Call {
-            path: self.path.into(),
+            path: self.path,
             args: self.args.cast_into(),
             src_ref: self.src_ref,
         }

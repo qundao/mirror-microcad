@@ -10,118 +10,165 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0xb3b97c5b5fc7a57e",
-        output_hash: "0x521700bbcccf7020",
+        output_hash: "0xf651e494e2d6a1d",
         tree: (
-            id: Some("builtin"),
-            attr: ((
-                doc: ((
-                    value: [],
-                    src_ref: "0:1 @ 0xb68464fb05014e73 (0..141)",
-                )),
-                meta: [],
-                commands: [],
-                tags: [],
-            )),
-            items: (
-                file_modules: [],
-                inline_modules: [],
-                aliases: (
-                    explicit_aliases: [
-                        (
-                            attr: ((
-                                doc: ((
-                                    value: [],
-                                    src_ref: "None",
-                                )),
-                                meta: [],
-                                commands: [],
-                                tags: [],
-                            )),
-                            visibility: Private,
-                            keyword_src_ref: "0:1 @ 0xb68464fb05014e73 (0..3)",
-                            path: HumanReadable(
-                                path: "__mu::core::sub",
-                                id: Some(Builtin(("0xa1730e22ab78d7d8"))),
-                            ),
-                            id: ((
-                                value: "sub",
-                                src_ref: "0:17 @ 0xb68464fb05014e73 (16..19)",
-                            )),
-                            src_ref: "0:1 @ 0xb68464fb05014e73 (0..19)",
-                        ),
-                        (
-                            attr: ((
-                                doc: ((
-                                    value: [],
-                                    src_ref: "None",
-                                )),
-                                meta: [],
-                                commands: [],
-                                tags: [],
-                            )),
-                            visibility: Private,
-                            keyword_src_ref: "1:1 @ 0xb68464fb05014e73 (21..24)",
-                            path: HumanReadable(
-                                path: "__mu::core::mul",
-                                id: Some(Builtin(("0x5da4622536ec034"))),
-                            ),
-                            id: ((
-                                value: "multiply",
-                                src_ref: "1:24 @ 0xb68464fb05014e73 (44..52)",
-                            )),
-                            src_ref: "1:1 @ 0xb68464fb05014e73 (21..52)",
-                        ),
-                    ],
-                    wildcards: [],
-                ),
-                constants: [],
-                functions: [],
-                workbenches: [],
+            root: (
+                index1: 1,
+                stamp: (0),
             ),
-            statements: [
-                (
-                    attr: ((
-                        doc: ((
-                            value: [],
-                            src_ref: "None",
+            arena: (
+                nodes: [
+                    (
+                        parent: None,
+                        previous_sibling: None,
+                        next_sibling: None,
+                        first_child: Some((
+                            index1: 2,
+                            stamp: (0),
                         )),
-                        meta: [],
-                        commands: [],
-                        tags: [],
-                    )),
-                    src_ref: "5:1 @ 0xb68464fb05014e73 (97..126)",
-                    visibility: Private,
-                    keyword_src_ref: "None",
-                    id: Some(((
-                        value: "a",
-                        src_ref: "5:1 @ 0xb68464fb05014e73 (97..98)",
-                    ))),
-                    ty: (
-                        ty: Any,
-                        src_ref: "None",
+                        last_child: Some((
+                            index1: 3,
+                            stamp: (0),
+                        )),
+                        stamp: (0),
+                        data: Data((
+                            meta: (
+                                name: Some(((
+                                    value: "builtin",
+                                    src_ref: "None",
+                                ))),
+                                vis: Public,
+                                attr: (
+                                    doc: ((
+                                        value: [],
+                                        src_ref: "0:1 @ 0xb68464fb05014e73 (0..141)",
+                                    )),
+                                    kv_exprs: [],
+                                    commands: [],
+                                    tags: [],
+                                ),
+                                src_ref: "0:1 @ 0xb68464fb05014e73 (0..141)",
+                                keyword_src_ref: "None",
+                            ),
+                            def: SourceFile((
+                                statements: [
+                                    (
+                                        attr: (
+                                            doc: ((
+                                                value: [],
+                                                src_ref: "None",
+                                            )),
+                                            kv_exprs: [],
+                                            commands: [],
+                                            tags: [],
+                                        ),
+                                        src_ref: "5:1 @ 0xb68464fb05014e73 (97..126)",
+                                        visibility: Private,
+                                        keyword_src_ref: "None",
+                                        id: Some(((
+                                            value: "a",
+                                            src_ref: "5:1 @ 0xb68464fb05014e73 (97..98)",
+                                        ))),
+                                        ty: (
+                                            ty: Any,
+                                            src_ref: "None",
+                                        ),
+                                        expression: Call((
+                                            path: Resolved(Builtin(("0x2a1ad822686b2491"))),
+                                            args: (
+                                                src_ref: "5:21 @ 0xb68464fb05014e73 (117..125)",
+                                                args: [
+                                                    Unnamed(Literal(((
+                                                        value: Quantity("1"),
+                                                        src_ref: "5:21 @ 0xb68464fb05014e73 (117..120)",
+                                                    )))),
+                                                    Unnamed(Literal(((
+                                                        value: Quantity("2"),
+                                                        src_ref: "5:26 @ 0xb68464fb05014e73 (122..125)",
+                                                    )))),
+                                                ],
+                                            ),
+                                            src_ref: "5:5 @ 0xb68464fb05014e73 (101..126)",
+                                        )),
+                                    ),
+                                ],
+                            )),
+                        )),
                     ),
-                    expression: Call((
-                        path: HumanReadable(
-                            path: "__mu::core::add",
-                            id: Some(Builtin(("0x2a1ad822686b2491"))),
-                        ),
-                        args: (
-                            src_ref: "5:21 @ 0xb68464fb05014e73 (117..125)",
-                            args: [
-                                Unnamed(Literal(((
-                                    value: Quantity("1"),
-                                    src_ref: "5:21 @ 0xb68464fb05014e73 (117..120)",
-                                )))),
-                                Unnamed(Literal(((
-                                    value: Quantity("2"),
-                                    src_ref: "5:26 @ 0xb68464fb05014e73 (122..125)",
-                                )))),
-                            ],
-                        ),
-                        src_ref: "5:5 @ 0xb68464fb05014e73 (101..126)",
-                    )),
-                ),
-            ],
+                    (
+                        parent: Some((
+                            index1: 1,
+                            stamp: (0),
+                        )),
+                        previous_sibling: None,
+                        next_sibling: Some((
+                            index1: 3,
+                            stamp: (0),
+                        )),
+                        first_child: None,
+                        last_child: None,
+                        stamp: (0),
+                        data: Data((
+                            meta: (
+                                name: Some(((
+                                    value: "sub",
+                                    src_ref: "0:17 @ 0xb68464fb05014e73 (16..19)",
+                                ))),
+                                vis: Private,
+                                attr: (
+                                    doc: ((
+                                        value: [],
+                                        src_ref: "None",
+                                    )),
+                                    kv_exprs: [],
+                                    commands: [],
+                                    tags: [],
+                                ),
+                                src_ref: "0:1 @ 0xb68464fb05014e73 (0..19)",
+                                keyword_src_ref: "0:1 @ 0xb68464fb05014e73 (0..3)",
+                            ),
+                            def: Alias((Resolved(Builtin(("0xa1730e22ab78d7d8"))))),
+                        )),
+                    ),
+                    (
+                        parent: Some((
+                            index1: 1,
+                            stamp: (0),
+                        )),
+                        previous_sibling: Some((
+                            index1: 2,
+                            stamp: (0),
+                        )),
+                        next_sibling: None,
+                        first_child: None,
+                        last_child: None,
+                        stamp: (0),
+                        data: Data((
+                            meta: (
+                                name: Some(((
+                                    value: "multiply",
+                                    src_ref: "1:24 @ 0xb68464fb05014e73 (44..52)",
+                                ))),
+                                vis: Private,
+                                attr: (
+                                    doc: ((
+                                        value: [],
+                                        src_ref: "None",
+                                    )),
+                                    kv_exprs: [],
+                                    commands: [],
+                                    tags: [],
+                                ),
+                                src_ref: "1:1 @ 0xb68464fb05014e73 (21..52)",
+                                keyword_src_ref: "1:1 @ 0xb68464fb05014e73 (21..24)",
+                            ),
+                            def: Alias((Resolved(Builtin(("0x5da4622536ec034"))))),
+                        )),
+                    ),
+                ],
+                first_free_slot: None,
+                last_free_slot: None,
+            ),
         ),
     ),
 )
