@@ -343,7 +343,7 @@ trait Bind<'ctx> {
 impl<'ctx> Bind<'ctx> for mir::Path {
     fn bind(&mut self, binder: &mut Binder<'ctx>) -> ResolveResult<()> {
         match self {
-            microcad_package::rst::Path::Unresolved(unresolved_path) => {
+            microcad_package::symbol::Path::Unresolved(unresolved_path) => {
                 todo!()
                 //*self = binder.bind(unresolved_path)?;
                 //Ok(())

@@ -5,13 +5,13 @@ use microcad_lang_base::{SrcReferrer, element::Case};
 
 use crate::{ResolveResult, resolve::ResolveError};
 
-use microcad_package::rst;
+use microcad_package::symbol;
 
 /// Check case
 pub trait CaseCheck {
     fn expected_case(&self) -> Option<Case>;
 
-    fn case_check(&self, id: &rst::Identifier) -> ResolveResult<()> {
+    fn case_check(&self, id: &symbol::Identifier) -> ResolveResult<()> {
         let actual = id.detect_case();
         match self.expected_case() {
             Some(expected) => {
@@ -30,11 +30,11 @@ pub trait CaseCheck {
     }
 }
 
-impl CaseCheck for rst::ResolvedSymbolDef {
+impl CaseCheck for symbol::SymbolDef {
     fn expected_case(&self) -> Option<Case> {
-        use rst::ResolvedSymbolDef::*;
+        use symbol::SymbolDef::*;
         match &self {
-            SourceFile(_) | InlineModule | Function(_) => Some(Case::LowerSnake),
+            Source(_) | InlineModule(_) | Function(_) => Some(Case::LowerSnake),
             Workbench(_) => Some(Case::Pascal),
             Constant(_) => Some(Case::UpperSnake),
             Alias(_) | Wildcard(_) => None,

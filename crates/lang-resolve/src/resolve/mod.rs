@@ -25,7 +25,7 @@ mod resolver;
 mod type_check;
 
 use microcad_lang_base::{CompilationResult, Diagnostics};
-use microcad_package::rst::Rst;
+use microcad_package::symbol::Rst;
 
 use crate::{
     mir::{self, UnresolvedSymbolTree},
