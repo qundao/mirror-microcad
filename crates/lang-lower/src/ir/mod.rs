@@ -29,7 +29,7 @@ pub use microcad_lang_base::{Identifier, element::Visibility};
 pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Ty, Unit};
 
 use derive_more::{Deref, Display, From};
-use microcad_lang_base::{SrcRef, tree_type_defs};
+use microcad_lang_base::{SrcRef, impl_tree_types};
 use serde::{Deserialize, Serialize};
 
 use crate::ir;
@@ -128,4 +128,19 @@ pub struct IrItem {
     pub def: Def,
 }
 
-tree_type_defs!(pub Tree<IrItem>);
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Tree<T> {
+    root: NodeId,
+    arena: Arena<T>,
+}
+
+impl<T> std::hash::Hash for Tree<T>
+where
+    T: std::hash::Hash,
+{
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.root().descendants().for_each(|node| node.hash(state));
+    }
+}
+
+impl_tree_types!(pub Tree<IrItem>);
