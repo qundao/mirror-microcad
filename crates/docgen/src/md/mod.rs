@@ -33,8 +33,8 @@ impl Md {
     }
 }
 
-impl<'a> DocGen<'a> for Md {
-    fn doc_gen(&self, symbol: SymbolNodeRef<'a>) -> Result<(), Box<dyn Error>> {
+impl DocGen for Md {
+    fn doc_gen<'a>(&self, symbol: SymbolNodeRef<'a>) -> Result<(), Box<dyn Error>> {
         symbol
             .descendants()
             .filter(|symbol| matches!(symbol.def(), SymbolDef::Source(_)))

@@ -16,6 +16,6 @@ use microcad_package::SymbolNodeRef;
 use std::error::Error;
 
 /// Documentation generator for a symbol.
-pub trait DocGen<'a> {
-    fn doc_gen(&self, symbol: SymbolNodeRef<'a>) -> Result<(), Box<dyn Error>>;
+pub trait DocGen {
+    fn doc_gen<'a>(&self, symbol: SymbolNodeRef<'a>) -> Result<(), Box<dyn Error>>;
 }

@@ -186,8 +186,8 @@ impl MdBook {
     }
 }
 
-impl<'a> DocGen<'a> for MdBook {
-    fn doc_gen(&self, symbol: SymbolNodeRef<'a>) -> Result<(), Box<dyn Error>> {
+impl DocGen for MdBook {
+    fn doc_gen<'a>(&self, symbol: SymbolNodeRef<'a>) -> Result<(), Box<dyn Error>> {
         std::fs::create_dir_all(self.path.join("src"))?;
 
         self.write_book_toml()?;
