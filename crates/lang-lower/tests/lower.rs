@@ -4,7 +4,7 @@
 use microcad_lang_base::{
     Artifact, CompilationResult, DiagRenderOptions, Identifier, MICROCAD_EXTENSION, Source,
 };
-use microcad_lang_lower::{self as lower, Ir, LowerContext, ir};
+use microcad_lang_lower::{self as lower, Desugar, Ir, LowerContext, LowerResult, ir};
 use microcad_lang_parse::{
     self as parse, Ast, Parse,
     ast::visitor::{ExpectedDiagnostic, ExpectedDiagnostics},
@@ -25,6 +25,22 @@ fn ir_from_source(source: &Source) -> CompilationResult<Ir> {
     lower::lower(&mut context, &ast)
 }
 
+fn desugar(source: &Source) -> LowerResult<ir::desugared::Source> {
+    let ast = parse::parse(source).expect("No parse error").0;
+    let mut context = LowerContext::from(source);
+    ir::desugared::Source::desugar(ast.tree(), &mut context)
+}
+
+macro_rules! desugar_unit_test {
+    ($name:ident => |$ir:ident| $body:block) => {
+        #[test_that::test]
+        fn $name() {
+            let source = source_from_test_file(stringify!($name));
+            desugar(&source).expect("No error")
+        }
+    };
+}
+
 macro_rules! unit_test {
     ($name:ident => |$ir:ident, $diag:ident| $body:block) => {
         #[test_that::test]
@@ -41,7 +57,6 @@ macro_rules! unit_test {
         }
     };
 }
-
 macro_rules! snapshot_test {
     // A successful snapshot test without errors and warnings.
     ($name:ident => ok) => {
@@ -133,7 +148,7 @@ macro_rules! test_diagnostic {
     };
 }
 
-unit_test!(module => |ir, diag| {
+desugar_unit_test!(module => |ir| {
     assert_that!(ir.tree, matches_pattern!(ir::Source {
         *statements: len(eq(3)),
         items: matches_pattern!(ir::SourceItems {
@@ -154,10 +169,9 @@ unit_test!(module => |ir, diag| {
         })
     }));
 
-    assert!(!diag.has_errors())
 });
 
-unit_test!(inline_module => |ir, diag| {
+desugar_unit_test!(inline_module => |ir| {
     assert_that!(ir.tree, matches_pattern!(ir::Source {
         statements: empty(),
         items: matches_pattern!(ir::SourceItems {

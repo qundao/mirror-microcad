@@ -1,35 +1,35 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Lower, LowerContext, LowerError, LowerResult, ir, lower::LowerExpr};
+use crate::{Desugar, LowerContext, LowerError, LowerResult, desugar::DesugarExpr, ir};
 
 use microcad_builtin::__mu;
 use microcad_lang_base::{Identifier, SpanToSrcRef, SrcRef};
 use microcad_lang_parse::ast;
 
-impl<Expr: LowerExpr> Lower<ast::Call> for ir::Call<Expr> {
-    fn lower(node: &ast::Call, context: &mut LowerContext) -> LowerResult<Self> {
+impl<Expr: DesugarExpr> Desugar<ast::Call> for ir::Call<Expr> {
+    fn desugar(node: &ast::Call, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::Call {
             src_ref: context.span_to_src_ref(&node.span),
-            path: ir::Path::lower(&node.path, context)?,
-            args: ir::ArgumentList::lower(&node.arguments, context)?,
+            path: ir::Path::desugar(&node.path, context)?,
+            args: ir::ArgumentList::desugar(&node.arguments, context)?,
         })
     }
 }
 
-impl<Expr: LowerExpr> Lower<Vec<ast::TupleItem>> for ir::ArgumentList<Expr> {
-    fn lower(node: &Vec<ast::TupleItem>, context: &mut LowerContext) -> LowerResult<Self> {
+impl<Expr: DesugarExpr> Desugar<Vec<ast::TupleItem>> for ir::ArgumentList<Expr> {
+    fn desugar(node: &Vec<ast::TupleItem>, context: &mut LowerContext) -> LowerResult<Self> {
         let mut args = Vec::new();
         let mut names: microcad_lang_base::HashSet<Identifier> =
             microcad_lang_base::HashSet::default();
 
         node.iter().try_for_each(|arg| -> LowerResult<()> {
-            let expr = Expr::lower(&arg.expr, context)?;
+            let expr = Expr::desugar(&arg.expr, context)?;
             let src_ref = context.span_to_src_ref(&arg.span);
 
             let arg = match &arg.id {
                 Some(name) => ir::Argument::Named {
-                    name: ir::Identifier::lower(name, context)?,
+                    name: ir::Identifier::desugar(name, context)?,
                     expr,
                     src_ref,
                 },
@@ -59,8 +59,8 @@ impl<Expr: LowerExpr> Lower<Vec<ast::TupleItem>> for ir::ArgumentList<Expr> {
     }
 }
 
-impl<Expr: LowerExpr> Lower<ast::ArgumentList> for ir::ArgumentList<Expr> {
-    fn lower(node: &ast::ArgumentList, context: &mut LowerContext) -> LowerResult<Self> {
+impl<Expr: DesugarExpr> Desugar<ast::ArgumentList> for ir::ArgumentList<Expr> {
+    fn desugar(node: &ast::ArgumentList, context: &mut LowerContext) -> LowerResult<Self> {
         let mut args = Vec::new();
 
         node.arguments
@@ -68,12 +68,12 @@ impl<Expr: LowerExpr> Lower<ast::ArgumentList> for ir::ArgumentList<Expr> {
             .try_for_each(|arg| -> LowerResult<()> {
                 match arg.name() {
                     Some(name) => args.push(ir::Argument::Named {
-                        name: ir::Identifier::lower(name, context)?,
-                        expr: Expr::lower(arg.value(), context)?,
+                        name: ir::Identifier::desugar(name, context)?,
+                        expr: Expr::desugar(arg.value(), context)?,
                         src_ref: context.span_to_src_ref(arg.span()),
                     }),
                     None => {
-                        let expr = Expr::lower(arg.value(), context)?;
+                        let expr = Expr::desugar(arg.value(), context)?;
                         args.push(ir::Argument::from(expr));
                     }
                 }
@@ -87,22 +87,22 @@ impl<Expr: LowerExpr> Lower<ast::ArgumentList> for ir::ArgumentList<Expr> {
     }
 }
 
-impl<Expr: LowerExpr> Lower<ast::UnaryOperation> for ir::Call<Expr> {
-    fn lower(node: &ast::UnaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
+impl<Expr: DesugarExpr> Desugar<ast::UnaryOperation> for ir::Call<Expr> {
+    fn desugar(node: &ast::UnaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             path: match node.op.value {
                 ast::UnaryOperator::Minus => __mu!(core::neg),
                 ast::UnaryOperator::Plus => __mu!(core::plus),
                 ast::UnaryOperator::Not => __mu!(core::not),
             },
-            args: ir::ArgumentList::from_iter([Expr::lower(&node.rhs, context)?]),
+            args: ir::ArgumentList::from_iter([Expr::desugar(&node.rhs, context)?]),
             src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
 
-impl<Expr: LowerExpr> Lower<ast::BinaryOperation> for ir::Call<Expr> {
-    fn lower(node: &ast::BinaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
+impl<Expr: DesugarExpr> Desugar<ast::BinaryOperation> for ir::Call<Expr> {
+    fn desugar(node: &ast::BinaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             path: match node.op.value {
                 ast::BinaryOperator::Add => __mu!(core::add),
@@ -125,12 +125,12 @@ impl<Expr: LowerExpr> Lower<ast::BinaryOperation> for ir::Call<Expr> {
             args: ir::ArgumentList::from_iter([
                 ir::Argument::Named {
                     name: Identifier::no_ref("lhs"),
-                    expr: Expr::lower(&node.lhs, context)?,
+                    expr: Expr::desugar(&node.lhs, context)?,
                     src_ref: context.span_to_src_ref(&node.lhs.span()),
                 },
                 ir::Argument::Named {
                     name: Identifier::no_ref("rhs"),
-                    expr: Expr::lower(&node.rhs, context)?,
+                    expr: Expr::desugar(&node.rhs, context)?,
                     src_ref: context.span_to_src_ref(&node.rhs.span()),
                 },
             ]),
@@ -167,8 +167,8 @@ pub fn lower_spec(
     })
 }
 
-impl Lower<ast::FormatString> for ir::Call<ir::ConstantExpression> {
-    fn lower(node: &ast::FormatString, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::FormatString> for ir::Call<ir::ConstantExpression> {
+    fn desugar(node: &ast::FormatString, context: &mut LowerContext) -> LowerResult<Self> {
         let mut args_vec = Vec::new();
         let mut pending_str = String::new();
 
@@ -189,7 +189,7 @@ impl Lower<ast::FormatString> for ir::Call<ir::ConstantExpression> {
                     }
 
                     let lowered_expr =
-                        ir::ConstantExpression::lower(expr_part.expr.as_ref(), context)?;
+                        ir::ConstantExpression::desugar(expr_part.expr.as_ref(), context)?;
 
                     if expr_part.specification.is_some() {
                         args_vec.push(

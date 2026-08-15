@@ -1,43 +1,8 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::SrcRef;
-use microcad_lang_proc_macros::SrcReferrer;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
-use crate::{MakeHumanReadable, Unresolver, ir};
+use crate::ir;
 
-/// A constant definition: `const FOO: Length = 32mm`.
-#[skip_serializing_none]
-#[derive(Debug, Clone, SrcReferrer, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Constant {
-    pub src_ref: SrcRef,
-    pub attr: ir::OuterAttributes,
-    pub visibility: ir::Visibility,
-    #[serde(skip_serializing_if = "SrcRef::is_none", default)]
-    pub keyword_src_ref: SrcRef,
-    pub id: ir::Identifier,
-    pub ty: ir::Type,
-    pub expr: ir::ConstantExpression,
-}
-
-impl MakeHumanReadable for Constant {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        self.attr.make_human_readable(unresolver);
-        self.expr.make_human_readable(unresolver);
-    }
-}
-
-impl std::fmt::Display for Constant {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{vis}const {id}: {ty} = {expr}",
-            vis = self.visibility,
-            id = self.id,
-            ty = self.ty,
-            expr = self.expr
-        )
-    }
-}

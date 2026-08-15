@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang_base::{self as base};
-use microcad_lang_lower::{Lower, LowerContext, ir};
+use microcad_lang_lower::{Desugar, LowerContext, ir};
 use microcad_lang_parse::ast;
 
 #[test]
@@ -16,7 +16,7 @@ fn outer_doc_block() {
 
     let source = base::Source::new(base::SourceKind::Str, String::new());
     let mut lower_context = LowerContext::from(&source);
-    let doc_block = ir::DocBlock::lower(&doc_block, &mut lower_context).unwrap();
+    let doc_block = ir::DocBlock::desugar(&doc_block, &mut lower_context).unwrap();
 
     let lines = doc_block.0.iter().map(|s| s.as_str()).collect::<Vec<_>>();
 
@@ -50,7 +50,7 @@ fn inner_doc_block() {
 
     let source = base::Source::from("");
     let mut lower_context = LowerContext::from(&source);
-    let doc_block = ir::DocBlock::lower(&statements, &mut lower_context).unwrap();
+    let doc_block = ir::DocBlock::desugar(&statements, &mut lower_context).unwrap();
 
     let lines = doc_block.0.iter().map(|s| s.as_str()).collect::<Vec<_>>();
 

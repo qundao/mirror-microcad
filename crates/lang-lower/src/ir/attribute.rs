@@ -3,9 +3,8 @@
 
 //! Attribute syntax entities.
 
-use crate::{MakeHumanReadable, Unresolver, ir};
+use crate::ir;
 
-use derive_more::{Deref, DerefMut};
 use microcad_lang_base::{Refer, SrcRef};
 
 use microcad_lang_proc_macros::SrcReferrer;
@@ -61,17 +60,11 @@ impl std::fmt::Display for DocBlock {
     }
 }
 
-/// Metadata for a [`Model`]
+/// Key-value attribute pair, e.g. `#[layer = "Test"]`
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Meta {
+pub struct KvExpr {
     pub name: ir::Path,
     pub expr: ir::ConstantExpression,
-}
-
-impl MakeHumanReadable for Meta {
-    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
-        self.expr.make_human_readable(unresolver);
-    }
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
@@ -79,13 +72,6 @@ pub struct Command {
     pub path: ir::Path,
     pub argument_list: ir::ArgumentList<ir::ConstantExpression>,
     pub src_ref: SrcRef,
-}
-
-impl MakeHumanReadable for Command {
-    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
-        self.path.make_human_readable(unresolver);
-        self.argument_list.make_human_readable(unresolver);
-    }
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
@@ -97,25 +83,18 @@ pub struct Tag {
 pub struct Attributes {
     /// Documentation
     pub doc: ir::DocBlock,
-    /// Metadata: #[color = "red"]
-    pub meta: Box<[Meta]>,
+    /// Key-value expressions: #[color = "red"]
+    pub kv_exprs: Box<[KvExpr]>,
     /// Commands: #[export("file.svg")] #[deprecate(since = "0.2.0")]
     pub commands: Box<[Command]>,
     /// Tags: #[deprecated]
     pub tags: Box<[Tag]>,
 }
 
-impl MakeHumanReadable for Attributes {
-    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
-        self.meta.make_human_readable(unresolver);
-        self.commands.make_human_readable(unresolver);
-    }
-}
-
 impl Attributes {
     pub fn is_empty(&self) -> bool {
         self.doc.is_empty()
-            && self.meta.is_empty()
+            && self.kv_exprs.is_empty()
             && self.commands.is_empty()
             && self.tags.is_empty()
     }
@@ -140,42 +119,10 @@ impl Attributes {
         self.doc = ir::DocBlock::merge(&self.doc, &rhs.doc);
 
         // Convert Box<[T]> to Vec<T> to append, then back to Box<[T]>
-        self.meta = extend_boxed_slices(self.meta, rhs.meta);
+        self.kv_exprs = extend_boxed_slices(self.kv_exprs, rhs.kv_exprs);
         self.commands = extend_boxed_slices(self.commands, rhs.commands);
         self.tags = extend_boxed_slices(self.tags, rhs.tags);
 
         self
-    }
-}
-
-/// Inner attributes (`//!`, `#![...]`), usually lowered from a `ast::StatementList`.
-#[derive(Debug, Clone, Deref, DerefMut, PartialEq, Hash, Serialize, Deserialize)]
-pub struct InnerAttributes(pub Attributes);
-
-impl MakeHumanReadable for InnerAttributes {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        self.0.make_human_readable(unresolver);
-    }
-}
-
-/// Outer attributes (`///`, `#[...]`), usually lowered from definitions.
-#[derive(Debug, Clone, Deref, DerefMut, Hash, PartialEq, Serialize, Deserialize)]
-pub struct OuterAttributes(pub Attributes);
-
-impl MakeHumanReadable for OuterAttributes {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        self.0.make_human_readable(unresolver);
-    }
-}
-
-impl From<OuterAttributes> for Attributes {
-    fn from(value: OuterAttributes) -> Self {
-        value.0
-    }
-}
-
-impl From<InnerAttributes> for Attributes {
-    fn from(value: InnerAttributes) -> Self {
-        value.0
     }
 }

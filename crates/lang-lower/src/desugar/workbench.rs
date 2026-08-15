@@ -2,16 +2,17 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    CastInto, Lower, LowerContext, LowerError, LowerResult, ir,
-    lower::{attribute::outer_with_doc, extract_statements, for_each_statement},
+    CastInto, Desugar, LowerContext, LowerError, LowerResult,
+    desugar::{attribute::outer_with_doc, extract_statements, for_each_statement},
+    ir,
 };
 
 use microcad_builtin::__mu;
-use microcad_lang_base::{Refer, SpanToSrcRef, SrcRef};
+use microcad_lang_base::{SpanToSrcRef, SrcRef};
 use microcad_lang_parse::ast;
 
-impl Lower<ast::Init> for ir::Init {
-    fn lower(node: &ast::Init, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Init> for ir::Init {
+    fn desugar(node: &ast::Init, context: &mut LowerContext) -> LowerResult<Self> {
         for_each_statement(&node.body.statements, context, |stmt, context| {
             let src_ref = context.span_to_src_ref(&stmt.span());
             use ast::Statement::*;
@@ -25,17 +26,17 @@ impl Lower<ast::Init> for ir::Init {
         })?;
 
         Ok(Self {
-            attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
+            attr: crate::desugar::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
             keyword_ref: context.span_to_src_ref(&node.keyword_span),
-            parameters: ir::ParameterList::lower(&node.parameters, context)?,
-            statements: Box::lower(&node.body.statements, context)?,
+            parameters: ir::ParameterList::desugar(&node.parameters, context)?,
+            statements: Box::desugar(&node.body.statements, context)?,
             src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
 
-impl Lower<ast::Body> for ir::Group {
-    fn lower(node: &ast::Body, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Body> for ir::Group {
+    fn desugar(node: &ast::Body, context: &mut LowerContext) -> LowerResult<Self> {
         let statements = &node.statements;
         for_each_statement(statements, context, |stmt, context| {
             let src_ref = context.span_to_src_ref(&stmt.span());
@@ -52,35 +53,37 @@ impl Lower<ast::Body> for ir::Group {
 
         Ok(Self {
             src_ref: context.span_to_src_ref(&node.span),
-            attr: ir::InnerAttributes::lower(statements, context)?,
-            statements: Box::lower(statements, context)?,
+            attr: ir::Attributes::desugar(statements, context)?,
+            statements: Box::desugar(statements, context)?,
         })
     }
 }
 
-impl Lower<ast::Expression> for ir::WorkbenchExpression {
-    fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Expression> for ir::WorkbenchExpression {
+    fn desugar(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
-            ast::Expression::Call(expr) => Self::Call(ir::Call::lower(expr, context)?),
-            ast::Expression::Bracketed(expr, _) => Self::lower(expr.as_ref(), context)?,
+            ast::Expression::Call(expr) => Self::Call(ir::Call::desugar(expr, context)?),
+            ast::Expression::Bracketed(expr, _) => Self::desugar(expr.as_ref(), context)?,
             ast::Expression::Literal(ast::Literal {
                 literal: ast::LiteralKind::String(s),
                 ..
             }) => Self::Literal(ir::Literal::from_value(s.content.clone())),
-            ast::Expression::Literal(expr) => Self::Literal(ir::Literal::lower(expr, context)?),
-            ast::Expression::String(s) => Self::Call(ir::Call::lower(s, context)?.cast_into()),
-            ast::Expression::Tuple(t) => Self::Call(ir::Call::lower(t, context)?),
-            ast::Expression::ArrayRange(a) => Self::lower(a, context)?,
-            ast::Expression::ArrayList(a) => Self::lower(a, context)?,
-            ast::Expression::SymbolPath(n) => Self::Path(ir::Path::lower(n, context)?),
-            ast::Expression::BinaryOperation(binop) => Self::Call(ir::Call::lower(binop, context)?),
-            ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call::lower(unop, context)?),
-            ast::Expression::Marker(identifier) => {
-                Self::Marker(ir::Marker::lower(identifier, context)?)
+            ast::Expression::Literal(expr) => Self::Literal(ir::Literal::desugar(expr, context)?),
+            ast::Expression::String(s) => Self::Call(ir::Call::desugar(s, context)?.cast_into()),
+            ast::Expression::Tuple(t) => Self::Call(ir::Call::desugar(t, context)?),
+            ast::Expression::ArrayRange(a) => Self::desugar(a, context)?,
+            ast::Expression::ArrayList(a) => Self::desugar(a, context)?,
+            ast::Expression::SymbolPath(n) => Self::Path(ir::Path::desugar(n, context)?),
+            ast::Expression::BinaryOperation(binop) => {
+                Self::Call(ir::Call::desugar(binop, context)?)
             }
-            ast::Expression::Body(body) => Self::Group(ir::Group::lower(body, context)?),
+            ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call::desugar(unop, context)?),
+            ast::Expression::Marker(identifier) => {
+                Self::Marker(ir::Marker::desugar(identifier, context)?)
+            }
+            ast::Expression::Body(body) => Self::Group(ir::Group::desugar(body, context)?),
             ast::Expression::ElementAccess(access) => access.element_chain.iter().try_fold(
-                Self::lower(access.expr.as_ref(), context)?,
+                Self::desugar(access.expr.as_ref(), context)?,
                 |lhs, element| -> LowerResult<Self> {
                     use ast::ElementInner::*;
                     let src_ref = context.span_to_src_ref(&access.span);
@@ -103,29 +106,29 @@ impl Lower<ast::Expression> for ir::WorkbenchExpression {
                             src_ref,
                         }),
                         Method(m) => Self::Call(ir::Call {
-                            path: ir::Path::lower(&m.path, context)?,
-                            args: ir::ArgumentList::lower(&m.arguments, context)?.prepended(lhs),
+                            path: ir::Path::desugar(&m.path, context)?,
+                            args: ir::ArgumentList::desugar(&m.arguments, context)?.prepended(lhs),
                             src_ref,
                         }),
                         ArrayElement(e) => Self::Call(ir::Call {
                             path: __mu!(core::array_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
-                                Self::lower(e.as_ref(), context)?,
+                                Self::desugar(e.as_ref(), context)?,
                             ]),
                             src_ref,
                         }),
                     })
                 },
             )?,
-            ast::Expression::If(if_expr) => Self::If(ir::If::lower(if_expr, context)?),
+            ast::Expression::If(if_expr) => Self::If(ir::If::desugar(if_expr, context)?),
             ast::Expression::Error(_) => todo!(),
         })
     }
 }
 
-impl Lower<ast::StatementList> for Box<[ir::Init]> {
-    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::StatementList> for Box<[ir::Init]> {
+    fn desugar(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         fn is_init(stmt: &ast::Statement) -> bool {
             matches!(stmt, ast::Statement::Init(_))
         }
@@ -177,80 +180,81 @@ impl Lower<ast::StatementList> for Box<[ir::Init]> {
 
         extract_statements(node, |stmt| {
             Ok(match stmt {
-                ast::Statement::Init(init) => Some(ir::Init::lower(init, context)?),
+                ast::Statement::Init(init) => Some(ir::Init::desugar(init, context)?),
                 _ => None,
             })
         })
     }
 }
 
-impl Lower<ast::LocalAssignment> for ir::WorkbenchStatement {
-    fn lower(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::LocalAssignment> for ir::WorkbenchStatement {
+    fn desugar(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            attr: ir::OuterAttributes::lower(&node.attr, context)?,
+            attr: ir::Attributes::desugar(&node.attr, context)?,
             src_ref: context.span_to_src_ref(&node.span),
             visibility: ir::Visibility::Private,
             keyword_src_ref: SrcRef::none(),
-            id: Some(ir::Identifier::lower(&node.id, context)?),
-            ty: ir::Type::lower(&node.ty, context)?,
-            expression: ir::WorkbenchExpression::lower(node.expr.as_ref(), context)?,
+            id: Some(ir::Identifier::desugar(&node.id, context)?),
+            ty: ir::Type::desugar(&node.ty, context)?,
+            expression: ir::WorkbenchExpression::desugar(node.expr.as_ref(), context)?,
         })
     }
 }
 
-impl Lower<ast::PropertyAssignment> for ir::WorkbenchStatement {
-    fn lower(node: &ast::PropertyAssignment, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::PropertyAssignment> for ir::WorkbenchStatement {
+    fn desugar(node: &ast::PropertyAssignment, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             attr: outer_with_doc(&node.doc, &node.attr, context)?,
             src_ref: context.span_to_src_ref(&node.span),
             visibility: ir::Visibility::Public,
             keyword_src_ref: context.span_to_src_ref(&node.keyword_span),
-            id: Some(ir::Identifier::lower(&node.id, context)?),
-            ty: ir::Type::lower(&node.ty, context)?,
-            expression: ir::WorkbenchExpression::lower(node.value.as_ref(), context)?,
+            id: Some(ir::Identifier::desugar(&node.id, context)?),
+            ty: ir::Type::desugar(&node.ty, context)?,
+            expression: ir::WorkbenchExpression::desugar(node.value.as_ref(), context)?,
         })
     }
 }
 
-impl Lower<ast::ExpressionStatement> for ir::WorkbenchStatement {
-    fn lower(node: &ast::ExpressionStatement, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::ExpressionStatement> for ir::WorkbenchStatement {
+    fn desugar(node: &ast::ExpressionStatement, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            attr: ir::OuterAttributes::lower(&node.attr, context)?,
+            attr: ir::Attributes::desugar(&node.attr, context)?,
             src_ref: context.span_to_src_ref(&node.span),
             visibility: ir::Visibility::Public,
             keyword_src_ref: SrcRef::none(),
             id: None,
             ty: ir::Type::default(),
-            expression: ir::WorkbenchExpression::lower(&node.expr, context)?,
+            expression: ir::WorkbenchExpression::desugar(&node.expr, context)?,
         })
     }
 }
 
-impl Lower<ast::ExpressionStatement> for Option<ir::WorkbenchStatement> {
-    fn lower(node: &ast::ExpressionStatement, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Some(ir::WorkbenchStatement::lower(node, context)?))
+impl Desugar<ast::ExpressionStatement> for Option<ir::WorkbenchStatement> {
+    fn desugar(node: &ast::ExpressionStatement, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Some(ir::WorkbenchStatement::desugar(node, context)?))
     }
 }
 
-impl Lower<ast::Statement> for Option<ir::WorkbenchStatement> {
-    fn lower(stmt: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Statement> for Option<ir::WorkbenchStatement> {
+    fn desugar(stmt: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match stmt {
             ast::Statement::LocalAssignment(local_assignment) => {
-                Some(ir::WorkbenchStatement::lower(local_assignment, context)?)
+                Some(ir::WorkbenchStatement::desugar(local_assignment, context)?)
             }
-            ast::Statement::Property(property_assignment) => {
-                Some(ir::WorkbenchStatement::lower(property_assignment, context)?)
-            }
+            ast::Statement::Property(property_assignment) => Some(ir::WorkbenchStatement::desugar(
+                property_assignment,
+                context,
+            )?),
             ast::Statement::Expression(expression_statement) => Some(
-                ir::WorkbenchStatement::lower(expression_statement, context)?,
+                ir::WorkbenchStatement::desugar(expression_statement, context)?,
             ),
             _ => None,
         })
     }
 }
 
-impl Lower<ast::StatementList> for ir::WorkbenchItems {
-    fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::StatementList> for ir::desugared::WorkbenchItems {
+    fn desugar(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         for_each_statement(statements, context, |stmt, context| {
             let src_ref = context.span_to_src_ref(&stmt.span());
             match stmt {
@@ -267,41 +271,44 @@ impl Lower<ast::StatementList> for ir::WorkbenchItems {
         })?;
 
         Ok(Self {
-            aliases: ir::Aliases::lower(statements, context)?,
-            constants: Box::lower(statements, context)?,
-            functions: Box::lower(statements, context)?,
+            aliases: ir::desugared::Aliases::desugar(statements, context)?,
+            constants: Box::desugar(statements, context)?,
+            functions: Box::desugar(statements, context)?,
         })
     }
 }
 
-impl Lower<ast::def::Workbench> for ir::Workbench {
-    fn lower(node: &ast::def::Workbench, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::def::Workbench> for ir::desugared::Workbench {
+    fn desugar(node: &ast::def::Workbench, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            keyword_ref: context.span_to_src_ref(&node.keyword_span),
-            outer_attr: crate::lower::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
-            visibility: ir::Visibility::lower(&node.vis, context)?,
-            kind: Refer::new(node.kind, context.span_to_src_ref(&node.span)),
-            id: ir::Identifier::lower(&node.id, context)?,
-            parameters: ir::ParameterList::lower(&node.parameters, context)?,
-            inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
-            inits: Box::lower(&node.body.statements, context)?,
-            items: ir::WorkbenchItems::lower(&node.body.statements, context)?,
-            statements: Box::lower(&node.body.statements, context)?,
+            meta: ir::Meta {
+                name: Some(ir::Identifier::desugar(&node.id, context)?),
+                attr: crate::desugar::attribute::outer_with_doc(&node.doc, &node.attr, context)?
+                    .extend(ir::Attributes::desugar(&node.body.statements, context)?),
+                keyword_src_ref: context.span_to_src_ref(&node.keyword_span),
+                vis: ir::Visibility::desugar(&node.vis, context)?,
+                src_ref: context.span_to_src_ref(&node.span),
+            },
+            kind: node.kind,
+            parameters: ir::ParameterList::desugar(&node.parameters, context)?,
+            inits: Box::desugar(&node.body.statements, context)?,
+            items: ir::desugared::WorkbenchItems::desugar(&node.body.statements, context)?,
+            statements: Box::desugar(&node.body.statements, context)?,
         })
     }
 }
 
-impl Lower<ast::Statement> for Option<ir::Workbench> {
-    fn lower(node: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Statement> for Option<ir::desugared::Workbench> {
+    fn desugar(node: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
-            ast::Statement::Workbench(w) => Some(ir::Workbench::lower(w, context)?),
+            ast::Statement::Workbench(w) => Some(ir::desugared::Workbench::desugar(w, context)?),
             _ => None,
         })
     }
 }
 
-impl Lower<ast::ExpressionStatement> for Option<ir::Workbench> {
-    fn lower(_: &ast::ExpressionStatement, _: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::ExpressionStatement> for Option<ir::desugared::Workbench> {
+    fn desugar(_: &ast::ExpressionStatement, _: &mut LowerContext) -> LowerResult<Self> {
         Ok(None)
     }
 }

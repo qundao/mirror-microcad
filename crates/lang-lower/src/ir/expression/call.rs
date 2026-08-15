@@ -3,7 +3,7 @@
 
 //! Syntax elements related to calls.
 
-use crate::{CastInto, MakeHumanReadable, Unresolver, ir};
+use crate::{CastInto, ir};
 use derive_more::Display;
 use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
 
@@ -22,16 +22,6 @@ pub enum Argument<Expr> {
     },
     /// Auto-bind candidate identifier: `b` (needs resolver to check against ParameterList)
     AutoNamed { name: Identifier, expr: Expr },
-}
-
-impl<Expr: ir::ExprSpec> MakeHumanReadable for Argument<Expr> {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        match self {
-            Argument::Unnamed(expr)
-            | Argument::Named { expr, .. }
-            | Argument::AutoNamed { expr, .. } => expr.make_human_readable(unresolver),
-        }
-    }
 }
 
 impl<Expr> SrcReferrer for Argument<Expr>
@@ -113,12 +103,6 @@ pub struct ArgumentList<Expr> {
 
     /// The unnamed arguments.
     pub args: Box<[Argument<Expr>]>,
-}
-
-impl<Expr: ir::ExprSpec> MakeHumanReadable for ArgumentList<Expr> {
-    fn make_human_readable<T: Unresolver>(&mut self, unresolver: &T) {
-        self.args.make_human_readable(unresolver)
-    }
 }
 
 impl<Expr> ArgumentList<Expr> {
@@ -203,12 +187,5 @@ where
             args: self.args.cast_into(),
             src_ref: self.src_ref,
         }
-    }
-}
-
-impl<Expr: ir::ExprSpec> MakeHumanReadable for Call<Expr> {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        self.path.make_human_readable(unresolver);
-        self.args.make_human_readable(unresolver);
     }
 }

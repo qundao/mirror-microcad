@@ -2,35 +2,36 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    CastInto, Lower, LowerContext, LowerError, LowerResult, ir,
-    lower::{extract_statements_with_tail, for_each_statement},
+    CastInto, Desugar, LowerContext, LowerError, LowerResult,
+    desugar::{extract_statements_with_tail, for_each_statement},
+    ir,
 };
 
 use microcad_builtin::__mu;
 use microcad_lang_base::{Identifier, SpanToSrcRef, SrcRef, SrcReferrer};
 use microcad_lang_parse::ast;
 
-impl Lower<ast::def::Function> for ir::OuterAttributes {
-    fn lower(node: &ast::def::Function, context: &mut LowerContext) -> LowerResult<Self> {
-        crate::lower::attribute::outer_with_doc(&node.doc, &node.attr, context)
+impl Desugar<ast::def::Function> for ir::Attributes {
+    fn desugar(node: &ast::def::Function, context: &mut LowerContext) -> LowerResult<Self> {
+        crate::desugar::attribute::outer_with_doc(&node.doc, &node.attr, context)
     }
 }
 
-impl Lower<ast::def::Function> for ir::FunctionSignature {
-    fn lower(node: &ast::def::Function, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::def::Function> for ir::FunctionSignature {
+    fn desugar(node: &ast::def::Function, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             src_ref: context.span_to_src_ref(&node.span),
-            parameters: ir::ParameterList::lower(&node.parameters, context)?,
+            parameters: ir::ParameterList::desugar(&node.parameters, context)?,
             return_type: match &node.return_type {
-                Some(ty) => Some(ir::Type::lower(ty, context)?),
+                Some(ty) => Some(ir::Type::desugar(ty, context)?),
                 None => None,
             },
         })
     }
 }
 
-impl Lower<ast::Body> for ir::Scope {
-    fn lower(node: &ast::Body, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Body> for ir::Scope {
+    fn desugar(node: &ast::Body, context: &mut LowerContext) -> LowerResult<Self> {
         let statements = &node.statements;
         for_each_statement(statements, context, |stmt, context| {
             let src_ref = context.span_to_src_ref(&stmt.span());
@@ -45,7 +46,7 @@ impl Lower<ast::Body> for ir::Scope {
             Ok(())
         })?;
 
-        let statements: Box<[ir::FunctionStatement]> = Box::lower(statements, context)?;
+        let statements: Box<[ir::FunctionStatement]> = Box::desugar(statements, context)?;
 
         Ok(Self {
             statements,
@@ -54,55 +55,55 @@ impl Lower<ast::Body> for ir::Scope {
     }
 }
 
-impl Lower<ast::FormatString> for ir::FunctionExpression {
-    fn lower(node: &ast::FormatString, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::FormatString> for ir::FunctionExpression {
+    fn desugar(node: &ast::FormatString, context: &mut LowerContext) -> LowerResult<Self> {
         // Lowering format string must only contain constant expression (without `{}` bodies).
         // Hence, we need to `cast_into` the resulting `ir::ConstantExpression` into `ir::FunctionExpression`
-        Ok(ir::Call::lower(node, context)?.cast_into().into())
+        Ok(ir::Call::desugar(node, context)?.cast_into().into())
     }
 }
 
-impl Lower<ast::Call> for ir::FunctionExpression {
-    fn lower(node: &ast::Call, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(ir::Call::lower(node, context)?.into())
+impl Desugar<ast::Call> for ir::FunctionExpression {
+    fn desugar(node: &ast::Call, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(ir::Call::desugar(node, context)?.into())
     }
 }
 
-impl Lower<ast::Literal> for ir::FunctionExpression {
-    fn lower(node: &ast::Literal, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Literal> for ir::FunctionExpression {
+    fn desugar(node: &ast::Literal, context: &mut LowerContext) -> LowerResult<Self> {
         // Lower the literal expression `1m` -> `Length::mm(1000)` (includes unit conversion)
-        Ok(ir::Literal::lower(node, context)?.into())
+        Ok(ir::Literal::desugar(node, context)?.into())
     }
 }
 
-impl Lower<ast::BinaryOperation> for ir::FunctionExpression {
-    fn lower(node: &ast::BinaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(ir::Call::lower(node, context)?.into())
+impl Desugar<ast::BinaryOperation> for ir::FunctionExpression {
+    fn desugar(node: &ast::BinaryOperation, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(ir::Call::desugar(node, context)?.into())
     }
 }
 
-impl Lower<ast::Expression> for ir::FunctionExpression {
-    fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Expression> for ir::FunctionExpression {
+    fn desugar(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
             // Remove parenthesis ()
-            ast::Expression::Bracketed(expr, _) => Self::lower(expr.as_ref(), context)?,
+            ast::Expression::Bracketed(expr, _) => Self::desugar(expr.as_ref(), context)?,
             // Lower call expression
-            ast::Expression::Call(expr) => Self::lower(expr, context)?,
-            ast::Expression::Literal(expr) => Self::lower(expr, context)?,
-            ast::Expression::BinaryOperation(binop) => Self::lower(binop, context)?,
-            ast::Expression::String(s) => Self::lower(s, context)?,
+            ast::Expression::Call(expr) => Self::desugar(expr, context)?,
+            ast::Expression::Literal(expr) => Self::desugar(expr, context)?,
+            ast::Expression::BinaryOperation(binop) => Self::desugar(binop, context)?,
+            ast::Expression::String(s) => Self::desugar(s, context)?,
             // `(1, 2)` -> `__mu::core::tuple(1, 2)`
-            ast::Expression::Tuple(t) => ir::Call::lower(t, context)?.into(),
-            ast::Expression::ArrayRange(a) => Self::lower(a, context)?,
-            ast::Expression::ArrayList(a) => Self::lower(a, context)?,
-            ast::Expression::SymbolPath(n) => ir::Path::lower(n, context)?.into(),
-            ast::Expression::UnaryOperation(unop) => ir::Call::lower(unop, context)?.into(),
+            ast::Expression::Tuple(t) => ir::Call::desugar(t, context)?.into(),
+            ast::Expression::ArrayRange(a) => Self::desugar(a, context)?,
+            ast::Expression::ArrayList(a) => Self::desugar(a, context)?,
+            ast::Expression::SymbolPath(n) => ir::Path::desugar(n, context)?.into(),
+            ast::Expression::UnaryOperation(unop) => ir::Call::desugar(unop, context)?.into(),
             ast::Expression::Marker(_) => {
                 panic!("Marker statement not allowed")
             }
-            ast::Expression::Body(body) => Self::Scope(ir::Scope::lower(body, context)?),
+            ast::Expression::Body(body) => Self::Scope(ir::Scope::desugar(body, context)?),
             ast::Expression::ElementAccess(access) => access.element_chain.iter().try_fold(
-                Self::lower(access.expr.as_ref(), context)?,
+                Self::desugar(access.expr.as_ref(), context)?,
                 |lhs, element| -> LowerResult<Self> {
                     use ast::ElementInner::*;
                     let src_ref = context.span_to_src_ref(&access.span);
@@ -118,55 +119,55 @@ impl Lower<ast::Expression> for ir::FunctionExpression {
                             src_ref,
                         }),
                         Method(m) => Self::Call(ir::Call {
-                            path: ir::Path::lower(&m.path, context)?,
-                            args: ir::ArgumentList::lower(&m.arguments, context)?.prepended(lhs),
+                            path: ir::Path::desugar(&m.path, context)?,
+                            args: ir::ArgumentList::desugar(&m.arguments, context)?.prepended(lhs),
                             src_ref,
                         }),
                         ArrayElement(e) => Self::Call(ir::Call {
                             path: __mu!(core::array_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
-                                Self::lower(e.as_ref(), context)?,
+                                Self::desugar(e.as_ref(), context)?,
                             ]),
                             src_ref,
                         }),
                     })
                 },
             )?,
-            ast::Expression::If(if_expr) => Self::If(ir::If::lower(if_expr, context)?),
+            ast::Expression::If(if_expr) => Self::If(ir::If::desugar(if_expr, context)?),
             ast::Expression::Error(_) => todo!(),
         })
     }
 }
 
-impl Lower<Option<ast::Expression>> for Option<ir::FunctionExpression> {
-    fn lower(node: &Option<ast::Expression>, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<Option<ast::Expression>> for Option<ir::FunctionExpression> {
+    fn desugar(node: &Option<ast::Expression>, context: &mut LowerContext) -> LowerResult<Self> {
         node.as_ref()
-            .map(|expr| ir::FunctionExpression::lower(expr, context))
+            .map(|expr| ir::FunctionExpression::desugar(expr, context))
             .transpose()
     }
 }
 
-impl Lower<ast::Return> for ir::ReturnStatement {
-    fn lower(node: &ast::Return, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Return> for ir::ReturnStatement {
+    fn desugar(node: &ast::Return, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            expr: Option::<ir::FunctionExpression>::lower(&node.expr, context)?,
+            expr: Option::<ir::FunctionExpression>::desugar(&node.expr, context)?,
             keyword_src_ref: context.span_to_src_ref(&node.keyword_span),
             src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
 
-impl Lower<ast::Statement> for Option<ir::FunctionStatement> {
-    fn lower(stmt: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Statement> for Option<ir::FunctionStatement> {
+    fn desugar(stmt: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match stmt {
             ast::Statement::Return(ret) => Some(ir::FunctionStatement::Return(
-                ir::ReturnStatement::lower(ret, context)?,
+                ir::ReturnStatement::desugar(ret, context)?,
             )),
             ast::Statement::LocalAssignment(local_assignment) => {
                 Some(ir::FunctionStatement::Local(ir::LocalAssignment::<
                     ir::FunctionExpression,
-                >::lower(
+                >::desugar(
                     local_assignment, context
                 )?))
             }
@@ -191,9 +192,9 @@ impl Lower<ast::Statement> for Option<ir::FunctionStatement> {
                         context.diag(LowerError::StatementNotAllowed { src_ref });
                         None
                     }
-                    ast::Expression::Call(call) => Some(ir::Call::lower(call, context)?.into()),
-                    ast::Expression::Body(body) => Some(ir::Scope::lower(body, context)?.into()),
-                    ast::Expression::If(if_) => Some(ir::If::lower(if_, context)?.into()),
+                    ast::Expression::Call(call) => Some(ir::Call::desugar(call, context)?.into()),
+                    ast::Expression::Body(body) => Some(ir::Scope::desugar(body, context)?.into()),
+                    ast::Expression::If(if_) => Some(ir::If::desugar(if_, context)?.into()),
                 }
             }
             _ => None,
@@ -201,16 +202,16 @@ impl Lower<ast::Statement> for Option<ir::FunctionStatement> {
     }
 }
 
-impl Lower<ast::StatementList> for Box<[ir::FunctionStatement]> {
-    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::StatementList> for Box<[ir::FunctionStatement]> {
+    fn desugar(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         let statements = extract_statements_with_tail(
             node,
             context,
-            Option::<ir::FunctionStatement>::lower,
+            Option::<ir::FunctionStatement>::desugar,
             // Lower Tail expression to Return statements.
             |tail, context| {
                 Ok(Some(ir::FunctionStatement::Tail(
-                    ir::FunctionExpression::lower(&tail.expr, context)?,
+                    ir::FunctionExpression::desugar(&tail.expr, context)?,
                 )))
             },
         )?;
@@ -235,8 +236,8 @@ impl Lower<ast::StatementList> for Box<[ir::FunctionStatement]> {
     }
 }
 
-impl Lower<ast::StatementList> for ir::FunctionItems {
-    fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::StatementList> for ir::desugared::FunctionItems {
+    fn desugar(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         for_each_statement(statements, context, |stmt, context| {
             let src_ref = context.span_to_src_ref(&stmt.span());
             use ast::Statement::*;
@@ -249,39 +250,41 @@ impl Lower<ast::StatementList> for ir::FunctionItems {
         })?;
 
         Ok(Self {
-            aliases: ir::Aliases::lower(statements, context)?,
-            constants: Box::lower(statements, context)?,
+            aliases: ir::desugared::Aliases::desugar(statements, context)?,
+            constants: Box::desugar(statements, context)?,
         })
     }
 }
 
-impl Lower<ast::def::Function> for ir::Function {
-    fn lower(node: &ast::def::Function, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::def::Function> for ir::desugared::Function {
+    fn desugar(node: &ast::def::Function, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            src_ref: context.span_to_src_ref(&node.span),
-            outer_attr: ir::OuterAttributes::lower(node, context)?,
-            visibility: ir::Visibility::lower(&node.vis, context)?,
-            keyword_ref: context.span_to_src_ref(&node.keyword_span),
-            id: Identifier::lower(&node.id, context)?,
-            signature: ir::FunctionSignature::lower(node, context)?,
-            inner_attr: ir::InnerAttributes::lower(&node.body.statements, context)?,
-            items: ir::FunctionItems::lower(&node.body.statements, context)?,
-            statements: Box::lower(&node.body.statements, context)?,
+            meta: ir::Meta {
+                name: Some(Identifier::desugar(&node.id, context)?),
+                src_ref: context.span_to_src_ref(&node.span),
+                attr: ir::Attributes::desugar(node, context)?
+                    .extend(ir::Attributes::desugar(&node.body.statements, context)?),
+                keyword_src_ref: context.span_to_src_ref(&node.keyword_span),
+                vis: ir::Visibility::desugar(&node.vis, context)?,
+            },
+            signature: ir::FunctionSignature::desugar(node, context)?,
+            items: ir::desugared::FunctionItems::desugar(&node.body.statements, context)?,
+            statements: Box::desugar(&node.body.statements, context)?,
         })
     }
 }
 
-impl Lower<ast::Statement> for Option<ir::Function> {
-    fn lower(node: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Statement> for Option<ir::desugared::Function> {
+    fn desugar(node: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
-            ast::Statement::Function(f) => Some(ir::Function::lower(f, context)?),
+            ast::Statement::Function(f) => Some(ir::desugared::Function::desugar(f, context)?),
             _ => None,
         })
     }
 }
 
-impl Lower<ast::ExpressionStatement> for Option<ir::Function> {
-    fn lower(_: &ast::ExpressionStatement, _: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::ExpressionStatement> for Option<ir::desugared::Function> {
+    fn desugar(_: &ast::ExpressionStatement, _: &mut LowerContext) -> LowerResult<Self> {
         Ok(None)
     }
 }

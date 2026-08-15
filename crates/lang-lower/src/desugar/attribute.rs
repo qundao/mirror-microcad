@@ -1,8 +1,8 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::lower::{extract_statements, for_each_statement};
-use crate::{Lower, LowerContext, LowerError, LowerResult, ir};
+use crate::desugar::{extract_statements, for_each_statement};
+use crate::{Desugar, LowerContext, LowerError, LowerResult, ir};
 
 use microcad_lang_base::{Refer, SpanToSrcRef};
 use microcad_lang_parse::ast;
@@ -12,9 +12,9 @@ pub fn outer_with_doc(
     doc: &ast::DocBlock,
     attr: &ast::Attributes,
     context: &mut LowerContext,
-) -> LowerResult<ir::OuterAttributes> {
-    let mut attr = ir::OuterAttributes::lower(attr, context)?;
-    attr.doc = ir::DocBlock::lower(doc, context)?;
+) -> LowerResult<ir::Attributes> {
+    let mut attr = ir::Attributes::desugar(attr, context)?;
+    attr.doc = ir::DocBlock::desugar(doc, context)?;
     Ok(attr)
 }
 
@@ -37,20 +37,20 @@ where
     Ok(items.into_boxed_slice())
 }
 
-impl Lower<ast::Attributes> for ir::OuterAttributes {
-    fn lower(node: &ast::Attributes, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Attributes> for ir::Attributes {
+    fn desugar(node: &ast::Attributes, context: &mut LowerContext) -> LowerResult<Self> {
         // Generate outer attributes without doc
-        Ok(Self(ir::Attributes {
+        Ok(ir::Attributes {
             doc: ir::DocBlock::default(),
-            meta: Box::<[ir::Meta]>::lower(node, context)?,
-            commands: Box::<[ir::Command]>::lower(node, context)?,
-            tags: Box::<[ir::Tag]>::lower(node, context)?,
-        }))
+            kv_exprs: Box::<[ir::KvExpr]>::desugar(node, context)?,
+            commands: Box::<[ir::Command]>::desugar(node, context)?,
+            tags: Box::<[ir::Tag]>::desugar(node, context)?,
+        })
     }
 }
 
-impl Lower<ast::DocBlock> for ir::DocBlock {
-    fn lower(node: &ast::DocBlock, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::DocBlock> for ir::DocBlock {
+    fn desugar(node: &ast::DocBlock, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self(Refer::new(
             node.lines
                 .iter()
@@ -63,8 +63,8 @@ impl Lower<ast::DocBlock> for ir::DocBlock {
     }
 }
 
-impl Lower<ast::StatementList> for ir::DocBlock {
-    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::StatementList> for ir::DocBlock {
+    fn desugar(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         // This does not check if statements are allowed in this context
         Ok(Self(Refer::new(
             extract_statements(node, |stmt| {
@@ -82,12 +82,12 @@ impl Lower<ast::StatementList> for ir::DocBlock {
     }
 }
 
-impl Lower<ast::Attributes> for Box<[ir::Meta]> {
-    fn lower(node: &ast::Attributes, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Attributes> for Box<[ir::KvExpr]> {
+    fn desugar(node: &ast::Attributes, context: &mut LowerContext) -> LowerResult<Self> {
         extract_attributes(node.0.iter(), |cmd| -> LowerResult<_> {
             Ok(match cmd {
                 ast::AttributeCommand::Assignment(local_assignment) => {
-                    Some(ir::Meta::lower(local_assignment, context)?)
+                    Some(ir::KvExpr::desugar(local_assignment, context)?)
                 }
                 _ => None,
             })
@@ -95,17 +95,17 @@ impl Lower<ast::Attributes> for Box<[ir::Meta]> {
     }
 }
 
-impl Lower<ast::LocalAssignment> for ir::Meta {
-    fn lower(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(ir::Meta {
-            name: ir::Path::from(ir::Identifier::lower(&node.id, context)?),
-            expr: ir::ConstantExpression::lower(node.expr.as_ref(), context)?,
+impl Desugar<ast::LocalAssignment> for ir::KvExpr {
+    fn desugar(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(ir::KvExpr {
+            name: ir::Path::from(ir::Identifier::desugar(&node.id, context)?),
+            expr: ir::ConstantExpression::desugar(node.expr.as_ref(), context)?,
         })
     }
 }
 
-impl Lower<ast::StatementList> for Box<[ir::Meta]> {
-    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::StatementList> for Box<[ir::KvExpr]> {
+    fn desugar(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         extract_attributes(
             node.statements.iter().filter_map(|(stmt, _)| match stmt {
                 ast::Statement::InnerAttribute(attribute) => Some(attribute),
@@ -114,7 +114,7 @@ impl Lower<ast::StatementList> for Box<[ir::Meta]> {
             |cmd| -> LowerResult<_> {
                 Ok(match cmd {
                     ast::AttributeCommand::Assignment(local_assignment) => {
-                        Some(ir::Meta::lower(local_assignment, context)?)
+                        Some(ir::KvExpr::desugar(local_assignment, context)?)
                     }
                     _ => None,
                 })
@@ -123,29 +123,29 @@ impl Lower<ast::StatementList> for Box<[ir::Meta]> {
     }
 }
 
-impl Lower<ast::Call> for ir::Command {
-    fn lower(node: &ast::Call, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Call> for ir::Command {
+    fn desugar(node: &ast::Call, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            path: ir::Path::lower(&node.path, context)?,
-            argument_list: ir::ArgumentList::lower(&node.arguments, context)?,
+            path: ir::Path::desugar(&node.path, context)?,
+            argument_list: ir::ArgumentList::desugar(&node.arguments, context)?,
             src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
 
-impl Lower<ast::Attributes> for Box<[ir::Command]> {
-    fn lower(node: &ast::Attributes, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Attributes> for Box<[ir::Command]> {
+    fn desugar(node: &ast::Attributes, context: &mut LowerContext) -> LowerResult<Self> {
         extract_attributes(node.0.iter(), |cmd| -> LowerResult<_> {
             Ok(match cmd {
-                ast::AttributeCommand::Call(call) => Some(ir::Command::lower(call, context)?),
+                ast::AttributeCommand::Call(call) => Some(ir::Command::desugar(call, context)?),
                 _ => None,
             })
         })
     }
 }
 
-impl Lower<ast::StatementList> for Box<[ir::Command]> {
-    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::StatementList> for Box<[ir::Command]> {
+    fn desugar(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         extract_attributes(
             node.statements.iter().filter_map(|(stmt, _)| match stmt {
                 ast::Statement::InnerAttribute(attribute) => Some(attribute),
@@ -153,7 +153,7 @@ impl Lower<ast::StatementList> for Box<[ir::Command]> {
             }),
             |cmd| -> LowerResult<_> {
                 Ok(match cmd {
-                    ast::AttributeCommand::Call(call) => Some(ir::Command::lower(call, context)?),
+                    ast::AttributeCommand::Call(call) => Some(ir::Command::desugar(call, context)?),
                     _ => None,
                 })
             },
@@ -161,27 +161,27 @@ impl Lower<ast::StatementList> for Box<[ir::Command]> {
     }
 }
 
-impl Lower<ast::Identifier> for ir::Tag {
-    fn lower(node: &ast::Identifier, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Identifier> for ir::Tag {
+    fn desugar(node: &ast::Identifier, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            name: ir::Identifier::lower(node, context)?,
+            name: ir::Identifier::desugar(node, context)?,
         })
     }
 }
 
-impl Lower<ast::Attributes> for Box<[ir::Tag]> {
-    fn lower(node: &ast::Attributes, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Attributes> for Box<[ir::Tag]> {
+    fn desugar(node: &ast::Attributes, context: &mut LowerContext) -> LowerResult<Self> {
         extract_attributes(node.0.iter(), |cmd| -> LowerResult<_> {
             Ok(match cmd {
-                ast::AttributeCommand::Ident(ident) => Some(ir::Tag::lower(ident, context)?),
+                ast::AttributeCommand::Ident(ident) => Some(ir::Tag::desugar(ident, context)?),
                 _ => None,
             })
         })
     }
 }
 
-impl Lower<ast::StatementList> for Box<[ir::Tag]> {
-    fn lower(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::StatementList> for Box<[ir::Tag]> {
+    fn desugar(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         extract_attributes(
             node.statements.iter().filter_map(|(stmt, _)| match stmt {
                 ast::Statement::InnerAttribute(attribute) => Some(attribute),
@@ -189,7 +189,7 @@ impl Lower<ast::StatementList> for Box<[ir::Tag]> {
             }),
             |cmd| -> LowerResult<_> {
                 Ok(match cmd {
-                    ast::AttributeCommand::Ident(ident) => Some(ir::Tag::lower(ident, context)?),
+                    ast::AttributeCommand::Ident(ident) => Some(ir::Tag::desugar(ident, context)?),
                     _ => None,
                 })
             },
@@ -197,15 +197,15 @@ impl Lower<ast::StatementList> for Box<[ir::Tag]> {
     }
 }
 
-impl Lower<ast::def::Workbench> for ir::OuterAttributes {
-    fn lower(node: &ast::def::Workbench, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::def::Workbench> for ir::Attributes {
+    fn desugar(node: &ast::def::Workbench, context: &mut LowerContext) -> LowerResult<Self> {
         outer_with_doc(&node.doc, &node.attr, context)
     }
 }
 
 /// Lower inner attributes
-impl Lower<ast::StatementList> for ir::InnerAttributes {
-    fn lower(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::StatementList> for ir::Attributes {
+    fn desugar(statements: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         #[derive(PartialEq)]
         enum State {
             /// Try to read doc comments first
@@ -238,11 +238,11 @@ impl Lower<ast::StatementList> for ir::InnerAttributes {
             Ok(())
         })?;
 
-        Ok(Self(ir::Attributes {
-            doc: ir::DocBlock::lower(statements, context)?,
-            meta: Box::<[ir::Meta]>::lower(statements, context)?,
-            commands: Box::<[ir::Command]>::lower(statements, context)?,
-            tags: Box::<[ir::Tag]>::lower(statements, context)?,
-        }))
+        Ok(ir::Attributes {
+            doc: ir::DocBlock::desugar(statements, context)?,
+            kv_exprs: Box::<[ir::KvExpr]>::desugar(statements, context)?,
+            commands: Box::<[ir::Command]>::desugar(statements, context)?,
+            tags: Box::<[ir::Tag]>::desugar(statements, context)?,
+        })
     }
 }

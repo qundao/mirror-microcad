@@ -11,11 +11,11 @@ pub mod cast_into;
 pub mod constant;
 pub mod expression;
 pub mod function;
-pub mod module;
 pub mod parameter;
 pub mod path;
-pub mod source;
 pub mod workbench;
+
+pub mod desugared;
 
 pub use assignment::*;
 pub use attribute::*;
@@ -23,20 +23,18 @@ pub use cast_into::*;
 pub use constant::*;
 pub use expression::*;
 pub use function::*;
-pub use module::*;
 pub use parameter::*;
 pub use path::{Path, UnresolvedPath};
-pub use source::*;
 pub use workbench::*;
 
 pub use microcad_lang_base::{Identifier, element::Visibility};
 pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Ty, Unit};
 
-use derive_more::{Deref, Display};
+use derive_more::{Deref, Display, From};
 use microcad_lang_base::SrcRef;
 use serde::{Deserialize, Serialize};
 
-use crate::{MakeHumanReadable, Unresolver, ir};
+use crate::ir;
 
 #[derive(Debug, Default, Display, Deref, Clone, Hash, PartialEq, Serialize, Deserialize)]
 #[display("{}", ty)]
@@ -46,52 +44,88 @@ pub struct Type {
     pub src_ref: SrcRef,
 }
 
-/// `use std::geo2d::Circle as C` => (path = "std::geo2d::Circle", id = "C")
-/// `use std::geo2d::Circle` => (path = "std::geo2d::Circle", id = "Circle")
-#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct ExplicitAlias {
-    pub attr: ir::OuterAttributes,
-    pub visibility: ir::Visibility,
-    pub keyword_src_ref: SrcRef,
-    pub path: Path,
-    pub id: Identifier,
+/// Symbol content
+#[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Meta {
+    pub name: Option<Identifier>,
+
+    /// Visibility
+    pub vis: Visibility,
+
+    /// Attributes, combined from Inner and OuterAttributes
+    pub attr: ir::Attributes,
+
+    /// Source code reference of the symbol definition
     pub src_ref: SrcRef,
-}
 
-impl MakeHumanReadable for ExplicitAlias {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        self.attr.make_human_readable(unresolver);
-        self.path.make_human_readable(unresolver);
-    }
-}
-
-/// `use std::geo2d::*`
-#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct WildcardAlias {
-    pub attr: ir::OuterAttributes,
-    pub visibility: ir::Visibility,
+    /// Source code reference of symbol's keyword
     pub keyword_src_ref: SrcRef,
-    pub path: Path,
-    pub src_ref: SrcRef,
 }
 
-impl MakeHumanReadable for WildcardAlias {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        self.attr.make_human_readable(unresolver);
-        self.path.make_human_readable(unresolver);
-    }
+/// A desugared source file.
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
+pub struct Source {
+    /// Workbench statements
+    pub statements: Box<[ir::WorkbenchStatement]>,
 }
 
-/// Aliases lowered from `use` statements.
-#[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Aliases {
-    pub explicit_aliases: Box<[ExplicitAlias]>,
-    pub wildcards: Box<[WildcardAlias]>,
+/// Workbench definition, e.g `sketch`, `part` or `op`.
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
+pub struct Workbench {
+    pub kind: ir::WorkbenchKind,
+    /// Workbench's building plan.
+    pub parameters: ir::ParameterList,
+    /// `init`
+    pub inits: Box<[ir::Init]>,
+    /// The actual statements to build the Model
+    pub statements: Box<[ir::WorkbenchStatement]>,
 }
 
-impl MakeHumanReadable for Aliases {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        self.explicit_aliases.make_human_readable(unresolver);
-        self.wildcards.make_human_readable(unresolver);
-    }
+#[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Alias(pub Path);
+
+#[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Wildcard(pub Path);
+
+#[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
+pub struct InlineModule;
+
+#[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
+pub struct FileModule;
+
+/// Symbol definition
+#[derive(Debug, Clone, Hash, From, PartialEq, Serialize, Deserialize)]
+pub enum Def {
+    /// Source file symbol.
+    SourceFile(Source),
+    /// Inline Module symbol: `mod foo {}`
+    InlineModule(InlineModule),
+    /// File Module Symbol: `mod foo;`
+    FileModule(FileModule),
+    /// Workbench symbol.
+    Workbench(Workbench),
+    /// Function symbol.
+    Function(Function),
+    /// Constant.
+    Constant(Constant),
+    /// Alias of a pub use statement.
+    Alias(Alias),
+    /// Use all available symbols in the module with the given name.
+    Wildcard(Wildcard),
 }
+
+/// An Ir Item holds a definition and meta data
+#[derive(Debug, Clone, Hash, From, PartialEq, Serialize, Deserialize)]
+pub struct IrItem {
+    /// Item metadata
+    pub meta: Meta,
+    /// Item definition
+    pub def: Def,
+}
+
+pub type IrArena = microcad_lang_base::tree::Arena<IrItem>;
+pub type IrNode = microcad_lang_base::tree::Node<IrItem>;
+pub type IrNodeRef<'a> = microcad_lang_base::tree::NodeRef<'a, IrItem>;
+pub type IrNodeMut<'a> = microcad_lang_base::tree::NodeMut<'a, IrItem>;
+pub type IrTree = microcad_lang_base::tree::Tree<IrItem>;
+pub type IrNodeId = microcad_lang_base::tree::NodeId;

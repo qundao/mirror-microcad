@@ -3,7 +3,7 @@
 
 //! µcad parameter syntax elements
 
-use crate::{MakeHumanReadable, Unresolver, ir};
+use crate::ir;
 
 use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
@@ -17,7 +17,7 @@ use serde_with::skip_serializing_none;
 
 pub struct Parameter {
     /// Parameter attributes
-    pub attr: ir::OuterAttributes,
+    pub attr: ir::Attributes,
     /// Name of the parameter
     pub id: Identifier,
     /// Type of the parameter or `None`
@@ -26,16 +26,6 @@ pub struct Parameter {
     pub default_value: Option<ir::ConstantExpression>,
     /// Source code reference
     pub src_ref: SrcRef,
-}
-
-impl MakeHumanReadable for Parameter {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        self.attr.make_human_readable(unresolver);
-        match &mut self.default_value {
-            Some(def) => def.make_human_readable(unresolver),
-            None => {}
-        }
-    }
 }
 
 impl std::fmt::Display for Parameter {
@@ -53,12 +43,6 @@ impl std::fmt::Display for Parameter {
 pub struct ParameterList {
     pub parameters: Box<[ir::Parameter]>,
     pub src_ref: SrcRef,
-}
-
-impl MakeHumanReadable for ParameterList {
-    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
-        self.parameters.make_human_readable(unresolver);
-    }
 }
 
 impl std::fmt::Display for ParameterList {

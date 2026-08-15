@@ -1,0 +1,38 @@
+// Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+use crate::{Desugar, LowerContext, LowerResult, ir};
+
+use microcad_lang_base::{Refer, SpanToSrcRef};
+use microcad_lang_parse::ast;
+use microcad_lang_types::{Type, ty};
+
+impl Desugar<ast::Type> for Type {
+    fn desugar(node: &ast::Type, context: &mut LowerContext) -> LowerResult<Self> {
+        use std::str::FromStr;
+        Ok(match node {
+            ast::Type::Single(ty) => Type::from_str(ty.name.as_str())
+                .map_err(|err| Refer::new(err, context.span_to_src_ref(&node.span())))?,
+            ast::Type::Array(ty) => Type::Array(Box::new(Type::desugar(&ty.inner, context)?)),
+            ast::Type::Tuple(ty) => Type::Tuple(Box::new(ty::TupleType::desugar(ty, context)?)),
+        })
+    }
+}
+
+impl Desugar<ast::Type> for ir::Type {
+    fn desugar(node: &ast::Type, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
+            ty: Type::desugar(node, context)?,
+            src_ref: context.span_to_src_ref(&node.span()),
+        })
+    }
+}
+
+impl Desugar<Option<ast::Type>> for ir::Type {
+    fn desugar(node: &Option<ast::Type>, context: &mut LowerContext) -> LowerResult<Self> {
+        match node {
+            Some(ty) => ir::Type::desugar(ty, context),
+            None => Ok(ir::Type::default()),
+        }
+    }
+}

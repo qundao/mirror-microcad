@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Lower, LowerContext, LowerError, LowerResult, ir, lower::LowerExpr};
+use crate::{Desugar, LowerContext, LowerError, LowerResult, desugar::DesugarExpr, ir};
 
 mod call;
 mod literal;
@@ -11,25 +11,25 @@ use microcad_lang_base::{Identifier, SpanToSrcRef};
 use microcad_lang_parse::ast;
 use microcad_lang_types::{Scalar, Value};
 
-impl Lower<ast::Identifier> for ir::Marker {
-    fn lower(node: &ast::Identifier, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Identifier> for ir::Marker {
+    fn desugar(node: &ast::Identifier, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            id: Identifier::lower(node, context)?,
+            id: Identifier::desugar(node, context)?,
             src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
 
-impl<Expr: ir::ExprSpec> Lower<ast::If> for ir::If<Expr>
+impl<Expr: ir::ExprSpec> Desugar<ast::If> for ir::If<Expr>
 where
-    Expr: Lower<ast::Expression>,
-    Expr::Body: Lower<ast::Body>,
+    Expr: Desugar<ast::Expression>,
+    Expr::Body: Desugar<ast::Body>,
 {
-    fn lower(node: &ast::If, context: &mut LowerContext) -> LowerResult<Self> {
+    fn desugar(node: &ast::If, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(ir::If {
             if_ref: context.span_to_src_ref(&node.if_span),
-            cond: Box::new(Expr::lower(node.condition.as_ref(), context)?),
-            body: Expr::Body::lower(&node.body, context)?.into(),
+            cond: Box::new(Expr::desugar(node.condition.as_ref(), context)?),
+            body: Expr::Body::desugar(&node.body, context)?.into(),
             next_if_ref: node
                 .next_if_span
                 .as_ref()
@@ -37,7 +37,7 @@ where
             next_if: node
                 .next_if
                 .as_ref()
-                .map(|next| ir::If::lower(next, context))
+                .map(|next| ir::If::desugar(next, context))
                 .transpose()?
                 .map(Box::new),
             else_ref: node
@@ -47,7 +47,7 @@ where
             body_else: node
                 .else_body
                 .as_ref()
-                .map(|body| Expr::Body::lower(body, context))
+                .map(|body| Expr::Body::desugar(body, context))
                 .transpose()?
                 .map(Box::new),
             src_ref: context.span_to_src_ref(&node.span),
@@ -55,14 +55,14 @@ where
     }
 }
 
-impl Lower<ast::SymbolPath> for ir::Path {
-    fn lower(node: &ast::SymbolPath, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::SymbolPath> for ir::Path {
+    fn desugar(node: &ast::SymbolPath, context: &mut LowerContext) -> LowerResult<Self> {
         let path = ir::UnresolvedPath {
             is_absolute: node.prefix.is_some(),
             parts: node
                 .parts
                 .iter()
-                .map(|ident| ir::Identifier::lower(ident, context))
+                .map(|ident| ir::Identifier::desugar(ident, context))
                 .collect::<Result<Vec<_>, _>>()?
                 .into_boxed_slice(),
             src_ref: context.span_to_src_ref(&node.span),
@@ -83,17 +83,17 @@ impl Lower<ast::SymbolPath> for ir::Path {
     }
 }
 
-impl<Expr: LowerExpr> Lower<ast::ArrayRangeExpression> for Expr
+impl<Expr: DesugarExpr> Desugar<ast::ArrayRangeExpression> for Expr
 where
     Expr: From<ir::Call<Expr>> + From<ir::Literal>,
 {
-    fn lower(a: &ast::ArrayRangeExpression, context: &mut LowerContext) -> LowerResult<Self> {
-        let unit = ir::Unit::lower(&a.unit, context)?;
+    fn desugar(a: &ast::ArrayRangeExpression, context: &mut LowerContext) -> LowerResult<Self> {
+        let unit = ir::Unit::desugar(&a.unit, context)?;
         let range = Expr::from(ir::Call {
             path: __mu!(core::range),
             args: ir::ArgumentList::from_iter([
-                Expr::lower(&a.start.expr, context)?,
-                Expr::lower(&a.end.expr, context)?,
+                Expr::desugar(&a.start.expr, context)?,
+                Expr::desugar(&a.end.expr, context)?,
             ]),
             src_ref: context.span_to_src_ref(&a.span),
         });
@@ -115,17 +115,17 @@ where
     }
 }
 
-impl<Expr: LowerExpr> Lower<ast::ArrayListExpression> for Expr
+impl<Expr: DesugarExpr> Desugar<ast::ArrayListExpression> for Expr
 where
     Expr: From<ir::Call<Expr>> + From<ir::Literal>,
 {
-    fn lower(a: &ast::ArrayListExpression, context: &mut LowerContext) -> LowerResult<Self> {
-        let unit = ir::Unit::lower(&a.unit, context)?;
+    fn desugar(a: &ast::ArrayListExpression, context: &mut LowerContext) -> LowerResult<Self> {
+        let unit = ir::Unit::desugar(&a.unit, context)?;
 
         let args = a
             .items
             .iter()
-            .map(|item| Expr::lower(&item.expr, context))
+            .map(|item| Expr::desugar(&item.expr, context))
             .collect::<Result<Vec<Expr>, _>>()?;
 
         let list = Expr::from(ir::Call {
@@ -151,31 +151,33 @@ where
     }
 }
 
-impl<Expr: LowerExpr> Lower<ast::TupleExpression> for ir::Call<Expr>
+impl<Expr: DesugarExpr> Desugar<ast::TupleExpression> for ir::Call<Expr>
 where
     Expr: From<ir::Call<Expr>> + From<ir::Literal>,
 {
-    fn lower(node: &ast::TupleExpression, context: &mut LowerContext) -> LowerResult<Self> {
+    fn desugar(node: &ast::TupleExpression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             path: __mu!(core::tuple),
-            args: ir::ArgumentList::lower(&node.values, context)?,
+            args: ir::ArgumentList::desugar(&node.values, context)?,
             src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }
 
-impl Lower<ast::Expression> for ir::ConstantExpression {
-    fn lower(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Expression> for ir::ConstantExpression {
+    fn desugar(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
-            ast::Expression::Bracketed(expr, _) => Self::lower(expr.as_ref(), context)?,
-            ast::Expression::Literal(expr) => ir::Literal::lower(expr, context)?.into(),
-            ast::Expression::String(s) => ir::Call::lower(s, context)?.into(),
-            ast::Expression::Tuple(t) => ir::Call::lower(t, context)?.into(),
-            ast::Expression::ArrayRange(a) => Self::lower(a, context)?,
-            ast::Expression::ArrayList(a) => Self::lower(a, context)?,
-            ast::Expression::SymbolPath(n) => Self::Path(ir::Path::lower(n, context)?),
-            ast::Expression::BinaryOperation(binop) => Self::Call(ir::Call::lower(binop, context)?),
-            ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call::lower(unop, context)?),
+            ast::Expression::Bracketed(expr, _) => Self::desugar(expr.as_ref(), context)?,
+            ast::Expression::Literal(expr) => ir::Literal::desugar(expr, context)?.into(),
+            ast::Expression::String(s) => ir::Call::desugar(s, context)?.into(),
+            ast::Expression::Tuple(t) => ir::Call::desugar(t, context)?.into(),
+            ast::Expression::ArrayRange(a) => Self::desugar(a, context)?,
+            ast::Expression::ArrayList(a) => Self::desugar(a, context)?,
+            ast::Expression::SymbolPath(n) => Self::Path(ir::Path::desugar(n, context)?),
+            ast::Expression::BinaryOperation(binop) => {
+                Self::Call(ir::Call::desugar(binop, context)?)
+            }
+            ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call::desugar(unop, context)?),
             expr => {
                 context.diag(LowerError::InvalidConstantExpression {
                     src_ref: context.span_to_src_ref(&expr.span()),

@@ -9,6 +9,6 @@ pub sketch Circle(radius: Length, center = (x = 0.0mm, y = 0.0mm)) {
         radius = diameter / 2.0;
     }
 
-    __builtin::geo2d::Circle(radius)
-        .__builtin::ops::translate(x = center.x, y = center.y);
+    __mu::geo2d::Circle(radius)
+        .__mu::ops::translate(x = center.x, y = center.y, z = 0.0mm);
 }

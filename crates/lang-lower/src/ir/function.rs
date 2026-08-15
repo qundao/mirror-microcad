@@ -3,7 +3,7 @@
 
 //! Function definition syntax element
 
-use crate::{CastInto, MakeHumanReadable, Unresolver, ir};
+use crate::{CastInto, ir};
 
 use derive_more::From;
 use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
@@ -18,12 +18,6 @@ pub struct FunctionSignature {
     pub return_type: Option<ir::Type>,
     /// Source code reference
     pub src_ref: SrcRef,
-}
-
-impl MakeHumanReadable for FunctionSignature {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        self.parameters.make_human_readable(unresolver);
-    }
 }
 
 impl std::fmt::Display for FunctionSignature {
@@ -48,12 +42,6 @@ pub struct Scope {
     pub src_ref: SrcRef,
 }
 
-impl MakeHumanReadable for Scope {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        self.statements.make_human_readable(unresolver);
-    }
-}
-
 #[non_exhaustive]
 #[derive(Debug, Clone, Hash, From, PartialEq, Serialize, Deserialize)]
 pub enum FunctionExpression {
@@ -63,18 +51,6 @@ pub enum FunctionExpression {
     Scope(Scope),
     If(ir::If<FunctionExpression>),
     Call(ir::Call<FunctionExpression>),
-}
-
-impl MakeHumanReadable for FunctionExpression {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        match self {
-            FunctionExpression::Path(path) => path.make_human_readable(unresolver),
-            FunctionExpression::Scope(scope) => scope.make_human_readable(unresolver),
-            FunctionExpression::If(if_) => if_.make_human_readable(unresolver),
-            FunctionExpression::Call(call) => call.make_human_readable(unresolver),
-            _ => {}
-        }
-    }
 }
 
 impl SingleIdentifier for FunctionExpression {
@@ -121,12 +97,6 @@ pub struct ReturnStatement {
     pub src_ref: SrcRef,
 }
 
-impl MakeHumanReadable for ReturnStatement {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        self.expr.make_human_readable(unresolver);
-    }
-}
-
 #[non_exhaustive]
 #[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
 pub enum FunctionStatement {
@@ -144,25 +114,6 @@ pub enum FunctionStatement {
     Return(ReturnStatement),
 }
 
-impl MakeHumanReadable for FunctionStatement {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        match self {
-            FunctionStatement::Local(local_assignment) => {
-                local_assignment.make_human_readable(unresolver)
-            }
-            FunctionStatement::Scope(scope) => scope.make_human_readable(unresolver),
-            FunctionStatement::Call(call) => call.make_human_readable(unresolver),
-            FunctionStatement::If(if_) => if_.make_human_readable(unresolver),
-            FunctionStatement::Tail(function_expression) => {
-                function_expression.make_human_readable(unresolver)
-            }
-            FunctionStatement::Return(return_statement) => {
-                return_statement.make_human_readable(unresolver)
-            }
-        }
-    }
-}
-
 impl SrcReferrer for FunctionStatement {
     fn src_ref(&self) -> SrcRef {
         use FunctionStatement::*;
@@ -177,50 +128,9 @@ impl SrcReferrer for FunctionStatement {
     }
 }
 
-#[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize)]
-pub struct FunctionItems {
-    /// use ...
-    pub aliases: ir::Aliases,
-    /// const FOO =
-    pub constants: Box<[ir::Constant]>,
-}
-
-impl MakeHumanReadable for FunctionItems {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        self.aliases.make_human_readable(unresolver);
-        self.constants.make_human_readable(unresolver);
-    }
-}
-
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Function {
-    /// Source ref for the whole definition
-    pub src_ref: SrcRef,
-    /// Outer attributes
-    pub outer_attr: ir::OuterAttributes,
-    /// public / private
-    pub visibility: ir::Visibility,
-    /// SrcRef of the `fn` keyword
-    pub keyword_ref: SrcRef,
-    /// Name of the function
-    pub id: ir::Identifier,
-    /// Function signature
     pub signature: ir::FunctionSignature,
-    /// #![...]
-    pub inner_attr: ir::InnerAttributes,
-
-    pub items: ir::FunctionItems,
-
     /// Function statements
     pub statements: Box<[ir::FunctionStatement]>,
-}
-
-impl MakeHumanReadable for Function {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        self.outer_attr.make_human_readable(unresolver);
-        self.signature.make_human_readable(unresolver);
-        self.inner_attr.make_human_readable(unresolver);
-        self.items.make_human_readable(unresolver);
-        self.statements.make_human_readable(unresolver);
-    }
 }

@@ -5,27 +5,32 @@
 
 pub mod ir;
 
-mod lower;
+mod error;
+pub use error::{LowerError, LowerResult};
+
+mod desugar;
+mod scaffold;
 
 use microcad_builtin::BuiltinRegistry;
 use microcad_lang_base::{
     CompilationResult, Diagnostics, HashId, Source, Span, SpanToSrcRef, SrcRef, SymbolId, ToHash,
+    hash_id,
 };
 
 pub use ir::CastInto;
-
-pub use lower::{LowerError, LowerResult};
 
 /// Intermediate representation
 use microcad_lang_parse::Ast;
 use microcad_lang_proc_macros::Artifact;
 use serde::{Deserialize, Serialize};
 
+use crate::{ir::IrArena, scaffold::Scaffold};
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Artifact)]
 pub struct Ir {
     pub input_hash: HashId,
     pub output_hash: HashId,
-    pub tree: ir::Source,
+    pub tree: ir::IrTree,
 }
 
 pub trait Unresolver {
@@ -66,34 +71,28 @@ where
     }
 }
 
-impl MakeHumanReadable for Ir {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        self.tree.make_human_readable(unresolver);
-    }
-}
-
-impl Lower<Ast> for Ir {
-    fn lower(node: &Ast, context: &mut LowerContext) -> LowerResult<Self> {
-        let tree = ir::Source::lower(node.tree(), context)?;
-
-        Ok(Self {
-            input_hash: node.output_hash(),
-            output_hash: tree.to_hash(),
-            tree,
-        })
+impl Desugar<Ast> for ir::desugared::Source {
+    fn desugar(node: &Ast, context: &mut LowerContext) -> LowerResult<Self> {
+        ir::desugared::Source::desugar(node.tree(), context)
     }
 }
 
 pub struct LowerContext<'source> {
     pub source: &'source Source,
+    pub arena: ir::IrArena,
+    pub node_id_stack: Vec<ir::IrNodeId>,
     pub builtins: BuiltinRegistry,
     pub errors: Vec<LowerError>,
 }
 
 impl<'source> LowerContext<'source> {
     pub fn new(source: &'source Source) -> Self {
+        let mut arena = IrArena::new();
+
         Self {
             source,
+            arena: IrArena::default(),
+            node_id_stack: vec![],
             builtins: BuiltinRegistry::new(),
             errors: vec![],
         }
@@ -115,8 +114,8 @@ impl<'source> SpanToSrcRef for LowerContext<'source> {
     }
 }
 
-pub trait Lower<AstNode>: Sized {
-    fn lower(node: &AstNode, context: &mut LowerContext) -> LowerResult<Self>;
+pub trait Desugar<AstNode>: Sized {
+    fn desugar(node: &AstNode, context: &mut LowerContext) -> LowerResult<Self>;
 }
 
 impl Unresolver for BuiltinRegistry {
@@ -137,17 +136,25 @@ impl Unresolver for BuiltinRegistry {
 
 pub fn lower<'source>(context: &mut LowerContext<'source>, ast: &Ast) -> CompilationResult<Ir> {
     // Short-circuit on fatal errors
-    let ir = match Ir::lower(ast, context) {
-        Ok(mut ir) => {
-            ir.make_human_readable(&context.builtins);
-            ir
-        }
+    let ir = match ir::desugared::Source::desugar(ast.tree(), context) {
+        Ok(mut ir) => ir,
         Err(fatal_error) => {
             let errors = std::mem::take(&mut context.errors);
             // Ensure the fatal error is logged in the diagnostics
             context.diag(fatal_error);
             return Err(errors.into());
         }
+    };
+
+    let root = ir.scaffold(context);
+
+    let arena = std::mem::take(&mut context.arena);
+    let tree = ir::IrTree::new(root, arena);
+
+    let ir = Ir {
+        input_hash: ast.output_hash(),
+        output_hash: hash_id!(tree),
+        tree,
     };
 
     let errors = std::mem::take(&mut context.errors);

@@ -1,14 +1,14 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Lower, LowerContext, LowerError, LowerResult, ir};
+use crate::{Desugar, LowerContext, LowerError, LowerResult, ir};
 
 use microcad_lang_base::{Refer, SpanToSrcRef};
 use microcad_lang_parse::ast;
 use microcad_lang_types::{Integer, Quantity, Scalar};
 
-impl Lower<ast::Literal> for ir::Literal {
-    fn lower(node: &ast::Literal, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Literal> for ir::Literal {
+    fn desugar(node: &ast::Literal, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match &node.literal {
             ast::LiteralKind::Bool(lit) => ir::Literal(Refer::new(
                 lit.value.into(),
@@ -27,7 +27,7 @@ impl Lower<ast::Literal> for ir::Literal {
                 context.span_to_src_ref(&lit.span),
             )),
             ast::LiteralKind::Quantity(lit) => {
-                let unit = ir::Unit::lower(&lit.unit, context)?;
+                let unit = ir::Unit::desugar(&lit.unit, context)?;
                 ir::Literal(Refer::new(
                     Quantity {
                         value: unit.normalize(Scalar::from_str(lit.value.as_str()).expect("No error expected, this string already has been checked in the parse stage.")),
@@ -52,8 +52,8 @@ impl Lower<ast::Literal> for ir::Literal {
     }
 }
 
-impl Lower<ast::Unit> for ir::Unit {
-    fn lower(node: &ast::Unit, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<ast::Unit> for ir::Unit {
+    fn desugar(node: &ast::Unit, context: &mut LowerContext) -> LowerResult<Self> {
         use std::str::FromStr;
         ir::Unit::from_str(node.name.as_str()).map_err(|_| {
             LowerError::UnknownUnit(Refer::new(
@@ -64,11 +64,11 @@ impl Lower<ast::Unit> for ir::Unit {
     }
 }
 
-impl Lower<Option<ast::Unit>> for ir::Unit {
-    fn lower(node: &Option<ast::Unit>, context: &mut LowerContext) -> LowerResult<Self> {
+impl Desugar<Option<ast::Unit>> for ir::Unit {
+    fn desugar(node: &Option<ast::Unit>, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(node
             .as_ref()
-            .map(|unit| Self::lower(unit, context))
+            .map(|unit| Self::desugar(unit, context))
             .transpose()?
             .unwrap_or_default())
     }

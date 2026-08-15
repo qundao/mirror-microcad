@@ -10,7 +10,7 @@ pub use call::*;
 use derive_more::From;
 pub use literal::*;
 
-use crate::{CastInto, MakeHumanReadable, ir};
+use crate::{CastInto, ir};
 use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
 
 use serde::{Deserialize, Serialize};
@@ -40,18 +40,6 @@ pub struct If<Expr: ExprSpec> {
     pub next_if: Option<Box<If<Expr>>>,
     /// Source code reference.
     pub src_ref: SrcRef,
-}
-
-impl<Expr: ExprSpec> MakeHumanReadable for If<Expr>
-where
-    Expr::Body: MakeHumanReadable,
-{
-    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
-        self.cond.make_human_readable(unresolver);
-        self.body.make_human_readable(unresolver);
-        self.body_else.make_human_readable(unresolver);
-        self.next_if.make_human_readable(unresolver);
-    }
 }
 
 impl<Src: ExprSpec, Dst: ExprSpec> CastInto<If<Dst>> for If<Src>
@@ -90,7 +78,7 @@ where
     }
 }
 
-pub trait ExprSpec: Serialize + SrcReferrer + SingleIdentifier + MakeHumanReadable {
+pub trait ExprSpec: Serialize + SrcReferrer + SingleIdentifier {
     type Body;
 }
 
@@ -120,16 +108,6 @@ impl SrcReferrer for ConstantExpression {
             ConstantExpression::Literal(literal) => literal.src_ref(),
             ConstantExpression::Path(name) => name.src_ref(),
             ConstantExpression::Call(call) => call.src_ref,
-        }
-    }
-}
-
-impl MakeHumanReadable for ConstantExpression {
-    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
-        match self {
-            ConstantExpression::Path(path) => path.make_human_readable(unresolver),
-            ConstantExpression::Call(call) => call.make_human_readable(unresolver),
-            _ => {}
         }
     }
 }
