@@ -40,18 +40,18 @@ pub struct RenderContext<'tree> {
 impl<'tree> RenderContext<'tree> {
     /// Initialize context with current model and prerender model.
     pub fn new(
-        model: &ModelRef<'tree>,
-        resolution: RenderResolution,
-        cache: Option<RcMut<RenderCache>>,
-        progress_tx: Option<ProgressTx>,
+        _model: &ModelRef<'tree>,
+        _resolution: RenderResolution,
+        _cache: Option<RcMut<RenderCache>>,
+        _progress_tx: Option<ProgressTx>,
     ) -> RenderResult<Self> {
-        Ok(Self {
-            model_stack: vec![model.clone()],
-            cache,
-            models_rendered: 0,
-            progress_tx,
-            models_to_render: todo!(), // model.prerender(resolution)?,
-        })
+        todo!() /*  Ok(Self {
+        model_stack: vec![model.clone()],
+        cache,
+        models_rendered: 0,
+        progress_tx,
+        models_to_render: // model.prerender(resolution)?,
+        }) */
     }
 
     /// The current model (panics if it is none).
