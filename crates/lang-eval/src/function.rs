@@ -33,10 +33,10 @@ impl FlowSignal {
     }
 
     /// Unwrap the inner `Value` or return an evaluation error if it was `Continue`.
-    pub fn expect_value(self, src_ref: SrcRef) -> Result<Value, EvalError> {
+    pub fn expect_value(self, src_ref: SrcRef) -> EvalResult<Value> {
         match self {
             FlowSignal::Yield(val) | FlowSignal::Return(val) => Ok(val),
-            FlowSignal::Continue => Err(EvalError::ExpectedExpression { src_ref }),
+            FlowSignal::Continue => Err(EvalError::ExpectedExpression { src_ref }.into()),
         }
     }
 }

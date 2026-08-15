@@ -70,14 +70,10 @@ impl StackFrame {
 }
 
 /// A generic stack.
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Stack(Vec<StackFrame>);
 
-impl Stack {
-    pub fn new() -> Self {
-        Self::default()
-    }
-}
+impl Stack {}
 
 impl StackRead for Stack {
     type Frame = StackFrame;
@@ -102,12 +98,6 @@ impl StackWrite for Stack {
 
     fn top_mut(&mut self) -> &mut StackFrame {
         self.0.last_mut().expect("A stack frame")
-    }
-}
-
-impl Default for Stack {
-    fn default() -> Self {
-        Self(vec![])
     }
 }
 

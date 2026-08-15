@@ -193,7 +193,7 @@ use microcad_package::symbol;
 use crate::{CallTrait, EvalContext, EvalResult};
 
 impl CallTrait<ModelTree> for symbol::Workbench {
-    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<ModelTree> {
+    fn call(&self, _args: &ArgumentValueList, _context: &mut EvalContext) -> EvalResult<ModelTree> {
         // Find correct inits
         todo!();
         /*
