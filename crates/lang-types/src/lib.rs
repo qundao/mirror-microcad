@@ -22,7 +22,9 @@ pub use ty::{
 };
 pub use value::{Array, Quantity, Tuple, Value, ValueAccess, ValueError, ValueList, ValueResult};
 
-pub use model::{Model, ModelNodeMut, ModelNodeRef, ModelOutputType, ModelTree};
+pub use model::{
+    Model, ModelOutputType, ModelTree, NodeMut as ModelNodeMut, NodeRef as ModelNodeRef,
+};
 
 pub use math_ops::MathOps;
 

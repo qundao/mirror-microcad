@@ -5,7 +5,7 @@ use microcad_lang_base::BuiltinId;
 use microcad_lang_types::{
     Arguments, Identifier, Model, ModelOutputType, ModelTree, Value, arguments,
     model::{
-        BooleanOp, Element, ModelNodeExt, Properties,
+        BooleanOp, Element, NodeExt, Properties,
         element::{self, BuiltinWorkbenchKind},
     },
 };
@@ -238,6 +238,7 @@ fn make_translation_node(x_mm: f64, y_mm: f64, z_mm: f64) -> Model {
         attr: Default::default(),
         element: Element::BuiltinWorkpiece(BuiltinWorkbenchKind::Transform),
         creator: None,
+        ..Default::default()
     }
 }
 
@@ -250,6 +251,7 @@ fn make_circle_input_tree(radius_mm: f64) -> ModelTree {
         attr: Default::default(),
         element: Element::BuiltinWorkpiece(BuiltinWorkbenchKind::Primitive2D),
         creator: None,
+        ..Default::default()
     })
 }
 
@@ -271,6 +273,7 @@ fn test_replace_input_placeholders_multiplicity() {
         attr: Default::default(),
         element: Element::Multiplicity,
         creator: None,
+        ..Default::default()
     });
 
     let translations = [
@@ -290,6 +293,7 @@ fn test_replace_input_placeholders_multiplicity() {
             attr: Default::default(),
             element: Element::InputPlaceholder,
             creator: None,
+            ..Default::default()
         };
         let placeholder_id = template_tree.arena.new_node(placeholder_model);
 

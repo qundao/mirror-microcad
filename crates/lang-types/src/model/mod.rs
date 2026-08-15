@@ -21,7 +21,7 @@ mod operation;
 
 pub use operation::{AffineTransform, BooleanOp};
 
-use microcad_lang_base::{BuiltinId, HashId, Identifier, hash_id};
+use microcad_lang_base::{BuiltinId, HashId, Identifier, hash_id, impl_tree_types};
 use serde::{Deserialize, Serialize};
 
 pub use attribute::Attributes;
@@ -45,7 +45,7 @@ pub struct Model {
     /// Model element
     pub element: Element,
 
-    hash_id: HashId,
+    pub hash_id: HashId,
 
     /// The call that created this model
     pub creator: Option<Creator>,
@@ -96,24 +96,20 @@ impl Ty for Model {
     }
 }
 
-pub type ModelArena = microcad_lang_base::tree::Arena<Model>;
-pub type ModelNode = microcad_lang_base::tree::Node<Model>;
-pub type ModelNodeRef<'a> = microcad_lang_base::tree::NodeRef<'a, Model>;
-pub type ModelNodeMut<'a> = microcad_lang_base::tree::NodeMut<'a, Model>;
-pub type ModelNodeId = microcad_lang_base::tree::NodeId;
+impl_tree_types!(pub ModelTree<Model>);
 
 /// Extension trait for [`SymbolNode`] .
-pub trait ModelNodeExt<'a> {
+pub trait NodeExt<'a> {
     fn name(&self) -> Option<&Identifier>;
 
     fn deduce_output_type(&self) -> ModelOutputType;
 
-    fn into_group_child(&self) -> Option<ModelNodeRef<'a>>;
+    fn into_group_child(&self) -> Option<NodeRef<'a>>;
 
     fn multiplicity_descendants(&self) -> iter::MultiplicityDescendants<'a>;
 }
 
-impl<'a> ModelNodeExt<'a> for ModelNodeRef<'a> {
+impl<'a> NodeExt<'a> for NodeRef<'a> {
     fn name(&self) -> Option<&Identifier> {
         self.name.as_ref()
     }
@@ -138,7 +134,7 @@ impl<'a> ModelNodeExt<'a> for ModelNodeRef<'a> {
     /// Return inner group child if this model only contains a single group child.
     ///
     /// Useful for operations like `subtract() {}` or `hull() {}` to unwrap nested groups.
-    fn into_group_child(&self) -> Option<ModelNodeRef<'a>> {
+    fn into_group_child(&self) -> Option<NodeRef<'a>> {
         let mut children = self.children();
         let first_child = children.next()?;
 

@@ -3,8 +3,8 @@
 
 use microcad_lang_base::{Artifact, ArtifactError, Identifier};
 use microcad_lang_types::{
-    arguments,
-    model::{Element, Model, ModelTree, Properties},
+    ModelTree, arguments,
+    model::{Element, Model, Properties},
 };
 
 /// Helper to construct a basic test `ModelTree`
@@ -15,6 +15,7 @@ fn create_test_model_tree() -> ModelTree {
         attr: Default::default(),
         element: Element::InputPlaceholder,
         creator: None,
+        ..Default::default()
     });
 
     let child_node = tree.arena.new_node(Model {
@@ -23,6 +24,7 @@ fn create_test_model_tree() -> ModelTree {
         attr: Default::default(),
         element: Element::InputPlaceholder,
         creator: None,
+        hash_id: Default::default(),
     });
 
     tree.root.append(child_node, &mut tree.arena);
@@ -35,6 +37,8 @@ fn test_model_tree_ron_roundtrip() -> Result<(), ArtifactError> {
 
     // 1. Serialize to RON artifact format
     let ron_str = original_tree.to_ron()?;
+
+    println!("{ron_str}");
 
     // Verify the RON contains expected envelope header details
     assert!(ron_str.contains("ModelTree"));
