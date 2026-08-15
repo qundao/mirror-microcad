@@ -249,7 +249,7 @@ pub mod core {
             }
         }
 
-        Ok(Value::String(formatted))
+        Ok(formatted.into())
     }
 
     #[builtin_fn(core::range(start: Integer, end: Integer) -> Any)] // TODO: Return [Integer]
@@ -262,9 +262,7 @@ pub mod core {
 
     #[builtin_fn(core::array(*) -> Any)]
     pub fn array(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
-        Ok(Value::Array(Array::from_iter(
-            args.positional_iter().cloned(),
-        )))
+        Ok(Array::from_iter(args.positional_iter().cloned()).into())
     }
 
     #[builtin_fn(core::tuple(*) -> Any)]
