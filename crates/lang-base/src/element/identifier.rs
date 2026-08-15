@@ -154,9 +154,9 @@ impl From<Identifier> for SourceSpan {
     }
 }
 
-impl From<&std::ffi::OsStr> for Identifier {
-    fn from(value: &std::ffi::OsStr) -> Self {
-        Identifier::no_ref(value.to_string_lossy().to_string().as_str())
+impl From<Name> for Identifier {
+    fn from(name: Name) -> Self {
+        Identifier(Refer::none(name))
     }
 }
 
