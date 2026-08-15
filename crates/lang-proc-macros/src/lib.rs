@@ -4,8 +4,6 @@
 extern crate proc_macro;
 
 pub(crate) mod prelude {
-    pub use proc_macro::TokenStream;
-    pub use quote::quote;
     pub use syn::*;
 }
 
@@ -261,6 +259,39 @@ pub fn derive_visit(input: TokenStream) -> TokenStream {
         }
         _ => panic!("Only structs supported"),
     }
+}
+
+use proc_macro::TokenStream;
+use quote::quote;
+use syn::{Data, DeriveInput, Fields, parse_macro_input};
+
+#[proc_macro_derive(Scaffold)]
+pub fn derive_scaffold(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+    let name = &input.ident;
+
+    // Ensure we are deriving for a struct with named fields
+    let fields = match input.data {
+        Data::Struct(data) => match data.fields {
+            Fields::Named(fields) => fields.named,
+            _ => panic!("#[derive(Scaffold)] only supports structs with named fields"),
+        },
+        _ => panic!("#[derive(Scaffold)] only supports structs"),
+    };
+
+    let field_idents: Vec<_> = fields.iter().map(|f| f.ident.as_ref().unwrap()).collect();
+
+    quote! {
+        impl crate::Scaffold for #name {
+            fn scaffold(self, context: &mut crate::LowerContext) -> ir::IrNodeId {
+                #(
+                    self.#field_idents.scaffold(context);
+                )*
+                *context.top_node()
+            }
+        }
+    }
+    .into()
 }
 
 #[proc_macro_derive(Artifact)]
