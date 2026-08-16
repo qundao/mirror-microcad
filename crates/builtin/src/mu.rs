@@ -394,9 +394,25 @@ pub mod math {
 
 #[builtin_mod]
 pub mod geo2d {
-    use microcad_lang_types::{Length, Model, Tuple, tuple};
+    use microcad_lang_base::{BuiltinInfo, hash_id};
+    use microcad_lang_types::{
+        Length, Model, ModelOutputType, Tuple, Type, function_type,
+        model::{
+            Element,
+            element::{BuiltinWorkpiece, Primitive2D},
+        },
+        tuple,
+    };
+
+    use crate::BuiltinPrimitive;
 
     use super::*;
+
+    static CIRCLE: Builtin = Builtin::Primitive(BuiltinPrimitive::new(
+        BuiltinInfo::new("__mu::geo2d::Circle"),
+        || function_type!((radius: Type::length()) -> Type::Model(ModelOutputType::Geometry2D)),
+        Circle::call,
+    ));
 
     /// A circle with a radius.
     #[derive(Serialize, Deserialize, Debug)]
@@ -406,29 +422,15 @@ pub mod geo2d {
     }
 
     impl Circle {
-        #[allow(unused)]
-        fn properties(&self) -> Tuple {
-            tuple!(radius = self.radius)
-        }
-
-        #[allow(unused)]
-        fn model(&self) -> Model {
-            todo!()
+        fn call(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Model, BuiltinError> {
+            Ok(Model {
+                name: None,
+                attr: Default::default(),
+                hash_id: hash_id!(args),
+                properties: args.into(),
+                element: Element::BuiltinWorkpiece(BuiltinWorkpiece::Primitive2D(CIRCLE.id())),
+                creator: None,
+            })
         }
     }
-
-    /*
-    #[typetag::serde]
-    impl Primitive2D for Circle {
-        fn builtin_info(&self) -> &'static BuiltinInfo {
-            BuiltinName::new("__mu::geo2d::Circle")
-        }
-
-        fn get_property(&self, name: &str) -> Value {
-            match name {
-                "radius" => Value::from(self.radius),
-                _ => Value::None,
-            }
-        }
-    }*/
 }

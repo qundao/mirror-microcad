@@ -107,7 +107,7 @@ fn member_access() {}
 fn array() {
     let mut ctx = BuiltinEvalContext::default();
     match core::array(arguments!(1, 2, 3, 4), &mut ctx) {
-        Ok(Value::Array(a)) => assert_eq!(a, array![1, 2, 3, 4]),
+        Ok(Value::Array(a)) => assert_eq!(a.as_ref(), &array![1, 2, 3, 4]),
         _ => panic!("Expected array input"),
     }
 }
