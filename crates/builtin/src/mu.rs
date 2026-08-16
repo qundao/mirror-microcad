@@ -395,9 +395,9 @@ pub mod math {
 /// Built-in 2D primitives
 #[builtin_mod]
 pub mod geo2d {
-    use microcad_lang_base::{BuiltinInfo, hash_id};
+    use microcad_lang_base::BuiltinInfo;
     use microcad_lang_types::{
-        Length, Model, ModelNodeRef, ModelOutputType, Type, function_type,
+        Length, Model, ModelOutputType, Type, function_type,
         model::{Element, element::BuiltinWorkpiece},
     };
 
@@ -420,14 +420,7 @@ pub mod geo2d {
 
     impl Circle {
         pub fn call(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Model, BuiltinError> {
-            Ok(Model {
-                name: None,
-                attr: Default::default(),
-                hash_id: hash_id!(args),
-                properties: args.into(),
-                element: Element::BuiltinWorkpiece(BuiltinWorkpiece::Primitive2D(CIRCLE.id())),
-                creator: None,
-            })
+            Ok(Model::new(BuiltinWorkpiece::Primitive2D(CIRCLE.id())).with_properties(args))
         }
 
         pub fn from_model(model: &Model) -> Result<Self, BuiltinError> {
