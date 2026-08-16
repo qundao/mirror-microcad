@@ -79,8 +79,21 @@ impl Ty for ArgumentValue {
 
 impl ArgumentValue {
     /// Create new argument value
-    pub fn new(value: Value, id: Option<Identifier>) -> Self {
-        Self { value, id }
+    pub fn new(value: impl Into<Value>, id: Option<Identifier>) -> Self {
+        Self {
+            value: value.into(),
+            id,
+        }
+    }
+
+    /// Create a positional argument (no name)
+    pub fn positional(value: impl Into<Value>) -> Self {
+        Self::new(value, None)
+    }
+
+    /// Create a named argument (e.g., `radius: 10.0`)
+    pub fn named(id: impl Into<Identifier>, value: impl Into<Value>) -> Self {
+        Self::new(value, Some(id.into()))
     }
 }
 
@@ -126,12 +139,24 @@ where
 #[macro_export]
 macro_rules! arguments {
     ($($key:ident = $value:expr),*) => {
-            microcad_lang_types::Arguments::from(microcad_lang_types::Tuple::from([$( (stringify!($key), microcad_lang_types::Value::from($value)) ),* ]
+            $crate::Arguments::from($crate::Tuple::from([$( (stringify!($key), $crate::Value::from($value)) ),* ]
                 .iter()))
     };
 
     ($($value:expr),*) => {
-            microcad_lang_types::Arguments::from(microcad_lang_types::Tuple::from([$( microcad_lang_types::Value::from($value)),* ]
+            $crate::Arguments::from($crate::Tuple::from([$( $crate::Value::from($value)),* ]
                 .iter()))
     };
+}
+
+/// Shortcut to create an argument value
+#[macro_export]
+macro_rules! argument_value {
+    ($id:ident = $value:expr) => {
+        $crate::ArgumentValue::named(stringify!($id), $value)
+    };
+    ($value:expr) => {
+        $crate::ArgumentValue::positional($value)
+    };
+    () => {};
 }
