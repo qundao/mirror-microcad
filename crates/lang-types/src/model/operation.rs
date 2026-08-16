@@ -6,17 +6,18 @@
 use derive_more::Display;
 use serde::{Deserialize, Serialize};
 
-use crate::{Mat3, Scalar, Vec3};
+use crate::{Length, Scalar};
 
 /// Transformation matrix
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Display, Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub enum AffineTransform {
     /// Translation.
-    Translation(Vec3),
+    #[display("x = {x}, y = {y}, z = {z}")]
+    Translation { x: Length, y: Length, z: Length },
     /// Generic rotation.
-    Rotation(Mat3),
+    // Rotation(Mat3), // TODO impl custom hash here
     /// Scale.
-    Scale(Vec3),
+    // Scale(Vec3), // Impl display
     /// Uniform scale.
     UniformScale(Scalar),
 }
@@ -27,7 +28,7 @@ pub enum BooleanOp {
     /// Computes the union R = P ∪ Q
     Union,
     /// computes the difference R = P ∖ Q
-    Subtract,
+    Difference,
     /// computes the intersection R = P ∩ Q
     Intersect,
 }

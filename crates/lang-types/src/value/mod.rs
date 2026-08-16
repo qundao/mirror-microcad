@@ -147,6 +147,38 @@ impl_try_from!(String => String);
 impl_try_from!(Integer => Integer);
 impl_try_from!(Integer => i64);
 
+impl TryFrom<Value> for Length {
+    type Error = ValueError;
+
+    fn try_from(value: Value) -> Result<Self, Self::Error> {
+        match value {
+            Value::Quantity(Quantity {
+                value,
+                quantity_type: QuantityType::Length,
+                ..
+            }) => Ok(Length(value)),
+            _ => Err(ValueError::CannotConvert(
+                value.to_string(),
+                "Length".into(),
+            )),
+        }
+    }
+}
+
+impl TryFrom<Value> for Rc<ModelTree> {
+    type Error = ValueError;
+
+    fn try_from(value: Value) -> Result<Self, Self::Error> {
+        match value {
+            Value::Model(tree) => Ok(tree),
+            _ => Err(ValueError::CannotConvert(
+                value.to_string(),
+                "ModelTree".into(),
+            )),
+        }
+    }
+}
+
 impl TryFrom<Value> for Scalar {
     type Error = ValueError;
 
@@ -284,6 +316,12 @@ impl From<Tuple> for Value {
 
 impl From<String> for Value {
     fn from(s: String) -> Self {
+        Self::String(s.to_compact_string())
+    }
+}
+
+impl From<&'static str> for Value {
+    fn from(s: &'static str) -> Self {
         Self::String(s.to_compact_string())
     }
 }

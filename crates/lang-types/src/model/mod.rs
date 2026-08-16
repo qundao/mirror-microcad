@@ -39,7 +39,7 @@ pub struct Model {
     /// Model attributes `#`
     pub attr: Attributes,
 
-    /// Model properties `-`
+    /// Model properties
     pub properties: Properties,
 
     /// Model element
@@ -52,15 +52,10 @@ pub struct Model {
 }
 
 impl Model {
-    pub fn primitive2d(builtin_id: BuiltinId, arguments: Arguments) -> Self {
-        let hash_id = hash_id!(builtin_id, arguments);
+    pub fn new(element: impl Into<Element>) -> Self {
         Self {
-            name: None,
-            properties: Properties::default(),
-            attr: Attributes::default(),
-            element: Element::BuiltinWorkpiece(element::BuiltinWorkbenchKind::Primitive2D),
-            creator: Some(Creator::builtin(builtin_id, arguments)),
-            hash_id,
+            element: element.into(),
+            ..Default::default()
         }
     }
 

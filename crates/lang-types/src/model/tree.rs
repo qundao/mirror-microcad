@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     Model, Ty, Type,
-    model::{self, NodeExt, element::BuiltinWorkbenchKind},
+    model::{self, NodeExt, element::BuiltinWorkpiece},
 };
 
 /// A model tree with a root node.
@@ -31,7 +31,7 @@ impl ModelTree {
     ///     └── rhs (other)
     pub fn apply_boolean_op(mut self, op: model::BooleanOp, rhs: Self) -> Self {
         // Check if `self`'s root is already a BooleanOp with the SAME operation
-        if let model::Element::BuiltinWorkpiece(BuiltinWorkbenchKind::BooleanOp(current_op)) =
+        if let model::Element::BuiltinWorkpiece(BuiltinWorkpiece::BooleanOp(current_op)) =
             self.root().element
             && current_op == op
         {
@@ -52,7 +52,7 @@ impl ModelTree {
 
         // 1. Create the top-level BooleanOp root node
         let root_model = Model {
-            element: model::Element::BuiltinWorkpiece(BuiltinWorkbenchKind::BooleanOp(op)),
+            element: model::Element::BuiltinWorkpiece(BuiltinWorkpiece::BooleanOp(op)),
             ..Model::default()
         };
         let root = arena.new_node(root_model);
@@ -198,6 +198,6 @@ impl std::ops::Sub for ModelTree {
     type Output = ModelTree;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        self.apply_boolean_op(model::BooleanOp::Subtract, rhs)
+        self.apply_boolean_op(model::BooleanOp::Difference, rhs)
     }
 }

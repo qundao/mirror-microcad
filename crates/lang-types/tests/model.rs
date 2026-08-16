@@ -6,7 +6,7 @@ use microcad_lang_types::{
     Arguments, Identifier, Model, ModelOutputType, ModelTree, Value, arguments,
     model::{
         BooleanOp, Element, NodeExt, Properties,
-        element::{self, BuiltinWorkbenchKind},
+        element::{self, BuiltinWorkpiece},
     },
 };
 
@@ -14,7 +14,7 @@ use microcad_lang_types::{
 fn create_test_model(name: &str) -> Model {
     Model {
         name: Some(Identifier::from(name)),
-        element: Element::BuiltinWorkpiece(element::BuiltinWorkbenchKind::Primitive2D),
+        element: Element::BuiltinWorkpiece(element::BuiltinWorkpiece::Primitive2D),
         ..Default::default()
     }
 }
@@ -104,7 +104,7 @@ fn test_into_group_child() {
 fn make_leaf(name: &str) -> ModelTree {
     ModelTree::new(Model {
         name: Some(Identifier::from(name)),
-        element: Element::BuiltinWorkpiece(element::BuiltinWorkbenchKind::Primitive2D),
+        element: Element::BuiltinWorkpiece(element::BuiltinWorkpiece::Primitive2D),
         ..Model::default()
     })
 }
@@ -135,7 +135,7 @@ fn test_basic_boolean_op_structure() {
     // 1. Check root is BooleanOp::Difference
     assert_eq!(
         root.element,
-        Element::BuiltinWorkpiece(BuiltinWorkbenchKind::BooleanOp(BooleanOp::Subtract))
+        Element::BuiltinWorkpiece(BuiltinWorkpiece::BooleanOp(BooleanOp::Difference))
     );
 
     // 2. Check group children are "a" and "b"
@@ -155,7 +155,7 @@ fn test_flattening_same_boolean_op() {
     // Verify root is single BooleanOp::Union
     assert_eq!(
         union_tree.root().element,
-        Element::BuiltinWorkpiece(BuiltinWorkbenchKind::BooleanOp(BooleanOp::Union))
+        Element::BuiltinWorkpiece(BuiltinWorkpiece::BooleanOp(BooleanOp::Union))
     );
 
     // Verify all 3 leaves are flattened under the SAME inner group
@@ -175,7 +175,7 @@ fn test_nested_different_boolean_ops() {
     // Root should be Intersection
     assert_eq!(
         mixed_tree.root().element,
-        Element::BuiltinWorkpiece(BuiltinWorkbenchKind::BooleanOp(BooleanOp::Intersect))
+        Element::BuiltinWorkpiece(BuiltinWorkpiece::BooleanOp(BooleanOp::Intersect))
     );
 
     // Inner group of the root should have 2 children: [UnionNode, Leaf("c")]
@@ -190,7 +190,7 @@ fn test_nested_different_boolean_ops() {
     // First child is the nested Union operation
     assert_eq!(
         children[0].element,
-        Element::BuiltinWorkpiece(BuiltinWorkbenchKind::BooleanOp(BooleanOp::Union))
+        Element::BuiltinWorkpiece(BuiltinWorkpiece::BooleanOp(BooleanOp::Union))
     );
 
     // Second child is leaf "c"
@@ -236,7 +236,7 @@ fn make_translation_node(x_mm: f64, y_mm: f64, z_mm: f64) -> Model {
         name: Some(Identifier::from("translate")),
         properties: Properties::from(args),
         attr: Default::default(),
-        element: Element::BuiltinWorkpiece(BuiltinWorkbenchKind::Transform),
+        element: Element::BuiltinWorkpiece(BuiltinWorkpiece::Transform),
         creator: None,
         ..Default::default()
     }
@@ -249,7 +249,7 @@ fn make_circle_input_tree(radius_mm: f64) -> ModelTree {
         name: Some(Identifier::from("Circle")),
         properties: Properties::from(args),
         attr: Default::default(),
-        element: Element::BuiltinWorkpiece(BuiltinWorkbenchKind::Primitive2D),
+        element: Element::BuiltinWorkpiece(BuiltinWorkpiece::Primitive2D),
         creator: None,
         ..Default::default()
     })
@@ -322,7 +322,7 @@ fn test_replace_input_placeholders_multiplicity() {
         assert_eq!(branch.name(), Some(&Identifier::from("translate")));
         assert!(matches!(
             branch.element,
-            Element::BuiltinWorkpiece(BuiltinWorkbenchKind::Transform)
+            Element::BuiltinWorkpiece(BuiltinWorkpiece::Transform)
         ));
 
         // Verify children under translate

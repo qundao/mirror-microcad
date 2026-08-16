@@ -8,23 +8,24 @@ use microcad_lang_base::{BuiltinId, BuiltinInfo, element::WorkbenchKind};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Value,
-    model::{BooleanOp, ModelOutputType},
+    Length, Value,
+    model::{AffineTransform, BooleanOp, ModelOutputType},
 };
 
 /// The kind of the built-in workbench determines its output.
-#[derive(Debug, Copy, Clone, Hash, Display, PartialEq, Serialize, Deserialize)]
-pub enum BuiltinWorkbenchKind {
+#[non_exhaustive]
+#[derive(Debug, Display, Clone, Hash, PartialEq, Serialize, Deserialize)]
+pub enum BuiltinWorkpiece {
     /// A parametric 2D primitive.
-    Primitive2D,
+    Primitive2D(BuiltinId),
     /// A parametric 3D primitive.
     Primitive3D,
     /// An affine transformation.
-    Transform,
-    /// An operation on a model.
-    Operation,
+    AffineTransform(AffineTransform),
     /// Boolean operation
     BooleanOp(BooleanOp),
+    /// Extrude
+    Extrude { height: Length },
 }
 
 /// Trait to implement a Primitive2D
@@ -37,23 +38,15 @@ pub trait Primitive2D {
     fn get_property(&self, s: &str) -> Value;
 }
 
-#[derive(Clone, Debug, Display, Hash, PartialEq, From, Serialize, Deserialize)]
-pub enum BuiltinWorkpiece {
-    Primitive2D(BuiltinId),
-    //Primitive3D(Box<dyn Primitive3D>),
-    //Operation(Box<dyn Operation>),
-    //Transform(AffineTransform),
-    BooleanOp(BooleanOp),
-}
-
-impl From<BuiltinWorkbenchKind> for ModelOutputType {
-    fn from(kind: BuiltinWorkbenchKind) -> Self {
-        match kind {
-            BuiltinWorkbenchKind::Primitive2D => Self::Geometry2D,
-            BuiltinWorkbenchKind::Primitive3D => Self::Geometry3D,
-            BuiltinWorkbenchKind::Operation
-            | BuiltinWorkbenchKind::Transform
-            | BuiltinWorkbenchKind::BooleanOp(_) => Self::NotDetermined,
+impl BuiltinWorkpiece {
+    fn output_type(&self) -> ModelOutputType {
+        match self {
+            BuiltinWorkpiece::Primitive2D(_) => ModelOutputType::Geometry2D,
+            BuiltinWorkpiece::Primitive3D => ModelOutputType::Geometry3D,
+            BuiltinWorkpiece::AffineTransform(_) | BuiltinWorkpiece::BooleanOp(_) => {
+                ModelOutputType::NotDetermined
+            }
+            BuiltinWorkpiece::Extrude { .. } => ModelOutputType::Geometry3D,
         }
     }
 }
@@ -72,7 +65,7 @@ pub enum Element {
     Workpiece(WorkbenchKind),
 
     /// A built-in workpiece which created by built-in workbenches.
-    BuiltinWorkpiece(BuiltinWorkbenchKind),
+    BuiltinWorkpiece(BuiltinWorkpiece),
 
     /// Multiplicity.
     Multiplicity,
@@ -86,7 +79,7 @@ impl Element {
         use Element::*;
         match &self {
             Workpiece(workpiece) => (*workpiece).into(),
-            BuiltinWorkpiece(builtin_workpiece) => (*builtin_workpiece).into(),
+            BuiltinWorkpiece(builtin_workpiece) => builtin_workpiece.output_type(),
             Group | Multiplicity | InputPlaceholder | Value(_) => ModelOutputType::NotDetermined,
         }
     }
