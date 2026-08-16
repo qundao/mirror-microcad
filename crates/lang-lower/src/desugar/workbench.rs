@@ -283,12 +283,12 @@ impl Desugar<ast::def::Workbench> for ir::desugared::Workbench {
         Ok(Self {
             meta: ir::Meta {
                 name: Some(ir::Identifier::desugar(&node.id, context)?),
-                attr: crate::desugar::attribute::outer_with_doc(&node.doc, &node.attr, context)?
-                    .extend(ir::Attributes::desugar(&node.body.statements, context)?),
                 keyword_src_ref: context.span_to_src_ref(&node.keyword_span),
                 vis: ir::Visibility::desugar(&node.vis, context)?,
                 src_ref: context.span_to_src_ref(&node.span),
             },
+            attr: crate::desugar::attribute::outer_with_doc(&node.doc, &node.attr, context)?
+                .extend(ir::Attributes::desugar(&node.body.statements, context)?),
             kind: node.kind,
             parameters: ir::ParameterList::desugar(&node.parameters, context)?,
             inits: Box::desugar(&node.body.statements, context)?,

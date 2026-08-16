@@ -50,9 +50,6 @@ pub struct Meta {
     /// Visibility
     pub vis: Visibility,
 
-    /// Attributes, combined from Inner and OuterAttributes
-    pub attr: ir::Attributes,
-
     /// Source code reference of the symbol definition
     pub src_ref: SrcRef,
 
@@ -63,46 +60,57 @@ pub struct Meta {
 /// A desugared source file.
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Source {
+    /// Attributes, combined from Inner and OuterAttributes
+    pub attr: ir::Attributes,
+
     /// Workbench statements
     pub statements: Box<[ir::WorkbenchStatement]>,
 }
 
-/// Workbench definition, e.g `sketch`, `part` or `op`.
-#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Workbench {
-    pub kind: ir::WorkbenchKind,
-    /// Workbench's building plan.
-    pub parameters: ir::ParameterList,
-    /// `init`
-    pub inits: Box<[ir::Init]>,
-    /// The actual statements to build the Model
-    pub statements: Box<[ir::WorkbenchStatement]>,
+#[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Alias {
+    /// Attributes, combined from Inner and OuterAttributes
+    pub attr: ir::Attributes,
+
+    pub path: Path,
 }
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
-pub struct Alias(pub Path);
+pub struct Wildcard {
+    /// Attributes, combined from Inner and OuterAttributes
+    pub attr: ir::Attributes,
+
+    pub path: Path,
+}
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
-pub struct Wildcard(pub Path);
+pub struct InlineModule {
+    /// Attributes, combined from Inner and OuterAttributes
+    pub attr: ir::Attributes,
+}
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
-pub struct InlineModule;
-
-#[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
-pub struct FileModule;
+pub struct FileModule {
+    /// Attributes
+    pub attr: ir::Attributes,
+}
 
 /// A constant definition: `const FOO: Length = 32mm`.
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Constant {
+    /// Attributes,
+    pub attr: ir::Attributes,
+    /// Type of the constant
     pub ty: ir::Type,
+    /// Expression type
     pub expr: ir::ConstantExpression,
 }
 
-/// Symbol definition
+/// IR item definition
 #[derive(Debug, Clone, Hash, From, PartialEq, Serialize, Deserialize)]
 pub enum Def {
     /// Source file symbol.
-    SourceFile(Source),
+    Source(Source),
     /// Inline Module symbol: `mod foo {}`
     InlineModule(InlineModule),
     /// File Module Symbol: `mod foo;`

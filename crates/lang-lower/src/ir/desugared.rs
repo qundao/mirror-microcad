@@ -13,6 +13,7 @@ use crate::ir;
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Alias {
     pub meta: ir::Meta,
+    pub attr: ir::Attributes,
     pub path: ir::Path,
 }
 
@@ -20,6 +21,7 @@ pub struct Alias {
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Wildcard {
     pub meta: ir::Meta,
+    pub attr: ir::Attributes,
     pub path: ir::Path,
 }
 
@@ -34,6 +36,7 @@ pub struct Aliases {
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Constant {
     pub meta: ir::Meta,
+    pub attr: ir::Attributes,
     pub ty: ir::Type,
     pub expr: ir::ConstantExpression,
 }
@@ -49,6 +52,7 @@ pub struct FunctionItems {
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Function {
     pub meta: ir::Meta,
+    pub attr: ir::Attributes,
     pub items: FunctionItems,
 
     pub signature: ir::FunctionSignature,
@@ -61,12 +65,14 @@ pub struct Function {
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct InlineModule {
     pub meta: ir::Meta,
+    pub attr: ir::Attributes,
     pub items: InlineModuleItems,
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct FileModule {
     pub meta: ir::Meta,
+    pub attr: ir::Attributes,
 }
 
 /// Items inside an inline module that will be resolved into Symbols.
@@ -94,6 +100,8 @@ pub struct WorkbenchItems {
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Workbench {
     pub meta: ir::Meta,
+    /// Attributes
+    pub attr: ir::Attributes,
     /// Items that will be resolved into Symbols
     pub items: WorkbenchItems,
     /// Workbench kind.
@@ -128,6 +136,8 @@ pub struct SourceItems {
 pub struct Source {
     /// Meta data.
     pub meta: ir::Meta,
+    /// Attributes
+    pub attr: ir::Attributes,
     /// Items that will become Symbols
     pub items: SourceItems,
     /// Workbench statements

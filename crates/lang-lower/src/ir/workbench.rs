@@ -113,3 +113,18 @@ impl CastInto<ir::WorkbenchExpression> for ir::ConstantExpression {
         }
     }
 }
+
+/// Workbench definition, e.g `sketch`, `part` or `op`.
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
+pub struct Workbench {
+    /// Attributes, combined from Inner and OuterAttributes
+    pub attr: ir::Attributes,
+    /// Workbench Kind
+    pub kind: ir::WorkbenchKind,
+    /// Workbench's building plan.
+    pub parameters: ir::ParameterList,
+    /// `init`
+    pub inits: Box<[ir::Init]>,
+    /// The actual statements to build the Model
+    pub statements: Box<[ir::WorkbenchStatement]>,
+}

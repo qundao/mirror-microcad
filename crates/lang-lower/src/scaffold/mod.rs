@@ -27,7 +27,7 @@ impl Scaffold for ir::desugared::FileModule {
     fn scaffold(self, context: &mut LowerContext) -> ir::NodeId {
         context.scaffold_item(ir::IrItem {
             meta: self.meta,
-            def: ir::FileModule.into(),
+            def: ir::FileModule { attr: self.attr }.into(),
         })
     }
 }
@@ -36,7 +36,11 @@ impl Scaffold for ir::desugared::Alias {
     fn scaffold(self, context: &mut LowerContext) -> ir::NodeId {
         context.scaffold_item(ir::IrItem {
             meta: self.meta,
-            def: ir::Alias(self.path).into(),
+            def: ir::Alias {
+                attr: self.attr,
+                path: self.path,
+            }
+            .into(),
         })
     }
 }
@@ -45,7 +49,11 @@ impl Scaffold for ir::desugared::Wildcard {
     fn scaffold(self, context: &mut LowerContext) -> ir::NodeId {
         context.scaffold_item(ir::IrItem {
             meta: self.meta,
-            def: ir::Wildcard(self.path).into(),
+            def: ir::Wildcard {
+                attr: self.attr,
+                path: self.path,
+            }
+            .into(),
         })
     }
 }
@@ -55,6 +63,7 @@ impl Scaffold for ir::desugared::Constant {
         context.scaffold_item(ir::IrItem {
             meta: self.meta,
             def: ir::Constant {
+                attr: self.attr,
                 ty: self.ty,
                 expr: self.expr,
             }
@@ -68,7 +77,7 @@ impl Scaffold for ir::desugared::InlineModule {
         context.scaffold_item_with_children(
             ir::IrItem {
                 meta: self.meta,
-                def: ir::InlineModule.into(),
+                def: ir::InlineModule { attr: self.attr }.into(),
             },
             self.items,
         )
@@ -81,6 +90,7 @@ impl Scaffold for ir::desugared::Function {
             ir::IrItem {
                 meta: self.meta,
                 def: ir::Function {
+                    attr: self.attr,
                     statements: self.statements,
                     signature: self.signature,
                 }
@@ -97,6 +107,7 @@ impl Scaffold for ir::desugared::Workbench {
             ir::IrItem {
                 meta: self.meta,
                 def: ir::Workbench {
+                    attr: self.attr,
                     statements: self.statements,
                     kind: self.kind,
                     parameters: self.parameters,
@@ -115,6 +126,7 @@ impl Scaffold for ir::desugared::Source {
             ir::IrItem {
                 meta: self.meta,
                 def: ir::Source {
+                    attr: self.attr,
                     statements: self.statements,
                 }
                 .into(),

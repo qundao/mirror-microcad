@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0xb3b97c5b5fc7a57e",
-        output_hash: "0xf651e494e2d6a1d",
+        output_hash: "0xf374cdc64e49d963",
         tree: (
             root: (
                 index1: 1,
@@ -38,6 +38,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     src_ref: "None",
                                 ))),
                                 vis: Public,
+                                src_ref: "0:1 @ 0xb68464fb05014e73 (0..141)",
+                                keyword_src_ref: "None",
+                            ),
+                            def: Source((
                                 attr: (
                                     doc: ((
                                         value: [],
@@ -47,10 +51,6 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     commands: [],
                                     tags: [],
                                 ),
-                                src_ref: "0:1 @ 0xb68464fb05014e73 (0..141)",
-                                keyword_src_ref: "None",
-                            ),
-                            def: SourceFile((
                                 statements: [
                                     (
                                         attr: (
@@ -115,6 +115,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     src_ref: "0:17 @ 0xb68464fb05014e73 (16..19)",
                                 ))),
                                 vis: Private,
+                                src_ref: "0:1 @ 0xb68464fb05014e73 (0..19)",
+                                keyword_src_ref: "0:1 @ 0xb68464fb05014e73 (0..3)",
+                            ),
+                            def: Alias((
                                 attr: (
                                     doc: ((
                                         value: [],
@@ -124,10 +128,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     commands: [],
                                     tags: [],
                                 ),
-                                src_ref: "0:1 @ 0xb68464fb05014e73 (0..19)",
-                                keyword_src_ref: "0:1 @ 0xb68464fb05014e73 (0..3)",
-                            ),
-                            def: Alias((Resolved(Builtin(("0xa1730e22ab78d7d8"))))),
+                                path: Resolved(Builtin(("0xa1730e22ab78d7d8"))),
+                            )),
                         )),
                     ),
                     (
@@ -150,6 +152,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     src_ref: "1:24 @ 0xb68464fb05014e73 (44..52)",
                                 ))),
                                 vis: Private,
+                                src_ref: "1:1 @ 0xb68464fb05014e73 (21..52)",
+                                keyword_src_ref: "1:1 @ 0xb68464fb05014e73 (21..24)",
+                            ),
+                            def: Alias((
                                 attr: (
                                     doc: ((
                                         value: [],
@@ -159,10 +165,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     commands: [],
                                     tags: [],
                                 ),
-                                src_ref: "1:1 @ 0xb68464fb05014e73 (21..52)",
-                                keyword_src_ref: "1:1 @ 0xb68464fb05014e73 (21..24)",
-                            ),
-                            def: Alias((Resolved(Builtin(("0x5da4622536ec034"))))),
+                                path: Resolved(Builtin(("0x5da4622536ec034"))),
+                            )),
                         )),
                     ),
                 ],

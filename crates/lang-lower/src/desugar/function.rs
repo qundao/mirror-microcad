@@ -262,11 +262,11 @@ impl Desugar<ast::def::Function> for ir::desugared::Function {
             meta: ir::Meta {
                 name: Some(Identifier::desugar(&node.id, context)?),
                 src_ref: context.span_to_src_ref(&node.span),
-                attr: ir::Attributes::desugar(node, context)?
-                    .extend(ir::Attributes::desugar(&node.body.statements, context)?),
                 keyword_src_ref: context.span_to_src_ref(&node.keyword_span),
                 vis: ir::Visibility::desugar(&node.vis, context)?,
             },
+            attr: ir::Attributes::desugar(node, context)?
+                .extend(ir::Attributes::desugar(&node.body.statements, context)?),
             signature: ir::FunctionSignature::desugar(node, context)?,
             items: ir::desugared::FunctionItems::desugar(&node.body.statements, context)?,
             statements: Box::desugar(&node.body.statements, context)?,

@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0x235cfcd5869dba8a",
-        output_hash: "0x67125a1be84bd382",
+        output_hash: "0xc094e1fb39fb3cff",
         tree: (
             root: (
                 index1: 1,
@@ -38,6 +38,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     src_ref: "None",
                                 ))),
                                 vis: Public,
+                                src_ref: "0:1 @ 0x12987dbb58cfe5ac (0..433)",
+                                keyword_src_ref: "None",
+                            ),
+                            def: Source((
                                 attr: (
                                     doc: ((
                                         value: [],
@@ -47,10 +51,6 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     commands: [],
                                     tags: [],
                                 ),
-                                src_ref: "0:1 @ 0x12987dbb58cfe5ac (0..433)",
-                                keyword_src_ref: "None",
-                            ),
-                            def: SourceFile((
                                 statements: [],
                             )),
                         )),
@@ -72,6 +72,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     src_ref: "6:12 @ 0x12987dbb58cfe5ac (159..165)",
                                 ))),
                                 vis: Public,
+                                src_ref: "1:1 @ 0x12987dbb58cfe5ac (1..433)",
+                                keyword_src_ref: "6:5 @ 0x12987dbb58cfe5ac (152..158)",
+                            ),
+                            def: Workbench((
                                 attr: (
                                     doc: ((
                                         value: [
@@ -87,10 +91,6 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     commands: [],
                                     tags: [],
                                 ),
-                                src_ref: "1:1 @ 0x12987dbb58cfe5ac (1..433)",
-                                keyword_src_ref: "6:5 @ 0x12987dbb58cfe5ac (152..158)",
-                            ),
-                            def: Workbench((
                                 kind: Sketch,
                                 parameters: (
                                     parameters: [

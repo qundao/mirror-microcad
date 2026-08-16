@@ -130,6 +130,9 @@ impl SrcReferrer for FunctionStatement {
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Function {
+    /// Attributes
+    pub attr: ir::Attributes,
+    /// Function signature.
     pub signature: ir::FunctionSignature,
     /// Function statements
     pub statements: Box<[ir::FunctionStatement]>,

@@ -16,10 +16,10 @@ impl Desugar<ast::def::FileModule> for ir::desugared::FileModule {
             meta: ir::Meta {
                 name: Some(ir::Identifier::desugar(&node.id, context)?),
                 src_ref: context.span_to_src_ref(&node.span),
-                attr: outer_with_doc(&node.doc, &node.attr, context)?,
                 vis: ir::Visibility::desugar(&node.vis, context)?,
                 keyword_src_ref: context.span_to_src_ref(&node.keyword_span),
             },
+            attr: outer_with_doc(&node.doc, &node.attr, context)?,
         })
     }
 }
@@ -70,11 +70,11 @@ impl Desugar<ast::def::InlineModule> for ir::desugared::InlineModule {
             meta: ir::Meta {
                 name: Some(ir::Identifier::desugar(&node.id, context)?),
                 src_ref: context.span_to_src_ref(&node.span),
-                attr: crate::desugar::attribute::outer_with_doc(&node.doc, &node.attr, context)?
-                    .extend(ir::Attributes::desugar(&node.body.statements, context)?),
                 vis: ir::Visibility::desugar(&node.vis, context)?,
                 keyword_src_ref: context.span_to_src_ref(&node.keyword_span),
             },
+            attr: crate::desugar::attribute::outer_with_doc(&node.doc, &node.attr, context)?
+                .extend(ir::Attributes::desugar(&node.body.statements, context)?),
             items: ir::desugared::InlineModuleItems::desugar(&node.body.statements, context)?,
         })
     }

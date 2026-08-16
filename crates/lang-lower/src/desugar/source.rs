@@ -40,11 +40,11 @@ impl Desugar<ast::Source> for ir::desugared::Source {
         Ok(Self {
             meta: ir::Meta {
                 name: context.source.file_module_name().map(Identifier::from),
-                attr: ir::Attributes::desugar(statements, context)?,
                 vis: Visibility::Public,
                 src_ref: context.span_to_src_ref(&node.span),
                 keyword_src_ref: SrcRef::none(),
             },
+            attr: ir::Attributes::desugar(statements, context)?,
             items: ir::desugared::SourceItems::desugar(statements, context)?,
             statements: Box::desugar(statements, context)?,
         })

@@ -208,7 +208,6 @@ impl Desugar<ast::StatementList> for ir::desugared::Aliases {
                     Some(ast::def::UseStatementPart::Identifier(id)) => {
                         Ok(Some(ir::desugared::Alias {
                             meta: ir::Meta {
-                                attr: ir::Attributes::desugar(&use_statement.attr, context)?,
                                 keyword_src_ref: context
                                     .span_to_src_ref(&use_statement.keyword_span),
                                 vis: ir::Visibility::desugar(&use_statement.vis, context)?,
@@ -223,6 +222,7 @@ impl Desugar<ast::StatementList> for ir::desugared::Aliases {
                                 )?),
                                 src_ref: context.span_to_src_ref(&use_statement.span),
                             },
+                            attr: ir::Attributes::desugar(&use_statement.attr, context)?,
                             path: ir::Path::desugar(&use_statement.name, context)?,
                         }))
                     }
@@ -237,12 +237,12 @@ impl Desugar<ast::StatementList> for ir::desugared::Aliases {
                         Ok(Some(ir::desugared::Wildcard {
                             meta: ir::Meta {
                                 name: None,
-                                attr: ir::Attributes::desugar(&use_statement.attr, context)?,
                                 keyword_src_ref: context
                                     .span_to_src_ref(&use_statement.keyword_span),
                                 vis: ir::Visibility::desugar(&use_statement.vis, context)?,
                                 src_ref: context.span_to_src_ref(&use_statement.span),
                             },
+                            attr: ir::Attributes::desugar(&use_statement.attr, context)?,
                             path: ir::Path::desugar(&use_statement.name, context)?,
                         }))
                     }
