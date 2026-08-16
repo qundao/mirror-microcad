@@ -21,7 +21,7 @@ mod operation;
 
 pub use operation::{AffineTransform, BooleanOp};
 
-use microcad_lang_base::{BuiltinId, HashId, Identifier, hash_id, impl_tree_types};
+use microcad_lang_base::{HashId, Identifier, impl_tree_types};
 use serde::{Deserialize, Serialize};
 
 pub use attribute::Attributes;
@@ -29,7 +29,7 @@ pub use creator::Creator;
 pub use element::Element;
 pub use output_type::ModelOutputType;
 
-use crate::{Arguments, Ty, Type};
+use crate::{Ty, Type};
 
 #[derive(Debug, Default, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub struct Model {
@@ -51,6 +51,7 @@ pub struct Model {
     pub creator: Option<Creator>,
 }
 
+/// Builder functions
 impl Model {
     pub fn new(element: impl Into<Element>) -> Self {
         Self {
@@ -59,16 +60,24 @@ impl Model {
         }
     }
 
-    pub fn with_name(mut self, name: Identifier) -> Self {
-        self.name = Some(name);
+    pub fn with_name(mut self, name: impl Into<Identifier>) -> Self {
+        self.name = Some(name.into());
         self
     }
 
-    pub fn with_attr(mut self, attr: Attributes) -> Self {
-        self.attr = attr;
+    pub fn with_attr(mut self, attr: impl Into<Attributes>) -> Self {
+        self.attr = attr.into();
         self
     }
 
+    pub fn with_properties(mut self, properties: impl Into<Properties>) -> Self {
+        self.properties = properties.into();
+        self
+    }
+}
+
+/// Accessor functions
+impl Model {
     pub fn output_type(&self) -> ModelOutputType {
         self.element.output_type()
     }
