@@ -8,13 +8,13 @@ pub mod workbench;
 
 mod parameter;
 
+use microcad_lang_lower::ir::{self, ConstantExpression};
+
 use microcad_lang_lower::ir::Visibility;
 pub use parameter::{Parameter, ParameterList};
 
 pub use function::{Function, FunctionExpression, FunctionStatement};
-pub use workbench::{
-    Init, InitStatement, Workbench, WorkbenchExpression, WorkbenchKind, WorkbenchStatement,
-};
+pub use workbench::{Workbench, WorkbenchExpression, WorkbenchKind, WorkbenchStatement};
 
 pub use microcad_lang_base::{Identifier, SymbolId};
 
@@ -24,7 +24,6 @@ use serde::{Deserialize, Serialize};
 
 use derive_more::From;
 use microcad_lang_base::{Refer, SrcRef};
-use microcad_lang_types::Value;
 
 pub use microcad_lang_lower::ir::Path;
 
@@ -33,46 +32,31 @@ pub struct DocBlock(pub Refer<String>);
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Constant {
-    //attr: ConstantAttributes,
-    pub value: Refer<Value>,
+    // pub attr: ConstantAttributes,
+    pub expr: ConstantExpression,
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Alias(pub SymbolId);
-
-
+pub struct Alias {
+    // pub attr: AliasAttributes
+    pub path: Path,
+}
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 // Usage inside your domain structs:
-pub struct Wildcard(pub SymbolId);
+pub struct Wildcard {
+    // pub attr: WildcardAttributes
+    pub path: Path,
+}
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Source {
-    //attr: SourceAttributes,
+    // pub attr: SourceAttributes,
     statements: Box<[WorkbenchStatement]>,
 }
 
 #[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct InlineModule;
-
-/// Symbol content
-#[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
-pub struct SymbolMetadata {
-    /// All symbols except Wildcards have ids.
-    pub id: Option<Identifier>,
-
-    /// Visibility
-    pub visibility: Visibility,
-
-    /// Source code reference of the symbol definition
-    pub src_ref: SrcRef,
-
-    /// Source code reference of symbol's keyword
-    pub keyword_src_ref: SrcRef,
-
-    /// Symbol documentation
-    pub doc: Option<String>,
-}
 
 /// Symbol definition
 #[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
@@ -93,9 +77,16 @@ pub enum SymbolDef {
     Wildcard(Wildcard),
 }
 
-#[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
+pub struct Doc {
+    pub content: String,
+    pub src_ref: SrcRef,
+}
+
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Symbol {
-    pub meta: SymbolMetadata,
+    pub meta: ir::Meta,
+    pub doc: Option<Doc>,
     pub def: SymbolDef,
 }
 
@@ -146,7 +137,7 @@ impl std::ops::Index<usize> for SymbolAbsPath {
 
 /// Extension trait for [`SymbolNode`] .
 pub trait SymbolNodeExt {
-    fn id(&self) -> Option<&Identifier>;
+    fn name(&self) -> Option<&Identifier>;
 
     fn is_public(&self) -> bool;
 
@@ -161,18 +152,18 @@ pub trait SymbolNodeExt {
 }
 
 impl<'a> SymbolNodeExt for SymbolNodeRef<'a> {
-    fn id(&self) -> Option<&Identifier> {
-        self.meta.id.as_ref()
+    fn name(&self) -> Option<&Identifier> {
+        self.meta.name.as_ref()
     }
 
     fn is_public(&self) -> bool {
-        self.meta.visibility == Visibility::Public
+        self.meta.vis == Visibility::Public
     }
 
     fn abs_path(&self) -> SymbolAbsPath {
         let mut parts: Vec<_> = self
             .ancestors()
-            .filter_map(|symbol| symbol.id().cloned())
+            .filter_map(|symbol| symbol.name().cloned())
             .collect();
 
         // Ancestors walk leaf -> root; reverse to get root -> leaf path
@@ -186,6 +177,6 @@ impl<'a> SymbolNodeExt for SymbolNodeRef<'a> {
     }
 
     fn doc(&self) -> Option<&String> {
-        self.get().meta.doc.as_ref()
+        self.get().doc.as_ref().map(|doc| &doc.content)
     }
 }
