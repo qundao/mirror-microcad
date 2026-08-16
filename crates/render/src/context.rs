@@ -3,15 +3,14 @@
 
 //! Render context
 
-use std::sync::mpsc;
+use std::sync::{Arc, RwLock, mpsc};
 
-use microcad_core::{Geometry2D, Geometry3D, RenderResolution, WithBounds2D, WithBounds3D};
+use microcad_core::{Geometry2D, Geometry3D, WithBounds2D, WithBounds3D};
 
 use microcad_hash::ToHash;
-use microcad_lang_base::RcMut;
-use microcad_lang_types::ModelRef;
+use microcad_lang_types::ModelNodeRef;
 
-use crate::{Geometry2DOutput, Geometry3DOutput, GeometryOutput, RenderCache, RenderResult};
+use crate::{GeometryOutput, RenderCache, RenderResolution, RenderResult};
 
 /// Our progress sender.
 pub type ProgressTx = mpsc::Sender<f32>;
@@ -22,10 +21,10 @@ pub type ProgressTx = mpsc::Sender<f32>;
 #[derive(Default)]
 pub struct RenderContext<'tree> {
     /// Model stack.
-    pub model_stack: Vec<ModelRef<'tree>>,
+    pub model_stack: Vec<ModelNodeRef<'tree>>,
 
     /// Optional render cache.
-    pub cache: Option<RcMut<RenderCache>>,
+    pub cache: Option<Arc<RwLock<RenderCache>>>,
 
     /// The number of models to be rendered.
     models_to_render: usize,
@@ -40,9 +39,8 @@ pub struct RenderContext<'tree> {
 impl<'tree> RenderContext<'tree> {
     /// Initialize context with current model and prerender model.
     pub fn new(
-        _model: &ModelRef<'tree>,
+        _model: &ModelNodeRef<'tree>,
         _resolution: RenderResolution,
-        _cache: Option<RcMut<RenderCache>>,
         _progress_tx: Option<ProgressTx>,
     ) -> RenderResult<Self> {
         todo!() /*  Ok(Self {
@@ -55,14 +53,14 @@ impl<'tree> RenderContext<'tree> {
     }
 
     /// The current model (panics if it is none).
-    pub fn model(&self) -> ModelRef<'tree> {
+    pub fn model(&self) -> ModelNodeRef<'tree> {
         self.model_stack.last().expect("A model").clone()
     }
 
     /// Run the closure `f` within the given `model`.
     pub fn with_model<T>(
         &mut self,
-        model: ModelRef<'tree>,
+        model: ModelNodeRef<'tree>,
         f: impl FnOnce(&mut RenderContext) -> T,
     ) -> T {
         self.model_stack.push(model);
@@ -93,58 +91,41 @@ impl<'tree> RenderContext<'tree> {
         (self.models_rendered as f32 / self.models_to_render as f32) * 100.0
     }
 
-    /// Update a 2D geometry if it is not in cache.
-    pub fn update_2d<T: Into<WithBounds2D<Geometry2D>>>(
+    /// Update a geometry if it is not in cache.
+    pub fn update(
         &mut self,
-        f: impl FnOnce(&mut RenderContext, ModelRef<'tree>) -> RenderResult<T>,
-    ) -> RenderResult<Geometry2DOutput> {
+        f: impl FnOnce(&mut RenderContext, ModelNodeRef<'tree>) -> RenderResult<GeometryOutput>,
+    ) -> RenderResult<GeometryOutput> {
         let model = self.model();
         let hash = model.to_hash();
 
         match self.cache.clone() {
             Some(cache) => {
+                // 1. Concurrent Read Check (Shared Lock)
                 {
-                    let mut cache = cache.borrow_mut();
-                    if let Some(GeometryOutput::Geometry2D(geo)) = cache.get(&hash) {
+                    let mut cache_read = cache.write().unwrap();
+                    if let Some(geo) = cache_read.get(&hash) {
                         return Ok(geo.clone());
                     }
-                }
-                {
-                    let (geo, cost) = self.call_with_cost(model, f)?;
-                    let geo: Geometry2DOutput = std::rc::Rc::new(geo.into());
-                    let mut cache = cache.borrow_mut();
-                    cache.insert_with_cost(hash, geo.clone(), cost);
-                    Ok(geo)
-                }
-            }
-            None => Ok(std::rc::Rc::new(f(self, model)?.into())),
-        }
-    }
+                } // Read lock is automatically dropped here so other threads aren't blocked during expensive geometry computation
 
-    /// Update a 3D geometry if it is not in cache.
-    pub fn update_3d<T: Into<WithBounds3D<Geometry3D>>>(
-        &mut self,
-        f: impl FnOnce(&mut RenderContext, ModelRef<'tree>) -> RenderResult<T>,
-    ) -> RenderResult<Geometry3DOutput> {
-        let model = self.model();
-        let hash = model.to_hash();
-        match self.cache.clone() {
-            Some(cache) => {
+                // 2. Compute Geometry Outside the Lock
+                let (geo, cost) = self.call_with_cost(model, f)?;
+
+                // 3. Insert Result into Cache (Exclusive Write Lock)
                 {
-                    let mut cache = cache.borrow_mut();
-                    if let Some(GeometryOutput::Geometry3D(geo)) = cache.get(&hash) {
-                        return Ok(geo.clone());
+                    let mut cache_write = cache.write().unwrap();
+                    // Optional double-check: in case another thread evaluated the exact same hash while we were computing
+                    if let Some(cached_geo) = cache_write.get(&hash) {
+                        return Ok(cached_geo.clone());
                     }
+
+                    cache_write.insert_with_cost(hash, geo.clone(), cost);
                 }
-                {
-                    let (geo, cost) = self.call_with_cost(model, f)?;
-                    let geo: Geometry3DOutput = std::rc::Rc::new(geo.into());
-                    let mut cache = cache.borrow_mut();
-                    cache.insert_with_cost(hash, geo.clone(), cost);
-                    Ok(geo)
-                }
+
+                Ok(geo)
             }
-            None => Ok(std::rc::Rc::new(f(self, model)?.into())),
+            None => Ok(f(self, model)?.into()),
         }
     }
 
@@ -155,11 +136,11 @@ impl<'tree> RenderContext<'tree> {
     }
 
     // Return the generated item and the number of milliseconds.
-    fn call_with_cost<T>(
+    fn call_with_cost(
         &mut self,
-        model: ModelRef<'tree>,
-        f: impl FnOnce(&mut RenderContext, ModelRef<'tree>) -> RenderResult<T>,
-    ) -> RenderResult<(T, f64)> {
+        model: ModelNodeRef<'tree>,
+        f: impl FnOnce(&mut RenderContext, ModelNodeRef<'tree>) -> RenderResult<GeometryOutput>,
+    ) -> RenderResult<(GeometryOutput, f64)> {
         use std::time::Instant;
         let start = Instant::now();
 

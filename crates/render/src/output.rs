@@ -3,80 +3,84 @@
 
 //! Render output type.
 
-use std::rc::Rc;
+use std::sync::Arc;
 
 use cgmath::SquareMatrix;
-use microcad_core::{
-    Bounds2D, Bounds3D, CalcBounds2D, CalcBounds3D, Geometry2D, Geometry3D, Length, Mat4,
-    RenderResolution, Vec2, Vec3, WithBounds2D, WithBounds3D,
-};
+
+use microcad_core::{self as core, CalcBounds3D};
+
 use microcad_hash::{HashId, ToHash, hash_id};
-use microcad_lang_types::{ModelRef, model::ModelOutputType};
+use microcad_lang_types::{
+    ModelNodeRef,
+    model::{ModelOutputType, NodeId},
+};
 
-use crate::{RenderAttributes, RenderResult};
-
-/// Geometry 2D type alias.
-pub type Geometry2DOutput = Rc<WithBounds2D<Geometry2D>>;
-
-/// Geometry 3D type alias.
-pub type Geometry3DOutput = Rc<WithBounds3D<Geometry3D>>;
+use crate::{RenderAttributes, RenderResolution, RenderResult};
 
 /// Geometry output to be stored in the render cache.
+#[non_exhaustive]
 #[derive(Debug, Clone, derive_more::From)]
-pub enum GeometryOutput {
-    /// 2D output.
-    Geometry2D(Geometry2DOutput),
-    /// 3D output.
-    Geometry3D(Geometry3DOutput),
+pub struct GeometryOutputInner {
+    pub geometry: core::Geometry,
+    pub bounds: core::Bounds3D,
+}
+
+#[derive(Debug, Clone)]
+pub struct GeometryOutput(Arc<GeometryOutputInner>);
+
+impl From<core::Geometry> for GeometryOutput {
+    fn from(geometry: core::Geometry) -> Self {
+        let bounds = geometry.calc_bounds_3d();
+        Self(Arc::new(GeometryOutputInner { geometry, bounds }))
+    }
 }
 
 impl GeometryOutput {
+    pub fn name(&self) -> &'static str {
+        todo!()
+    }
+
     /// The radius of a centered circle that wraps the output geometries bounds on the ground.
-    pub fn ground_radius(&self) -> Length {
+    pub fn ground_radius(&self) -> core::Length {
+        todo!()
+        /*
         let mut bounds = match &self {
             GeometryOutput::Geometry2D(geo2d) => geo2d.bounds.clone(),
             GeometryOutput::Geometry3D(geo3d) => {
-                Bounds2D::new(geo3d.bounds.min.truncate(), geo3d.bounds.max.truncate())
             }
         };
-        bounds.extend_by_point(Vec2::new(0.0, 0.0));
-        Length::mm(bounds.radius())
+        let bounds = Bounds2D::new(geo3d.bounds.min.truncate(), geo3d.bounds.max.truncate());
+        bounds.extend_by_point(core::Vec2::new(0.0, 0.0));
+        core::Length::mm(bounds.radius())
+        */
     }
 
     /// The radius of a centered sphere, that wrap the geometries bounds.
-    pub fn scene_radius(&self) -> Length {
-        let mut bounds = match &self {
-            GeometryOutput::Geometry2D(geo2d) => {
-                Bounds3D::new(geo2d.bounds.min.extend(0.0), geo2d.bounds.max.extend(0.0))
-            }
-            GeometryOutput::Geometry3D(geo3d) => geo3d.bounds.clone(),
-        };
-        bounds.extend_by_point(Vec3::new(0.0, 0.0, 0.0));
-        Length::mm(bounds.radius())
+    pub fn scene_radius(&self) -> core::Length {
+        let mut bounds = self.0.bounds.clone();
+        bounds.extend_by_point(core::Vec3::new(0.0, 0.0, 0.0));
+        core::Length::mm(bounds.radius())
     }
 }
 
-impl From<Geometry2D> for GeometryOutput {
-    fn from(geo: Geometry2D) -> Self {
-        Self::Geometry2D(Rc::new(geo.into()))
-    }
-}
-
-impl From<Geometry3D> for GeometryOutput {
-    fn from(geo: Geometry3D) -> Self {
-        Self::Geometry3D(Rc::new(geo.into()))
+impl<T> FromIterator<T> for GeometryOutput
+where
+    T: Into<core::Geometry>,
+{
+    fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
+        todo!()
     }
 }
 
 /// The model output when a model has been processed.
 #[derive(Debug, Clone)]
 pub struct RenderOutput {
-    /// The output (2D/3D) this render output is expected to produce.
+    /// The output (2D/3D) this render output was expected to produce.
     pub output_type: ModelOutputType,
     /// Local transformation matrix.
-    pub local_matrix: Option<Mat4>,
+    pub local_matrix: Option<core::Mat4>,
     /// World transformation matrix.
-    pub world_matrix: Option<Mat4>,
+    pub world_matrix: Option<core::Mat4>,
     /// The render resolution, calculated from transformation matrix.
     pub resolution: Option<RenderResolution>,
     /// The output geometry.
@@ -85,14 +89,16 @@ pub struct RenderOutput {
     pub attributes: RenderAttributes,
     /// Computed model hash.
     hash: HashId,
+
+    model_node_id: NodeId,
 }
 
 impl RenderOutput {
     /// Create new render output for model.
-    pub fn new<'tree>(model: &ModelRef<'tree>) -> RenderResult<Self> {
+    pub fn new<'tree>(model: ModelNodeRef<'tree>) -> RenderResult<Self> {
         let output_type = model.output_type();
         let hash = hash_id!(model);
-        let local_matrix = Some(Mat4::identity()); /*
+        let local_matrix = Some(core::Mat4::identity()); /*
         TODO: Get local matrix transform for element
         model
         .element()
@@ -108,11 +114,12 @@ impl RenderOutput {
             geometry: None,
             attributes: RenderAttributes::default(), // TODO: Get render attributes from model.into(),
             hash,
+            model_node_id: model.id,
         })
     }
 
     /// Set the world matrix for render output.
-    pub fn set_world_matrix(&mut self, m: Mat4) {
+    pub fn set_world_matrix(&mut self, m: core::Mat4) {
         self.world_matrix = Some(m);
     }
 
@@ -129,27 +136,6 @@ impl RenderOutput {
     /// Set render resolution.
     pub fn set_resolution(&mut self, render_resolution: RenderResolution) {
         self.resolution = Some(render_resolution);
-    }
-
-    /// Local matrix.
-    pub fn local_matrix(&self) -> Option<Mat4> {
-        self.local_matrix
-    }
-
-    /// The radius of a centered circle that wraps the output geometries bounds on the ground.
-    pub fn ground_radius(&self) -> Length {
-        self.geometry
-            .as_ref()
-            .map(|geo| geo.ground_radius())
-            .unwrap_or_default()
-    }
-
-    /// The radius of a centered sphere that wraps the output geometries bounds.
-    pub fn scene_radius(&self) -> Length {
-        self.geometry
-            .as_ref()
-            .map(|geo| geo.scene_radius())
-            .unwrap_or_default()
     }
 
     pub fn output_type(&self) -> ModelOutputType {
@@ -170,8 +156,7 @@ impl std::fmt::Display for RenderOutput {
             },
             hash = self.to_hash(),
             geo = match &self.geometry {
-                Some(GeometryOutput::Geometry2D(geo)) => geo.name(),
-                Some(GeometryOutput::Geometry3D(geo)) => geo.name(),
+                Some(geo) => geo.name(),
                 None => "",
             },
             resolution = match &self.resolution {
@@ -186,23 +171,5 @@ impl std::fmt::Display for RenderOutput {
 impl ToHash for RenderOutput {
     fn to_hash(&self) -> HashId {
         self.hash
-    }
-}
-
-impl CalcBounds2D for RenderOutput {
-    fn calc_bounds_2d(&self) -> Bounds2D {
-        match &self.geometry {
-            Some(GeometryOutput::Geometry2D(output)) => output.bounds.clone(),
-            _ => Bounds2D::default(),
-        }
-    }
-}
-
-impl CalcBounds3D for RenderOutput {
-    fn calc_bounds_3d(&self) -> Bounds3D {
-        match &self.geometry {
-            Some(GeometryOutput::Geometry3D(output)) => output.bounds.clone(),
-            _ => Bounds3D::default(),
-        }
     }
 }

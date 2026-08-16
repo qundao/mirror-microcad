@@ -7,17 +7,20 @@ mod attribute;
 mod cache;
 mod context;
 mod output;
+mod render;
+
+use microcad_hash::HashMap;
 
 pub use attribute::*;
 pub use cache::*;
 pub use context::*;
+use microcad_core::{Geometry, Geometry2D, Scalar};
 use microcad_lang_types::model::ModelOutputType;
 pub use output::*;
+pub use render::{Render, RenderResolution};
 
 use miette::Diagnostic;
 use thiserror::Error;
-
-pub use microcad_core::RenderResolution;
 
 /// An error that occurred during rendering.
 #[derive(Debug, Error, Diagnostic)]
@@ -26,16 +29,55 @@ pub enum RenderError {
     #[error("Invalid output type: {0}")]
     InvalidOutputType(ModelOutputType),
 
+    #[error("Builtin error")]
+    BuiltinError(#[from] BuiltinError),
+
     /// Nothing to render.
     #[error("Nothing to render")]
     NothingToRender,
+}
+
+use microcad_builtin::{BuiltinError, BuiltinId, mu};
+
+/// Built-in execution function signature
+pub type RenderFn = fn(&mut RenderContext) -> Result<GeometryOutput, RenderError>;
+
+pub struct RenderHooks {
+    hooks: HashMap<BuiltinId, RenderFn>,
+}
+
+impl RenderHooks {
+    pub fn new() -> Self {
+        let mut hooks: HashMap<BuiltinId, RenderFn> = HashMap::default();
+
+        hooks.insert(mu::geo2d::CIRCLE.id(), |ctx| {
+            let circle = mu::geo2d::Circle::from_model(ctx.model().get())?;
+            Ok(circle.render_with_context(ctx)?.into())
+        });
+
+        Self { hooks }
+    }
+}
+
+impl Render for mu::geo2d::Circle {
+    fn render(&self, resolution: &RenderResolution) -> Geometry {
+        let radius: Scalar = self.radius.to_num();
+        let n = resolution.circular_segments(radius);
+        Geometry2D::Polygon(microcad_core::Circle::circle_polygon(radius, n)).into()
+    }
+}
+
+impl RenderWithContext for mu::geo2d::Circle {
+    fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<GeometryOutput> {
+        context.update(|context, _| Ok(self.render(&context.current_resolution()).into()))
+    }
 }
 
 /// A result from rendering a model.
 pub type RenderResult<T> = Result<T, RenderError>;
 
 /// The render trait.
-pub trait RenderWithContext<T> {
+pub trait RenderWithContext<T = GeometryOutput> {
     /// Render method.
     fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<T>;
 }
@@ -56,18 +98,6 @@ impl Element {
             },
             _ => Ok(None),
         }
-    }
-}
-
-impl ModelInner {
-    /// Get render resolution.
-    pub fn resolution(&self) -> RenderResolution {
-        let output = self.output.as_ref().expect("Some render output.");
-        output
-            .resolution
-            .as_ref()
-            .expect("Some resolution.")
-            .clone()
     }
 }
 
@@ -153,31 +183,17 @@ impl Model {
     }
 }
 
-impl CalcBounds2D for Model {
-    fn calc_bounds_2d(&self) -> Bounds2D {
-        let self_ = self.borrow();
-        match &self_.output().geometry {
-            Some(GeometryOutput::Geometry2D(geometry)) => geometry.bounds.clone(),
-            Some(GeometryOutput::Geometry3D(_)) => Bounds2D::default(),
-            None => Bounds2D::default(),
-        }
-    }
-}
-
 /// This implementation renders a [`Geometry2D`] out of a [`Model`].
 ///
 /// Notes:
 /// * The impl attaches the output geometry to the model's render output.
 /// * It is assumed the model has been pre-rendered.
-impl RenderWithContext<Geometry2DOutput> for Model {
+impl RenderWithContext<GeometryOutput> for Model {
     fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Geometry2DOutput> {
         context.with_model(self.clone(), |context| {
             let model = context.model();
-            let geometry: Geometry2DOutput = {
+            let geometry: GeometryOutput = {
                 let model_ = model.borrow();
-                let output = model.render_output_type();
-                match output {
-                    OutputType::Geometry2D => {
                         match model_.element() {
                             // A group geometry will render the child geometry
                             Element::BuiltinWorkpiece(builtin_workpiece) => {
@@ -185,8 +201,6 @@ impl RenderWithContext<Geometry2DOutput> for Model {
                             }
                             _ => Ok(model_.children.render_with_context(context)?),
                         }
-                    }
-                    output_type => Err(RenderError::InvalidOutputType(output_type)),
                 }
             }?;
 
@@ -198,58 +212,6 @@ impl RenderWithContext<Geometry2DOutput> for Model {
     }
 }
 
-/// This implementation renders a [`Geometry3D`] out of a [`Model`].
-///
-/// Notes:
-/// * The impl attaches the output geometry to the model's render output.
-/// * It is assumed the model has been pre-rendered.
-impl RenderWithContext<Geometry3DOutput> for Model {
-    fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Geometry3DOutput> {
-        context.with_model(self.clone(), |context| {
-            let model = context.model();
-            let geometry: Geometry3DOutput = {
-                let model_ = model.borrow();
-                let output = model.render_output_type();
-                match output {
-                    OutputType::Geometry3D => {
-                        match model_.element() {
-                            // A group geometry will render the child geometry
-                            Element::BuiltinWorkpiece(builtin_workpiece) => {
-                                builtin_workpiece.render_with_context(context)
-                            }
-                            _ => model_.children.render_with_context(context),
-                        }
-                    }
-                    output_type => Err(RenderError::InvalidOutputType(output_type)),
-                }
-            }?;
-
-            self.borrow_mut()
-                .output_mut()
-                .set_geometry(GeometryOutput::Geometry3D(geometry.clone()));
-            Ok(geometry)
-        })
-    }
-}
-
-impl RenderWithContext<Model> for Model {
-    fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Model> {
-        match self.render_output_type() {
-            OutputType::Geometry2D => {
-                let _: Geometry2DOutput = self.render_with_context(context)?;
-            }
-            OutputType::Geometry3D => {
-                let _: Geometry3DOutput = self.render_with_context(context)?;
-            }
-            _ => {
-                return Err(RenderError::NothingToRender);
-            }
-        }
-        log::trace!("Finished render:\n{}", FormatTree(self));
-
-        Ok(self.clone())
-    }
-}
 
 impl RenderWithContext<Geometries2D> for Models {
     fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Geometries2D> {
@@ -294,44 +256,6 @@ impl RenderWithContext<Geometry3DOutput> for Models {
                 Geometry3D::Collection(self.render_with_context(context)?).into(),
             )),
         }
-    }
-}
-
-impl RenderWithContext<Geometry2DOutput> for BuiltinWorkpiece {
-    fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Geometry2DOutput> {
-        todo!()
-        /*match self.call()? {
-            BuiltinWorkpieceOutput::Primitive2D(primitive) => {
-                primitive.render_with_context(context)
-            }
-            BuiltinWorkpieceOutput::Transform(transform) => {
-                let model = context.model();
-                let model_ = model.borrow();
-                let output: Geometry2DOutput = model_.children.render_with_context(context)?;
-                Ok(Rc::new(output.transformed_2d(&transform.mat2d())))
-            }
-            BuiltinWorkpieceOutput::Operation(operation) => operation.process_2d(context),
-            _ => unreachable!(),
-        }*/
-    }
-}
-
-impl RenderWithContext<Geometry3DOutput> for BuiltinWorkpiece {
-    fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Geometry3DOutput> {
-        todo!()
-        /*match self.call()? {
-            BuiltinWorkpieceOutput::Primitive3D(primitive) => {
-                primitive.render_with_context(context)
-            }
-            BuiltinWorkpieceOutput::Transform(transform) => {
-                let model = context.model();
-                let model_ = model.borrow();
-                let output: Geometry3DOutput = model_.children.render_with_context(context)?;
-                Ok(Rc::new(output.transformed_3d(&transform.mat3d())))
-            }
-            BuiltinWorkpieceOutput::Operation(operation) => operation.process_3d(context),
-            _ => unreachable!(),
-        }*/
     }
 }
 */
