@@ -188,6 +188,15 @@ impl Transformed3D for Bounds3D {
     }
 }
 
+impl From<Bounds2D> for Bounds3D {
+    fn from(bounds: Bounds2D) -> Self {
+        Bounds {
+            min: bounds.min.extend(0.0),
+            max: bounds.max.extend(0.0),
+        }
+    }
+}
+
 /// Trait to calculate a bounding box of 3D geometry.
 pub trait CalcBounds3D {
     /// Fetch bounds.

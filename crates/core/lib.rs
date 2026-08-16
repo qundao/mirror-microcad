@@ -30,6 +30,7 @@ pub type Mat3 = cgmath::Matrix3<Scalar>;
 pub type Mat4 = cgmath::Matrix4<Scalar>;
 /// Primitive angle type in radians.
 pub type Angle = cgmath::Rad<Scalar>;
+use derive_more::From;
 /// Length type.
 pub use length::Length;
 
@@ -71,4 +72,22 @@ pub fn mat3_to_mat4(m: &Mat3) -> Mat4 {
         0.0, 0.0, 1.0, 0.0, // Z axis: identity (no change)
         0.0, 0.0, 0.0, 1.0, // Homogeneous row
     )
+}
+
+/// A µcad core geometry.
+#[derive(Debug, Clone, From)]
+pub enum Geometry {
+    /// Geometry 2D
+    Geometry2D(Geometry2D),
+    /// Geometry 3D
+    Geometry3D(Geometry3D),
+}
+
+impl CalcBounds3D for Geometry {
+    fn calc_bounds_3d(&self) -> Bounds3D {
+        match self {
+            Geometry::Geometry2D(geo2d) => geo2d.calc_bounds_2d().into(),
+            Geometry::Geometry3D(geo3d) => geo3d.calc_bounds_3d(),
+        }
+    }
 }
