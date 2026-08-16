@@ -29,7 +29,7 @@ pub use creator::Creator;
 pub use element::Element;
 pub use output_type::ModelOutputType;
 
-use crate::{Ty, Type};
+use crate::{Arguments, Ty, Type};
 
 #[derive(Debug, Default, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub struct Model {
@@ -67,6 +67,12 @@ impl Model {
 
     pub fn with_attr(mut self, attr: impl Into<Attributes>) -> Self {
         self.attr = attr.into();
+        self
+    }
+
+    pub fn with_op_properties(mut self, args: Arguments) -> Self {
+        let args = args.with_field_removed("self");
+        self.properties = Properties::hidden_inputs(args);
         self
     }
 

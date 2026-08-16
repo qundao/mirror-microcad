@@ -3,25 +3,51 @@
 
 use microcad_lang_base::BuiltinId;
 use microcad_lang_types::{
-    Arguments, Identifier, Model, ModelOutputType, ModelTree, Value, arguments,
+    Arguments, Identifier, Length, Model, ModelOutputType, ModelTree, Value, arguments,
     model::{
-        BooleanOp, Element, NodeExt, Properties,
+        AffineTransform, BooleanOp, Element, NodeExt, Properties,
         element::{self, BuiltinWorkpiece},
     },
+    tuple,
 };
 
-// Simple helper to create a base model for testing
-fn create_test_model(name: &str) -> Model {
-    Model {
-        name: Some(Identifier::from(name)),
-        element: Element::BuiltinWorkpiece(element::BuiltinWorkpiece::Primitive2D),
-        ..Default::default()
+mod model {
+    use microcad_lang_types::{Length, model::AffineTransform};
+
+    use super::*;
+
+    /// A Group model with name
+    pub fn group(name: &str) -> Model {
+        Model::new(Element::Group).with_name(name)
+    }
+
+    /// A Circle model with a radius
+    pub fn circle(name: &str, radius: f64) -> Model {
+        Model::new(element::BuiltinWorkpiece::Primitive2D(
+            BuiltinId::from_name("__mu::geo2d::Circle"),
+        ))
+        .with_name(name)
+        .with_properties(Arguments::from(tuple!(radius = Length::mm(radius))))
+    }
+
+    /// Helper to build a `__mu::ops::translate(x, y, z)` transform node
+    pub fn translation(x_mm: f64, y_mm: f64, z_mm: f64) -> Model {
+        let args = arguments!(x = x_mm, y = y_mm, z = z_mm);
+        Model::new(element::BuiltinWorkpiece::AffineTransform(
+            AffineTransform::Translation {
+                x: Length::mm(x_mm),
+                y: Length::mm(y_mm),
+                z: Length::mm(z_mm),
+            },
+        ))
+        .with_name("translate")
+        .with_op_properties(args)
     }
 }
 
 #[test]
 fn test_model_tree_creation_and_root() {
-    let root_model = create_test_model("root");
+    let root_model = model::circle("root", 2.0);
     let tree = ModelTree::new(root_model);
 
     let root_ref = tree.root();
@@ -31,12 +57,11 @@ fn test_model_tree_creation_and_root() {
 
 #[test]
 fn test_tree_hierarchy_and_children() {
-    let root_model = create_test_model("parent");
-    let mut tree = ModelTree::new(root_model);
+    let mut tree = ModelTree::new(model::circle("parent", 1.0));
 
     // Add children using the arena directly
-    let child1 = tree.arena.new_node(create_test_model("child1"));
-    let child2 = tree.arena.new_node(create_test_model("child2"));
+    let child1 = tree.arena.new_node(model::circle("child1", 2.0));
+    let child2 = tree.arena.new_node(model::circle("child2", 3.0));
 
     tree.root.append(child1, &mut tree.arena);
     tree.root.append(child2, &mut tree.arena);
@@ -54,14 +79,14 @@ fn test_tree_hierarchy_and_children() {
 #[test]
 fn test_deduce_output_type_fallback() {
     // Create a root model with an undetermined output type (e.g., a generic Group)
-    let mut group_model = create_test_model("group");
-    group_model.element = Element::Group; // Assuming Group produces NotDetermined initially
+    let group_model = model::group("group");
 
     let mut tree = ModelTree::new(group_model);
 
     // Child model has a concrete output type
-    let child_model =
-        Model::primitive2d(BuiltinId::from("__mu::geo2d::Circle"), Arguments::default());
+    let child_model = Model::new(BuiltinWorkpiece::Primitive2D(BuiltinId::from(
+        "__mu::geo2d::Circle",
+    )));
     let child_id = tree.arena.new_node(child_model);
     tree.root.append(child_id, &mut tree.arena);
 
@@ -74,16 +99,9 @@ fn test_deduce_output_type_fallback() {
 
 #[test]
 fn test_into_group_child() {
-    let group_model = Model {
-        element: Element::Group,
-        ..create_test_model("parent_group")
-    };
-    let mut tree = ModelTree::new(group_model);
+    let mut tree = ModelTree::new(model::group("parent_group"));
+    let inner_group = model::group("inner_group");
 
-    let inner_group = Model {
-        element: Element::Group,
-        ..create_test_model("inner_group")
-    };
     let inner_id = tree.arena.new_node(inner_group);
     tree.root.append(inner_id, &mut tree.arena);
 
@@ -98,15 +116,6 @@ fn test_into_group_child() {
         group_child.unwrap().name(),
         Some(&Identifier::from("inner_group"))
     );
-}
-
-/// Helper to construct a simple leaf ModelTree with a specific name
-fn make_leaf(name: &str) -> ModelTree {
-    ModelTree::new(Model {
-        name: Some(Identifier::from(name)),
-        element: Element::BuiltinWorkpiece(element::BuiltinWorkpiece::Primitive2D),
-        ..Model::default()
-    })
 }
 
 /// Helper to extract child names under the inner group
@@ -124,8 +133,8 @@ fn get_group_child_names(tree: &ModelTree) -> Vec<String> {
 
 #[test]
 fn test_basic_boolean_op_structure() {
-    let a = make_leaf("a");
-    let b = make_leaf("b");
+    let a = ModelTree::new(model::circle("a", 2.0));
+    let b = ModelTree::new(model::circle("b", 1.0));
 
     // a - b (Difference)
     let diff_tree = a - b;
@@ -145,9 +154,9 @@ fn test_basic_boolean_op_structure() {
 
 #[test]
 fn test_flattening_same_boolean_op() {
-    let a = make_leaf("a");
-    let b = make_leaf("b");
-    let c = make_leaf("c");
+    let a = ModelTree::new(model::circle("a", 1.0));
+    let b = ModelTree::new(model::circle("b", 2.0));
+    let c = ModelTree::new(model::circle("c", 3.0));
 
     // Chained Union: (a | b) | c
     let union_tree = a | b | c;
@@ -165,9 +174,9 @@ fn test_flattening_same_boolean_op() {
 
 #[test]
 fn test_nested_different_boolean_ops() {
-    let a = make_leaf("a");
-    let b = make_leaf("b");
-    let c = make_leaf("c");
+    let a = ModelTree::new(model::circle("a", 1.0));
+    let b = ModelTree::new(model::circle("b", 2.0));
+    let c = ModelTree::new(model::circle("c", 3.0));
 
     // Mixed operations: (a | b) & c -> Union inside Intersection
     let mixed_tree = (a | b) & c;
@@ -199,9 +208,9 @@ fn test_nested_different_boolean_ops() {
 
 #[test]
 fn test_subtree_adoption_preserves_hierarchy() {
-    let mut parent_tree = make_leaf("parent");
-    let child1 = make_leaf("child1");
-    let child2 = make_leaf("child2");
+    let mut parent_tree = ModelTree::new(model::circle("parent", 1.0));
+    let child1 = ModelTree::new(model::circle("child1", 2.0));
+    let child2 = ModelTree::new(model::circle("child2", 3.0));
 
     // Construct a deep subtree for LHS
     let child1_id = parent_tree.adopt_tree(child1.root, &child1.arena);
@@ -209,7 +218,7 @@ fn test_subtree_adoption_preserves_hierarchy() {
     parent_tree.root.append(child1_id, &mut parent_tree.arena);
     parent_tree.root.append(child2_id, &mut parent_tree.arena);
 
-    let rhs = make_leaf("rhs");
+    let rhs = ModelTree::new(model::circle("rhs", 4.0));
 
     // Combine deep parent_tree with simple rhs
     let combined = parent_tree | rhs;
@@ -229,32 +238,6 @@ fn test_subtree_adoption_preserves_hierarchy() {
     assert_eq!(adopted_subchildren, vec!["child1", "child2"]);
 }
 
-/// Helper to build a `__mu::ops::translate(x, y, z)` transform node
-fn make_translation_node(x_mm: f64, y_mm: f64, z_mm: f64) -> Model {
-    let args = arguments!(x = x_mm, y = y_mm, z = z_mm);
-    Model {
-        name: Some(Identifier::from("translate")),
-        properties: Properties::from(args),
-        attr: Default::default(),
-        element: Element::BuiltinWorkpiece(BuiltinWorkpiece::Transform),
-        creator: None,
-        ..Default::default()
-    }
-}
-
-/// Helper to build a `__mu::geo2d::Circle(radius = 5.0)` input tree
-fn make_circle_input_tree(radius_mm: f64) -> ModelTree {
-    let args = arguments!(radius = radius_mm);
-    ModelTree::new(Model {
-        name: Some(Identifier::from("Circle")),
-        properties: Properties::from(args),
-        attr: Default::default(),
-        element: Element::BuiltinWorkpiece(BuiltinWorkpiece::Primitive2D),
-        creator: None,
-        ..Default::default()
-    })
-}
-
 #[test]
 fn test_replace_input_placeholders_multiplicity() {
     // 1. Build Multiplicity template tree:
@@ -267,14 +250,8 @@ fn test_replace_input_placeholders_multiplicity() {
     //   │     └── InputPlaceholder
     //   └── translate(10, 10, 0)
     //         └── InputPlaceholder
-    let mut template_tree = ModelTree::new(Model {
-        name: Some(Identifier::from("Multiplicity")),
-        properties: Properties::new(),
-        attr: Default::default(),
-        element: Element::Multiplicity,
-        creator: None,
-        ..Default::default()
-    });
+    let mut template_tree =
+        ModelTree::new(Model::new(Element::Multiplicity).with_name("Multiplicity"));
 
     let translations = [
         (0.0, 0.0, 0.0),
@@ -284,7 +261,7 @@ fn test_replace_input_placeholders_multiplicity() {
     ];
 
     for (x, y, z) in translations {
-        let trans_model = make_translation_node(x, y, z);
+        let trans_model = model::translation(x, y, z);
         let trans_id = template_tree.arena.new_node(trans_model);
 
         let placeholder_model = Model {
@@ -304,8 +281,7 @@ fn test_replace_input_placeholders_multiplicity() {
             .append(trans_id, &mut template_tree.arena);
     }
 
-    // 2. Build input tree to replace placeholders (__mu::geo2d::Circle(radius = 5.0))
-    let circle_tree = make_circle_input_tree(5.0);
+    let circle_tree = ModelTree::new(model::circle("Circle", 5.0));
 
     // 3. Perform replacement
     let result_tree = template_tree.replace_input_placeholders(&circle_tree);
@@ -322,7 +298,9 @@ fn test_replace_input_placeholders_multiplicity() {
         assert_eq!(branch.name(), Some(&Identifier::from("translate")));
         assert!(matches!(
             branch.element,
-            Element::BuiltinWorkpiece(BuiltinWorkpiece::Transform)
+            Element::BuiltinWorkpiece(BuiltinWorkpiece::AffineTransform(
+                AffineTransform::Translation { .. }
+            ))
         ));
 
         // Verify children under translate
@@ -347,7 +325,7 @@ fn test_replace_input_placeholders_multiplicity() {
                 .properties
                 .get_property("radius")
                 .map(|p| &p.value),
-            Some(&Value::from(5.0))
+            Some(&Value::from(Length::mm(5.0)))
         );
     }
 

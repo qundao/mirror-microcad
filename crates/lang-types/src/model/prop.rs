@@ -67,6 +67,36 @@ impl Properties {
         }
     }
 
+    pub fn inputs(inputs: Arguments) -> Self {
+        let mut properties = Properties::new();
+
+        for (name, value) in inputs.named_iter() {
+            properties.set_property(
+                name.clone(),
+                value.clone(),
+                PropertyType::Input,
+                SrcRef::default(),
+            );
+        }
+
+        properties
+    }
+
+    pub fn hidden_inputs(inputs: Arguments) -> Self {
+        let mut properties = Properties::new();
+
+        for (name, value) in inputs.named_iter() {
+            properties.set_property(
+                name.clone(),
+                value.clone(),
+                PropertyType::Hidden,
+                SrcRef::default(),
+            );
+        }
+
+        properties
+    }
+
     /// Gets a reference to a property by its name.
     pub fn get_property(&self, name: impl Into<Identifier>) -> Option<&Property> {
         self.props.get(&name.into())
@@ -140,17 +170,6 @@ impl<'a> IntoIterator for &'a Properties {
 
 impl From<Arguments> for Properties {
     fn from(args: Arguments) -> Self {
-        let mut properties = Properties::new();
-
-        for (name, value) in args.named_iter() {
-            properties.set_property(
-                name.clone(),
-                value.clone(),
-                PropertyType::Input,
-                SrcRef::default(),
-            );
-        }
-
-        properties
+        Self::inputs(args)
     }
 }

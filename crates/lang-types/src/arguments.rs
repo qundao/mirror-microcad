@@ -54,6 +54,13 @@ impl Arguments {
     pub fn try_get<T: TryFrom<Value, Error = ValueError>>(&self, name: &str) -> ValueResult<T> {
         T::try_from(self.get(name).clone())
     }
+
+    /// Consumes `self`, removes the named argument if present, and returns the modified `Arguments`.
+    pub fn with_field_removed(mut self, name: &str) -> Self {
+        let key = Identifier::no_ref(name);
+        self.0 = self.0.with_field_removed(&key);
+        self
+    }
 }
 
 /// Argument value.

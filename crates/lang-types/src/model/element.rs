@@ -25,7 +25,7 @@ pub enum BuiltinWorkpiece {
     /// Boolean operation
     BooleanOp(BooleanOp),
     /// Extrude
-    Extrude { height: Length },
+    Operation(BuiltinId),
 }
 
 /// Trait to implement a Primitive2D
@@ -46,7 +46,7 @@ impl BuiltinWorkpiece {
             BuiltinWorkpiece::AffineTransform(_) | BuiltinWorkpiece::BooleanOp(_) => {
                 ModelOutputType::NotDetermined
             }
-            BuiltinWorkpiece::Extrude { .. } => ModelOutputType::Geometry3D,
+            _ => todo!(),
         }
     }
 }

@@ -43,6 +43,14 @@ impl Tuple {
             .find_map(|(k, v)| if k == field { Some(v) } else { None })
     }
 
+    /// Consumes `self`, removes the specified named field if present, and returns `self`.
+    pub fn with_field_removed(mut self, key: &Identifier) -> Self {
+        if let Some(pos) = self.named.iter().position(|(id, _)| id == key) {
+            self.named.swap_remove(pos);
+        }
+        self
+    }
+
     /// Checks if two tuples have matching structural shapes:
     /// 1. Same number of positional elements.
     /// 2. Same set of named field identifiers (in exact sequence).
