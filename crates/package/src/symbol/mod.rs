@@ -11,6 +11,7 @@ mod parameter;
 use microcad_lang_lower::ir::{self, ConstantExpression};
 
 use microcad_lang_lower::ir::Visibility;
+use microcad_lang_types::Value;
 pub use parameter::{Parameter, ParameterList};
 
 pub use function::{Function, FunctionExpression, FunctionStatement};
@@ -34,6 +35,20 @@ pub struct DocBlock(pub Refer<String>);
 pub struct Constant {
     // pub attr: ConstantAttributes,
     pub expr: ConstantExpression,
+}
+
+impl Constant {
+    /// Return the value of the constant.
+    ///
+    /// TODO Error handling
+    pub fn value(&self) -> &Value {
+        match &self.expr {
+            ConstantExpression::Invalid => todo!(),
+            ConstantExpression::Literal(literal) => literal.value(),
+            ConstantExpression::Path(_) => todo!(),
+            ConstantExpression::Call(_) => todo!(),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]

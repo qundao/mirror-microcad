@@ -1,8 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::Identifier;
-use microcad_lang_lower::ir::{self, ConstantExpression};
+use microcad_lang_lower::ir;
 use microcad_lang_types::{FunctionType, Tuple};
 use serde::{Deserialize, Serialize};
 
