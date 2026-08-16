@@ -397,7 +397,7 @@ pub mod math {
 pub mod geo2d {
     use microcad_lang_base::{BuiltinInfo, hash_id};
     use microcad_lang_types::{
-        Length, Model, ModelOutputType, Type, function_type,
+        Length, Model, ModelNodeRef, ModelOutputType, Type, function_type,
         model::{Element, element::BuiltinWorkpiece},
     };
 
@@ -405,7 +405,7 @@ pub mod geo2d {
 
     use super::*;
 
-    static CIRCLE: Builtin = Builtin::Primitive(BuiltinPrimitive::new(
+    pub static CIRCLE: Builtin = Builtin::Primitive(BuiltinPrimitive::new(
         BuiltinInfo::new("__mu::geo2d::Circle"),
         || function_type!((radius: Type::length()) -> Type::Model(ModelOutputType::Geometry2D)),
         Circle::call,
@@ -429,6 +429,24 @@ pub mod geo2d {
                 creator: None,
             })
         }
+
+        pub fn from_model(model: &Model) -> Result<Self, BuiltinError> {
+            // TODO Assertion if Model is a circle primitive
+            assert_eq!(
+                model.element,
+                Element::BuiltinWorkpiece(BuiltinWorkpiece::Primitive2D(CIRCLE.id()))
+            );
+
+            let radius = Length::try_from(
+                model
+                    .get_property("radius")
+                    .expect("Input model must have a property 'radius'")
+                    .value
+                    .clone(),
+            )?;
+
+            Ok(Circle { radius })
+        }
     }
 }
 
@@ -439,7 +457,7 @@ pub mod ops {
 
     use microcad_lang_base::BuiltinInfo;
     use microcad_lang_types::{
-        Length, Model, ModelOutputType, ModelTree, Type, Vec3, function_type,
+        Length, Model, ModelOutputType, ModelTree, Type, function_type,
         model::{AffineTransform, BooleanOp, Element, element::BuiltinWorkpiece},
     };
 
@@ -447,7 +465,7 @@ pub mod ops {
 
     use super::*;
 
-    static TRANSLATE: Builtin = Builtin::Operation(BuiltinOperation::new(
+    pub static TRANSLATE: Builtin = Builtin::Operation(BuiltinOperation::new(
         BuiltinInfo::new("__mu::ops::translate"),
         || function_type!((self: Type::Model(ModelOutputType::Any), x: Type::length(), y: Type::length(), z: Type::length()) -> Type::Model(ModelOutputType::Any)),
         translate,
@@ -471,7 +489,7 @@ pub mod ops {
         Ok(tree)
     }
 
-    static DIFFERENCE: Builtin = Builtin::Operation(BuiltinOperation::new(
+    pub static DIFFERENCE: Builtin = Builtin::Operation(BuiltinOperation::new(
         BuiltinInfo::new("__mu::ops::difference"),
         || function_type!((self: Type::Model(ModelOutputType::Any)) -> Type::Model(ModelOutputType::Any)),
         difference,
@@ -496,7 +514,7 @@ pub mod ops {
         Ok(tree)
     }
 
-    static EXTRUDE: Builtin = Builtin::Operation(BuiltinOperation::new(
+    pub static EXTRUDE: Builtin = Builtin::Operation(BuiltinOperation::new(
         BuiltinInfo::new("__mu::ops::extrude"),
         || function_type!((self: Type::Model(ModelOutputType::Geometry2D), height: Type::length()) -> Type::Model(ModelOutputType::Geometry3D)),
         extrude,
