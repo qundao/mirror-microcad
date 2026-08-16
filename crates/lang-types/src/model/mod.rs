@@ -72,6 +72,10 @@ impl Model {
     pub fn output_type(&self) -> ModelOutputType {
         self.element.output_type()
     }
+
+    pub fn get_property(&self, name: impl Into<Identifier>) -> Option<&Property> {
+        self.properties.get_property(name)
+    }
 }
 
 impl std::fmt::Display for Model {
