@@ -16,8 +16,6 @@
 //!
 //! Each sub-step is implemented in a separate module.
 
-pub mod scaffold;
-
 mod bind;
 mod case_check;
 mod error;
@@ -25,12 +23,6 @@ mod resolver;
 mod type_check;
 
 use microcad_lang_base::{CompilationResult, Diagnostics};
-use microcad_package::symbol::Rst;
-
-use crate::{
-    mir::{self, UnresolvedSymbolTree},
-    scaffold::TreeBuilder,
-};
 
 pub use error::ResolveError;
 
@@ -125,9 +117,10 @@ impl ResolveContext {
         // The final tree should now look like this:
         // Workspace # The workspace root node
         // ├── mu # The `mu` node containing all external dependencies (already resolved)
-        // |   ├── builtin
         // |   ├── std
         // |   └── ... # Any other external dependency
+        // ├── use ::mu::* #   wildcard to include everything from mu by default.
+        // ├── use std::geo2d::Circle; # Optional default alias
         // ├── foo # Loaded from `foo.mu`
         // |   └── bar # Loaded from `foo/bar.mu`
         // ├── baz # Loaded from `baz.mu`
@@ -137,7 +130,7 @@ impl ResolveContext {
     }
 }
 
-pub fn resolve(resolver: Box<dyn Resolver>) -> CompilationResult<Rst> {
+pub fn resolve(resolver: Box<dyn Resolver>) -> CompilationResult<SymbolTree> {
     let mut context = ResolveContext::new(resolver);
 
     /*
