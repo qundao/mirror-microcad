@@ -31,21 +31,3 @@ pub trait CallTrait<T> {
     /// Evaluate call into value (if possible).
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<T>;
 }
-
-/// Shortcut to create an argument value
-#[macro_export]
-macro_rules! argument_value {
-    ($id:ident: $ty:ident = $value:expr) => {
-        microcad_lang_types::ArgumentValue::new(
-            $value.into(),
-            Some(microcad_lang_types::Identifier::no_ref(stringify!($id))),
-        )
-    };
-    ($id:ident = $value:expr) => {
-        microcad_lang_types::ArgumentValue::new(
-            $value.into(),
-            Some(microcad_lang_types::Identifier::no_ref(stringify!($id))),
-        )
-    };
-    () => {};
-}

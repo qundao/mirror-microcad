@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang_base::Identifier;
-use microcad_lang_eval::{argument_value, find_multi_match};
+use microcad_lang_eval::find_multi_match;
 use microcad_lang_types::{
-    ArgumentValue, ArgumentValueList, Length, Scalar, Tuple, Type, Value, arguments, function_type,
-    tuple,
+    ArgumentValue, ArgumentValueList, Length, Tuple, Type, argument_value, arguments, array,
+    function_type, tuple,
 };
 
 #[test]
@@ -14,9 +14,9 @@ fn argument_matching() {
     let defaults = tuple!(d = Length::mm(4.0));
 
     let arguments: ArgumentValueList = [
-        argument_value!(a: Scalar = Scalar::from_num(1.0)),
-        argument_value!(b: Length = Length::mm(2.0)),
-        argument_value!(Scalar = Scalar::from_num(3.0)),
+        argument_value!(a = 1.0),
+        argument_value!(b = Length::mm(2.0)),
+        argument_value!(3.0),
     ]
     .into_iter()
     .collect();
@@ -33,12 +33,9 @@ fn argument_matching() {
 #[test]
 fn argument_match_fail() {
     let ty = function_type!((x: Type::scalar(), y: Type::scalar(), z: Type::scalar()));
-    let arguments: ArgumentValueList = [
-        argument_value!(x: Scalar = Scalar::from_num(1.0)),
-        argument_value!(Length = Length::mm(1.0)),
-    ]
-    .into_iter()
-    .collect();
+    let arguments: ArgumentValueList = [argument_value!(x = 1.0), argument_value!(Length::mm(1.0))]
+        .into_iter()
+        .collect();
     assert!(microcad_lang_eval::find_match(&arguments, &ty, &Default::default()).is_err());
 }
 
@@ -50,18 +47,8 @@ fn multi_match_cartesian_product() {
 
     // f(a = [1.0, 2.0], b = [10.0, 20.0, 30.0])
     let args: ArgumentValueList = [
-        ArgumentValue::new(
-            Value::from(vec![Value::from(1.0), Value::from(2.0)]),
-            Some(Identifier::no_ref("a")),
-        ),
-        ArgumentValue::new(
-            Value::from(vec![
-                Value::from(10.0),
-                Value::from(20.0),
-                Value::from(30.0),
-            ]),
-            Some(Identifier::no_ref("b")),
-        ),
+        ArgumentValue::new(array![1.0, 2.0], Some(Identifier::no_ref("a"))),
+        ArgumentValue::new(array![10.0, 20.0, 30.0], Some(Identifier::no_ref("b"))),
     ]
     .into_iter()
     .collect();

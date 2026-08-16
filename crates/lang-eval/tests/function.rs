@@ -5,8 +5,8 @@
 
 use microcad_builtin::__mu;
 use microcad_lang_base::{Identifier, SrcRef, SymbolId, ToCompactString};
-use microcad_lang_eval::{CallTrait, EvalContext, argument_value};
-use microcad_lang_types::{ArgumentValueList, Integer, Type, Value, function_type, tuple};
+use microcad_lang_eval::{CallTrait, EvalContext};
+use microcad_lang_types::{ArgumentValueList, Type, Value, argument_value, function_type, tuple};
 use microcad_package::symbol::{
     Function, FunctionExpression, FunctionStatement, Path,
     function::{Argument, ArgumentList, Call, If, Literal, ReturnStatement, Scope},
@@ -61,12 +61,12 @@ fn return_a() {
     let mut context = EvalContext::new();
     let result = f
         .call(
-            &ArgumentValueList::from_iter([argument_value!(a: Integer = Integer::from_num(2.0))]),
+            &ArgumentValueList::from_iter([argument_value!(a = 2)]),
             &mut context,
         )
         .expect("No eval error");
 
-    assert_eq!(result, Value::from(2_i64))
+    assert_eq!(result, Value::from(2))
 }
 
 #[test]
@@ -92,15 +92,12 @@ fn add() {
     let mut context = EvalContext::new();
     let result = f
         .call(
-            &ArgumentValueList::from_iter([
-                argument_value!(a: Integer = Integer::from_num(1)),
-                argument_value!(b: Integer = Integer::from_num(3)),
-            ]),
+            &ArgumentValueList::from_iter([argument_value!(a = 1), argument_value!(b = 3)]),
             &mut context,
         )
         .expect("No eval error");
 
-    assert_eq!(result, Value::from(4_i64));
+    assert_eq!(result, Value::from(4));
 }
 
 #[test]
@@ -139,10 +136,7 @@ fn if_a_greater_than() {
     let mut context = EvalContext::new();
     let result = f
         .call(
-            &ArgumentValueList::from_iter([
-                argument_value!(a: Integer = Integer::from_num(1)),
-                argument_value!(b: Integer = Integer::from_num(3)),
-            ]),
+            &ArgumentValueList::from_iter([argument_value!(a = 1), argument_value!(b = 3)]),
             &mut context,
         )
         .expect("No eval error");
@@ -152,10 +146,7 @@ fn if_a_greater_than() {
     let mut context = EvalContext::new();
     let result = f
         .call(
-            &ArgumentValueList::from_iter([
-                argument_value!(a: Integer = Integer::from_num(3)),
-                argument_value!(b: Integer = Integer::from_num(1)),
-            ]),
+            &ArgumentValueList::from_iter([argument_value!(a = 3), argument_value!(b = 1)]),
             &mut context,
         )
         .expect("No eval error");
