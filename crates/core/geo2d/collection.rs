@@ -29,7 +29,7 @@ impl Geometries2D {
     }
 
     /// Apply boolean operation to render into MultiPolygon.
-    pub fn boolean_op(&self, op: &BooleanOp) -> geo2d::MultiPolygon {
+    pub fn boolean_op(&self, op: BooleanOp) -> geo2d::MultiPolygon {
         let multi_polygon_list: Vec<_> = self
             .0
             .iter()
@@ -52,7 +52,7 @@ impl Geometries2D {
             .iter()
             .fold(multi_polygon_list[0].clone(), |acc, geo| {
                 use geo::BooleanOps;
-                acc.boolean_op(geo, op.into())
+                acc.boolean_op(geo, op)
             })
     }
 

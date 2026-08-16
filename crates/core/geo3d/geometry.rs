@@ -37,11 +37,12 @@ impl Geometry3D {
     }
 
     /// Execute boolean operation.
-    pub fn boolean_op(&self, other: &Geometry3D, op: &BooleanOp) -> Option<Self> {
-        let op: manifold_rs::BooleanOp = op.into();
+    pub fn boolean_op(&self, other: &Geometry3D, op: BooleanOp) -> Option<Self> {
         let a: Rc<Manifold> = self.clone().into();
         let b: Rc<Manifold> = other.clone().into();
-        Some(Geometry3D::Manifold(Rc::new(a.boolean_op(&b, op))))
+        Some(Geometry3D::Manifold(Rc::new(
+            a.boolean_op(&b, crate::boolean_op(op)),
+        )))
     }
 
     /// Calculate contex hull.

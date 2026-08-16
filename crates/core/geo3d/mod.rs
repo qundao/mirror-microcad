@@ -25,19 +25,6 @@ pub use plane::Plane;
 pub use reflect::*;
 pub use vertex::Vertex;
 
-use crate::BooleanOp;
-
-impl From<&BooleanOp> for manifold_rs::BooleanOp {
-    fn from(op: &BooleanOp) -> Self {
-        match op {
-            BooleanOp::Union => manifold_rs::BooleanOp::Union,
-            BooleanOp::Intersect => manifold_rs::BooleanOp::Intersection,
-            BooleanOp::Subtract => manifold_rs::BooleanOp::Difference,
-            _ => unimplemented!(),
-        }
-    }
-}
-
 #[test]
 fn test_mesh_volume() {
     let manifold = Manifold::sphere(1.0, 512);

@@ -40,8 +40,7 @@ impl FetchPoints2D for Circle {
 
 impl Circle {
     /// Render a circle with a radius into a polygon.
-    pub fn circle_polygon(radius: Scalar, resolution: &RenderResolution) -> Polygon {
-        let n = resolution.circular_segments(radius);
+    pub fn circle_polygon(radius: Scalar, n: u32) -> Polygon {
         let points = NgonIterator::new(n).map(|p| p * radius).collect();
         Polygon::new(LineString::new(points), vec![])
     }

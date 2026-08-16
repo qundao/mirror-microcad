@@ -325,7 +325,7 @@ impl From<&Geometry3D> for TriangleMesh {
 
 impl From<&Geometries3D> for TriangleMesh {
     fn from(geo: &Geometries3D) -> Self {
-        geo.boolean_op(&BooleanOp::Union).to_mesh().into()
+        geo.boolean_op(BooleanOp::Union).to_mesh().into()
     }
 }
 

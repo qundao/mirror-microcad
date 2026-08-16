@@ -3,15 +3,12 @@
 
 //! µcad core
 
-mod boolean_op;
-
 pub mod bounds;
 pub mod color;
 pub mod core_error;
 pub mod geo2d;
 pub mod geo3d;
 pub mod length;
-pub mod render;
 pub mod traits;
 pub mod triangle;
 
@@ -42,14 +39,24 @@ pub mod consts {
     pub use std::f64::consts::TAU;
 }
 
-pub use boolean_op::BooleanOp;
+pub use geo::OpType as BooleanOp;
+
 pub use bounds::*;
 pub use color::*;
 pub use core_error::*;
 pub use geo2d::*;
 pub use geo3d::*;
-pub use render::*;
 pub use triangle::*;
+
+/// Helper function to convert a boolean op
+pub fn boolean_op(op: BooleanOp) -> manifold_rs::BooleanOp {
+    match op {
+        BooleanOp::Intersection => manifold_rs::BooleanOp::Intersection,
+        BooleanOp::Union => manifold_rs::BooleanOp::Union,
+        BooleanOp::Difference => manifold_rs::BooleanOp::Difference,
+        BooleanOp::Xor => unimplemented!(),
+    }
+}
 
 /// Convert a Matrix4 to Matrix3.
 pub fn mat4_to_mat3(m: &Mat4) -> Mat3 {
