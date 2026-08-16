@@ -5,7 +5,7 @@
 
 use std::{error::Error, io::Write};
 
-use microcad_package::{SymbolDef, SymbolNodeRef, symbol::SymbolNodeExt};
+use microcad_package::{SymbolDef, SymbolNodeExt, SymbolNodeRef};
 
 use crate::{DocGen, md::ToMd};
 
@@ -102,7 +102,7 @@ impl MdBook {
 
         let path = Self::symbol_path(symbol.clone());
 
-        if let Some(id) = symbol.id() {
+        if let Some(id) = symbol.name() {
             entry(writer, id, path, depth)?;
             let depth = depth + 1;
 

@@ -4,10 +4,7 @@
 //! Microcad micro markdown parser and writer
 
 use microcad_lang_markdown::{Markdown, Paragraph, Section};
-use microcad_package::{
-    SymbolDef, SymbolNodeRef,
-    symbol::{self, SymbolNodeExt},
-};
+use microcad_package::{SymbolDef, SymbolNodeExt, SymbolNodeRef, symbol};
 
 /// Helper function to parse markdown from a string, but any occurring parse error will lead to a panic.
 ///
@@ -49,7 +46,7 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
     fn to_md(&self) -> Markdown {
         // Print one line description of a workbench
         fn symbol_one_line_item<'a>(symbol: SymbolNodeRef<'a>) -> Option<String> {
-            if let Some(id) = symbol.id() {
+            if let Some(id) = symbol.name() {
                 let link = format!(
                     "- [`{id}`]({filename})",
                     filename = match symbol.def {
@@ -93,7 +90,7 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
 
         let mut md = Markdown::default();
 
-        match (self.id(), self.doc()) {
+        match (self.name(), self.doc()) {
             (Some(id), Some(doc)) => {
                 md = parse(format!("# {id}\n{doc}"));
             }
@@ -114,7 +111,7 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
                 matches!(
                     symbol.def(),
                     SymbolDef::Workbench(workbench_definition) if
-                        matches!(&workbench_definition.kind.value, WorkbenchKind::Sketch)
+                        matches!(&workbench_definition.kind, WorkbenchKind::Sketch)
                 )
             });
 
@@ -123,7 +120,7 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
                 matches!(
                     symbol.def(),
                     SymbolDef::Workbench(workbench_definition) if
-                        matches!(&workbench_definition.kind.value, WorkbenchKind::Part)
+                        matches!(&workbench_definition.kind, WorkbenchKind::Part)
                 )
             });
 
@@ -132,7 +129,7 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
                 matches!(
                     symbol.def(),
                     SymbolDef::Workbench(workbench_definition) if
-                        matches!(&workbench_definition.kind.value, WorkbenchKind::Op)
+                        matches!(&workbench_definition.kind, WorkbenchKind::Op)
                 )
             });
 
@@ -168,9 +165,9 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
             {
                 let constants: Vec<_> = self
                     .children()
-                    .filter_map(|symbol| match (symbol.id(), symbol.def()) {
+                    .filter_map(|symbol| match (symbol.name(), symbol.def()) {
                         (Some(id), SymbolDef::Constant(constant)) => {
-                            Some((id.clone(), constant.value.value.clone()))
+                            Some((id.clone(), constant.value().clone()))
                         }
                         _ => None,
                     })
@@ -196,8 +193,8 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
                 let aliases: Vec<_> = self
                     .children()
                     .filter_map(|symbol| match symbol.def() {
-                        SymbolDef::Alias(alias) if symbol.id().is_some() => {
-                            Some((symbol.id().cloned().unwrap(), alias.0.clone()))
+                        SymbolDef::Alias(alias) if symbol.name().is_some() => {
+                            Some((symbol.name().cloned().unwrap(), alias.path.clone()))
                         }
                         _ => None,
                     })
