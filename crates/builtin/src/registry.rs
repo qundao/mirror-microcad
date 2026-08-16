@@ -25,21 +25,34 @@ impl BuiltinRegistry {
         };
 
         use crate::mu;
-        registry.register_all(mu::core::ALL_BUILTINS);
-        registry.register_all(mu::math::ALL_BUILTINS);
-        registry.register_all(mu::debug::ALL_BUILTINS);
+        let default_modules = [
+            mu::core::ALL_BUILTINS,
+            mu::debug::ALL_BUILTINS,
+            mu::math::ALL_BUILTINS,
+            mu::geo2d::ALL_BUILTINS,
+            mu::ops::ALL_BUILTINS,
+        ];
+
+        registry.register_all(default_modules.into_iter().flatten().cloned());
         registry
     }
 
     pub fn register(&mut self, builtin: &'static Builtin) {
-        self.builtins.insert(builtin.id(), builtin);
+        let id = builtin.id();
+        let previous = self.builtins.insert(id, builtin);
+
+        // TODO Return a Result::Err here when we want to be able to load built-ins dynamically
+        assert!(
+            previous.is_none(),
+            "Compiler bug: Duplicate builtin ID registered: {:?}",
+            id
+        );
     }
 
     /// Register an iterator of builtin static references
-    pub fn register_all<'a>(&mut self, builtins: impl IntoIterator<Item = &'a &'static Builtin>) {
-        builtins
-            .into_iter()
-            .for_each(|builtin| self.register(builtin))
+    pub fn register_all(&mut self, builtins: impl IntoIterator<Item = &'static Builtin>) {
+        self.builtins
+            .extend(builtins.into_iter().map(|b| (b.id(), b)));
     }
 
     pub fn get(&self, id: BuiltinId) -> Option<&'static Builtin> {

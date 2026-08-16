@@ -114,6 +114,16 @@ pub struct BuiltinOperation {
     pub f: BuiltinEvalFn<ModelTree>,
 }
 
+impl BuiltinOperation {
+    pub const fn new(
+        info: BuiltinInfo,
+        ty: BuiltinFn<FunctionType>,
+        f: BuiltinEvalFn<ModelTree>,
+    ) -> Self {
+        Self { info, ty, f }
+    }
+}
+
 #[derive(Debug, Clone, From)]
 pub enum Builtin {
     /// Produces a constant Value

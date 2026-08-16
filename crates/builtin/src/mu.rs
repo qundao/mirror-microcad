@@ -392,16 +392,13 @@ pub mod math {
     }
 }
 
+/// Built-in 2D primitives
 #[builtin_mod]
 pub mod geo2d {
     use microcad_lang_base::{BuiltinInfo, hash_id};
     use microcad_lang_types::{
-        Length, Model, ModelOutputType, Tuple, Type, function_type,
-        model::{
-            Element,
-            element::{BuiltinWorkpiece, Primitive2D},
-        },
-        tuple,
+        Length, Model, ModelOutputType, Type, function_type,
+        model::{Element, element::BuiltinWorkpiece},
     };
 
     use crate::BuiltinPrimitive;
@@ -422,7 +419,7 @@ pub mod geo2d {
     }
 
     impl Circle {
-        fn call(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Model, BuiltinError> {
+        pub fn call(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Model, BuiltinError> {
             Ok(Model {
                 name: None,
                 attr: Default::default(),
@@ -432,5 +429,89 @@ pub mod geo2d {
                 creator: None,
             })
         }
+    }
+}
+
+/// Built-in Operations
+#[builtin_mod]
+pub mod ops {
+    use std::rc::Rc;
+
+    use microcad_lang_base::BuiltinInfo;
+    use microcad_lang_types::{
+        Length, Model, ModelOutputType, ModelTree, Type, Vec3, function_type,
+        model::{AffineTransform, BooleanOp, Element, element::BuiltinWorkpiece},
+    };
+
+    use crate::BuiltinOperation;
+
+    use super::*;
+
+    static TRANSLATE: Builtin = Builtin::Operation(BuiltinOperation::new(
+        BuiltinInfo::new("__mu::ops::translate"),
+        || function_type!((self: Type::Model(ModelOutputType::Any), x: Type::length(), y: Type::length(), z: Type::length()) -> Type::Model(ModelOutputType::Any)),
+        translate,
+    ));
+
+    pub fn translate(
+        args: Arguments,
+        _ctx: &mut BuiltinEvalContext,
+    ) -> Result<ModelTree, BuiltinError> {
+        let self_: Rc<ModelTree> = args.try_get("self")?;
+        let x: Length = args.try_get("x")?;
+        let y: Length = args.try_get("y")?;
+        let z: Length = args.try_get("z")?;
+
+        let mut tree = ModelTree::new(Model::new(BuiltinWorkpiece::AffineTransform(
+            AffineTransform::Translation { x, y, z },
+        )));
+
+        tree.adopt_tree(self_.root, &self_.arena);
+
+        Ok(tree)
+    }
+
+    static DIFFERENCE: Builtin = Builtin::Operation(BuiltinOperation::new(
+        BuiltinInfo::new("__mu::ops::difference"),
+        || function_type!((self: Type::Model(ModelOutputType::Any)) -> Type::Model(ModelOutputType::Any)),
+        difference,
+    ));
+
+    pub fn difference(
+        args: Arguments,
+        _ctx: &mut BuiltinEvalContext,
+    ) -> Result<ModelTree, BuiltinError> {
+        let self_: Rc<ModelTree> = args.try_get("self")?;
+
+        // Create a tree for the groups first.
+        let mut group_tree = ModelTree::new(Model::new(Element::Group));
+        group_tree.adopt_tree(self_.root, &self_.arena);
+
+        // Create the actual operation node
+        let mut tree = ModelTree::new(Model::new(BuiltinWorkpiece::BooleanOp(
+            BooleanOp::Difference,
+        )));
+        tree.adopt_tree(group_tree.root, &group_tree.arena);
+
+        Ok(tree)
+    }
+
+    static EXTRUDE: Builtin = Builtin::Operation(BuiltinOperation::new(
+        BuiltinInfo::new("__mu::ops::extrude"),
+        || function_type!((self: Type::Model(ModelOutputType::Geometry2D), height: Type::length()) -> Type::Model(ModelOutputType::Geometry3D)),
+        extrude,
+    ));
+
+    pub fn extrude(
+        args: Arguments,
+        _ctx: &mut BuiltinEvalContext,
+    ) -> Result<ModelTree, BuiltinError> {
+        let self_: Rc<ModelTree> = args.try_get("self")?;
+        let height: Length = args.try_get("height")?;
+
+        let mut tree = ModelTree::new(Model::new(BuiltinWorkpiece::Extrude { height }));
+        tree.adopt_tree(self_.root, &self_.arena);
+
+        Ok(tree)
     }
 }
