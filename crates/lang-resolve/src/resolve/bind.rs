@@ -5,8 +5,9 @@
 
 use derive_more::From;
 use microcad_lang_base::{HashMap, Identifier, SrcRef, SrcReferrer};
+use microcad_lang_lower::ir;
 
-use crate::{ResolveContext, ResolveResult, mir};
+use crate::{ResolveContext, ResolveResult};
 
 /// A map of locals.
 ///
@@ -144,7 +145,7 @@ pub enum Environment {
 #[derive(Debug, From)]
 pub enum BindStackFrame {
     SourceFile(SourceFileFrame),
-    InlineModule(mir::SymbolHandle),
+    InlineModule(ir::Path),
     Function(FunctionFrame),
     FunctionScope(FunctionScopeFrame),
     Workbench(WorkbenchFrame),

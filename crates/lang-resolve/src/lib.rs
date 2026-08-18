@@ -5,11 +5,4 @@
 
 mod resolve;
 
-pub mod mir;
-
-/// The mid-level intermediate represenation (MIR).
-pub use mir::Mir;
-
-pub use resolve::{ResolveContext, ResolveResult, resolve, scaffold};
-
-pub use scaffold::scaffold;
+pub use resolve::{ResolveContext, ResolveResult, resolve};
