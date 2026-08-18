@@ -5,8 +5,6 @@
 
 use std::sync::{Arc, RwLock, mpsc};
 
-use microcad_core::{Geometry2D, Geometry3D, WithBounds2D, WithBounds3D};
-
 use microcad_hash::ToHash;
 use microcad_lang_types::ModelNodeRef;
 
