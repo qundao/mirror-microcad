@@ -29,7 +29,7 @@ pub use microcad_lang_base::{Identifier, element::Visibility};
 pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Ty, Unit};
 
 use derive_more::{Deref, Display, From};
-use microcad_lang_base::{SrcRef, impl_tree_types};
+use microcad_lang_base::SrcRef;
 use serde::{Deserialize, Serialize};
 
 use crate::ir;
@@ -157,4 +157,19 @@ impl std::hash::Hash for Tree {
     }
 }
 
-impl_tree_types!(pub Tree<IrItem>);
+impl Tree {
+    pub fn new(root: IrItem) -> Self {
+        let mut arena = Arena::default();
+        let root = arena.new_node(root);
+        Self { root, arena }
+    }
+    pub fn root<'a>(&'a self) -> NodeRef<'a> {
+        NodeRef::new(self.root, &self.arena)
+    }
+}
+
+pub type Arena = microcad_lang_base::tree::Arena<IrItem>;
+pub type Node = microcad_lang_base::tree::Node<IrItem>;
+pub type NodeRef<'a> = microcad_lang_base::tree::NodeRef<'a, IrItem>;
+pub type NodeMut<'a> = microcad_lang_base::tree::NodeMut<'a, IrItem>;
+pub type NodeId = microcad_lang_base::tree::NodeId;
