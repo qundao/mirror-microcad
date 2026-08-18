@@ -473,9 +473,12 @@ pub mod ops {
         let y: Length = args.try_get("y")?;
         let z: Length = args.try_get("z")?;
 
-        let mut tree = ModelTree::new(Model::new(BuiltinWorkpiece::AffineTransform(
-            AffineTransform::Translation { x, y, z },
-        )));
+        let mut tree = ModelTree::new(
+            Model::new(BuiltinWorkpiece::AffineTransform(
+                AffineTransform::Translation { x, y, z },
+            ))
+            .with_op_properties(args),
+        );
 
         tree.adopt_tree(self_.root, &self_.arena);
 
@@ -518,9 +521,9 @@ pub mod ops {
         _ctx: &mut BuiltinEvalContext,
     ) -> Result<ModelTree, BuiltinError> {
         let self_: Rc<ModelTree> = args.try_get("self")?;
-        let height: Length = args.try_get("height")?;
-
-        let mut tree = ModelTree::new(Model::new(BuiltinWorkpiece::Extrude { height }));
+        let mut tree = ModelTree::new(
+            Model::new(BuiltinWorkpiece::Operation(EXTRUDE.id())).with_op_properties(args),
+        );
         tree.adopt_tree(self_.root, &self_.arena);
 
         Ok(tree)
