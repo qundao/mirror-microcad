@@ -8,7 +8,7 @@ use microcad_lang_base::{BuiltinId, BuiltinInfo, element::WorkbenchKind};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Length, Value,
+    Value,
     model::{AffineTransform, BooleanOp, ModelOutputType},
 };
 
