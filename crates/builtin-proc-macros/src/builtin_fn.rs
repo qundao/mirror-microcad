@@ -144,8 +144,26 @@ pub(crate) fn builtin_fn_impl(attr: TokenStream, item: TokenStream) -> TokenStre
         }
     };
 
+    let id_doc = format!(
+        "**Static ID:** `{}`",
+        microcad_hash::HashId::compile_time_hash(format!("__mu::{fn_name}::{mod_name}").as_str())
+    );
+    let fn_vis = &input_fn.vis;
+    let fn_sig = &input_fn.sig;
+    let fn_block = &input_fn.block;
+    let fn_attrs = &input_fn.attrs;
+
+    let fn_with_doc = quote! {
+        #(#fn_attrs)*
+        #[doc = ""]
+        #[doc = #id_doc]
+        #fn_vis #fn_sig {
+            #fn_block
+        }
+    };
+
     quote! {
-        #input_fn
+        #fn_with_doc
 
         pub static #static_name: Builtin = builtin!(
             Function
