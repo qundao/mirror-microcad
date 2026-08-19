@@ -157,7 +157,7 @@ impl Eval<FlowSignal> for symbol::FunctionExpression {
         use symbol::FunctionExpression as Expr;
         match self {
             Expr::Invalid => todo!("Error handling"),
-            Expr::Literal(literal) => Ok(FlowSignal::Yield(literal.value().clone())),
+            Expr::Constant(literal) => Ok(FlowSignal::Yield(literal.value().clone())),
             Expr::Path(name) => name.eval(context),
             Expr::Scope(s) => s.eval(context),
             Expr::If(if_) => if_.eval(context),

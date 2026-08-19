@@ -9,7 +9,7 @@ use microcad_lang_eval::{CallTrait, EvalContext};
 use microcad_lang_types::{ArgumentValueList, Type, Value, argument_value, function_type, tuple};
 use microcad_package::symbol::{
     Function, FunctionExpression, FunctionStatement, Path,
-    function::{Argument, ArgumentList, Call, If, Literal, ReturnStatement, Scope},
+    function::{Argument, ArgumentList, Call, ConstantValue, If, ReturnStatement, Scope},
 };
 
 fn statements<T>(a: impl Iterator<Item = T>) -> Box<[FunctionStatement]>
@@ -118,13 +118,21 @@ fn if_a_greater_than() {
                 })
                 .into(),
                 body: scope(
-                    [FunctionStatement::Tail(Literal::from_value(2_i64).into())].into_iter(),
+                    [FunctionStatement::Tail(
+                        ConstantValue::from_value(2_i64).into(),
+                    )]
+                    .into_iter(),
                 )
                 .into(),
                 else_ref: None,
                 body_else: Some(
-                    scope([FunctionStatement::Tail(Literal::from_value(4_i64).into())].into_iter())
-                        .into(),
+                    scope(
+                        [FunctionStatement::Tail(
+                            ConstantValue::from_value(4_i64).into(),
+                        )]
+                        .into_iter(),
+                    )
+                    .into(),
                 ),
                 next_if_ref: None,
                 next_if: None,
