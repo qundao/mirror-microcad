@@ -29,6 +29,18 @@ pub struct Parameter {
     pub src_ref: SrcRef,
 }
 
+impl Parameter {
+    pub fn new(id: impl Into<Identifier>, ty: impl Into<ir::Type>) -> Self {
+        Self {
+            attr: ir::Attributes::default(),
+            id: id.into(),
+            ty: ty.into(),
+            default_value: None,
+            src_ref: SrcRef::none(),
+        }
+    }
+}
+
 impl std::fmt::Display for Parameter {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{id}: {ty}", id = self.id, ty = self.ty)?;
@@ -103,6 +115,17 @@ where
                 .map(|p| p.into())
                 .collect::<Vec<_>>()
                 .into_boxed_slice(),
+            src_ref: SrcRef::none(),
+        }
+    }
+}
+
+impl From<Vec<ir::Parameter>> for ParameterList {
+    fn from(mut params: Vec<ir::Parameter>) -> Self {
+        params.sort_by(|a, b| a.id.cmp(&b.id));
+
+        Self {
+            parameters: params.into_boxed_slice(),
             src_ref: SrcRef::none(),
         }
     }

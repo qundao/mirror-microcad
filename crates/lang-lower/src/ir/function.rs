@@ -3,11 +3,14 @@
 
 //! Function definition syntax element
 
-use crate::{CastInto, ir};
+use crate::{
+    CastInto,
+    ir::{self, ExprSpec},
+};
 
 use derive_more::From;
 use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
-use microcad_lang_types::Value;
+use microcad_lang_types::{FunctionType, Tuple, Ty, Value};
 use serde::{Deserialize, Serialize};
 
 /// Parameters and return type of a function
@@ -19,6 +22,51 @@ pub struct FunctionSignature {
     pub return_type: Option<ir::Type>,
     /// Source code reference
     pub src_ref: SrcRef,
+}
+
+/// Builder methods for testing.
+impl FunctionSignature {
+    pub fn new(parameters: impl Into<ir::ParameterList>) -> Self {
+        Self {
+            parameters: parameters.into(),
+            return_type: None,
+            src_ref: SrcRef::none(),
+        }
+    }
+
+    pub fn with_return_type(mut self, ty: impl Into<ir::Type>) -> Self {
+        self.return_type = Some(ty.into());
+        self
+    }
+}
+
+/// Retrieval methods for evaluation
+impl FunctionSignature {
+    pub fn ty(&self) -> FunctionType {
+        FunctionType {
+            parameters: Some(microcad_lang_types::FunctionTypeParameters(
+                self.parameters
+                    .parameters
+                    .iter()
+                    .map(|param| {
+                        match param
+                            .default_value
+                            .as_ref()
+                            .and_then(|expr| expr.value().cloned())
+                        {
+                            Some(value) => (param.id.clone(), value.ty()),
+                            None => (param.id.clone(), param.ty.ty.clone()),
+                        }
+                    })
+                    .collect(),
+            )),
+            return_ty: self.return_type.as_ref().map(|ty| Box::new(ty.ty.clone())),
+        }
+    }
+
+    pub fn default_parameter_values(&self) -> Tuple {
+        self.parameters.default_values()
+    }
 }
 
 impl std::fmt::Display for FunctionSignature {
@@ -144,4 +192,14 @@ pub struct Function {
     pub signature: ir::FunctionSignature,
     /// Function statements
     pub statements: Box<[ir::FunctionStatement]>,
+}
+
+impl Function {
+    pub fn ty(&self) -> FunctionType {
+        self.signature.ty()
+    }
+
+    pub fn default_parameters(&self) -> Tuple {
+        self.signature.default_parameter_values()
+    }
 }

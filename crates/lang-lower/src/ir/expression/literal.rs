@@ -8,7 +8,7 @@ use microcad_lang_base::{Refer, SrcRef, SrcReferrer};
 use microcad_lang_types::{Type, Value, ty};
 use serde::{Deserialize, Serialize};
 
-/// Literal of any kind.
+/// A constant value lowered from a ast::Literal.
 #[derive(Clone, Display, Debug, Hash, PartialEq, Serialize, Deserialize)]
 #[display("{}", self.value())]
 pub struct ConstantValue(pub Refer<Value>);

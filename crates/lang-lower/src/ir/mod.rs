@@ -42,6 +42,15 @@ pub struct Type {
     pub src_ref: SrcRef,
 }
 
+impl From<microcad_lang_types::Type> for Type {
+    fn from(ty: microcad_lang_types::Type) -> Self {
+        Self {
+            ty: ty.into(),
+            src_ref: SrcRef::none(),
+        }
+    }
+}
+
 /// Symbol content
 #[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Meta {
