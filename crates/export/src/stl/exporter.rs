@@ -26,7 +26,7 @@ impl Exporter for StlExporter {
         Ok(Value::None)*/
     }
 
-    fn output_type(&self) -> ModelOutputType {
+    fn model_type(&self) -> ModelOutputType {
         ModelOutputType::Geometry3D
     }
 }

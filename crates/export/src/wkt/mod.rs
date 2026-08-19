@@ -6,7 +6,7 @@
 use std::fmt::Write;
 
 use geo::line_string;
-use microcad_core::{Geometries2D, Geometry2D, Transformed2D, mat4_to_mat3};
+use microcad_core::{Geometries2D, Geometry2D};
 use microcad_lang_types::{Model, ModelNodeRef, ModelOutputType, Value};
 
 use wkt::ToWkt;
@@ -59,7 +59,7 @@ impl WriteWkt for Geometry2D {
 }
 
 impl WriteWkt for Model {
-    fn write_wkt(&self, writer: &mut impl Write) -> std::fmt::Result {
+    fn write_wkt(&self, _writer: &mut impl Write) -> std::fmt::Result {
         todo!()
         /*
         let self_ = self.borrow();
@@ -92,7 +92,7 @@ impl Exporter for WktExporter {
         Ok(Value::None)
     }
 
-    fn output_type(&self) -> ModelOutputType {
+    fn model_type(&self) -> ModelOutputType {
         ModelOutputType::Geometry2D
     }
 }
