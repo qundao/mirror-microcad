@@ -8,4 +8,6 @@ pub mod symbol;
 
 pub use manifest::{Manifest, ManifestError};
 
-pub use symbol::{SymbolDef, SymbolId, SymbolNode, SymbolNodeExt, SymbolNodeMut, SymbolNodeRef};
+pub use symbol::{
+    SymbolDef, SymbolId, SymbolNode, SymbolNodeExt, SymbolNodeMut, SymbolNodeRef, SymbolTree,
+};

@@ -85,6 +85,18 @@ pub type SymbolArena = microcad_lang_base::tree::Arena<Symbol>;
 pub type SymbolNode = microcad_lang_base::tree::Node<Symbol>;
 pub type SymbolNodeRef<'a> = microcad_lang_base::tree::NodeRef<'a, Symbol>;
 pub type SymbolNodeMut<'a> = microcad_lang_base::tree::NodeMut<'a, Symbol>;
+pub type SymbolNodeId = microcad_lang_base::tree::NodeId;
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct SymbolTree {
+    /// The symbol root.
+    pub root: SymbolNodeId,
+
+    /// Symbol node id of `mu` symbol that contains all external dependen
+    pub mu: SymbolNodeId,
+
+    pub arena: SymbolArena,
+}
 
 pub struct SymbolAbsPath {
     pub parts: Vec<Identifier>,
