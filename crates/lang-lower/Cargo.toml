@@ -37,5 +37,5 @@ microcad-builtin = { workspace = true }
 
 [dev-dependencies]
 pretty_assertions = "1.4"
-insta = "1.45.0"
-test-that = { git = "https://github.com/hovinen/test-that.git", rev = "42d3e8dd" }
+insta = "1.48.0"
+test-that = "0.5"

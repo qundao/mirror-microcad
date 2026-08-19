@@ -41,7 +41,7 @@ macro_rules! desugar_unit_test {
     };
 }
 
-macro_rules! unit_test {
+macro_rules! _unit_test {
     ($name:ident => |$ir:ident, $diag:ident| $body:block) => {
         #[test_that::test]
         fn $name() {
