@@ -6,19 +6,22 @@
 use crate::ir::{self, ExprSpec};
 
 use microcad_lang_base::{Identifier, SrcRef};
-use microcad_lang_types::{Tuple, Ty, Type};
+use microcad_lang_types::Tuple;
 use microcad_macros::{Identifiable, SrcReferrer};
 
 use serde::{Deserialize, Serialize};
-use serde_with::skip_serializing_none;
+
+#[non_exhaustive]
+#[derive(Debug, Default, Clone, Hash, PartialEq, Serialize, Deserialize)]
+pub struct ParameterAttributes {
+    pub doc: ir::DocBlock,
+}
 
 /// A parameter of a parameter list.
-#[skip_serializing_none]
 #[derive(Debug, Clone, Hash, SrcReferrer, Identifiable, PartialEq, Serialize, Deserialize)]
-
 pub struct Parameter {
     /// Parameter attributes
-    pub attr: ir::Attributes,
+    pub attr: ParameterAttributes,
     /// Name of the parameter
     pub id: Identifier,
     /// Type of the parameter
@@ -29,10 +32,11 @@ pub struct Parameter {
     pub src_ref: SrcRef,
 }
 
+/// Builder methods.
 impl Parameter {
     pub fn new(id: impl Into<Identifier>, ty: impl Into<ir::Type>) -> Self {
         Self {
-            attr: ir::Attributes::default(),
+            attr: Default::default(),
             id: id.into(),
             ty: ty.into(),
             default_value: None,
@@ -77,6 +81,11 @@ impl ParameterList {
     /// Check if the `ParameterList` is empty.
     pub fn is_empty(&self) -> bool {
         self.parameters.is_empty()
+    }
+
+    /// Returns an iterator over the parameters.
+    pub fn iter(&self) -> std::slice::Iter<'_, ir::Parameter> {
+        self.parameters.iter()
     }
 
     /// Return default values for this parameters, assuming all constant expression have been folded into values.

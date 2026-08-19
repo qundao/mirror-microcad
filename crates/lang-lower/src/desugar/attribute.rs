@@ -102,6 +102,7 @@ impl Desugar<ast::LocalAssignment> for ir::KvExpr {
         Ok(ir::KvExpr {
             name: ir::Path::from(ir::Identifier::desugar(&node.id, context)?),
             expr: ir::ConstantExpression::desugar(node.expr.as_ref(), context)?,
+            src_ref: context.span_to_src_ref(&node.span),
         })
     }
 }

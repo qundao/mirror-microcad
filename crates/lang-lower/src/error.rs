@@ -8,6 +8,8 @@ use microcad_lang_types::{TypeError, ValueError};
 use miette::Diagnostic;
 use thiserror::Error;
 
+use crate::ir;
+
 /// Errors and warnings during lowering
 #[derive(Debug, Error, Diagnostic)]
 #[allow(missing_docs)]
@@ -129,6 +131,26 @@ pub enum LowerError {
 
     #[error("The result of the function statement is ignored")]
     FunctionStatementIgnored(#[label("Removed this statement")] SrcRef),
+
+    #[error("Unsupported command attribute: {path}")]
+    UnsupportedCommandAttribute {
+        path: ir::Path,
+        #[label("Command attribute")]
+        src_ref: SrcRef,
+    },
+
+    #[error("Unsupported key-value attribute: {key}")]
+    UnsupportedKeyValueAttribute {
+        key: ir::Path,
+        #[label("Command attribute")]
+        src_ref: SrcRef,
+    },
+
+    #[error("Unsupported tag attribute: {tag}")]
+    UnsupportedTagAttribute {
+        #[label("Tag attribute")]
+        tag: ir::Identifier,
+    },
 }
 
 /// Result with lower error
@@ -158,6 +180,9 @@ impl SrcReferrer for LowerError {
             LowerError::InnerDocAfterInnerAttribute { src_ref } => *src_ref,
             LowerError::InnerAttributeAfterStatement { src_ref } => *src_ref,
             LowerError::FunctionStatementIgnored(src_ref) => *src_ref,
+            LowerError::UnsupportedCommandAttribute { src_ref, .. } => *src_ref,
+            LowerError::UnsupportedKeyValueAttribute { src_ref, .. } => *src_ref,
+            LowerError::UnsupportedTagAttribute { tag } => tag.src_ref(),
         }
     }
 }

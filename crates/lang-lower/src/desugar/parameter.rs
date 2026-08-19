@@ -1,15 +1,47 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Desugar, LowerContext, LowerResult, desugar::sort_and_check, ir};
+use crate::{Desugar, LowerContext, LowerError, LowerResult, desugar::sort_and_check, ir};
 
 use microcad_lang_base::SpanToSrcRef;
 use microcad_lang_parse::ast;
 
+/// Trait to lower generic attributes into item specific attributes.
+pub trait LowerAttributes: Sized + Default {
+    fn lower_attributes(attr: ir::Attributes, context: &mut LowerContext) -> LowerResult<Self>;
+}
+
+impl LowerAttributes for ir::ParameterAttributes {
+    fn lower_attributes(attr: ir::Attributes, context: &mut LowerContext) -> LowerResult<Self> {
+        attr.commands.iter().for_each(|attr| {
+            context.diag(LowerError::UnsupportedCommandAttribute {
+                path: attr.path.clone(),
+                src_ref: attr.src_ref,
+            })
+        });
+        attr.kv_exprs.iter().for_each(|attr| {
+            context.diag(LowerError::UnsupportedKeyValueAttribute {
+                key: attr.name.clone(),
+                src_ref: attr.src_ref,
+            })
+        });
+        attr.tags.iter().for_each(|attr| {
+            context.diag(LowerError::UnsupportedTagAttribute {
+                tag: attr.name.clone(),
+            })
+        });
+
+        Ok(Self { doc: attr.doc })
+    }
+}
+
 impl Desugar<ast::Parameter> for ir::Parameter {
     fn desugar(node: &ast::Parameter, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            attr: crate::desugar::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
+            attr: ir::ParameterAttributes::lower_attributes(
+                crate::desugar::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
+                context,
+            )?,
             src_ref: context.span_to_src_ref(&node.span),
             id: ir::Identifier::desugar(&node.id, context)?,
             ty: ir::Type::desugar(&node.ty, context)?,

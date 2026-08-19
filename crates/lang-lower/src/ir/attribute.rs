@@ -50,6 +50,7 @@ impl std::fmt::Display for DocBlock {
 pub struct KvExpr {
     pub name: ir::Path,
     pub expr: ir::ConstantExpression,
+    pub src_ref: SrcRef,
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]

@@ -21,6 +21,7 @@ pub use attribute::*;
 pub use cast_into::*;
 pub use expression::*;
 pub use function::*;
+use microcad_lang_types::Value;
 pub use parameter::*;
 pub use path::{Path, UnresolvedPath};
 pub use workbench::*;
@@ -113,6 +114,12 @@ pub struct Constant {
     pub ty: ir::Type,
     /// Expression type
     pub expr: ir::ConstantExpression,
+}
+
+impl Constant {
+    pub fn value(&self) -> Option<&Value> {
+        self.expr.value()
+    }
 }
 
 /// IR item definition
