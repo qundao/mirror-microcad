@@ -4,27 +4,22 @@
 //! Tests for evaluating workbenches.
 
 use microcad_builtin::__mu;
-use microcad_lang_base::{Identifier, SrcRef, SymbolId, ToCompactString};
 use microcad_lang_eval::{CallTrait, EvalContext};
-use microcad_lang_types::{ArgumentValueList, Length, Type, Value, argument_value};
-use microcad_package::symbol::{
-    self, Attributes, ConstantValue, Parameter, Path, Workbench, WorkbenchExpression,
-    WorkbenchStatement,
-    workbench::{self, Argument, ArgumentList, Call, Group, If},
-};
+use microcad_lang_types::{ArgumentValueList, Length};
+use microcad_package::symbol::{self, Attributes, ConstantValue, workbench};
 
 /// sketch Circle() { __mu::geo2d::Circle(radius = 4.0mm); }
 #[test]
 fn circle_no_parameters() {
     let workbench = symbol::Workbench {
         attr: Attributes::default(),
-        signature: symbol::workbench::WorkbenchSignature::new(
+        signature: workbench::WorkbenchSignature::new(
             symbol::WorkbenchKind::Sketch,
             vec![], // No parameters
         ),
         statements: vec![symbol::WorkbenchStatement::new(
-            symbol::workbench::Call::builtin(__mu!(geo2d::Circle)).with_args(vec![
-                Argument::named("radius", ConstantValue::from_value(Length::mm(4.0))),
+            workbench::Call::builtin(__mu!(geo2d::Circle)).with_args(vec![
+                workbench::Argument::named("radius", ConstantValue::from_value(Length::mm(4.0))),
             ]),
         )]
         .into_boxed_slice(),
