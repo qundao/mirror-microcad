@@ -3,13 +3,14 @@
 
 //! Import values from TOML
 
-use microcad_lang_base::{Identifier, Name, SrcRef};
 use microcad_lang_types::*;
 
 /// Import TOML files into a tuple.
 pub struct TomlImporter;
 
 impl TomlImporter {
+    /// Convert a TOML value into a µcad value.
+    #[allow(unused)]
     fn toml_to_value(toml: toml::Value) -> Value {
         match toml {
             toml::Value::String(s) => s.into(),
