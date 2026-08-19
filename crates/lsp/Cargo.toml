@@ -34,7 +34,7 @@ microcad-driver = { workspace = true }
 microcad-viewer-ipc = { workspace = true }
 
 [dev-dependencies]
-test-that = { git = "https://github.com/hovinen/test-that", branch = "main" }
+test-that = "0.5"
 
 microcad-driver = { workspace = true }
 

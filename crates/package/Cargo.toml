@@ -30,7 +30,7 @@ microcad-macros = { workspace = true }
 
 [dev-dependencies]
 test-that = "0.5"
-insta = "1.45.0"
+insta = "1.48.0"
 
 [features]
 default = ["io"]
