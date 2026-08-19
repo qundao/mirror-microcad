@@ -31,8 +31,6 @@ pub struct SourceFile {
     pub source: mu::Source,
     pub ast: mu::StageResult<mu::Ast>,
     pub ir: mu::StageResult<mu::Ir>,
-    pub mir: mu::StageResult<mu::Mir>,
-    pub rst: mu::StageResult<mu::Rst>,
     //pub model: Option<mu::CompilationResult<mu::Model>>,
 }
 
@@ -43,8 +41,6 @@ impl SourceFile {
             source,
             ast: mu::StageResult::default(),
             ir: mu::StageResult::default(),
-            mir: mu::StageResult::default(),
-            rst: mu::StageResult::default(),
         }
     }
 
@@ -59,8 +55,8 @@ impl SourceFile {
         match artifact_kind {
             ArtifactKind::Ast => self.ast.artifact().map(|ast| ast.emit(path)),
             ArtifactKind::Ir => self.ir.artifact().map(|ir| ir.emit(path)),
-            ArtifactKind::Mir => self.mir.artifact().map(|mir| mir.emit(path)),
-            ArtifactKind::Symbol => self.rst.artifact().map(|rst| rst.emit(path)),
+            _ => unreachable!(), //ArtifactKind::ModelTree => self.mir.artifact().map(|mir| mir.emit(path)),
+                                 // ArtifactKind::SymbolTree => self.rst.artifact().map(|rst| rst.emit(path)),
         };
 
         Ok(())
@@ -68,11 +64,7 @@ impl SourceFile {
 
     /// Return iterator over diagnostics
     pub fn diagnostics(&self) -> impl Iterator<Item = &mu::Diagnostic> {
-        self.ast
-            .diag_iter()
-            .chain(self.ir.diag_iter())
-            .chain(self.mir.diag_iter())
-            .chain(self.rst.diag_iter())
+        self.ast.diag_iter().chain(self.ir.diag_iter())
     }
 
     /// Loads the code from the file specified in the `url`.
@@ -157,19 +149,8 @@ impl mu::commands::compile::Lower for SourceFile {
     fn lower(&mut self) -> Result {
         match &self.ast.artifact() {
             Some(ast) => {
-                self.ir = mu::lower(&self.source, ast).into();
-                Ok(())
-            }
-            _ => Err(SourceError::InvalidState.into()),
-        }
-    }
-}
-
-impl mu::commands::compile::Resolve for SourceFile {
-    fn scaffold(&mut self /*,  params: impl Into<ScaffoldParameters>  */) -> Result {
-        match &self.ir.artifact() {
-            Some(ir) => {
-                self.mir = mu::scaffold(ir, &self.source).into();
+                let mut lower_context = mu::lower::LowerContext::new(&self.source);
+                self.ir = mu::lower(&mut lower_context, ast).into();
                 Ok(())
             }
             _ => Err(SourceError::InvalidState.into()),

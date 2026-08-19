@@ -38,7 +38,7 @@ pub mod resolve {
     pub use microcad_lang_resolve::*;
 }
 
-pub use resolve::{Mir, Rst, resolve, scaffold};
+pub use resolve::resolve;
 
 pub use crate::config::DriverConfig;
 pub use crate::document::{Document, SourceFile};

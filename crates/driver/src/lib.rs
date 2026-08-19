@@ -43,7 +43,7 @@ pub fn value_from_str(s: &str) -> Result<Value> {
 
     let source = mu::Source::from(s);
     let parse_context = mu::parse::ParseContext::from(&source);
-    mu::ir::Literal::desugar(
+    mu::ir::ConstantValue::desugar(
         &mu::ast::Literal::parse(&parse_context)?,
         &mut mu::lower::LowerContext::from(&source),
     )

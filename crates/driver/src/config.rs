@@ -3,7 +3,7 @@
 
 //! µcad driver config.
 
-use microcad_core::RenderResolution;
+use microcad_render::RenderResolution;
 use miette::IntoDiagnostic;
 use serde::Deserialize;
 

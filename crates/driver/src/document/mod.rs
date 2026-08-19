@@ -1,7 +1,6 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-mod builtin;
 mod markdown;
 mod mdbook;
 mod source_file;
@@ -13,11 +12,10 @@ use microcad_lang_base::{DiagRenderOptions, SourceKind, Url};
 pub use source_file::SourceFile;
 pub use stdin::Stdin;
 
-use crate::prelude::{self as mu, traits::Resolve};
+use crate::prelude as mu;
 
 pub type Markdown = markdown::MarkdownDocument;
 pub type MdBook = mdbook::MdBookDocument;
-pub type Builtin = builtin::Builtin;
 
 /// A document containing µcad code.
 #[derive(From)]
@@ -30,9 +28,6 @@ pub enum Document {
 
     /// An `book.toml` of a markdown book
     MdBook(MdBook),
-
-    /// A builtin symbol
-    Builtin(Builtin),
 }
 
 impl Document {
@@ -50,8 +45,6 @@ impl Document {
             Ok(MdBook::new(url)?.into())
         } else if path.ends_with(".md") {
             Ok(Markdown::new(SourceKind::from(url))?.into())
-        } else if url.scheme() == "builtin" {
-            Ok(Builtin::new().into())
         } else if url.scheme() == "file" {
             Ok(Box::new(SourceFile::load_from_file(url)?).into())
         } else {
@@ -69,7 +62,7 @@ impl mu::commands::GetCode for Document {
     fn get_code(&self) -> Option<&str> {
         match self {
             Self::SourceFile(source_file) => source_file.get_code(),
-            Self::Markdown(_) | Self::MdBook(_) | Self::Builtin(_) => None,
+            Self::Markdown(_) | Self::MdBook(_) => None,
         }
     }
 }
@@ -78,7 +71,7 @@ impl mu::commands::SetCode for Document {
     fn set_code(&mut self, new_code: String) -> Option<&str> {
         match self {
             Self::SourceFile(source_file) => source_file.set_code(new_code),
-            Self::Markdown(_) | Self::MdBook(_) | Self::Builtin(_) => None,
+            Self::Markdown(_) | Self::MdBook(_) => None,
         }
     }
 }
@@ -87,15 +80,6 @@ impl mu::commands::compile::Parse for Document {
     fn parse(&mut self) -> mu::Result {
         match self {
             Document::SourceFile(source) => source.parse(),
-            _ => unimplemented!(),
-        }
-    }
-}
-
-impl mu::commands::compile::Resolve for Document {
-    fn scaffold(&mut self) -> mu::Result {
-        match self {
-            Document::SourceFile(source) => source.scaffold(),
             _ => unimplemented!(),
         }
     }
@@ -144,7 +128,6 @@ impl mu::commands::PrintDiagnostics for Document {
             Document::SourceFile(i) => i.print_diagnostics(f, options),
             Document::Markdown(_) => todo!(),
             Document::MdBook(_) => todo!(),
-            Document::Builtin(_) => todo!(),
         }
     }
 }
