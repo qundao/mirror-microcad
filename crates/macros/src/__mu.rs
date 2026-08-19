@@ -36,7 +36,7 @@ pub(crate) fn __mu_impl(input: TokenStream) -> TokenStream {
     quote! {
         {
             // 1. Compile-time existence check for function item
-            let _check_fn_exists = #__mu::#module::#fn_ident;
+            use #__mu::#module::#fn_ident;
 
             // 2. Resolve static BuiltinId item
             #__mu::#module::#static_ident.id().into()

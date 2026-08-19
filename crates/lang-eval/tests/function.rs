@@ -152,7 +152,7 @@ fn if_a_greater_than() {
         )
         .expect("No eval error");
 
-    assert_eq!(result, Value::from(4_i64));
+    assert_eq!(result, Value::from(4));
 
     let mut context = EvalContext::new();
     let result = f
@@ -162,5 +162,5 @@ fn if_a_greater_than() {
         )
         .expect("No eval error");
 
-    assert_eq!(result, Value::from(2_i64))
+    assert_eq!(result, Value::from(2))
 }
