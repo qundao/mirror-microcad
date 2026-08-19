@@ -233,7 +233,7 @@ impl Eval<FlowSignal> for Box<[symbol::FunctionStatement]> {
 
 impl CallTrait<Value> for symbol::Function {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Value> {
-        match crate::find_match(args, &self.ty, &self.default_parameters) {
+        match crate::find_match(args, &self.ty(), &self.default_parameters()) {
             Ok(args) => context.scope(FunctionFrame::new(args), |context| {
                 Ok(self.statements.eval(context)?.into_value())
             }),

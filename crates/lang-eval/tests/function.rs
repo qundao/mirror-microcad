@@ -6,10 +6,10 @@
 use microcad_builtin::__mu;
 use microcad_lang_base::{Identifier, SrcRef, SymbolId, ToCompactString};
 use microcad_lang_eval::{CallTrait, EvalContext};
-use microcad_lang_types::{ArgumentValueList, Type, Value, argument_value, function_type, tuple};
+use microcad_lang_types::{ArgumentValueList, Type, Value, argument_value};
 use microcad_package::symbol::{
-    Function, FunctionExpression, FunctionStatement, Path,
-    function::{Argument, ArgumentList, Call, ConstantValue, If, ReturnStatement, Scope},
+    Attributes, ConstantValue, Function, FunctionExpression, FunctionStatement, Parameter, Path,
+    function::{self, Argument, ArgumentList, Call, If, Scope},
 };
 
 fn statements<T>(a: impl Iterator<Item = T>) -> Box<[FunctionStatement]>
@@ -45,17 +45,18 @@ fn arg(name: &str, expr: FunctionExpression) -> Argument {
 
 #[test]
 fn return_a() {
-    let f = Function {
-        ty: function_type!((a: Type::Integer) -> Type::Integer),
-        default_parameters: tuple!(),
+    let f = function::Function {
+        signature: function::FunctionSignature::new(vec![Parameter::new("a", Type::Integer)])
+            .with_return_type(Type::Integer),
         statements: statements(
-            [ReturnStatement {
+            [function::ReturnStatement {
                 expr: Some(name_expr("a")),
                 keyword_src_ref: SrcRef::none(),
                 src_ref: SrcRef::none(),
             }]
             .into_iter(),
         ),
+        attr: Attributes::default(),
     };
 
     let mut context = EvalContext::new();
@@ -71,9 +72,12 @@ fn return_a() {
 
 #[test]
 fn add() {
-    let f = Function {
-        ty: function_type!((a: Type::Integer, b: Type::Integer) -> Type::Integer),
-        default_parameters: tuple!(),
+    let f = function::Function {
+        signature: function::FunctionSignature::new(vec![
+            Parameter::new("a", Type::Integer),
+            Parameter::new("b", Type::Integer),
+        ])
+        .with_return_type(Type::Integer),
         statements: statements(
             [FunctionStatement::Tail(
                 Call {
@@ -87,6 +91,7 @@ fn add() {
             )]
             .into_iter(),
         ),
+        attr: Attributes::default(),
     };
 
     let mut context = EvalContext::new();
@@ -103,8 +108,11 @@ fn add() {
 #[test]
 fn if_a_greater_than() {
     let f = Function {
-        ty: function_type!((a: Type::Integer, b: Type::Integer) -> Type::Integer),
-        default_parameters: tuple!(),
+        signature: function::FunctionSignature::new(vec![
+            Parameter::new("a", Type::Integer),
+            Parameter::new("b", Type::Integer),
+        ])
+        .with_return_type(Type::Integer),
         statements: statements(
             [If {
                 src_ref: SrcRef::none(),
@@ -118,19 +126,13 @@ fn if_a_greater_than() {
                 })
                 .into(),
                 body: scope(
-                    [FunctionStatement::Tail(
-                        ConstantValue::from_value(2_i64).into(),
-                    )]
-                    .into_iter(),
+                    [FunctionStatement::Tail(ConstantValue::from_value(2).into())].into_iter(),
                 )
                 .into(),
                 else_ref: None,
                 body_else: Some(
                     scope(
-                        [FunctionStatement::Tail(
-                            ConstantValue::from_value(4_i64).into(),
-                        )]
-                        .into_iter(),
+                        [FunctionStatement::Tail(ConstantValue::from_value(4).into())].into_iter(),
                     )
                     .into(),
                 ),
@@ -139,6 +141,7 @@ fn if_a_greater_than() {
             }]
             .into_iter(),
         ),
+        attr: Attributes::default(),
     };
 
     let mut context = EvalContext::new();
