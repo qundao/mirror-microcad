@@ -43,7 +43,7 @@ use microcad_builtin::{BuiltinError, BuiltinId, mu};
 pub type RenderFn = fn(&mut RenderContext) -> Result<GeometryOutput, RenderError>;
 
 pub struct RenderHooks {
-    hooks: HashMap<BuiltinId, RenderFn>,
+    _hooks: HashMap<BuiltinId, RenderFn>,
 }
 
 impl RenderHooks {
@@ -55,7 +55,7 @@ impl RenderHooks {
             Ok(circle.render_with_context(ctx)?.into())
         });
 
-        Self { hooks }
+        Self { _hooks: hooks }
     }
 }
 

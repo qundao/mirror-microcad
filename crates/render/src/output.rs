@@ -63,15 +63,6 @@ impl GeometryOutput {
     }
 }
 
-impl<T> FromIterator<T> for GeometryOutput
-where
-    T: Into<core::Geometry>,
-{
-    fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
-        todo!()
-    }
-}
-
 /// The model output when a model has been processed.
 #[derive(Debug, Clone)]
 pub struct RenderOutput {
@@ -90,7 +81,7 @@ pub struct RenderOutput {
     /// Computed model hash.
     hash: HashId,
 
-    model_node_id: NodeId,
+    _model_node_id: NodeId,
 }
 
 impl RenderOutput {
@@ -114,7 +105,7 @@ impl RenderOutput {
             geometry: None,
             attributes: RenderAttributes::default(), // TODO: Get render attributes from model.into(),
             hash,
-            model_node_id: model.id,
+            _model_node_id: model.id,
         })
     }
 
