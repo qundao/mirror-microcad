@@ -85,7 +85,7 @@ impl Desugar<ast::SymbolPath> for ir::Path {
 
 impl<Expr: DesugarExpr> Desugar<ast::ArrayRangeExpression> for Expr
 where
-    Expr: From<ir::Call<Expr>> + From<ir::Literal>,
+    Expr: From<ir::Call<Expr>> + From<ir::ConstantValue>,
 {
     fn desugar(a: &ast::ArrayRangeExpression, context: &mut LowerContext) -> LowerResult<Self> {
         let unit = ir::Unit::desugar(&a.unit, context)?;
@@ -105,7 +105,7 @@ where
                 path: __mu!(core::mul),
                 args: ir::ArgumentList::from_iter([
                     range,
-                    Expr::from(ir::Literal::from(
+                    Expr::from(ir::ConstantValue::from(
                         (Value::from(Scalar::from_num(1.0)) * unit)?,
                     )),
                 ]),
@@ -117,7 +117,7 @@ where
 
 impl<Expr: DesugarExpr> Desugar<ast::ArrayListExpression> for Expr
 where
-    Expr: From<ir::Call<Expr>> + From<ir::Literal>,
+    Expr: From<ir::Call<Expr>> + From<ir::ConstantValue>,
 {
     fn desugar(a: &ast::ArrayListExpression, context: &mut LowerContext) -> LowerResult<Self> {
         let unit = ir::Unit::desugar(&a.unit, context)?;
@@ -141,7 +141,7 @@ where
                 path: __mu!(core::mul),
                 args: ir::ArgumentList::from_iter([
                     list,
-                    Expr::from(ir::Literal::from(
+                    Expr::from(ir::ConstantValue::from(
                         (Value::from(Scalar::from_num(1.0)) * unit)?,
                     )),
                 ]),
@@ -153,7 +153,7 @@ where
 
 impl<Expr: DesugarExpr> Desugar<ast::TupleExpression> for ir::Call<Expr>
 where
-    Expr: From<ir::Call<Expr>> + From<ir::Literal>,
+    Expr: From<ir::Call<Expr>> + From<ir::ConstantValue>,
 {
     fn desugar(node: &ast::TupleExpression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
@@ -168,7 +168,7 @@ impl Desugar<ast::Expression> for ir::ConstantExpression {
     fn desugar(node: &ast::Expression, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match node {
             ast::Expression::Bracketed(expr, _) => Self::desugar(expr.as_ref(), context)?,
-            ast::Expression::Literal(expr) => ir::Literal::desugar(expr, context)?.into(),
+            ast::Expression::Literal(expr) => ir::ConstantValue::desugar(expr, context)?.into(),
             ast::Expression::String(s) => ir::Call::desugar(s, context)?.into(),
             ast::Expression::Tuple(t) => ir::Call::desugar(t, context)?.into(),
             ast::Expression::ArrayRange(a) => Self::desugar(a, context)?,

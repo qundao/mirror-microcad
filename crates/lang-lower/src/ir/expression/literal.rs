@@ -11,9 +11,9 @@ use serde::{Deserialize, Serialize};
 /// Literal of any kind.
 #[derive(Clone, Display, Debug, Hash, PartialEq, Serialize, Deserialize)]
 #[display("{}", self.value())]
-pub struct Literal(pub Refer<Value>);
+pub struct ConstantValue(pub Refer<Value>);
 
-impl Literal {
+impl ConstantValue {
     /// Return value of literal.
     pub fn value(&self) -> &Value {
         &self.0.value
@@ -24,19 +24,19 @@ impl Literal {
     }
 }
 
-impl From<Value> for Literal {
+impl From<Value> for ConstantValue {
     fn from(v: Value) -> Self {
         Self::from_value(v)
     }
 }
 
-impl SrcReferrer for Literal {
+impl SrcReferrer for ConstantValue {
     fn src_ref(&self) -> SrcRef {
         self.0.src_ref
     }
 }
 
-impl ty::Ty for Literal {
+impl ty::Ty for ConstantValue {
     fn ty(&self) -> Type {
         self.value().ty()
     }

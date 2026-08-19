@@ -9,6 +9,7 @@ use derive_more::{Display, From};
 use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
 
 pub use microcad_lang_base::element::WorkbenchKind;
+use microcad_lang_types::Value;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
 
@@ -67,7 +68,7 @@ impl Marker {
 #[derive(Debug, Clone, From, PartialEq, Hash, Serialize, Deserialize)]
 pub enum WorkbenchExpression {
     Invalid,
-    Literal(ir::Literal),
+    Constant(ir::ConstantValue),
     Path(ir::Path),
     Group(ir::Group),
     If(ir::If<WorkbenchExpression>),
@@ -80,7 +81,7 @@ impl SrcReferrer for WorkbenchExpression {
         use WorkbenchExpression::*;
         match &self {
             Invalid => SrcRef::none(),
-            Literal(literal) => literal.src_ref(),
+            Constant(literal) => literal.src_ref(),
             Path(name) => name.src_ref(),
             Group(group) => group.src_ref,
             If(if_) => if_.src_ref,
@@ -92,6 +93,13 @@ impl SrcReferrer for WorkbenchExpression {
 
 impl ir::ExprSpec for WorkbenchExpression {
     type Body = Group;
+
+    fn value(&self) -> Option<&Value> {
+        match &self {
+            WorkbenchExpression::Constant(constant) => Some(constant.value()),
+            _ => None,
+        }
+    }
 }
 
 impl SingleIdentifier for WorkbenchExpression {
@@ -107,7 +115,7 @@ impl CastInto<ir::WorkbenchExpression> for ir::ConstantExpression {
     fn cast_into(self: ir::ConstantExpression) -> ir::WorkbenchExpression {
         match self {
             ir::ConstantExpression::Invalid => ir::WorkbenchExpression::Invalid,
-            ir::ConstantExpression::Literal(literal) => ir::WorkbenchExpression::Literal(literal),
+            ir::ConstantExpression::Constant(literal) => ir::WorkbenchExpression::Constant(literal),
             ir::ConstantExpression::Path(name) => ir::WorkbenchExpression::Path(name),
             ir::ConstantExpression::Call(call) => ir::WorkbenchExpression::Call(call.cast_into()),
         }

@@ -9,6 +9,7 @@ mod literal;
 pub use call::*;
 use derive_more::From;
 pub use literal::*;
+use microcad_lang_types::Value;
 
 use crate::{CastInto, ir};
 use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
@@ -78,8 +79,12 @@ where
     }
 }
 
+/// Specification trait for an expression.
 pub trait ExprSpec: Serialize + SrcReferrer + SingleIdentifier {
     type Body;
+
+    /// Test if an expression holds a constant value.
+    fn value(&self) -> Option<&Value>;
 }
 
 /// An expression that can be evaluated during `resolve` phase.
@@ -87,7 +92,7 @@ pub trait ExprSpec: Serialize + SrcReferrer + SingleIdentifier {
 
 pub enum ConstantExpression {
     Invalid,
-    Literal(ir::Literal),
+    Constant(ir::ConstantValue),
     Path(ir::Path),
     Call(ir::Call<ConstantExpression>),
 }
@@ -105,7 +110,7 @@ impl SrcReferrer for ConstantExpression {
     fn src_ref(&self) -> SrcRef {
         match &self {
             ConstantExpression::Invalid => SrcRef::none(),
-            ConstantExpression::Literal(literal) => literal.src_ref(),
+            ConstantExpression::Constant(literal) => literal.src_ref(),
             ConstantExpression::Path(name) => name.src_ref(),
             ConstantExpression::Call(call) => call.src_ref,
         }
@@ -114,12 +119,19 @@ impl SrcReferrer for ConstantExpression {
 
 impl ExprSpec for ConstantExpression {
     type Body = (); // Constant expressions have no body.
+
+    fn value(&self) -> Option<&Value> {
+        match &self {
+            ConstantExpression::Constant(constant) => Some(constant.value()),
+            _ => None,
+        }
+    }
 }
 
 impl std::fmt::Display for ConstantExpression {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {
-            ConstantExpression::Literal(literal) => write!(f, "{literal}"),
+            ConstantExpression::Constant(literal) => write!(f, "{literal}"),
             ConstantExpression::Path(path) => write!(f, "{path}"),
             _ => unimplemented!(),
         }

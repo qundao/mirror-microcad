@@ -72,7 +72,7 @@ impl Desugar<ast::Call> for ir::FunctionExpression {
 impl Desugar<ast::Literal> for ir::FunctionExpression {
     fn desugar(node: &ast::Literal, context: &mut LowerContext) -> LowerResult<Self> {
         // Lower the literal expression `1m` -> `Length::mm(1000)` (includes unit conversion)
-        Ok(ir::Literal::desugar(node, context)?.into())
+        Ok(ir::ConstantValue::desugar(node, context)?.into())
     }
 }
 

@@ -18,7 +18,7 @@ fn outer_doc_block() {
     let mut lower_context = LowerContext::from(&source);
     let doc_block = ir::DocBlock::desugar(&doc_block, &mut lower_context).unwrap();
 
-    let lines = doc_block.0.iter().map(|s| s.as_str()).collect::<Vec<_>>();
+    let lines = doc_block.content.lines().collect::<Vec<_>>();
 
     assert_eq!(vec!["A", "B", "C"], lines);
 }
@@ -52,7 +52,7 @@ fn inner_doc_block() {
     let mut lower_context = LowerContext::from(&source);
     let doc_block = ir::DocBlock::desugar(&statements, &mut lower_context).unwrap();
 
-    let lines = doc_block.0.iter().map(|s| s.as_str()).collect::<Vec<_>>();
+    let lines = doc_block.content.lines().collect::<Vec<_>>();
 
     assert_eq!(vec!["A", "B", "C"], lines);
 }

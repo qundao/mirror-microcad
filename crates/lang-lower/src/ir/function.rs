@@ -7,6 +7,7 @@ use crate::{CastInto, ir};
 
 use derive_more::From;
 use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
+use microcad_lang_types::Value;
 use serde::{Deserialize, Serialize};
 
 /// Parameters and return type of a function
@@ -46,7 +47,7 @@ pub struct Scope {
 #[derive(Debug, Clone, Hash, From, PartialEq, Serialize, Deserialize)]
 pub enum FunctionExpression {
     Invalid,
-    Literal(ir::Literal),
+    Constant(ir::ConstantValue),
     Path(ir::Path),
     Scope(Scope),
     If(ir::If<FunctionExpression>),
@@ -64,13 +65,20 @@ impl SingleIdentifier for FunctionExpression {
 
 impl ir::ExprSpec for FunctionExpression {
     type Body = Scope;
+
+    fn value(&self) -> Option<&Value> {
+        match &self {
+            FunctionExpression::Constant(constant) => Some(constant.value()),
+            _ => None,
+        }
+    }
 }
 
 impl CastInto<ir::FunctionExpression> for ir::ConstantExpression {
     fn cast_into(self: ir::ConstantExpression) -> ir::FunctionExpression {
         match self {
             ir::ConstantExpression::Invalid => ir::FunctionExpression::Invalid,
-            ir::ConstantExpression::Literal(literal) => ir::FunctionExpression::Literal(literal),
+            ir::ConstantExpression::Constant(literal) => ir::FunctionExpression::Constant(literal),
             ir::ConstantExpression::Path(path) => ir::FunctionExpression::Path(path),
             ir::ConstantExpression::Call(call) => ir::FunctionExpression::Call(call.cast_into()),
         }
@@ -81,7 +89,7 @@ impl SrcReferrer for FunctionExpression {
     fn src_ref(&self) -> SrcRef {
         match &self {
             FunctionExpression::Invalid => SrcRef::none(),
-            FunctionExpression::Literal(literal) => literal.src_ref(),
+            FunctionExpression::Constant(literal) => literal.src_ref(),
             FunctionExpression::Path(name) => name.src_ref(),
             FunctionExpression::Scope(scope) => scope.src_ref,
             FunctionExpression::If(if_expr) => if_expr.src_ref,

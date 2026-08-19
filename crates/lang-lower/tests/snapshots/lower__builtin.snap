@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0xb3b97c5b5fc7a57e",
-        output_hash: "0xf374cdc64e49d963",
+        output_hash: "0xc1d65f040dd07b4d",
         tree: (
             root: (
                 index1: 1,
@@ -43,10 +43,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                             ),
                             def: Source((
                                 attr: (
-                                    doc: ((
-                                        value: [],
+                                    doc: (
+                                        content: "",
                                         src_ref: "0:1 @ 0xb68464fb05014e73 (0..141)",
-                                    )),
+                                    ),
                                     kv_exprs: [],
                                     commands: [],
                                     tags: [],
@@ -54,10 +54,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                 statements: [
                                     (
                                         attr: (
-                                            doc: ((
-                                                value: [],
+                                            doc: (
+                                                content: "",
                                                 src_ref: "None",
-                                            )),
+                                            ),
                                             kv_exprs: [],
                                             commands: [],
                                             tags: [],
@@ -78,11 +78,11 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             args: (
                                                 src_ref: "5:21 @ 0xb68464fb05014e73 (117..125)",
                                                 args: [
-                                                    Unnamed(Literal(((
+                                                    Unnamed(Constant(((
                                                         value: Quantity("1"),
                                                         src_ref: "5:21 @ 0xb68464fb05014e73 (117..120)",
                                                     )))),
-                                                    Unnamed(Literal(((
+                                                    Unnamed(Constant(((
                                                         value: Quantity("2"),
                                                         src_ref: "5:26 @ 0xb68464fb05014e73 (122..125)",
                                                     )))),
@@ -120,10 +120,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                             ),
                             def: Alias((
                                 attr: (
-                                    doc: ((
-                                        value: [],
+                                    doc: (
+                                        content: "",
                                         src_ref: "None",
-                                    )),
+                                    ),
                                     kv_exprs: [],
                                     commands: [],
                                     tags: [],
@@ -157,10 +157,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                             ),
                             def: Alias((
                                 attr: (
-                                    doc: ((
-                                        value: [],
+                                    doc: (
+                                        content: "",
                                         src_ref: "None",
-                                    )),
+                                    ),
                                     kv_exprs: [],
                                     commands: [],
                                     tags: [],

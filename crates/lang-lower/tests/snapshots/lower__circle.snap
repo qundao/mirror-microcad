@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0x235cfcd5869dba8a",
-        output_hash: "0xc094e1fb39fb3cff",
+        output_hash: "0x23aa3c62db51f63c",
         tree: (
             root: (
                 index1: 1,
@@ -43,10 +43,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                             ),
                             def: Source((
                                 attr: (
-                                    doc: ((
-                                        value: [],
+                                    doc: (
+                                        content: "",
                                         src_ref: "0:1 @ 0x12987dbb58cfe5ac (0..433)",
-                                    )),
+                                    ),
                                     kv_exprs: [],
                                     commands: [],
                                     tags: [],
@@ -77,16 +77,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                             ),
                             def: Workbench((
                                 attr: (
-                                    doc: ((
-                                        value: [
-                                            "Circle definition with an offset.",
-                                            "",
-                                            "Examples:",
-                                            "* With radius `r`: `Circle(r = 10.0mm);`",
-                                            "* With diameter `d`: `Circle(d = 5.0mm);`",
-                                        ],
+                                    doc: (
+                                        content: "Circle definition with an offset.\n\nExamples:\n* With radius `r`: `Circle(r = 10.0mm);`\n* With diameter `d`: `Circle(d = 5.0mm);`",
                                         src_ref: "1:1 @ 0x12987dbb58cfe5ac (1..148)",
-                                    )),
+                                    ),
                                     kv_exprs: [],
                                     commands: [],
                                     tags: [],
@@ -96,10 +90,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     parameters: [
                                         (
                                             attr: (
-                                                doc: ((
-                                                    value: [],
+                                                doc: (
+                                                    content: "",
                                                     src_ref: "6:35 @ 0x12987dbb58cfe5ac (182..182)",
-                                                )),
+                                                ),
                                                 kv_exprs: [],
                                                 commands: [],
                                                 tags: [],
@@ -122,7 +116,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                 value: "x",
                                                                 src_ref: "6:45 @ 0x12987dbb58cfe5ac (192..193)",
                                                             )),
-                                                            expr: Literal(((
+                                                            expr: Constant(((
                                                                 value: Quantity("0mm"),
                                                                 src_ref: "6:49 @ 0x12987dbb58cfe5ac (196..201)",
                                                             ))),
@@ -133,7 +127,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                 value: "y",
                                                                 src_ref: "6:56 @ 0x12987dbb58cfe5ac (203..204)",
                                                             )),
-                                                            expr: Literal(((
+                                                            expr: Constant(((
                                                                 value: Quantity("0mm"),
                                                                 src_ref: "6:60 @ 0x12987dbb58cfe5ac (207..212)",
                                                             ))),
@@ -147,10 +141,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                         ),
                                         (
                                             attr: (
-                                                doc: ((
-                                                    value: [],
+                                                doc: (
+                                                    content: "",
                                                     src_ref: "6:19 @ 0x12987dbb58cfe5ac (166..166)",
-                                                )),
+                                                ),
                                                 kv_exprs: [],
                                                 commands: [],
                                                 tags: [],
@@ -172,10 +166,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     (
                                         keyword_ref: "7:5 @ 0x12987dbb58cfe5ac (221..225)",
                                         attr: (
-                                            doc: ((
-                                                value: [],
+                                            doc: (
+                                                content: "",
                                                 src_ref: "7:5 @ 0x12987dbb58cfe5ac (221..221)",
-                                            )),
+                                            ),
                                             kv_exprs: [],
                                             commands: [],
                                             tags: [],
@@ -184,10 +178,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             parameters: [
                                                 (
                                                     attr: (
-                                                        doc: ((
-                                                            value: [],
+                                                        doc: (
+                                                            content: "",
                                                             src_ref: "7:28 @ 0x12987dbb58cfe5ac (244..244)",
-                                                        )),
+                                                        ),
                                                         kv_exprs: [],
                                                         commands: [],
                                                         tags: [],
@@ -210,7 +204,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                         value: "x",
                                                                         src_ref: "7:38 @ 0x12987dbb58cfe5ac (254..255)",
                                                                     )),
-                                                                    expr: Literal(((
+                                                                    expr: Constant(((
                                                                         value: Quantity("0mm"),
                                                                         src_ref: "7:42 @ 0x12987dbb58cfe5ac (258..263)",
                                                                     ))),
@@ -221,7 +215,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                         value: "y",
                                                                         src_ref: "7:49 @ 0x12987dbb58cfe5ac (265..266)",
                                                                     )),
-                                                                    expr: Literal(((
+                                                                    expr: Constant(((
                                                                         value: Quantity("0mm"),
                                                                         src_ref: "7:53 @ 0x12987dbb58cfe5ac (269..274)",
                                                                     ))),
@@ -235,10 +229,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                 ),
                                                 (
                                                     attr: (
-                                                        doc: ((
-                                                            value: [],
+                                                        doc: (
+                                                            content: "",
                                                             src_ref: "7:10 @ 0x12987dbb58cfe5ac (226..226)",
-                                                        )),
+                                                        ),
                                                         kv_exprs: [],
                                                         commands: [],
                                                         tags: [],
@@ -259,10 +253,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                         statements: [
                                             (
                                                 attr: (
-                                                    doc: ((
-                                                        value: [],
+                                                    doc: (
+                                                        content: "",
                                                         src_ref: "None",
-                                                    )),
+                                                    ),
                                                     kv_exprs: [],
                                                     commands: [],
                                                     tags: [],
@@ -305,7 +299,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                     value: "rhs",
                                                                     src_ref: "None",
                                                                 )),
-                                                                expr: Literal(((
+                                                                expr: Constant(((
                                                                     value: Quantity("2"),
                                                                     src_ref: "8:29 @ 0x12987dbb58cfe5ac (307..310)",
                                                                 ))),
@@ -323,10 +317,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                 statements: [
                                     (
                                         attr: (
-                                            doc: ((
-                                                value: [],
+                                            doc: (
+                                                content: "",
                                                 src_ref: "None",
-                                            )),
+                                            ),
                                             kv_exprs: [],
                                             commands: [],
                                             tags: [],
@@ -473,7 +467,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                             value: "z",
                                                             src_ref: "12:64 @ 0x12987dbb58cfe5ac (419..420)",
                                                         )),
-                                                        expr: Literal(((
+                                                        expr: Constant(((
                                                             value: Quantity("0mm"),
                                                             src_ref: "12:68 @ 0x12987dbb58cfe5ac (423..428)",
                                                         ))),

@@ -7,20 +7,20 @@ use microcad_lang_base::{Refer, SpanToSrcRef};
 use microcad_lang_parse::ast;
 use microcad_lang_types::{Integer, Quantity, Scalar};
 
-impl Desugar<ast::Literal> for ir::Literal {
+impl Desugar<ast::Literal> for ir::ConstantValue {
     fn desugar(node: &ast::Literal, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(match &node.literal {
-            ast::LiteralKind::Bool(lit) => ir::Literal(Refer::new(
+            ast::LiteralKind::Bool(lit) => ir::ConstantValue(Refer::new(
                 lit.value.into(),
                 context.span_to_src_ref(&lit.span),
             )),
-            ast::LiteralKind::Integer(lit) => ir::Literal(Refer::new(
+            ast::LiteralKind::Integer(lit) => ir::ConstantValue(Refer::new(
                 Integer::from_str(lit.value.as_str()).expect(
                     "No error expected, this string already has been checked in the parse stage.",
                 ).into(),
                 context.span_to_src_ref(&lit.span),
             )),
-            ast::LiteralKind::Float(lit) => ir::Literal(Refer::new(
+            ast::LiteralKind::Float(lit) => ir::ConstantValue(Refer::new(
                 Scalar::from_str(lit.value.as_str()).expect(
                     "No error expected, this string already has been checked in the parse stage.",
                 ).into(),
@@ -28,7 +28,7 @@ impl Desugar<ast::Literal> for ir::Literal {
             )),
             ast::LiteralKind::Quantity(lit) => {
                 let unit = ir::Unit::desugar(&lit.unit, context)?;
-                ir::Literal(Refer::new(
+                ir::ConstantValue(Refer::new(
                     Quantity {
                         value: unit.normalize(Scalar::from_str(lit.value.as_str()).expect("No error expected, this string already has been checked in the parse stage.")),
                         quantity_type: unit.quantity_type(),
@@ -38,7 +38,7 @@ impl Desugar<ast::Literal> for ir::Literal {
                     context.span_to_src_ref(&lit.span),
                 ))
             }
-            ast::LiteralKind::String(lit) => ir::Literal(Refer::new(
+            ast::LiteralKind::String(lit) => ir::ConstantValue(Refer::new(
                 lit.content.clone().into(),
                 context.span_to_src_ref(&lit.span),
             )),
