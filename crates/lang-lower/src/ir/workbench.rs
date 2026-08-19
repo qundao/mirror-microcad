@@ -26,6 +26,21 @@ pub struct WorkbenchStatement {
     pub expression: WorkbenchExpression,
 }
 
+/// Builder methods for testing
+impl WorkbenchStatement {
+    pub fn new(expr: impl Into<WorkbenchExpression>) -> Self {
+        Self {
+            attr: Default::default(),
+            src_ref: Default::default(),
+            visibility: Default::default(),
+            keyword_src_ref: Default::default(),
+            id: None,
+            ty: Default::default(),
+            expression: expr.into(),
+        }
+    }
+}
+
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
 pub struct Group {
     pub src_ref: SrcRef,
@@ -122,17 +137,41 @@ impl CastInto<ir::WorkbenchExpression> for ir::ConstantExpression {
     }
 }
 
-/// Workbench definition, e.g `sketch`, `part` or `op`.
+/// A workbench signature consists of the workbench kind, a parameter list and statements
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Workbench {
-    /// Attributes, combined from Inner and OuterAttributes
-    pub attr: ir::Attributes,
+pub struct WorkbenchSignature {
     /// Workbench Kind
     pub kind: ir::WorkbenchKind,
     /// Workbench's building plan.
     pub parameters: ir::ParameterList,
     /// `init`
     pub inits: Box<[ir::Init]>,
+}
+
+/// Builder methods for testing
+impl WorkbenchSignature {
+    /// Create a new Workbench signature
+    pub fn new(kind: WorkbenchKind, parameters: impl Into<ir::ParameterList>) -> Self {
+        Self {
+            kind,
+            parameters: parameters.into(),
+            inits: Default::default(),
+        }
+    }
+
+    pub fn with_inits(mut self, inits: impl IntoIterator<Item = ir::Init>) -> Self {
+        self.inits = inits.into_iter().collect();
+        self
+    }
+}
+
+/// Workbench definition, e.g `sketch`, `part` or `op`.
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
+pub struct Workbench {
+    /// Attributes, combined from Inner and OuterAttributes
+    pub attr: ir::Attributes,
+    /// Workbench Kind
+    pub signature: WorkbenchSignature,
     /// The actual statements to build the Model
     pub statements: Box<[ir::WorkbenchStatement]>,
 }

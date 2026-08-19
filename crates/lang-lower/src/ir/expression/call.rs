@@ -5,6 +5,7 @@
 
 use crate::{CastInto, ir};
 use derive_more::Display;
+use microcad_builtin::BuiltinId;
 use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
 
 use serde::{Deserialize, Serialize};
@@ -24,15 +25,20 @@ pub enum Argument<Expr> {
     AutoNamed { name: Identifier, expr: Expr },
 }
 
-impl<Expr> SrcReferrer for Argument<Expr>
-where
-    Expr: SrcReferrer,
-{
-    fn src_ref(&self) -> SrcRef {
-        match self {
-            Argument::Unnamed(expr) | Argument::AutoNamed { expr, .. } => expr.src_ref(),
-            Argument::Named { src_ref, .. } => *src_ref,
+/// Builder methods for spec.
+impl<Expr> Argument<Expr> {
+    /// Create a new named argument (e.g. `a = 3.0`).
+    pub fn named(name: impl Into<Identifier>, expr: impl Into<Expr>) -> Self {
+        Self::Named {
+            name: name.into(),
+            expr: expr.into(),
+            src_ref: SrcRef::none(),
         }
+    }
+
+    /// Create a new unnamed argument from expression.
+    pub fn unnamed(expr: impl Into<Expr>) -> Self {
+        Self::Unnamed(expr.into())
     }
 }
 
@@ -41,6 +47,18 @@ impl<Expr> Argument<Expr> {
         match self {
             Argument::Unnamed(_) => None,
             Argument::Named { name, .. } | Argument::AutoNamed { name, .. } => Some(name),
+        }
+    }
+}
+
+impl<Expr> SrcReferrer for Argument<Expr>
+where
+    Expr: SrcReferrer,
+{
+    fn src_ref(&self) -> SrcRef {
+        match self {
+            Argument::Unnamed(expr) | Argument::AutoNamed { expr, .. } => expr.src_ref(),
+            Argument::Named { src_ref, .. } => *src_ref,
         }
     }
 }
@@ -121,6 +139,15 @@ impl<Expr> ArgumentList<Expr> {
     }
 }
 
+impl<Expr> Default for ArgumentList<Expr> {
+    fn default() -> Self {
+        Self {
+            src_ref: SrcRef::none(),
+            args: Box::new([]),
+        }
+    }
+}
+
 impl<Expr> std::fmt::Display for ArgumentList<Expr>
 where
     Expr: std::fmt::Display,
@@ -133,6 +160,15 @@ where
                 .collect::<Vec<_>>()
                 .join(", ")
         })
+    }
+}
+
+impl<Expr> From<Vec<Argument<Expr>>> for ArgumentList<Expr> {
+    fn from(args: Vec<Argument<Expr>>) -> Self {
+        Self {
+            args: args.into_boxed_slice(),
+            src_ref: SrcRef::none(),
+        }
     }
 }
 
@@ -175,6 +211,22 @@ pub struct Call<Expr: ir::ExprSpec> {
     pub args: ir::ArgumentList<Expr>,
     /// Source code reference.
     pub src_ref: SrcRef,
+}
+
+/// Builder methods
+impl<Expr: ir::ExprSpec> Call<Expr> {
+    pub fn builtin(builtin_id: BuiltinId) -> Self {
+        Self {
+            path: ir::Path::from(builtin_id),
+            args: ir::ArgumentList::default(),
+            src_ref: SrcRef::none(),
+        }
+    }
+
+    pub fn with_args(mut self, args: impl Into<ArgumentList<Expr>>) -> Self {
+        self.args = args.into();
+        self
+    }
 }
 
 impl<Src: ir::ExprSpec, Dst: ir::ExprSpec> CastInto<Call<Dst>> for Call<Src>

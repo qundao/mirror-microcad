@@ -109,9 +109,11 @@ impl Scaffold for ir::desugared::Workbench {
                 def: ir::Workbench {
                     attr: self.attr,
                     statements: self.statements,
-                    kind: self.kind,
-                    parameters: self.parameters,
-                    inits: self.inits,
+                    signature: ir::WorkbenchSignature {
+                        kind: self.kind,
+                        parameters: self.parameters,
+                        inits: self.inits,
+                    },
                 }
                 .into(),
             },
