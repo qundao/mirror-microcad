@@ -102,7 +102,6 @@ impl mu::commands::Format for Document {
             Document::SourceFile(item) => item.format(params),
             Document::Markdown(item) => item.format(params),
             Document::MdBook(item) => item.format(params),
-            _ => unimplemented!(),
         }
     }
 }
@@ -113,7 +112,6 @@ impl mu::commands::Sync for Document {
             Document::SourceFile(source) => source.sync(),
             Document::Markdown(markdown) => markdown.sync(),
             Document::MdBook(mdbook) => mdbook.sync(),
-            _ => unimplemented!(),
         }
     }
 }

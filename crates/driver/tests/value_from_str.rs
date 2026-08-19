@@ -1,23 +1,25 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_core::Integer;
-use microcad_lang_types::{
-    ty::QuantityType,
-    value::{Quantity, Value},
-};
+use microcad_lang_types::{Quantity, QuantityType, Scalar, Value};
 
 #[test]
 fn test_value_from_str_literals() {
     let cases: Vec<(&str, Value)> = vec![
-        ("0.1mm", Quantity::new(0.1, QuantityType::Length).into()), // Expecting a Quantity/Measurement
+        (
+            "0.1mm",
+            Quantity::new(Scalar::from_num(0.1), QuantityType::Length).into(),
+        ), // Expecting a Quantity/Measurement
         (
             "42°",
-            Quantity::new(0.7330382858376184, QuantityType::Angle).into(),
+            Quantity::new(Scalar::from_num(0.73303829), QuantityType::Angle).into(),
         ), // Expecting a Quantity/Angle
-        ("\"Foo\"", "Foo".to_string().into()),                      // Expecting a String
-        ("1", (1 as Integer).into()),                               // Expecting an Integer
-        ("23.0", Quantity::new(23.0, QuantityType::Scalar).into()), // Expecting a Scalar
+        ("\"Foo\"", "Foo".to_string().into()), // Expecting a String
+        ("1", Value::from(1)),                 // Expecting an Integer
+        (
+            "23.0",
+            Quantity::new(Scalar::from_num(23.0), QuantityType::Scalar).into(),
+        ), // Expecting a Scalar
     ];
 
     for (input, output) in cases {

@@ -40,7 +40,7 @@ pub struct CompileParameters {
 pub trait Compile: Parse + Lower /*+ Eval */ {
     /// Compile a document into a `Model`.
     fn compile(&mut self, parameters: impl Into<CompileParameters>) -> Result {
-        let parameters = parameters.into();
+        let _parameters = parameters.into();
         self.parse()?;
         self.lower()?;
         Ok(())
