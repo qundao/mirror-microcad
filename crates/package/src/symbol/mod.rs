@@ -6,13 +6,9 @@
 pub mod function;
 pub mod workbench;
 
-mod parameter;
-
-use microcad_lang_lower::ir::{self, ConstantExpression};
+use microcad_lang_lower::ir;
 
 use microcad_lang_lower::ir::Visibility;
-use microcad_lang_types::Value;
-pub use parameter::{Parameter, ParameterList};
 
 pub use function::{Function, FunctionExpression, FunctionStatement};
 pub use workbench::{Workbench, WorkbenchExpression, WorkbenchKind, WorkbenchStatement};
@@ -24,51 +20,8 @@ use std::hash::Hash;
 use serde::{Deserialize, Serialize};
 
 use derive_more::From;
-use microcad_lang_base::{Refer, SrcRef};
 
 pub use microcad_lang_lower::ir::Path;
-
-#[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
-pub struct DocBlock(pub Refer<String>);
-
-#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Constant {
-    // pub attr: ConstantAttributes,
-    pub expr: ConstantExpression,
-}
-
-impl Constant {
-    /// Return the value of the constant.
-    ///
-    /// TODO Error handling
-    pub fn value(&self) -> &Value {
-        match &self.expr {
-            ConstantExpression::Invalid => todo!(),
-            ConstantExpression::Constant(literal) => literal.value(),
-            ConstantExpression::Path(_) => todo!(),
-            ConstantExpression::Call(_) => todo!(),
-        }
-    }
-}
-
-#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Alias {
-    // pub attr: AliasAttributes
-    pub path: Path,
-}
-
-#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-// Usage inside your domain structs:
-pub struct Wildcard {
-    // pub attr: WildcardAttributes
-    pub path: Path,
-}
-
-#[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
-pub struct Source {
-    // pub attr: SourceAttributes,
-    statements: Box<[WorkbenchStatement]>,
-}
 
 #[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct InlineModule;
@@ -77,7 +30,7 @@ pub struct InlineModule;
 #[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
 pub enum SymbolDef {
     /// Source file symbol.
-    Source(Source),
+    Source(ir::Source),
     /// Inline Module symbol: `mod foo {}`
     InlineModule(InlineModule),
     /// Workbench symbol.
@@ -85,23 +38,17 @@ pub enum SymbolDef {
     /// Function symbol.
     Function(Function),
     /// Constant.
-    Constant(Constant),
+    Constant(ir::Constant),
     /// Alias of a pub use statement.
-    Alias(Alias),
+    Alias(ir::Alias),
     /// Use all available symbols in the module with the given name.
-    Wildcard(Wildcard),
-}
-
-#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Doc {
-    pub content: String,
-    pub src_ref: SrcRef,
+    Wildcard(ir::Wildcard),
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Symbol {
     pub meta: ir::Meta,
-    pub doc: Option<Doc>,
+    pub doc: Option<ir::DocBlock>,
     pub def: SymbolDef,
 }
 
