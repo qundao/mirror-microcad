@@ -3,6 +3,8 @@
 
 //! The `bind` sub-step. This binds all `SymbolPath`s to actual SymbolIds and LocalIds
 
+/*
+
 use derive_more::From;
 use microcad_lang_base::{HashMap, Identifier, SrcRef, SrcReferrer};
 use microcad_lang_lower::ir;
@@ -346,7 +348,7 @@ impl<'ctx> Bind<'ctx> for mir::Path {
         match self {
             microcad_package::symbol::Path::Unresolved(unresolved_path) => {
                 todo!()
-                //*self = binder.bind(unresolved_path)?;
+                // *self = binder.bind(unresolved_path)?;
                 //Ok(())
             }
             _ => Ok(()),
@@ -409,3 +411,5 @@ impl<'ctx> Bind<'ctx> for mir::Function {
         })
     }
 }
+
+*/

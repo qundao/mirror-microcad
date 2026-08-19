@@ -37,6 +37,26 @@ pub struct ResolveContext {
     pub diagnostics: Diagnostics,
 }
 
+/// The scaffolding step builds the unresolved tree from a workspace directory.
+///
+/// The workspace can be resolved in two modes:
+/// - `Lib`: We resolve the workspace as a library by loading the `lib.mu` file, if it exists.
+///          If it does not exist, we load every file in the workspace root directory.
+/// - `Source`: We resolve a single source file within the workspace and only load its dependencies.
+///
+/// Optionally, the workspace can contain a `mu.toml` manifest file.
+/// The `mu.toml` contain metadata for the µcad library and defines external dependencies.
+///
+/// A workspace directory can look like this:
+///
+/// /my_project
+/// ├── mu.toml # Optional, but mandatory for publishing.
+/// ├── lib.mu # Optional. If it is not present and if we are in Lib mode, we load all files in the directory.
+/// ├── foo.mu # A file in the workspace
+/// ├── /foo # A subdirectory
+/// |   ├── bar.mu
+/// |   ... # More files
+/// ├── baz.mu
 impl ResolveContext {
     pub fn new(resolver: Box<dyn Resolver>) -> Self {
         Self {
@@ -45,31 +65,11 @@ impl ResolveContext {
         }
     }
 
-    /// The scaffolding step builds the unresolved tree from a workspace directory.
-    ///
-    /// The workspace can be resolved in two modes:
-    /// - `Lib`: We resolve the workspace as a library by loading the `lib.mu` file, if it exists.
-    ///          If it does not exist, we load every file in the workspace root directory.
-    /// - `Source`: We resolve a single source file within the workspace and only load its dependencies.
-    ///
-    /// Optionally, the workspace can contain a `mu.toml` manifest file.
-    /// The `mu.toml` contain metadata for the µcad library and defines external dependencies.
-    ///
-    /// A workspace directory can look like this:
-    ///
-    /// /my_project
-    /// ├── mu.toml # Optional, but mandatory for publishing.
-    /// ├── lib.mu # Optional. If it is not present and if we are in Lib mode, we load all files in the directory.
-    /// ├── foo.mu # A file in the workspace
-    /// ├── /foo # A subdirectory
-    /// |   ├── bar.mu
-    /// |   ... # More files
-    /// ├── baz.mu
-    pub fn scaffold(&mut self) -> ResolveResult<UnresolvedSymbolTree> {
+    pub fn scaffold(&mut self) {
         // Try to load on optional `mu.toml` manifest file.
-        let manifest /*: Option<Manifest> */ = self.resolver.load_manifest()?;
+        //let manifest: Option<Manifest> = self.resolver.load_manifest()?;
 
-        todo!();
+        todo!()
 
         //let mut builder = TreeBuilder::new(mir::Workspace::from(manifest));
 
@@ -130,10 +130,10 @@ impl ResolveContext {
     }
 }
 
-pub fn resolve(resolver: Box<dyn Resolver>) -> CompilationResult<SymbolTree> {
+pub fn resolve(_resolver: Box<dyn Resolver>) -> CompilationResult<microcad_package::SymbolTree> {
+    /*
     let mut context = ResolveContext::new(resolver);
 
-    /*
     // Step 1: Scaffold symbol hierarchy
     let scaffolded = context.scaffold()?;
 

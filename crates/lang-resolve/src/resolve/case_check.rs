@@ -38,7 +38,6 @@ impl CaseCheck for symbol::SymbolDef {
             Workbench(_) => Some(Case::Pascal),
             Constant(_) => Some(Case::UpperSnake),
             Alias(_) | Wildcard(_) => None,
-            _ => None,
         }
     }
 }
