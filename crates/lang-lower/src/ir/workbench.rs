@@ -21,7 +21,7 @@ pub struct WorkbenchStatement {
     pub src_ref: SrcRef,
     pub visibility: ir::Visibility, // public = property
     pub keyword_src_ref: SrcRef,
-    pub id: Option<ir::Identifier>,
+    pub name: Option<ir::Identifier>,
     pub ty: ir::Type,
     pub expression: WorkbenchExpression,
 }
@@ -34,7 +34,7 @@ impl WorkbenchStatement {
             src_ref: Default::default(),
             visibility: Default::default(),
             keyword_src_ref: Default::default(),
-            id: None,
+            name: None,
             ty: Default::default(),
             expression: expr.into(),
         }

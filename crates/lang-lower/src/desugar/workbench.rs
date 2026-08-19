@@ -196,7 +196,7 @@ impl Desugar<ast::LocalAssignment> for ir::WorkbenchStatement {
             src_ref: context.span_to_src_ref(&node.span),
             visibility: ir::Visibility::Private,
             keyword_src_ref: SrcRef::none(),
-            id: Some(ir::Identifier::desugar(&node.id, context)?),
+            name: Some(ir::Identifier::desugar(&node.id, context)?),
             ty: ir::Type::desugar(&node.ty, context)?,
             expression: ir::WorkbenchExpression::desugar(node.expr.as_ref(), context)?,
         })
@@ -210,7 +210,7 @@ impl Desugar<ast::PropertyAssignment> for ir::WorkbenchStatement {
             src_ref: context.span_to_src_ref(&node.span),
             visibility: ir::Visibility::Public,
             keyword_src_ref: context.span_to_src_ref(&node.keyword_span),
-            id: Some(ir::Identifier::desugar(&node.id, context)?),
+            name: Some(ir::Identifier::desugar(&node.id, context)?),
             ty: ir::Type::desugar(&node.ty, context)?,
             expression: ir::WorkbenchExpression::desugar(node.value.as_ref(), context)?,
         })
@@ -224,7 +224,7 @@ impl Desugar<ast::ExpressionStatement> for ir::WorkbenchStatement {
             src_ref: context.span_to_src_ref(&node.span),
             visibility: ir::Visibility::Public,
             keyword_src_ref: SrcRef::none(),
-            id: None,
+            name: None,
             ty: ir::Type::default(),
             expression: ir::WorkbenchExpression::desugar(&node.expr, context)?,
         })
