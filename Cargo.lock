@@ -5817,7 +5817,7 @@ dependencies = [
  "serde",
  "serde_with",
  "strum 0.28.0",
- "test-that 0.2.0",
+ "test-that",
  "thiserror 2.0.18",
 ]
 
@@ -5868,7 +5868,7 @@ dependencies = [
  "postcard",
  "semver",
  "serde",
- "test-that 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "test-that",
  "thiserror 2.0.18",
 ]
 
@@ -5909,7 +5909,7 @@ dependencies = [
  "miette",
  "serde",
  "serde_json",
- "test-that 0.5.2 (git+https://github.com/hovinen/test-that?branch=main)",
+ "test-that",
  "tokio",
  "tower-lsp",
  "tracing",
@@ -5942,7 +5942,7 @@ dependencies = [
  "postcard",
  "semver",
  "serde",
- "test-that 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "test-that",
  "thiserror 2.0.18",
  "toml",
 ]
@@ -8919,42 +8919,13 @@ dependencies = [
 
 [[package]]
 name = "test-that"
-version = "0.2.0"
-source = "git+https://github.com/hovinen/test-that.git?rev=42d3e8dd#42d3e8ddfcc0ccebc45802ff5b8727ee7cec4891"
-dependencies = [
- "num-traits",
- "regex",
- "test-that-macro 0.2.0",
-]
-
-[[package]]
-name = "test-that"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "291f228058142bae421e0b4b014a7b18edd6137629550cc15da37feed66a7db6"
 dependencies = [
  "num-traits",
  "regex",
- "test-that-macro 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "test-that"
-version = "0.5.2"
-source = "git+https://github.com/hovinen/test-that?branch=main#0fa7d8f4ceedcc92e45d3590b2d2f6edbcdc6472"
-dependencies = [
- "num-traits",
- "regex",
- "test-that-macro 0.5.2 (git+https://github.com/hovinen/test-that?branch=main)",
-]
-
-[[package]]
-name = "test-that-macro"
-version = "0.2.0"
-source = "git+https://github.com/hovinen/test-that.git?rev=42d3e8dd#42d3e8ddfcc0ccebc45802ff5b8727ee7cec4891"
-dependencies = [
- "quote",
- "syn 2.0.118",
+ "test-that-macro",
 ]
 
 [[package]]
@@ -8962,15 +8933,6 @@ name = "test-that-macro"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b6453b0f4c66f6ed93ac9ababa97e347a22f5556180d19808bb6d796522eef5d"
-dependencies = [
- "quote",
- "syn 2.0.118",
-]
-
-[[package]]
-name = "test-that-macro"
-version = "0.5.2"
-source = "git+https://github.com/hovinen/test-that?branch=main#0fa7d8f4ceedcc92e45d3590b2d2f6edbcdc6472"
 dependencies = [
  "quote",
  "syn 2.0.118",
