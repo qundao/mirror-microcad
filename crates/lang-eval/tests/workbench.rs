@@ -8,9 +8,14 @@ use microcad_lang_eval::{CallTrait, EvalContext};
 use microcad_lang_types::{ArgumentValueList, Length};
 use microcad_package::symbol::{self, Attributes, ConstantValue, workbench};
 
+#[test]
+fn test_init() {
+    
+}
+
 /// sketch Circle() { __mu::geo2d::Circle(radius = 4.0mm); }
 #[test]
-fn circle_no_parameters() {
+fn circle_without_parameter() {
     let workbench = symbol::Workbench {
         attr: Attributes::default(),
         signature: workbench::WorkbenchSignature::new(
@@ -29,4 +34,33 @@ fn circle_no_parameters() {
     let result = workbench
         .call(&ArgumentValueList::default(), &mut context)
         .expect("No eval error");
+}
+
+/// sketch Circle(radius: Length) { __mu::geo2d::Circle(radius); }
+#[test]
+fn circle_parameter() {
+    todo!()
+}
+
+/// sketch Circle(radius: Length) {
+///    init(diameter: Length) {
+///        radius = diameter / 2;
+///    }
+///    __mu::geo2d::Circle(radius);
+/// }
+#[test]
+fn circle_init() {
+    todo!()
+}
+
+/// sketch Circle(radius: Length) {
+///     init(diameter: Length) {
+///         radius = diameter / 2;
+///     }
+///     __mu::geo2d::Circle(radius)
+///         .__mu::geo2d::translate(x = 10.0mm, y = 10.0mm, z = 0.0mm);
+/// }
+#[test]
+fn circle_init_op() {
+    todo!()
 }

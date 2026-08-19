@@ -1,125 +1,15 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use derive_more::From;
+mod stack;
+
+pub use stack::*;
 
 use microcad_builtin::BuiltinRegistry;
-use microcad_lang_base::{HashMap, Name, ToCompactString};
-use microcad_lang_types::{Arguments, ModelTree, Value, model::Property};
+use microcad_lang_base::Name;
+use microcad_lang_types::{ModelTree, Value, model::Property};
 
 use crate::{EvalError, EvalResult};
-
-/// A map of locals.
-///
-/// The `Vec<SrcRef>` represents the usages of this local.
-#[derive(Debug, Default)]
-pub struct LocalTable(HashMap<Name, Value>);
-
-#[derive(Debug, Default)]
-pub struct FunctionFrame {
-    //symbol: mir::SymbolHandle,
-    pub locals: LocalTable,
-}
-
-impl FunctionFrame {
-    pub fn new(args: Arguments) -> Self {
-        let locals = LocalTable(
-            args.named_iter()
-                .map(|(id, value)| (id.to_compact_string(), value.clone()))
-                .collect(),
-        );
-
-        Self { locals }
-    }
-}
-
-#[derive(Debug, Default)]
-pub struct FunctionScopeFrame {
-    //symbol: mir::SymbolHandle,
-    pub locals: LocalTable,
-}
-
-impl FunctionScopeFrame {
-    pub fn new() -> Self {
-        Self::default()
-    }
-}
-
-#[derive(Debug, From)]
-pub enum StackFrame {
-    Function(FunctionFrame),
-    FunctionScope(FunctionScopeFrame),
-}
-
-impl StackFrame {
-    pub fn get_local(&self, name: &Name) -> Option<&Value> {
-        match self {
-            StackFrame::Function(FunctionFrame { locals })
-            | StackFrame::FunctionScope(FunctionScopeFrame { locals }) => locals.0.get(name),
-        }
-    }
-
-    pub fn put_local(&mut self, name: Name, value: Value) {
-        match self {
-            StackFrame::Function(FunctionFrame { locals })
-            | StackFrame::FunctionScope(FunctionScopeFrame { locals }) => {
-                locals.0.insert(name, value);
-            }
-        }
-    }
-}
-
-/// A generic stack.
-#[derive(Debug, Default)]
-pub struct Stack(Vec<StackFrame>);
-
-impl Stack {}
-
-impl StackRead for Stack {
-    type Frame = StackFrame;
-
-    fn get_local(&self, name: &Name) -> Option<&Value> {
-        self.0.iter().rev().find_map(|frame| frame.get_local(name))
-    }
-
-    fn top(&self) -> &StackFrame {
-        self.0.last().expect("A stack frame") // Intentionally no error handling here
-    }
-}
-
-impl StackWrite for Stack {
-    fn push(&mut self, frame: impl Into<StackFrame>) {
-        self.0.push(frame.into());
-    }
-
-    fn pop(&mut self) -> StackFrame {
-        self.0.pop().expect("A stack frame")
-    }
-
-    fn top_mut(&mut self) -> &mut StackFrame {
-        self.0.last_mut().expect("A stack frame")
-    }
-}
-
-pub trait StackRead {
-    type Frame;
-
-    fn get_local(&self, _name: &Name) -> Option<&Value> {
-        None
-    }
-
-    fn top(&self) -> &Self::Frame;
-}
-
-pub trait StackWrite: StackRead {
-    fn top_mut(&mut self) -> &mut Self::Frame;
-    fn pop(&mut self) -> Self::Frame {
-        unimplemented!("Implement stack pop")
-    }
-    fn push(&mut self, _: impl Into<Self::Frame>) {
-        unimplemented!("Implement stack push")
-    }
-}
 
 #[derive(Debug, Default)]
 pub struct EvalContext {

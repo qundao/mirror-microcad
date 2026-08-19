@@ -6,11 +6,11 @@
 use crate::{CallTrait, Eval, EvalContext, EvalResult};
 
 use microcad_lang_base::element::Visibility;
-use microcad_package::symbol;
+use microcad_package::symbol::{self, ParameterList};
 
 use microcad_lang_types::{
     ArgumentValueList, ModelTree, Value,
-    model::{Property, PropertyType},
+    model::{Properties, Property, PropertyType},
 };
 
 impl Eval<Value> for symbol::workbench::Group {
@@ -252,9 +252,18 @@ impl ir::WorkbenchDefinition {
 }
 */
 
+pub trait InitExt {
+    fn input_properties(
+        &self,
+        parameters: &ParameterList,
+        context: &mut EvalContext,
+    ) -> EvalResult<Properties>;
+}
+
 impl CallTrait<ModelTree> for symbol::Workbench {
     fn call(&self, _args: &ArgumentValueList, _context: &mut EvalContext) -> EvalResult<ModelTree> {
         // Find correct inits
+
         todo!();
         /*
         match crate::find_multi_match(args, &self.ty, &self.default_parameters) {
