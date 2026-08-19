@@ -7,7 +7,7 @@ use std::fmt::Write;
 
 use geo::line_string;
 use microcad_core::{Geometries2D, Geometry2D, Transformed2D, mat4_to_mat3};
-use microcad_lang_types::{Model, ModelOutputType, ModelRef, Value};
+use microcad_lang_types::{Model, ModelNodeRef, ModelOutputType, Value};
 
 use wkt::ToWkt;
 
@@ -77,10 +77,10 @@ impl WriteWkt for Model {
     }
 }
 
-impl<'tree> Exporter<'tree> for WktExporter {
-    fn export(
+impl Exporter for WktExporter {
+    fn export<'tree>(
         &self,
-        model: &ModelRef<'tree>,
+        model: &ModelNodeRef<'tree>,
         parameters: &ExporterParameters,
     ) -> Result<Value, ExportError> {
         use std::io::Write;

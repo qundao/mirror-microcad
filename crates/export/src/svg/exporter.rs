@@ -4,7 +4,7 @@
 //! Scalable Vector Graphics (SVG) export
 
 use microcad_core::{Color, Scalar};
-use microcad_lang_types::{ModelOutputType, ModelRef, Value};
+use microcad_lang_types::{ModelNodeRef, ModelOutputType, Value};
 
 use crate::{ExportError, Exporter, ExporterParameters};
 
@@ -144,10 +144,10 @@ impl SvgExporter {
     }
 }
 
-impl<'tree> Exporter<'tree> for SvgExporter {
-    fn export(
+impl Exporter for SvgExporter {
+    fn export<'tree>(
         &self,
-        _model: &ModelRef<'tree>,
+        _model: &ModelNodeRef<'tree>,
         _parameters: &ExporterParameters,
     ) -> Result<Value, ExportError> {
         todo!()

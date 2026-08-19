@@ -226,10 +226,9 @@ fn svg_sample_sketch() -> std::io::Result<()> {
     // Draw intersection.
     let intersection = Geometry2D::Rect(rect).boolean_op(
         Geometry2D::Polygon(
-            Circle::circle_polygon(circle.radius, &RenderResolution::default())
-                .translate(circle.offset.x, circle.offset.y),
+            Circle::circle_polygon(circle.radius, 32).translate(circle.offset.x, circle.offset.y),
         ),
-        &BooleanOp::Intersect,
+        BooleanOp::Intersection,
     );
 
     intersection.write_svg_mapped(

@@ -3,7 +3,7 @@
 
 //! Export models to files
 
-use microcad_lang_types::{ModelOutputType, ModelRef, Value};
+use microcad_lang_types::{ModelNodeRef, ModelOutputType, Value};
 use thiserror::Error;
 
 pub mod ply;
@@ -31,10 +31,10 @@ pub struct ExporterParameters {
     pub path: std::path::PathBuf,
 }
 
-pub trait Exporter<'tree> {
-    fn export(
+pub trait Exporter {
+    fn export<'tree>(
         &self,
-        model: &ModelRef<'tree>,
+        model: &ModelNodeRef<'tree>,
         parameters: &ExporterParameters,
     ) -> Result<Value, ExportError>;
 
