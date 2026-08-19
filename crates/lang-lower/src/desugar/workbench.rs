@@ -11,6 +11,44 @@ use microcad_builtin::__mu;
 use microcad_lang_base::{SpanToSrcRef, SrcRef};
 use microcad_lang_parse::ast;
 
+impl Desugar<ast::Statement> for Option<ir::InitStatement> {
+    fn desugar(node: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(match node {
+            ast::Statement::LocalAssignment(local_assignment) => {
+                Some(ir::InitStatement::desugar(local_assignment, context)?)
+            }
+            _ => {
+                context.diag(LowerError::StatementNotAllowed {
+                    src_ref: context.span_to_src_ref(&node.span()),
+                });
+
+                None
+            }
+        })
+    }
+}
+
+impl Desugar<ast::ExpressionStatement> for Option<ir::InitStatement> {
+    fn desugar(node: &ast::ExpressionStatement, context: &mut LowerContext) -> LowerResult<Self> {
+        context.diag(LowerError::StatementNotAllowed {
+            src_ref: context.span_to_src_ref(&node.span),
+        });
+        Ok(None)
+    }
+}
+
+impl Desugar<ast::LocalAssignment> for ir::InitStatement {
+    fn desugar(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
+        // TODO Check attributes in node
+
+        Ok(Self {
+            name: ir::Identifier::desugar(&node.id, context)?,
+            expression: ir::WorkbenchExpression::desugar(node.expr.as_ref(), context)?,
+            src_ref: context.span_to_src_ref(&node.span),
+        })
+    }
+}
+
 impl Desugar<ast::Init> for ir::Init {
     fn desugar(node: &ast::Init, context: &mut LowerContext) -> LowerResult<Self> {
         for_each_statement(&node.body.statements, context, |stmt, context| {
@@ -18,8 +56,9 @@ impl Desugar<ast::Init> for ir::Init {
             use ast::Statement::*;
             match stmt {
                 FileModule(_) | InlineModule(_) | Function(_) | Workbench(_) | Return(_)
-                | Use(_) | Property(_) | Const(_) | InnerDocComment(_) | InnerAttribute(_)
-                | Error(_) => context.diag(LowerError::StatementNotAllowed { src_ref }),
+                | Use(_) | Const(_) | InnerDocComment(_) | InnerAttribute(_) | Error(_) => {
+                    context.diag(LowerError::StatementNotAllowed { src_ref })
+                }
                 _ => {}
             }
             Ok(())

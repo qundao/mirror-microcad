@@ -97,11 +97,6 @@ pub enum LowerError {
     #[error("Invalid expression")]
     InvalidExpression { src_ref: SrcRef },
 
-    /// An invalid statement was encountered
-    #[error("Statement is not allowed in this context")]
-    #[diagnostic(code("UnexpectedStatement"))]
-    UnexpectedStatement { src_ref: SrcRef },
-
     /// A type range between non-integer literals
     #[error("range expressions must be between integers")]
     InvalidRangeType { src_ref: SrcRef },
@@ -166,7 +161,6 @@ impl SrcReferrer for LowerError {
             | LowerError::UseGlobAlias(src_ref)
             | LowerError::InvalidLiteral { src_ref, .. }
             | LowerError::InvalidExpression { src_ref }
-            | LowerError::UnexpectedStatement { src_ref }
             | LowerError::InvalidRangeType { src_ref }
             | LowerError::ImplicitWorkbenchReturn { src_ref } => *src_ref,
             LowerError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),

@@ -65,7 +65,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                         src_ref: "5:1 @ 0xb68464fb05014e73 (97..126)",
                                         visibility: Private,
                                         keyword_src_ref: "None",
-                                        id: Some(((
+                                        name: Some(((
                                             value: "a",
                                             src_ref: "5:1 @ 0xb68464fb05014e73 (97..98)",
                                         ))),

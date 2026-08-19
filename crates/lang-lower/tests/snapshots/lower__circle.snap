@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0x235cfcd5869dba8a",
-        output_hash: "0x23aa3c62db51f63c",
+        output_hash: "0xf2523670066eba2",
         tree: (
             root: (
                 index1: 1,
@@ -85,235 +85,212 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     commands: [],
                                     tags: [],
                                 ),
-                                kind: Sketch,
-                                parameters: (
-                                    parameters: [
-                                        (
-                                            attr: (
-                                                doc: (
-                                                    content: "",
-                                                    src_ref: "6:35 @ 0x12987dbb58cfe5ac (182..182)",
-                                                ),
-                                                kv_exprs: [],
-                                                commands: [],
-                                                tags: [],
-                                            ),
-                                            id: ((
-                                                value: "center",
-                                                src_ref: "6:35 @ 0x12987dbb58cfe5ac (182..188)",
-                                            )),
-                                            ty: (
-                                                ty: Any,
-                                                src_ref: "None",
-                                            ),
-                                            default_value: Some(Call((
-                                                path: Resolved(Builtin(("0x8546b16eecadcdcc"))),
-                                                args: (
-                                                    src_ref: "None",
-                                                    args: [
-                                                        Named(
-                                                            name: ((
-                                                                value: "x",
-                                                                src_ref: "6:45 @ 0x12987dbb58cfe5ac (192..193)",
-                                                            )),
-                                                            expr: Constant(((
-                                                                value: Quantity("0mm"),
-                                                                src_ref: "6:49 @ 0x12987dbb58cfe5ac (196..201)",
-                                                            ))),
-                                                            src_ref: "6:45 @ 0x12987dbb58cfe5ac (192..201)",
-                                                        ),
-                                                        Named(
-                                                            name: ((
-                                                                value: "y",
-                                                                src_ref: "6:56 @ 0x12987dbb58cfe5ac (203..204)",
-                                                            )),
-                                                            expr: Constant(((
-                                                                value: Quantity("0mm"),
-                                                                src_ref: "6:60 @ 0x12987dbb58cfe5ac (207..212)",
-                                                            ))),
-                                                            src_ref: "6:56 @ 0x12987dbb58cfe5ac (203..212)",
-                                                        ),
-                                                    ],
-                                                ),
-                                                src_ref: "6:44 @ 0x12987dbb58cfe5ac (191..213)",
-                                            ))),
-                                            src_ref: "6:34 @ 0x12987dbb58cfe5ac (181..213)",
-                                        ),
-                                        (
-                                            attr: (
-                                                doc: (
-                                                    content: "",
-                                                    src_ref: "6:19 @ 0x12987dbb58cfe5ac (166..166)",
-                                                ),
-                                                kv_exprs: [],
-                                                commands: [],
-                                                tags: [],
-                                            ),
-                                            id: ((
-                                                value: "radius",
-                                                src_ref: "6:19 @ 0x12987dbb58cfe5ac (166..172)",
-                                            )),
-                                            ty: (
-                                                ty: Quantity(Length),
-                                                src_ref: "6:27 @ 0x12987dbb58cfe5ac (174..180)",
-                                            ),
-                                            src_ref: "6:19 @ 0x12987dbb58cfe5ac (166..180)",
-                                        ),
-                                    ],
-                                    src_ref: "6:19 @ 0x12987dbb58cfe5ac (166..213)",
-                                ),
-                                inits: [
-                                    (
-                                        keyword_ref: "7:5 @ 0x12987dbb58cfe5ac (221..225)",
-                                        attr: (
-                                            doc: (
-                                                content: "",
-                                                src_ref: "7:5 @ 0x12987dbb58cfe5ac (221..221)",
-                                            ),
-                                            kv_exprs: [],
-                                            commands: [],
-                                            tags: [],
-                                        ),
-                                        parameters: (
-                                            parameters: [
-                                                (
-                                                    attr: (
-                                                        doc: (
-                                                            content: "",
-                                                            src_ref: "7:28 @ 0x12987dbb58cfe5ac (244..244)",
-                                                        ),
-                                                        kv_exprs: [],
-                                                        commands: [],
-                                                        tags: [],
-                                                    ),
-                                                    id: ((
-                                                        value: "center",
-                                                        src_ref: "7:28 @ 0x12987dbb58cfe5ac (244..250)",
-                                                    )),
-                                                    ty: (
-                                                        ty: Any,
-                                                        src_ref: "None",
-                                                    ),
-                                                    default_value: Some(Call((
-                                                        path: Resolved(Builtin(("0x8546b16eecadcdcc"))),
-                                                        args: (
-                                                            src_ref: "None",
-                                                            args: [
-                                                                Named(
-                                                                    name: ((
-                                                                        value: "x",
-                                                                        src_ref: "7:38 @ 0x12987dbb58cfe5ac (254..255)",
-                                                                    )),
-                                                                    expr: Constant(((
-                                                                        value: Quantity("0mm"),
-                                                                        src_ref: "7:42 @ 0x12987dbb58cfe5ac (258..263)",
-                                                                    ))),
-                                                                    src_ref: "7:38 @ 0x12987dbb58cfe5ac (254..263)",
-                                                                ),
-                                                                Named(
-                                                                    name: ((
-                                                                        value: "y",
-                                                                        src_ref: "7:49 @ 0x12987dbb58cfe5ac (265..266)",
-                                                                    )),
-                                                                    expr: Constant(((
-                                                                        value: Quantity("0mm"),
-                                                                        src_ref: "7:53 @ 0x12987dbb58cfe5ac (269..274)",
-                                                                    ))),
-                                                                    src_ref: "7:49 @ 0x12987dbb58cfe5ac (265..274)",
-                                                                ),
-                                                            ],
-                                                        ),
-                                                        src_ref: "7:37 @ 0x12987dbb58cfe5ac (253..275)",
-                                                    ))),
-                                                    src_ref: "7:27 @ 0x12987dbb58cfe5ac (243..275)",
-                                                ),
-                                                (
-                                                    attr: (
-                                                        doc: (
-                                                            content: "",
-                                                            src_ref: "7:10 @ 0x12987dbb58cfe5ac (226..226)",
-                                                        ),
-                                                        kv_exprs: [],
-                                                        commands: [],
-                                                        tags: [],
-                                                    ),
-                                                    id: ((
-                                                        value: "diameter",
-                                                        src_ref: "7:10 @ 0x12987dbb58cfe5ac (226..234)",
-                                                    )),
-                                                    ty: (
-                                                        ty: Quantity(Length),
-                                                        src_ref: "7:20 @ 0x12987dbb58cfe5ac (236..242)",
-                                                    ),
-                                                    src_ref: "7:10 @ 0x12987dbb58cfe5ac (226..242)",
-                                                ),
-                                            ],
-                                            src_ref: "7:10 @ 0x12987dbb58cfe5ac (226..275)",
-                                        ),
-                                        statements: [
+                                signature: (
+                                    kind: Sketch,
+                                    parameters: (
+                                        parameters: [
                                             (
                                                 attr: (
                                                     doc: (
                                                         content: "",
-                                                        src_ref: "None",
+                                                        src_ref: "6:35 @ 0x12987dbb58cfe5ac (182..182)",
                                                     ),
-                                                    kv_exprs: [],
-                                                    commands: [],
-                                                    tags: [],
                                                 ),
-                                                src_ref: "8:9 @ 0x12987dbb58cfe5ac (287..310)",
-                                                visibility: Private,
-                                                keyword_src_ref: "None",
-                                                id: Some(((
-                                                    value: "radius",
-                                                    src_ref: "8:9 @ 0x12987dbb58cfe5ac (287..293)",
-                                                ))),
+                                                id: ((
+                                                    value: "center",
+                                                    src_ref: "6:35 @ 0x12987dbb58cfe5ac (182..188)",
+                                                )),
                                                 ty: (
                                                     ty: Any,
                                                     src_ref: "None",
                                                 ),
-                                                expression: Call((
-                                                    path: Resolved(Builtin(("0x43186122764a895d"))),
+                                                default_value: Some(Call((
+                                                    path: Resolved(Builtin(("0x8546b16eecadcdcc"))),
                                                     args: (
                                                         src_ref: "None",
                                                         args: [
                                                             Named(
                                                                 name: ((
-                                                                    value: "lhs",
-                                                                    src_ref: "None",
+                                                                    value: "x",
+                                                                    src_ref: "6:45 @ 0x12987dbb58cfe5ac (192..193)",
                                                                 )),
-                                                                expr: Path(Unresolved((
-                                                                    is_absolute: false,
-                                                                    parts: [
-                                                                        ((
-                                                                            value: "diameter",
-                                                                            src_ref: "8:18 @ 0x12987dbb58cfe5ac (296..304)",
-                                                                        )),
-                                                                    ],
-                                                                    src_ref: "8:18 @ 0x12987dbb58cfe5ac (296..305)",
+                                                                expr: Constant(((
+                                                                    value: Quantity("0mm"),
+                                                                    src_ref: "6:49 @ 0x12987dbb58cfe5ac (196..201)",
                                                                 ))),
-                                                                src_ref: "8:18 @ 0x12987dbb58cfe5ac (296..305)",
+                                                                src_ref: "6:45 @ 0x12987dbb58cfe5ac (192..201)",
                                                             ),
                                                             Named(
                                                                 name: ((
-                                                                    value: "rhs",
-                                                                    src_ref: "None",
+                                                                    value: "y",
+                                                                    src_ref: "6:56 @ 0x12987dbb58cfe5ac (203..204)",
                                                                 )),
                                                                 expr: Constant(((
-                                                                    value: Quantity("2"),
-                                                                    src_ref: "8:29 @ 0x12987dbb58cfe5ac (307..310)",
+                                                                    value: Quantity("0mm"),
+                                                                    src_ref: "6:60 @ 0x12987dbb58cfe5ac (207..212)",
                                                                 ))),
-                                                                src_ref: "8:29 @ 0x12987dbb58cfe5ac (307..310)",
+                                                                src_ref: "6:56 @ 0x12987dbb58cfe5ac (203..212)",
                                                             ),
                                                         ],
                                                     ),
-                                                    src_ref: "8:18 @ 0x12987dbb58cfe5ac (296..310)",
+                                                    src_ref: "6:44 @ 0x12987dbb58cfe5ac (191..213)",
+                                                ))),
+                                                src_ref: "6:34 @ 0x12987dbb58cfe5ac (181..213)",
+                                            ),
+                                            (
+                                                attr: (
+                                                    doc: (
+                                                        content: "",
+                                                        src_ref: "6:19 @ 0x12987dbb58cfe5ac (166..166)",
+                                                    ),
+                                                ),
+                                                id: ((
+                                                    value: "radius",
+                                                    src_ref: "6:19 @ 0x12987dbb58cfe5ac (166..172)",
                                                 )),
+                                                ty: (
+                                                    ty: Quantity(Length),
+                                                    src_ref: "6:27 @ 0x12987dbb58cfe5ac (174..180)",
+                                                ),
+                                                default_value: None,
+                                                src_ref: "6:19 @ 0x12987dbb58cfe5ac (166..180)",
                                             ),
                                         ],
-                                        src_ref: "7:5 @ 0x12987dbb58cfe5ac (221..323)",
+                                        src_ref: "6:19 @ 0x12987dbb58cfe5ac (166..213)",
                                     ),
-                                ],
+                                    inits: [
+                                        (
+                                            keyword_ref: "7:5 @ 0x12987dbb58cfe5ac (221..225)",
+                                            attr: (
+                                                doc: (
+                                                    content: "",
+                                                    src_ref: "7:5 @ 0x12987dbb58cfe5ac (221..221)",
+                                                ),
+                                                kv_exprs: [],
+                                                commands: [],
+                                                tags: [],
+                                            ),
+                                            parameters: (
+                                                parameters: [
+                                                    (
+                                                        attr: (
+                                                            doc: (
+                                                                content: "",
+                                                                src_ref: "7:28 @ 0x12987dbb58cfe5ac (244..244)",
+                                                            ),
+                                                        ),
+                                                        id: ((
+                                                            value: "center",
+                                                            src_ref: "7:28 @ 0x12987dbb58cfe5ac (244..250)",
+                                                        )),
+                                                        ty: (
+                                                            ty: Any,
+                                                            src_ref: "None",
+                                                        ),
+                                                        default_value: Some(Call((
+                                                            path: Resolved(Builtin(("0x8546b16eecadcdcc"))),
+                                                            args: (
+                                                                src_ref: "None",
+                                                                args: [
+                                                                    Named(
+                                                                        name: ((
+                                                                            value: "x",
+                                                                            src_ref: "7:38 @ 0x12987dbb58cfe5ac (254..255)",
+                                                                        )),
+                                                                        expr: Constant(((
+                                                                            value: Quantity("0mm"),
+                                                                            src_ref: "7:42 @ 0x12987dbb58cfe5ac (258..263)",
+                                                                        ))),
+                                                                        src_ref: "7:38 @ 0x12987dbb58cfe5ac (254..263)",
+                                                                    ),
+                                                                    Named(
+                                                                        name: ((
+                                                                            value: "y",
+                                                                            src_ref: "7:49 @ 0x12987dbb58cfe5ac (265..266)",
+                                                                        )),
+                                                                        expr: Constant(((
+                                                                            value: Quantity("0mm"),
+                                                                            src_ref: "7:53 @ 0x12987dbb58cfe5ac (269..274)",
+                                                                        ))),
+                                                                        src_ref: "7:49 @ 0x12987dbb58cfe5ac (265..274)",
+                                                                    ),
+                                                                ],
+                                                            ),
+                                                            src_ref: "7:37 @ 0x12987dbb58cfe5ac (253..275)",
+                                                        ))),
+                                                        src_ref: "7:27 @ 0x12987dbb58cfe5ac (243..275)",
+                                                    ),
+                                                    (
+                                                        attr: (
+                                                            doc: (
+                                                                content: "",
+                                                                src_ref: "7:10 @ 0x12987dbb58cfe5ac (226..226)",
+                                                            ),
+                                                        ),
+                                                        id: ((
+                                                            value: "diameter",
+                                                            src_ref: "7:10 @ 0x12987dbb58cfe5ac (226..234)",
+                                                        )),
+                                                        ty: (
+                                                            ty: Quantity(Length),
+                                                            src_ref: "7:20 @ 0x12987dbb58cfe5ac (236..242)",
+                                                        ),
+                                                        default_value: None,
+                                                        src_ref: "7:10 @ 0x12987dbb58cfe5ac (226..242)",
+                                                    ),
+                                                ],
+                                                src_ref: "7:10 @ 0x12987dbb58cfe5ac (226..275)",
+                                            ),
+                                            statements: [
+                                                (
+                                                    src_ref: "8:9 @ 0x12987dbb58cfe5ac (287..310)",
+                                                    name: ((
+                                                        value: "radius",
+                                                        src_ref: "8:9 @ 0x12987dbb58cfe5ac (287..293)",
+                                                    )),
+                                                    expression: Call((
+                                                        path: Resolved(Builtin(("0x43186122764a895d"))),
+                                                        args: (
+                                                            src_ref: "None",
+                                                            args: [
+                                                                Named(
+                                                                    name: ((
+                                                                        value: "lhs",
+                                                                        src_ref: "None",
+                                                                    )),
+                                                                    expr: Path(Unresolved((
+                                                                        is_absolute: false,
+                                                                        parts: [
+                                                                            ((
+                                                                                value: "diameter",
+                                                                                src_ref: "8:18 @ 0x12987dbb58cfe5ac (296..304)",
+                                                                            )),
+                                                                        ],
+                                                                        src_ref: "8:18 @ 0x12987dbb58cfe5ac (296..305)",
+                                                                    ))),
+                                                                    src_ref: "8:18 @ 0x12987dbb58cfe5ac (296..305)",
+                                                                ),
+                                                                Named(
+                                                                    name: ((
+                                                                        value: "rhs",
+                                                                        src_ref: "None",
+                                                                    )),
+                                                                    expr: Constant(((
+                                                                        value: Quantity("2"),
+                                                                        src_ref: "8:29 @ 0x12987dbb58cfe5ac (307..310)",
+                                                                    ))),
+                                                                    src_ref: "8:29 @ 0x12987dbb58cfe5ac (307..310)",
+                                                                ),
+                                                            ],
+                                                        ),
+                                                        src_ref: "8:18 @ 0x12987dbb58cfe5ac (296..310)",
+                                                    )),
+                                                ),
+                                            ],
+                                            src_ref: "7:5 @ 0x12987dbb58cfe5ac (221..323)",
+                                        ),
+                                    ],
+                                ),
                                 statements: [
                                     (
                                         attr: (
@@ -328,6 +305,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                         src_ref: "11:5 @ 0x12987dbb58cfe5ac (323..429)",
                                         visibility: Public,
                                         keyword_src_ref: "None",
+                                        name: None,
                                         ty: (
                                             ty: Any,
                                             src_ref: "None",

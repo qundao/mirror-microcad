@@ -11,10 +11,8 @@ use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
 pub use microcad_lang_base::element::WorkbenchKind;
 use microcad_lang_types::Value;
 use serde::{Deserialize, Serialize};
-use serde_with::skip_serializing_none;
 
 /// Each WorkbenchStatement eventually evals into a [`Models`]
-#[skip_serializing_none]
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
 pub struct WorkbenchStatement {
     pub attr: ir::Attributes,
@@ -48,6 +46,17 @@ pub struct Group {
     pub statements: Box<[WorkbenchStatement]>,
 }
 
+/// Each WorkbenchStatement eventually evals into a [`Models`]
+#[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
+pub struct InitStatement {
+    /// Property name
+    pub name: ir::Identifier,
+    /// Property value
+    pub expression: WorkbenchExpression,
+    /// Source code reference
+    pub src_ref: SrcRef,
+}
+
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Init {
     /// SrcRef of the `init` keyword
@@ -57,7 +66,7 @@ pub struct Init {
     /// Parameter list for this init definition
     pub parameters: ir::ParameterList,
     /// Body if the init definition
-    pub statements: Box<[WorkbenchStatement]>,
+    pub statements: Box<[InitStatement]>,
     /// Source reference
     pub src_ref: SrcRef,
 }
