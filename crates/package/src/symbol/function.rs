@@ -10,7 +10,7 @@ pub type FunctionStatement = ir::FunctionStatement;
 
 pub type ReturnStatement = ir::ReturnStatement;
 
-pub use ir::Literal;
+pub use ir::ConstantValue;
 pub type Scope = ir::Scope;
 pub type If = ir::If<FunctionExpression>;
 

@@ -44,7 +44,7 @@ impl Constant {
     pub fn value(&self) -> &Value {
         match &self.expr {
             ConstantExpression::Invalid => todo!(),
-            ConstantExpression::Literal(literal) => literal.value(),
+            ConstantExpression::Constant(literal) => literal.value(),
             ConstantExpression::Path(_) => todo!(),
             ConstantExpression::Call(_) => todo!(),
         }
