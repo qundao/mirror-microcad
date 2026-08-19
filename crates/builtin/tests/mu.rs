@@ -1,5 +1,5 @@
 use microcad_builtin::{BuiltinEvalContext, mu::*};
-use microcad_builtin_proc_macros::test_builtin_fn;
+use microcad_macros::test_builtin_fn;
 
 use microcad_lang_types::{Value, arguments, array, tuple};
 
