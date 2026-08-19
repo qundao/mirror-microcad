@@ -3,17 +3,31 @@
 
 //! µcad resolved symbol tree (RST).
 
-pub mod function;
 pub mod workbench;
 
 use microcad_lang_lower::ir;
 
 use microcad_lang_lower::ir::Visibility;
 
-pub use function::{Function, FunctionExpression, FunctionStatement};
 pub use workbench::{Workbench, WorkbenchExpression, WorkbenchKind, WorkbenchStatement};
 
 pub use microcad_lang_base::{Identifier, SymbolId};
+
+pub mod function {
+    pub use ir::{Function, FunctionExpression, FunctionSignature, FunctionStatement};
+    use microcad_lang_lower::ir;
+
+    pub type Call = ir::Call<FunctionExpression>;
+    pub type Argument = ir::Argument<FunctionExpression>;
+    pub type ArgumentList = ir::ArgumentList<FunctionExpression>;
+    pub type If = ir::If<FunctionExpression>;
+    pub type Scope = ir::Scope;
+    pub type ReturnStatement = ir::ReturnStatement;
+}
+
+pub use ir::{Attributes, ConstantValue, Parameter, ParameterList};
+
+pub use function::{Function, FunctionExpression, FunctionStatement};
 
 use std::hash::Hash;
 
