@@ -69,7 +69,7 @@ pub fn derive_artifact(input: TokenStream) -> TokenStream {
     derive_artifact::derive_artifact_impl(input)
 }
 
-/// Derive the trait `Artifact` for this struct to mark it as compiler artifact.
+/// Derive the trait `Identifiable` for this struct to return the `id` field.
 #[proc_macro_derive(Identifiable)]
 pub fn derive_identifiable(input: TokenStream) -> TokenStream {
     derive_identifiable::derive_identifiable_impl(input)
