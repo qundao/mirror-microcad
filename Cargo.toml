@@ -35,6 +35,33 @@ members = [
     "tests/update-md-banner",
 ]
 
+default-members = [
+    "crates/builtin",
+    "crates/cli",
+    "crates/core",
+    "crates/docgen",
+    "crates/driver",
+    "crates/export",
+    "crates/hash",
+    "crates/import",
+    "crates/lang-base",
+    "crates/lang-eval",
+    "crates/lang-format",
+    "crates/lang-lower",
+    "crates/lang-markdown",
+    "crates/lang-parse",
+    "crates/lang-resolve",
+    "crates/lang-types",
+    "crates/macros",
+    "crates/package",
+    "crates/render",
+    "crates/std",
+
+#    "tests",
+#    "tests/update-copyright",
+#    "tests/update-md-banner",
+]
+
 resolver = "2"
 
 [workspace.package]
