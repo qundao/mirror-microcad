@@ -3,7 +3,7 @@
 
 use derive_more::{Deref, DerefMut, Display, From};
 use microcad_lang_base::{Identifier, SrcRef};
-use microcad_lang_proc_macros::SrcReferrer;
+use microcad_macros::SrcReferrer;
 use serde::{Deserialize, Serialize};
 
 use crate::{Tuple, Ty, Type, Value, ValueError, ValueResult};

@@ -6,7 +6,7 @@
 use crate::ir;
 
 use microcad_lang_base::{Identifier, SrcRef};
-use microcad_lang_proc_macros::{Identifiable, SrcReferrer};
+use microcad_macros::{Identifiable, SrcReferrer};
 
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;

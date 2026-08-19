@@ -5,7 +5,7 @@
 
 use derive_more::Deref;
 use microcad_lang_base::{Identifier, SrcRef};
-use microcad_lang_proc_macros::SrcReferrer;
+use microcad_macros::SrcReferrer;
 use microcad_lang_types::{Ty, Type, Value};
 use serde::{Deserialize, Serialize};
 

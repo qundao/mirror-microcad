@@ -12,7 +12,7 @@ use microcad_lang_base::{Name, Span};
 
 pub use expression::*;
 pub use literal::*;
-use microcad_lang_proc_macros::Visit;
+use microcad_macros::Visit;
 use serde::Serialize;
 pub use statement::*;
 pub use ty::*;

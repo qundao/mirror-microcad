@@ -24,4 +24,4 @@ typetag = "0.2"
 
 microcad-lang-base = { workspace = true }
 microcad-lang-types = { workspace = true }
-microcad-builtin-proc-macros = { workspace = true }
+microcad-macros = { workspace = true }

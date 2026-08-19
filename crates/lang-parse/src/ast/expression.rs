@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang_base::Spanned;
-use microcad_lang_proc_macros::Visit;
+use microcad_macros::Visit;
 use serde::Serialize;
 
 use crate::ast;

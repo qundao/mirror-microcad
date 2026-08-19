@@ -4,7 +4,7 @@
 use crate::ast;
 
 use microcad_lang_base::{Name, Span};
-use microcad_lang_proc_macros::Visit;
+use microcad_macros::Visit;
 use serde::Serialize;
 
 /// The possible types

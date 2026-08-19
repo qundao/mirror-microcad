@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 [package]
-name = "microcad-builtin-proc-macros"
-description = "Provides procedural macros for creating µcad built-in symbols."
+name = "microcad-macros"
+description = "Procedural macros for µcad language and built-ins."
 authors.workspace = true
 edition.workspace = true
 homepage.workspace = true
@@ -14,7 +14,6 @@ version.workspace = true
 
 [lib]
 proc-macro = true
-
 
 [dependencies]
 syn = { version = "2.0", features = ["full"] }

@@ -1,104 +1,13 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-extern crate proc_macro;
+//! Implementation for the `#[derive(Visit)]` derive macro.
+//!
+//! This is used implementing AST visitors.
 
-pub(crate) mod prelude {
-    pub use syn::*;
-}
+use crate::prelude::*;
 
-use prelude::*;
-
-/// Derives the `SrcReferrer` trait for structs.
-///
-/// This macro supports two types of data structures:
-/// 1. **Named Structs**: Automatically implements `src_ref()` by cloning a field
-///    named `src_ref`.
-/// 2. **Unnamed (Tuple) Structs**: Automatically implements `src_ref()` by
-///    delegating to the first element (`self.0`). The first element must
-///    implement the `SrcReferrer` trait.
-///
-/// # Panics
-/// Will fail to compile if applied to Enums, Unions, or Unit structs.
-#[proc_macro_derive(SrcReferrer)]
-pub fn derive_src_referrer(input: TokenStream) -> TokenStream {
-    let input = parse_macro_input!(input as DeriveInput);
-    let name = &input.ident;
-
-    // Only support structs with named and unnamed fields.
-    match &input.data {
-        Data::Struct(ds) => match &ds.fields {
-            // Generate SrcReferrer for a struct with `src_ref` field:
-            // `struct Foo { bar: Integer, src_ref: SrcRef };`.
-            Fields::Named(_) => {
-                quote! {
-                    impl microcad_lang_base::SrcReferrer for #name {
-                        fn src_ref(&self) -> microcad_lang_base::SrcRef  {
-                            self.src_ref
-                        }
-                    }
-                }
-            }
-            // Generate SrcReferrer for a tuple `struct Bar(Refer<Identifier>);`.
-            Fields::Unnamed(_) => {
-                quote! {
-                    impl microcad_lang_base::SrcReferrer for #name {
-                        fn src_ref(&self) -> microcad_lang_base::SrcRef  {
-                            self.0.src_ref()
-                        }
-                    }
-                }
-            }
-            // Unit structs are not supported.
-            Fields::Unit => {
-                Error::new_spanned(name, "Unit structs are not supported").to_compile_error()
-            }
-        },
-        _ => Error::new_spanned(name, "Unions and enums are not supported").to_compile_error(),
-    }
-    .into()
-}
-
-/// Derives the `Identifiable` trait for named structs.
-///
-/// This macro implements `id_ref()` by returning a reference to an `id` field.
-/// The `id` field must be of type `crate::Identifier`.
-///
-/// # Constraints
-/// - Only works on **Named Structs**.
-/// - Does **not** support Tuple structs, Unit structs, Enums, or Unions.
-#[proc_macro_derive(Identifiable)]
-pub fn derive_id(input: TokenStream) -> TokenStream {
-    let input = parse_macro_input!(input as DeriveInput);
-    let name = input.ident.clone();
-
-    match &input.data {
-        Data::Struct(ds) => match &ds.fields {
-            // Generate `Identifiable` for a struct with `id` field `struct Foo { bar: Integer, id: Identifier };`.
-            Fields::Named(_) => {
-                quote! {
-                    impl microcad_lang_base::Identifiable for #name {
-                        fn id_ref(&self) -> &microcad_lang_base::Identifier  {
-                            &self.id
-                        }
-                    }
-                }
-            }
-            Fields::Unnamed(_) => {
-                Error::new_spanned(name, "Unnamed structs are not supported").to_compile_error()
-            }
-            // Unit structs not supported.
-            Fields::Unit => {
-                Error::new_spanned(name, "Unit structs are not supported").to_compile_error()
-            }
-        },
-        _ => Error::new_spanned(name, "Unions and enums are not supported").to_compile_error(),
-    }
-    .into()
-}
-
-#[proc_macro_derive(Visit, attributes(visit))]
-pub fn derive_visit(input: TokenStream) -> TokenStream {
+pub fn derive_visit_impl(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
     let name = input.ident;
 
@@ -259,52 +168,4 @@ pub fn derive_visit(input: TokenStream) -> TokenStream {
         }
         _ => panic!("Only structs supported"),
     }
-}
-
-use proc_macro::TokenStream;
-use quote::quote;
-use syn::{Data, DeriveInput, Fields, parse_macro_input};
-
-#[proc_macro_derive(Scaffold)]
-pub fn derive_scaffold(input: TokenStream) -> TokenStream {
-    let input = parse_macro_input!(input as DeriveInput);
-    let name = &input.ident;
-
-    // Ensure we are deriving for a struct with named fields
-    let fields = match input.data {
-        Data::Struct(data) => match data.fields {
-            Fields::Named(fields) => fields.named,
-            _ => panic!("#[derive(Scaffold)] only supports structs with named fields"),
-        },
-        _ => panic!("#[derive(Scaffold)] only supports structs"),
-    };
-
-    let field_idents: Vec<_> = fields.iter().map(|f| f.ident.as_ref().unwrap()).collect();
-
-    quote! {
-        impl crate::Scaffold for #name {
-            fn scaffold(self, context: &mut crate::LowerContext) -> ir::NodeId {
-                #(
-                    self.#field_idents.scaffold(context);
-                )*
-                *context.top_node()
-            }
-        }
-    }
-    .into()
-}
-
-#[proc_macro_derive(Artifact)]
-pub fn derive_artifact(input: TokenStream) -> TokenStream {
-    let input = parse_macro_input!(input as DeriveInput);
-    let name = input.ident;
-
-    quote! {
-        impl microcad_lang_base::Artifact for #name {
-            fn kind() -> microcad_lang_base::ArtifactKind {
-                microcad_lang_base::ArtifactKind::#name
-            }
-        }
-    }
-    .into()
 }

@@ -20,7 +20,7 @@ pub use ir::CastInto;
 
 /// Intermediate representation
 use microcad_lang_parse::Ast;
-use microcad_lang_proc_macros::Artifact;
+use microcad_macros::Artifact;
 use serde::{Deserialize, Serialize};
 
 use crate::{ir::Arena, scaffold::Scaffold};

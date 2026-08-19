@@ -5,30 +5,22 @@
 
 use crate::ir;
 
-use microcad_lang_base::{Refer, SrcRef};
+use microcad_lang_base::SrcRef;
 
-use microcad_lang_proc_macros::SrcReferrer;
+use microcad_macros::SrcReferrer;
 use serde::{Deserialize, Serialize};
 
 /// Block of documentation comments, stripped of `/// `.
 #[derive(Clone, Debug, Default, Hash, SrcReferrer, PartialEq, Serialize, Deserialize)]
-pub struct DocBlock(pub Refer<Box<[String]>>);
+pub struct DocBlock {
+    pub content: String,
+    pub src_ref: SrcRef,
+}
 
 impl DocBlock {
-    /// Create new doc block for builtin.
-    pub fn new_builtin(comment: &str) -> Self {
-        Self(Refer::none(
-            comment
-                .lines()
-                .map(|s| s.to_string())
-                .collect::<Vec<String>>()
-                .into_boxed_slice(),
-        ))
-    }
-
     /// Check if this doc block is empty.
     pub fn is_empty(&self) -> bool {
-        self.0.is_empty()
+        self.content.is_empty()
     }
 
     /// Merge two doc blocks, e.g. for merging inner and outer docs
@@ -37,26 +29,19 @@ impl DocBlock {
             (true, true) => Self::default(),
             (true, false) => b.clone(),
             (false, true) => a.clone(),
-            _ => {
-                use microcad_lang_base::SrcReferrer;
-                let merged =
-                    a.0.iter()
-                        .chain([String::default()].iter()) // Add an empty line
-                        .chain(b.0.iter())
-                        .cloned()
-                        .collect::<Vec<_>>();
-                Self(Refer::new(
-                    merged.into_boxed_slice(),
-                    SrcRef::merge(&a.src_ref(), &b.src_ref()),
-                ))
-            }
+            _ => Self {
+                content: format!("{}\n{}", a.content, b.content),
+                src_ref: SrcRef::merge(&a.src_ref, &b.src_ref),
+            },
         }
     }
 }
 
 impl std::fmt::Display for DocBlock {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", &self.0.value.join("\n"))
+        self.content
+            .lines()
+            .try_for_each(|line| writeln!(f, "/// {line}"))
     }
 }
 

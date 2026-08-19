@@ -14,8 +14,7 @@ use derive_more::{Debug, From};
 use microcad_lang_types::{Arguments, FunctionType, Model, ModelTree, Value};
 
 pub use microcad_lang_base::{BuiltinId, BuiltinInfo};
-
-pub use microcad_builtin_proc_macros::__mu;
+pub use microcad_macros::__mu;
 
 #[derive(Debug, Default)]
 pub struct BuiltinEvalContext<'a> {

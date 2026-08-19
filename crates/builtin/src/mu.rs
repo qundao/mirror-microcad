@@ -3,10 +3,10 @@
 
 //! µcad built-in library definitions.
 
-use microcad_builtin_proc_macros::{builtin_constant, builtin_fn, builtin_mod};
 use microcad_lang_types::{
     Arguments, Array, BinaryOperator, Identifier, Integer, Ty, TypeError, Value,
 };
+use microcad_macros::{builtin_constant, builtin_fn, builtin_mod};
 
 use crate::{Builtin, BuiltinError, BuiltinEvalContext, builtin};
 

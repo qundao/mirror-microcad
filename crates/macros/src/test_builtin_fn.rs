@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Implementation for the `#[test_builtin_fn(...)` attribute macro.
+//! Implementation for the `#[test_builtin_fn(...)]` attribute macro.
 
 use crate::prelude::*;
 

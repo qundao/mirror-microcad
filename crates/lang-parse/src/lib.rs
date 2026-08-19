@@ -27,7 +27,7 @@ mod parse;
 mod lex;
 
 use microcad_lang_base::{CompilationResult, Diagnostics, HashId};
-use microcad_lang_proc_macros::Artifact;
+use microcad_macros::Artifact;
 
 pub use lex::lex;
 

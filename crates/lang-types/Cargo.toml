@@ -32,7 +32,7 @@ thiserror = "2.0.17"
 typetag = "0.2"
 
 microcad-lang-base = { workspace = true }
-microcad-lang-proc-macros = { workspace = true }
+microcad-macros = { workspace = true }
 
 [dev-dependencies]
 pretty_assertions = "1.4"

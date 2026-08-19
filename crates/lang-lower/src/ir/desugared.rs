@@ -3,7 +3,7 @@
 
 //! Function definition syntax element
 
-use microcad_lang_proc_macros::Scaffold;
+use microcad_macros::Scaffold;
 use serde::{Deserialize, Serialize};
 
 use crate::ir;

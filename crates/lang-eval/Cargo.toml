@@ -20,7 +20,7 @@ rustc-hash = "2.1.1"
 thiserror = "2.0.17"
 
 microcad-lang-base = { workspace = true }
-microcad-lang-proc-macros = { workspace = true }
+microcad-macros = { workspace = true }
 microcad-lang-types = { workspace = true }
 microcad-package = { workspace = true }
 microcad-builtin = { workspace = true }

@@ -19,7 +19,7 @@ use crate::ast::{
 use microcad_lang_base::Spanned;
 pub use microcad_lang_base::element::WorkbenchKind;
 
-use microcad_lang_proc_macros::Visit;
+use microcad_macros::Visit;
 use serde::Serialize;
 
 /// An optional visibility modifier

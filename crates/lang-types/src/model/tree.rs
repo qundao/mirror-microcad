@@ -3,7 +3,7 @@
 
 //! Model tree.
 
-use microcad_lang_proc_macros::Artifact;
+use microcad_macros::Artifact;
 use serde::{Deserialize, Serialize};
 
 use crate::{

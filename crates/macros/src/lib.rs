@@ -7,6 +7,11 @@ mod __mu;
 mod builtin_constant;
 mod builtin_fn;
 mod builtin_mod;
+mod derive_artifact;
+mod derive_identifiable;
+mod derive_scaffold;
+mod derive_src_referrer;
+mod derive_visit;
 mod test_builtin_fn;
 
 pub(crate) mod prelude {
@@ -16,12 +21,18 @@ pub(crate) mod prelude {
     pub use syn::parse::{Parse, ParseStream};
     pub use syn::spanned::Spanned;
     pub use syn::{
-        Expr, Ident, ItemFn, ItemMod, ItemStatic, Path, Result, Token, parse_macro_input,
-        parse_quote,
+        Data, DeriveInput, Expr, Fields, Ident, ItemFn, ItemMod, ItemStatic, Path, Result, Token,
+        parse_macro_input, parse_quote,
     };
 }
 
 use prelude::*;
+
+/// Macro to get the hash from built-in function.
+#[proc_macro]
+pub fn __mu(input: TokenStream) -> TokenStream {
+    __mu::__mu_impl(input)
+}
 
 #[proc_macro_attribute]
 pub fn builtin_constant(attr: TokenStream, item: TokenStream) -> TokenStream {
@@ -52,8 +63,29 @@ pub fn test_builtin_fn(attr: TokenStream, item: TokenStream) -> TokenStream {
     test_builtin_fn::test_builtin_fn_impl(attr, item)
 }
 
-/// Macro to get the hash from built-in function.
-#[proc_macro]
-pub fn __mu(input: TokenStream) -> TokenStream {
-    __mu::__mu_impl(input)
+/// Derive the trait `Artifact` for this struct to mark it as compiler artifact.
+#[proc_macro_derive(Artifact)]
+pub fn derive_artifact(input: TokenStream) -> TokenStream {
+    derive_artifact::derive_artifact_impl(input)
+}
+
+/// Derive the trait `Artifact` for this struct to mark it as compiler artifact.
+#[proc_macro_derive(Identifiable)]
+pub fn derive_identifiable(input: TokenStream) -> TokenStream {
+    derive_identifiable::derive_identifiable_impl(input)
+}
+
+#[proc_macro_derive(Scaffold)]
+pub fn derive_scaffold(input: TokenStream) -> TokenStream {
+    derive_scaffold::derive_scaffold_impl(input)
+}
+
+#[proc_macro_derive(SrcReferrer)]
+pub fn derive_src_referrer(input: TokenStream) -> TokenStream {
+    derive_src_referrer::derive_src_referrer_impl(input)
+}
+
+#[proc_macro_derive(Visit, attributes(visit))]
+pub fn derive_visit(input: TokenStream) -> TokenStream {
+    derive_visit::derive_visit_impl(input)
 }

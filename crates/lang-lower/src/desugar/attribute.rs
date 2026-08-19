@@ -4,7 +4,7 @@
 use crate::desugar::{extract_statements, for_each_statement};
 use crate::{Desugar, LowerContext, LowerError, LowerResult, ir};
 
-use microcad_lang_base::{Refer, SpanToSrcRef};
+use microcad_lang_base::SpanToSrcRef;
 use microcad_lang_parse::ast;
 
 /// Helper function to get outer attributes
@@ -51,23 +51,24 @@ impl Desugar<ast::Attributes> for ir::Attributes {
 
 impl Desugar<ast::DocBlock> for ir::DocBlock {
     fn desugar(node: &ast::DocBlock, context: &mut LowerContext) -> LowerResult<Self> {
-        Ok(Self(Refer::new(
-            node.lines
+        Ok(Self {
+            content: node
+                .lines
                 .iter()
                 .filter_map(|s| s.strip_prefix("/// ").or(s.strip_prefix("///")))
                 .map(|s| s.trim_end().to_string())
                 .collect::<Vec<_>>()
-                .into_boxed_slice(),
-            context.span_to_src_ref(&node.span),
-        )))
+                .join("\n"),
+            src_ref: context.span_to_src_ref(&node.span),
+        })
     }
 }
 
 impl Desugar<ast::StatementList> for ir::DocBlock {
     fn desugar(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         // This does not check if statements are allowed in this context
-        Ok(Self(Refer::new(
-            extract_statements(node, |stmt| {
+        Ok(Self {
+            content: extract_statements(node, |stmt| {
                 Ok(match stmt {
                     ast::Statement::InnerDocComment(inner_doc_comment) => {
                         let s = inner_doc_comment.line.clone();
@@ -76,9 +77,10 @@ impl Desugar<ast::StatementList> for ir::DocBlock {
                     }
                     _ => None,
                 })
-            })?,
-            context.span_to_src_ref(&node.span),
-        )))
+            })?
+            .join("\n"),
+            src_ref: context.span_to_src_ref(&node.span),
+        })
     }
 }
 

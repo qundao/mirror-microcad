@@ -4,7 +4,7 @@
 use crate::ast::{ItemExtras, Span, Unit};
 
 use microcad_lang_base::CompactString;
-use microcad_lang_proc_macros::Visit;
+use microcad_macros::Visit;
 use serde::{Serialize, Serializer};
 use std::num::{ParseFloatError, ParseIntError};
 use thiserror::Error;
