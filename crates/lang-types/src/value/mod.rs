@@ -36,7 +36,7 @@ use serde::{Deserialize, Serialize};
 
 pub type ValueResult<Type = Value> = std::result::Result<Type, ValueError>;
 
-/// A variant value with attached source code reference.
+/// Any value in a µcad model.
 #[derive(Clone, Debug, Display, Hash, Default, PartialEq, From, Serialize, Deserialize)]
 pub enum Value {
     /// A None Value.
