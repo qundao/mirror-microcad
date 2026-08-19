@@ -2505,15 +2505,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "convert_case"
-version = "0.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "affbf0190ed2caf063e3def54ff444b449371d55c58e513a95ab98eca50adb49"
-dependencies = [
- "unicode-segmentation",
-]
-
-[[package]]
 name = "copypasta"
 version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2981,7 +2972,7 @@ version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "799a97264921d8623a957f6c3b9011f3b5492f557bbb7a5a19b7fa6d06ba8dcb"
 dependencies = [
- "convert_case 0.10.0",
+ "convert_case",
  "proc-macro2",
  "quote",
  "rustc_version",
@@ -5624,24 +5615,14 @@ dependencies = [
  "dirs",
  "geo",
  "log",
- "microcad-builtin-proc-macros",
  "microcad-lang-base",
  "microcad-lang-types",
+ "microcad-macros",
  "miette",
  "phf 0.14.0",
  "serde",
  "thiserror 2.0.18",
  "typetag",
-]
-
-[[package]]
-name = "microcad-builtin-proc-macros"
-version = "0.6.0"
-dependencies = [
- "microcad-hash",
- "proc-macro2",
- "quote",
- "syn 2.0.118",
 ]
 
 [[package]]
@@ -5685,7 +5666,10 @@ version = "0.6.0"
 dependencies = [
  "derive_more",
  "log",
+ "microcad-builtin",
  "microcad-core",
+ "microcad-docgen",
+ "microcad-export",
  "microcad-lang-base",
  "microcad-lang-format",
  "microcad-lang-lower",
@@ -5693,6 +5677,7 @@ dependencies = [
  "microcad-lang-parse",
  "microcad-lang-resolve",
  "microcad-lang-types",
+ "microcad-render",
  "microcad-std",
  "miette",
  "notify",
@@ -5793,8 +5778,8 @@ dependencies = [
  "log",
  "microcad-builtin",
  "microcad-lang-base",
- "microcad-lang-proc-macros",
  "microcad-lang-types",
+ "microcad-macros",
  "microcad-package",
  "miette",
  "pretty_assertions",
@@ -5823,8 +5808,8 @@ dependencies = [
  "microcad-builtin",
  "microcad-lang-base",
  "microcad-lang-parse",
- "microcad-lang-proc-macros",
  "microcad-lang-types",
+ "microcad-macros",
  "miette",
  "pretty_assertions",
  "ron",
@@ -5858,21 +5843,11 @@ dependencies = [
  "insta",
  "logos",
  "microcad-lang-base",
- "microcad-lang-proc-macros",
+ "microcad-macros",
  "miette",
  "serde",
  "test-case",
  "thiserror 2.0.18",
-]
-
-[[package]]
-name = "microcad-lang-proc-macros"
-version = "0.6.0"
-dependencies = [
- "convert_case 0.11.0",
- "proc-macro2",
- "quote",
- "syn 2.0.118",
 ]
 
 [[package]]
@@ -5886,8 +5861,8 @@ dependencies = [
  "microcad-lang-base",
  "microcad-lang-lower",
  "microcad-lang-parse",
- "microcad-lang-proc-macros",
  "microcad-lang-types",
+ "microcad-macros",
  "microcad-package",
  "miette",
  "postcard",
@@ -5908,7 +5883,7 @@ dependencies = [
  "insta",
  "log",
  "microcad-lang-base",
- "microcad-lang-proc-macros",
+ "microcad-macros",
  "miette",
  "pretty_assertions",
  "round",
@@ -5942,6 +5917,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "microcad-macros"
+version = "0.6.0"
+dependencies = [
+ "microcad-hash",
+ "proc-macro2",
+ "quote",
+ "syn 3.0.3",
+]
+
+[[package]]
 name = "microcad-package"
 version = "0.6.0"
 dependencies = [
@@ -5951,8 +5936,8 @@ dependencies = [
  "log",
  "microcad-lang-base",
  "microcad-lang-lower",
- "microcad-lang-proc-macros",
  "microcad-lang-types",
+ "microcad-macros",
  "miette",
  "postcard",
  "semver",
@@ -5970,9 +5955,9 @@ dependencies = [
  "derive_more",
  "insta",
  "log",
+ "microcad-builtin",
  "microcad-core",
  "microcad-hash",
- "microcad-lang-base",
  "microcad-lang-types",
  "miette",
  "pretty_assertions",
