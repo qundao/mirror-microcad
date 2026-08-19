@@ -27,14 +27,7 @@ impl ToMd for symbol::ParameterList {
             parse(format!(
                 "# Parameters\n{}",
                 self.iter()
-                    .map(|param| format!(
-                        "## {}\n{}",
-                        param.id,
-                        match &param.doc {
-                            Some(doc) => doc,
-                            None => "",
-                        }
-                    ))
+                    .map(|param| format!("## {}\n{}", param.id, param.attr.doc.content))
                     .collect::<Vec<String>>()
                     .join("\n")
             ))
@@ -111,7 +104,7 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
                 matches!(
                     symbol.def(),
                     SymbolDef::Workbench(workbench_definition) if
-                        matches!(&workbench_definition.kind, WorkbenchKind::Sketch)
+                        matches!(&workbench_definition.signature.kind, WorkbenchKind::Sketch)
                 )
             });
 
@@ -120,7 +113,7 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
                 matches!(
                     symbol.def(),
                     SymbolDef::Workbench(workbench_definition) if
-                        matches!(&workbench_definition.kind, WorkbenchKind::Part)
+                        matches!(&workbench_definition.signature.kind, WorkbenchKind::Part)
                 )
             });
 
@@ -129,7 +122,7 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
                 matches!(
                     symbol.def(),
                     SymbolDef::Workbench(workbench_definition) if
-                        matches!(&workbench_definition.kind, WorkbenchKind::Op)
+                        matches!(&workbench_definition.signature.kind, WorkbenchKind::Op)
                 )
             });
 
@@ -166,8 +159,8 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
                 let constants: Vec<_> = self
                     .children()
                     .filter_map(|symbol| match (symbol.name(), symbol.def()) {
-                        (Some(id), SymbolDef::Constant(constant)) => {
-                            Some((id.clone(), constant.value().clone()))
+                        (Some(id), SymbolDef::Constant(constant)) if constant.value().is_some() => {
+                            Some((id.clone(), constant.value().unwrap().clone()))
                         }
                         _ => None,
                     })
