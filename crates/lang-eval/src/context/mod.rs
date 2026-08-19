@@ -5,9 +5,9 @@ use derive_more::From;
 
 use microcad_builtin::BuiltinRegistry;
 use microcad_lang_base::{HashMap, Name, ToCompactString};
-use microcad_lang_types::{Arguments, Value};
+use microcad_lang_types::{Arguments, ModelTree, Value, model::Property};
 
-use crate::EvalError;
+use crate::{EvalError, EvalResult};
 
 /// A map of locals.
 ///
@@ -128,6 +128,8 @@ pub struct EvalContext {
     diag: Vec<EvalError>,
 
     pub builtins: BuiltinRegistry,
+
+    pub arena: microcad_lang_types::model::Arena,
 }
 
 impl EvalContext {
@@ -174,6 +176,14 @@ impl EvalContext {
 
     pub fn top_mut(&mut self) -> &mut StackFrame {
         self.stack.top_mut()
+    }
+
+    pub(crate) fn model_add_property(&mut self, _property: Property) -> EvalResult<()> {
+        todo!()
+    }
+
+    pub(crate) fn model_append_child(&mut self, _model: ModelTree) {
+        todo!()
     }
 }
 

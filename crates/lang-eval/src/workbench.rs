@@ -3,6 +3,71 @@
 
 //! Workbench definition syntax element evaluation
 
+use crate::{CallTrait, Eval, EvalContext, EvalResult};
+
+use microcad_lang_base::element::Visibility;
+use microcad_package::symbol;
+
+use microcad_lang_types::{
+    ArgumentValueList, ModelTree, Value,
+    model::{Property, PropertyType},
+};
+
+impl Eval<Value> for symbol::workbench::Group {
+    fn eval(&self, _context: &mut EvalContext) -> EvalResult<Value> {
+        todo!()
+    }
+}
+
+impl Eval<Value> for symbol::WorkbenchExpression {
+    fn eval(&self, _context: &mut EvalContext) -> EvalResult<Value> {
+        match &self {
+            symbol::WorkbenchExpression::Invalid => todo!(),
+            symbol::WorkbenchExpression::Constant(constant_value) => {
+                Ok(constant_value.value().clone())
+            }
+            symbol::WorkbenchExpression::Path(_path) => todo!(),
+            symbol::WorkbenchExpression::Group(_group) => todo!(),
+            symbol::WorkbenchExpression::If(_) => todo!(),
+            symbol::WorkbenchExpression::Call(_) => todo!(),
+            symbol::WorkbenchExpression::Marker(_) => todo!(),
+            _ => todo!(),
+        }
+    }
+}
+
+impl Eval<ModelTree> for symbol::WorkbenchExpression {
+    fn eval(&self, _context: &mut EvalContext) -> EvalResult<ModelTree> {
+        todo!()
+    }
+}
+
+impl Eval<()> for symbol::WorkbenchStatement {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<()> {
+        match &self.name {
+            // If we have an id, this becomes a property in the current model
+            Some(name) => {
+                let property = Property {
+                    name: name.clone(),
+                    value: self.expression.eval(context)?,
+                    src_ref: self.src_ref,
+                    ty: match &self.visibility {
+                        Visibility::Public => PropertyType::Output,
+                        Visibility::Private => PropertyType::Hidden,
+                    },
+                };
+                context.model_add_property(property)?;
+            }
+            // If we have no id, we have a child model.
+            None => {
+                let model: ModelTree = self.expression.eval(context)?;
+                context.model_append_child(model);
+            }
+        }
+        Ok(())
+    }
+}
+
 /*
 impl ir::WorkbenchDefinition {
     /// Try to evaluate a single call into a [`Model`].
@@ -186,11 +251,6 @@ impl ir::WorkbenchDefinition {
     }
 }
 */
-
-use microcad_lang_types::{ArgumentValueList, ModelTree};
-use microcad_package::symbol;
-
-use crate::{CallTrait, EvalContext, EvalResult};
 
 impl CallTrait<ModelTree> for symbol::Workbench {
     fn call(&self, _args: &ArgumentValueList, _context: &mut EvalContext) -> EvalResult<ModelTree> {
