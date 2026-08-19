@@ -20,7 +20,7 @@ pub use r#type::*;
 pub use type_list::*;
 pub use unit::*;
 
-pub use function_type::FunctionType;
+pub use function_type::{FunctionType, FunctionTypeParameters};
 
 use crate::{BinaryOperator, UnaryOperator};
 

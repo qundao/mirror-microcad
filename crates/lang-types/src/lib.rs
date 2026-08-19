@@ -18,7 +18,8 @@ pub use arguments::{ArgumentValue, ArgumentValueList, Arguments};
 use derive_more::{Deref, DerefMut, Display};
 use serde::{Deserialize, Serialize};
 pub use ty::{
-    FunctionType, MatrixType, QuantityType, TupleType, Ty, Type, TypeError, TypeResult, Unit,
+    FunctionType, FunctionTypeParameters, MatrixType, QuantityType, TupleType, Ty, Type, TypeError,
+    TypeResult, Unit,
 };
 pub use value::{Array, Quantity, Tuple, Value, ValueAccess, ValueError, ValueList, ValueResult};
 
