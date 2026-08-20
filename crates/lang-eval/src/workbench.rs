@@ -5,7 +5,7 @@
 
 use crate::{CallTrait, Eval, EvalContext, EvalError, EvalResult, context::WorkbenchGroupFrame};
 
-use microcad_builtin::{Builtin, BuiltinError};
+use microcad_builtin::Builtin;
 use microcad_lang_base::{SrcReferrer, element::Visibility};
 use microcad_package::{
     SymbolId,
@@ -14,7 +14,7 @@ use microcad_package::{
 
 use microcad_lang_types::{
     ArgumentValueList, ModelTree, Value,
-    model::{Element, Properties, Property, PropertyType},
+    model::{Properties, Property, PropertyType},
 };
 
 impl Eval<ModelTree> for symbol::workbench::Group {
