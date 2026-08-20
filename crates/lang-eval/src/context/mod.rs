@@ -3,6 +3,7 @@
 
 mod stack;
 
+use microcad_package::symbol;
 pub use stack::*;
 
 use microcad_builtin::BuiltinRegistry;
@@ -68,11 +69,44 @@ impl EvalContext {
         self.stack.top_mut()
     }
 
+    /// Add a property to the current model
     pub(crate) fn model_add_property(&mut self, _property: Property) -> EvalResult<()> {
         todo!()
     }
 
+    /// Append a child model to the current model
     pub(crate) fn model_append_child(&mut self, _model: ModelTree) {
+        todo!()
+    }
+
+    /// Local a local or property value by traversing up the stack
+    pub(crate) fn look_up_local(&self, _local_id: &str) -> EvalResult<Value> {
+        todo!()
+    }
+
+    pub(crate) fn eval_constant_symbol(
+        &mut self,
+        node_id: symbol::SymbolNodeId,
+    ) -> EvalResult<Value> {
+        /// Local up a symbol by its node id in the current package
+        fn look_up_symbol(_node_id: symbol::SymbolNodeId) -> Option<symbol::SymbolDef> {
+            todo!()
+        }
+
+        let symbol = match look_up_symbol(node_id) {
+            Some(symbol) => symbol,
+            None => todo!("Error handling: Symbol {node_id} not found"),
+        };
+        use crate::Eval;
+        symbol.eval(self)
+    }
+
+    /// Local up a symbol by its node id in an external package
+    pub(crate) fn look_up_external_symbol(
+        &self,
+        _dep_name: &str,
+        _node_id: symbol::SymbolNodeId,
+    ) -> Option<symbol::SymbolDef> {
         todo!()
     }
 }

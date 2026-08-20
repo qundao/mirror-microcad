@@ -3,7 +3,10 @@
 
 use derive_more::From;
 use microcad_lang_base::{HashMap, Name, ToCompactString};
-use microcad_lang_types::{Arguments, ModelTree, Value, model::Properties};
+use microcad_lang_types::{
+    Arguments, Model, ModelTree, Value,
+    model::{Element, Properties},
+};
 
 /// A map of locals.
 #[derive(Debug, Default)]
@@ -46,8 +49,19 @@ pub struct WorkbenchFrame {
 
 #[derive(Debug, Default)]
 pub struct WorkbenchGroupFrame {
+    pub model: Model,
     pub properties: Properties,
     pub children: Vec<ModelTree>,
+}
+
+impl WorkbenchGroupFrame {
+    pub fn new() -> Self {
+        Self {
+            model: Model::from(Element::Group),
+            properties: todo!(),
+            children: todo!(),
+        }
+    }
 }
 
 #[derive(Debug, Default)]

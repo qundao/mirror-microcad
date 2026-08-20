@@ -5,7 +5,7 @@
 
 use microcad_builtin::BuiltinError;
 use microcad_lang_base::{Identifier, IdentifierList, Name, SrcRef, element::WorkbenchKind};
-use microcad_lang_types::{Integer, Type, ValueError, model::ModelOutputType, ty::TypeList};
+use microcad_lang_types::{Type, ValueError, model::ModelOutputType, ty::TypeList};
 use miette::Diagnostic;
 
 use thiserror::Error;
@@ -18,13 +18,9 @@ pub enum EvalError {
     #[error("Value error: {0}")]
     ValueError(#[from] ValueError),
 
-    /// An error occurred during handling values.
+    /// Builtin error
     #[error("Builtin error: {0}")]
-    BuiltinFunctionError(#[from] BuiltinError),
-
-    /// Can't find a project file by it's qualified name.
-    #[error("Not implemented: {0}")]
-    Todo(String),
+    BuiltinError(#[from] BuiltinError),
 
     /// List index out of bounds.
     #[error("List index out of bounds: {index} >= {len}")]
@@ -94,10 +90,6 @@ pub enum EvalError {
     #[error("Arguments match by identifier but have incompatible types: {0}")]
     IdMatchButNotType(String),
 
-    /// Builtin error
-    #[error("Builtin error: {0}")]
-    BuiltinError(String),
-
     /// Trying to use multiplicity where it is not allowed
     #[error("Multiplicity not allowed '{0}'")]
     MultiplicityNotAllowed(IdentifierList),
@@ -159,10 +151,10 @@ pub enum EvalError {
     #[error("Missing model in workbench")]
     NoModelInWorkbench,
 
-    /// Assignment failed because value already has been defined before.
-    #[error("Value {name} already in defined: {value}")]
+    /// Assignment failed because a property already has been defined before.
+    #[error("Property `{name}` already defined: {value}")]
     #[diagnostic(help("Values in microcad are immutable"))]
-    ValueAlreadyDefined {
+    PropertyAlreadyDefined {
         /// Location of the error
         #[label(primary, "{name} is already defined")]
         location: SrcRef,
@@ -175,30 +167,9 @@ pub enum EvalError {
         previous_location: SrcRef,
     },
 
-    /// Assignment failed because left side is not an l-value
-    #[error("Assignment failed because {0} is not an l-value")]
-    NotAnLValue(Identifier),
-
-    /// Found unused global symbols.
-    #[error("Unused global symbol {0}.")]
-    UnusedGlobalSymbol(String),
-
     /// Unused local.
     #[error("Unused local {0}.")]
     UnusedLocal(Identifier),
-
-    /// Evaluation aborted because of prior resolve errors
-    #[error("Evaluation aborted because of prior resolve errors!")]
-    ResolveFailed,
-
-    /// Bad range (first > last)
-    #[error("First number ({first}) must be smaller than last ({last})")]
-    BadRange {
-        first: Integer,
-        last: Integer,
-        #[label("Bad range")]
-        src_ref: SrcRef,
-    },
 
     /// Ambiguous types in tuple
     #[error("Ambiguous type '{ty}' in tuple")]
@@ -209,10 +180,6 @@ pub enum EvalError {
         )]
         src_ref: SrcRef,
     },
-
-    /// Invalid control flow
-    #[error("Invalid flow")]
-    InvalidFlow(#[label("This statement does not return a value.")] SrcRef),
 
     #[error("range expression boundaries must be integers")]
     InvalidRangeBoundaryType {
@@ -256,6 +223,20 @@ pub enum EvalError {
 
     #[error("Missing required argument {id}")]
     MissingRequiredArgument { id: Identifier },
+
+    #[error("Constant expression expected")]
+    ConstantExpressionExpected {
+        #[label("This expression is not a constant")]
+        src_ref: microcad_lang_base::SrcRef,
+    },
+
+    #[error("Unresolved symbol: {path}")]
+    UnresolvedPath {
+        path: String,
+
+        #[label("This symbol could not be found in any package")]
+        src_ref: SrcRef,
+    },
 }
 
 impl From<BuiltinError> for Box<EvalError> {

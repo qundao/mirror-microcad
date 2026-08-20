@@ -3,26 +3,109 @@
 
 //! Workbench definition syntax element evaluation
 
-use crate::{CallTrait, Eval, EvalContext, EvalResult};
+use crate::{CallTrait, Eval, EvalContext, EvalError, EvalResult, context::WorkbenchGroupFrame};
 
-use microcad_lang_base::element::Visibility;
-use microcad_package::symbol::{self, ParameterList};
+use microcad_builtin::{Builtin, BuiltinError};
+use microcad_lang_base::{SrcReferrer, element::Visibility};
+use microcad_package::{
+    SymbolId,
+    symbol::{self, ParameterList},
+};
 
 use microcad_lang_types::{
     ArgumentValueList, ModelTree, Value,
-    model::{Properties, Property, PropertyType},
+    model::{Element, Properties, Property, PropertyType},
 };
 
-impl Eval<Value> for symbol::workbench::Group {
-    fn eval(&self, _context: &mut EvalContext) -> EvalResult<Value> {
+impl Eval<ModelTree> for symbol::workbench::Group {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<ModelTree> {
+        context.scope(WorkbenchGroupFrame::new(), |context| {
+            self.statements
+                .iter()
+                .try_for_each(|stmt| stmt.eval(context))?;
+            todo!("Current current model from stack")
+        })
+    }
+}
+
+impl Eval<ModelTree> for symbol::workbench::If {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<ModelTree> {
         todo!()
+    }
+}
+
+impl Eval<ModelTree> for symbol::workbench::Marker {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<ModelTree> {
+        todo!("Return current cloned version of context current top model")
+    }
+}
+
+impl Eval<Value> for Builtin {
+    fn eval(&self, _context: &mut EvalContext) -> EvalResult<Value> {
+        match self {
+            Builtin::Constant(builtin_constant) => Ok(builtin_constant.value()),
+            _ => todo!("Error handling: Builtin constant expected"),
+        }
+    }
+}
+
+impl Eval<Value> for symbol::SymbolDef {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+        match self {
+            symbol::SymbolDef::Constant(constant) => match constant.value() {
+                Some(value) => Ok(value.clone()),
+                None => {
+                    context.diag(EvalError::ConstantExpressionExpected {
+                        src_ref: constant.expr.src_ref(),
+                    });
+                    Ok(Value::None)
+                }
+            },
+            _ => todo!("Error handling: Constant symbol expected"),
+        }
+    }
+}
+
+impl Eval<Value> for symbol::SymbolId {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+        match &self {
+            SymbolId::Builtin(builtin_id) => match context.builtins.get(*builtin_id) {
+                Some(builtin) => Ok(builtin.eval(context)?),
+                None => {
+                    //context.diag(BuiltinError::NoBuiltin { full_name: (), id: *builtin_id })
+                    Ok(Value::None)
+                }
+            },
+            SymbolId::Local(local_id) => context.look_up_local(local_id),
+            SymbolId::Item(node_id) => context.eval_constant_symbol(*node_id),
+            SymbolId::External { package_name, id } => {
+                let symbol = context.look_up_external_symbol(package_name, *id).unwrap();
+                symbol.eval(context)
+            }
+        }
+    }
+}
+
+impl Eval<Value> for symbol::Path {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+        match self {
+            symbol::Path::Resolved(symbol_id) => symbol_id.eval(context),
+            symbol::Path::Unresolved(unresolved_path) => {
+                context.diag(EvalError::UnresolvedPath {
+                    path: unresolved_path.to_string(),
+                    src_ref: unresolved_path.src_ref,
+                });
+                Ok(Value::None)
+            }
+            symbol::Path::HumanReadable { .. } => todo!(),
+        }
     }
 }
 
 impl Eval<Value> for symbol::WorkbenchExpression {
     fn eval(&self, _context: &mut EvalContext) -> EvalResult<Value> {
         match &self {
-            symbol::WorkbenchExpression::Invalid => todo!(),
+            symbol::WorkbenchExpression::Invalid => unreachable!(),
             symbol::WorkbenchExpression::Constant(constant_value) => {
                 Ok(constant_value.value().clone())
             }
@@ -37,8 +120,9 @@ impl Eval<Value> for symbol::WorkbenchExpression {
 }
 
 impl Eval<ModelTree> for symbol::WorkbenchExpression {
-    fn eval(&self, _context: &mut EvalContext) -> EvalResult<ModelTree> {
-        todo!()
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<ModelTree> {
+        let value: Value = self.eval(context)?;
+        Ok(value.into())
     }
 }
 
