@@ -10,7 +10,7 @@ pub part Sphere(radius: Length) {
         radius = diameter / 2;
     }
 
-    __builtin::geo3d::Sphere(radius);
+    __mu::geo3d::Sphere(radius);
 }
 
 /// Cube definition

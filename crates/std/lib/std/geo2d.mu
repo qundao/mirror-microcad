@@ -11,8 +11,8 @@ pub sketch Circle(radius: Length, center = (x = 0.0mm, y = 0.0mm)) {
         radius = diameter / 2.0;
     }
 
-    __builtin::geo2d::Circle(radius)
-        .__builtin::ops::translate(x = center.x, y = center.y);
+    __mu::geo2d::Circle(radius)
+        .__mu::ops::translate(x = center.x, y = center.y);
 }
 
 /// A frame with a thickness.
@@ -31,9 +31,9 @@ pub sketch InvoluteGearProfile(module: Length, teeth: Integer, pressure_angle = 
     prop pitch_radius = module * teeth / 2.0;
     prop outer_radius = pitch_radius + module;
     prop tooth_angle = 360° / teeth;
-    prop tooth_distance = (outer_radius - pitch_radius) * __builtin::math::PI;
+    prop tooth_distance = (outer_radius - pitch_radius) * __mu::math::PI;
 
-    __builtin::geo2d::InvoluteGearProfile(module, teeth, pressure_angle);
+    __mu::geo2d::InvoluteGearProfile(module, teeth, pressure_angle);
 }
 
 
@@ -53,13 +53,13 @@ pub sketch Line(p0: Vec2, p1: Vec2) {
         p1 = (x = (p.x + width) / 1mm , y = p.y / 1mm);
     }
 
-    __builtin::geo2d::Line(x0 = p0.x, y0 = p0.y, x1 = p1.x, y1 = p1.y);
+    __mu::geo2d::Line(x0 = p0.x, y0 = p0.y, x1 = p1.x, y1 = p1.y);
 }
 
 /// A regular convex polygon with `n` corners.
 pub sketch Ngon(n: Integer, radius: Length) {
     std::debug::assert(n > 2, "N must be at least 3.");
-    __builtin::geo2d::Ngon(n, radius);
+    __mu::geo2d::Ngon(n, radius);
 }
 
 /// Rectangle definition.
@@ -79,7 +79,7 @@ pub sketch Rect(width: Length, height: Length, x: Length, y: Length) {
         y = -size / 2.0; // center y
     }
 
-    __builtin::geo2d::Rect(width, height, x, y);
+    __mu::geo2d::Rect(width, height, x, y);
 }
 
 pub sketch Ring(outer_radius: Length, inner_radius: Length ) {
@@ -134,7 +134,7 @@ pub sketch RoundedRect(
         radius_top_right = radius;
     }
 
-    __builtin::geo2d::RoundedRect(
+    __mu::geo2d::RoundedRect(
         width, height, x, y,
         radius_bottom_left,
         radius_bottom_right,
@@ -150,7 +150,7 @@ pub sketch Sector(radius: Length, start: Angle, end: Angle) {
         end = offset + angle / 2;
     }
 
-    __builtin::geo2d::Sector(radius, start, end);
+    __mu::geo2d::Sector(radius, start, end);
 }
 
 pub sketch SinusoidalGearProfile(module: Length, teeth: Integer, roundness = 0.5, stretch = 0.5) {
@@ -158,11 +158,11 @@ pub sketch SinusoidalGearProfile(module: Length, teeth: Integer, roundness = 0.5
     prop outer_radius = pitch_radius + module;
     prop tooth_angle = 360° / teeth;
 
-    __builtin::geo2d::SinusoidalGearProfile(module, teeth, roundness, stretch);
+    __mu::geo2d::SinusoidalGearProfile(module, teeth, roundness, stretch);
 }
 
 
 /// Text definition.
 pub sketch Text(height: Length, text: String, font_file = "") {
-    __builtin::geo2d::Text(height, text, font_file);
+    __mu::geo2d::Text(height, text, font_file);
 }

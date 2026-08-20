@@ -1,16 +1,16 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-pub use __builtin::ops::center;
-pub use __builtin::ops::hull;
-pub use __builtin::ops::intersect;
-pub use __builtin::ops::subtract;
-pub use __builtin::ops::multiply;
-pub use __builtin::ops::union;
+pub use __mu::ops::center;
+pub use __mu::ops::hull;
+pub use __mu::ops::intersect;
+pub use __mu::ops::subtract;
+pub use __mu::ops::multiply;
+pub use __mu::ops::union;
 
 /// Align a geometry collection along an axis with a certain spacing.
 pub op align(direction: Vec3, spacing = 0mm) {
-    @input.__builtin::ops::align(
+    @input.__mu::ops::align(
         x = direction.x,
         y = direction.y,
         z = direction.z,
@@ -20,7 +20,7 @@ pub op align(direction: Vec3, spacing = 0mm) {
 
 /// Create a new geometry whose boundary is offset the specified distance from the input.
 pub op buffer(distance: Length) {
-    @input.__builtin::ops::buffer(distance);
+    @input.__mu::ops::buffer(distance);
 }
 
 /// Generate a contour geometry out of an input geometry.
@@ -69,7 +69,7 @@ pub op distribute_grid(x: Length, y: Length, width: Length, height: Length, rows
     }
 
 
-    @input.__builtin::ops::distribute_grid(x, y, width, height, rows, columns);
+    @input.__mu::ops::distribute_grid(x, y, width, height, rows, columns);
 }
 
 /// Linear extrude a 2D geometry into a 3D.
@@ -78,31 +78,31 @@ pub op extrude(
         scale = (x = 100%, y = 100%),
         twist = 0°,
 ) {
-    @input.__builtin::ops::extrude(height, scale_x = scale.x, scale_y = scale.y, twist);
+    @input.__mu::ops::extrude(height, scale_x = scale.x, scale_y = scale.y, twist);
 }
 
 /// Mirror along an axis, keeping existing geometry.
 pub op mirror(x = 0.0mm, y = 0.0mm, z = 0.0mm, n: Vec3) {
-    @input.__builtin::ops::mirror(
+    @input.__mu::ops::mirror(
         x, y, z, nx = n.x, ny = n.y, nz = n.z
     );
 }
 
 /// Orient an object towards a vector.
 pub op orient(v: Vec3) {
-    @input.__builtin::ops::orient(x = v.x, y = v.y, z = v.z);
+    @input.__mu::ops::orient(x = v.x, y = v.y, z = v.z);
 }
 
 /// Reflect a geometry along an axis.
 pub op reflect(x = 0.0mm, y = 0.0mm, z = 0.0mm, n: Vec3) {
-    @input.__builtin::ops::reflect(
+    @input.__mu::ops::reflect(
         x, y, z, nx = n.x, ny = n.y, nz = n.z
     );
 }
 
 /// Revolve a geometry around 360°.
 pub op revolve(angle = 360°) {
-    @input.__builtin::ops::revolve(angle);
+    @input.__mu::ops::revolve(angle);
 }
 
 /// An operation that rotates a part.
@@ -120,8 +120,8 @@ pub op rotate(matrix: Matrix3) {
     /// * `Rect(42mm).rotate(45°);`: 2D rotation of a square by 45°.
     /// * `Cube(42mm).rotate(45°, (x = 1, y = 1, z = 1)) ;`: Rotates a cube by 45° around a diagonal axis.
     /// * `Cube(42mm).rotate(30°, Y);`: Rotates a cube by 30° around Y axis.
-    init(angle: Angle, axis = __builtin::math::Z) {
-        matrix = __builtin::math::rotate_around_axis(angle, x = axis.x, y = axis.y, z = axis.z);
+    init(angle: Angle, axis = __mu::math::Z) {
+        matrix = __mu::math::rotate_around_axis(angle, x = axis.x, y = axis.y, z = axis.z);
     }
 
     /// Euler rotation around X, Y, Z.
@@ -133,7 +133,7 @@ pub op rotate(matrix: Matrix3) {
     /// Examples:
     /// * `Cube(42mm).rotate(45°, (1, 0, 0));`: Rotates a cylinder by 45° around X axis (unnamed tuple).
     init(x = 0°, y = 0°, z = 0°) {
-        matrix = __builtin::math::rotate_xyz(x, y, z);
+        matrix = __mu::math::rotate_xyz(x, y, z);
     }
 
     /// Euler rotation around X, Y, Z (nautical angles)
@@ -145,24 +145,24 @@ pub op rotate(matrix: Matrix3) {
     /// Example:
     /// * `Cube(42mm).rotate(roll = 30°)`: Rotates a cylinder by 45° around X axis.
     init(roll = 0°, pitch = 0°, yaw = 0°) {
-        matrix = __builtin::math::rotate_xyz(roll, pitch, yaw);
+        matrix = __mu::math::rotate_xyz(roll, pitch, yaw);
     }
 
     /// Euler rotation around X, Y and Z axis (with a vector of angles)
     ///
     /// * `Cube(42mm).rotate(xyz = (30°,20°,10°))`: Euler rotation for a cube around X, Y, Z axis.
     init(xyz = (x = 0°,y = 0°,z = 0°)) {
-        matrix = __builtin::math::rotate_xyz(xyz.x, xyz.y, xyz.z);
+        matrix = __mu::math::rotate_xyz(xyz.x, xyz.y, xyz.z);
     }
 
     /// Euler rotation around Z, Y and X axis (with a vector of angles)
     ///
     /// * `Cube(42mm).rotate(zyx = (30°,20°,10°));`: Euler rotation for a cube around Z, Y, X axis.
     init(zyx = (x = 0°, y = 0°, z = 0°)) {
-        matrix = __builtin::math::rotate_zyx(zyx.z, zyx.y, zyx.x);
+        matrix = __mu::math::rotate_zyx(zyx.z, zyx.y, zyx.x);
     }
 
-    @input.__builtin::ops::rotate(matrix);
+    @input.__mu::ops::rotate(matrix);
 }
 
 /// An operation that scales a part.
@@ -191,7 +191,7 @@ pub op scale(v: Vec3) {
         v = (x = x, y = y, z = z);
     }
 
-    @input.__builtin::ops::scale(x = v.x, y = v.y, z = v.z);
+    @input.__mu::ops::scale(x = v.x, y = v.y, z = v.z);
 }
 
 /// Create a spiral with a height and an inner and outer radius.
@@ -201,17 +201,17 @@ pub op spiralize(
     angle: Angle,
     height = 0mm
 ) {
-    @input.__builtin::ops::spiralize(height, inner_radius, outer_radius, angle);
+    @input.__mu::ops::spiralize(height, inner_radius, outer_radius, angle);
 }
 
 /// An operation that translates (moves) a geometry.
 pub op translate(x = 0.0mm, y = 0.0mm, z = 0.0mm) {
     /// Polar-style translate with distance and angle.
     init(distance: Length, angle: Angle) {
-        x = distance * __builtin::math::cos(angle);
-        y = distance * __builtin::math::sin(angle);
+        x = distance * __mu::math::cos(angle);
+        y = distance * __mu::math::sin(angle);
         z = 0.0mm;
     }
 
-    @input.__builtin::ops::translate(x, y, z);
+    @input.__mu::ops::translate(x, y, z);
 }
