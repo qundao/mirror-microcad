@@ -54,4 +54,7 @@ pub enum BuiltinError {
     #[error("{0}")]
     #[diagnostic(severity(Advice))]
     Info(String),
+
+    #[error("Property not found: {name}")]
+    PropertyNotFound { name: String },
 }

@@ -195,11 +195,11 @@ pub mod core {
                 }
                 .into()),
             },
-            Value::Model(_model) => todo!(
-                "match model.get_child(name)
-                Some(prop) => Ok(Value::from(prop)),
-                None => Err(ModelError::ChildNotFound "
-            ),
+            // Get an input or output property of a model tree.
+            Value::Model(model) => match model.get_property(&name) {
+                Some(prop) => Ok(prop.value.clone()),
+                None => Err(BuiltinError::PropertyNotFound { name: name.clone() }),
+            },
             value => Err(BuiltinError::TypeError(TypeError::NoArrayType(value.ty()))),
         }
     }
@@ -400,6 +400,7 @@ pub mod geo2d {
         Length, Model, ModelOutputType, Type, function_type,
         model::{Element, element::BuiltinWorkpiece},
     };
+    use microcad_macros::__mu;
 
     use crate::BuiltinPrimitive;
 
@@ -420,14 +421,17 @@ pub mod geo2d {
 
     impl Circle {
         pub fn call(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Model, BuiltinError> {
-            Ok(Model::new(BuiltinWorkpiece::Primitive2D(CIRCLE.id())).with_properties(args))
+            Ok(
+                Model::new(BuiltinWorkpiece::Primitive2D(__mu!(geo2d::Circle)))
+                    .with_properties(args),
+            )
         }
 
         pub fn from_model(model: &Model) -> Result<Self, BuiltinError> {
             // TODO Assertion if Model is a circle primitive
             assert_eq!(
                 model.element,
-                Element::BuiltinWorkpiece(BuiltinWorkpiece::Primitive2D(CIRCLE.id()))
+                Element::BuiltinWorkpiece(BuiltinWorkpiece::Primitive2D(__mu!(geo2d::Circle)))
             );
 
             let radius = Length::try_from(
