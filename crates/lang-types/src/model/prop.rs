@@ -98,8 +98,8 @@ impl Properties {
     }
 
     /// Gets a reference to a property by its name.
-    pub fn get_property(&self, name: impl Into<Identifier>) -> Option<&Property> {
-        self.props.get(&name.into())
+    pub fn get_property(&self, name: impl AsRef<str>) -> Option<&Property> {
+        self.props.get(name.as_ref())
     }
 
     /// Sets or updates a property.

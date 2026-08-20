@@ -88,8 +88,8 @@ impl Model {
         self.element.output_type()
     }
 
-    pub fn get_property(&self, name: impl Into<Identifier>) -> Option<&Property> {
-        self.properties.get_property(name)
+    pub fn get_property(&self, name: impl AsRef<str>) -> Option<&Property> {
+        self.properties.get_property(name.as_ref())
     }
 }
 

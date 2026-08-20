@@ -1,7 +1,12 @@
+// Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_types::{
-    Value, arguments,
-    model::{Properties, Property, PropertyType},
+    Model, ModelTree, Value, arguments,
+    model::{
+        Arena, BooleanOp, Element, Properties, Property, PropertyType, element::BuiltinWorkpiece,
+    },
 };
 
 #[test]
@@ -79,4 +84,64 @@ fn test_deref_and_iterators() {
     // Test IntoIterator for owned Properties
     let owned_items: Vec<(Identifier, Property)> = props.into_iter().collect();
     assert_eq!(owned_items.len(), 2);
+}
+
+#[test]
+fn test_model_tree_get_property_recursive_and_filtering() {
+    let mut arena = Arena::new();
+
+    // Leaf Node 1: Input property ("radius")
+    let mut leaf1_model = Model::default();
+    leaf1_model
+        .properties
+        .set_property("radius", 5.0, PropertyType::Input, SrcRef::none());
+    let leaf1 = arena.new_node(leaf1_model);
+
+    // Leaf Node 2: Hidden property ("internal_id") & Output property ("area")
+    let mut leaf2_model = Model::default();
+    leaf2_model
+        .properties
+        .set_property("internal_id", 42, PropertyType::Hidden, SrcRef::none());
+    leaf2_model
+        .properties
+        .set_property("area", 78.5, PropertyType::Output, SrcRef::none());
+    let leaf2 = arena.new_node(leaf2_model);
+
+    // Parent Node: Groups leaf1 and leaf2
+    let group_node = arena.new_node(Model::from(Element::Group));
+    group_node.append(leaf1, &mut arena);
+    group_node.append(leaf2, &mut arena);
+
+    // Root Node: BooleanOp wrapping the group
+    let root = arena.new_node(Model::new(Element::BuiltinWorkpiece(
+        BuiltinWorkpiece::BooleanOp(BooleanOp::Union),
+    )));
+    root.append(group_node, &mut arena);
+
+    let tree = ModelTree { root, arena };
+
+    // --- Assertions ---
+
+    // 1. Should recursively find Input property in leaf1
+    let radius_prop = tree
+        .get_property("radius")
+        .expect("Should find 'radius' in leaf1");
+    assert_eq!(radius_prop.value, Value::from(5.0));
+    assert_eq!(radius_prop.ty, PropertyType::Input);
+
+    // 2. Should recursively find Output property in leaf2
+    let area_prop = tree
+        .get_property("area")
+        .expect("Should find 'area' in leaf2");
+    assert_eq!(area_prop.value, Value::from(78.5));
+    assert_eq!(area_prop.ty, PropertyType::Output);
+
+    // 3. Should IGNORE Hidden properties in leaf2
+    assert!(
+        tree.get_property("internal_id").is_none(),
+        "Hidden properties must be ignored during recursive lookup"
+    );
+
+    // 4. Non-existent property across whole tree
+    assert!(tree.get_property("height").is_none());
 }
