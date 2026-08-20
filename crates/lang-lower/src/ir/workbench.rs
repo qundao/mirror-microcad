@@ -26,7 +26,7 @@ pub struct WorkbenchStatement {
 
 /// Builder methods for testing
 impl WorkbenchStatement {
-    pub fn new(expr: impl Into<WorkbenchExpression>) -> Self {
+    pub fn expr(expr: impl Into<WorkbenchExpression>) -> Self {
         Self {
             attr: Default::default(),
             src_ref: Default::default(),
