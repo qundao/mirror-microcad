@@ -1,6 +1,8 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+use proc_macro2::Span;
+
 use crate::prelude::*;
 
 struct MuInput {
@@ -12,6 +14,17 @@ impl Parse for MuInput {
         Ok(MuInput {
             path: input.parse()?,
         })
+    }
+}
+
+fn get_mod_mu() -> proc_macro2::TokenStream {
+    match proc_macro_crate::crate_name("microcad-builtin") {
+        Ok(proc_macro_crate::FoundCrate::Itself) => quote! { crate::mu },
+        Ok(proc_macro_crate::FoundCrate::Name(name)) => {
+            let ident = Ident::new(&name, Span::call_site());
+            quote! { ::#ident::mu }
+        }
+        Err(_) => panic!("Crate not found"), // quote! { ::microcad_builtin::mu }, // Fallback
     }
 }
 
@@ -28,7 +41,7 @@ pub(crate) fn __mu_impl(input: TokenStream) -> TokenStream {
         .into();
     }
 
-    let __mu = quote! { ::microcad_builtin::mu }; // `__mu`
+    let __mu = get_mod_mu(); // `__mu`
     let module = &path.segments[0].ident; // `core`
     let fn_ident = &path.segments[1].ident; // `add`
     let static_ident = Ident::new(&fn_ident.to_string().to_uppercase(), fn_ident.span()); // `ADD`
