@@ -238,6 +238,19 @@ impl std::iter::IntoIterator for IdentifierList {
     }
 }
 
+// Allow borrowing `Identifier` as `str`
+impl std::borrow::Borrow<str> for Identifier {
+    fn borrow(&self) -> &str {
+        &self.0.value
+    }
+}
+
+impl AsRef<str> for Identifier {
+    fn as_ref(&self) -> &str {
+        &self.0.value
+    }
+}
+
 #[test]
 fn identifier_comparison() {
     use crate::{LineCol, SrcRef};
