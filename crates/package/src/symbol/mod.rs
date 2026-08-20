@@ -38,6 +38,7 @@ pub mod workbench {
     pub type ArgumentList = ir::ArgumentList<WorkbenchExpression>;
     pub type If = ir::If<WorkbenchExpression>;
     pub type Group = ir::Group;
+    pub type Marker = ir::Marker;
 }
 
 pub use ir::{Attributes, ConstantValue, Parameter, ParameterList};
