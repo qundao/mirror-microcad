@@ -118,7 +118,7 @@ pub mod core {
     #[builtin_fn(core::and(lhs: Any, rhs: Any) -> Bool)]
     pub fn and(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
-        Ok((lhs == rhs).into())
+        Ok((lhs & rhs)?)
     }
 
     /// Compare to values if they are greater_than
