@@ -52,7 +52,7 @@ pub mod core {
         Ok((lhs | rhs)?)
     }
 
-    /// Union of two values.
+    /// Intersection of two values.
     #[builtin_fn(core::intersect(lhs: Any, rhs: Any) -> Any)]
     pub fn intersect(
         args: Arguments,
@@ -62,49 +62,49 @@ pub mod core {
         Ok((lhs & rhs)?)
     }
 
-    /// Compare to values if they are greater_than
+    /// Returns `true` if `lhs` is strictly greater than `rhs`.
     #[builtin_fn(core::gt(lhs: Any, rhs: Any) -> Bool)]
     pub fn gt(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
         Ok(lhs.cmp(BinaryOperator::GreaterThan, &rhs)?)
     }
 
-    /// Compare to values if they are greater_than
+    /// Returns `true` if `lhs` is strictly less than `rhs`.
     #[builtin_fn(core::lt(lhs: Any, rhs: Any) -> Bool)]
     pub fn lt(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
         Ok(lhs.cmp(BinaryOperator::LessThan, &rhs)?)
     }
 
-    /// Compare to values if they are greater_than
+    /// Returns `true` if `lhs` is greater than or equal to `rhs`.
     #[builtin_fn(core::ge(lhs: Any, rhs: Any) -> Bool)]
     pub fn ge(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
         Ok(lhs.cmp(BinaryOperator::GreaterEqual, &rhs)?)
     }
 
-    /// Compare to values if they are greater_than
+    /// Returns `true` if `lhs` is less than or equal to `rhs`.
     #[builtin_fn(core::le(lhs: Any, rhs: Any) -> Bool)]
     pub fn le(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
         Ok(lhs.cmp(BinaryOperator::LessEqual, &rhs)?)
     }
 
-    /// Compare to values if they are greater_than
+    /// Returns `true` if `lhs` and `rhs` are strictly equal.
     #[builtin_fn(core::eq(lhs: Any, rhs: Any) -> Bool)]
     pub fn eq(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
         Ok(lhs.cmp(BinaryOperator::Equal, &rhs)?)
     }
 
-    /// Compare to values if they are greater_than
+    /// Returns `true` if `lhs` and `rhs` are equal within a floating-point tolerance threshold.
     #[builtin_fn(core::near(lhs: Any, rhs: Any) -> Bool)]
     pub fn near(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
         Ok(lhs.cmp(BinaryOperator::Near, &rhs)?)
     }
 
-    /// Compare to values if they are greater_than
+    /// Returns `true` if `lhs` and `rhs` are not equal.
     #[builtin_fn(core::not_equal(lhs: Any, rhs: Any) -> Bool)]
     pub fn not_equal(
         args: Arguments,
@@ -115,14 +115,14 @@ pub mod core {
     }
 
     /// Compare to values if they are greater_than
-    #[builtin_fn(core::and(lhs: Any, rhs: Any) -> Bool)]
+    #[builtin_fn(core::and(lhs: Bool, rhs: Bool) -> Bool)]
     pub fn and(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
         Ok((lhs & rhs)?)
     }
 
     /// Compare to values if they are greater_than
-    #[builtin_fn(core::or(lhs: Any, rhs: Any) -> Bool)]
+    #[builtin_fn(core::or(lhs: Bool, rhs: Bool) -> Bool)]
     pub fn or(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
         Ok((lhs | rhs)?)
@@ -177,6 +177,7 @@ pub mod core {
         }
     }
 
+    /// Access a field in a tuple or a property of a model.
     #[builtin_fn(core::member_access(lhs: Any, name: String) -> Any)]
     pub fn member_access(
         args: Arguments,
@@ -204,6 +205,7 @@ pub mod core {
         }
     }
 
+    /// Format a string.
     #[builtin_fn(core::format(*) -> String)]
     pub fn format(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         Ok(Value::from(
@@ -214,6 +216,16 @@ pub mod core {
         ))
     }
 
+    /// Formats an expression as a `String` using optional field width and decimal precision specifiers.
+    ///
+    /// Accepts a `width` (minimum character output width, right-aligned) and a `precision`
+    /// (number of decimal places for floating-point values/lengths or maximum characters for strings).
+    /// Passing a negative integer for `width` or `precision` disables that specifier.
+    ///
+    /// ### Parameters
+    /// - `expr`: The value to format into a string.
+    /// - `width`: Minimum total character width (padded with spaces on the left if positive).
+    /// - `precision`: Maximum decimal places or string character limit.
     #[builtin_fn(core::format_spec(expr: Any, width: Integer, precision: Integer) -> String)]
     pub fn format_spec(
         args: Arguments,
@@ -260,16 +272,19 @@ pub mod core {
         Ok(array.into())
     }
 
+    /// Construct an array.
     #[builtin_fn(core::array(*) -> Any)]
     pub fn array(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         Ok(Array::from_iter(args.positional_iter().cloned()).into())
     }
 
+    /// Construct a tuple.
     #[builtin_fn(core::tuple(*) -> Any)]
     pub fn tuple(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         Ok(args.0.into())
     }
 
+    /// Access the attributes in a model tree.
     #[builtin_fn(core::attribute_access(lhs: Any, name: String) -> Any)]
     pub fn attribute_access(
         _args: Arguments,
