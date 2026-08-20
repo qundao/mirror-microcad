@@ -320,6 +320,12 @@ impl From<String> for Value {
     }
 }
 
+impl From<ModelTree> for Value {
+    fn from(model: ModelTree) -> Self {
+        Self::Model(Rc::new(model))
+    }
+}
+
 impl From<&'static str> for Value {
     fn from(s: &'static str) -> Self {
         Self::String(s.to_compact_string())

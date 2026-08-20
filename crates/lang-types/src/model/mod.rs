@@ -21,7 +21,7 @@ mod operation;
 
 pub use operation::{AffineTransform, BooleanOp};
 
-use microcad_lang_base::{HashId, Identifier, impl_tree_types};
+use microcad_lang_base::{HashId, Identifier};
 use serde::{Deserialize, Serialize};
 
 pub use attribute::Attributes;
@@ -29,7 +29,7 @@ pub use creator::Creator;
 pub use element::Element;
 pub use output_type::ModelOutputType;
 
-use crate::{Arguments, Ty, Type};
+use crate::{Arguments, Ty, Type, Value};
 
 #[derive(Debug, Default, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub struct Model {
@@ -93,6 +93,12 @@ impl Model {
     }
 }
 
+impl From<Element> for Model {
+    fn from(element: Element) -> Self {
+        Self::new(element)
+    }
+}
+
 impl std::fmt::Display for Model {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         if let Some(name) = &self.name {
@@ -110,7 +116,34 @@ impl Ty for Model {
     }
 }
 
-impl_tree_types!(pub ModelTree<Model>);
+impl ModelTree {
+    pub fn new(root: impl Into<Model>) -> Self {
+        let mut arena = Arena::default();
+        let root = arena.new_node(root.into());
+        Self { root, arena }
+    }
+
+    pub fn root<'a>(&'a self) -> NodeRef<'a> {
+        NodeRef::new(self.root, &self.arena)
+    }
+}
+
+impl From<Value> for ModelTree {
+    fn from(value: Value) -> Self {
+        match value {
+            Value::Model(model_tree) => {
+                std::rc::Rc::try_unwrap(model_tree).unwrap_or_else(|rc| (*rc).clone())
+            }
+            value => ModelTree::new(crate::model::Element::Value(value)),
+        }
+    }
+}
+
+pub type Arena = microcad_lang_base::tree::Arena<Model>;
+pub type Node = microcad_lang_base::tree::Node<Model>;
+pub type NodeRef<'a> = microcad_lang_base::tree::NodeRef<'a, Model>;
+pub type NodeMut<'a> = microcad_lang_base::tree::NodeMut<'a, Model>;
+pub type NodeId = microcad_lang_base::tree::NodeId;
 
 /// Extension trait for [`SymbolNode`] .
 pub trait NodeExt<'a> {
