@@ -393,7 +393,7 @@ pub mod debug {
 #[builtin_mod]
 pub mod math {
     use super::*;
-    use microcad_lang_types::{MathOps, tuple};
+    use microcad_lang_types::{Angle, MathOps, Scalar, tuple};
 
     /// Pi
     #[builtin_constant(math::PI)]
@@ -430,6 +430,40 @@ pub mod math {
     pub fn cos(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let x = args.get("x");
         Ok(x.cos()?)
+    }
+
+    #[builtin_fn(math::rotate_around_axis(angle: Angle, x: Scalar, y: Scalar, z: Scalar) -> Mat3)]
+    pub fn rotate_around_axis(
+        args: Arguments,
+        _ctx: &mut BuiltinEvalContext,
+    ) -> Result<Value, BuiltinError> {
+        let angle: Angle = args.try_get("angle")?;
+        let x: Scalar = args.try_get("x")?;
+        let y: Scalar = args.try_get("y")?;
+        let z: Scalar = args.try_get("z")?;
+        Ok(microcad_lang_types::math::rotate_around_axis(angle, x, y, z).into())
+    }
+
+    #[builtin_fn(math::rotate_xyz(x: Angle, y: Angle, z: Angle) -> Mat3)]
+    pub fn rotate_xyz(
+        args: Arguments,
+        _ctx: &mut BuiltinEvalContext,
+    ) -> Result<Value, BuiltinError> {
+        let x: Angle = args.try_get("x")?;
+        let y: Angle = args.try_get("y")?;
+        let z: Angle = args.try_get("z")?;
+        Ok(microcad_lang_types::math::rotate_xyz(x, y, z).into())
+    }
+
+    #[builtin_fn(math::rotate_zyx(x: Angle, y: Angle, z: Angle) -> Mat3)]
+    pub fn rotate_zyx(
+        args: Arguments,
+        _ctx: &mut BuiltinEvalContext,
+    ) -> Result<Value, BuiltinError> {
+        let x: Angle = args.try_get("x")?;
+        let y: Angle = args.try_get("y")?;
+        let z: Angle = args.try_get("z")?;
+        Ok(microcad_lang_types::math::rotate_zyx(x, y, z).into())
     }
 }
 
