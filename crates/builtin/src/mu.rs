@@ -114,14 +114,14 @@ pub mod core {
         Ok(lhs.cmp(BinaryOperator::NotEqual, &rhs)?)
     }
 
-    /// Compare to values if they are greater_than
+    /// Logical AND
     #[builtin_fn(core::and(lhs: Bool, rhs: Bool) -> Bool)]
     pub fn and(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
         Ok((lhs & rhs)?)
     }
 
-    /// Compare to values if they are greater_than
+    /// Logical OR
     #[builtin_fn(core::or(lhs: Bool, rhs: Bool) -> Bool)]
     pub fn or(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let (lhs, rhs) = args.get_binary();
@@ -264,6 +264,20 @@ pub mod core {
         Ok(formatted.into())
     }
 
+    /// Generates an array containing a sequence of integers from `start` to `end` (inclusive).
+    ///
+    /// If `start` is greater than `end`, an empty array is returned.
+    ///
+    /// ### Parameters
+    /// - `start`: The beginning integer value of the sequence.
+    /// - `end`: The ending integer value of the sequence (included in output).
+    ///
+    /// ### Examples
+    /// ```text
+    /// range(1, 5)  // -> [1, 2, 3, 4, 5]
+    /// range(0, 0)  // -> [0]
+    /// range(5, 1)  // -> []
+    /// ```
     #[builtin_fn(core::range(start: Integer, end: Integer) -> Any)] // TODO: Return [Integer]
     pub fn range(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Value, BuiltinError> {
         let start: i64 = args.try_get("start")?;
