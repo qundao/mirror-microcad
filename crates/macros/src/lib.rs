@@ -17,13 +17,14 @@ mod test_builtin_fn;
 
 pub(crate) mod prelude {
     pub use proc_macro::TokenStream;
+    pub use proc_macro2::TokenStream as TokenStream2;
 
     pub use quote::{format_ident, quote};
     pub use syn::parse::{Parse, ParseStream};
     pub use syn::spanned::Spanned;
     pub use syn::{
         Data, DeriveInput, Expr, Fields, Ident, ItemFn, ItemMod, ItemStatic, Path, Result, Token,
-        parse_macro_input, parse_quote,
+        parse_macro_input,
     };
 
     pub(crate) use super::helpers;

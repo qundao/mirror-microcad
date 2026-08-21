@@ -3,20 +3,84 @@
 
 //! Implementation for the `#[builtin_fn(...)` attribute macro.
 
+use quote::ToTokens;
+
 use crate::prelude::*;
 
-// Represents a parameter in the macro attribute: `lhs: Any`
+/// A built-in type.
+enum BuiltinType {
+    /// Any identifier
+    Single(Ident),
+    /// An identifier in `[]`
+    Array(Ident),
+}
+
+impl BuiltinType {
+    fn map_ty_ident(ty: &Ident) -> TokenStream2 {
+        match ty.to_string().as_str() {
+            "Scalar" => quote! { microcad_lang_types::Type::scalar() },
+            "Angle" => quote! { microcad_lang_types::Type::angle() },
+            "Length" => quote! { microcad_lang_types::Type::length() },
+            "Mat3" => quote! { microcad_lang_types::Type::matrix(3,3) },
+            "Model" => {
+                quote! { microcad_lang_types::Type::Model(microcad_lang_type::model::ModelOutputType::Any) }
+            }
+            _ => quote! { microcad_lang_types::Type::#ty },
+        }
+    }
+}
+
+impl quote::ToTokens for BuiltinType {
+    fn to_tokens(&self, tokens: &mut TokenStream2) {
+        let expanded = match self {
+            BuiltinType::Single(ident) => Self::map_ty_ident(ident),
+            BuiltinType::Array(ident) => {
+                let ty = Self::map_ty_ident(ident);
+                quote! { microcad_lang_types::Type::Array(Box::new(#ty)) }
+            }
+        };
+
+        // Append the expanded tokens into the mutable buffer
+        expanded.to_tokens(tokens);
+    }
+}
+// Represents a parameter in the macro attribute, e.g.: `lhs: Any`
 struct BuiltinParam {
     name: Ident,
-    ty: Ident,
+    ty: BuiltinType,
+}
+
+impl quote::ToTokens for BuiltinParam {
+    fn to_tokens(&self, tokens: &mut TokenStream2) {
+        let name = &self.name;
+        let ty = &self.ty;
+
+        quote! {
+            #name: #ty
+        }
+        .to_tokens(tokens);
+    }
+}
+
+impl Parse for BuiltinType {
+    fn parse(input: ParseStream) -> Result<Self> {
+        if input.peek(syn::token::Bracket) {
+            let content;
+            syn::bracketed!(content in input);
+            Ok(Self::Array(content.parse()?))
+        } else {
+            Ok(Self::Single(input.parse()?))
+        }
+    }
 }
 
 impl Parse for BuiltinParam {
     fn parse(input: ParseStream) -> Result<Self> {
         let name: Ident = input.parse()?;
         input.parse::<Token![:]>()?;
-        let ty: Ident = input.parse()?;
-        Ok(BuiltinParam { name, ty })
+        let ty: BuiltinType = input.parse()?;
+
+        Ok(Self { name, ty })
     }
 }
 
@@ -28,7 +92,7 @@ struct BuiltinFnSig {
     name: Ident,
     is_variadic: bool,
     params: Vec<BuiltinParam>,
-    return_type: Option<Ident>,
+    return_type: Option<BuiltinType>,
 }
 
 impl Parse for BuiltinFnSig {
@@ -107,23 +171,18 @@ pub(crate) fn builtin_fn_impl(attr: TokenStream, item: TokenStream) -> TokenStre
 
     let static_name = helpers::ident_upper(&fn_name);
 
+    // Generate list of parameters from input tokens.
     let formatted_params = if is_variadic {
         quote! { (*) }
     } else {
-        // Reconstruct param list format: `lhs: Type::Any, rhs: Type::Any`
-        let formatted_params = params.iter().map(|p| {
-            let p_name = &p.name;
-            let p_ty = format_ident!("{}", p.ty);
-            quote! { #p_name: microcad_lang_types::Type::#p_ty }
-        });
-
+        let formatted_params = params.into_iter().map(BuiltinParam::into_token_stream);
         quote! { (#(#formatted_params),*) }
     };
 
     let return_type = match return_type {
         Some(return_type) => {
-            let return_type = format_ident!("{}", return_type);
-            quote! { -> microcad_lang_types::Type::#return_type  }
+            let return_type = return_type.into_token_stream();
+            quote! { -> #return_type  }
         }
         None => {
             quote! {}
