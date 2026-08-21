@@ -38,6 +38,8 @@ pub type BuiltinEvalFn<T = Value> =
 /// A type of a function returning a T as builtin.
 pub type BuiltinFn<T> = fn() -> T;
 
+pub type BuiltinResult<T = Value> = Result<T, BuiltinError>;
+
 #[derive(Debug, Clone)]
 #[debug("{}", info)]
 pub struct BuiltinFunction {
