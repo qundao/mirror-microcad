@@ -47,6 +47,15 @@ impl Type {
         Self::Quantity(QuantityType::Length)
     }
 
+    /// Shortcut to create an angle type.
+    pub fn angle() -> Self {
+        Self::Quantity(QuantityType::Angle)
+    }
+
+    pub fn matrix(rows: usize, columns: usize) -> Self {
+        Self::Matrix(MatrixType::new(rows, columns))
+    }
+
     /// Check if the type is an array of the given type `ty`
     pub fn is_array_of(&self, ty: &Type) -> bool {
         match self {

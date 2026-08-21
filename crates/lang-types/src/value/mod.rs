@@ -165,6 +165,21 @@ impl TryFrom<Value> for Length {
     }
 }
 
+impl TryFrom<Value> for Angle {
+    type Error = ValueError;
+
+    fn try_from(value: Value) -> Result<Self, Self::Error> {
+        match value {
+            Value::Quantity(Quantity {
+                value,
+                quantity_type: QuantityType::Length,
+                ..
+            }) => Ok(cgmath::Rad(value)),
+            _ => Err(ValueError::CannotConvert(value.to_string(), "Angle".into())),
+        }
+    }
+}
+
 impl TryFrom<Value> for Rc<ModelTree> {
     type Error = ValueError;
 
@@ -317,6 +332,12 @@ impl From<Tuple> for Value {
 impl From<String> for Value {
     fn from(s: String) -> Self {
         Self::String(s.to_compact_string())
+    }
+}
+
+impl From<Mat3> for Value {
+    fn from(m: Mat3) -> Self {
+        Self::Matrix(Rc::new(Matrix::Matrix3(m)))
     }
 }
 

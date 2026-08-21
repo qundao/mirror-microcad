@@ -3,7 +3,7 @@
 
 //! Mathematical operations.
 
-use crate::{Angle, AngleF, Mat3F, Vec3F};
+use crate::{Angle, AngleF, Mat3, Mat3F, Scalar, Vec3F};
 
 use cgmath::{InnerSpace, SquareMatrix};
 
@@ -33,6 +33,26 @@ fn angle_f(x: Angle) -> AngleF {
     cgmath::Rad(x.0.to_num::<f64>())
 }
 
+fn mat3f_to_mat3(mat3f: Mat3F) -> Mat3 {
+    Mat3::new(
+        Scalar::from_num(mat3f.x.x),
+        Scalar::from_num(mat3f.x.y),
+        Scalar::from_num(mat3f.x.z),
+        Scalar::from_num(mat3f.y.x),
+        Scalar::from_num(mat3f.y.y),
+        Scalar::from_num(mat3f.y.z),
+        Scalar::from_num(mat3f.z.x),
+        Scalar::from_num(mat3f.z.y),
+        Scalar::from_num(mat3f.z.z),
+    )
+}
+
+pub fn rotate_around_axis(angle: Angle, x: Scalar, y: Scalar, z: Scalar) -> Mat3 {
+    let axis = Vec3F::new(x.to_num(), y.to_num(), z.to_num());
+    let mat3f = Mat3F::from_axis_angle(axis, angle_f(angle));
+    mat3f_to_mat3(mat3f)
+}
+
 /// Helper function to return rotation X,Y,Z rotation matrices.
 pub fn rotation_matrices_xyz(x: Angle, y: Angle, z: Angle) -> (Mat3F, Mat3F, Mat3F) {
     (
@@ -40,6 +60,16 @@ pub fn rotation_matrices_xyz(x: Angle, y: Angle, z: Angle) -> (Mat3F, Mat3F, Mat
         Mat3F::from_angle_y(angle_f(y)),
         Mat3F::from_angle_z(angle_f(z)),
     )
+}
+
+pub fn rotate_xyz(x: Angle, y: Angle, z: Angle) -> Mat3 {
+    let (x, y, z) = rotation_matrices_xyz(x, y, z);
+    mat3f_to_mat3(x * y * z)
+}
+
+pub fn rotate_zyx(x: Angle, y: Angle, z: Angle) -> Mat3 {
+    let (x, y, z) = rotation_matrices_xyz(x, y, z);
+    mat3f_to_mat3(z * y * x)
 }
 
 /// Rotation matrix to orient a vector
