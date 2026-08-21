@@ -301,10 +301,22 @@ pub mod core {
     /// Access the attributes in a model tree.
     #[builtin_fn(core::attribute_access(lhs: Any, name: String) -> Any)]
     pub fn attribute_access(
-        _args: Arguments,
+        args: Arguments,
         _ctx: &mut BuiltinEvalContext,
     ) -> Result<Value, BuiltinError> {
-        todo!()
+        use microcad_lang_types::model::AttributeAccess;
+
+        let lhs = args.get("lhs");
+        let name: String = args.try_get("name")?;
+
+        match lhs {
+            // Get an input or output property of a model tree.
+            Value::Model(model) => match model.get_attribute(&name) {
+                Some(attr) => Ok(attr.clone()),
+                None => Err(BuiltinError::PropertyNotFound { name: name.clone() }),
+            },
+            value => Err(BuiltinError::TypeError(TypeError::NoArrayType(value.ty()))),
+        }
     }
 }
 
