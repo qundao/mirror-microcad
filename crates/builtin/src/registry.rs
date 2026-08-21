@@ -25,9 +25,10 @@ impl BuiltinRegistry {
         };
 
         use crate::mu;
-        let default_modules = [&mu::CORE, &mu::DEBUG, &mu::MATH, &mu::GEO2D, &mu::OPS];
+        [&mu::CORE, &mu::DEBUG, &mu::MATH, &mu::GEO2D, &mu::OPS]
+            .iter()
+            .for_each(|module| registry.register(module));
 
-        registry.register_all(default_modules.into_iter());
         registry
     }
 
@@ -53,13 +54,14 @@ impl BuiltinRegistry {
         }
     }
 
-    /// Register an iterator of builtin static references
-    pub fn register_all(&mut self, builtins: impl IntoIterator<Item = &'static Builtin>) {
-        self.builtins
-            .extend(builtins.into_iter().map(|b| (b.id(), b)));
-    }
-
     pub fn get(&self, id: BuiltinId) -> Option<&'static Builtin> {
+        if self.builtins.get(&id).is_none() {
+            eprintln!("--- {id}");
+            self.builtins
+                .iter()
+                .for_each(|(k, v)| eprintln!("{k} {v:#?}"));
+        }
+
         self.builtins.get(&id).copied()
     }
 }
