@@ -5921,6 +5921,7 @@ name = "microcad-macros"
 version = "0.6.0"
 dependencies = [
  "microcad-hash",
+ "proc-macro-crate",
  "proc-macro2",
  "quote",
  "syn 3.0.3",
