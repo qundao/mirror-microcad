@@ -17,7 +17,7 @@ pub(crate) fn builtin_mod_impl(item: TokenStream) -> TokenStream {
         .flat_map(|(_, items)| items)
         .filter_map(|item| match item {
             syn::Item::Fn(ItemFn { attrs, sig, .. })
-                if helpers::attr_exists(attrs, "builtin_fs") =>
+                if helpers::attr_exists(attrs, "builtin_fn") =>
             {
                 Some(format_ident!("{}", sig.ident.to_string().to_uppercase()))
             }
