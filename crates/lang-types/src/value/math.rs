@@ -53,4 +53,57 @@ impl MathOps for Value {
             val => Err(ValueError::InvalidMathOperand(val.ty())),
         }
     }
+
+    fn int(&self) -> ValueResult {
+        match self {
+            Value::Integer(i) => Ok(Value::Integer(*i)),
+            Value::Quantity(q) => q.int(),
+            val => Err(ValueError::InvalidMathOperand(val.ty())),
+        }
+    }
+
+    /// Calculate the sign of the value (-1, 0, or 1).
+    fn signum(&self) -> ValueResult {
+        match self {
+            Value::Integer(i) => Ok(Value::Integer(i.signum())),
+            Value::Quantity(q) => q.signum(),
+            val => Err(ValueError::InvalidMathOperand(val.ty())),
+        }
+    }
+
+    /// Round down to the nearest integer.
+    fn floor(&self) -> ValueResult {
+        match self {
+            Value::Integer(i) => Ok(Value::Integer(*i)),
+            Value::Quantity(q) => q.floor(),
+            val => Err(ValueError::InvalidMathOperand(val.ty())),
+        }
+    }
+
+    /// Round up to the nearest integer.
+    fn ceil(&self) -> ValueResult {
+        match self {
+            Value::Integer(i) => Ok(Value::Integer(*i)),
+            Value::Quantity(q) => q.ceil(),
+            val => Err(ValueError::InvalidMathOperand(val.ty())),
+        }
+    }
+
+    /// Round to the nearest integer.
+    fn round(&self) -> ValueResult {
+        match self {
+            Value::Integer(i) => Ok(Value::Integer(*i)),
+            Value::Quantity(q) => q.round(),
+            val => Err(ValueError::InvalidMathOperand(val.ty())),
+        }
+    }
+
+    /// Extract the fractional part.
+    fn fract(&self) -> ValueResult {
+        match self {
+            Value::Integer(_) => Ok(Value::Integer(0.into())),
+            Value::Quantity(q) => q.fract(),
+            val => Err(ValueError::InvalidMathOperand(val.ty())),
+        }
+    }
 }

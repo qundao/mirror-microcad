@@ -3,11 +3,10 @@
 
 //! µcad language types and values.
 
+pub mod math;
 pub mod model;
 pub mod ty;
 pub mod value;
-
-mod math_ops;
 
 mod color;
 pub use color::Color;
@@ -27,7 +26,7 @@ pub use model::{
     Model, ModelOutputType, ModelTree, NodeMut as ModelNodeMut, NodeRef as ModelNodeRef,
 };
 
-pub use math_ops::MathOps;
+pub use math::MathOps;
 
 pub use microcad_lang_base::{
     Identifier,
@@ -52,6 +51,16 @@ pub type Mat3 = cgmath::Matrix3<Scalar>;
 pub type Mat4 = cgmath::Matrix4<Scalar>;
 /// Primitive angle type in radians.
 pub type Angle = cgmath::Rad<Scalar>;
+
+pub type ScalarF = f64;
+
+pub type AngleF = cgmath::Rad<ScalarF>;
+
+/// 3D vector type.
+pub type Vec3F = cgmath::Vector3<ScalarF>;
+
+/// Matrix 3x3 floating point type.
+pub type Mat3F = cgmath::Matrix3<ScalarF>;
 
 /// A length in mm
 #[derive(
