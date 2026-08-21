@@ -6,7 +6,7 @@
 use crate::prelude::*;
 
 pub(crate) fn builtin_mod_impl(item: TokenStream) -> TokenStream {
-    let mut item_mod = parse_macro_input!(item as ItemMod);
+    let item_mod = parse_macro_input!(item as ItemMod);
 
     let mod_name = &item_mod.ident;
     let mod_upper_name = helpers::ident_upper(mod_name);
@@ -29,15 +29,6 @@ pub(crate) fn builtin_mod_impl(item: TokenStream) -> TokenStream {
             _ => None,
         })
         .collect();
-
-    // Append `pub static ALL_BUILTINS` to the end of the module's item vector
-    if let Some((_, items)) = &mut item_mod.content {
-        items.push(parse_quote! {
-            pub static ALL_BUILTINS: &[&'static Builtin] = &[
-                #(&#collected_builtins),*
-            ];
-        });
-    }
 
     let doc = helpers::attr_fetch_doc(&item_mod.attrs);
 
