@@ -3,21 +3,42 @@
 
 //! Model tree.
 
+mod node;
 mod ops;
+
+pub use node::{Node, NodeExt, NodeId, NodeMut, NodeRef};
 
 use microcad_macros::Artifact;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Model, Ty, Type,
-    model::{self, NodeExt, element::BuiltinWorkpiece},
+    Model, Ty, Type, Value,
+    model::{self, element::BuiltinWorkpiece},
 };
 
 /// A model tree with a root node.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Artifact)]
 pub struct ModelTree {
-    pub root: model::NodeId,
-    pub arena: model::Arena,
+    pub root: NodeId,
+    pub arena: Arena,
+}
+
+impl ModelTree {
+    pub fn new(root: impl Into<Model>) -> Self {
+        let mut arena = Arena::default();
+        let root = arena.new_node(root.into());
+        Self { root, arena }
+    }
+
+    pub fn root<'a>(&'a self) -> NodeRef<'a> {
+        NodeRef::new(self.root, &self.arena)
+    }
+}
+
+impl model::AttributeAccess for ModelTree {
+    fn get_attribute(&self, name: impl AsRef<str>) -> Option<Value> {
+        self.root().get_attribute(name)
+    }
 }
 
 impl ModelTree {
@@ -50,7 +71,7 @@ impl ModelTree {
         }
 
         // --- Otherwise, construct the new tree structure ---
-        let mut arena = model::Arena::new();
+        let mut arena = Arena::new();
 
         // 1. Create the top-level BooleanOp root node
         let root_model = Model {
@@ -78,18 +99,14 @@ impl ModelTree {
     }
 
     /// Recursively copies a sub-tree from `source_arena` into `self.arena`.
-    pub fn adopt_tree(
-        &mut self,
-        source_id: model::NodeId,
-        source_arena: &model::Arena,
-    ) -> model::NodeId {
+    pub fn adopt_tree(&mut self, source_id: NodeId, source_arena: &Arena) -> NodeId {
         Self::adopt_tree_to_arena(&mut self.arena, source_id, source_arena)
     }
 
     /// Returns a new `ModelTree` where every `Element::InputPlaceholder` node
     /// (and its descendants) is replaced with a deep copy of `input_model`.
     pub fn replace_input_placeholders(&self, input_model: &ModelTree) -> Self {
-        let mut new_arena = model::Arena::new();
+        let mut new_arena = Arena::new();
 
         // Recursively build the transformed tree starting from root
         let new_root = Self::replace_placeholders_recursive(
@@ -158,3 +175,16 @@ impl std::ops::Sub for ModelTree {
         self.apply_boolean_op(model::BooleanOp::Difference, rhs)
     }
 }
+
+impl From<Value> for ModelTree {
+    fn from(value: Value) -> Self {
+        match value {
+            Value::Model(model_tree) => {
+                std::rc::Rc::try_unwrap(model_tree).unwrap_or_else(|rc| (*rc).clone())
+            }
+            value => ModelTree::new(crate::model::Element::Value(value)),
+        }
+    }
+}
+
+pub type Arena = microcad_lang_base::tree::Arena<Model>;

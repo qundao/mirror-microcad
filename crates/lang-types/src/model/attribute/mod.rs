@@ -60,11 +60,15 @@ impl std::fmt::Display for Attribute {
 #[derive(Clone, Default, Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Attributes(pub Vec<Attribute>);
 
-impl Attributes {
+pub trait AttributeAccess {
     /// Gets the value of the first attribute matching `name`.
     ///
     /// Returns `None` if no attribute with the given identifier exists.
-    pub fn get(&self, name: impl AsRef<str>) -> Option<Value> {
+    fn get_attribute(&self, name: impl AsRef<str>) -> Option<Value>;
+}
+
+impl AttributeAccess for Attributes {
+    fn get_attribute(&self, name: impl AsRef<str>) -> Option<Value> {
         let key = name.as_ref();
 
         self.0.iter().find_map(|attr| {
