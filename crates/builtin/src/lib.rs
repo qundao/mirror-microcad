@@ -123,6 +123,18 @@ impl BuiltinOperation {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct BuiltinModule {
+    pub info: BuiltinInfo,
+    pub items: &'static [&'static Builtin],
+}
+
+impl BuiltinModule {
+    pub const fn new(info: BuiltinInfo, items: &'static [&'static Builtin]) -> Self {
+        Self { info, items }
+    }
+}
+
 #[derive(Debug, Clone, From)]
 pub enum Builtin {
     /// Produces a constant Value
@@ -133,6 +145,8 @@ pub enum Builtin {
     Primitive(BuiltinPrimitive),
     /// A function computing a model tree from an existing one
     Operation(BuiltinOperation),
+    /// A builtin module
+    Module(BuiltinModule),
 }
 
 impl Builtin {
@@ -142,6 +156,7 @@ impl Builtin {
             Builtin::Function(f) => f.info.id(),
             Builtin::Primitive(p) => p.info.id(),
             Builtin::Operation(o) => o.info.id(),
+            Builtin::Module(o) => o.info.id(),
         }
     }
 
@@ -151,6 +166,7 @@ impl Builtin {
             Builtin::Function(f) => f.info.name,
             Builtin::Primitive(p) => p.info.name,
             Builtin::Operation(o) => o.info.name,
+            Builtin::Module(o) => o.info.name,
         }
     }
 
@@ -191,6 +207,20 @@ impl Builtin {
 /// A macro to generate built-in functions.
 #[macro_export]
 macro_rules! builtin {
+    // Helper: @info for Modules (Only takes a module identifier)
+    (
+        @info
+        $doc:literal
+        $mod_name:ident
+    ) => {
+        $crate::BuiltinInfo::new(concat!(
+            "__mu::",
+            stringify!($mod_name)
+        ))
+        .with_doc($doc)
+    };
+
+    // Helper: @info for Functions/Constants
     (
         @info
         $doc:literal
@@ -203,6 +233,22 @@ macro_rules! builtin {
             stringify!($fn_name)
         ))
         .with_doc($doc)
+    };
+
+    // Syntax: builtin!(
+    //     Module
+    //     "Doc string"
+    //     mod_name [ builtin1, builtin2, ... ]
+    // )
+    (
+        Module
+        $doc:literal
+        $mod_name:ident [ $($builtin:expr),* $(,)? ]
+    ) => {
+        $crate::Builtin::Module($crate::BuiltinModule::new(
+            $crate::builtin!(@info $doc $mod_name),
+            &[ $($builtin),* ],
+        ))
     };
 
     // Syntax: builtin!(
