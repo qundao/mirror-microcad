@@ -7,7 +7,7 @@ mod export_command;
 mod layer;
 mod resolution_attribute;
 
-use crate::Color;
+use crate::{Color, Value};
 pub use export_command::ExportCommand;
 pub use layer::Layer;
 pub use resolution_attribute::ResolutionAttribute;
@@ -59,6 +59,28 @@ impl std::fmt::Display for Attribute {
 
 #[derive(Clone, Default, Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Attributes(pub Vec<Attribute>);
+
+impl Attributes {
+    /// Gets the value of the first attribute matching `name`.
+    ///
+    /// Returns `None` if no attribute with the given identifier exists.
+    pub fn get(&self, name: impl AsRef<str>) -> Option<Value> {
+        let key = name.as_ref();
+
+        self.0.iter().find_map(|attr| {
+            if &attr.id() == key {
+                let value = match attr {
+                    Attribute::Color(color) => Value::from(color.clone()),
+                    Attribute::Resolution(res) => Value::from(res.clone()),
+                    Attribute::Export(export) => Value::from(export.clone()),
+                };
+                Some(value)
+            } else {
+                None
+            }
+        })
+    }
+}
 
 impl std::fmt::Display for Attributes {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

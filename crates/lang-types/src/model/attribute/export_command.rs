@@ -7,6 +7,8 @@ use derive_more::Display;
 use microcad_lang_base::Name;
 use serde::{Deserialize, Serialize};
 
+use crate::{Value, tuple};
+
 /// Export attribute, e.g. `#[export: "output.svg"]`.
 #[derive(Clone, Debug, Display, PartialEq, Hash, Serialize, Deserialize)]
 #[display("path = {}, id = {}", path.display(), id)]
@@ -15,4 +17,13 @@ pub struct ExportCommand {
     pub path: std::path::PathBuf,
     /// Exporter id
     pub id: Name,
+}
+
+impl From<ExportCommand> for Value {
+    fn from(export: ExportCommand) -> Self {
+        Value::from(tuple!(
+            path = export.path.display().to_string(),
+            id = export.id
+        ))
+    }
 }
