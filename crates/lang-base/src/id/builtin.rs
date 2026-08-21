@@ -56,7 +56,9 @@ impl BuiltinInfo {
     }
 
     pub const fn with_doc(mut self, doc: &'static str) -> Self {
-        self.doc = Some(doc);
+        if !doc.is_empty() {
+            self.doc = Some(doc);
+        }
         self
     }
 
