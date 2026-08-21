@@ -91,19 +91,6 @@ pub(crate) fn builtin_fn_impl(attr: TokenStream, item: TokenStream) -> TokenStre
     // Parse the annotated function
     let input_fn = parse_macro_input!(item as ItemFn);
 
-    // Get the doc string comment if present
-    let mut doc_comment = String::new();
-    for attr in &input_fn.attrs {
-        if attr.path().is_ident("doc")
-            && let Ok(syn::Expr::Lit(syn::ExprLit {
-                lit: syn::Lit::Str(lit_str),
-                ..
-            })) = &attr.meta.require_name_value().map(|nv| &nv.value)
-        {
-            doc_comment.push_str(lit_str.value().trim());
-        }
-    }
-
     let fn_name = &input_fn.sig.ident;
 
     if name != *fn_name {
@@ -118,8 +105,7 @@ pub(crate) fn builtin_fn_impl(attr: TokenStream, item: TokenStream) -> TokenStre
         .into();
     }
 
-    // Generate uppercase static name (e.g., `add` -> `ADD`)
-    let static_name = format_ident!("{}", fn_name.to_string().to_uppercase());
+    let static_name = helpers::ident_upper(&fn_name);
 
     let formatted_params = if is_variadic {
         quote! { (*) }
@@ -161,6 +147,8 @@ pub(crate) fn builtin_fn_impl(attr: TokenStream, item: TokenStream) -> TokenStre
             #fn_block
         }
     };
+
+    let doc_comment = helpers::attr_fetch_doc(&input_fn.attrs);
 
     quote! {
         #fn_with_doc

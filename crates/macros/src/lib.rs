@@ -12,6 +12,7 @@ mod derive_identifiable;
 mod derive_scaffold;
 mod derive_src_referrer;
 mod derive_visit;
+mod helpers;
 mod test_builtin_fn;
 
 pub(crate) mod prelude {
@@ -24,6 +25,8 @@ pub(crate) mod prelude {
         Data, DeriveInput, Expr, Fields, Ident, ItemFn, ItemMod, ItemStatic, Path, Result, Token,
         parse_macro_input, parse_quote,
     };
+
+    pub(crate) use super::helpers;
 }
 
 use prelude::*;

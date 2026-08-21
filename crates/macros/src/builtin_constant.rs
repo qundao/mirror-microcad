@@ -30,20 +30,6 @@ pub(crate) fn builtin_constant_impl(attr: TokenStream, item: TokenStream) -> Tok
 
     // Parse the annotated static item (e.g., `pub static PI: Builtin = std::f64::consts::PI;`)
     let input_static = parse_macro_input!(item as ItemStatic);
-
-    // Extract doc comment string
-    let mut doc_comment = String::new();
-    for attr in &input_static.attrs {
-        if attr.path().is_ident("doc")
-            && let Ok(syn::Expr::Lit(syn::ExprLit {
-                lit: syn::Lit::Str(lit_str),
-                ..
-            })) = &attr.meta.require_name_value().map(|nv| &nv.value)
-        {
-            doc_comment.push_str(lit_str.value().trim());
-        }
-    }
-
     let static_name = &input_static.ident;
 
     if name != *static_name {
@@ -58,6 +44,7 @@ pub(crate) fn builtin_constant_impl(attr: TokenStream, item: TokenStream) -> Tok
         .into();
     }
 
+    let doc_comment = helpers::attr_fetch_doc(&input_static.attrs);
     let expr = &input_static.expr;
     let vis = &input_static.vis;
 

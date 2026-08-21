@@ -8,35 +8,27 @@ use crate::prelude::*;
 pub(crate) fn builtin_mod_impl(item: TokenStream) -> TokenStream {
     let mut item_mod = parse_macro_input!(item as ItemMod);
 
-    let mut collected_builtins = Vec::new();
+    let mod_name = &item_mod.ident;
+    let mod_upper_name = helpers::ident_upper(mod_name);
 
-    if let Some((_, items)) = &item_mod.content {
-        for item in items {
-            match item {
-                // Scan functions with #[builtin_fn(...)]
-                syn::Item::Fn(ItemFn { attrs, sig, .. }) => {
-                    let has_builtin_fn =
-                        attrs.iter().any(|attr| attr.path().is_ident("builtin_fn"));
-                    if has_builtin_fn {
-                        // Converts Rust fn name `greater_than` -> UPPERCASE static name `GREATER_THAN`
-                        let static_ident =
-                            format_ident!("{}", sig.ident.to_string().to_uppercase());
-                        collected_builtins.push(static_ident);
-                    }
-                }
-                // Scan statics with #[builtin_constant(...)]
-                syn::Item::Static(ItemStatic { attrs, ident, .. }) => {
-                    let has_builtin_constant = attrs
-                        .iter()
-                        .any(|attr| attr.path().is_ident("builtin_constant"));
-                    if has_builtin_constant {
-                        collected_builtins.push(ident.clone());
-                    }
-                }
-                _ => {}
+    let collected_builtins: Vec<_> = item_mod
+        .content
+        .iter()
+        .flat_map(|(_, items)| items)
+        .filter_map(|item| match item {
+            syn::Item::Fn(ItemFn { attrs, sig, .. })
+                if helpers::attr_exists(attrs, "builtin_fs") =>
+            {
+                Some(format_ident!("{}", sig.ident.to_string().to_uppercase()))
             }
-        }
-    }
+            syn::Item::Static(ItemStatic { attrs, ident, .. })
+                if helpers::attr_exists(attrs, "builtin_constant") =>
+            {
+                Some(ident.clone())
+            }
+            _ => None,
+        })
+        .collect();
 
     // Append `pub static ALL_BUILTINS` to the end of the module's item vector
     if let Some((_, items)) = &mut item_mod.content {
@@ -47,8 +39,12 @@ pub(crate) fn builtin_mod_impl(item: TokenStream) -> TokenStream {
         });
     }
 
+    let doc = helpers::attr_fetch_doc(&item_mod.attrs);
+
     quote! {
         #item_mod
+
+        pub static #mod_upper_name: Builtin = builtin!(Module #doc #mod_name [#(&#mod_name::#collected_builtins),*]);
     }
     .into()
 }
