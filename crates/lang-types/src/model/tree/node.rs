@@ -1,0 +1,67 @@
+// Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+//! Model node.
+
+use microcad_lang_base::Identifier;
+
+use crate::{Model, ModelOutputType, model};
+
+pub type Node = microcad_lang_base::tree::Node<Model>;
+pub type NodeRef<'a> = microcad_lang_base::tree::NodeRef<'a, Model>;
+pub type NodeMut<'a> = microcad_lang_base::tree::NodeMut<'a, Model>;
+pub type NodeId = microcad_lang_base::tree::NodeId;
+
+/// Extension trait for [`SymbolNode`] .
+pub trait NodeExt<'a> {
+    fn name(&self) -> Option<&Identifier>;
+
+    fn deduce_output_type(&self) -> ModelOutputType;
+
+    fn into_group_child(self) -> Option<NodeRef<'a>>;
+
+    fn multiplicity_descendants(&self) -> model::iter::MultiplicityDescendants<'a>;
+}
+
+impl<'a> NodeExt<'a> for NodeRef<'a> {
+    fn name(&self) -> Option<&Identifier> {
+        self.name.as_ref()
+    }
+
+    /// Deduce output type from element or children.
+    fn deduce_output_type(&self) -> ModelOutputType {
+        let output_type = self.element.output_type();
+
+        if output_type == ModelOutputType::NotDetermined {
+            // Fallback: iterate over children and deduce
+            for child in self.children() {
+                let child_type = child.deduce_output_type();
+                if child_type != ModelOutputType::NotDetermined {
+                    return child_type;
+                }
+            }
+        }
+
+        output_type
+    }
+
+    /// Return inner group child if this model only contains a single group child.
+    ///
+    /// Useful for operations like `subtract() {}` or `hull() {}` to unwrap nested groups.
+    fn into_group_child(self) -> Option<NodeRef<'a>> {
+        let mut children = self.children();
+        let first_child = children.next()?;
+
+        // Ensure it's the ONLY child
+        if children.next().is_none() && matches!(first_child.element, model::Element::Group) {
+            Some(first_child)
+        } else {
+            None
+        }
+    }
+
+    /// An iterator that descends to multiplicity nodes.
+    fn multiplicity_descendants(&self) -> model::iter::MultiplicityDescendants<'a> {
+        model::iter::MultiplicityDescendants::new(*self)
+    }
+}
