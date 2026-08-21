@@ -25,15 +25,9 @@ impl BuiltinRegistry {
         };
 
         use crate::mu;
-        let default_modules = [
-            mu::core::ALL_BUILTINS,
-            mu::debug::ALL_BUILTINS,
-            mu::math::ALL_BUILTINS,
-            mu::geo2d::ALL_BUILTINS,
-            mu::ops::ALL_BUILTINS,
-        ];
+        let default_modules = [&mu::CORE, &mu::DEBUG, &mu::MATH, &mu::GEO2D, &mu::OPS];
 
-        registry.register_all(default_modules.into_iter().flatten().cloned());
+        registry.register_all(default_modules.into_iter());
         registry
     }
 
@@ -47,6 +41,16 @@ impl BuiltinRegistry {
             "Compiler bug: Duplicate builtin ID registered: {:?}",
             id
         );
+
+        match builtin {
+            Builtin::Module(builtin_module) => {
+                builtin_module
+                    .items
+                    .iter()
+                    .for_each(|item| self.register(item));
+            }
+            _ => {}
+        }
     }
 
     /// Register an iterator of builtin static references
