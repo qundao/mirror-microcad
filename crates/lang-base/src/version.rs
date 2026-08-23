@@ -69,7 +69,7 @@ pub struct VersionAnnotation {
 
 impl VersionAnnotation {
     /// Creates a standard stable version annotation.
-    pub fn stable(introduced: Version) -> Self {
+    pub const fn stable(introduced: Version) -> Self {
         Self {
             introduced,
             stability: Stability::Stable,
@@ -86,15 +86,6 @@ impl VersionAnnotation {
         match &self.stability {
             Stability::Deprecated { since, .. } => target_version >= since,
             _ => false,
-        }
-    }
-}
-
-impl Default for VersionAnnotation {
-    fn default() -> Self {
-        Self {
-            introduced: LanguageVersion::current().into(),
-            stability: Stability::Stable,
         }
     }
 }
