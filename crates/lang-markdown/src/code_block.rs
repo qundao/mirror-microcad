@@ -96,7 +96,7 @@ impl CodeBlock {
 
     /// Get source for a code block
     pub fn source(&self, mut url: Url) -> Source {
-        url.set_fragment(self.header.name.as_ref().map(|s| s.as_str()));
+        url.set_fragment(self.header.name.as_deref());
         Source::new(
             SourceLocation::new(url).with_line_offset(self.line_offset as u32),
             self.code.clone(),
