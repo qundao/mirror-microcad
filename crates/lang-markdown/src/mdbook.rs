@@ -5,6 +5,7 @@
 
 use std::collections::HashMap;
 
+use microcad_lang_base::WriteToFile;
 use miette::Diagnostic;
 use thiserror::Error;
 
@@ -99,10 +100,10 @@ impl MdBook {
 
     pub fn save_all(&self) -> Result<(), MdBookError> {
         self.md_files.iter().try_for_each(|(md_file, md)| {
-            md.save(self.abs_md_file(md_file))
+            md.write_to_file(self.abs_md_file(md_file))
                 .map_err(|err| MdBookError::Save {
                     file: md_file.clone(),
-                    err,
+                    err: crate::markdown::MarkdownError::IoError(err),
                 })
         })
     }

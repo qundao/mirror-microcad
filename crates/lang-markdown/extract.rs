@@ -4,7 +4,7 @@
 //! A tool to extract snippets from a markdown or mdbook into a list of µcad source files.
 //!
 //! This tool is also supposed to be an example on how to use the microcad-lang-markdown API.
-//! Hence, we intentionally do use the microcad-driver API here.
+//! Hence, we intentionally do *NOT* use the microcad-driver API here.
 
 use clap::Parser;
 

@@ -18,3 +18,13 @@ pub use section::Section;
 
 pub use parser::ParseError;
 pub use parser::parse;
+
+/// Helper macro to construct a Markdown from any format string.
+#[macro_export]
+macro_rules! md {
+    ($($arg:tt)*) => {
+        $crate::parse(&format!($($arg)*)).unwrap_or_default()
+    };
+}
+
+pub use microcad_lang_base::WriteToFile;

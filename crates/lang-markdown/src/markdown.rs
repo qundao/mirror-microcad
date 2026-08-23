@@ -5,7 +5,7 @@
 
 use std::str::FromStr;
 
-use derive_more::{Deref, DerefMut};
+use microcad_lang_base::WriteToFile;
 use thiserror::Error;
 
 use crate::{CodeBlock, Paragraph, ParseError, Section};
@@ -21,7 +21,7 @@ pub enum MarkdownError {
 }
 
 /// Markdown struct, represented as a linear list of sections.
-#[derive(Debug, Default, Clone, Deref, DerefMut)]
+#[derive(Debug, Default, Clone)]
 pub struct Markdown(Vec<Section>);
 
 impl Markdown {
@@ -42,13 +42,6 @@ impl Markdown {
     pub fn load(path: impl AsRef<std::path::Path>) -> Result<Self, MarkdownError> {
         let input = std::fs::read_to_string(path)?;
         Markdown::from_str(&input).map_err(|err| err.into())
-    }
-
-    /// Write markdown to file.
-    pub fn save(&self, path: impl AsRef<std::path::Path>) -> Result<(), MarkdownError> {
-        use std::io::Write;
-        let mut file = std::fs::File::create(path)?;
-        Ok(file.write_all(self.to_string().as_bytes())?)
     }
 
     /// Add a new section.
@@ -103,6 +96,8 @@ impl std::fmt::Display for Markdown {
         Ok(())
     }
 }
+
+impl WriteToFile for Markdown {}
 
 #[test]
 fn test_heading_parsing_and_display() {
