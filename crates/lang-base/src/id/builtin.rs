@@ -41,8 +41,11 @@ impl From<String> for BuiltinId {
 #[debug("{name}")]
 #[display("{name}@{id}")]
 pub struct BuiltinInfo {
+    /// Full name of the built-in, e.g. `__mu::geo2d::Circle`.
     pub name: &'static str,
+    /// The hash ID of the built-in, generated from it's full-name.
     pub id: BuiltinId,
+    /// Optional documentation.
     pub doc: Option<&'static str>,
 }
 
@@ -68,5 +71,19 @@ impl BuiltinInfo {
 
     pub const fn id(&self) -> BuiltinId {
         self.id
+    }
+}
+
+/// Item name methods.
+impl BuiltinInfo {
+    /// Returns the item name (e.g., `"Circle"` from `"__mu::geo2d::Circle"`).
+    /// Returns `None` if the name only contains a root/module without a distinct item.
+    pub fn item_name(&self) -> Option<&'static str> {
+        let parts: Vec<&'static str> = self.name.split("::").collect();
+        if parts.len() >= 1 {
+            parts.last().copied()
+        } else {
+            None
+        }
     }
 }
