@@ -43,25 +43,15 @@ impl BuiltinRegistry {
             id
         );
 
-        match builtin {
-            Builtin::Module(builtin_module) => {
-                builtin_module
-                    .items
-                    .iter()
-                    .for_each(|item| self.register(item));
-            }
-            _ => {}
+        if let Builtin::Module(builtin_module) = builtin {
+            builtin_module
+                .items
+                .iter()
+                .for_each(|item| self.register(item));
         }
     }
 
     pub fn get(&self, id: BuiltinId) -> Option<&'static Builtin> {
-        if self.builtins.get(&id).is_none() {
-            eprintln!("--- {id}");
-            self.builtins
-                .iter()
-                .for_each(|(k, v)| eprintln!("{k} {v:#?}"));
-        }
-
         self.builtins.get(&id).copied()
     }
 }

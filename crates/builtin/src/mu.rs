@@ -467,7 +467,7 @@ pub mod math {
         let x: Angle = args.try_get("x")?;
         let y: Angle = args.try_get("y")?;
         let z: Angle = args.try_get("z")?;
-        Ok(microcad_lang_types::math::rotate_zyx(x, y, z).into())
+        Ok(microcad_lang_types::math::rotate_zyx(z, y, x).into())
     }
 }
 
