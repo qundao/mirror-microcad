@@ -9,7 +9,7 @@ use miette::Diagnostic as MietteDiagnostic;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use crate::{CompilationResult, Diagnostic, Diagnostics, Version};
+use crate::{CompilationResult, Diagnostic, Diagnostics, LanguageVersion};
 
 #[derive(Debug, Error, MietteDiagnostic)]
 pub enum ArtifactError {
@@ -34,7 +34,10 @@ pub enum ArtifactError {
 
     /// Version mismatch
     #[error("Version mismatch: {expected} != {got}")]
-    VersionMismatch { expected: Version, got: Version },
+    VersionMismatch {
+        expected: LanguageVersion,
+        got: LanguageVersion,
+    },
 }
 
 #[derive(Debug, Display, PartialEq, Clone, Copy, Serialize, Deserialize, FromStr)]
@@ -53,16 +56,16 @@ pub enum ArtifactKind {
 #[repr(C)]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ArtifactHeader {
-    pub magic: [u8; 4],     // "&mu;"
-    pub version: Version,   // Increment this whenever the format changes
-    pub kind: ArtifactKind, // The artifact type (AST, IR, etc.)
+    pub magic: [u8; 4],           // "&mu;"
+    pub version: LanguageVersion, // Increment this whenever the format changes
+    pub kind: ArtifactKind,       // The artifact type (AST, IR, etc.)
 }
 
 impl From<ArtifactKind> for ArtifactHeader {
     fn from(kind: ArtifactKind) -> Self {
         Self {
             magic: *b"&mu;",
-            version: Version::current(),
+            version: LanguageVersion::current(),
             kind,
         }
     }
@@ -92,7 +95,7 @@ impl<T> Envelope<T> {
         let version = self.header.version;
         if !version.is_compatible() {
             return Err(ArtifactError::VersionMismatch {
-                expected: Version::current(),
+                expected: LanguageVersion::current(),
                 got: version,
             });
         }

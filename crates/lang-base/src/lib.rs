@@ -34,8 +34,6 @@ pub const MICROCAD_EXTENSIONS: &[&str] = &["mu", "µcad", "mcad", "ucad"];
 /// Default extension for µcad files.
 pub const MICROCAD_EXTENSION: &str = "µcad";
 
-pub use version::{MICROCAD_VERSION, Version};
-
 pub use artifact::{Artifact, ArtifactError, ArtifactHeader, ArtifactKind, StageResult};
 pub use diag::{DiagRenderOptions, Diagnostic, Diagnostics};
 pub use element::{Identifier, IdentifierList};
@@ -43,6 +41,7 @@ pub use output::{Capture, Output, Stdout};
 pub use rc::{Rc, RcMut};
 pub use src_ref::{LineCol, LineIndex, Refer, Span, SpanToSrcRef, Spanned, SrcRef, SrcReferrer};
 pub use tree::{FormatTree, TreeDisplay, TreeState};
+pub use version::{LanguageVersion, MICROCAD_VERSION, Stability, Version, VersionAnnotation};
 
 pub use source::{Source, SourceKind, SourceLocation, SourceMap, TextEdit};
 
