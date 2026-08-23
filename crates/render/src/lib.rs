@@ -37,7 +37,7 @@ pub enum RenderError {
     NothingToRender,
 }
 
-use microcad_builtin::{BuiltinError, BuiltinId, mu};
+use microcad_builtin::{__mu, BuiltinError, BuiltinId, mu};
 
 /// Built-in execution function signature
 pub type RenderFn = fn(&mut RenderContext) -> Result<GeometryOutput, RenderError>;
@@ -50,9 +50,8 @@ impl RenderHooks {
     pub fn new() -> Self {
         let mut hooks: HashMap<BuiltinId, RenderFn> = HashMap::default();
 
-        hooks.insert(mu::geo2d::CIRCLE.id(), |ctx| {
-            let circle = mu::geo2d::Circle::from_model(ctx.model().get())?;
-            Ok(circle.render_with_context(ctx)?.into())
+        hooks.insert(__mu!(geo2d::Circle), |ctx| {
+            mu::geo2d::Circle::from_model(ctx.model().get())?.render_with_context(ctx)
         });
 
         Self { _hooks: hooks }

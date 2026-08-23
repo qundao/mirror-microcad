@@ -52,7 +52,7 @@ impl<'tree> RenderContext<'tree> {
 
     /// The current model (panics if it is none).
     pub fn model(&self) -> ModelNodeRef<'tree> {
-        self.model_stack.last().expect("A model").clone()
+        *self.model_stack.last().expect("A model")
     }
 
     /// Run the closure `f` within the given `model`.
@@ -123,7 +123,7 @@ impl<'tree> RenderContext<'tree> {
 
                 Ok(geo)
             }
-            None => Ok(f(self, model)?.into()),
+            None => Ok(f(self, model)?),
         }
     }
 
