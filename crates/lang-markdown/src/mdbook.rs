@@ -3,9 +3,7 @@
 
 //! µcad markdown book support.
 
-use std::collections::HashMap;
-
-use microcad_lang_base::WriteToFile;
+use microcad_lang_base::{HashMap, WriteToFile};
 use miette::Diagnostic;
 use thiserror::Error;
 

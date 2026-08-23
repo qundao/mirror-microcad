@@ -3,7 +3,11 @@
 
 //! µcad markdown parser.
 
-use crate::{CodeBlock, Markdown, Paragraph, Section, code_block::CodeBlockHeader};
+use crate::{
+    Block, CodeBlock, Markdown, Section,
+    block::{BlockQuote, Table},
+    code_block::CodeBlockHeader,
+};
 use miette::Diagnostic;
 use thiserror::Error;
 
@@ -194,7 +198,7 @@ impl Parse for Markdown {
                     }
                 }
 
-                current_section.content.push(Paragraph::CodeBlock(block));
+                current_section.content.push(Block::CodeBlock(block));
             }
             // 3. Tables
             else if trimmed.starts_with('|') {
@@ -208,7 +212,21 @@ impl Parse for Markdown {
                 }
                 current_section
                     .content
-                    .push(Paragraph::Table(content.join("\n").trim().to_string()));
+                    .push(Block::Table(Table::from_iter(content.into_iter())));
+            } else if trimmed.starts_with(">") {
+                let mut content = vec![line.to_string()];
+                while let Some((_, line)) = context.next() {
+                    let trimmed = line.trim();
+                    if !trimmed.starts_with(">") {
+                        break;
+                    }
+                    content.push(line.to_string());
+                }
+                current_section
+                    .content
+                    .push(Block::BlockQuote(BlockQuote::from_iter(
+                        content.into_iter(),
+                    )));
             }
             // 4. Text
             else {
@@ -222,7 +240,7 @@ impl Parse for Markdown {
                 }
                 current_section
                     .content
-                    .push(Paragraph::Text(content.join("\n").to_string()));
+                    .push(Block::Paragraph(content.join("\n").to_string()));
             }
         }
 

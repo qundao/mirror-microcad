@@ -15,5 +15,5 @@ macro_rules! test_case {
 }
 
 test_case!(basic);
-test_case!(paragraphs);
+test_case!(blocks);
 test_case!(codeblock);

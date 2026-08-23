@@ -3,17 +3,17 @@
 
 //! µcad language markdown support library.
 
+mod block;
 mod code_block;
 mod markdown;
 mod mdbook;
-mod paragraph;
 mod parser;
 mod section;
 
+pub use block::Block;
 pub use code_block::{CodeBlock, CodeBlockHeader};
 pub use markdown::{Markdown, MarkdownError};
 pub use mdbook::{MdBook, MdBookError};
-pub use paragraph::Paragraph;
 pub use section::Section;
 
 pub use parser::ParseError;

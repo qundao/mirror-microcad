@@ -8,7 +8,7 @@ use std::str::FromStr;
 use microcad_lang_base::WriteToFile;
 use thiserror::Error;
 
-use crate::{CodeBlock, Paragraph, ParseError, Section};
+use crate::{Block, CodeBlock, ParseError, Section};
 
 #[derive(Error, Debug)]
 pub enum MarkdownError {
@@ -58,9 +58,9 @@ impl Markdown {
     pub fn code_blocks(&self) -> impl Iterator<Item = &CodeBlock> {
         self.0
             .iter() // Iterate over Vec<Section>
-            .flat_map(|section| section.content.iter()) // Flatten Paragraphs
-            .filter_map(|paragraph| {
-                if let Paragraph::CodeBlock(block) = paragraph {
+            .flat_map(|section| section.content.iter()) // Flatten Blocks
+            .filter_map(|block| {
+                if let Block::CodeBlock(block) = block {
                     Some(block)
                 } else {
                     None
@@ -72,9 +72,9 @@ impl Markdown {
     pub fn code_blocks_mut(&mut self) -> impl Iterator<Item = &mut CodeBlock> {
         self.0
             .iter_mut() // Iterate over Vec<Section>
-            .flat_map(|section| section.content.iter_mut()) // Flatten Paragraphs
-            .filter_map(|paragraph| {
-                if let Paragraph::CodeBlock(block) = paragraph {
+            .flat_map(|section| section.content.iter_mut()) // Flatten Blocks
+            .filter_map(|block| {
+                if let Block::CodeBlock(block) = block {
                     Some(block)
                 } else {
                     None
@@ -113,14 +113,14 @@ fn test_heading_parsing_and_display() {
     assert!(
         md.0[0]
             .content
-            .contains(&Paragraph::Text("Content".to_string()))
+            .contains(&Block::Paragraph("Content".to_string()))
     );
     assert_eq!(md.0[1].level, 2);
     assert_eq!(md.0[1].heading, "Sub");
     assert!(
         md.0[1]
             .content
-            .contains(&Paragraph::Text("More content".to_string()))
+            .contains(&Block::Paragraph("More content".to_string()))
     );
 
     // Verify formatting includes the double newline you added in Display

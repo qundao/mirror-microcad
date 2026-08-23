@@ -3,17 +3,17 @@
 
 //! Markdown section
 
-use crate::Paragraph;
+use crate::Block;
 
-/// A markdown section with heading and paragraphs.
+/// A markdown section with heading and block elements.
 #[derive(Debug, Clone, Default)]
 pub struct Section {
     /// A heading, displayed with a `#` prefix in markdown.
     pub heading: String,
     /// Section level.
     pub level: i64,
-    /// The section content, consisting of paragraphs.
-    pub content: Vec<Paragraph>,
+    /// The section content, consisting of blocks.
+    pub content: Vec<Block>,
 }
 
 impl Section {
@@ -39,15 +39,12 @@ impl std::fmt::Display for Section {
             Ok(())
         } else {
             writeln!(f)?;
-            self.content
-                .iter()
-                .enumerate()
-                .try_for_each(|(i, paragraph)| {
-                    if i > 0 {
-                        writeln!(f)?;
-                    }
-                    write!(f, "{paragraph}")
-                })
+            self.content.iter().enumerate().try_for_each(|(i, block)| {
+                if i > 0 {
+                    writeln!(f)?;
+                }
+                write!(f, "{block}")
+            })
         }
     }
 }

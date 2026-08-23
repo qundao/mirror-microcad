@@ -25,7 +25,7 @@ derive_more = { version = "2", features = ["deref", "deref_mut"] }
 thiserror = "2.0"
 miette = "7.3.0"
 
-# Uses for md-extractor
+# Used by md-extractor
 clap = { version = "4", features = ["derive"], optional = true }
 
 microcad-lang-base = { workspace = true }
