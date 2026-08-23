@@ -152,24 +152,22 @@ pub enum Builtin {
 }
 
 impl Builtin {
-    pub const fn id(&self) -> BuiltinId {
+    pub const fn info(&self) -> &BuiltinInfo {
         match self {
-            Builtin::Constant(c) => c.info.id(),
-            Builtin::Function(f) => f.info.id(),
-            Builtin::Primitive(p) => p.info.id(),
-            Builtin::Operation(o) => o.info.id(),
-            Builtin::Module(o) => o.info.id(),
+            Builtin::Constant(c) => &c.info,
+            Builtin::Function(f) => &f.info,
+            Builtin::Primitive(p) => &p.info,
+            Builtin::Operation(o) => &o.info,
+            Builtin::Module(o) => &o.info,
         }
     }
 
+    pub const fn id(&self) -> BuiltinId {
+        self.info().id()
+    }
+
     pub const fn name(&self) -> &'static str {
-        match self {
-            Builtin::Constant(c) => c.info.name,
-            Builtin::Function(f) => f.info.name,
-            Builtin::Primitive(p) => p.info.name,
-            Builtin::Operation(o) => o.info.name,
-            Builtin::Module(o) => o.info.name,
-        }
+        self.info().name
     }
 
     pub fn call_fn(

@@ -5,11 +5,12 @@
 
 use microcad_lang_base::{BuiltinId, HashMap};
 
-use crate::Builtin;
+use crate::{Builtin, BuiltinModule};
 
 #[derive(Default)]
 pub struct BuiltinRegistry {
     builtins: HashMap<BuiltinId, &'static Builtin>,
+    modules: Vec<&'static BuiltinModule>,
 }
 
 impl std::fmt::Debug for BuiltinRegistry {
@@ -19,15 +20,23 @@ impl std::fmt::Debug for BuiltinRegistry {
 }
 
 impl BuiltinRegistry {
+    /// Create a new [`BuiltinRegistry`] and register default modules.
     pub fn new() -> Self {
-        let mut registry = Self {
-            builtins: HashMap::default(),
-        };
+        let mut registry = Self::default();
 
         use crate::mu;
-        [&mu::CORE, &mu::DEBUG, &mu::MATH, &mu::GEO2D, &mu::OPS]
-            .iter()
-            .for_each(|module| registry.register(module));
+        [
+            &mu::CORE,
+            &mu::DEBUG,
+            &mu::MATH,
+            &mu::ARRAY,
+            &mu::STRING,
+            &mu::COLOR,
+            &mu::GEO2D,
+            &mu::OPS,
+        ]
+        .iter()
+        .for_each(|module| registry.register(module));
 
         registry
     }
@@ -48,10 +57,15 @@ impl BuiltinRegistry {
                 .items
                 .iter()
                 .for_each(|item| self.register(item));
+            self.modules.push(builtin_module);
         }
     }
 
     pub fn get(&self, id: BuiltinId) -> Option<&'static Builtin> {
         self.builtins.get(&id).copied()
+    }
+
+    pub fn modules(&self) -> impl Iterator<Item = &&'static BuiltinModule> {
+        self.modules.iter()
     }
 }

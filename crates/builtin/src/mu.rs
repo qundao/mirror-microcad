@@ -210,7 +210,7 @@ pub mod core {
     /// (number of decimal places for floating-point values/lengths or maximum characters for strings).
     /// Passing a negative integer for `width` or `precision` disables that specifier.
     ///
-    /// ### Parameters
+    /// ## Parameters
     /// - `expr`: The value to format into a string.
     /// - `width`: Minimum total character width (padded with spaces on the left if positive).
     /// - `precision`: Maximum decimal places or string character limit.
@@ -253,11 +253,11 @@ pub mod core {
     ///
     /// If `start` is greater than `end`, an empty array is returned.
     ///
-    /// ### Parameters
+    /// ## Parameters
     /// - `start`: The beginning integer value of the sequence.
     /// - `end`: The ending integer value of the sequence (included in output).
     ///
-    /// ### Examples
+    /// ## Examples
     /// ```text
     /// range(1, 5)  // -> [1, 2, 3, 4, 5]
     /// range(0, 0)  // -> [0]
