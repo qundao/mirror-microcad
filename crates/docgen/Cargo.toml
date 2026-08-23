@@ -14,13 +14,25 @@ rust-version.workspace = true
 version.workspace = true
 
 [dependencies]
-toml = { version = "1.1.2", features = ["serde"] }
+derive_more = { version = "2", features = ["deref", "deref_mut", "from"] }
+log = "0.4"
+miette = "7.3.0"
 serde = "1.0"
 thiserror = "2.0"
-log = "0.4"
-clap = { version = "4", features = ["derive"] }
-derive_more = { version = "2", features = ["deref", "deref_mut", "from"] }
+toml = { version = "1.1.2", features = ["serde"] }
+
+# Used by bin_builtin
+clap = { version = "4", features = ["derive"], optional = true }
 
 microcad-builtin = { workspace = true }
 microcad-lang-markdown = { workspace = true }
 microcad-package = { workspace = true }
+
+[[bin]]
+name = "microcad-docgen-builtin"
+path = "builtin.rs"
+required-features = ["bin_builtin"]
+
+[features]
+# Dependencies for md extractor
+bin_builtin = ["dep:clap"]

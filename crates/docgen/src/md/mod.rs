@@ -8,6 +8,7 @@ mod to_md;
 use std::error::Error;
 
 use crate::DocGen;
+use microcad_lang_markdown::WriteToFile;
 use microcad_package::{SymbolDef, SymbolNodeExt, SymbolNodeRef};
 pub(crate) use to_md::ToMd;
 
@@ -28,7 +29,7 @@ impl Md {
     pub fn write_md_file<'a>(&self, symbol: SymbolNodeRef<'a>) -> Result<(), Box<dyn Error>> {
         Ok(symbol
             .to_md()
-            .save(self.symbol_md_file_path(symbol))
+            .write_to_file(self.symbol_md_file_path(symbol))
             .map_err(Box::new)?)
     }
 }

@@ -3,11 +3,18 @@
 
 //! Generate a markdown book from a symbol tree.
 
+mod config;
+mod summary;
+
 use std::{error::Error, io::Write};
 
+use microcad_lang_markdown::WriteToFile;
 use microcad_package::{SymbolDef, SymbolNodeExt, SymbolNodeRef};
 
 use crate::{DocGen, md::ToMd};
+pub use summary::{Summary, SummaryEntry};
+
+pub use config::Config;
 
 /// Mdbook generator.
 ///
@@ -22,30 +29,6 @@ impl MdBook {
         Self {
             path: path.as_ref().to_path_buf(),
         }
-    }
-
-    /// Because this function is tested and imports a built-in file, it has intentionally no error handling.
-    fn generate_book_toml_string(&self) -> String {
-        let book_toml: toml::Value =
-            toml::de::from_str(include_str!("book.toml")).expect("Valid toml");
-        let str = toml::ser::to_string(&book_toml).expect("No error");
-        format!(
-            r#"# Copyright © 2026 The µcad authors <info@ucad.xyz>
-# SPDX-License-Identifier: AGPL-3.0-or-later
-#
-# NOTE: Auto-generated code.
-# This markdown book has been generated from µcad source via `microcad-docgen`.
-# Changes in the book might be overwritten.
-{str}
-"#
-        )
-    }
-
-    /// Generate the toml file for the book
-    fn write_book_toml(&self) -> std::io::Result<()> {
-        let mut file = std::fs::File::create(self.path.join("book.toml"))?;
-        file.write_all(self.generate_book_toml_string().as_bytes())?;
-        Ok(())
     }
 
     /// Return the path for a symbol.
@@ -162,7 +145,7 @@ impl MdBook {
                 std::fs::create_dir_all(path.parent().expect("A parent"))?;
                 match symbol.def() {
                     SymbolDef::Source(_) | SymbolDef::InlineModule(_) | SymbolDef::Workbench(_) => {
-                        symbol.to_md().save(path)
+                        symbol.to_md().write_to_file(path)
                     }
                     _ => Ok(()),
                 }
@@ -190,7 +173,7 @@ impl DocGen for MdBook {
     fn doc_gen<'a>(&self, symbol: SymbolNodeRef<'a>) -> Result<(), Box<dyn Error>> {
         std::fs::create_dir_all(self.path.join("src"))?;
 
-        self.write_book_toml()?;
+        Config.write_to_file(self.path.join("book.toml"))?;
         self.write_summary(symbol.clone())?;
         self.write_symbol(symbol)
     }

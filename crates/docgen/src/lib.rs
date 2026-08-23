@@ -3,6 +3,7 @@
 
 //! µcad Markdown support library
 
+mod builtin;
 mod md;
 mod mdbook;
 
@@ -11,6 +12,9 @@ pub use md::Md;
 
 /// mdbook Generator.
 pub use mdbook::MdBook;
+
+/// builtin documentation generator.
+pub use builtin::BuiltinMdbook;
 
 use microcad_package::SymbolNodeRef;
 use std::error::Error;
