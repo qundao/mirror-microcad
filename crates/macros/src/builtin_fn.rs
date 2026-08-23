@@ -8,42 +8,37 @@ use quote::ToTokens;
 use crate::prelude::*;
 
 /// A built-in type.
-enum BuiltinType {
-    /// Any identifier
-    Single(Ident),
-    /// An identifier in `[]`
-    Array(Ident),
-}
+struct BuiltinType(Ident);
 
-impl BuiltinType {
-    fn map_ty_ident(ty: &Ident) -> TokenStream2 {
-        match ty.to_string().as_str() {
-            "Scalar" => quote! { microcad_lang_types::Type::scalar() },
-            "Angle" => quote! { microcad_lang_types::Type::angle() },
-            "Length" => quote! { microcad_lang_types::Type::length() },
-            "Mat3" => quote! { microcad_lang_types::Type::matrix(3,3) },
-            "Model" => {
-                quote! { microcad_lang_types::Type::Model(microcad_lang_type::model::ModelOutputType::Any) }
-            }
-            _ => quote! { microcad_lang_types::Type::#ty },
-        }
+impl Parse for BuiltinType {
+    fn parse(input: ParseStream) -> Result<Self> {
+        Ok(Self(input.parse()?))
     }
 }
 
 impl quote::ToTokens for BuiltinType {
     fn to_tokens(&self, tokens: &mut TokenStream2) {
-        let expanded = match self {
-            BuiltinType::Single(ident) => Self::map_ty_ident(ident),
-            BuiltinType::Array(ident) => {
-                let ty = Self::map_ty_ident(ident);
-                quote! { microcad_lang_types::Type::Array(Box::new(#ty)) }
+        let ty = &self.0;
+        let expanded = match ty.to_string().as_str() {
+            "Scalar" => quote! { microcad_lang_types::Type::scalar() },
+            "Angle" => quote! { microcad_lang_types::Type::angle() },
+            "Length" => quote! { microcad_lang_types::Type::length() },
+            "Color" => quote! { microcad_lang_types::Type::color() },
+            "Array" => {
+                quote! { microcad_lang_types::Type::Array(Box::new(microcad_lang_types::Type::Any)) }
             }
+            "Mat3" => quote! { microcad_lang_types::Type::matrix(3,3) },
+            "Model" => {
+                quote! { microcad_lang_types::Type::Model(microcad_lang_type::model::ModelOutputType::Any) }
+            }
+            _ => quote! { microcad_lang_types::Type::#ty },
         };
 
         // Append the expanded tokens into the mutable buffer
         expanded.to_tokens(tokens);
     }
 }
+
 // Represents a parameter in the macro attribute, e.g.: `lhs: Any`
 struct BuiltinParam {
     name: Ident,
@@ -59,18 +54,6 @@ impl quote::ToTokens for BuiltinParam {
             #name: #ty
         }
         .to_tokens(tokens);
-    }
-}
-
-impl Parse for BuiltinType {
-    fn parse(input: ParseStream) -> Result<Self> {
-        if input.peek(syn::token::Bracket) {
-            let content;
-            syn::bracketed!(content in input);
-            Ok(Self::Array(content.parse()?))
-        } else {
-            Ok(Self::Single(input.parse()?))
-        }
     }
 }
 
@@ -179,31 +162,33 @@ pub(crate) fn builtin_fn_impl(attr: TokenStream, item: TokenStream) -> TokenStre
         quote! { (#(#formatted_params),*) }
     };
 
-    let return_type = match return_type {
-        Some(return_type) => {
-            let return_type = return_type.into_token_stream();
-            quote! { -> #return_type  }
-        }
-        None => {
-            quote! {}
-        }
-    };
+    let return_type = return_type
+        .map(|ty| {
+            let ty = ty.into_token_stream();
+            quote! { -> #ty }
+        })
+        .unwrap_or_default();
 
-    let id_doc = format!(
-        "**Static ID:** `{}`",
-        microcad_hash::HashId::compile_time_hash(format!("__mu::{fn_name}::{mod_name}").as_str())
-    );
-    let fn_vis = &input_fn.vis;
-    let fn_sig = &input_fn.sig;
-    let fn_block = &input_fn.block;
-    let fn_attrs = &input_fn.attrs;
+    let fn_with_doc = {
+        // TODO: Move this block into a helper function.
+        let id_doc = format!(
+            "**Static ID:** `{}`",
+            microcad_hash::HashId::compile_time_hash(
+                format!("__mu::{mod_name}::{fn_name}").as_str()
+            )
+        );
+        let fn_vis = &input_fn.vis;
+        let fn_sig = &input_fn.sig;
+        let fn_block = &input_fn.block;
+        let fn_attrs = &input_fn.attrs;
 
-    let fn_with_doc = quote! {
-        #(#fn_attrs)*
-        #[doc = ""]
-        #[doc = #id_doc]
-        #fn_vis #fn_sig {
-            #fn_block
+        quote! {
+            #(#fn_attrs)*
+            #[doc = ""]
+            #[doc = #id_doc]
+            #fn_vis #fn_sig {
+                #fn_block
+            }
         }
     };
 
