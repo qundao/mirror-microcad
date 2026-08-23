@@ -55,10 +55,18 @@ impl Array {
         self.items.last().cloned().unwrap_or_default()
     }
 
-    /// Get all elements but the first
-    pub fn tail(&self) -> Array {
+    /// Get first `n` elements
+    pub fn head(&self, n: Integer) -> Array {
         Array::new(
-            self.items.iter().skip(1).cloned().collect(),
+            self.items.iter().take(n.to_num()).cloned().collect(),
+            self.ty.clone(),
+        )
+    }
+
+    /// Get all elements but the first `n`
+    pub fn tail(&self, n: Integer) -> Array {
+        Array::new(
+            self.items.iter().skip(n.to_num()).cloned().collect(),
             self.ty.clone(),
         )
     }
