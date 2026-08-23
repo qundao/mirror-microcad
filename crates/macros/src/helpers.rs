@@ -8,18 +8,17 @@ pub fn attr_fetch_doc(attrs: &[syn::Attribute]) -> String {
     attrs
         .iter()
         .filter_map(|attr| {
-            if attr.path().is_ident("doc") {
-                if let Ok(nv) = attr.meta.require_name_value() {
-                    if let syn::Expr::Lit(syn::ExprLit {
-                        lit: syn::Lit::Str(lit_str),
-                        ..
-                    }) = &nv.value
-                    {
-                        return Some(lit_str.value().trim().to_string());
-                    }
-                }
+            if attr.path().is_ident("doc")
+                && let Ok(nv) = attr.meta.require_name_value()
+                && let syn::Expr::Lit(syn::ExprLit {
+                    lit: syn::Lit::Str(lit_str),
+                    ..
+                }) = &nv.value
+            {
+                Some(lit_str.value().trim().to_string())
+            } else {
+                None
             }
-            None
         })
         .reduce(|acc, line| format!("{acc}\n{line}"))
         .unwrap_or_default()

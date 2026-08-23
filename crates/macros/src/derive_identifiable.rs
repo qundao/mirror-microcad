@@ -23,7 +23,7 @@ pub fn derive_identifiable_impl(input: TokenStream) -> TokenStream {
         }) => fields
             .named
             .iter()
-            .any(|f| f.ident.as_ref().map_or(false, |i| i == "id")),
+            .any(|f| f.ident.as_ref().is_some_and(|i| i == "id")),
         _ => false,
     };
 

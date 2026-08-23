@@ -152,7 +152,7 @@ pub(crate) fn builtin_fn_impl(attr: TokenStream, item: TokenStream) -> TokenStre
         .into();
     }
 
-    let static_name = helpers::ident_upper(&fn_name);
+    let static_name = helpers::ident_upper(fn_name);
 
     // Generate list of parameters from input tokens.
     let formatted_params = if is_variadic {
