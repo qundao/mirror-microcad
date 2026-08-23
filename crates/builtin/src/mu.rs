@@ -483,6 +483,7 @@ pub mod string {
     }
 }
 
+/// Built-in array functions.
 #[builtin_mod]
 pub mod array {
     use std::rc::Rc;
@@ -497,47 +498,81 @@ pub mod array {
 
     #[builtin_fn(array::first(a: Array) -> Any)]
     pub fn first(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        todo!()
+        let a: Rc<Array> = args.try_get("a")?;
+        Ok(a.first())
     }
 
     #[builtin_fn(array::last(a: Array) -> Any)]
     pub fn last(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        todo!()
+        let a: Rc<Array> = args.try_get("a")?;
+        Ok(a.last())
     }
 
     #[builtin_fn(array::rev(a: Array) -> Array)]
     pub fn rev(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        todo!()
+        let a: Rc<Array> = args.try_get("a")?;
+        Ok(a.rev().into())
     }
 
     #[builtin_fn(array::sorted(a: Array) -> Array)]
     pub fn sorted(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        todo!()
+        let a: Rc<Array> = args.try_get("a")?;
+        Ok(a.sorted().into())
     }
 
     #[builtin_fn(array::head(a: Array, n: Integer) -> Array)]
     pub fn head(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        todo!()
+        let a: Rc<Array> = args.try_get("a")?;
+        let n: Integer = args.try_get("n")?;
+        Ok(a.head(n).into())
     }
 
     #[builtin_fn(array::tail(a: Array, n: Integer) -> Array)]
     pub fn tail(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        todo!()
+        let a: Rc<Array> = args.try_get("a")?;
+        let n: Integer = args.try_get("n")?;
+        Ok(a.tail(n).into())
     }
 
-    #[builtin_fn(array::contains(a: Array, v: Any) -> Array)]
+    #[builtin_fn(array::contains(a: Array, v: Any) -> Bool)]
     pub fn contains(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        todo!()
+        let a: Rc<Array> = args.try_get("a")?;
+        let v = args.get("v");
+        Ok(a.contains(v).into())
+    }
+
+    #[builtin_fn(array::all_equal(a: Array) -> Bool)]
+    pub fn all_equal(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
+        let a: Rc<Array> = args.try_get("a")?;
+        Ok(a.all_equal().into())
+    }
+
+    #[builtin_fn(array::is_ascending(a: Array) -> Bool)]
+    pub fn is_ascending(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
+        let a: Rc<Array> = args.try_get("a")?;
+        Ok(a.is_ascending().into())
+    }
+
+    #[builtin_fn(array::is_descending(a: Array) -> Bool)]
+    pub fn is_descending(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
+        let a: Rc<Array> = args.try_get("a")?;
+        Ok(a.is_descending().into())
     }
 }
 
+/// Built-in color functions.
 #[builtin_mod]
 pub mod color {
     use super::*;
 
-    #[builtin_fn(array::rgb(r: Scalar, g: Scalar, b: Scalar) -> Color)]
+    use microcad_lang_types::{Scalar, tuple};
+
+    #[builtin_fn(color::rgb(r: Scalar, g: Scalar, b: Scalar) -> Color)]
     pub fn rgb(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        todo!()
+        let r: Scalar = args.try_get("r")?;
+        let g: Scalar = args.try_get("g")?;
+        let b: Scalar = args.try_get("b")?;
+        Ok(tuple!(r = r, g = g, b = b).into())
     }
 }
 
