@@ -144,7 +144,7 @@ pub struct ShortId(CompactString);
 
 impl PartialEq<Identifier> for ShortId {
     fn eq(&self, other: &Identifier) -> bool {
-        self.0 == other.to_string()
+        self.0 == *other
     }
 }
 
