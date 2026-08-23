@@ -3,7 +3,7 @@
 
 //! Microcad micro markdown parser and writer
 
-use microcad_lang_markdown::{Markdown, Paragraph, Section};
+use microcad_lang_markdown::{Block, Markdown, Section};
 use microcad_package::{SymbolDef, SymbolNodeExt, SymbolNodeRef, symbol};
 
 /// Helper function to parse markdown from a string, but any occurring parse error will lead to a panic.
@@ -70,7 +70,7 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
                 md.add_section(Section {
                     heading: heading.to_string(),
                     level: 2,
-                    content: vec![Paragraph::Text(
+                    content: vec![Block::Paragraph(
                         symbols
                             .into_iter()
                             .filter_map(symbol_one_line_item)
@@ -170,7 +170,7 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
                     md.add_section(Section {
                         heading: "Constants".to_string(),
                         level: 2,
-                        content: vec![Paragraph::Text(
+                        content: vec![Block::Paragraph(
                             constants
                                 .into_iter()
                                 .map(|(identifier, value)| format!("- `{identifier}` = `{value}`"))
@@ -197,7 +197,7 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
                     md.add_section(Section {
                         heading: "Aliases".to_string(),
                         level: 2,
-                        content: vec![Paragraph::Text(
+                        content: vec![Block::Paragraph(
                             aliases
                                 .into_iter()
                                 .map(|(identifier, name)| format!("- `{identifier}` => `{name}`"))
