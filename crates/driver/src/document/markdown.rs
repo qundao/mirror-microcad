@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{Diagnostics, SourceLocation};
+use microcad_lang_base::{Diagnostics, SourceLocation, WriteToFile};
 use miette::IntoDiagnostic;
 
 use crate::prelude as mu;
@@ -70,7 +70,7 @@ impl mu::commands::Sync for mu::document::Markdown {
     fn sync(&self) -> mu::Result {
         Ok(self
             .markdown
-            .save(self.location.path().expect("Location must be a path"))
+            .write_to_file(self.location.path().expect("Location must be a path"))
             .into_diagnostic()?)
     }
 }
