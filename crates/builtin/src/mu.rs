@@ -372,6 +372,7 @@ pub mod debug {
     }
 }
 
+/// Built-in math functions.
 #[builtin_mod]
 pub mod math {
     use super::*;
@@ -467,6 +468,76 @@ pub mod math {
         let y: Angle = args.try_get("y")?;
         let z: Angle = args.try_get("z")?;
         Ok(microcad_lang_types::math::rotate_zyx(x, y, z).into())
+    }
+}
+
+/// Built-in string functions
+#[builtin_mod]
+pub mod string {
+    use super::*;
+
+    #[builtin_fn(string::len(s: String) -> Integer)]
+    pub fn len(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
+        let s: String = args.try_get("s")?;
+        Ok(s.len().into())
+    }
+}
+
+#[builtin_mod]
+pub mod array {
+    use std::rc::Rc;
+
+    use super::*;
+
+    #[builtin_fn(array::count(a: Array) -> Integer)]
+    pub fn count(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
+        let a: Rc<Array> = args.try_get("a")?;
+        Ok(a.len().into())
+    }
+
+    #[builtin_fn(array::first(a: Array) -> Any)]
+    pub fn first(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
+        todo!()
+    }
+
+    #[builtin_fn(array::last(a: Array) -> Any)]
+    pub fn last(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
+        todo!()
+    }
+
+    #[builtin_fn(array::rev(a: Array) -> Array)]
+    pub fn rev(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
+        todo!()
+    }
+
+    #[builtin_fn(array::sorted(a: Array) -> Array)]
+    pub fn sorted(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
+        todo!()
+    }
+
+    #[builtin_fn(array::head(a: Array, n: Integer) -> Array)]
+    pub fn head(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
+        todo!()
+    }
+
+    #[builtin_fn(array::tail(a: Array, n: Integer) -> Array)]
+    pub fn tail(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
+        todo!()
+    }
+
+    #[builtin_fn(array::contains(a: Array, v: Any) -> Array)]
+    pub fn contains(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
+        todo!()
+    }
+}
+
+#[builtin_mod]
+pub mod color {
+    use super::*;
+
+    #[builtin_fn(array::rgb(r: Scalar, g: Scalar, b: Scalar) -> Color)]
+    pub fn rgb(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
+        todo!()
     }
 }
 
