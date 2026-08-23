@@ -147,6 +147,25 @@ impl_try_from!(String => String);
 impl_try_from!(Integer => Integer);
 impl_try_from!(Integer => i64);
 
+impl TryFrom<Value> for Scalar {
+    type Error = ValueError;
+
+    fn try_from(value: Value) -> Result<Self, Self::Error> {
+        match value {
+            Value::Integer(i) => Ok(Scalar::from(i)),
+            Value::Quantity(Quantity {
+                value,
+                quantity_type: QuantityType::Scalar,
+                ..
+            }) => Ok(value),
+            _ => Err(ValueError::CannotConvert(
+                value.to_string(),
+                "Scalar".into(),
+            )),
+        }
+    }
+}
+
 impl TryFrom<Value> for Length {
     type Error = ValueError;
 
@@ -161,6 +180,17 @@ impl TryFrom<Value> for Length {
                 value.to_string(),
                 "Length".into(),
             )),
+        }
+    }
+}
+
+impl TryFrom<Value> for Rc<Array> {
+    type Error = ValueError;
+
+    fn try_from(value: Value) -> Result<Self, Self::Error> {
+        match value {
+            Value::Array(array) => Ok(array),
+            _ => Err(ValueError::CannotConvert(value.to_string(), "Array".into())),
         }
     }
 }
@@ -191,75 +221,6 @@ impl TryFrom<Value> for Rc<ModelTree> {
                 "ModelTree".into(),
             )),
         }
-    }
-}
-
-impl TryFrom<Value> for Scalar {
-    type Error = ValueError;
-
-    fn try_from(value: Value) -> Result<Self, Self::Error> {
-        match value {
-            Value::Integer(i) => Ok(Scalar::from(i)),
-            Value::Quantity(Quantity {
-                value,
-                quantity_type: QuantityType::Scalar,
-                ..
-            }) => Ok(value),
-            _ => Err(ValueError::CannotConvert(
-                value.to_string(),
-                "Scalar".into(),
-            )),
-        }
-    }
-}
-
-impl TryFrom<&Value> for Angle {
-    type Error = ValueError;
-
-    fn try_from(value: &Value) -> Result<Self, Self::Error> {
-        match value {
-            Value::Quantity(Quantity {
-                value,
-                quantity_type: QuantityType::Angle,
-                ..
-            }) => Ok(cgmath::Rad(*value)),
-            _ => Err(ValueError::CannotConvert(value.to_string(), "Angle".into())),
-        }
-    }
-}
-
-impl TryFrom<&Value> for Length {
-    type Error = ValueError;
-
-    fn try_from(value: &Value) -> Result<Self, Self::Error> {
-        match value {
-            Value::Quantity(Quantity {
-                value,
-                quantity_type: QuantityType::Length,
-                ..
-            }) => Ok(Length(*value)),
-            _ => Err(ValueError::CannotConvert(
-                value.to_string(),
-                "Length".into(),
-            )),
-        }
-    }
-}
-
-impl TryFrom<&Value> for Mat3 {
-    type Error = ValueError;
-
-    fn try_from(value: &Value) -> Result<Self, Self::Error> {
-        if let Value::Matrix(m) = value
-            && let Matrix::Matrix3(matrix3) = m.as_ref()
-        {
-            return Ok(*matrix3);
-        }
-
-        Err(ValueError::CannotConvert(
-            value.to_string(),
-            "Matrix3".into(),
-        ))
     }
 }
 

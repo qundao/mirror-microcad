@@ -52,6 +52,10 @@ impl Type {
         Self::Quantity(QuantityType::Angle)
     }
 
+    pub fn color() -> Self {
+        TupleType::color().into()
+    }
+
     pub fn matrix(rows: usize, columns: usize) -> Self {
         Self::Matrix(MatrixType::new(rows, columns))
     }
@@ -101,10 +105,11 @@ impl std::str::FromStr for Type {
         }
 
         match ty {
-            "Color" => Ok(Type::Tuple(Box::new(TupleType::new_color()))),
-            "Vec2" => Ok(Type::Tuple(Box::new(TupleType::new_vec2()))),
-            "Vec3" => Ok(Type::Tuple(Box::new(TupleType::new_vec3()))),
-            "Size2" => Ok(Type::Tuple(Box::new(TupleType::new_size2()))),
+            "Color" => Ok(Type::color()),
+            "Vec2" => Ok(Type::Tuple(Box::new(TupleType::vec2()))),
+            "Vec3" => Ok(Type::Tuple(Box::new(TupleType::vec3()))),
+            "Mat3" => Ok(Type::matrix(3, 3)),
+            "Size2" => Ok(Type::Tuple(Box::new(TupleType::size2()))),
             "Any" => Ok(Type::Any),
             "Integer" => Ok(Type::Integer),
             "Bool" => Ok(Type::Bool),

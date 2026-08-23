@@ -20,14 +20,14 @@ pub struct TupleType {
 
 impl TupleType {
     /// Create new Vec2 type.
-    pub fn new_vec2() -> Self {
+    pub fn vec2() -> Self {
         [("x", Type::scalar()), ("y", Type::scalar())]
             .into_iter()
             .collect()
     }
 
     /// Create new Vec3 type.
-    pub fn new_vec3() -> Self {
+    pub fn vec3() -> Self {
         [
             ("x", Type::scalar()),
             ("y", Type::scalar()),
@@ -38,7 +38,7 @@ impl TupleType {
     }
 
     /// Create new Color type.
-    pub fn new_color() -> Self {
+    pub fn color() -> Self {
         [
             ("r", Type::scalar()),
             ("g", Type::scalar()),
@@ -50,7 +50,7 @@ impl TupleType {
     }
 
     /// Create new Size2 type.
-    pub fn new_size2() -> Self {
+    pub fn size2() -> Self {
         [("width", Type::length()), ("height", Type::length())]
             .into_iter()
             .collect()

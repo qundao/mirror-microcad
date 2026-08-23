@@ -3,7 +3,7 @@ use microcad_lang_types::{function_type, ty::*};
 
 #[test]
 fn test_tuple_type_eq() {
-    assert_eq!(TupleType::new_color(), TupleType::new_color());
+    assert_eq!(TupleType::color(), TupleType::color());
 }
 
 #[test]
