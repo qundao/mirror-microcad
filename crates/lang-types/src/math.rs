@@ -67,7 +67,7 @@ pub fn rotate_xyz(x: Angle, y: Angle, z: Angle) -> Mat3 {
     mat3f_to_mat3(x * y * z)
 }
 
-pub fn rotate_zyx(x: Angle, y: Angle, z: Angle) -> Mat3 {
+pub fn rotate_zyx(z: Angle, y: Angle, x: Angle) -> Mat3 {
     let (x, y, z) = rotation_matrices_xyz(x, y, z);
     mat3f_to_mat3(z * y * x)
 }

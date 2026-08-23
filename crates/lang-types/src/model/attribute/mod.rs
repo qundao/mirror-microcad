@@ -74,7 +74,7 @@ impl AttributeAccess for Attributes {
         self.0.iter().find_map(|attr| {
             if &attr.id() == key {
                 let value = match attr {
-                    Attribute::Color(color) => Value::from(color.clone()),
+                    Attribute::Color(color) => Value::from(*color),
                     Attribute::Resolution(res) => Value::from(res.clone()),
                     Attribute::Export(export) => Value::from(export.clone()),
                 };
