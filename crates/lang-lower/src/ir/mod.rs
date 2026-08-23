@@ -46,7 +46,7 @@ pub struct Type {
 impl From<microcad_lang_types::Type> for Type {
     fn from(ty: microcad_lang_types::Type) -> Self {
         Self {
-            ty: ty.into(),
+            ty,
             src_ref: SrcRef::none(),
         }
     }
