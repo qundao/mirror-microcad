@@ -129,3 +129,16 @@ pub trait Identifiable {
 
 /// A result that contains the compilation artifact bundled with diagnostics.
 pub type CompilationResult<T> = Result<(T, Diagnostics), Diagnostics>;
+
+/// Write the display output of type to file.
+#[cfg(feature = "io")]
+pub trait WriteToFile: std::fmt::Display {
+    /// Writes the `Display` output to a file at the specified path.
+    fn write_to_file(&self, path: impl AsRef<std::path::Path>) -> std::io::Result<()> {
+        use std::io::Write;
+        let file = std::fs::File::create(path)?;
+        let mut writer = std::io::BufWriter::new(file);
+        write!(writer, "{self}")?;
+        writer.flush()
+    }
+}
