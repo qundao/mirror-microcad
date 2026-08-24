@@ -84,7 +84,7 @@ pub struct TestModule {
 impl TestModule {
     /// Create a new test module from a directory.
     pub fn new(path: impl AsRef<std::path::Path>) -> Self {
-        let mdbook = microcad_lang_markdown::MdBook::new(&path).expect("No error");
+        let mdbook = microcad_lang_markdown::MdBook::load(&path).expect("No error");
 
         let mut root = TestModule::default();
 
@@ -104,7 +104,7 @@ impl TestModule {
             }
 
             let env = crate::test_env::TestEnv::new(
-                mdbook.abs_md_file(&path),
+                mdbook.abs_md_file_path(&path),
                 &name,
                 &code_block.code,
                 code_block.line_offset as u32,
