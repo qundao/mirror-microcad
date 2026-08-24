@@ -38,11 +38,19 @@ pub struct MdBook {
 }
 
 impl MdBook {
-    /// Create a new [`MdBookDirectory`].
+    pub fn new(name: impl Into<String>) -> Self {
+        Self {
+            name: name.into(),
+            src_path: std::path::PathBuf::from("src"),
+            md_files: HashMap::default(),
+        }
+    }
+
+    /// Load an MdBook from file.
     ///
     /// Will fail if the directory does not contain a `book.toml` file.
     /// Scans the directory `src` recursively for markdown files ending with `.md`.
-    pub fn new(path: impl AsRef<std::path::Path>) -> Result<Self, MdBookError> {
+    pub fn load(path: impl AsRef<std::path::Path>) -> Result<Self, MdBookError> {
         let root = path.as_ref();
 
         let root = if root.ends_with("book.toml") {
@@ -87,20 +95,26 @@ impl MdBook {
 
         Ok(Self {
             name,
-            src_path,
+            src_path: std::path::PathBuf::from("src"),
             md_files,
         })
     }
 
-    pub fn abs_md_file(&self, md_file: impl AsRef<std::path::Path>) -> std::path::PathBuf {
+    pub fn add_md(&mut self, path: impl AsRef<std::path::Path>, md: Markdown) {
+        self.md_files.insert(path.as_ref().to_path_buf(), md);
+    }
+
+    pub fn abs_md_file_path(&self, md_file: impl AsRef<std::path::Path>) -> std::path::PathBuf {
         self.src_path.join(md_file.as_ref())
     }
 
-    pub fn save_all(&self) -> Result<(), MdBookError> {
-        self.md_files.iter().try_for_each(|(md_file, md)| {
-            md.write_to_file(self.abs_md_file(md_file))
+    pub fn save_all(&self, path: impl AsRef<std::path::Path>) -> Result<(), MdBookError> {
+        self.md_files.iter().try_for_each(|(md_file_path, md)| {
+            let md_file_path = path.as_ref().join(md_file_path);
+
+            md.write_to_file(&md_file_path)
                 .map_err(|err| MdBookError::Save {
-                    file: md_file.clone(),
+                    file: md_file_path.clone(),
                     err: crate::markdown::MarkdownError::IoError(err),
                 })
         })

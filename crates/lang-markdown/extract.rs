@@ -51,7 +51,7 @@ pub fn mu_base_path(input_path: impl AsRef<std::path::Path>, name: &str) -> std:
 fn main() -> miette::Result<()> {
     let cli = ExtractCli::parse();
 
-    let mdbook = md::MdBook::new(cli.input).into_diagnostic()?;
+    let mdbook = md::MdBook::load(cli.input).into_diagnostic()?;
     let output = match cli.output {
         Some(path) => path,
         None => std::env::current_dir().into_diagnostic()?,
