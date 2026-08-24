@@ -1,12 +1,16 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! µcad built-in library definitions.
+//! µcad built-in compiler library.
+//!
+//! Every compiler built-in starts with `__mu` prefix.
+//!
+//! The built-ins are grouped into several submodules.
 
 use microcad_lang_types::{
     Arguments, Array, BinaryOperator, Identifier, Integer, Ty, TypeError, Value,
 };
-use microcad_macros::{builtin_constant, builtin_fn, builtin_mod};
+use microcad_macros::{builtin_constant, builtin_fn, builtin_mod, include_inner_docs};
 
 use crate::{Builtin, BuiltinError, BuiltinEvalContext, BuiltinResult, builtin};
 
@@ -717,3 +721,5 @@ pub mod ops {
         Ok(tree)
     }
 }
+
+pub static __MU: &str = include_inner_docs!("src/mu.rs");
