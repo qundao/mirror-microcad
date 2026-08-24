@@ -135,6 +135,14 @@ pub trait WriteToFile: std::fmt::Display {
     /// Writes the `Display` output to a file at the specified path.
     fn write_to_file(&self, path: impl AsRef<std::path::Path>) -> std::io::Result<()> {
         use std::io::Write;
+
+        let path = path.as_ref();
+
+        // Create parent directories if they don't exist
+        if let Some(parent) = path.parent() {
+            std::fs::create_dir_all(parent)?;
+        }
+
         let file = std::fs::File::create(path)?;
         let mut writer = std::io::BufWriter::new(file);
         write!(writer, "{self}")?;
