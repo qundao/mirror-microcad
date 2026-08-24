@@ -29,7 +29,7 @@ impl BuiltinRegistry {
             &mu::CORE,
             &mu::DEBUG,
             &mu::MATH,
-            &mu::ARRAY,
+            &mu::LIST,
             &mu::STRING,
             &mu::COLOR,
             &mu::GEO2D,

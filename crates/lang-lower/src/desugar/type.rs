@@ -13,7 +13,7 @@ impl Desugar<ast::Type> for Type {
         Ok(match node {
             ast::Type::Single(ty) => Type::from_str(ty.name.as_str())
                 .map_err(|err| Refer::new(err, context.span_to_src_ref(&node.span())))?,
-            ast::Type::Array(ty) => Type::Array(Box::new(Type::desugar(&ty.inner, context)?)),
+            ast::Type::List(ty) => Type::List(Box::new(Type::desugar(&ty.inner, context)?)),
             ast::Type::Tuple(ty) => Type::Tuple(Box::new(ty::TupleType::desugar(ty, context)?)),
         })
     }

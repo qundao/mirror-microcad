@@ -7,7 +7,7 @@
 std::geo2d::Circle(40mm);
 
 attribute#access;
-array[access];
+list[access];
 tuple.access;
 method.call(10mm);
 

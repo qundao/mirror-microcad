@@ -132,7 +132,7 @@ pub trait SemanticTokens<'ast> {
 impl_tokens!(ast::Comment => TokenType::COMMENT);
 impl_tokens!(ast::Unit => TokenType::KEYWORD); // TODO: A custom "unit" token type is preferred
 
-impl_tokens!(ast::ArrayType => inner);
+impl_tokens!(ast::ListType => inner);
 impl_tokens!(ast::TupleType => |self_, ctx| {
     self_.inner.iter().for_each(|(id, ty)| {
         ty.semantic_tokens(ctx);
@@ -143,7 +143,7 @@ impl_tokens!(ast::TupleType => |self_, ctx| {
 impl_tokens!(ast::SingleType => TokenType::TYPE);
 impl_tokens!(ast::Type => |self_, ctx| {
     match self_ {
-        ast::Type::Array(a) => a.semantic_tokens(ctx),
+        ast::Type::List(a) => a.semantic_tokens(ctx),
         ast::Type::Single(s) => s.semantic_tokens(ctx),
         ast::Type::Tuple(t) => t.semantic_tokens(ctx),
     }

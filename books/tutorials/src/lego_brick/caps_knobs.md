@@ -65,7 +65,7 @@ Notice that we have called the `std::geo2d::Circle` with an additional argument 
 A [tuple](../types/tuples.md) is a collection of (mostly named) values.
 
 The parameter `c` of a circle is supposed to be a tuple of type `(x: Length, y: Length)`.
-By passing an array of `Length` to the tuple, we are generating a *multiplicity*, which eventually creates `2*4` circles.
+By passing an list of `Length`s to the tuple, we are generating a *multiplicity*, which eventually creates `2*4` circles.
 
 Let's create a sketch for the knobs:
 

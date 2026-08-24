@@ -4,15 +4,14 @@
 use microcad_lang_base::Identifier;
 use microcad_lang_eval::find_multi_match;
 use microcad_lang_types::{
-    ArgumentValue, ArgumentValueList, Length, Tuple, Type, argument_value, arguments, array,
-    function_type, tuple,
+    ArgumentValue, ArgumentValueList, Length, Tuple, Type, argument_value, arguments,
+    function_type, list, tuple,
 };
 
 #[test]
 fn argument_matching() {
     let ty = function_type!((a: Type::scalar(), b: Type::length(), c: Type::scalar(), d: Type::length()));
     let defaults = tuple!(d = Length::mm(4.0));
-
     let arguments: ArgumentValueList = [
         argument_value!(a = 1.0),
         argument_value!(b = Length::mm(2.0)),
@@ -47,8 +46,8 @@ fn multi_match_cartesian_product() {
 
     // f(a = [1.0, 2.0], b = [10.0, 20.0, 30.0])
     let args: ArgumentValueList = [
-        ArgumentValue::new(array![1.0, 2.0], Some(Identifier::no_ref("a"))),
-        ArgumentValue::new(array![10.0, 20.0, 30.0], Some(Identifier::no_ref("b"))),
+        ArgumentValue::new(list![1.0, 2.0], Some(Identifier::no_ref("a"))),
+        ArgumentValue::new(list![10.0, 20.0, 30.0], Some(Identifier::no_ref("b"))),
     ]
     .into_iter()
     .collect();

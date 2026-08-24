@@ -112,8 +112,8 @@ impl Desugar<ast::Expression> for ir::WorkbenchExpression {
             }
             ast::Expression::String(s) => Self::Call(ir::Call::desugar(s, context)?.cast_into()),
             ast::Expression::Tuple(t) => Self::Call(ir::Call::desugar(t, context)?),
-            ast::Expression::ArrayRange(a) => Self::desugar(a, context)?,
-            ast::Expression::ArrayList(a) => Self::desugar(a, context)?,
+            ast::Expression::Range(a) => Self::desugar(a, context)?,
+            ast::Expression::List(a) => Self::desugar(a, context)?,
             ast::Expression::SymbolPath(n) => Self::Path(ir::Path::desugar(n, context)?),
             ast::Expression::BinaryOperation(binop) => {
                 Self::Call(ir::Call::desugar(binop, context)?)
@@ -151,8 +151,8 @@ impl Desugar<ast::Expression> for ir::WorkbenchExpression {
                             args: ir::ArgumentList::desugar(&m.arguments, context)?.prepended(lhs),
                             src_ref,
                         }),
-                        ArrayElement(e) => Self::Call(ir::Call {
-                            path: __mu!(core::array_access),
+                        ListElement(e) => Self::Call(ir::Call {
+                            path: __mu!(core::list_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
                                 Self::desugar(e.as_ref(), context)?,

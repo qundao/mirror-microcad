@@ -5,9 +5,7 @@
 
 use microcad_lang_base::element::BinaryOperator;
 
-use crate::{
-    Array, Quantity, QuantityType, Scalar, Ty, Type, Unit, Value, ValueError, ValueResult,
-};
+use crate::{List, Quantity, QuantityType, Scalar, Ty, Type, Unit, Value, ValueError, ValueResult};
 
 impl Value {
     pub fn cmp(&self, op: BinaryOperator, rhs: &Self) -> ValueResult {
@@ -47,10 +45,10 @@ impl Value {
         match self {
             Value::Integer(n) => Ok(Value::Integer(-n)),
             Value::Quantity(q) => Ok(Value::Quantity(-q.clone())),
-            Value::Array(a) => {
+            Value::List(a) => {
                 let mut mutated = a.clone();
                 std::rc::Rc::make_mut(&mut mutated).neg_in_place()?;
-                Ok(Value::Array(mutated))
+                Ok(Value::List(mutated))
             }
             Value::Tuple(t) => {
                 let mut mutated = t.clone();
@@ -69,12 +67,12 @@ impl std::ops::Neg for Value {
         match self {
             Value::Integer(n) => Ok(Value::Integer(-n)),
             Value::Quantity(q) => Ok(Value::Quantity(q.neg())),
-            Value::Array(mut a) => {
+            Value::List(mut a) => {
                 // Mutates in-place if refcount == 1; clones container only if shared.
                 std::rc::Rc::make_mut(&mut a).neg_in_place()?;
 
-                // `a` is already the mutated Rc<Array>!
-                Ok(Value::Array(a))
+                // `a` is already the mutated Rc<List>!
+                Ok(Value::List(a))
             }
             Value::Tuple(mut t) => {
                 std::rc::Rc::make_mut(&mut t).neg_in_place()?;
@@ -91,7 +89,7 @@ impl std::ops::Not for Value {
     fn not(self) -> Self::Output {
         match self {
             Value::Bool(b) => Ok(Value::Bool(!b)),
-            Value::Array(a) => !a.as_ref().clone(), // TODO This could be optimized via applying `not` in-place
+            Value::List(a) => !a.as_ref().clone(), // TODO This could be optimized via applying `not` in-place
             Value::Tuple(t) => !t.as_ref().clone(), // TODO This could be optimized via applying `not` in-place
             _ => Err(ValueError::InvalidOperator("!".into())),
         }
@@ -115,7 +113,7 @@ impl std::ops::Add for Value {
             // Concatenate two strings
             (Value::String(lhs), Value::String(rhs)) => Ok(Value::String(lhs + &rhs)),
             // Concatenate two lists
-            (Value::Array(lhs), Value::Array(rhs)) => {
+            (Value::List(lhs), Value::List(rhs)) => {
                 if lhs.ty() != rhs.ty() {
                     return Err(ValueError::CannotCombineVecOfDifferentType(
                         lhs.ty(),
@@ -123,10 +121,10 @@ impl std::ops::Add for Value {
                     ));
                 }
 
-                Ok(Array::from_iter(lhs.iter().chain(rhs.iter()).cloned()).into())
+                Ok(List::from_iter(lhs.iter().chain(rhs.iter()).cloned()).into())
             }
-            // Add a value to an array.
-            (Value::Array(lhs), rhs) => Ok((lhs.as_ref().clone() + rhs)?), // TODO This could be optimized via applying `not` in-place
+            // Add a value to an list.
+            (Value::List(lhs), rhs) => Ok((lhs.as_ref().clone() + rhs)?), // TODO This could be optimized via applying `not` in-place
             // Add two tuples of the same type: (x = 1., y = 2.) + (x = 3., y = 4.)
             (Value::Tuple(lhs), Value::Tuple(rhs)) => {
                 Ok((lhs.as_ref().clone() + rhs.as_ref().clone())?.into()) // TODO This could be optimized via applying `not` in-place
@@ -150,8 +148,8 @@ impl std::ops::Sub for Value {
             (Value::Integer(lhs), Value::Quantity(rhs)) => lhs - rhs,
             // Subtract two numbers
             (Value::Quantity(lhs), Value::Quantity(rhs)) => lhs - rhs,
-            // Subtract value to an array: `[1,2,3] - 1 = [0,1,2]`.
-            (Value::Array(lhs), rhs) => lhs.as_ref().clone() - rhs,
+            // Subtract value to an list: `[1,2,3] - 1 = [0,1,2]`.
+            (Value::List(lhs), rhs) => lhs.as_ref().clone() - rhs,
             // Subtract two tuples of the same type: (x = 1., y = 2.) - (x = 3., y = 4.)
             (Value::Tuple(lhs), Value::Tuple(rhs)) => {
                 Ok((lhs.as_ref().clone() - rhs.as_ref().clone())?.into())
@@ -177,8 +175,8 @@ impl std::ops::Mul for Value {
             (Value::Quantity(lhs), Value::Integer(rhs)) => lhs * rhs,
             // Multiply two scalars
             (Value::Quantity(lhs), Value::Quantity(rhs)) => lhs * rhs,
-            (Value::Array(array), value) | (value, Value::Array(array)) => {
-                Ok((array.as_ref().clone() * value)?)
+            (Value::List(list), value) | (value, Value::List(list)) => {
+                Ok((list.as_ref().clone() * value)?)
             }
 
             (Value::Tuple(tuple), value) | (value, Value::Tuple(tuple)) => {
@@ -204,7 +202,7 @@ impl std::ops::Mul<Unit> for Value {
             (Value::Quantity(quantity), Type::Quantity(quantity_type)) => {
                 quantity * Quantity::new(unit.factor(), quantity_type)
             }
-            (Value::Array(array), Type::Quantity(quantity_type)) => Ok((array.as_ref().clone()
+            (Value::List(list), Type::Quantity(quantity_type)) => Ok((list.as_ref().clone()
                 * Value::Quantity(Quantity::new(unit.factor(), quantity_type)))?),
             (value, _) => Err(ValueError::CannotAddUnitToValueWithUnit(value.to_string())),
         }
@@ -224,7 +222,7 @@ impl std::ops::Div for Value {
             (Value::Quantity(lhs), Value::Integer(rhs)) => lhs / rhs,
             (Value::Integer(lhs), Value::Quantity(rhs)) => lhs / rhs,
             (Value::Quantity(lhs), Value::Quantity(rhs)) => lhs / rhs,
-            (Value::Array(array), value) => Ok((array.as_ref().clone() / value)?),
+            (Value::List(list), value) => Ok((list.as_ref().clone() / value)?),
             (Value::Tuple(tuple), value) => Ok((tuple.as_ref().clone() / value)?.into()),
             (lhs, rhs) => Err(ValueError::InvalidOperator(format!("{lhs} / {rhs}"))),
         }

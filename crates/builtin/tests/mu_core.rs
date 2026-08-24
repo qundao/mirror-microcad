@@ -4,7 +4,7 @@
 use microcad_builtin::{BuiltinEvalContext, mu::*};
 use microcad_macros::test_builtin_fn;
 
-use microcad_lang_types::{Value, arguments, array, tuple};
+use microcad_lang_types::{Value, arguments, list, tuple};
 
 // --- Arithmetic Operators ---
 
@@ -97,9 +97,9 @@ fn or() {}
 // --- Data Structure Access & Construction ---
 
 #[test]
-#[test_builtin_fn(core::array_access(lhs = array![10, 20, 30], index = 1) == 20)]
-#[test_builtin_fn(core::array_access(lhs = array![10, 20, 30], index = 0) == 10)]
-fn array_access() {}
+#[test_builtin_fn(core::list_access(lhs = list![10, 20, 30], index = 1) == 20)]
+#[test_builtin_fn(core::list_access(lhs = list![10, 20, 30], index = 0) == 10)]
+fn list_access() {}
 
 #[test]
 #[test_builtin_fn(core::member_access(lhs = tuple!(a = 42, b = "hello"), name = "a") == 42)]
@@ -107,11 +107,11 @@ fn array_access() {}
 fn member_access() {}
 
 #[test]
-fn array() {
+fn list() {
     let mut ctx = BuiltinEvalContext::default();
-    match core::array(arguments!(1, 2, 3, 4), &mut ctx) {
-        Ok(Value::Array(a)) => assert_eq!(a.as_ref(), &array![1, 2, 3, 4]),
-        _ => panic!("Expected array input"),
+    match core::list(arguments!(1, 2, 3, 4), &mut ctx) {
+        Ok(Value::List(a)) => assert_eq!(a.as_ref(), &list![1, 2, 3, 4]),
+        _ => panic!("Expected list input"),
     }
 }
 
@@ -120,8 +120,8 @@ fn array() {
 fn tuple() {}
 
 #[test]
-#[test_builtin_fn(core::range(start = 1, end = 4) == array![1, 2, 3, 4])]
-#[test_builtin_fn(core::range(start = 0, end = 0) == array![0])]
+#[test_builtin_fn(core::range(start = 1, end = 4) == list![1, 2, 3, 4])]
+#[test_builtin_fn(core::range(start = 0, end = 0) == list![0])]
 fn range() {}
 
 // --- String Formatting ---

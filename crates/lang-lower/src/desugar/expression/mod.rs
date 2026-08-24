@@ -83,11 +83,11 @@ impl Desugar<ast::SymbolPath> for ir::Path {
     }
 }
 
-impl<Expr: DesugarExpr> Desugar<ast::ArrayRangeExpression> for Expr
+impl<Expr: DesugarExpr> Desugar<ast::RangeExpression> for Expr
 where
     Expr: From<ir::Call<Expr>> + From<ir::ConstantValue>,
 {
-    fn desugar(a: &ast::ArrayRangeExpression, context: &mut LowerContext) -> LowerResult<Self> {
+    fn desugar(a: &ast::RangeExpression, context: &mut LowerContext) -> LowerResult<Self> {
         let unit = ir::Unit::desugar(&a.unit, context)?;
         let range = Expr::from(ir::Call {
             path: __mu!(core::range),
@@ -115,11 +115,11 @@ where
     }
 }
 
-impl<Expr: DesugarExpr> Desugar<ast::ArrayListExpression> for Expr
+impl<Expr: DesugarExpr> Desugar<ast::ListExpression> for Expr
 where
     Expr: From<ir::Call<Expr>> + From<ir::ConstantValue>,
 {
-    fn desugar(a: &ast::ArrayListExpression, context: &mut LowerContext) -> LowerResult<Self> {
+    fn desugar(a: &ast::ListExpression, context: &mut LowerContext) -> LowerResult<Self> {
         let unit = ir::Unit::desugar(&a.unit, context)?;
 
         let args = a
@@ -129,7 +129,7 @@ where
             .collect::<Result<Vec<Expr>, _>>()?;
 
         let list = Expr::from(ir::Call {
-            path: __mu!(core::array),
+            path: __mu!(core::list),
             args: ir::ArgumentList::from_iter(args),
             src_ref: context.span_to_src_ref(&a.span),
         });
@@ -171,8 +171,8 @@ impl Desugar<ast::Expression> for ir::ConstantExpression {
             ast::Expression::Literal(expr) => ir::ConstantValue::desugar(expr, context)?.into(),
             ast::Expression::String(s) => ir::Call::desugar(s, context)?.into(),
             ast::Expression::Tuple(t) => ir::Call::desugar(t, context)?.into(),
-            ast::Expression::ArrayRange(a) => Self::desugar(a, context)?,
-            ast::Expression::ArrayList(a) => Self::desugar(a, context)?,
+            ast::Expression::Range(a) => Self::desugar(a, context)?,
+            ast::Expression::List(a) => Self::desugar(a, context)?,
             ast::Expression::SymbolPath(n) => Self::Path(ir::Path::desugar(n, context)?),
             ast::Expression::BinaryOperation(binop) => {
                 Self::Call(ir::Call::desugar(binop, context)?)

@@ -6,7 +6,7 @@
 //! Every evaluation of any *symbol* leads to a [`Value`] which then might continued
 //! to process or ends up as the overall evaluation result.
 
-mod array;
+mod list;
 mod math;
 mod matrix;
 pub mod ops;
@@ -18,7 +18,7 @@ mod value_list;
 
 use std::rc::Rc;
 
-pub use array::*;
+pub use list::*;
 pub use matrix::*;
 use microcad_lang_base::{CompactString, ToCompactString};
 pub use quantity::*;
@@ -52,7 +52,7 @@ pub enum Value {
     /// A string value.
     String(CompactString),
     /// A list of values with a common type.
-    Array(Rc<Array>),
+    List(Rc<List>),
     /// A tuple of named items.
     Tuple(Rc<Tuple>),
     /// A matrix.
@@ -119,7 +119,7 @@ impl crate::ty::Ty for Value {
             Value::Quantity(q) => q.ty(),
             Value::Bool(_) => Type::Bool,
             Value::String(_) => Type::String,
-            Value::Array(list) => list.ty(),
+            Value::List(list) => list.ty(),
             Value::Tuple(tuple) => tuple.ty(),
             Value::Matrix(matrix) => matrix.ty(),
             Value::Model(model) => model.ty(),
@@ -184,13 +184,13 @@ impl TryFrom<Value> for Length {
     }
 }
 
-impl TryFrom<Value> for Rc<Array> {
+impl TryFrom<Value> for Rc<List> {
     type Error = ValueError;
 
     fn try_from(value: Value) -> Result<Self, Self::Error> {
         match value {
-            Value::Array(array) => Ok(array),
-            _ => Err(ValueError::CannotConvert(value.to_string(), "Array".into())),
+            Value::List(list) => Ok(list),
+            _ => Err(ValueError::CannotConvert(value.to_string(), "List".into())),
         }
     }
 }
@@ -278,9 +278,9 @@ impl From<Vec3> for Value {
     }
 }
 
-impl From<Array> for Value {
-    fn from(array: Array) -> Self {
-        Self::Array(Rc::new(array))
+impl From<List> for Value {
+    fn from(list: List) -> Self {
+        Self::List(Rc::new(list))
     }
 }
 
@@ -321,6 +321,6 @@ impl From<()> for Value {
 }
 impl FromIterator<Value> for Value {
     fn from_iter<T: IntoIterator<Item = Value>>(iter: T) -> Self {
-        Array::from_iter(iter).into()
+        List::from_iter(iter).into()
     }
 }

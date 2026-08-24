@@ -19,7 +19,7 @@ impl TomlImporter {
             toml::Value::Boolean(b) => b.into(),
             toml::Value::Datetime(_) => todo!(),
             toml::Value::Array(values) => {
-                Array::from_iter(values.into_iter().map(Self::toml_to_value)).into()
+                List::from_iter(values.into_iter().map(Self::toml_to_value)).into()
             }
             toml::Value::Table(map) => Tuple::from_iter(
                 map.into_iter()

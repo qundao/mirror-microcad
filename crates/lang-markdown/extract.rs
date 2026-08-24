@@ -24,7 +24,7 @@ pub struct ExtractCli {
 
 /// Converts codesnipped path and name into a flattened `.mu`
 ///
-/// types/collections/array/range.md#some_test -> types_collections_array_range_some_test.mu
+/// types/collections/list/range.md#some_test -> types_collections_list_range_some_test.mu
 pub fn mu_base_path(input_path: impl AsRef<std::path::Path>, name: &str) -> std::path::PathBuf {
     let input_path = input_path.as_ref();
     let mut base = std::path::PathBuf::new();

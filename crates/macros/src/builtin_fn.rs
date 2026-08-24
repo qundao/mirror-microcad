@@ -24,8 +24,8 @@ impl quote::ToTokens for BuiltinType {
             "Angle" => quote! { microcad_lang_types::Type::angle() },
             "Length" => quote! { microcad_lang_types::Type::length() },
             "Color" => quote! { microcad_lang_types::Type::color() },
-            "Array" => {
-                quote! { microcad_lang_types::Type::Array(Box::new(microcad_lang_types::Type::Any)) }
+            "List" => {
+                quote! { microcad_lang_types::Type::list() }
             }
             "Mat3" => quote! { microcad_lang_types::Type::matrix(3,3) },
             "Model" => {

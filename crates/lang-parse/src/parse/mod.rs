@@ -290,7 +290,7 @@ fn parser<'tokens>()
         .labelled("single type")
         .boxed();
 
-        let array = ws
+        let list = ws
             .clone()
             .or_not()
             .ignore_then(type_parser.clone())
@@ -300,12 +300,12 @@ fn parser<'tokens>()
                 just(Token::SigilCloseSquareBracket),
             )
             .map_with(|inner, e| {
-                ast::Type::Array(ast::ArrayType {
+                ast::Type::List(ast::ListType {
                     span: e.span(),
                     inner: Box::new(inner),
                 })
             })
-            .labelled("array type")
+            .labelled("list type")
             .boxed();
 
         let tuple = ws
@@ -345,7 +345,7 @@ fn parser<'tokens>()
             .labelled("tuple type")
             .boxed();
 
-        single.or(array).or(tuple).labelled("type").boxed()
+        single.or(list).or(tuple).labelled("type").boxed()
     });
 
     let unary_operator_parser = select_ref! {
@@ -1312,20 +1312,20 @@ fn parser<'tokens>()
             .map_with(|expr, e| ast::Expression::Bracketed(Box::new(expr), e.span()))
             .boxed();
 
-        let array_item = expression_parser
+        let list_item = expression_parser
             .clone()
             .with_extras()
-            .map_with(|(expr, extras), e| ast::ArrayItem {
+            .map_with(|(expr, extras), e| ast::ListItem {
                 span: e.span(),
                 extras,
                 expr,
             })
             .boxed();
 
-        let array_range = array_item
+        let range = list_item
             .clone()
             .then_ignore(just(Token::SigilDoubleDot))
-            .then(array_item.clone())
+            .then(list_item.clone())
             .with_extras()
             .delimited_by(
                 just(Token::SigilOpenSquareBracket).then_maybe_whitespace(),
@@ -1333,7 +1333,7 @@ fn parser<'tokens>()
             )
             .then(unit.clone().or_not())
             .map_with(|(((start, end), extras), unit), e| {
-                ast::Expression::ArrayRange(ast::ArrayRangeExpression {
+                ast::Expression::Range(ast::RangeExpression {
                     span: e.span(),
                     extras,
                     start: Box::new(start),
@@ -1341,10 +1341,10 @@ fn parser<'tokens>()
                     unit,
                 })
             })
-            .labelled("array range")
+            .labelled("range")
             .boxed();
 
-        let array_list = array_item
+        let list = list_item
             .clone()
             .separated_by(just(Token::SigilComma).then_maybe_whitespace())
             .allow_trailing()
@@ -1356,14 +1356,14 @@ fn parser<'tokens>()
             )
             .then(unit.clone().or_not())
             .map_with(|((items, extras), unit), e| {
-                ast::Expression::ArrayList(ast::ArrayListExpression {
+                ast::Expression::List(ast::ListExpression {
                     span: e.span(),
                     extras,
                     items,
                     unit,
                 })
             })
-            .labelled("array")
+            .labelled("list")
             .boxed();
 
         let body_expression = body
@@ -1443,8 +1443,8 @@ fn parser<'tokens>()
             .or(call)
             .or(marker)
             .or(bracket_based)
-            .or(array_range)
-            .or(array_list)
+            .or(range)
+            .or(list)
             .or(body_expression)
             .or(symbol_path_expr)
             .boxed();
@@ -1467,21 +1467,21 @@ fn parser<'tokens>()
             .labelled("method call")
             .boxed();
 
-        let access_array = expression_parser
+        let list_access = expression_parser
             .clone()
             .delimited_by(
                 just(Token::SigilOpenSquareBracket),
                 just(Token::SigilCloseSquareBracket),
             )
             .map(Box::new)
-            .map(ast::ElementInner::ArrayElement)
-            .labelled("array access")
+            .map(ast::ElementInner::ListElement)
+            .labelled("list access")
             .boxed();
 
         let access_item = access_attribute
             .or(access_method)
             .or(access_tuple)
-            .or(access_array)
+            .or(list_access)
             .with_extras()
             .map_with(|(inner, extras), e| ast::Element {
                 span: e.span(),

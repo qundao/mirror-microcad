@@ -66,7 +66,7 @@ impl TupleType {
         {
             self.named.iter().all(|arg| {
                 if let Some((_, ty)) = params.named.iter().find(|(id, _)| id == &arg.0) {
-                    arg.1 == *ty || arg.1.is_array_of(ty)
+                    arg.1 == *ty || arg.1.is_list_of(ty)
                 } else {
                     false
                 }

@@ -24,9 +24,9 @@ pub enum Expression {
     /// A tuple: `(a = 1, b = 23)`
     Tuple(TupleExpression),
     /// A range expression: `[1..4]`
-    ArrayRange(ArrayRangeExpression),
+    Range(RangeExpression),
     /// A list expression: `[1, 2, 3]`
-    ArrayList(ArrayListExpression),
+    List(ListExpression),
     /// A format string: `"We have {n} items"`
     String(FormatString),
     /// A symbol path: `foo::bar::baz`
@@ -56,8 +56,8 @@ impl Expression {
             Expression::Literal(ex) => ex.span.clone(),
             Expression::Bracketed(_, span) => span.clone(),
             Expression::Tuple(ex) => ex.span.clone(),
-            Expression::ArrayRange(ex) => ex.span.clone(),
-            Expression::ArrayList(ex) => ex.span.clone(),
+            Expression::Range(ex) => ex.span.clone(),
+            Expression::List(ex) => ex.span.clone(),
             Expression::String(ex) => ex.span.clone(),
             Expression::SymbolPath(ex) => ex.span.clone(),
             Expression::Marker(ex) => ex.span.clone(),
@@ -170,31 +170,31 @@ pub struct TupleExpression {
     pub values: Vec<TupleItem>,
 }
 
-/// An array range, containing all values from the start value (inclusive) till then end value (exclusive)
+/// A range, containing all values from the start value (inclusive) till then end value (exclusive)
 #[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
-pub struct ArrayRangeExpression {
+pub struct RangeExpression {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub start: Box<ArrayItem>,
-    pub end: Box<ArrayItem>,
+    pub start: Box<ListItem>,
+    pub end: Box<ListItem>,
     pub unit: Option<ast::Unit>,
 }
 
-/// An array specified as a list of items
+/// A list of items
 #[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
-pub struct ArrayListExpression {
+pub struct ListExpression {
     pub span: Span,
     pub extras: ast::ItemExtras,
-    pub items: Vec<ArrayItem>,
+    pub items: Vec<ListItem>,
     pub unit: Option<ast::Unit>,
 }
 
-/// An item that can be part of an array expression
+/// An item that can be part of an list expression
 #[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
-pub struct ArrayItem {
+pub struct ListItem {
     pub span: Span,
     pub extras: ast::ItemExtras,
     pub expr: Expression,
@@ -254,7 +254,7 @@ pub struct Call {
 
 /// An expression that access an element from another expression.
 ///
-/// Either accessing an array or tuple item, accessing an attribute of a value or a method call.
+/// Either accessing an list or tuple item, accessing an attribute of a value or a method call.
 #[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
 pub struct ElementAccess {
@@ -270,7 +270,7 @@ pub enum ElementInner {
     Attribute(ast::Identifier),
     Tuple(ast::Identifier),
     Method(Box<Call>),
-    ArrayElement(Box<Expression>),
+    ListElement(Box<Expression>),
 }
 
 #[derive(Debug, Hash, PartialEq, Visit, Serialize)]

@@ -13,7 +13,7 @@ fn test_tuple_type_match() {
             (Identifier::no_ref("x"), Type::Integer),
             (
                 Identifier::no_ref("y"),
-                Type::Array(Box::new(Type::Integer)),
+                Type::List(Box::new(Type::Integer)),
             ),
         ]
         .into_iter()

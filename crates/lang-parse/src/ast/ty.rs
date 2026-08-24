@@ -12,7 +12,7 @@ use serde::Serialize;
 #[allow(missing_docs)]
 pub enum Type {
     Single(SingleType),
-    Array(ArrayType),
+    List(ListType),
     Tuple(TupleType),
 }
 
@@ -21,7 +21,7 @@ impl Type {
     pub fn span(&self) -> Span {
         match self {
             Type::Single(ty) => ty.span.clone(),
-            Type::Array(ty) => ty.span.clone(),
+            Type::List(ty) => ty.span.clone(),
             Type::Tuple(ty) => ty.span.clone(),
         }
     }
@@ -45,10 +45,10 @@ pub struct SingleType {
     pub name: Name,
 }
 
-/// An array type
+/// A list type
 #[derive(Debug, Hash, PartialEq, Visit, Serialize)]
 #[allow(missing_docs)]
-pub struct ArrayType {
+pub struct ListType {
     pub span: Span,
     pub inner: Box<Type>,
 }

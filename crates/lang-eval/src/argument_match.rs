@@ -156,8 +156,8 @@ pub fn find_multi_match(
             .find(|(p_id, _)| p_id == &id)
             .map(|(_, ty)| ty);
 
-        if let (Some(expected), Value::Array(elements)) = (expected_ty, &val) {
-            if expected.is_array_of(expected) || !expected.is_array_of(&Type::Any) {
+        if let (Some(expected), Value::List(elements)) = (expected_ty, &val) {
+            if expected.is_list_of(expected) || !expected.is_list_of(&Type::Any) {
                 resolved_lists.push((id, elements.to_vec()));
             } else {
                 resolved_lists.push((id, vec![val.clone()]));

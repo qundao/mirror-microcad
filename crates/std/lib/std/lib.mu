@@ -13,5 +13,5 @@ pub use __mu::debug;
 pub use __mu::log;
 pub use __mu::color;
 pub use __mu::to_string;
-pub use __mu::array;
+pub use __mu::list;
 pub use __mu::string;

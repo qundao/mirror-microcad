@@ -20,7 +20,7 @@ pub use ty::{
     FunctionType, FunctionTypeParameters, MatrixType, QuantityType, TupleType, Ty, Type, TypeError,
     TypeResult, Unit,
 };
-pub use value::{Array, Quantity, Tuple, Value, ValueAccess, ValueError, ValueList, ValueResult};
+pub use value::{List, Quantity, Tuple, Value, ValueAccess, ValueError, ValueList, ValueResult};
 
 pub use model::{
     Model, ModelOutputType, ModelTree, NodeMut as ModelNodeMut, NodeRef as ModelNodeRef,

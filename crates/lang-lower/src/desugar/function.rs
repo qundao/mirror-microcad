@@ -94,8 +94,8 @@ impl Desugar<ast::Expression> for ir::FunctionExpression {
             ast::Expression::String(s) => Self::desugar(s, context)?,
             // `(1, 2)` -> `__mu::core::tuple(1, 2)`
             ast::Expression::Tuple(t) => ir::Call::desugar(t, context)?.into(),
-            ast::Expression::ArrayRange(a) => Self::desugar(a, context)?,
-            ast::Expression::ArrayList(a) => Self::desugar(a, context)?,
+            ast::Expression::Range(a) => Self::desugar(a, context)?,
+            ast::Expression::List(a) => Self::desugar(a, context)?,
             ast::Expression::SymbolPath(n) => ir::Path::desugar(n, context)?.into(),
             ast::Expression::UnaryOperation(unop) => ir::Call::desugar(unop, context)?.into(),
             ast::Expression::Marker(_) => {
@@ -123,8 +123,8 @@ impl Desugar<ast::Expression> for ir::FunctionExpression {
                             args: ir::ArgumentList::desugar(&m.arguments, context)?.prepended(lhs),
                             src_ref,
                         }),
-                        ArrayElement(e) => Self::Call(ir::Call {
-                            path: __mu!(core::array_access),
+                        ListElement(e) => Self::Call(ir::Call {
+                            path: __mu!(core::list_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
                                 Self::desugar(e.as_ref(), context)?,
@@ -178,8 +178,8 @@ impl Desugar<ast::Statement> for Option<ir::FunctionStatement> {
                     Literal(_)
                     | Bracketed(_, _)
                     | Tuple(_)
-                    | ArrayRange(_)
-                    | ArrayList(_)
+                    | Range(_)
+                    | List(_)
                     | String(_)
                     | SymbolPath(_)
                     | BinaryOperation(_)

@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 
 /// Collection of values of the same type.
 #[derive(Clone, Debug, Deref, Hash, PartialEq, DerefMut, Serialize, Deserialize)]
-pub struct Array {
+pub struct List {
     /// List of values
     #[deref]
     #[deref_mut]
@@ -19,7 +19,7 @@ pub struct Array {
     ty: Type,
 }
 
-impl Array {
+impl List {
     /// Create new list from `ValueList`.
     pub fn new(items: ValueList, ty: Type) -> Self {
         Self { items, ty }
@@ -30,7 +30,7 @@ impl Array {
         Self { items, ty }
     }
 
-    /// Negates all elements in the array in-place.
+    /// Negates all elements in the list in-place.
     /// Returns an error if any element cannot be negated (e.g., strings or booleans).
     pub fn neg_in_place(&mut self) -> Result<(), ValueError> {
         for val in &mut self.items.iter_mut() {
@@ -44,7 +44,7 @@ impl Array {
 /// All builtin methods and builtin functions.
 ///
 /// `len` and `contains` are already implemented and accessible via `impl Deref`.
-impl Array {
+impl List {
     /// Get the first element, or None
     pub fn first(&self) -> Value {
         self.items.first().cloned().unwrap_or_default()
@@ -56,30 +56,30 @@ impl Array {
     }
 
     /// Get first `n` elements
-    pub fn head(&self, n: Integer) -> Array {
-        Array::new(
+    pub fn head(&self, n: Integer) -> List {
+        List::new(
             self.items.iter().take(n.to_num()).cloned().collect(),
             self.ty.clone(),
         )
     }
 
     /// Get all elements but the first `n`
-    pub fn tail(&self, n: Integer) -> Array {
-        Array::new(
+    pub fn tail(&self, n: Integer) -> List {
+        List::new(
             self.items.iter().skip(n.to_num()).cloned().collect(),
             self.ty.clone(),
         )
     }
 
-    /// Return a reversed version of the array.
-    pub fn rev(&self) -> Array {
-        Array::new(self.items.iter().rev().cloned().collect(), self.ty.clone())
+    /// Return a reversed version of the list.
+    pub fn rev(&self) -> List {
+        List::new(self.items.iter().rev().cloned().collect(), self.ty.clone())
     }
 
-    /// Return a sorted version of this array.
+    /// Return a sorted version of this list.
     ///
     /// Only primitive types (quantities, integers, bools and string) can be sorted.
-    pub fn sorted(&self) -> Array {
+    pub fn sorted(&self) -> List {
         let mut items = self.items.clone();
         match self.ty {
             Type::Integer | Type::Quantity(..) | Type::String | Type::Bool => {
@@ -97,7 +97,7 @@ impl Array {
             _ => {}
         };
 
-        Array::new(items, self.ty.clone())
+        List::new(items, self.ty.clone())
     }
 
     /// Check if all items are equal.
@@ -119,7 +119,7 @@ impl Array {
     }
 }
 
-impl IntoIterator for Array {
+impl IntoIterator for List {
     type Item = Value;
     type IntoIter = std::vec::IntoIter<Self::Item>;
 
@@ -128,17 +128,17 @@ impl IntoIterator for Array {
     }
 }
 
-impl TryFrom<ValueList> for Array {
+impl TryFrom<ValueList> for List {
     type Error = ValueError;
-    fn try_from(items: ValueList) -> ValueResult<Array> {
+    fn try_from(items: ValueList) -> ValueResult<List> {
         match items.types().common_type() {
-            Some(ty) => Ok(Array::new(items, ty)),
+            Some(ty) => Ok(List::new(items, ty)),
             None => Err(ValueError::CommonTypeExpected),
         }
     }
 }
 
-impl FromIterator<Value> for Array {
+impl FromIterator<Value> for List {
     fn from_iter<T: IntoIterator<Item = Value>>(iter: T) -> Self {
         let items: ValueList = iter.into_iter().collect();
         let ty = items.types().common_type().expect("Common type");
@@ -146,7 +146,7 @@ impl FromIterator<Value> for Array {
     }
 }
 
-impl std::fmt::Display for Array {
+impl std::fmt::Display for List {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(
             f,
@@ -161,19 +161,19 @@ impl std::fmt::Display for Array {
     }
 }
 
-impl crate::ty::Ty for Array {
+impl crate::ty::Ty for List {
     fn ty(&self) -> Type {
-        Type::Array(Box::new(self.ty.clone()))
+        Type::List(Box::new(self.ty.clone()))
     }
 }
 
-/// + operator. Adds a value to an array, e.g.: `[1,2] + 1 == [2,3]`.
-impl std::ops::Add<Value> for Array {
+/// + operator. Adds a value to a list, e.g.: `[1,2] + 1 == [2,3]`.
+impl std::ops::Add<Value> for List {
     type Output = ValueResult;
 
     fn add(self, rhs: Value) -> Self::Output {
         if self.ty.is_compatible_to(&rhs.ty()) {
-            Ok(Value::Array(Rc::new(Self::from_values(ValueList::new(
+            Ok(Value::List(Rc::new(Self::from_values(ValueList::new(
                 self.items
                     .iter()
                     .map(|value| value.clone() + rhs.clone())
@@ -185,8 +185,8 @@ impl std::ops::Add<Value> for Array {
     }
 }
 
-/// - operator. Subtracts a value from an array, e.g.: `[1,2] - 1 == [0,1]`.
-impl std::ops::Sub<Value> for Array {
+/// - operator. Subtracts a value from an list, e.g.: `[1,2] - 1 == [0,1]`.
+impl std::ops::Sub<Value> for List {
     type Output = ValueResult;
 
     fn sub(self, rhs: Value) -> Self::Output {
@@ -204,8 +204,8 @@ impl std::ops::Sub<Value> for Array {
     }
 }
 
-/// * operator. Multiply a value from an array, e.g.: `[1,2] * 2 == [2,4]`.
-impl std::ops::Mul<Value> for Array {
+/// * operator. Multiply a value from an list, e.g.: `[1,2] * 2 == [2,4]`.
+impl std::ops::Mul<Value> for List {
     type Output = ValueResult;
 
     fn mul(self, rhs: Value) -> Self::Output {
@@ -218,15 +218,15 @@ impl std::ops::Mul<Value> for Array {
                     .collect::<Result<Vec<_>, _>>()?;
 
                 // `from_values` infers `Type` from the actual multiplied element values
-                Ok(Array::from_values(ValueList::new(values)).into())
+                Ok(List::from_values(ValueList::new(values)).into())
             }
             _ => Err(ValueError::InvalidOperator("*".into())),
         }
     }
 }
 
-/// / operator. Divide an array by value, e.g.: `[2,4] / 2 == [1,2]`.
-impl std::ops::Div<Value> for Array {
+/// / operator. Divide an list by value, e.g.: `[2,4] / 2 == [1,2]`.
+impl std::ops::Div<Value> for List {
     type Output = ValueResult;
 
     fn div(self, rhs: Value) -> Self::Output {
@@ -239,21 +239,21 @@ impl std::ops::Div<Value> for Array {
 
         let values = ValueList::new(divided_values);
 
-        // 2. Determine resulting Array Type based on element type division
-        // An Array divided by a Scalar preserves an Array structure with transformed element types
+        // 2. Determine resulting List Type based on element type division
+        // An List divided by a Scalar preserves an List structure with transformed element types
         match (&self.ty, rhs.ty()) {
-            (Type::Integer, Type::Integer) => Ok(Array::new(values, Type::Integer).into()),
-            (Type::Quantity(_), _) => Ok(Array::from_values(values).into()),
+            (Type::Integer, Type::Integer) => Ok(List::new(values, Type::Integer).into()),
+            (Type::Quantity(_), _) => Ok(List::from_values(values).into()),
             _ => Err(ValueError::InvalidOperator("/".into())),
         }
     }
 }
 
-impl std::ops::Neg for Array {
+impl std::ops::Neg for List {
     type Output = ValueResult;
 
     fn neg(self) -> Self::Output {
-        let items = Array::from_values(ValueList::new(
+        let items = List::from_values(ValueList::new(
             self.iter()
                 .map(|value| -value.clone())
                 .collect::<Result<Vec<_>, _>>()?,
@@ -262,11 +262,11 @@ impl std::ops::Neg for Array {
     }
 }
 
-impl std::ops::Not for Array {
+impl std::ops::Not for List {
     type Output = ValueResult;
 
     fn not(self) -> Self::Output {
-        let items = Array::from_values(ValueList::new(
+        let items = List::from_values(ValueList::new(
             self.iter()
                 .map(|value| !value.clone())
                 .collect::<Result<Vec<_>, _>>()?,
@@ -276,8 +276,8 @@ impl std::ops::Not for Array {
 }
 
 #[macro_export]
-macro_rules! array {
+macro_rules! list {
         ($($value:expr),*) => {
-                $crate::Array::from_iter([$( $crate::Value::from($value)),* ].into_iter())
+                $crate::List::from_iter([$( $crate::Value::from($value)),* ].into_iter())
         }
 }

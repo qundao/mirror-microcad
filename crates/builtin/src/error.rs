@@ -30,9 +30,9 @@ pub enum BuiltinError {
     AssertionFailed(String),
 
     #[error(
-        "array index out of bounds: index is {index}, but array length is {len} (valid indices: 0..{len})"
+        "list index out of bounds: index is {index}, but list length is {len} (valid indices: 0..{len})"
     )]
-    BadArrayIndex { index: usize, len: usize },
+    BadListIndex { index: usize, len: usize },
 
     #[error("Evaluation aborted. Panic: {0}")]
     Panic(String),

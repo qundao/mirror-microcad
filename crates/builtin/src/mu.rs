@@ -8,7 +8,7 @@
 //! The built-ins are grouped into several submodules.
 
 use microcad_lang_types::{
-    Arguments, Array, BinaryOperator, Identifier, Integer, Ty, TypeError, Value,
+    Arguments, BinaryOperator, Identifier, Integer, List, Ty, TypeError, Value,
 };
 use microcad_macros::{builtin_constant, builtin_fn, builtin_mod, include_inner_docs};
 
@@ -154,21 +154,18 @@ pub mod core {
         Ok((!rhs)?)
     }
 
-    #[builtin_fn(core::array_access(lhs: Any, index: Integer) -> Any)]
-    pub fn array_access(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        let lhs = args.get("lhs");
+    #[builtin_fn(core::list_access(lhs: List, index: Integer) -> Any)]
+    pub fn list_access(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
+        let lhs: std::rc::Rc<List> = args.try_get("lhs")?;
         let index: Integer = args.try_get("index")?;
         let index = index.to_num::<usize>();
 
-        match lhs {
-            Value::Array(arr) => match arr.get(index) {
-                Some(value) => Ok(value.clone()),
-                None => Err(BuiltinError::BadArrayIndex {
-                    index,
-                    len: arr.len(),
-                }),
-            },
-            value => Err(BuiltinError::TypeError(TypeError::NoArrayType(value.ty()))),
+        match lhs.get(index) {
+            Some(value) => Ok(value.clone()),
+            None => Err(BuiltinError::BadListIndex {
+                index,
+                len: lhs.len(),
+            }),
         }
     }
 
@@ -193,7 +190,7 @@ pub mod core {
                 Some(prop) => Ok(prop.value.clone()),
                 None => Err(BuiltinError::PropertyNotFound { name: name.clone() }),
             },
-            value => Err(BuiltinError::TypeError(TypeError::NoArrayType(value.ty()))),
+            value => Err(BuiltinError::TypeError(TypeError::NoListType(value.ty()))),
         }
     }
 
@@ -253,7 +250,7 @@ pub mod core {
         Ok(formatted.into())
     }
 
-    /// Generates an array containing a sequence of integers from `start` to `end` (inclusive).
+    /// Generates a list containing a sequence of integers from `start` to `end` (inclusive).
     ///
     /// If `start` is greater than `end`, an empty array is returned.
     ///
@@ -271,14 +268,14 @@ pub mod core {
     pub fn range(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
         let start: i64 = args.try_get("start")?;
         let end: i64 = args.try_get("end")?;
-        let array = Array::from_iter((start..=end).map(Value::from));
-        Ok(array.into())
+        let list = List::from_iter((start..=end).map(Value::from));
+        Ok(list.into())
     }
 
-    /// Construct an array.
-    #[builtin_fn(core::array(*) -> Any)]
-    pub fn array(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        Ok(Array::from_iter(args.positional_iter().cloned()).into())
+    /// Construct a list.
+    #[builtin_fn(core::list(*) -> Any)]
+    pub fn list(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
+        Ok(List::from_iter(args.positional_iter().cloned()).into())
     }
 
     /// Construct a tuple.
@@ -301,7 +298,7 @@ pub mod core {
                 Some(attr) => Ok(attr.clone()),
                 None => Err(BuiltinError::PropertyNotFound { name: name.clone() }),
             },
-            value => Err(BuiltinError::TypeError(TypeError::NoArrayType(value.ty()))),
+            value => Err(BuiltinError::TypeError(TypeError::NoListType(value.ty()))),
         }
     }
 }
@@ -487,79 +484,79 @@ pub mod string {
     }
 }
 
-/// Built-in array functions.
+/// Built-in list functions.
 #[builtin_mod]
-pub mod array {
+pub mod list {
     use std::rc::Rc;
 
     use super::*;
 
-    #[builtin_fn(array::count(a: Array) -> Integer)]
+    #[builtin_fn(list::count(a: List) -> Integer)]
     pub fn count(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        let a: Rc<Array> = args.try_get("a")?;
+        let a: Rc<List> = args.try_get("a")?;
         Ok(a.len().into())
     }
 
-    #[builtin_fn(array::first(a: Array) -> Any)]
+    #[builtin_fn(list::first(a: List) -> Any)]
     pub fn first(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        let a: Rc<Array> = args.try_get("a")?;
+        let a: Rc<List> = args.try_get("a")?;
         Ok(a.first())
     }
 
-    #[builtin_fn(array::last(a: Array) -> Any)]
+    #[builtin_fn(list::last(a: List) -> Any)]
     pub fn last(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        let a: Rc<Array> = args.try_get("a")?;
+        let a: Rc<List> = args.try_get("a")?;
         Ok(a.last())
     }
 
-    #[builtin_fn(array::rev(a: Array) -> Array)]
+    #[builtin_fn(list::rev(a: List) -> List)]
     pub fn rev(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        let a: Rc<Array> = args.try_get("a")?;
+        let a: Rc<List> = args.try_get("a")?;
         Ok(a.rev().into())
     }
 
-    #[builtin_fn(array::sorted(a: Array) -> Array)]
+    #[builtin_fn(list::sorted(a: List) -> List)]
     pub fn sorted(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        let a: Rc<Array> = args.try_get("a")?;
+        let a: Rc<List> = args.try_get("a")?;
         Ok(a.sorted().into())
     }
 
-    #[builtin_fn(array::head(a: Array, n: Integer) -> Array)]
+    #[builtin_fn(list::head(a: List, n: Integer) -> List)]
     pub fn head(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        let a: Rc<Array> = args.try_get("a")?;
+        let a: Rc<List> = args.try_get("a")?;
         let n: Integer = args.try_get("n")?;
         Ok(a.head(n).into())
     }
 
-    #[builtin_fn(array::tail(a: Array, n: Integer) -> Array)]
+    #[builtin_fn(list::tail(a: List, n: Integer) -> List)]
     pub fn tail(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        let a: Rc<Array> = args.try_get("a")?;
+        let a: Rc<List> = args.try_get("a")?;
         let n: Integer = args.try_get("n")?;
         Ok(a.tail(n).into())
     }
 
-    #[builtin_fn(array::contains(a: Array, v: Any) -> Bool)]
+    #[builtin_fn(list::contains(a: List, v: Any) -> Bool)]
     pub fn contains(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        let a: Rc<Array> = args.try_get("a")?;
+        let a: Rc<List> = args.try_get("a")?;
         let v = args.get("v");
         Ok(a.contains(v).into())
     }
 
-    #[builtin_fn(array::all_equal(a: Array) -> Bool)]
+    #[builtin_fn(list::all_equal(a: List) -> Bool)]
     pub fn all_equal(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        let a: Rc<Array> = args.try_get("a")?;
+        let a: Rc<List> = args.try_get("a")?;
         Ok(a.all_equal().into())
     }
 
-    #[builtin_fn(array::is_ascending(a: Array) -> Bool)]
+    #[builtin_fn(list::is_ascending(a: List) -> Bool)]
     pub fn is_ascending(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        let a: Rc<Array> = args.try_get("a")?;
+        let a: Rc<List> = args.try_get("a")?;
         Ok(a.is_ascending().into())
     }
 
-    #[builtin_fn(array::is_descending(a: Array) -> Bool)]
+    #[builtin_fn(list::is_descending(a: List) -> Bool)]
     pub fn is_descending(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        let a: Rc<Array> = args.try_get("a")?;
+        let a: Rc<List> = args.try_get("a")?;
         Ok(a.is_descending().into())
     }
 }

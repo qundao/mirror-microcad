@@ -55,8 +55,8 @@ impl Format for ast::Expression {
             ast::Expression::Literal(literal) => literal.format(f),
             ast::Expression::Bracketed(bracket, _) => node!('(' bracket.format(f) ')'),
             ast::Expression::Tuple(tuple_expression) => tuple_expression.format(f),
-            ast::Expression::ArrayRange(array_range_expression) => array_range_expression.format(f),
-            ast::Expression::ArrayList(array_list_expression) => array_list_expression.format(f),
+            ast::Expression::Range(range_expr) => range_expr.format(f),
+            ast::Expression::List(list_expr) => list_expr.format(f),
             ast::Expression::String(format_string) => format_string.format(f),
             ast::Expression::SymbolPath(qualified_name) => qualified_name.format(f),
             ast::Expression::Marker(identifier) => format!("@{}", identifier.name).into(),
@@ -144,13 +144,13 @@ impl Format for ast::TupleExpression {
     }
 }
 
-impl Format for ast::ArrayItem {
+impl Format for ast::ListItem {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras => self.expr)
     }
 }
 
-impl Format for ast::ArrayRangeExpression {
+impl Format for ast::RangeExpression {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f, self.extras =>
             '[' self.start ".." self.end ']' self.unit
@@ -158,7 +158,7 @@ impl Format for ast::ArrayRangeExpression {
     }
 }
 
-impl Format for ast::ArrayListExpression {
+impl Format for ast::ListExpression {
     fn format(&self, f: &FormatConfig) -> Node {
         let nodes: Vec<Node> = self.items.iter().map(|item| item.format(f)).collect();
         let break_mode = BreakMode::from_layout(&nodes, 0, f);
@@ -232,7 +232,7 @@ impl Format for ast::ElementInner {
             Attribute(identifier) => node!(f => '#' identifier),
             Tuple(identifier) => node!(f => '.' identifier),
             Method(call) => node!(f => '.' call),
-            ArrayElement(expression) => node!(f => '[' expression ']'),
+            ListElement(expression) => node!(f => '[' expression ']'),
         }
     }
 }
@@ -250,8 +250,8 @@ impl Format for ast::ElementAccess {
             ast::Expression::Literal(_) => false,
             ast::Expression::Bracketed(_, _) => true,
             ast::Expression::Tuple(_) => true,
-            ast::Expression::ArrayRange(_) => false,
-            ast::Expression::ArrayList(_) => true,
+            ast::Expression::Range(_) => false,
+            ast::Expression::List(_) => true,
             ast::Expression::String(_) => true,
             ast::Expression::SymbolPath(_) => true,
             ast::Expression::Marker(_) => true,

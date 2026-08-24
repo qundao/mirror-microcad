@@ -39,16 +39,16 @@ impl_tokens!(ast::TupleExpression => |self_, ctx| {
         .for_each(|item| item.semantic_tokens(ctx));
 });
 
-impl_tokens!(ast::ArrayItem => extras, expr);
+impl_tokens!(ast::ListItem => extras, expr);
 
-impl_tokens!(ast::ArrayRangeExpression => |self_, ctx| {
+impl_tokens!(ast::RangeExpression => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
     self_.start.semantic_tokens(ctx);
     self_.end.semantic_tokens(ctx);
     if let Some(unit) = self_.unit.as_ref() { unit.semantic_tokens(ctx) }
 });
 
-impl_tokens!(ast::ArrayListExpression => |self_, ctx| {
+impl_tokens!(ast::ListExpression => |self_, ctx| {
     self_.extras.semantic_tokens(ctx);
     self_.items
         .iter()
@@ -121,7 +121,7 @@ impl_tokens!(ast::ElementInner => |self_, ctx| {
             ctx.push_token(&identifier.span, TokenType::PROPERTY, &[])
         }
         ast::ElementInner::Method(call) => call.semantic_tokens(ctx),
-        ast::ElementInner::ArrayElement(expression) => expression.semantic_tokens(ctx),
+        ast::ElementInner::ListElement(expression) => expression.semantic_tokens(ctx),
     }
 });
 
@@ -144,11 +144,11 @@ impl_tokens!(ast::Expression => |self_, ctx| {
         ast::Expression::Literal(literal) => literal.semantic_tokens(ctx),
         ast::Expression::Bracketed(expression, _) => expression.semantic_tokens(ctx),
         ast::Expression::Tuple(tuple_expression) => tuple_expression.semantic_tokens(ctx),
-        ast::Expression::ArrayRange(array_range_expression) => {
-            array_range_expression.semantic_tokens(ctx)
+        ast::Expression::Range(range_expression) => {
+            range_expression.semantic_tokens(ctx)
         }
-        ast::Expression::ArrayList(array_list_expression) => {
-            array_list_expression.semantic_tokens(ctx)
+        ast::Expression::List(list_expression) => {
+            list_expression.semantic_tokens(ctx)
         }
         ast::Expression::String(format_string) => format_string.semantic_tokens(ctx),
         ast::Expression::SymbolPath(qualified_name) => qualified_name.semantic_tokens(ctx),

@@ -70,7 +70,7 @@ impl std::ops::Neg for Type {
         use Type::*;
         match self {
             Integer | Quantity(_) => Ok(self),
-            Array(ty) => -(*ty),
+            List(ty) => -(*ty),
             Tuple(ty) => -(*ty),
             ty => Err(TypeError::UnsupportedUnaryOperator {
                 op: UnaryOperator::Minus,
@@ -87,7 +87,7 @@ impl std::ops::Not for Type {
         use Type::*;
         match self {
             Bool => Ok(self),
-            Array(ty) => -(*ty),
+            List(ty) => -(*ty),
             Tuple(ty) => -(*ty),
             ty => Err(TypeError::UnsupportedUnaryOperator {
                 op: UnaryOperator::Not,
@@ -109,7 +109,7 @@ impl std::ops::Add for Type {
             (Quantity(QuantityType::Scalar), Integer) => Ok(Quantity(QuantityType::Scalar)),
             (Quantity(lhs), Quantity(rhs)) => lhs + rhs,
             (String, String) => Ok(Type::String),
-            (Array(lhs), Array(rhs)) => *lhs + *rhs,
+            (List(lhs), List(rhs)) => *lhs + *rhs,
             (Tuple(lhs), Tuple(rhs)) => *lhs + *rhs,
             (Matrix(lhs), Matrix(rhs)) => lhs + rhs,
             (lhs, rhs) => Err(TypeError::UnsupportedBinaryOperator {
@@ -132,7 +132,7 @@ impl std::ops::Sub for Type {
             (Integer, Quantity(QuantityType::Scalar)) => Ok(Quantity(QuantityType::Scalar)),
             (Quantity(QuantityType::Scalar), Integer) => Ok(Quantity(QuantityType::Scalar)),
             (Quantity(lhs), Quantity(rhs)) => lhs - rhs,
-            (Array(lhs), Array(rhs)) => *lhs - *rhs,
+            (List(lhs), List(rhs)) => *lhs - *rhs,
             (Tuple(lhs), Tuple(rhs)) => *lhs - *rhs,
             (Matrix(lhs), Matrix(rhs)) => lhs - rhs,
             (Model(lhs), Model(rhs)) if lhs == rhs => Ok(Model(lhs)),
@@ -156,7 +156,7 @@ impl std::ops::Mul for Type {
             (Integer, Quantity(QuantityType::Scalar)) => Ok(Quantity(QuantityType::Scalar)),
             (Quantity(QuantityType::Scalar), Integer) => Ok(Quantity(QuantityType::Scalar)),
             (Quantity(lhs), Quantity(rhs)) => lhs * rhs,
-            (ty, Array(array_type)) | (Array(array_type), ty) => *array_type * ty,
+            (ty, List(list_type)) | (List(list_type), ty) => *list_type * ty,
             (Tuple(_), _) | (_, Tuple(_)) => todo!(),
             (Matrix(_), _) | (_, Matrix(_)) => todo!(),
             (lhs, rhs) => Err(TypeError::UnsupportedBinaryOperator {
@@ -178,7 +178,7 @@ impl std::ops::Div for Type {
         match (lhs, rhs) {
             (Integer, Integer) => Ok(Integer),
             (Quantity(lhs), Type::Quantity(rhs)) => lhs / rhs,
-            (Array(array_type), ty) => *array_type / ty,
+            (List(list_type), ty) => *list_type / ty,
             (lhs, rhs) => Err(TypeError::UnsupportedBinaryOperator {
                 op: BinaryOperator::Divide,
                 lhs,

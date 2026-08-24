@@ -42,9 +42,9 @@ pub enum EvalError {
         found: Type,
     },
 
-    /// Array elements have different types.
-    #[error("Array elements have different types: {0}")]
-    ArrayElementsDifferentTypes(TypeList),
+    /// List elements have different types.
+    #[error("List elements have different types: {0}")]
+    ListElementsDifferentTypes(TypeList),
 
     /// Argument count mismatch.
     #[error("Argument count mismatch: expected {expected}, got {found} in {args}")]

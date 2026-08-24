@@ -24,8 +24,9 @@ pub enum Type {
     String,
     /// A boolean: `true`, `false`.
     Bool,
-    /// An array of elements of the same type: `[Scalar]`.
-    Array(Box<Type>),
+    /// A list of elements, with a optional: `[Scalar]`.
+    /// `List` is a type alias for `[Any]`.
+    List(Box<Type>),
     /// A named tuple of elements: `(x: Scalar, y: String)`.
     Tuple(Box<TupleType>),
     /// Matrix type: `Matrix3x3`.
@@ -52,18 +53,25 @@ impl Type {
         Self::Quantity(QuantityType::Angle)
     }
 
+    /// Short-cut for a `Color` type
     pub fn color() -> Self {
         TupleType::color().into()
     }
 
+    /// Short-cut for a `List` type, or `[Any]`, respectively.
+    pub fn list() -> Self {
+        Self::List(Box::new(Type::Any))
+    }
+
+    /// Short-cut for a matrix type.
     pub fn matrix(rows: usize, columns: usize) -> Self {
         Self::Matrix(MatrixType::new(rows, columns))
     }
 
-    /// Check if the type is an array of the given type `ty`
-    pub fn is_array_of(&self, ty: &Type) -> bool {
+    /// Check if the type is an list of the given type `ty`
+    pub fn is_list_of(&self, ty: &Type) -> bool {
         match self {
-            Self::Array(array_type) => array_type.as_ref() == ty,
+            Self::List(list_type) => list_type.as_ref() == ty,
             _ => false,
         }
     }
@@ -136,7 +144,7 @@ impl std::fmt::Display for Type {
             Self::Quantity(quantity) => write!(f, "{quantity}"),
             Self::String => write!(f, "String"),
             Self::Bool => write!(f, "Bool"),
-            Self::Array(t) => write!(f, "[{t}]"),
+            Self::List(t) => write!(f, "[{t}]"),
             Self::Tuple(t) => write!(f, "{t}"),
             Self::Matrix(t) => write!(f, "{t}"),
             Self::Function(t) => write!(f, "{t}"),

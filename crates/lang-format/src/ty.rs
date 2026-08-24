@@ -15,7 +15,7 @@ impl Format for ast::Type {
     fn format(&self, f: &FormatConfig) -> Node {
         match &self {
             ast::Type::Single(single_type) => single_type.format(f),
-            ast::Type::Array(array_type) => array_type.format(f),
+            ast::Type::List(list_type) => list_type.format(f),
             ast::Type::Tuple(tuple_type) => tuple_type.format(f),
         }
     }
@@ -27,7 +27,7 @@ impl Format for ast::SingleType {
     }
 }
 
-impl Format for ast::ArrayType {
+impl Format for ast::ListType {
     fn format(&self, f: &FormatConfig) -> Node {
         node!(f => '[' self.inner ']')
     }

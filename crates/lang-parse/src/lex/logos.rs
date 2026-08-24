@@ -197,7 +197,7 @@ fn single_line_comment_callback<'a>(lex: &mut Lexer<'a, LogosToken<'a>>) -> Opti
 fn string_token_callback<'a>(
     lex: &mut Lexer<'a, LogosToken<'a>>,
 ) -> Result<QuoteVariant<'a>, LexerError> {
-    // if we have a quote that follow then end of a number (digit or '.') or array, the token is an inch unit
+    // if we have a quote that follow then end of a number (digit or '.') or list, the token is an inch unit
     // this is a massive hack, but the best I can think of to distinguish '"
     let last_byte = lex
         .source()
