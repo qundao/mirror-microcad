@@ -3,7 +3,7 @@
 
 //! Evaluate function
 
-use microcad_builtin::Builtin;
+use microcad_builtin::BuiltinItem;
 use microcad_lang_base::{SrcRef, SrcReferrer, ToCompactString};
 use microcad_lang_types::{ArgumentValue, ArgumentValueList, Value, tuple};
 use microcad_package::symbol;
@@ -108,7 +108,7 @@ impl Eval<FlowSignal> for symbol::function::Call {
                 let args = self.args.eval(context)?;
 
                 match context.builtins.get(*builtin_id) {
-                    Some(Builtin::Function(f)) => {
+                    Some(BuiltinItem::Function(f)) => {
                         let args = find_match(&args, &f.ty(), &tuple!())?;
 
                         Ok(FlowSignal::Yield(f.call_isolated(args)?))
@@ -143,7 +143,7 @@ impl Eval<FlowSignal> for symbol::Path {
             }
             symbol::Path::Resolved(symbol::SymbolId::Builtin(builtin)) => {
                 match context.builtins.get(*builtin) {
-                    Some(Builtin::Constant(c)) => Ok(FlowSignal::Yield(c.value())),
+                    Some(BuiltinItem::Constant(c)) => Ok(FlowSignal::Yield(c.value())),
                     _ => todo!("Error handling"),
                 }
             }

@@ -5,7 +5,7 @@
 
 use crate::{CallTrait, Eval, EvalContext, EvalError, EvalResult, context::WorkbenchGroupFrame};
 
-use microcad_builtin::Builtin;
+use microcad_builtin::BuiltinItem;
 use microcad_lang_base::{SrcReferrer, element::Visibility};
 use microcad_package::{
     SymbolId,
@@ -40,10 +40,10 @@ impl Eval<ModelTree> for symbol::workbench::Marker {
     }
 }
 
-impl Eval<Value> for Builtin {
+impl Eval<Value> for BuiltinItem {
     fn eval(&self, _context: &mut EvalContext) -> EvalResult<Value> {
         match self {
-            Builtin::Constant(builtin_constant) => Ok(builtin_constant.value()),
+            BuiltinItem::Constant(builtin_constant) => Ok(builtin_constant.value()),
             _ => todo!("Error handling: Builtin constant expected"),
         }
     }
