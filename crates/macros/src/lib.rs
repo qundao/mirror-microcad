@@ -13,6 +13,7 @@ mod derive_scaffold;
 mod derive_src_referrer;
 mod derive_visit;
 mod helpers;
+mod include_inner_docs;
 mod test_builtin_fn;
 
 pub(crate) mod prelude {
@@ -92,4 +93,10 @@ pub fn derive_src_referrer(input: TokenStream) -> TokenStream {
 #[proc_macro_derive(Visit, attributes(visit))]
 pub fn derive_visit(input: TokenStream) -> TokenStream {
     derive_visit::derive_visit_impl(input)
+}
+
+/// Extract the inner doc comments `//!` in a source file.
+#[proc_macro]
+pub fn include_inner_docs(input: TokenStream) -> TokenStream {
+    include_inner_docs::include_inner_docs_impl(input)
 }
