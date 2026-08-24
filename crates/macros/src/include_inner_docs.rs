@@ -5,14 +5,14 @@
 
 use crate::prelude::*;
 
-fn expand_include_inner_docs(lit_str: &syn::LitStr) -> syn::Result<String> {
+fn expand_include_inner_docs(lit_str: &syn::LitStr) -> syn::Result<(String, std::path::PathBuf)> {
     let relative_path = lit_str.value();
 
-    // Resolve path relative to the manifest directory of the calling crate
+    // 1. Resolve path relative to CARGO_MANIFEST_DIR (fixes rust-analyzer)
     let manifest_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap_or_else(|_| ".".to_string());
     let file_path = std::path::Path::new(&manifest_dir).join(&relative_path);
 
-    // 1. Read file
+    // 2. Read file
     let content = std::fs::read_to_string(&file_path).map_err(|err| {
         syn::Error::new(
             lit_str.span(),
@@ -20,7 +20,7 @@ fn expand_include_inner_docs(lit_str: &syn::LitStr) -> syn::Result<String> {
         )
     })?;
 
-    // 2. Extract inner docs
+    // 3. Extract inner docs
     let inner_docs = syn::parse_file(&content)?
         .attrs
         .into_iter()
@@ -45,7 +45,7 @@ fn expand_include_inner_docs(lit_str: &syn::LitStr) -> syn::Result<String> {
         .collect::<Vec<_>>()
         .join("\n");
 
-    Ok(inner_docs)
+    Ok((inner_docs, file_path))
 }
 
 /// Extract the inner doc comments `//!` in a source file.
@@ -53,7 +53,19 @@ pub fn include_inner_docs_impl(input: TokenStream) -> TokenStream {
     let lit_str = parse_macro_input!(input as syn::LitStr);
 
     match expand_include_inner_docs(&lit_str) {
-        Ok(docs) => quote!(#docs).into(),
+        Ok((docs, path)) => {
+            let path_str = path.to_string_lossy();
+
+            // Forces Cargo and rust-analyzer to track file changes,
+            // while producing a valid &'static str expression.
+            quote! {
+                {
+                    const _: &[u8] = include_bytes!(#path_str);
+                    #docs
+                }
+            }
+            .into()
+        }
         Err(err) => err.to_compile_error().into(),
     }
 }
