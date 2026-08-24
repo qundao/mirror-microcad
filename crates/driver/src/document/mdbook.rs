@@ -21,7 +21,7 @@ impl MdBookDocument {
     pub fn new(url: Url) -> Result<Self> {
         let location = SourceLocation::new(url);
         Ok(Self {
-            mdbook: MdBook::new(location.path().ok_or(miette::miette!("Not a file path"))?)
+            mdbook: MdBook::load(location.path().ok_or(miette::miette!("Not a file path"))?)
                 .into_diagnostic()?,
             location,
             diags: Default::default(),
