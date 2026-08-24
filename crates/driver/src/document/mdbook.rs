@@ -63,6 +63,6 @@ impl commands::Format for document::MdBook {
 
 impl commands::Sync for document::MdBook {
     fn sync(&self) -> Result {
-        Ok(self.mdbook.save_all().into_diagnostic()?)
+        todo!()
     }
 }
