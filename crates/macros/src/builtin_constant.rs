@@ -46,11 +46,9 @@ pub(crate) fn builtin_constant_impl(attr: TokenStream, item: TokenStream) -> Tok
 
     let doc_comment = helpers::attr_fetch_doc(&input_static.attrs);
     let expr = &input_static.expr;
-    let vis = &input_static.vis;
 
-    // Generate output expansion wrapping inside `builtin_constant_helper!`
     quote! {
-        #vis static #static_name: Builtin = builtin!(
+        pub static #static_name: BuiltinItem = builtin_item!(
             Constant
             #doc_comment
             #mod_name::#name = #expr

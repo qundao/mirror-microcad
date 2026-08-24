@@ -35,7 +35,7 @@ pub(crate) fn builtin_mod_impl(item: TokenStream) -> TokenStream {
     quote! {
         #item_mod
 
-        pub static #mod_upper_name: Builtin = builtin!(Module #doc #mod_name [#(&#mod_name::#collected_builtins),*]);
+        pub static #mod_upper_name: BuiltinItem = builtin_item!(Module #doc #mod_name [#(&#mod_name::#collected_builtins),*]);
     }
     .into()
 }
