@@ -29,7 +29,6 @@ impl ToMd for BuiltinConstant {
                     "**{name} = {value}**\n{doc}",
                     name = self.info.name,
                     value = self.value(),
-                    doc = doc.to_string()
                 ))
                 .unwrap_or_default()
         )
@@ -39,10 +38,17 @@ impl ToMd for BuiltinConstant {
 impl ToMd for BuiltinFunction {
     fn to_md(&self) -> md::Markdown {
         md::md!(
-            "# {name}{ty} {{#{name}}} \n{doc}",
+            "# Function {name} {{#{name}}} \n{doc}",
             name = self.info.item_name().unwrap(),
-            ty = self.ty(),
-            doc = self.info.doc.map(|doc| doc.to_string()).unwrap_or_default()
+            doc = self
+                .info
+                .doc
+                .map(|doc| format!(
+                    "> `{name}{ty}`\n\n{doc}",
+                    name = self.info.name,
+                    ty = self.ty()
+                ))
+                .unwrap_or_default()
         )
     }
 }
@@ -100,30 +106,36 @@ impl BuiltinMdbook {
         }
     }
 
-    pub fn write(&self, path: impl AsRef<std::path::Path>) -> std::io::Result<()> {
+    pub fn to_mdbook(&self) -> md::MdBook {
+        let mut mdbook = md::MdBook::new("__mu");
+
+        self.registry.modules().for_each(|module| {
+            let mod_name = module.info.item_name().unwrap();
+            let md_path = std::path::PathBuf::from("src").join(mod_name);
+            mdbook.add_md(md_path.join("README.md"), module.to_md());
+
+            module.items.iter().for_each(|item| {
+                let item_name = item.info().item_name().unwrap();
+                mdbook.add_md(md_path.join(format!("{item_name}.md")), item.to_md());
+            })
+        });
+
+        mdbook
+    }
+
+    pub fn write(&self, path: impl AsRef<std::path::Path>) -> Result<(), md::MdBookError> {
         let path = path.as_ref();
         std::fs::create_dir_all(&path)?;
         crate::mdbook::Config.write_to_file(path.join("book.toml"))?;
 
-        let src_dir = path.join("src");
-        std::fs::create_dir_all(&src_dir)?;
-        self.write_summary(src_dir.join("SUMMARY.md"))?;
+        let mdbook = self.to_mdbook();
+        self.summary()
+            .write_to_file(path.join(&mdbook.src_path).join("SUMMARY.md"))?;
 
-        self.registry.modules().try_for_each(|module| {
-            let mod_name = module.info.item_name().unwrap();
-            let md_path = src_dir.join(mod_name);
-            std::fs::create_dir_all(&md_path)?;
-            module.to_md().write_to_file(md_path.join("README.md"))?;
-
-            module.items.iter().try_for_each(|item| {
-                let item_name = item.info().item_name().unwrap();
-                item.to_md()
-                    .write_to_file(md_path.join(format!("{item_name}.md")))
-            })
-        })
+        mdbook.save_all(path)
     }
 
-    fn write_summary(&self, path: impl AsRef<std::path::Path>) -> std::io::Result<()> {
+    fn summary(&self) -> Summary {
         let mut entries = Vec::new();
         use crate::mdbook::SummaryEntry;
 
@@ -144,6 +156,6 @@ impl BuiltinMdbook {
             });
         });
 
-        Summary::from_iter(entries).write_to_file(path)
+        Summary::from_iter(entries)
     }
 }
