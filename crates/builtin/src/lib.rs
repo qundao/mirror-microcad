@@ -128,17 +128,53 @@ impl BuiltinOperation {
 #[derive(Debug, Clone)]
 pub struct BuiltinModule {
     pub info: BuiltinInfo,
-    pub items: &'static [&'static Builtin],
+    pub items: &'static [&'static BuiltinItem],
 }
 
+/// Builder methods
 impl BuiltinModule {
-    pub const fn new(info: BuiltinInfo, items: &'static [&'static Builtin]) -> Self {
+    pub const fn new(info: BuiltinInfo, items: &'static [&'static BuiltinItem]) -> Self {
         Self { info, items }
     }
 }
 
+/// Item methods
+impl BuiltinModule {
+    pub fn items(&self) -> impl Iterator<Item = &'static BuiltinItem> {
+        self.items.iter().copied()
+    }
+
+    pub fn constants(&self) -> impl Iterator<Item = &'static BuiltinConstant> {
+        self.items().filter_map(|item| match item {
+            BuiltinItem::Constant(builtin_constant) => Some(builtin_constant),
+            _ => None,
+        })
+    }
+
+    pub fn functions(&self) -> impl Iterator<Item = &'static BuiltinFunction> {
+        self.items().filter_map(|item| match item {
+            BuiltinItem::Function(f) => Some(f),
+            _ => None,
+        })
+    }
+
+    pub fn operations(&self) -> impl Iterator<Item = &'static BuiltinOperation> {
+        self.items().filter_map(|item| match item {
+            BuiltinItem::Operation(op) => Some(op),
+            _ => None,
+        })
+    }
+
+    pub fn primitives(&self) -> impl Iterator<Item = &'static BuiltinPrimitive> {
+        self.items().filter_map(|item| match item {
+            BuiltinItem::Primitive(op) => Some(op),
+            _ => None,
+        })
+    }
+}
+
 #[derive(Debug, Clone, From)]
-pub enum Builtin {
+pub enum BuiltinItem {
     /// Produces a constant Value
     Constant(BuiltinConstant),
     /// A function computing a Value
@@ -151,14 +187,14 @@ pub enum Builtin {
     Module(BuiltinModule),
 }
 
-impl Builtin {
+impl BuiltinItem {
     pub const fn info(&self) -> &BuiltinInfo {
         match self {
-            Builtin::Constant(c) => &c.info,
-            Builtin::Function(f) => &f.info,
-            Builtin::Primitive(p) => &p.info,
-            Builtin::Operation(o) => &o.info,
-            Builtin::Module(o) => &o.info,
+            BuiltinItem::Constant(c) => &c.info,
+            BuiltinItem::Function(f) => &f.info,
+            BuiltinItem::Primitive(p) => &p.info,
+            BuiltinItem::Operation(o) => &o.info,
+            BuiltinItem::Module(o) => &o.info,
         }
     }
 
@@ -176,7 +212,7 @@ impl Builtin {
         ctx: &mut BuiltinEvalContext,
     ) -> Result<Value, BuiltinError> {
         match self {
-            Builtin::Function(f) => (f.f)(args, ctx),
+            BuiltinItem::Function(f) => (f.f)(args, ctx),
             _ => unreachable!("Only functions can be called."),
         }
     }
@@ -187,7 +223,7 @@ impl Builtin {
         ctx: &mut BuiltinEvalContext,
     ) -> Result<Model, BuiltinError> {
         match self {
-            Builtin::Primitive(p) => (p.f)(args, ctx),
+            BuiltinItem::Primitive(p) => (p.f)(args, ctx),
             _ => unreachable!("Only functions can be called."),
         }
     }
@@ -198,15 +234,15 @@ impl Builtin {
         ctx: &mut BuiltinEvalContext,
     ) -> Result<ModelTree, BuiltinError> {
         match self {
-            Builtin::Operation(o) => (o.f)(args, ctx),
+            BuiltinItem::Operation(o) => (o.f)(args, ctx),
             _ => unreachable!("Only functions can be called."),
         }
     }
 }
 
-/// A macro to generate built-in functions.
+/// A macro to declare built-in items.
 #[macro_export]
-macro_rules! builtin {
+macro_rules! builtin_item {
     // Helper: @info for Modules (Only takes a module identifier)
     (
         @info
@@ -235,23 +271,23 @@ macro_rules! builtin {
         .with_doc($doc)
     };
 
-    // Syntax: builtin!(
+    // Syntax: builtin_item!(
     //     Module
     //     "Doc string"
-    //     mod_name [ builtin1, builtin2, ... ]
+    //     mod_name [ item1, item2, ... ]
     // )
     (
         Module
         $doc:literal
         $mod_name:ident [ $($builtin:expr),* $(,)? ]
     ) => {
-        $crate::Builtin::Module($crate::BuiltinModule::new(
-            $crate::builtin!(@info $doc $mod_name),
+        $crate::BuiltinItem::Module($crate::BuiltinModule::new(
+            $crate::builtin_item!(@info $doc $mod_name),
             &[ $($builtin),* ],
         ))
     };
 
-    // Syntax: builtin!(
+    // Syntax: builtin_item!(
     //      Function
     //      "Doc string"
     //      mod::func(param1: type1, param2: type2, ...) -> return_type
@@ -261,20 +297,20 @@ macro_rules! builtin {
         $doc:literal
         $mod_name:ident::$fn_name:ident ( $func_ty:expr )
     ) => {
-        $crate::Builtin::Function($crate::BuiltinFunction::new(
-            $crate::builtin!(@info $doc $mod_name::$fn_name),
+        $crate::BuiltinItem::Function($crate::BuiltinFunction::new(
+            $crate::builtin_item!(@info $doc $mod_name::$fn_name),
             || $func_ty,
             $fn_name,
         ))
     };
-    // Syntax: builtin!(Constant "A constant" math::PI = std::f64::consts::PI)
+    // Syntax: builtin_item!(Constant "A constant" math::PI = std::f64::consts::PI)
     (
         Constant
         $doc:literal
         $mod_name:ident::$fn_name:ident = $value:expr
     ) => {
-        $crate::Builtin::Constant($crate::BuiltinConstant::new(
-            $crate::builtin!(@info $doc $mod_name::$fn_name),
+        $crate::BuiltinItem::Constant($crate::BuiltinConstant::new(
+            $crate::builtin_item!(@info $doc $mod_name::$fn_name),
             || $crate::Value::from($value),
         ))
     };

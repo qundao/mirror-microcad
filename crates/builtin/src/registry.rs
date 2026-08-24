@@ -5,11 +5,11 @@
 
 use microcad_lang_base::{BuiltinId, HashMap};
 
-use crate::{Builtin, BuiltinModule};
+use crate::{BuiltinItem, BuiltinModule};
 
 #[derive(Default)]
 pub struct BuiltinRegistry {
-    builtins: HashMap<BuiltinId, &'static Builtin>,
+    builtins: HashMap<BuiltinId, &'static BuiltinItem>,
     modules: Vec<&'static BuiltinModule>,
 }
 
@@ -41,7 +41,7 @@ impl BuiltinRegistry {
         registry
     }
 
-    pub fn register(&mut self, builtin: &'static Builtin) {
+    pub fn register(&mut self, builtin: &'static BuiltinItem) {
         let id = builtin.id();
         let previous = self.builtins.insert(id, builtin);
 
@@ -52,7 +52,7 @@ impl BuiltinRegistry {
             id
         );
 
-        if let Builtin::Module(builtin_module) = builtin {
+        if let BuiltinItem::Module(builtin_module) = builtin {
             builtin_module
                 .items
                 .iter()
@@ -61,7 +61,7 @@ impl BuiltinRegistry {
         }
     }
 
-    pub fn get(&self, id: BuiltinId) -> Option<&'static Builtin> {
+    pub fn get(&self, id: BuiltinId) -> Option<&'static BuiltinItem> {
         self.builtins.get(&id).copied()
     }
 

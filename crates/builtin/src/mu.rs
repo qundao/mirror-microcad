@@ -12,7 +12,7 @@ use microcad_lang_types::{
 };
 use microcad_macros::{builtin_constant, builtin_fn, builtin_mod, include_inner_docs};
 
-use crate::{Builtin, BuiltinError, BuiltinEvalContext, BuiltinResult, builtin};
+use crate::{BuiltinError, BuiltinEvalContext, BuiltinItem, BuiltinResult, builtin_item};
 
 use serde::{Deserialize, Serialize};
 
@@ -384,16 +384,16 @@ pub mod math {
 
     /// Pi
     #[builtin_constant(math::PI)]
-    pub static PI: Builtin = std::f64::consts::PI;
+    pub static PI: BuiltinItem = std::f64::consts::PI;
 
     #[builtin_constant(math::X)]
-    pub static X: Builtin = tuple!(x = 1.0, y = 0.0, z = 0.0);
+    pub static X: BuiltinItem = tuple!(x = 1.0, y = 0.0, z = 0.0);
 
     #[builtin_constant(math::Y)]
-    pub static Y: Builtin = tuple!(x = 0.0, y = 1.0, z = 0.0);
+    pub static Y: BuiltinItem = tuple!(x = 0.0, y = 1.0, z = 0.0);
 
     #[builtin_constant(math::Z)]
-    pub static Z: Builtin = tuple!(x = 0.0, y = 0.0, z = 1.0);
+    pub static Z: BuiltinItem = tuple!(x = 0.0, y = 0.0, z = 1.0);
 
     #[builtin_fn(math::abs(x: Any) -> Any)]
     pub fn abs(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
@@ -594,7 +594,7 @@ pub mod geo2d {
 
     use super::*;
 
-    pub static CIRCLE: Builtin = Builtin::Primitive(BuiltinPrimitive::new(
+    pub static CIRCLE: BuiltinItem = BuiltinItem::Primitive(BuiltinPrimitive::new(
         BuiltinInfo::new("__mu::geo2d::Circle"),
         || function_type!((radius: Type::length()) -> Type::Model(ModelOutputType::Geometry2D)),
         Circle::call,
@@ -650,7 +650,7 @@ pub mod ops {
 
     use super::*;
 
-    pub static TRANSLATE: Builtin = Builtin::Operation(BuiltinOperation::new(
+    pub static TRANSLATE: BuiltinItem = BuiltinItem::Operation(BuiltinOperation::new(
         BuiltinInfo::new("__mu::ops::translate"),
         || function_type!((self: Type::Model(ModelOutputType::Any), x: Type::length(), y: Type::length(), z: Type::length()) -> Type::Model(ModelOutputType::Any)),
         translate,
@@ -677,7 +677,7 @@ pub mod ops {
         Ok(tree)
     }
 
-    pub static DIFFERENCE: Builtin = Builtin::Operation(BuiltinOperation::new(
+    pub static DIFFERENCE: BuiltinItem = BuiltinItem::Operation(BuiltinOperation::new(
         BuiltinInfo::new("__mu::ops::difference"),
         || function_type!((self: Type::Model(ModelOutputType::Any)) -> Type::Model(ModelOutputType::Any)),
         difference,
@@ -702,7 +702,7 @@ pub mod ops {
         Ok(tree)
     }
 
-    pub static EXTRUDE: Builtin = Builtin::Operation(BuiltinOperation::new(
+    pub static EXTRUDE: BuiltinItem = BuiltinItem::Operation(BuiltinOperation::new(
         BuiltinInfo::new("__mu::ops::extrude"),
         || function_type!((self: Type::Model(ModelOutputType::Geometry2D), height: Type::length()) -> Type::Model(ModelOutputType::Geometry3D)),
         extrude,
