@@ -53,6 +53,7 @@ pub struct BuiltinInfo {
     pub version_annotation: Option<fn() -> VersionAnnotation>,
 }
 
+/// Builder methods.
 impl BuiltinInfo {
     pub const fn new(name: &'static str) -> Self {
         Self {
@@ -79,21 +80,36 @@ impl BuiltinInfo {
     }
 }
 
-/// Item name methods.
+/// Getter methods.
 impl BuiltinInfo {
-    /// Return the Id of the built-in
+    /// Return the Id of the built-in.
     pub const fn id(&self) -> BuiltinId {
         self.id
     }
 
+    /// Returns the module name containing the item (e.g., `"geo2d"` from `"__mu::geo2d::Circle"`).
+    /// Returns `""` if there is no parent module.
+    pub fn module_name(&self) -> &'static str {
+        self.name.rsplit_once("::").map_or("", |(parent, _)| {
+            parent
+                .rsplit_once("::")
+                .map_or(parent, |(_, module)| module)
+        })
+    }
+
     /// Returns the item name (e.g., `"Circle"` from `"__mu::geo2d::Circle"`).
     /// Returns `None` if the name only contains a root/module without a distinct item.
-    pub fn item_name(&self) -> Option<&'static str> {
-        let parts: Vec<&'static str> = self.name.split("::").collect();
-        if parts.len() >= 1 {
-            parts.last().copied()
-        } else {
-            None
-        }
+    pub fn item_name(&self) -> &'static str {
+        self.name
+            .rsplit_once("::")
+            .map_or(self.name, |(_, item)| item)
+    }
+
+    /// Get the first line of the documentation, if any.
+    pub fn doc_summary(&self) -> &'static str {
+        self.doc
+            .and_then(|doc| doc.lines().next())
+            .map(str::trim)
+            .unwrap_or("")
     }
 }
