@@ -108,10 +108,19 @@ impl BuiltinMdbook {
 
     pub fn to_mdbook(&self) -> md::MdBook {
         let mut mdbook = md::MdBook::new("__mu");
+        let src_path = std::path::PathBuf::from("src");
+
+        mdbook.add_md(
+            src_path.join("README.md"),
+            md::md!(
+                "# `__mu`: µcad Compiler built-in library\n{doc}",
+                doc = microcad_builtin::mu::__MU
+            ),
+        );
 
         self.registry.modules().for_each(|module| {
             let mod_name = module.info.item_name().unwrap();
-            let md_path = std::path::PathBuf::from("src").join(mod_name);
+            let md_path = src_path.join(mod_name);
             mdbook.add_md(md_path.join("README.md"), module.to_md());
 
             module.items.iter().for_each(|item| {
