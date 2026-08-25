@@ -35,7 +35,7 @@ pub const MICROCAD_EXTENSIONS: &[&str] = &["mu", "µcad", "mcad", "ucad"];
 pub const MICROCAD_EXTENSION: &str = "µcad";
 
 pub use artifact::{Artifact, ArtifactError, ArtifactHeader, ArtifactKind, StageResult};
-pub use diag::{DiagRenderOptions, Diagnostic, Diagnostics};
+pub use diag::{DiagRenderOptions, Diagnostic, Diagnostics, PushDiag};
 pub use element::{Identifier, IdentifierList};
 pub use output::{Capture, Output, Stdout};
 pub use rc::{Rc, RcMut};

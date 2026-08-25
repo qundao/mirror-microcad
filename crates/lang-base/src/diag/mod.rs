@@ -13,5 +13,19 @@
 mod diagnostic;
 mod diagnostics;
 
-pub use diagnostic::*;
-pub use diagnostics::*;
+pub use diagnostic::Diagnostic;
+pub use diagnostics::{DiagRenderOptions, Diagnostics};
+
+pub trait PushDiag<E: miette::Diagnostic> {
+    fn push_diag(&mut self, err: impl Into<E>);
+
+    fn capture<T: Default>(&mut self, result: Result<T, impl Into<E>>) -> T {
+        match result {
+            Ok(t) => t,
+            Err(err) => {
+                self.push_diag(err);
+                T::default()
+            }
+        }
+    }
+}
