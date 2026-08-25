@@ -15,7 +15,10 @@ pub use prop::{Properties, Property, PropertyType};
 
 mod tree;
 
-pub use tree::{Arena, ModelTree, Node, NodeExt, NodeId, NodeMut, NodeRef};
+pub use tree::{
+    Arena, BuildModelTreeError, ModelTree, ModelTreeBuilder, ModelTreeBuilderMut, Node, NodeExt,
+    NodeId, NodeMut, NodeRef,
+};
 
 mod operation;
 

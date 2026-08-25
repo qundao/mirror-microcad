@@ -28,6 +28,35 @@ pub struct Property {
     pub ty: PropertyType,
 }
 
+/// Builder method
+impl Property {
+    pub fn new(name: impl AsRef<str>, value: impl Into<Value>, ty: PropertyType) -> Self {
+        Self {
+            name: Identifier::from(name.as_ref()),
+            value: value.into(),
+            src_ref: SrcRef::none(),
+            ty,
+        }
+    }
+
+    pub fn input(name: impl AsRef<str>, value: impl Into<Value>) -> Self {
+        Self::new(name, value, PropertyType::Input)
+    }
+
+    pub fn output(name: impl AsRef<str>, value: impl Into<Value>) -> Self {
+        Self::new(name, value, PropertyType::Output)
+    }
+
+    pub fn hidden(name: impl AsRef<str>, value: impl Into<Value>) -> Self {
+        Self::new(name, value, PropertyType::Hidden)
+    }
+
+    pub fn with_src_ref(mut self, src_ref: SrcRef) -> Self {
+        self.src_ref = src_ref;
+        self
+    }
+}
+
 impl std::fmt::Display for Property {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // Choose key icon based on visibility
@@ -71,12 +100,7 @@ impl Properties {
         let mut properties = Properties::new();
 
         for (name, value) in inputs.named_iter() {
-            properties.set_property(
-                name.clone(),
-                value.clone(),
-                PropertyType::Input,
-                SrcRef::default(),
-            );
+            properties.set_property(Property::input(name.clone(), value.clone()));
         }
 
         properties
@@ -86,12 +110,7 @@ impl Properties {
         let mut properties = Properties::new();
 
         for (name, value) in inputs.named_iter() {
-            properties.set_property(
-                name.clone(),
-                value.clone(),
-                PropertyType::Hidden,
-                SrcRef::default(),
-            );
+            properties.set_property(Property::hidden(name.clone(), value.clone()));
         }
 
         properties
@@ -106,21 +125,10 @@ impl Properties {
     ///
     /// If the property already exists, its value, visibility, and source reference are updated.
     /// Returns a reference to the newly inserted or updated [`Property`].
-    pub fn set_property(
-        &mut self,
-        name: impl Into<Identifier>,
-        value: impl Into<Value>,
-        ty: PropertyType,
-        src_ref: SrcRef,
-    ) -> &Property {
-        let name = name.into();
-        let property = Property {
-            name: name.clone(),
-            value: value.into(),
-            src_ref,
-            ty,
-        };
-        self.props.insert(name.clone(), property);
+    pub fn set_property(&mut self, property: impl Into<Property>) -> &Property {
+        let property = property.into();
+        let name = property.name.clone();
+        self.props.insert(name.clone(), property.into());
         self.props.get(&name).expect("Property was just inserted")
     }
 

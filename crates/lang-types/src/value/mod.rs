@@ -28,7 +28,7 @@ pub use value_error::*;
 pub use value_list::*;
 
 use crate::{
-    Angle, Color, Integer, Length, Mat3, ModelTree, QuantityType, Scalar, Type, Vec2, Vec3,
+    Angle, Color, Integer, Length, Mat3, Model, ModelTree, QuantityType, Scalar, Type, Vec2, Vec3,
 };
 
 use derive_more::{Display, From};
@@ -299,6 +299,12 @@ impl From<String> for Value {
 impl From<Mat3> for Value {
     fn from(m: Mat3) -> Self {
         Self::Matrix(Rc::new(Matrix::Matrix3(m)))
+    }
+}
+
+impl From<Model> for Value {
+    fn from(model: Model) -> Self {
+        Self::Model(Rc::new(model.into()))
     }
 }
 

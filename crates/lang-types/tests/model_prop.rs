@@ -18,12 +18,7 @@ fn test_properties_basic_crud() {
     assert!(!props.contains("radius"));
 
     // 1. Insert property
-    let inserted = props.set_property(
-        "radius",
-        Value::from(10.5),
-        PropertyType::Input,
-        SrcRef::none(),
-    );
+    let inserted = props.set_property(Property::input("radius", 10.5));
 
     assert_eq!(inserted.name, Identifier::from("radius"));
     assert_eq!(inserted.value, Value::from(10.5));
@@ -38,7 +33,7 @@ fn test_properties_basic_crud() {
     assert_eq!(retrieved.value, Value::from(10.5));
 
     // 3. Update existing property
-    props.set_property("radius", 20.0, PropertyType::Input, SrcRef::none());
+    props.set_property(Property::input("radius", 20.0));
 
     assert_eq!(props.len(), 1); // Length should remain 1
     let updated = props.get_property("radius").unwrap();
@@ -66,8 +61,8 @@ fn test_from_arguments() {
 #[test]
 fn test_deref_and_iterators() {
     let mut props = Properties::new();
-    props.set_property("x", 1.0, PropertyType::Input, SrcRef::none());
-    props.set_property("y", 2.0, PropertyType::Input, SrcRef::none());
+    props.set_property(Property::input("x", 1.0));
+    props.set_property(Property::input("y", 2.0));
 
     // Test Deref to BTreeMap methods (e.g. .keys(), .values())
     let keys: Vec<_> = props.keys().map(|id| id.to_string()).collect();
@@ -94,17 +89,17 @@ fn test_model_tree_get_property_recursive_and_filtering() {
     let mut leaf1_model = Model::default();
     leaf1_model
         .properties
-        .set_property("radius", 5.0, PropertyType::Input, SrcRef::none());
+        .set_property(Property::input("radius", 5.0));
     let leaf1 = arena.new_node(leaf1_model);
 
     // Leaf Node 2: Hidden property ("internal_id") & Output property ("area")
     let mut leaf2_model = Model::default();
     leaf2_model
         .properties
-        .set_property("internal_id", 42, PropertyType::Hidden, SrcRef::none());
+        .set_property(Property::hidden("internal_id", 42));
     leaf2_model
         .properties
-        .set_property("area", 78.5, PropertyType::Output, SrcRef::none());
+        .set_property(Property::output("area", 78.5));
     let leaf2 = arena.new_node(leaf2_model);
 
     // Parent Node: Groups leaf1 and leaf2

@@ -3,10 +3,13 @@
 
 //! Model tree.
 
+mod builder;
 mod node;
 mod ops;
 
 pub use node::{Node, NodeExt, NodeId, NodeMut, NodeRef};
+
+pub use builder::{BuildModelTreeError, ModelTreeBuilder, ModelTreeBuilderMut};
 
 use microcad_macros::Artifact;
 use serde::{Deserialize, Serialize};
@@ -184,6 +187,12 @@ impl From<Value> for ModelTree {
             }
             value => ModelTree::new(crate::model::Element::Value(value)),
         }
+    }
+}
+
+impl From<Model> for ModelTree {
+    fn from(model: Model) -> Self {
+        Self::new(model)
     }
 }
 
