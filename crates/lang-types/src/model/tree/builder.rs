@@ -59,8 +59,9 @@ impl ModelTreeBuilder {
             .with_properties(std::mem::take(&mut self.properties));
 
         let mut model_tree = ModelTree::new(model);
-        self.children.iter().for_each(|child| {
-            model_tree.adopt_tree(child.root, &child.arena);
+        let children = std::mem::take(&mut self.children);
+        children.into_iter().for_each(|child| {
+            model_tree.append(child);
         });
 
         model_tree

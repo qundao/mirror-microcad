@@ -102,8 +102,14 @@ impl ModelTree {
     }
 
     /// Recursively copies a sub-tree from `source_arena` into `self.arena`.
-    pub fn adopt_tree(&mut self, source_id: NodeId, source_arena: &Arena) -> NodeId {
+    pub(crate) fn adopt_tree(&mut self, source_id: NodeId, source_arena: &Arena) -> NodeId {
         Self::adopt_tree_to_arena(&mut self.arena, source_id, source_arena)
+    }
+
+    pub fn append(&mut self, child: impl Into<ModelTree>) {
+        let tree = child.into();
+        let node_id = self.adopt_tree(tree.root, &tree.arena);
+        self.root.append(node_id, &mut self.arena);
     }
 
     /// Returns a new `ModelTree` where every `Element::InputPlaceholder` node

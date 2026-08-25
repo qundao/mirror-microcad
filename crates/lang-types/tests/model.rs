@@ -59,12 +59,8 @@ fn test_model_tree_creation_and_root() {
 fn test_tree_hierarchy_and_children() {
     let mut tree = ModelTree::new(model::circle("parent", 1.0));
 
-    // Add children using the arena directly
-    let child1 = tree.arena.new_node(model::circle("child1", 2.0));
-    let child2 = tree.arena.new_node(model::circle("child2", 3.0));
-
-    tree.root.append(child1, &mut tree.arena);
-    tree.root.append(child2, &mut tree.arena);
+    tree.append(model::circle("child1", 2.0));
+    tree.append(model::circle("child2", 3.0));
 
     // Verify traversal via root reference
     let root_ref = tree.root();
@@ -87,8 +83,7 @@ fn test_deduce_output_type_fallback() {
     let child_model = Model::new(BuiltinWorkpiece::Primitive2D(BuiltinId::from(
         "__mu::geo2d::Circle",
     )));
-    let child_id = tree.arena.new_node(child_model);
-    tree.root.append(child_id, &mut tree.arena);
+    tree.append(child_model);
 
     // The root should fall back to its child's type
     let root_ref = tree.root();
@@ -100,10 +95,8 @@ fn test_deduce_output_type_fallback() {
 #[test]
 fn test_into_group_child() {
     let mut tree = ModelTree::new(model::group("parent_group"));
-    let inner_group = model::group("inner_group");
 
-    let inner_id = tree.arena.new_node(inner_group);
-    tree.root.append(inner_id, &mut tree.arena);
+    tree.append(model::group("inner_group"));
 
     let root_ref = tree.root();
     let group_child = root_ref.into_group_child();
@@ -213,10 +206,8 @@ fn test_subtree_adoption_preserves_hierarchy() {
     let child2 = ModelTree::new(model::circle("child2", 3.0));
 
     // Construct a deep subtree for LHS
-    let child1_id = parent_tree.adopt_tree(child1.root, &child1.arena);
-    let child2_id = parent_tree.adopt_tree(child2.root, &child2.arena);
-    parent_tree.root.append(child1_id, &mut parent_tree.arena);
-    parent_tree.root.append(child2_id, &mut parent_tree.arena);
+    parent_tree.append(child1);
+    parent_tree.append(child2);
 
     let rhs = ModelTree::new(model::circle("rhs", 4.0));
 
@@ -264,14 +255,7 @@ fn test_replace_input_placeholders_multiplicity() {
         let trans_model = model::translation(x, y, z);
         let trans_id = template_tree.arena.new_node(trans_model);
 
-        let placeholder_model = Model {
-            name: None,
-            properties: Properties::new(),
-            attr: Default::default(),
-            element: Element::InputPlaceholder,
-            creator: None,
-            ..Default::default()
-        };
+        let placeholder_model = Model::new(Element::InputPlaceholder);
         let placeholder_id = template_tree.arena.new_node(placeholder_model);
 
         // Attach InputPlaceholder under translation, and translation under Multiplicity
