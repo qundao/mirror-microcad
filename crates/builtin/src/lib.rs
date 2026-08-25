@@ -8,6 +8,7 @@ pub use error::BuiltinError;
 
 pub mod mu;
 mod registry;
+use microcad_lang_base::PushDiag;
 pub use registry::BuiltinRegistry;
 
 use derive_more::{Debug, From};
@@ -23,6 +24,12 @@ pub struct BuiltinEvalContext<'a> {
 
     /// Diagnostics.
     pub diags: Vec<BuiltinError>,
+}
+
+impl<'a> PushDiag<BuiltinError> for BuiltinEvalContext<'a> {
+    fn push_diag(&mut self, err: impl Into<BuiltinError>) {
+        self.diags.push(err.into());
+    }
 }
 
 impl<'a> BuiltinEvalContext<'a> {

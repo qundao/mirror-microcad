@@ -19,6 +19,8 @@ use serde::{Deserialize, Serialize};
 /// The built-in core functions.
 #[builtin_mod]
 pub mod core {
+    use microcad_lang_base::PushDiag;
+
     use super::*;
 
     /// Calculate the sum of two values
@@ -156,7 +158,7 @@ pub mod core {
 
     #[builtin_fn(core::list_access(lhs: List, index: Integer) -> Any)]
     pub fn list_access(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        let lhs: std::rc::Rc<List> = args.try_get("lhs")?;
+        let lhs: std::rc::Rc<List> = _ctx.capture(args.try_get("lhs"));
         let index: Integer = args.try_get("index")?;
         let index = index.to_num::<usize>();
 
