@@ -3,9 +3,11 @@
 
 //! Workbench definition syntax element evaluation
 
-use crate::{CallTrait, Eval, EvalContext, EvalError, EvalResult, context::WorkbenchGroupFrame};
+use crate::{
+    CallTrait, Eval, EvalContext, EvalError, EvalResult, context::WorkbenchGroupFrame, find_match,
+};
 
-use microcad_builtin::BuiltinItem;
+use microcad_builtin::{BuiltinEvalContext, BuiltinItem};
 use microcad_lang_base::{SrcReferrer, element::Visibility};
 use microcad_package::{
     SymbolId,
@@ -13,8 +15,9 @@ use microcad_package::{
 };
 
 use microcad_lang_types::{
-    ArgumentValueList, ModelTree, Value,
-    model::{Properties, Property, PropertyType},
+    ArgumentValue, ArgumentValueList, ModelTree, Value,
+    model::{ModelTreeBuilderMut, Properties, Property, PropertyType},
+    tuple,
 };
 
 impl Eval<ModelTree> for symbol::workbench::Group {
@@ -23,7 +26,7 @@ impl Eval<ModelTree> for symbol::workbench::Group {
             self.statements
                 .iter()
                 .try_for_each(|stmt| stmt.eval(context))?;
-            todo!("Current current model from stack")
+            Ok(context.model_tree_builder_mut().build())
         })
     }
 }
@@ -102,8 +105,70 @@ impl Eval<Value> for symbol::Path {
     }
 }
 
+impl Eval<ArgumentValue> for symbol::workbench::Argument {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<ArgumentValue> {
+        Ok(match self {
+            symbol::workbench::Argument::Unnamed(expr) => {
+                let value: Value = expr.eval(context)?;
+                ArgumentValue::new(value, None)
+            }
+            symbol::workbench::Argument::Named { name, expr, .. }
+            | symbol::workbench::Argument::AutoNamed { name, expr } => {
+                let value: Value = expr.eval(context)?;
+                ArgumentValue::new(value, Some(name.clone()))
+            }
+        })
+    }
+}
+
+impl Eval<ArgumentValueList> for symbol::workbench::ArgumentList {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<ArgumentValueList> {
+        let map: Vec<ArgumentValue> = self
+            .args
+            .iter()
+            .map(|arg| arg.eval(context))
+            .collect::<EvalResult<Vec<_>>>()?;
+
+        Ok(ArgumentValueList {
+            args: map,
+            src_ref: self.src_ref,
+        })
+    }
+}
+
+impl Eval<Value> for symbol::workbench::Call {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+        match &self.path {
+            symbol::Path::Resolved(symbol::SymbolId::Builtin(builtin_id)) => {
+                let args = self.args.eval(context)?;
+
+                match context.builtins.get(*builtin_id) {
+                    Some(BuiltinItem::Function(f)) => {
+                        let args = find_match(&args, &f.ty(), &tuple!())?;
+
+                        Ok(f.call_isolated(args)?)
+                    }
+                    Some(BuiltinItem::Primitive(p)) => {
+                        let args = find_match(&args, &(p.ty)(), &tuple!())?;
+                        Ok((p.f)(args, &mut BuiltinEvalContext::default())?.into())
+                    }
+                    None => unimplemented!("Function not found: {builtin_id}"),
+                    _ => todo!(),
+                }
+            }
+            path => {
+                context.diag(EvalError::SymbolCannotBeCalled {
+                    path: path.to_string(),
+                    src_ref: self.src_ref,
+                });
+                Ok(Value::None)
+            }
+        }
+    }
+}
+
 impl Eval<Value> for symbol::WorkbenchExpression {
-    fn eval(&self, _context: &mut EvalContext) -> EvalResult<Value> {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         match &self {
             symbol::WorkbenchExpression::Invalid => unreachable!(),
             symbol::WorkbenchExpression::Constant(constant_value) => {
@@ -112,7 +177,7 @@ impl Eval<Value> for symbol::WorkbenchExpression {
             symbol::WorkbenchExpression::Path(_path) => todo!(),
             symbol::WorkbenchExpression::Group(_group) => todo!(),
             symbol::WorkbenchExpression::If(_) => todo!(),
-            symbol::WorkbenchExpression::Call(_) => todo!(),
+            symbol::WorkbenchExpression::Call(call) => call.eval(context),
             symbol::WorkbenchExpression::Marker(_) => todo!(),
             _ => todo!(),
         }
@@ -140,12 +205,15 @@ impl Eval<()> for symbol::WorkbenchStatement {
                         Visibility::Private => PropertyType::Hidden,
                     },
                 };
-                context.model_add_property(property)?;
+                context
+                    .model_tree_builder_mut()
+                    .add_model_property(property);
             }
             // If we have no id, we have a child model.
             None => {
                 let model: ModelTree = self.expression.eval(context)?;
-                context.model_append_child(model);
+                eprintln!("Eval model\n{model}");
+                context.model_tree_builder_mut().add_model_child(model);
             }
         }
         Ok(())

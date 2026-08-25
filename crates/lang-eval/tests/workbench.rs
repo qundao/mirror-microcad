@@ -5,7 +5,7 @@
 
 use microcad_builtin::__mu;
 use microcad_lang_base::SrcRef;
-use microcad_lang_eval::{CallTrait, Eval, EvalContext};
+use microcad_lang_eval::{CallTrait, EvalContext};
 use microcad_lang_types::{ArgumentValueList, Length, ModelTree};
 use microcad_package::symbol::{self, Attributes, ConstantValue, WorkbenchStatement, workbench};
 
@@ -37,7 +37,7 @@ pub mod helper {
 }
 
 #[test]
-fn group() {
+fn eval_group() {
     use helper::*;
 
     let group = symbol::workbench::Group {
@@ -50,7 +50,7 @@ fn group() {
     use microcad_lang_eval::Eval;
     let model: ModelTree = group.eval(&mut context).expect("No error");
 
-    println!("{model}");
+    panic!("{model}");
 }
 
 /// sketch Circle() { __mu::geo2d::Circle(radius = 4.0mm); }

@@ -4,8 +4,8 @@
 use derive_more::From;
 use microcad_lang_base::{HashMap, Name, ToCompactString};
 use microcad_lang_types::{
-    Arguments, Model, ModelTree, Value,
-    model::{Element, Properties},
+    Arguments, Value,
+    model::{Element, ModelTreeBuilder, ModelTreeBuilderMut, Properties},
 };
 
 /// A map of locals.
@@ -41,26 +41,33 @@ impl FunctionScopeFrame {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct WorkbenchFrame {
-    pub properties: Properties,
-    pub children: Vec<ModelTree>,
+    pub builder: ModelTreeBuilder,
 }
 
-#[derive(Debug, Default)]
+impl ModelTreeBuilderMut for WorkbenchFrame {
+    fn model_tree_builder_mut(&mut self) -> &mut ModelTreeBuilder {
+        &mut self.builder
+    }
+}
+
+#[derive(Debug)]
 pub struct WorkbenchGroupFrame {
-    pub model: Model,
-    pub properties: Properties,
-    pub children: Vec<ModelTree>,
+    pub builder: ModelTreeBuilder,
 }
 
 impl WorkbenchGroupFrame {
     pub fn new() -> Self {
         Self {
-            model: Model::from(Element::Group),
-            properties: todo!(),
-            children: todo!(),
+            builder: ModelTreeBuilder::new(Element::Group),
         }
+    }
+}
+
+impl ModelTreeBuilderMut for WorkbenchGroupFrame {
+    fn model_tree_builder_mut(&mut self) -> &mut ModelTreeBuilder {
+        &mut self.builder
     }
 }
 
@@ -104,11 +111,27 @@ impl StackFrame {
     }
 }
 
+impl ModelTreeBuilderMut for StackFrame {
+    fn model_tree_builder_mut(&mut self) -> &mut ModelTreeBuilder {
+        match self {
+            StackFrame::Workbench(workbench_frame) => workbench_frame.model_tree_builder_mut(),
+            StackFrame::WorkbenchGroup(workbench_group_frame) => {
+                workbench_group_frame.model_tree_builder_mut()
+            }
+            _ => panic!("No model tree builder"),
+        }
+    }
+}
+
 /// A generic stack.
 #[derive(Debug, Default)]
 pub struct Stack(Vec<StackFrame>);
 
-impl Stack {}
+impl ModelTreeBuilderMut for Stack {
+    fn model_tree_builder_mut(&mut self) -> &mut ModelTreeBuilder {
+        self.top_mut().model_tree_builder_mut()
+    }
+}
 
 impl StackRead for Stack {
     type Frame = StackFrame;

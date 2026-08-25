@@ -8,7 +8,7 @@ pub use stack::*;
 
 use microcad_builtin::BuiltinRegistry;
 use microcad_lang_base::Name;
-use microcad_lang_types::{ModelTree, Value, model::Property};
+use microcad_lang_types::{Value, model::ModelTreeBuilderMut};
 
 use crate::{EvalError, EvalResult};
 
@@ -69,16 +69,6 @@ impl EvalContext {
         self.stack.top_mut()
     }
 
-    /// Add a property to the current model
-    pub(crate) fn model_add_property(&mut self, _property: Property) -> EvalResult<()> {
-        todo!()
-    }
-
-    /// Append a child model to the current model
-    pub(crate) fn model_append_child(&mut self, _model: ModelTree) {
-        todo!()
-    }
-
     /// Local a local or property value by traversing up the stack
     pub(crate) fn look_up_local(&self, _local_id: &str) -> EvalResult<Value> {
         todo!()
@@ -134,5 +124,11 @@ impl StackWrite for EvalContext {
 
     fn top_mut(&mut self) -> &mut Self::Frame {
         self.stack.top_mut()
+    }
+}
+
+impl ModelTreeBuilderMut for EvalContext {
+    fn model_tree_builder_mut(&mut self) -> &mut microcad_lang_types::model::ModelTreeBuilder {
+        self.top_mut().model_tree_builder_mut()
     }
 }
