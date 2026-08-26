@@ -252,6 +252,22 @@ impl Eval<()> for symbol::WorkbenchStatement {
     }
 }
 
+/// Evaluate an [`InitStatement`] into an input property.
+///
+/// This does not throw an error if the property is not as workbench parameter.
+impl Eval<Property> for symbol::workbench::InitStatement {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Property> {
+        let value: Value = self.expression.eval(context)?;
+        Ok(Property::input(self.name.clone(), value).with_src_ref(self.src_ref))
+    }
+}
+
+impl CallTrait<Properties> for symbol::workbench::Init {
+    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Properties> {
+        todo!()
+    }
+}
+
 impl CallTrait<ModelTree> for symbol::Workbench {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<ModelTree> {
         // Find correct inits
@@ -266,7 +282,7 @@ impl CallTrait<ModelTree> for symbol::Workbench {
             Ok(arguments) => {
                 for args in arguments {
                     let model: ModelTree = context.scope(
-                        WorkbenchFrame::new(Workpiece::new(symbol::WorkbenchKind::Sketch)),
+                        WorkbenchFrame::new(Workpiece::new(self.signature.kind)),
                         |context| -> EvalResult<ModelTree> {
                             context.model_tree_builder_mut().add_model_properties(
                                 Properties::from(args).into_iter().map(|(_, prop)| prop),

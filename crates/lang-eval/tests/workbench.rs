@@ -6,7 +6,9 @@
 use microcad_builtin::__mu;
 use microcad_lang_base::SrcRef;
 use microcad_lang_eval::{CallTrait, Eval, EvalContext};
-use microcad_lang_types::{ArgumentValueList, Length, ModelTree, Type, Value, argument_value};
+use microcad_lang_types::{
+    ArgumentValueList, Length, ModelTree, Type, Value, argument_value, list,
+};
 use microcad_package::{
     SymbolId,
     symbol::{
@@ -80,8 +82,8 @@ fn group_with_property() {
     let mut context = EvalContext::new();
     let model: ModelTree = group.eval(&mut context).expect("No error");
 
-    let prop = model.get_property("a").expect("A property");
-    assert_eq!(prop.value, Value::from(Length::mm(4.0)));
+    let prop = model.get_property_value("a");
+    assert_eq!(prop, Value::from(Length::mm(4.0)));
 
     insta::assert_snapshot!("group_with_property", model)
 }
@@ -109,6 +111,9 @@ fn circle_without_parameter() {
 }
 
 /// sketch Circle(radius: Length) { __mu::geo2d::Circle(radius); }
+///
+/// Call single: Circle(4.0mm)
+/// Call multi: Circle([1.0mm, 2.0mm, 3.0mm]);
 #[test]
 fn circle_parameter() {
     use helper::*;
@@ -124,20 +129,37 @@ fn circle_parameter() {
         )))]),
     };
 
-    let radius = Length::mm(4.0);
+    {
+        let radius = Length::mm(4.0);
+        let mut context = EvalContext::new();
+        let model = workbench
+            .call(
+                &ArgumentValueList::from_iter([argument_value!(radius = radius)]),
+                &mut context,
+            )
+            .expect("No eval error");
 
-    let mut context = EvalContext::new();
-    let model = workbench
-        .call(
-            &ArgumentValueList::from_iter([argument_value!(radius = radius)]),
-            &mut context,
-        )
-        .expect("No eval error");
+        let prop = model.get_property_value("radius");
+        assert_eq!(prop, Value::from(radius));
 
-    let prop = model.get_property("radius").expect("A radius property");
-    assert_eq!(prop.value, Value::from(radius));
+        insta::assert_snapshot!("circle_parameter_single", model);
+    }
 
-    insta::assert_snapshot!("circle_parameter", model)
+    {
+        let radius = list![Length::mm(1.0), Length::mm(2.0), Length::mm(3.0)];
+        let mut context = EvalContext::new();
+        let model = workbench
+            .call(
+                &ArgumentValueList::from_iter([argument_value!(radius = radius.clone())]),
+                &mut context,
+            )
+            .expect("No eval error");
+
+        let prop = model.get_property_value("radius");
+        assert_eq!(prop, Value::from(radius));
+
+        insta::assert_snapshot!("circle_parameter_multi", model);
+    }
 }
 
 /// sketch Circle(radius: Length) {
