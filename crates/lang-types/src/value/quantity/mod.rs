@@ -13,8 +13,6 @@ use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{Integer, Length, Scalar};
 
-const OUTPUT_PRECISION: i32 = 14;
-
 /// A numeric value
 #[derive(Clone, Debug)]
 pub struct Quantity {

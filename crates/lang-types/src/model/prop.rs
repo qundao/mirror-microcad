@@ -116,11 +116,6 @@ impl Properties {
         properties
     }
 
-    /// Gets a reference to a property by its name.
-    pub fn get_property(&self, name: impl AsRef<str>) -> Option<&Property> {
-        self.props.get(name.as_ref())
-    }
-
     /// Sets or updates a property.
     ///
     /// If the property already exists, its value, visibility, and source reference are updated.
@@ -145,6 +140,18 @@ impl Properties {
     /// Returns `true` if there are no properties set.
     pub fn is_empty(&self) -> bool {
         self.props.is_empty()
+    }
+}
+
+/// Property access trait.
+pub trait GetProperty {
+    /// Gets a reference to a property by its name.
+    fn get_property(&self, name: impl AsRef<str>) -> Option<&Property>;
+}
+
+impl GetProperty for Properties {
+    fn get_property(&self, name: impl AsRef<str>) -> Option<&Property> {
+        self.props.get(name.as_ref())
     }
 }
 

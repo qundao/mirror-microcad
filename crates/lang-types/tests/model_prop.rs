@@ -5,7 +5,8 @@ use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_types::{
     Model, ModelTree, Value, arguments,
     model::{
-        Arena, BooleanOp, Element, Properties, Property, PropertyType, element::BuiltinWorkpiece,
+        Arena, BooleanOp, Element, GetProperty, Properties, Property, PropertyType,
+        element::BuiltinWorkpiece,
     },
 };
 

@@ -19,7 +19,7 @@ use thiserror::Error;
 
 use crate::{
     Model, ModelTree,
-    model::{Attributes, Element, Properties, Property},
+    model::{Attributes, Element, Properties, Property, prop::GetProperty},
 };
 
 #[derive(Debug)]
@@ -71,4 +71,10 @@ impl ModelTreeBuilder {
 /// Trait to add builder methods to build up a model
 pub trait ModelTreeBuilderMut {
     fn model_tree_builder_mut(&mut self) -> &mut ModelTreeBuilder;
+}
+
+impl GetProperty for ModelTreeBuilder {
+    fn get_property(&self, name: impl AsRef<str>) -> Option<&Property> {
+        self.properties.get_property(name)
+    }
 }

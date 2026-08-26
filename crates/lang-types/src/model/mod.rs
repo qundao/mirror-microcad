@@ -11,7 +11,7 @@ pub mod output_type;
 pub mod workpiece;
 
 mod prop;
-pub use prop::{Properties, Property, PropertyType};
+pub use prop::{GetProperty, Properties, Property, PropertyType};
 
 mod tree;
 

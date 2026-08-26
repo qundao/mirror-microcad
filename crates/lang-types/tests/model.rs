@@ -231,6 +231,8 @@ fn test_subtree_adoption_preserves_hierarchy() {
 
 #[test]
 fn test_replace_input_placeholders_multiplicity() {
+    use microcad_lang_types::model::GetProperty;
+
     // 1. Build Multiplicity template tree:
     // Multiplicity
     //   ├── translate(0, 0, 0)
