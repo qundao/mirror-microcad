@@ -8,7 +8,7 @@ use microcad_lang_base::{BuiltinId, SrcRef, element::WorkbenchKind};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Value,
+    Ty, Type, Value,
     model::{AffineTransform, BooleanOp, ModelOutputType},
 };
 
@@ -24,6 +24,16 @@ impl Workpiece {
         Self {
             kind,
             src_ref: SrcRef::none(),
+        }
+    }
+}
+
+impl Ty for WorkbenchKind {
+    fn ty(&self) -> crate::Type {
+        match self {
+            WorkbenchKind::Sketch => Type::Model(ModelOutputType::Geometry2D),
+            WorkbenchKind::Part => Type::Model(ModelOutputType::Geometry3D),
+            WorkbenchKind::Op => Type::Model(ModelOutputType::Any),
         }
     }
 }

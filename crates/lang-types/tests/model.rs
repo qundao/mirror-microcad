@@ -5,7 +5,7 @@ use microcad_lang_base::BuiltinId;
 use microcad_lang_types::{
     Arguments, Identifier, Length, Model, ModelOutputType, ModelTree, Value, arguments,
     model::{
-        AffineTransform, BooleanOp, Element, NodeExt, Properties,
+        AffineTransform, BooleanOp, Element, NodeExt,
         element::{self, BuiltinWorkpiece},
     },
     tuple,

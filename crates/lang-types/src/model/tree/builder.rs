@@ -45,6 +45,12 @@ impl ModelTreeBuilder {
         self.attributes = attributes;
     }
 
+    pub fn add_model_properties(&mut self, properties: impl IntoIterator<Item = Property>) {
+        properties
+            .into_iter()
+            .for_each(|property| self.add_model_property(property));
+    }
+
     pub fn add_model_property(&mut self, property: Property) {
         self.properties.set_property(property);
     }

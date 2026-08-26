@@ -26,7 +26,7 @@ impl std::fmt::Display for FunctionTypeParameters {
 }
 
 impl FunctionTypeParameters {
-    /// Create a new SignagureParameter
+    /// Create a new SignatureParameter
     pub fn new(mut parameters: Vec<(Identifier, Type)>) -> Self {
         parameters.sort_by_key(|(id, _)| id.clone());
         Self(parameters)

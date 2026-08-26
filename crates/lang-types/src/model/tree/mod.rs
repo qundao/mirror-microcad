@@ -16,7 +16,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     Model, Ty, Type, Value,
-    model::{self, element::BuiltinWorkpiece},
+    model::{self, Element, element::BuiltinWorkpiece},
 };
 
 /// A model tree with a root node.
@@ -31,6 +31,18 @@ impl ModelTree {
         let mut arena = Arena::default();
         let root = arena.new_node(root.into());
         Self { root, arena }
+    }
+
+    /// Create a multiplicity node if there is more than one child in the list
+    pub fn to_multiplicity(mut children: Vec<ModelTree>) -> Self {
+        match children.len() {
+            1 => children.remove(0), // Return this tree if we have only one element.
+            _ => {
+                let mut tree = ModelTree::new(Element::Multiplicity);
+                tree.extend(children);
+                tree
+            }
+        }
     }
 
     pub fn root<'a>(&'a self) -> NodeRef<'a> {
@@ -199,6 +211,12 @@ impl From<Value> for ModelTree {
 impl From<Model> for ModelTree {
     fn from(model: Model) -> Self {
         Self::new(model)
+    }
+}
+
+impl Extend<ModelTree> for ModelTree {
+    fn extend<T: IntoIterator<Item = ModelTree>>(&mut self, iter: T) {
+        iter.into_iter().for_each(|child| self.append(child));
     }
 }
 
