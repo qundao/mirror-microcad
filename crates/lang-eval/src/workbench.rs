@@ -16,7 +16,7 @@ use microcad_package::{
 
 use microcad_lang_types::{
     ArgumentValue, ArgumentValueList, ModelTree, Value,
-    model::{ModelTreeBuilderMut, Properties, Property, PropertyType},
+    model::{Element, ModelTreeBuilderMut, Properties, Property, PropertyType},
     tuple,
 };
 
@@ -38,8 +38,8 @@ impl Eval<ModelTree> for symbol::workbench::If {
 }
 
 impl Eval<ModelTree> for symbol::workbench::Marker {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<ModelTree> {
-        todo!("Return current cloned version of context current top model")
+    fn eval(&self, _context: &mut EvalContext) -> EvalResult<ModelTree> {
+        Ok(ModelTree::new(Element::InputPlaceholder))
     }
 }
 
@@ -174,11 +174,11 @@ impl Eval<Value> for symbol::WorkbenchExpression {
             symbol::WorkbenchExpression::Constant(constant_value) => {
                 Ok(constant_value.value().clone())
             }
-            symbol::WorkbenchExpression::Path(_path) => todo!(),
-            symbol::WorkbenchExpression::Group(_group) => todo!(),
+            symbol::WorkbenchExpression::Path(path) => path.eval(context),
+            symbol::WorkbenchExpression::Group(group) => Ok(group.eval(context)?.into()),
             symbol::WorkbenchExpression::If(_) => todo!(),
             symbol::WorkbenchExpression::Call(call) => call.eval(context),
-            symbol::WorkbenchExpression::Marker(_) => todo!(),
+            symbol::WorkbenchExpression::Marker(marker) => Ok(marker.eval(context)?.into()),
             _ => todo!(),
         }
     }
@@ -212,7 +212,6 @@ impl Eval<()> for symbol::WorkbenchStatement {
             // If we have no id, we have a child model.
             None => {
                 let model: ModelTree = self.expression.eval(context)?;
-                eprintln!("Eval model\n{model}");
                 context.model_tree_builder_mut().add_model_child(model);
             }
         }
