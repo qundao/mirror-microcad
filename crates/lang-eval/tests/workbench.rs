@@ -72,9 +72,7 @@ fn group_with_property() {
         attr: Attributes::default(),
         statements: statements([
             WorkbenchStatement::prop("a", expr_length(4.0)),
-            WorkbenchStatement::expr(call_circle(WorkbenchExpression::Path(Path::Resolved(
-                SymbolId::Local("a".into()),
-            )))),
+            WorkbenchStatement::expr(call_circle(Path::Resolved(SymbolId::Local("a".into())))),
         ]),
     };
 
@@ -102,9 +100,11 @@ fn circle_without_parameter() {
     };
 
     let mut context = EvalContext::new();
-    let result = workbench
+    let model = workbench
         .call(&ArgumentValueList::default(), &mut context)
         .expect("No eval error");
+
+    insta::assert_snapshot!("circle_without_parameter", model)
 }
 
 /// sketch Circle(radius: Length) { __mu::geo2d::Circle(radius); }

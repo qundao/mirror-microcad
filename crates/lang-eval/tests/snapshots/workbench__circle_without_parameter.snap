@@ -1,0 +1,7 @@
+---
+source: crates/lang-eval/tests/workbench.rs
+expression: model
+---
+sketch
+└── 0x1801bf438d8b094
+    [in]  radius: Length = 4mm

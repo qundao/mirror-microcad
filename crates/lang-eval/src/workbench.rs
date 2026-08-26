@@ -4,7 +4,9 @@
 //! Workbench definition syntax element evaluation
 
 use crate::{
-    CallTrait, Eval, EvalContext, EvalError, EvalResult, context::WorkbenchGroupFrame, find_match,
+    CallTrait, Eval, EvalContext, EvalError, EvalResult,
+    context::{WorkbenchFrame, WorkbenchGroupFrame},
+    find_match,
 };
 
 use microcad_builtin::{BuiltinEvalContext, BuiltinItem};
@@ -16,7 +18,7 @@ use microcad_package::{
 
 use microcad_lang_types::{
     ArgumentValue, ArgumentValueList, ModelTree, Value,
-    model::{Element, ModelTreeBuilderMut, Properties, Property, PropertyType},
+    model::{Element, ModelTreeBuilderMut, Properties, Property, PropertyType, Workpiece},
     tuple,
 };
 
@@ -250,203 +252,20 @@ impl Eval<()> for symbol::WorkbenchStatement {
     }
 }
 
-/*
-impl ir::WorkbenchDefinition {
-    /// Try to evaluate a single call into a [`Model`].
-    ///
-    /// - `arguments`: Single argument tuple (will not be multiplied).
-    /// - `init`: Initializer to call with given `arguments`.
-    /// - `context`: Current evaluation context.
-    fn eval_to_model<'a>(
-        &'a self,
-        call_src_ref: SrcRef,
-        creator: Creator,
-        init: Option<&'a ir::InitDefinition>,
-        context: &mut EvalContext,
-    ) -> EvalResult<Model> {
-        let arguments = creator.arguments.clone();
-
-        // copy all arguments which are part of the building plan into properties
-        let (mut properties, non_properties): (Vec<_>, Vec<_>) = arguments
-            .named_iter()
-            .map(|(id, value)| (id.clone(), value.clone()))
-            .partition(|(id, _)| self.parameters.contains_key(id));
-
-        // create uninitialized values for all missing building plan properties
-        let missing: Vec<_> = self
-            .parameters
-            .iter()
-            .filter(|param| !properties.iter().any(|(id, _)| param.id_ref() == id))
-            .map(|param| param.id())
-            .collect();
-        missing
-            .into_iter()
-            .for_each(|id| properties.push((id, Value::None)));
-
-        // Create model
-        let model = ModelBuilder::new(
-            Element::Workpiece(Workpiece {
-                kind: *self.kind,
-                // copy all arguments which are part of the building plan to properties
-                properties: properties.into_iter().collect(),
-                creator: Hashed::new(creator),
-            }),
-            call_src_ref,
-        )
-        .attributes(self.attribute_list.eval(context)?)
-        .build();
-
-        context.scope(
-            StackFrame::Workbench(model, self.id(), Default::default()),
-            |context| {
-                let model = context.get_model()?;
-
-                // run init code
-                if let Some(init) = init {
-                    log::trace!(
-                        "Initializing`{id:?}` {kind}",
-                        id = self.id_ref(),
-                        kind = self.kind
-                    );
-                    if let Err(err) = init.eval(non_properties.into_iter().collect(), context) {
-                        context.error(&self.src_ref(), err)?;
-                    }
-                }
-
-                // At this point, all properties must have a value
-                log::trace!(
-                    "Run body`{id:?}` {kind}",
-                    id = self.id_ref(),
-                    kind = self.kind
-                );
-                model.append_children(self.body.statements.eval(context)?);
-
-                Ok(model)
-            },
-        )
-    }
-}
-
-impl ir::WorkbenchDefinition {
-    /// Evaluate the call of a workbench with given arguments.
-    ///
-    /// - `args`: Arguments which will be matched with the building plan and the initializers using parameter multiplicity.
-    /// - `context`: Current evaluation context.
-    ///
-    /// Return evaluated nodes (multiple nodes might be created by parameter multiplicity).
-    pub fn call(
-        &self,
-        call_src_ref: SrcRef,
-        symbol: Symbol,
-        arguments: &ArgumentValueList,
-        context: &mut EvalContext,
-    ) -> EvalResult<Model> {
-        // prepare empty result model
-        let mut models = Models::default();
-
-        // match all initializations starting with the building plan
-        let matches: Vec<_> = std::iter::once((
-            None,
-            self.parameters
-                .eval(context)
-                .and_then(|params| ArgumentMatch::find_multi_match(arguments, &params)),
-        ))
-        // chain the inits
-        .chain(self.inits().map(|init| {
-            (
-                Some(init),
-                init.parameters
-                    .eval(context)
-                    .and_then(|params| ArgumentMatch::find_multi_match(arguments, &params)),
-            )
-        }))
-        // filter out non-matching
-        .filter_map(|(i, m)| if let Ok(m) = m { Some((i, m)) } else { None })
-        .collect();
-
-        // find hightest priority matches
-        let matches = Priority::high_to_low().iter().find_map(|priority| {
-            let matches: Vec<_> = matches
-                .iter()
-                .filter(|(_, m)| m.priority == *priority)
-                .collect();
-            if matches.is_empty() {
-                None
-            } else {
-                Some(matches)
-            }
-        });
-
-        if let Some(mut matches) = matches {
-            if matches.len() > 1 {
-                let ambiguous = matches
-                    .iter()
-                    .map(|(init, _)| match init {
-                        Some(init) => {
-                            format!(
-                                "{name}::{init}",
-                                name = symbol.full_name(),
-                                init = init.signature()
-                            )
-                        }
-                        None => format!(
-                            "{name}({params})",
-                            name = symbol.full_name(),
-                            params = self.parameters
-                        ),
-                    })
-                    .collect::<Vec<_>>();
-
-                context.error(
-                    arguments,
-                    EvalError::AmbiguousInitialization {
-                        src_ref: call_src_ref,
-                        name: self.id(),
-                        actual_params: arguments.to_string(),
-                        ambiguous_params: ambiguous,
-                    },
-                )?;
-            } else if let Some(matched) = matches.pop() {
-                // evaluate models for all multiplicity matches
-                for arguments in matched.1.args.iter() {
-                    models.push(self.eval_to_model(
-                        call_src_ref,
-                        Creator::new(symbol.clone(), arguments.clone()),
-                        matched.0,
-                        context,
-                    )?);
-                }
-            }
-        } else {
-            context.error(
-                arguments,
-                EvalError::NoInitializationFound {
-                    src_ref: call_src_ref,
-                    name: self.id(),
-                    actual_params: arguments.to_string(),
-                    possible_params: self.possible_params(),
-                },
-            )?;
-        }
-
-        Ok(models.to_multiplicity(self.src_ref()))
-    }
-}
-*/
-
-pub trait InitExt {
-    fn input_properties(
-        &self,
-        parameters: &ParameterList,
-        context: &mut EvalContext,
-    ) -> EvalResult<Properties>;
-}
-
 impl CallTrait<ModelTree> for symbol::Workbench {
-    fn call(&self, _args: &ArgumentValueList, _context: &mut EvalContext) -> EvalResult<ModelTree> {
+    fn call(&self, _args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<ModelTree> {
         // Find correct inits
 
-        todo!();
+        context.scope(
+            WorkbenchFrame::new(Workpiece::new(symbol::WorkbenchKind::Sketch)),
+            |context| {
+                self.statements
+                    .iter()
+                    .try_for_each(|stmt| stmt.eval(context))?;
+                Ok(context.model_tree_builder_mut().build())
+            },
+        )
+
         /*
         match crate::find_multi_match(args, &self.ty, &self.default_parameters) {
             Ok(args) => {

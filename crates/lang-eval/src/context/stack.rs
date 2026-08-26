@@ -5,7 +5,7 @@ use derive_more::From;
 use microcad_lang_base::{HashMap, Name, ToCompactString};
 use microcad_lang_types::{
     Arguments, Value,
-    model::{Element, GetProperty, ModelTreeBuilder, ModelTreeBuilderMut, Properties},
+    model::{Element, GetProperty, ModelTreeBuilder, ModelTreeBuilderMut, Properties, Workpiece},
 };
 
 pub trait Lookup {
@@ -69,6 +69,14 @@ pub struct WorkbenchFrame {
     pub builder: ModelTreeBuilder,
 }
 
+impl WorkbenchFrame {
+    pub fn new(workpiece: Workpiece) -> Self {
+        Self {
+            builder: ModelTreeBuilder::new(Element::Workpiece(workpiece)),
+        }
+    }
+}
+
 impl ModelTreeBuilderMut for WorkbenchFrame {
     fn model_tree_builder_mut(&mut self) -> &mut ModelTreeBuilder {
         &mut self.builder
@@ -86,17 +94,17 @@ pub struct WorkbenchGroupFrame {
     pub builder: ModelTreeBuilder,
 }
 
-impl Lookup for WorkbenchGroupFrame {
-    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
-        self.builder.get_property(name).map(|prop| &prop.value)
-    }
-}
-
 impl WorkbenchGroupFrame {
     pub fn new() -> Self {
         Self {
             builder: ModelTreeBuilder::new(Element::Group),
         }
+    }
+}
+
+impl Lookup for WorkbenchGroupFrame {
+    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
+        self.builder.get_property(name).map(|prop| &prop.value)
     }
 }
 
