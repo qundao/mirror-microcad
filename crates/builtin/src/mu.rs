@@ -188,10 +188,14 @@ pub mod core {
                 .into()),
             },
             // Get an input or output property of a model tree.
-            Value::Model(model) => match model.get_property(&name) {
-                Some(prop) => Ok(prop.value.clone()),
-                None => Err(BuiltinError::PropertyNotFound { name: name.clone() }),
-            },
+            Value::Model(model) => {
+                let value = model.get_property_value(&name);
+                if value.is_none() {
+                    Err(BuiltinError::PropertyNotFound { name: name.clone() })
+                } else {
+                    Ok(value)
+                }
+            }
             value => Err(BuiltinError::TypeError(TypeError::NoListType(value.ty()))),
         }
     }
