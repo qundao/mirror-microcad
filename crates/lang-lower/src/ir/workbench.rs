@@ -6,7 +6,7 @@
 use crate::{CastInto, ir};
 
 use derive_more::{Display, From};
-use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
+use microcad_lang_base::{Identifier, SingleIdentifier, SrcRef, SrcReferrer, element::Visibility};
 
 pub use microcad_lang_base::element::WorkbenchKind;
 use microcad_lang_types::Value;
@@ -26,6 +26,7 @@ pub struct WorkbenchStatement {
 
 /// Builder methods for testing
 impl WorkbenchStatement {
+    /// Construct an expression that will eventually produce a model, `__mu::geo2d::Circle(radius = 4.0mm)`.
     pub fn expr(expr: impl Into<WorkbenchExpression>) -> Self {
         Self {
             attr: Default::default(),
@@ -33,6 +34,19 @@ impl WorkbenchStatement {
             visibility: Default::default(),
             keyword_src_ref: Default::default(),
             name: None,
+            ty: Default::default(),
+            expression: expr.into(),
+        }
+    }
+
+    /// Construct a property, `prop a = 42mm`.
+    pub fn prop(name: impl AsRef<str>, expr: impl Into<WorkbenchExpression>) -> Self {
+        Self {
+            name: Some(Identifier::from(name.as_ref())),
+            attr: Default::default(),
+            src_ref: Default::default(),
+            visibility: Visibility::Public,
+            keyword_src_ref: Default::default(),
             ty: Default::default(),
             expression: expr.into(),
         }

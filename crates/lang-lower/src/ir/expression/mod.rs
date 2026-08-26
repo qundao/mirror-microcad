@@ -35,8 +35,6 @@ pub struct If<Expr: ExprSpec> {
     pub else_ref: Option<SrcRef>,
     /// Body if `false`.
     pub body_else: Option<Box<Expr::Body>>,
-    /// SrcRef of the `else[ if]` keyword, if present.
-    pub next_if_ref: Option<SrcRef>,
     /// Next if statement: `else if x == 1`.
     pub next_if: Option<Box<If<Expr>>>,
     /// Source code reference.
@@ -55,7 +53,6 @@ where
             body: Box::new(self.body.cast_into()),
             else_ref: self.else_ref,
             body_else: self.body_else.map(|body| Box::new(body.cast_into())),
-            next_if_ref: self.next_if_ref,
             next_if: self.next_if.map(|next_if| Box::new(next_if.cast_into())),
             src_ref: self.src_ref,
         }

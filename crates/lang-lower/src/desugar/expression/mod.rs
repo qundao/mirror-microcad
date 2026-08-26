@@ -30,10 +30,6 @@ where
             if_ref: context.span_to_src_ref(&node.if_span),
             cond: Box::new(Expr::desugar(node.condition.as_ref(), context)?),
             body: Expr::Body::desugar(&node.body, context)?.into(),
-            next_if_ref: node
-                .next_if_span
-                .as_ref()
-                .map(|span| context.span_to_src_ref(span)),
             next_if: node
                 .next_if
                 .as_ref()
