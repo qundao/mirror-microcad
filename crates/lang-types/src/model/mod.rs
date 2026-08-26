@@ -112,9 +112,9 @@ impl From<Element> for Model {
 impl std::fmt::Display for Model {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         if let Some(name) = &self.name {
-            write!(f, "{name}: < ")?;
+            write!(f, "{name}: ")?;
         }
-        write!(f, "{}", self.element)?;
+        writeln!(f, "{}", self.element)?;
         write!(f, "{}", self.attr)?;
         write!(f, "{}", self.properties)
     }

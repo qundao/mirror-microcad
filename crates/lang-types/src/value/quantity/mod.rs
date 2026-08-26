@@ -85,13 +85,14 @@ impl Quantity {
 impl std::fmt::Display for Quantity {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let display_value = self.unit.denormalize(self.value);
-        let precision = f.precision().unwrap_or(OUTPUT_PRECISION as usize);
-        let num_str = format!("{:.precision$}", display_value, precision = precision);
-
+        let num_str = match f.precision() {
+            Some(precision) => format!("{:.precision$}", display_value, precision = precision),
+            None => format!("{display_value}"),
+        };
         let full_str = if self.unit.is_none() {
             num_str
         } else {
-            format!("{num_str} {}", self.unit)
+            format!("{num_str}{}", self.unit)
         };
 
         // 3. Handle width and alignment

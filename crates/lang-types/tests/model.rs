@@ -32,13 +32,13 @@ mod model {
 
     /// Helper to build a `__mu::ops::translate(x, y, z)` transform node
     pub fn translation(x_mm: f64, y_mm: f64, z_mm: f64) -> Model {
-        let args = arguments!(x = x_mm, y = y_mm, z = z_mm);
+        let x = Length::mm(x_mm);
+        let y = Length::mm(y_mm);
+        let z = Length::mm(z_mm);
+
+        let args = arguments!(x = x, y = y, z = z);
         Model::new(element::BuiltinWorkpiece::AffineTransform(
-            AffineTransform::Translation {
-                x: Length::mm(x_mm),
-                y: Length::mm(y_mm),
-                z: Length::mm(z_mm),
-            },
+            AffineTransform::Translation { x, y, z },
         ))
         .with_name("translate")
         .with_op_properties(args)

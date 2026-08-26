@@ -84,7 +84,7 @@ pub struct Properties {
 
 impl std::fmt::Display for Properties {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.iter().try_for_each(|(_, prop)| prop.fmt(f))
+        self.iter().try_for_each(|(_, prop)| writeln!(f, "{prop}"))
     }
 }
 
