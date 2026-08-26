@@ -83,6 +83,10 @@ impl Model {
         self.properties = properties.into();
         self
     }
+
+    fn is_multiplicity(&self) -> bool {
+        matches!(self.element, Element::Multiplicity)
+    }
 }
 
 /// Accessor functions

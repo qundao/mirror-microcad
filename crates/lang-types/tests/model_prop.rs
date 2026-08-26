@@ -119,25 +119,34 @@ fn test_model_tree_get_property_recursive_and_filtering() {
     // --- Assertions ---
 
     // 1. Should recursively find Input property in leaf1
+    let radius_prop = tree.get_property_value("radius");
+    assert_eq!(radius_prop, Value::from(5.0));
+
     let radius_prop = tree
-        .get_property("radius")
-        .expect("Should find 'radius' in leaf1");
-    assert_eq!(radius_prop.value, Value::from(5.0));
+        .get_properties_recursive("radius")
+        .first()
+        .cloned()
+        .unwrap();
     assert_eq!(radius_prop.ty, PropertyType::Input);
 
     // 2. Should recursively find Output property in leaf2
+    let area_prop = tree.get_property_value("area");
+    assert_eq!(area_prop, Value::from(78.5));
+
     let area_prop = tree
-        .get_property("area")
-        .expect("Should find 'area' in leaf2");
-    assert_eq!(area_prop.value, Value::from(78.5));
+        .get_properties_recursive("area")
+        .first()
+        .cloned()
+        .unwrap();
     assert_eq!(area_prop.ty, PropertyType::Output);
 
     // 3. Should IGNORE Hidden properties in leaf2
-    assert!(
-        tree.get_property("internal_id").is_none(),
+    assert_eq!(
+        tree.get_properties_recursive("internal_id").len(),
+        0,
         "Hidden properties must be ignored during recursive lookup"
     );
 
     // 4. Non-existent property across whole tree
-    assert!(tree.get_property("height").is_none());
+    assert_eq!(tree.get_properties_recursive("height").len(), 0);
 }

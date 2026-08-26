@@ -15,7 +15,7 @@ use microcad_macros::Artifact;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Model, Ty, Type, Value,
+    List, Model, Ty, Type, Value,
     model::{self, Element, element::BuiltinWorkpiece},
 };
 
@@ -143,12 +143,28 @@ impl ModelTree {
         }
     }
 
-    /// Recursively searches all descendants in the model tree for an `Input` or `Output`
-    /// property with the matching identifier.
+    /// If there are several properties
     ///
-    /// Ignores `Hidden` properties. Returns `None` if no matching property is found.
-    pub fn get_property(&self, id: impl AsRef<str>) -> Option<&model::Property> {
-        self.get_property_recursive(self.root, id)
+    pub fn get_property_value(&self, id: impl AsRef<str>) -> Value {
+        let properties = self.get_properties_recursive(id);
+        match properties.len() {
+            0 => Value::None,
+            1 => Value::from(properties.first().unwrap().value.clone()),
+            _ => List::from_iter(
+                properties
+                    .into_iter()
+                    .map(|property| property.value.clone()),
+            )
+            .into(),
+        }
+    }
+
+    /// Recursively searches all descendants in the model tree for `Input` or `Output`
+    /// properties with the matching identifier.
+    ///
+    /// Ignores `Hidden` properties.
+    pub fn get_properties_recursive(&self, id: impl AsRef<str>) -> Vec<&model::Property> {
+        self._get_properties_recursive(self.root, id)
     }
 }
 

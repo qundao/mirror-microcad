@@ -62,30 +62,29 @@ impl model::ModelTree {
     /// Looks up input and output properties in all descendants of the model tree.
     ///
     /// Recursive depth-first helper to search nodes in `self.arena`.
-    pub(super) fn get_property_recursive(
+    pub(super) fn _get_properties_recursive(
         &self,
         current_id: model::NodeId,
         target_id: impl AsRef<str>,
-    ) -> Option<&model::Property> {
+    ) -> Vec<&model::Property> {
         let node = model::NodeRef::new(current_id, &self.arena);
 
+        let model = node.get();
+
         // 1. Check if the current node's model contains a matching Input/Output property
-        if let Some(prop) = node.get().get_property(target_id.as_ref())
+        if let Some(prop) = model.get_property(target_id.as_ref())
             && matches!(
                 prop.ty,
                 model::PropertyType::Input | model::PropertyType::Output
             )
         {
-            return Some(prop);
+            return vec![prop];
         }
 
         // 2. Recursively search children
-        for child in node.children() {
-            if let Some(prop) = self.get_property_recursive(child.id, target_id.as_ref()) {
-                return Some(prop);
-            }
-        }
-
-        None
+        node.children()
+            .into_iter()
+            .flat_map(|child| self._get_properties_recursive(child.id, target_id.as_ref()))
+            .collect()
     }
 }
