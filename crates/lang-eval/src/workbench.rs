@@ -253,30 +253,37 @@ impl Eval<()> for symbol::WorkbenchStatement {
 }
 
 impl CallTrait<ModelTree> for symbol::Workbench {
-    fn call(&self, _args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<ModelTree> {
+    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<ModelTree> {
         // Find correct inits
 
-        context.scope(
-            WorkbenchFrame::new(Workpiece::new(symbol::WorkbenchKind::Sketch)),
-            |context| {
-                self.statements
-                    .iter()
-                    .try_for_each(|stmt| stmt.eval(context))?;
-                Ok(context.model_tree_builder_mut().build())
-            },
-        )
+        let mut models = Vec::new();
 
-        /*
-        match crate::find_multi_match(args, &self.ty, &self.default_parameters) {
-            Ok(args) => {
-                for arg in args {
-                    context.scope(WorkbenchFrame::new(args), |context| {
-                        Ok(self.statements.eval(context)?)
-                    })
+        match crate::find_multi_match(
+            args,
+            &self.signature.ty(),
+            &self.signature.parameters.default_values(),
+        ) {
+            Ok(arguments) => {
+                for args in arguments {
+                    let model: ModelTree = context.scope(
+                        WorkbenchFrame::new(Workpiece::new(symbol::WorkbenchKind::Sketch)),
+                        |context| -> EvalResult<ModelTree> {
+                            context.model_tree_builder_mut().add_model_properties(
+                                Properties::from(args).into_iter().map(|(_, prop)| prop),
+                            );
+                            self.statements
+                                .iter()
+                                .try_for_each(|stmt| stmt.eval(context))?;
+                            Ok(context.model_tree_builder_mut().build())
+                        },
+                    )?;
+
+                    models.push(model);
                 }
             }
-
             Err(_) => todo!(),
-        }*/
+        }
+
+        Ok(ModelTree::to_multiplicity(models))
     }
 }

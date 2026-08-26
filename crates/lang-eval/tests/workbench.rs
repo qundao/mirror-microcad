@@ -6,11 +6,12 @@
 use microcad_builtin::__mu;
 use microcad_lang_base::SrcRef;
 use microcad_lang_eval::{CallTrait, Eval, EvalContext};
-use microcad_lang_types::{ArgumentValueList, Length, ModelTree, Value};
+use microcad_lang_types::{ArgumentValueList, Length, ModelTree, Type, Value, argument_value};
 use microcad_package::{
     SymbolId,
     symbol::{
-        self, Attributes, ConstantValue, Path, WorkbenchExpression, WorkbenchStatement, workbench,
+        self, Attributes, ConstantValue, Parameter, Path, WorkbenchExpression, WorkbenchStatement,
+        workbench,
     },
 };
 
@@ -110,7 +111,33 @@ fn circle_without_parameter() {
 /// sketch Circle(radius: Length) { __mu::geo2d::Circle(radius); }
 #[test]
 fn circle_parameter() {
-    todo!()
+    use helper::*;
+
+    let workbench = symbol::Workbench {
+        attr: Attributes::default(),
+        signature: workbench::WorkbenchSignature::new(
+            symbol::WorkbenchKind::Sketch,
+            vec![Parameter::new("radius", Type::length())],
+        ),
+        statements: statements([WorkbenchStatement::expr(call_circle(Path::Resolved(
+            SymbolId::Local("radius".into()),
+        )))]),
+    };
+
+    let radius = Length::mm(4.0);
+
+    let mut context = EvalContext::new();
+    let model = workbench
+        .call(
+            &ArgumentValueList::from_iter([argument_value!(radius = radius)]),
+            &mut context,
+        )
+        .expect("No eval error");
+
+    let prop = model.get_property("radius").expect("A radius property");
+    assert_eq!(prop.value, Value::from(radius));
+
+    insta::assert_snapshot!("circle_parameter", model)
 }
 
 /// sketch Circle(radius: Length) {
