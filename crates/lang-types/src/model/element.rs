@@ -4,13 +4,29 @@
 //! Element of a [`Model`].
 
 use derive_more::{Display, From};
-use microcad_lang_base::{BuiltinId, BuiltinInfo, element::WorkbenchKind};
+use microcad_lang_base::{BuiltinId, SrcRef, element::WorkbenchKind};
 use serde::{Deserialize, Serialize};
 
 use crate::{
     Value,
     model::{AffineTransform, BooleanOp, ModelOutputType},
 };
+
+#[derive(Debug, Display, Clone, Hash, PartialEq, Serialize, Deserialize)]
+#[display("{kind}")]
+pub struct Workpiece {
+    pub kind: WorkbenchKind,
+    pub src_ref: SrcRef,
+}
+
+impl Workpiece {
+    pub fn new(kind: WorkbenchKind) -> Self {
+        Self {
+            kind,
+            src_ref: SrcRef::none(),
+        }
+    }
+}
 
 /// The kind of the built-in workbench determines its output.
 #[non_exhaustive]
@@ -26,16 +42,6 @@ pub enum BuiltinWorkpiece {
     BooleanOp(BooleanOp),
     /// Extrude
     Operation(BuiltinId),
-}
-
-/// Trait to implement a Primitive2D
-#[typetag::serde(tag = "primitive2d")]
-pub trait Primitive2D {
-    /// Get the builtin name for this primitive.
-    fn builtin_info(&self) -> &'static BuiltinInfo;
-
-    /// Get a property of this model
-    fn get_property(&self, s: &str) -> Value;
 }
 
 impl BuiltinWorkpiece {
@@ -62,7 +68,7 @@ pub enum Element {
     Value(Value),
 
     /// A workpiece which is created by workbenches.
-    Workpiece(WorkbenchKind),
+    Workpiece(Workpiece),
 
     /// A built-in workpiece which created by built-in workbenches.
     BuiltinWorkpiece(BuiltinWorkpiece),
@@ -78,7 +84,7 @@ impl Element {
     pub fn output_type(&self) -> ModelOutputType {
         use Element::*;
         match &self {
-            Workpiece(workpiece) => (*workpiece).into(),
+            Workpiece(workpiece) => workpiece.kind.into(),
             BuiltinWorkpiece(builtin_workpiece) => builtin_workpiece.output_type(),
             Group | Multiplicity | InputPlaceholder | Value(_) => ModelOutputType::NotDetermined,
         }

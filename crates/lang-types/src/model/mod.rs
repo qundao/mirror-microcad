@@ -8,7 +8,6 @@ pub mod creator;
 pub mod element;
 pub mod iter;
 pub mod output_type;
-pub mod workpiece;
 
 mod prop;
 pub use prop::{GetProperty, Properties, Property, PropertyType};
@@ -30,7 +29,7 @@ use serde::{Deserialize, Serialize};
 pub use attribute::{Attribute, AttributeAccess, Attributes};
 
 pub use creator::Creator;
-pub use element::Element;
+pub use element::{BuiltinWorkpiece, Element, Workpiece};
 pub use output_type::ModelOutputType;
 
 use crate::{Arguments, Ty, Type, Value};
