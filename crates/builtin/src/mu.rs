@@ -671,7 +671,7 @@ pub mod ops {
             .with_op_properties(args),
         );
 
-        tree.adopt_tree(self_.root, &self_.arena);
+        tree.append(Rc::unwrap_or_clone(self_));
 
         Ok(tree)
     }
@@ -690,13 +690,13 @@ pub mod ops {
 
         // Create a tree for the groups first.
         let mut group_tree = ModelTree::new(Model::new(Element::Group));
-        group_tree.adopt_tree(self_.root, &self_.arena);
+        group_tree.append(Rc::unwrap_or_clone(self_));
 
         // Create the actual operation node
         let mut tree = ModelTree::new(Model::new(BuiltinWorkpiece::BooleanOp(
             BooleanOp::Difference,
         )));
-        tree.adopt_tree(group_tree.root, &group_tree.arena);
+        tree.append(group_tree);
 
         Ok(tree)
     }
@@ -715,7 +715,7 @@ pub mod ops {
         let mut tree = ModelTree::new(
             Model::new(BuiltinWorkpiece::Operation(EXTRUDE.id())).with_op_properties(args),
         );
-        tree.adopt_tree(self_.root, &self_.arena);
+        tree.append(Rc::unwrap_or_clone(self_));
 
         Ok(tree)
     }
