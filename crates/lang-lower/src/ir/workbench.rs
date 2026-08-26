@@ -9,7 +9,7 @@ use derive_more::{Display, From};
 use microcad_lang_base::{Identifier, SingleIdentifier, SrcRef, SrcReferrer, element::Visibility};
 
 pub use microcad_lang_base::element::WorkbenchKind;
-use microcad_lang_types::Value;
+use microcad_lang_types::{FunctionType, Value};
 use serde::{Deserialize, Serialize};
 
 /// Each WorkbenchStatement eventually evals into a [`Models`]
@@ -185,6 +185,16 @@ impl WorkbenchSignature {
     pub fn with_inits(mut self, inits: impl IntoIterator<Item = ir::Init>) -> Self {
         self.inits = inits.into_iter().collect();
         self
+    }
+}
+
+impl WorkbenchSignature {
+    pub fn ty(&self) -> FunctionType {
+        use microcad_lang_types::Ty;
+        FunctionType::new(
+            self.parameters.function_type_parameters(),
+            Some(self.kind.ty()),
+        )
     }
 }
 

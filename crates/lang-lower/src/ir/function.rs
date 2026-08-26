@@ -3,14 +3,11 @@
 
 //! Function definition syntax element
 
-use crate::{
-    CastInto,
-    ir::{self, ExprSpec},
-};
+use crate::{CastInto, ir};
 
 use derive_more::From;
 use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
-use microcad_lang_types::{FunctionType, Tuple, Ty, Value};
+use microcad_lang_types::{FunctionType, Tuple, Value};
 use serde::{Deserialize, Serialize};
 
 /// Parameters and return type of a function
@@ -44,22 +41,7 @@ impl FunctionSignature {
 impl FunctionSignature {
     pub fn ty(&self) -> FunctionType {
         FunctionType {
-            parameters: Some(microcad_lang_types::FunctionTypeParameters(
-                self.parameters
-                    .parameters
-                    .iter()
-                    .map(|param| {
-                        match param
-                            .default_value
-                            .as_ref()
-                            .and_then(|expr| expr.value().cloned())
-                        {
-                            Some(value) => (param.id.clone(), value.ty()),
-                            None => (param.id.clone(), param.ty.ty.clone()),
-                        }
-                    })
-                    .collect(),
-            )),
+            parameters: Some(self.parameters.function_type_parameters()),
             return_ty: self.return_type.as_ref().map(|ty| Box::new(ty.ty.clone())),
         }
     }

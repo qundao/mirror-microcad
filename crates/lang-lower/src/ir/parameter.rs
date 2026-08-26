@@ -6,7 +6,7 @@
 use crate::ir::{self, ExprSpec};
 
 use microcad_lang_base::{Identifier, SrcRef};
-use microcad_lang_types::Tuple;
+use microcad_lang_types::{FunctionTypeParameters, Tuple};
 use microcad_macros::{Identifiable, SrcReferrer};
 
 use serde::{Deserialize, Serialize};
@@ -34,10 +34,10 @@ pub struct Parameter {
 
 /// Builder methods.
 impl Parameter {
-    pub fn new(id: impl Into<Identifier>, ty: impl Into<ir::Type>) -> Self {
+    pub fn new(id: impl AsRef<str>, ty: impl Into<ir::Type>) -> Self {
         Self {
             attr: Default::default(),
-            id: id.into(),
+            id: Identifier::from(id.as_ref()),
             ty: ty.into(),
             default_value: None,
             src_ref: SrcRef::none(),
@@ -96,6 +96,25 @@ impl ParameterList {
                 None => None,
             }
         }))
+    }
+
+    /// Function type parameters
+    pub fn function_type_parameters(&self) -> FunctionTypeParameters {
+        use microcad_lang_types::Ty;
+        FunctionTypeParameters(
+            self.iter()
+                .map(|param| {
+                    match param
+                        .default_value
+                        .as_ref()
+                        .and_then(|expr| expr.value().cloned())
+                    {
+                        Some(value) => (param.id.clone(), value.ty()),
+                        None => (param.id.clone(), param.ty.ty.clone()),
+                    }
+                })
+                .collect(),
+        )
     }
 }
 
