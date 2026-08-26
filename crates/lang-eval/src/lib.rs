@@ -15,13 +15,13 @@ pub use eval_error::*;
 
 pub use context::EvalContext;
 
-use microcad_lang_types::ArgumentValueList;
+use microcad_lang_types::{ArgumentValueList, Value};
 pub use microcad_package::symbol;
 
 /// Evaluation trait.
 ///
 /// The return type `T` defines to which output type the type is evaluated.
-pub trait Eval<T> {
+pub trait Eval<T = Value> {
     /// Evaluate a syntax element into a type `T`.
     fn eval(&self, context: &mut EvalContext) -> EvalResult<T>;
 }

@@ -136,7 +136,6 @@ fn if_a_greater_than() {
                     )
                     .into(),
                 ),
-                next_if_ref: None,
                 next_if: None,
             }]
             .into_iter(),

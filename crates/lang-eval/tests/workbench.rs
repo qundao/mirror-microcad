@@ -5,9 +5,14 @@
 
 use microcad_builtin::__mu;
 use microcad_lang_base::SrcRef;
-use microcad_lang_eval::{CallTrait, EvalContext};
-use microcad_lang_types::{ArgumentValueList, Length, ModelTree};
-use microcad_package::symbol::{self, Attributes, ConstantValue, WorkbenchStatement, workbench};
+use microcad_lang_eval::{CallTrait, Eval, EvalContext};
+use microcad_lang_types::{ArgumentValueList, Length, ModelTree, Value};
+use microcad_package::{
+    SymbolId,
+    symbol::{
+        self, Attributes, ConstantValue, Path, WorkbenchExpression, WorkbenchStatement, workbench,
+    },
+};
 
 /// Expressions used for testing
 pub mod helper {
@@ -16,13 +21,15 @@ pub mod helper {
 
     use super::*;
 
-    /// __mu::geo2d::Circle(radius)
-    pub fn call_circle(radius: f64) -> symbol::WorkbenchExpression {
+    /// `4.0mm`
+    pub fn expr_length(v: f64) -> WorkbenchExpression {
+        ConstantValue::from_value(Length::mm(v)).into()
+    }
+
+    /// __mu::geo2d::Circle(radius = expr)
+    pub fn call_circle(expr: impl Into<WorkbenchExpression>) -> symbol::WorkbenchExpression {
         workbench::Call::builtin(__mu!(geo2d::Circle))
-            .with_args(vec![workbench::Argument::named(
-                "radius",
-                ConstantValue::from_value(Length::mm(radius)),
-            )])
+            .with_args(vec![workbench::Argument::named("radius", expr)])
             .into()
     }
 
@@ -36,21 +43,48 @@ pub mod helper {
     }
 }
 
+/// { __mu::geo2d::Circle(radius = 4.0mm); }
 #[test]
-fn eval_group() {
+fn group() {
     use helper::*;
 
     let group = symbol::workbench::Group {
         src_ref: SrcRef::none(),
         attr: Attributes::default(),
-        statements: statements([WorkbenchStatement::expr(call_circle(4.0))]),
+        statements: statements([WorkbenchStatement::expr(call_circle(expr_length(4.0)))]),
     };
 
     let mut context = EvalContext::new();
-    use microcad_lang_eval::Eval;
+    let model: ModelTree = group.eval(&mut context).expect("No error");
+    insta::assert_snapshot!("group", model)
+}
+
+/// {
+///     prop a = 4.0mm; // Add property to current model tree
+///     __mu::geo2d::Circle(a); // Add circle as new Model Tree
+/// }
+#[test]
+fn group_with_property() {
+    use helper::*;
+
+    let group = symbol::workbench::Group {
+        src_ref: SrcRef::none(),
+        attr: Attributes::default(),
+        statements: statements([
+            WorkbenchStatement::prop("a", expr_length(4.0)),
+            WorkbenchStatement::expr(call_circle(WorkbenchExpression::Path(Path::Resolved(
+                SymbolId::Local("a".into()),
+            )))),
+        ]),
+    };
+
+    let mut context = EvalContext::new();
     let model: ModelTree = group.eval(&mut context).expect("No error");
 
-    panic!("{model}");
+    let prop = model.get_property("a").expect("A property");
+    assert_eq!(prop.value, Value::from(Length::mm(4.0)));
+
+    insta::assert_snapshot!("group_with_property", model)
 }
 
 /// sketch Circle() { __mu::geo2d::Circle(radius = 4.0mm); }
@@ -64,7 +98,7 @@ fn circle_without_parameter() {
             symbol::WorkbenchKind::Sketch,
             vec![], // No parameters
         ),
-        statements: statements([WorkbenchStatement::expr(call_circle(4.0))]),
+        statements: statements([WorkbenchStatement::expr(call_circle(expr_length(4.0)))]),
     };
 
     let mut context = EvalContext::new();

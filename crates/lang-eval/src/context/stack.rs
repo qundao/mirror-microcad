@@ -5,16 +5,33 @@ use derive_more::From;
 use microcad_lang_base::{HashMap, Name, ToCompactString};
 use microcad_lang_types::{
     Arguments, Value,
-    model::{Element, ModelTreeBuilder, ModelTreeBuilderMut, Properties},
+    model::{Element, GetProperty, ModelTreeBuilder, ModelTreeBuilderMut, Properties},
 };
+
+pub trait Lookup {
+    /// Local a local or property value by traversing up the stack
+    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value>;
+}
 
 /// A map of locals.
 #[derive(Debug, Default)]
 pub struct LocalTable(HashMap<Name, Value>);
 
+impl Lookup for LocalTable {
+    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
+        self.0.get(&Name::from(name.as_ref()))
+    }
+}
+
 #[derive(Debug, Default)]
 pub struct FunctionFrame {
     pub locals: LocalTable,
+}
+
+impl Lookup for FunctionFrame {
+    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
+        self.locals.look_up_local(name)
+    }
 }
 
 impl FunctionFrame {
@@ -41,6 +58,12 @@ impl FunctionScopeFrame {
     }
 }
 
+impl Lookup for FunctionScopeFrame {
+    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
+        self.locals.look_up_local(name)
+    }
+}
+
 #[derive(Debug)]
 pub struct WorkbenchFrame {
     pub builder: ModelTreeBuilder,
@@ -52,9 +75,21 @@ impl ModelTreeBuilderMut for WorkbenchFrame {
     }
 }
 
+impl Lookup for WorkbenchFrame {
+    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
+        self.builder.get_property(name).map(|prop| &prop.value)
+    }
+}
+
 #[derive(Debug)]
 pub struct WorkbenchGroupFrame {
     pub builder: ModelTreeBuilder,
+}
+
+impl Lookup for WorkbenchGroupFrame {
+    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
+        self.builder.get_property(name).map(|prop| &prop.value)
+    }
 }
 
 impl WorkbenchGroupFrame {
@@ -123,6 +158,23 @@ impl ModelTreeBuilderMut for StackFrame {
     }
 }
 
+impl Lookup for StackFrame {
+    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
+        match &self {
+            StackFrame::Call(_) => None,
+            StackFrame::Function(function_frame) => function_frame.look_up_local(name),
+            StackFrame::FunctionScope(function_scope_frame) => {
+                function_scope_frame.look_up_local(name)
+            }
+            StackFrame::Workbench(workbench_frame) => workbench_frame.look_up_local(name),
+            StackFrame::WorkbenchGroup(workbench_group_frame) => {
+                workbench_group_frame.look_up_local(name)
+            }
+            StackFrame::WorkbenchInit(_) => None,
+        }
+    }
+}
+
 /// A generic stack.
 #[derive(Debug, Default)]
 pub struct Stack(Vec<StackFrame>);
@@ -130,6 +182,16 @@ pub struct Stack(Vec<StackFrame>);
 impl ModelTreeBuilderMut for Stack {
     fn model_tree_builder_mut(&mut self) -> &mut ModelTreeBuilder {
         self.top_mut().model_tree_builder_mut()
+    }
+}
+
+impl Lookup for Stack {
+    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
+        let name = name.as_ref();
+        self.0
+            .iter()
+            .rev()
+            .find_map(|frame| frame.look_up_local(name))
     }
 }
 

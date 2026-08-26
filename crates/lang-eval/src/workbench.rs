@@ -31,9 +31,28 @@ impl Eval<ModelTree> for symbol::workbench::Group {
     }
 }
 
-impl Eval<ModelTree> for symbol::workbench::If {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<ModelTree> {
-        todo!()
+impl Eval<Value> for symbol::workbench::Group {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+        let model_tree: ModelTree = self.eval(context)?;
+        Ok(model_tree.into())
+    }
+}
+
+impl Eval<Value> for symbol::workbench::If {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+        let cond: Value = self.cond.eval(context)?;
+        let cond: bool = cond.try_into()?;
+
+        if cond {
+            self.body.eval(context)
+        } else if let Some(next_if) = &self.next_if {
+            // Handle `else if ...` chain
+            next_if.eval(context)
+        } else if let Some(body) = &self.body_else {
+            body.eval(context)
+        } else {
+            Ok(Value::None)
+        }
     }
 }
 
@@ -71,6 +90,8 @@ impl Eval<Value> for symbol::SymbolDef {
 
 impl Eval<Value> for symbol::SymbolId {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+        use crate::context::Lookup;
+
         match &self {
             SymbolId::Builtin(builtin_id) => match context.builtins.get(*builtin_id) {
                 Some(builtin) => Ok(builtin.eval(context)?),
@@ -79,7 +100,12 @@ impl Eval<Value> for symbol::SymbolId {
                     Ok(Value::None)
                 }
             },
-            SymbolId::Local(local_id) => context.look_up_local(local_id),
+            SymbolId::Local(local_id) => match context.look_up_local(local_id) {
+                Some(value) => Ok(value.clone()),
+                None => {
+                    todo!("Error handling: Local '{local_id}' not found")
+                }
+            },
             SymbolId::Item(node_id) => context.eval_constant_symbol(*node_id),
             SymbolId::External { package_name, id } => {
                 let symbol = context.look_up_external_symbol(package_name, *id).unwrap();
@@ -136,7 +162,7 @@ impl Eval<ArgumentValueList> for symbol::workbench::ArgumentList {
     }
 }
 
-impl Eval<Value> for symbol::workbench::Call {
+impl Eval for symbol::workbench::Call {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         match &self.path {
             symbol::Path::Resolved(symbol::SymbolId::Builtin(builtin_id)) => {
@@ -175,11 +201,11 @@ impl Eval<Value> for symbol::WorkbenchExpression {
                 Ok(constant_value.value().clone())
             }
             symbol::WorkbenchExpression::Path(path) => path.eval(context),
-            symbol::WorkbenchExpression::Group(group) => Ok(group.eval(context)?.into()),
-            symbol::WorkbenchExpression::If(_) => todo!(),
+            symbol::WorkbenchExpression::Group(group) => group.eval(context),
+            symbol::WorkbenchExpression::If(if_) => if_.eval(context),
             symbol::WorkbenchExpression::Call(call) => call.eval(context),
             symbol::WorkbenchExpression::Marker(marker) => Ok(marker.eval(context)?.into()),
-            _ => todo!(),
+            _ => unimplemented!(),
         }
     }
 }
@@ -211,8 +237,13 @@ impl Eval<()> for symbol::WorkbenchStatement {
             }
             // If we have no id, we have a child model.
             None => {
-                let model: ModelTree = self.expression.eval(context)?;
-                context.model_tree_builder_mut().add_model_child(model);
+                let value: Value = self.expression.eval(context)?;
+                // It might be that the value is none, because an if expression might not produce a model when its condition is not fulfilled
+                if !value.is_none() {
+                    context
+                        .model_tree_builder_mut()
+                        .add_model_child(ModelTree::from(value));
+                }
             }
         }
         Ok(())

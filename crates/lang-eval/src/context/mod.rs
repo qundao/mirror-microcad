@@ -69,11 +69,6 @@ impl EvalContext {
         self.stack.top_mut()
     }
 
-    /// Local a local or property value by traversing up the stack
-    pub(crate) fn look_up_local(&self, _local_id: &str) -> EvalResult<Value> {
-        todo!()
-    }
-
     pub(crate) fn eval_constant_symbol(
         &mut self,
         node_id: symbol::SymbolNodeId,
@@ -98,6 +93,12 @@ impl EvalContext {
         _node_id: symbol::SymbolNodeId,
     ) -> Option<symbol::SymbolDef> {
         todo!()
+    }
+}
+
+impl Lookup for EvalContext {
+    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
+        self.stack.look_up_local(name)
     }
 }
 
