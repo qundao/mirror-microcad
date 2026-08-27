@@ -17,7 +17,7 @@ pub use context::*;
 use microcad_core::{Geometry, Geometry2D, Scalar};
 use microcad_lang_types::model::ModelOutputType;
 pub use output::*;
-pub use render::{Render, RenderResolution};
+pub use render::{RenderPrimitive, RenderResolution};
 
 use miette::Diagnostic;
 use thiserror::Error;
@@ -37,38 +37,71 @@ pub enum RenderError {
     NothingToRender,
 }
 
-use microcad_builtin::{__mu, BuiltinError, BuiltinId, mu};
+use microcad_builtin::{BuiltinConstruct, BuiltinError, BuiltinId, mu};
 
 /// Built-in execution function signature
 pub type RenderFn = fn(&mut RenderContext) -> Result<GeometryOutput, RenderError>;
 
+#[derive(Debug, Default)]
 pub struct RenderHooks {
-    _hooks: HashMap<BuiltinId, RenderFn>,
+    hooks: HashMap<BuiltinId, RenderFn>,
 }
 
 impl RenderHooks {
     pub fn new() -> Self {
-        let mut hooks: HashMap<BuiltinId, RenderFn> = HashMap::default();
+        let mut hooks = RenderHooks::default();
+        hooks.insert::<mu::geo2d::Circle>();
+        hooks
+    }
 
-        hooks.insert(__mu!(geo2d::Circle), |ctx| {
-            mu::geo2d::Circle::from_model(ctx.model().get())?.render_with_context(ctx)
+    pub fn insert<C: BuiltinConstruct + Render>(&mut self) {
+        self.hooks.insert(C::item().id(), |ctx| {
+            C::from_model(ctx.model().get())?.render(ctx)
         });
-
-        Self { _hooks: hooks }
     }
 }
 
-impl Render for mu::geo2d::Circle {
-    fn render(&self, resolution: &RenderResolution) -> Geometry {
+impl RenderPrimitive for mu::geo2d::Circle {
+    fn render_primitive(&self, resolution: &RenderResolution) -> Geometry {
         let radius: Scalar = self.radius.to_num();
         let n = resolution.circular_segments(radius);
         Geometry2D::Polygon(microcad_core::Circle::circle_polygon(radius, n)).into()
     }
 }
 
-impl RenderWithContext for mu::geo2d::Circle {
-    fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<GeometryOutput> {
-        context.update(|context, _| Ok(self.render(&context.current_resolution()).into()))
+impl<T: RenderPrimitive> Render for T {
+    fn render(&self, context: &mut RenderContext) -> RenderResult<GeometryOutput> {
+        context.update(|context, _| Ok(self.render_primitive(&context.current_resolution()).into()))
+    }
+}
+
+impl Render for mu::ops::Difference {
+    fn render(&self, context: &mut RenderContext) -> RenderResult<GeometryOutput> {
+        todo!()
+        /*context.update(|context, node| {
+            let outputs = Vec::new();
+            node.into_group().children().try_for_each(|node| {
+                outputs.push(node.render_with_context(context)?);
+                Ok(())
+            });
+
+            Ok(outputs.difference())
+        })*/
+    }
+}
+
+impl Render for mu::ops::Extrude {
+    fn render(&self, context: &mut RenderContext) -> RenderResult<GeometryOutput> {
+        todo!()
+        /*context.update(|context, node| {
+            let outputs = Vec::new();
+            node.children().try_for_each(|node| {
+                outputs.push(node.render_with_context(context)?);
+                Ok(())
+            });
+
+            Ok(node.union().extrude(self.height.to_num()))
+        })*/
     }
 }
 
@@ -76,9 +109,9 @@ impl RenderWithContext for mu::geo2d::Circle {
 pub type RenderResult<T> = Result<T, RenderError>;
 
 /// The render trait.
-pub trait RenderWithContext<T = GeometryOutput> {
+pub trait Render<T = GeometryOutput> {
     /// Render method.
-    fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<T>;
+    fn render(&self, context: &mut RenderContext) -> RenderResult<T>;
 }
 
 /*

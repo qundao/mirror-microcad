@@ -8,9 +8,9 @@ use cgmath::InnerSpace;
 use microcad_core as core;
 
 /// A trait that renders something with a reslution
-pub trait Render<T = core::Geometry> {
+pub trait RenderPrimitive<T = core::Geometry> {
     /// The render function.
-    fn render(&self, resolution: &RenderResolution) -> T;
+    fn render_primitive(&self, resolution: &RenderResolution) -> T;
 
     /// A render hint to tell whether this geometry is independent from resolution.
     ///
