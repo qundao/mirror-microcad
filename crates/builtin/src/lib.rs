@@ -12,7 +12,10 @@ use microcad_lang_base::PushDiag;
 pub use registry::BuiltinRegistry;
 
 use derive_more::{Debug, From};
-use microcad_lang_types::{Arguments, FunctionType, Model, ModelTree, Value};
+use microcad_lang_types::{
+    Arguments, FunctionType, Model, ModelTree, Value,
+    model::{self, BuiltinWorkpiece},
+};
 
 pub use microcad_lang_base::{BuiltinId, BuiltinInfo};
 pub use microcad_macros::__mu;
@@ -117,6 +120,24 @@ impl BuiltinPrimitive {
     pub fn ty(&self) -> FunctionType {
         (self.ty)()
     }
+}
+
+pub trait BuiltinConstruct: Sized {
+    /// Returns the static metadata item for this primitive.
+    fn item() -> &'static BuiltinItem;
+
+    /// Returns the primitive element descriptor.
+    fn element() -> model::Element {
+        model::BuiltinWorkpiece::Primitive(Self::item().id()).into()
+    }
+
+    /// Call this builtin with builtin with arguments and evaluate it into a model.
+    fn call(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Model, BuiltinError> {
+        Ok(Model::new(Self::element()).with_properties(args))
+    }
+
+    /// Constructs the Rust struct representation from a evaluated `Model`.
+    fn from_model(model: &Model) -> Result<Self, BuiltinError>;
 }
 
 #[derive(Debug, Clone)]
@@ -252,37 +273,11 @@ impl BuiltinItem {
     }
 }
 
+use microcad_lang_base::builtin_info;
+
 /// A macro to declare built-in items.
 #[macro_export]
 macro_rules! builtin_item {
-    // Helper: @info for Modules (Only takes a module identifier)
-    (
-        @info
-        $doc:literal
-        $mod_name:ident
-    ) => {
-        $crate::BuiltinInfo::new(concat!(
-            "__mu::",
-            stringify!($mod_name)
-        ))
-        .with_doc($doc)
-    };
-
-    // Helper: @info for Functions/Constants
-    (
-        @info
-        $doc:literal
-        $mod_name:ident::$fn_name:ident
-    ) => {
-        $crate::BuiltinInfo::new(concat!(
-            "__mu::",
-            stringify!($mod_name),
-            "::",
-            stringify!($fn_name)
-        ))
-        .with_doc($doc)
-    };
-
     // Syntax: builtin_item!(
     //     Module
     //     "Doc string"
@@ -294,7 +289,7 @@ macro_rules! builtin_item {
         $mod_name:ident [ $($builtin:expr),* $(,)? ]
     ) => {
         $crate::BuiltinItem::Module($crate::BuiltinModule::new(
-            $crate::builtin_item!(@info $doc $mod_name),
+            $crate::builtin_info!($doc $mod_name),
             &[ $($builtin),* ],
         ))
     };
@@ -310,7 +305,7 @@ macro_rules! builtin_item {
         $mod_name:ident::$fn_name:ident ( $func_ty:expr )
     ) => {
         $crate::BuiltinItem::Function($crate::BuiltinFunction::new(
-            $crate::builtin_item!(@info $doc $mod_name::$fn_name),
+            $crate::builtin_info!($doc $mod_name::$fn_name),
             || $func_ty,
             $fn_name,
         ))
@@ -322,8 +317,34 @@ macro_rules! builtin_item {
         $mod_name:ident::$fn_name:ident = $value:expr
     ) => {
         $crate::BuiltinItem::Constant($crate::BuiltinConstant::new(
-            $crate::builtin_item!(@info $doc $mod_name::$fn_name),
+            $crate::builtin_info!($doc $mod_name::$fn_name),
             || $crate::Value::from($value),
+        ))
+    };
+
+    // Syntax: builtin_item!(Operation "An operation" ops::op(param1: type1, ...) -> return_type))
+    (
+        Operation
+        $doc:literal
+        $mod_name:ident::$fn_name:ident ( $func_ty:expr )
+    ) => {
+        $crate::BuiltinItem::Operation($crate::BuiltinOperation::new(
+            $crate::builtin_info!($doc $mod_name::$fn_name),
+            || $func_ty,
+            $fn_name,
+        ))
+    };
+
+    // Syntax: builtin_item!(Operation "An operation" ops::op(param1: type1, ...) -> return_type))
+    (
+        Primitive
+        $doc:literal
+        $mod_name:ident::$struct_name:ident ( $func_ty:expr )
+    ) => {
+        $crate::BuiltinItem::Primitive($crate::BuiltinPrimitive::new(
+            $crate::builtin_info!($doc $mod_name::$fn_name),
+            || $func_ty,
+            $struct_name::call,
         ))
     };
 }

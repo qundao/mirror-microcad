@@ -587,13 +587,9 @@ pub mod color {
 #[builtin_mod]
 pub mod geo2d {
     use microcad_lang_base::BuiltinInfo;
-    use microcad_lang_types::{
-        Length, Model, ModelOutputType, Type, function_type,
-        model::{Element, element::BuiltinWorkpiece},
-    };
-    use microcad_macros::__mu;
+    use microcad_lang_types::{Length, Model, ModelOutputType, Type, function_type};
 
-    use crate::BuiltinPrimitive;
+    use crate::{BuiltinConstruct, BuiltinPrimitive};
 
     use super::*;
 
@@ -610,30 +606,26 @@ pub mod geo2d {
         pub radius: Length,
     }
 
-    impl Circle {
-        pub fn call(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Model, BuiltinError> {
-            Ok(
-                Model::new(BuiltinWorkpiece::Primitive2D(__mu!(geo2d::Circle)))
-                    .with_properties(args),
-            )
+    impl BuiltinConstruct for Circle {
+        fn item() -> &'static BuiltinItem {
+            &CIRCLE
         }
 
-        pub fn from_model(model: &Model) -> Result<Self, BuiltinError> {
+        fn from_model(model: &Model) -> Result<Self, BuiltinError> {
             // TODO Assertion if Model is a circle primitive
-            assert_eq!(
-                model.element,
-                Element::BuiltinWorkpiece(BuiltinWorkpiece::Primitive2D(__mu!(geo2d::Circle)))
-            );
+            assert_eq!(model.element, Self::element());
 
-            let radius = Length::try_from(
-                model
-                    .get_property("radius")
-                    .expect("Input model must have a property 'radius'")
-                    .value
-                    .clone(),
-            )?;
-
-            Ok(Circle { radius })
+            Ok(Circle {
+                radius: TryFrom::try_from(
+                    model
+                        .get_property("radius")
+                        .ok_or(BuiltinError::PropertyNotFound {
+                            name: String::from("radius"),
+                        })?
+                        .value
+                        .clone(),
+                )?,
+            })
         }
     }
 }
@@ -648,6 +640,7 @@ pub mod ops {
         Length, Model, ModelOutputType, ModelTree, Type, function_type,
         model::{AffineTransform, BooleanOp, Element, element::BuiltinWorkpiece},
     };
+    use microcad_macros::__mu;
 
     use crate::BuiltinOperation;
 
@@ -659,6 +652,7 @@ pub mod ops {
         translate,
     ));
 
+    //#[builtin_op(ops::translate(self: Model, x: Length, y: Length, z: Length) -> Model)]
     pub fn translate(
         args: Arguments,
         _ctx: &mut BuiltinEvalContext,
@@ -686,6 +680,8 @@ pub mod ops {
         difference,
     ));
 
+    pub struct Difference;
+
     pub fn difference(
         args: Arguments,
         _ctx: &mut BuiltinEvalContext,
@@ -705,6 +701,10 @@ pub mod ops {
         Ok(tree)
     }
 
+    pub struct Extrude {
+        height: Length,
+    }
+
     pub static EXTRUDE: BuiltinItem = BuiltinItem::Operation(BuiltinOperation::new(
         BuiltinInfo::new("__mu::ops::extrude"),
         || function_type!((self: Type::Model(ModelOutputType::Geometry2D), height: Type::length()) -> Type::Model(ModelOutputType::Geometry3D)),
@@ -717,7 +717,7 @@ pub mod ops {
     ) -> Result<ModelTree, BuiltinError> {
         let self_: Rc<ModelTree> = args.try_get("self")?;
         let mut tree = ModelTree::new(
-            Model::new(BuiltinWorkpiece::Operation(EXTRUDE.id())).with_op_properties(args),
+            Model::new(BuiltinWorkpiece::Operation(__mu!(ops::extrude))).with_op_properties(args),
         );
         tree.append(Rc::unwrap_or_clone(self_));
 
