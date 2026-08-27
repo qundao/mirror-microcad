@@ -1,0 +1,125 @@
+---
+source: crates/lang-parse/tests/parser.rs
+expression: output
+---
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: "0x946d92f84cbd9e75",
+        output_hash: "0x257901ca204ec103",
+        tree: (
+            span: (
+                start: 0,
+                end: 13,
+            ),
+            statements: (
+                span: (
+                    start: 0,
+                    end: 13,
+                ),
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [
+                    (LocalAssignment((
+                        span: (
+                            start: 0,
+                            end: 12,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        attr: ([]),
+                        id: (
+                            span: (
+                                start: 0,
+                                end: 1,
+                            ),
+                            name: "a",
+                        ),
+                        ty: None,
+                        expr: Range((
+                            span: (
+                                start: 4,
+                                end: 12,
+                            ),
+                            extras: (
+                                leading: ([]),
+                                trailing: ([]),
+                            ),
+                            start: (
+                                span: (
+                                    start: 5,
+                                    end: 6,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                expr: Literal((
+                                    span: (
+                                        start: 5,
+                                        end: 6,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    literal: Integer((
+                                        span: (
+                                            start: 5,
+                                            end: 6,
+                                        ),
+                                        value: "1",
+                                    )),
+                                )),
+                            ),
+                            end: (
+                                span: (
+                                    start: 8,
+                                    end: 9,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                expr: Literal((
+                                    span: (
+                                        start: 8,
+                                        end: 9,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    literal: Integer((
+                                        span: (
+                                            start: 8,
+                                            end: 9,
+                                        ),
+                                        value: "3",
+                                    )),
+                                )),
+                            ),
+                            unit: Some((
+                                span: (
+                                    start: 10,
+                                    end: 12,
+                                ),
+                                name: "mm",
+                            )),
+                        )),
+                    )), ([])),
+                ],
+                tail: None,
+            ),
+        ),
+    ),
+)
+---

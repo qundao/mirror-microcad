@@ -1,0 +1,129 @@
+---
+source: crates/lang-parse/tests/parser.rs
+expression: output
+---
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: "0x128299deb4d93ef5",
+        output_hash: "0x51a76e4d5ce6ca42",
+        tree: (
+            span: (
+                start: 0,
+                end: 25,
+            ),
+            statements: (
+                span: (
+                    start: 0,
+                    end: 25,
+                ),
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
+                    span: (
+                        start: 0,
+                        end: 25,
+                    ),
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
+                    ),
+                    attr: ([]),
+                    expr: List((
+                        span: (
+                            start: 0,
+                            end: 25,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        items: [
+                            (
+                                span: (
+                                    start: 1,
+                                    end: 12,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                expr: Literal((
+                                    span: (
+                                        start: 1,
+                                        end: 12,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([
+                                            Whitespace((" ")),
+                                            Comment((
+                                                span: (
+                                                    start: 3,
+                                                    end: 12,
+                                                ),
+                                                inner: MultiLine("foo"),
+                                            )),
+                                        ]),
+                                    ),
+                                    literal: Integer((
+                                        span: (
+                                            start: 1,
+                                            end: 2,
+                                        ),
+                                        value: "1",
+                                    )),
+                                )),
+                            ),
+                            (
+                                span: (
+                                    start: 13,
+                                    end: 24,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                expr: Literal((
+                                    span: (
+                                        start: 13,
+                                        end: 24,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([
+                                            Whitespace((" ")),
+                                            Comment((
+                                                span: (
+                                                    start: 15,
+                                                    end: 24,
+                                                ),
+                                                inner: MultiLine("bar"),
+                                            )),
+                                        ]),
+                                    ),
+                                    literal: Integer((
+                                        span: (
+                                            start: 13,
+                                            end: 14,
+                                        ),
+                                        value: "2",
+                                    )),
+                                )),
+                            ),
+                        ],
+                        unit: None,
+                    )),
+                )),
+            ),
+        ),
+    ),
+)
+---

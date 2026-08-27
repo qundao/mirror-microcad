@@ -9,17 +9,17 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: "0x628a8560e0681bf7",
-        output_hash: "0x75159817772a4575",
+        input_hash: "0xcb7be3be36b6ae84",
+        output_hash: "0x94aa7946daa72e83",
         tree: (
             span: (
                 start: 0,
-                end: 17,
+                end: 6,
             ),
             statements: (
                 span: (
                     start: 0,
-                    end: 17,
+                    end: 6,
                 ),
                 extras: (
                     leading: ([]),
@@ -29,23 +29,19 @@ expression: output
                 tail: Some((
                     span: (
                         start: 0,
-                        end: 17,
+                        end: 6,
                     ),
                     extras: (
                         leading: ([]),
                         trailing: ([]),
                     ),
                     attr: ([]),
-                    expr: Call((
+                    expr: ElementAccess((
                         span: (
                             start: 0,
-                            end: 17,
+                            end: 6,
                         ),
-                        extras: (
-                            leading: ([]),
-                            trailing: ([]),
-                        ),
-                        path: (
+                        expr: SymbolPath((
                             span: (
                                 start: 0,
                                 end: 3,
@@ -64,26 +60,36 @@ expression: output
                                     name: "foo",
                                 ),
                             ],
-                        ),
-                        arguments: (
-                            span: (
-                                start: 4,
-                                end: 16,
-                            ),
-                            extras: (
-                                leading: ([
-                                    Comment((
+                        )),
+                        element_chain: [
+                            (
+                                span: (
+                                    start: 3,
+                                    end: 6,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                inner: ListElement(Literal((
+                                    span: (
+                                        start: 4,
+                                        end: 5,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    literal: Integer((
                                         span: (
                                             start: 4,
-                                            end: 16,
+                                            end: 5,
                                         ),
-                                        inner: MultiLine("foobar"),
+                                        value: "1",
                                     )),
-                                ]),
-                                trailing: ([]),
+                                ))),
                             ),
-                            arguments: [],
-                        ),
+                        ],
                     )),
                 )),
             ),

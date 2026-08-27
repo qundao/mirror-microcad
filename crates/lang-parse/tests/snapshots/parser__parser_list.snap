@@ -1,0 +1,165 @@
+---
+source: crates/lang-parse/tests/parser.rs
+expression: output
+---
+(
+    header: (
+        magic: (38, 109, 117, 59),
+        version: ("0.6.0"),
+        kind: Ast,
+    ),
+    payload: (
+        input_hash: "0x4fe1a4b83dcec32b",
+        output_hash: "0x82b5df5dd16fca92",
+        tree: (
+            span: (
+                start: 0,
+                end: 9,
+            ),
+            statements: (
+                span: (
+                    start: 0,
+                    end: 9,
+                ),
+                extras: (
+                    leading: ([]),
+                    trailing: ([]),
+                ),
+                statements: [],
+                tail: Some((
+                    span: (
+                        start: 0,
+                        end: 9,
+                    ),
+                    extras: (
+                        leading: ([]),
+                        trailing: ([]),
+                    ),
+                    attr: ([]),
+                    expr: List((
+                        span: (
+                            start: 0,
+                            end: 9,
+                        ),
+                        extras: (
+                            leading: ([]),
+                            trailing: ([]),
+                        ),
+                        items: [
+                            (
+                                span: (
+                                    start: 1,
+                                    end: 2,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                expr: Literal((
+                                    span: (
+                                        start: 1,
+                                        end: 2,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    literal: Integer((
+                                        span: (
+                                            start: 1,
+                                            end: 2,
+                                        ),
+                                        value: "1",
+                                    )),
+                                )),
+                            ),
+                            (
+                                span: (
+                                    start: 3,
+                                    end: 4,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                expr: Literal((
+                                    span: (
+                                        start: 3,
+                                        end: 4,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    literal: Integer((
+                                        span: (
+                                            start: 3,
+                                            end: 4,
+                                        ),
+                                        value: "2",
+                                    )),
+                                )),
+                            ),
+                            (
+                                span: (
+                                    start: 5,
+                                    end: 6,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                expr: Literal((
+                                    span: (
+                                        start: 5,
+                                        end: 6,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    literal: Integer((
+                                        span: (
+                                            start: 5,
+                                            end: 6,
+                                        ),
+                                        value: "3",
+                                    )),
+                                )),
+                            ),
+                            (
+                                span: (
+                                    start: 7,
+                                    end: 8,
+                                ),
+                                extras: (
+                                    leading: ([]),
+                                    trailing: ([]),
+                                ),
+                                expr: Literal((
+                                    span: (
+                                        start: 7,
+                                        end: 8,
+                                    ),
+                                    extras: (
+                                        leading: ([]),
+                                        trailing: ([]),
+                                    ),
+                                    literal: Integer((
+                                        span: (
+                                            start: 7,
+                                            end: 8,
+                                        ),
+                                        value: "4",
+                                    )),
+                                )),
+                            ),
+                        ],
+                        unit: None,
+                    )),
+                )),
+            ),
+        ),
+    ),
+)
+---

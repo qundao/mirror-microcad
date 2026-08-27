@@ -71,7 +71,7 @@ expression: output
                                     leading: ([]),
                                     trailing: ([]),
                                 ),
-                                inner: ArrayElement(Literal((
+                                inner: ListElement(Literal((
                                     span: (
                                         start: 4,
                                         end: 5,
@@ -141,7 +141,7 @@ expression: output
                                         leading: ([]),
                                         trailing: ([]),
                                     ),
-                                    name: (
+                                    path: (
                                         span: (
                                             start: 15,
                                             end: 19,

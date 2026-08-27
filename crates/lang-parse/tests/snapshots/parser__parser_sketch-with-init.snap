@@ -300,7 +300,7 @@ expression: output
                                                 leading: ([]),
                                                 trailing: ([]),
                                             ),
-                                            name: (
+                                            path: (
                                                 span: (
                                                     start: 101,
                                                     end: 119,

@@ -59,7 +59,7 @@ expression: output
                                 ),
                                 value: Minus,
                             ),
-                            rhs: ArrayList((
+                            rhs: List((
                                 span: (
                                     start: 1,
                                     end: 4,
@@ -107,7 +107,7 @@ expression: output
                             ),
                             value: NotEqual,
                         ),
-                        rhs: ArrayList((
+                        rhs: List((
                             span: (
                                 start: 8,
                                 end: 11,

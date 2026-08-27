@@ -80,7 +80,7 @@ expression: output
                                         leading: ([]),
                                         trailing: ([]),
                                     ),
-                                    name: (
+                                    path: (
                                         span: (
                                             start: 4,
                                             end: 7,

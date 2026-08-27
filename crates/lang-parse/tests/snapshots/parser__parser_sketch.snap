@@ -135,7 +135,7 @@ expression: output
                                                 leading: ([]),
                                                 trailing: ([]),
                                             ),
-                                            name: (
+                                            path: (
                                                 span: (
                                                     start: 30,
                                                     end: 48,
