@@ -5,7 +5,7 @@ use microcad_lang_base::Identifier;
 use microcad_lang_eval::ArgumentMatch;
 use microcad_lang_types::{
     ArgumentValue, ArgumentValueList, CallSignature, Length, Tuple, Type, argument_value,
-    arguments, call_signature, function_type, list, tuple,
+    arguments, call_signature, list, tuple,
 };
 
 struct ArgumentMatchDummy {

@@ -19,21 +19,42 @@ use microcad_package::{
 
 /// Expressions used for testing
 pub mod helper {
-
-    use microcad_package::symbol::WorkbenchStatement;
+    use microcad_package::symbol::{WorkbenchExpression as Expr, WorkbenchStatement};
 
     use super::*;
 
     /// `4.0mm`
-    pub fn expr_length(v: f64) -> WorkbenchExpression {
+    pub fn length(v: f64) -> Expr {
         ConstantValue::from_value(Length::mm(v)).into()
     }
 
     /// __mu::geo2d::Circle(radius = expr)
-    pub fn call_circle(expr: impl Into<WorkbenchExpression>) -> symbol::WorkbenchExpression {
+    pub fn call_circle(radius: impl Into<Expr>) -> Expr {
         workbench::Call::builtin(__mu!(geo2d::Circle))
-            .with_args(vec![workbench::Argument::named("radius", expr)])
+            .with_args(vec![workbench::Argument::named("radius", radius)])
             .into()
+    }
+
+    /// __mu::op::translate(self, x, y, z)
+    pub fn call_translate(
+        self_: impl Into<Expr>,
+        x: impl Into<Expr>,
+        y: impl Into<Expr>,
+        z: impl Into<Expr>,
+    ) -> Expr {
+        workbench::Call::builtin(__mu!(ops::translate))
+            .with_args(vec![
+                workbench::Argument::named("self", self_),
+                workbench::Argument::named("x", x),
+                workbench::Argument::named("y", y),
+                workbench::Argument::named("z", z),
+            ])
+            .into()
+    }
+
+    /// Local expression with `name`
+    pub fn local(name: &str) -> Expr {
+        symbol::Path::Resolved(SymbolId::Local(name.into())).into()
     }
 
     pub fn statements(
@@ -54,7 +75,7 @@ fn group() {
     let group = symbol::workbench::Group {
         src_ref: SrcRef::none(),
         attr: Attributes::default(),
-        statements: statements([WorkbenchStatement::expr(call_circle(expr_length(4.0)))]),
+        statements: statements([WorkbenchStatement::expr(call_circle(length(4.0)))]),
     };
 
     let mut context = EvalContext::new();
@@ -74,8 +95,8 @@ fn group_with_property() {
         src_ref: SrcRef::none(),
         attr: Attributes::default(),
         statements: statements([
-            WorkbenchStatement::prop("a", expr_length(4.0)),
-            WorkbenchStatement::expr(call_circle(Path::Resolved(SymbolId::Local("a".into())))),
+            WorkbenchStatement::prop("a", length(4.0)),
+            WorkbenchStatement::expr(call_circle(local("a"))),
         ]),
     };
 
@@ -86,6 +107,26 @@ fn group_with_property() {
     assert_eq!(prop, Value::from(Length::mm(4.0)));
 
     insta::assert_snapshot!("group_with_property", model)
+}
+
+/// __mu::geo2d::Circle(radius = 4.0mm).translate(x = 1.0mm, y = 2.0mm, z = 0.0mm)
+#[test]
+fn translate_circle() {
+    use helper::*;
+
+    let expr = call_translate(
+        call_circle(length(4.0)),
+        length(1.0),
+        length(2.0),
+        length(0.0),
+    );
+
+    let mut context = EvalContext::new();
+    let model: ModelTree = expr.eval(&mut context).expect("No error");
+    let prop = model.get_property_value("radius");
+    assert_eq!(prop, Value::from(Length::mm(4.0)));
+
+    insta::assert_snapshot!("translate_circle", model)
 }
 
 /// sketch Circle() { __mu::geo2d::Circle(radius = 4.0mm); }
@@ -99,7 +140,7 @@ fn circle_without_parameter() {
             symbol::WorkbenchKind::Sketch,
             vec![], // No parameters
         ),
-        statements: statements([WorkbenchStatement::expr(call_circle(expr_length(4.0)))]),
+        statements: statements([WorkbenchStatement::expr(call_circle(length(4.0)))]),
     };
 
     let mut context = EvalContext::new();
@@ -186,10 +227,7 @@ fn circle_init() {
             "radius",
             workbench::Call::builtin(__mu!(core::div)).with_args(
                 workbench::ArgumentList::from_iter([
-                    workbench::Argument::named(
-                        "lhs",
-                        symbol::Path::Resolved(SymbolId::Local("diameter".into())),
-                    ),
+                    workbench::Argument::named("lhs", local("diameter")),
                     workbench::Argument::named("rhs", symbol::ConstantValue::from_value(2.0)),
                 ]),
             ),

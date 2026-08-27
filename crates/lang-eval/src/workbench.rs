@@ -173,8 +173,28 @@ impl Eval for symbol::workbench::Call {
                         Ok(f.call_isolated(args)?)
                     }
                     Some(BuiltinItem::Primitive(p)) => {
-                        let args = p.argument_match(&args)?;
-                        Ok((p.f)(args, &mut BuiltinEvalContext::default())?.into())
+                        let multi_args = p.argument_multi_match(&args)?;
+                        let mut models = Vec::new();
+                        for args in multi_args {
+                            models.push(ModelTree::from((p.f)(
+                                args,
+                                &mut BuiltinEvalContext::default(),
+                            )?));
+                        }
+
+                        Ok(ModelTree::to_multiplicity(models).into())
+                    }
+                    Some(BuiltinItem::Operation(op)) => {
+                        let multi_args = op.argument_multi_match(&args)?;
+                        let mut models = Vec::new();
+                        for args in multi_args {
+                            models.push(ModelTree::from((op.f)(
+                                args,
+                                &mut BuiltinEvalContext::default(),
+                            )?));
+                        }
+
+                        Ok(ModelTree::to_multiplicity(models).into())
                     }
                     None => unimplemented!("Function not found: {builtin_id}"),
                     _ => todo!(),

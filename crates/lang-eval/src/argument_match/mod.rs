@@ -269,3 +269,13 @@ impl ArgumentMatch for microcad_builtin::BuiltinPrimitive {
         Tuple::default()
     }
 }
+
+impl ArgumentMatch for microcad_builtin::BuiltinOperation {
+    fn call_signature(&self) -> CallSignature {
+        (self.ty)().call_ty.clone()
+    }
+
+    fn default_values(&self) -> Tuple {
+        Tuple::default()
+    }
+}
