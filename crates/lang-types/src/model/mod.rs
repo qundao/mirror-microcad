@@ -98,6 +98,12 @@ impl Model {
     pub fn get_property(&self, name: impl AsRef<str>) -> Option<&Property> {
         self.properties.get_property(name.as_ref())
     }
+
+    pub fn get_property_value(&self, name: impl AsRef<str>) -> Value {
+        self.get_property(name)
+            .map(|property| property.value.clone())
+            .unwrap_or_default()
+    }
 }
 
 impl AttributeAccess for Model {
