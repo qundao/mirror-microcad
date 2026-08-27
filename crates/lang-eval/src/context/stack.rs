@@ -5,7 +5,10 @@ use derive_more::From;
 use microcad_lang_base::{HashMap, Name, ToCompactString};
 use microcad_lang_types::{
     Arguments, Value,
-    model::{Element, GetProperty, ModelTreeBuilder, ModelTreeBuilderMut, Properties, Workpiece},
+    model::{
+        Element, GetProperty, ModelTreeBuilder, ModelTreeBuilderMut, Properties, Property,
+        Workpiece,
+    },
 };
 
 pub trait Lookup {
@@ -119,6 +122,24 @@ pub struct WorkbenchInitFrame {
     pub properties: Properties,
 }
 
+impl WorkbenchInitFrame {
+    pub fn new(arguments: Arguments) -> WorkbenchInitFrame {
+        Self {
+            properties: Properties::from_iter(
+                arguments
+                    .named_iter()
+                    .map(|(id, value)| Property::hidden(id, value.clone())),
+            ),
+        }
+    }
+}
+
+impl Lookup for WorkbenchInitFrame {
+    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
+        self.properties.get_property(name).map(|prop| &prop.value)
+    }
+}
+
 #[derive(Debug)]
 pub struct CallFrame {
     pub path: microcad_package::symbol::Path,
@@ -178,7 +199,7 @@ impl Lookup for StackFrame {
             StackFrame::WorkbenchGroup(workbench_group_frame) => {
                 workbench_group_frame.look_up_local(name)
             }
-            StackFrame::WorkbenchInit(_) => None,
+            StackFrame::WorkbenchInit(init) => init.look_up_local(name),
         }
     }
 }

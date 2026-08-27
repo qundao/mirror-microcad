@@ -5,7 +5,7 @@
 
 use crate::{
     CallTrait, Eval, EvalContext, EvalError, EvalResult,
-    context::{WorkbenchGroupFrame, WorkpieceFrame},
+    context::{WorkbenchGroupFrame, WorkbenchInitFrame, WorkpieceFrame},
 };
 
 use microcad_builtin::{BuiltinEvalContext, BuiltinItem};
@@ -15,7 +15,6 @@ use microcad_package::{SymbolId, symbol};
 use microcad_lang_types::{
     ArgumentValue, ArgumentValueList, ModelTree, Value,
     model::{Element, ModelTreeBuilderMut, Properties, Property, PropertyType, Workpiece},
-    tuple,
 };
 
 impl Eval<ModelTree> for symbol::workbench::Group {
@@ -259,12 +258,6 @@ impl Eval<Property> for symbol::workbench::InitStatement {
     }
 }
 
-impl CallTrait<Properties> for symbol::workbench::Init {
-    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Properties> {
-        todo!()
-    }
-}
-
 impl CallTrait<ModelTree> for symbol::Workbench {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<ModelTree> {
         fn eval_to_model(
@@ -305,7 +298,21 @@ impl CallTrait<ModelTree> for symbol::Workbench {
                 match init.argument_multi_match(args) {
                     Ok(arguments) => {
                         for args in arguments {
-                            let properties = Properties::from(args);
+                            let properties = context.scope(
+                                WorkbenchInitFrame::new(args),
+                                |context| -> EvalResult<Properties> {
+                                    let mut properties = Properties::new();
+                                    init.statements.iter().try_for_each(
+                                        |stmt| -> EvalResult<()> {
+                                            let property: Property = stmt.eval(context)?;
+                                            properties.set_property(property);
+                                            Ok(())
+                                        },
+                                    )?;
+                                    Ok(properties)
+                                },
+                            )?;
+
                             models.push(eval_to_model(&self, properties, context)?);
                         }
                     }

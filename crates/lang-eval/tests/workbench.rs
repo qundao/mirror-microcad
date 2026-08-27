@@ -170,9 +170,51 @@ fn circle_parameter() {
 /// }
 #[test]
 fn circle_init() {
-    todo!()
+    use helper::*;
+
+    let workbench = symbol::Workbench {
+        attr: Attributes::default(),
+        signature: workbench::WorkbenchSignature::new(
+            symbol::WorkbenchKind::Sketch,
+            vec![Parameter::new("radius", Type::length())],
+        )
+        .with_inits([workbench::Init::default_init(vec![Parameter::new(
+            "diameter",
+            Type::length(),
+        )])
+        .with_statements([workbench::InitStatement::new(
+            "radius",
+            workbench::Call::builtin(__mu!(core::div)).with_args(
+                workbench::ArgumentList::from_iter([
+                    workbench::Argument::named(
+                        "lhs",
+                        symbol::Path::Resolved(SymbolId::Local("diameter".into())),
+                    ),
+                    workbench::Argument::named("rhs", symbol::ConstantValue::from_value(2.0)),
+                ]),
+            ),
+        )])]),
+        statements: statements([WorkbenchStatement::expr(call_circle(Path::Resolved(
+            SymbolId::Local("radius".into()),
+        )))]),
+    };
+
+    let diameter = Length::mm(8.0);
+    let mut context = EvalContext::new();
+    let model = workbench
+        .call(
+            &ArgumentValueList::from_iter([argument_value!(diameter = diameter)]),
+            &mut context,
+        )
+        .expect("No eval error");
+
+    let prop = model.get_property_value("radius");
+    assert_eq!(prop, Value::from(Length::mm(4.0)));
+
+    insta::assert_snapshot!("circle_init", model);
 }
 
+/*
 /// sketch Circle(radius: Length) {
 ///     init(diameter: Length) {
 ///         radius = diameter / 2;
@@ -183,4 +225,4 @@ fn circle_init() {
 #[test]
 fn circle_init_op() {
     todo!()
-}
+}*/
