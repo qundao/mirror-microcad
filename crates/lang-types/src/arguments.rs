@@ -1,7 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use derive_more::{Deref, DerefMut, Display, From};
+use derive_more::{Display, From};
 use microcad_lang_base::{Identifier, SrcRef};
 use microcad_macros::SrcReferrer;
 use serde::{Deserialize, Serialize};
@@ -21,21 +21,16 @@ impl Arguments {
     }
 
     /// Retrieves a named [`Value`] by key.
-    ///
-    /// # Panics
-    ///
-    /// Panics if the argument key is not present.
-    #[track_caller]
-    pub fn get(&self, name: &str) -> &Value {
+    pub fn get(&self, name: impl AsRef<str>) -> &Value {
         self.named_iter()
             .find_map(|(id, v)| {
-                if id == &Identifier::no_ref(name) {
+                if id == &Identifier::from(name.as_ref()) {
                     Some(v)
                 } else {
                     None
                 }
             })
-            .unwrap()
+            .unwrap() // TODO: This is not cool.
     }
 
     /// Get `lhs` and `rhs` from binary arguments.
@@ -51,15 +46,24 @@ impl Arguments {
         self.try_get("cond")
     }
 
-    pub fn try_get<T: TryFrom<Value, Error = ValueError>>(&self, name: &str) -> ValueResult<T> {
+    pub fn try_get<T: TryFrom<Value, Error = ValueError>>(
+        &self,
+        name: impl AsRef<str>,
+    ) -> ValueResult<T> {
         T::try_from(self.get(name).clone())
     }
 
     /// Consumes `self`, removes the named argument if present, and returns the modified `Arguments`.
-    pub fn with_field_removed(mut self, name: &str) -> Self {
-        let key = Identifier::no_ref(name);
+    pub fn with_field_removed(mut self, name: impl AsRef<str>) -> Self {
+        let key = Identifier::from(name.as_ref());
         self.0 = self.0.with_field_removed(&key);
         self
+    }
+}
+
+impl FromIterator<(Identifier, Value)> for Arguments {
+    fn from_iter<T: IntoIterator<Item = (Identifier, Value)>>(iter: T) -> Self {
+        Self::from(Tuple::from_iter(iter))
     }
 }
 
@@ -108,12 +112,29 @@ impl ArgumentValue {
 ///
 /// Also provides methods to find a matching call
 /// between it and a given *parameter list*.
-#[derive(Clone, Debug, Default, Deref, DerefMut, SrcReferrer)]
+#[derive(Clone, Debug, Default, SrcReferrer)]
 pub struct ArgumentValueList {
-    #[deref]
-    #[deref_mut]
     pub args: Vec<ArgumentValue>,
     pub src_ref: SrcRef,
+}
+
+impl ArgumentValueList {
+    pub fn get_named(&self, name: impl AsRef<str>) -> Option<&Value> {
+        let this_name = Identifier::from(name.as_ref());
+        self.args.iter().find_map(|arg| {
+            if let Some(name) = &arg.id
+                && name == &this_name
+            {
+                Some(&arg.value)
+            } else {
+                None
+            }
+        })
+    }
+
+    pub fn iter(&self) -> impl Iterator<Item = &ArgumentValue> {
+        self.args.iter()
+    }
 }
 
 impl std::fmt::Display for ArgumentValueList {

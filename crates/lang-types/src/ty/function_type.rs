@@ -198,6 +198,23 @@ impl std::fmt::Display for FunctionType {
 }
 
 #[macro_export]
+macro_rules! call_signature {
+    // 1. Variadic call signature
+    (*) => {
+        $crate::CallSignature::variadic(None)
+    };
+
+    // 2. Named parameters without return type: function_type!((a: TypeA, b: TypeB))
+    ($( $param:ident : $ty:expr ),* $(,)?) => {
+        $crate::CallSignature::new(vec![
+            $(
+                ($crate::Identifier::from(stringify!($param)), $ty)
+            ),*
+        ])
+    };
+}
+
+#[macro_export]
 macro_rules! function_type {
     // 1. Variadic with return type: function_type!(* -> ReturnTy)
     ((*) -> $ret:expr) => {
