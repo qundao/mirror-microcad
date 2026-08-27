@@ -120,7 +120,8 @@ impl Desugar<ast::Expression> for ir::FunctionExpression {
                         }),
                         Method(m) => Self::Call(ir::Call {
                             path: ir::Path::desugar(&m.path, context)?,
-                            args: ir::ArgumentList::desugar(&m.arguments, context)?.prepended(lhs),
+                            args: ir::ArgumentList::desugar(&m.arguments, context)?
+                                .desugar_method(lhs),
                             src_ref,
                         }),
                         ListElement(e) => Self::Call(ir::Call {

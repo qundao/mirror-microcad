@@ -124,7 +124,7 @@ pub struct ArgumentList<Expr> {
 }
 
 impl<Expr> ArgumentList<Expr> {
-    /// Prepends a positional argument to the front of the argument list.
+    /// Prepends an argument to the front of the argument list.
     pub fn prepend(&mut self, arg: impl Into<Argument<Expr>>) {
         let mut new_args = Vec::with_capacity(self.args.len() + 1);
         new_args.push(arg.into());
@@ -136,6 +136,18 @@ impl<Expr> ArgumentList<Expr> {
     pub fn prepended(mut self, arg: impl Into<Argument<Expr>>) -> Self {
         self.prepend(arg);
         self
+    }
+
+    /// Prepend the `self` argument to [`ArgumentList`].
+    ///
+    /// This is used when desugaring AST method calls into IR calls, e.g.:
+    /// `Circle(radius = 4.0).translate(x = 1.0mm, y = 1.0mm, z = 1.0mm)`
+    ///
+    /// becomes
+    ///
+    /// translate(self = Circle(radius = 4.0), x = 1.0mm, y = 1.0mm, z = 1.0mm)
+    pub fn desugar_method(self, expr: impl Into<Expr>) -> Self {
+        self.prepended(Argument::named("self", expr))
     }
 }
 
