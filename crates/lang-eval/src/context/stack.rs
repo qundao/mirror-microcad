@@ -187,6 +187,20 @@ impl Lookup for StackFrame {
 #[derive(Debug, Default)]
 pub struct Stack(Vec<StackFrame>);
 
+impl Stack {
+    pub fn current_call_scope(&self) -> impl Iterator<Item = &StackFrame> {
+        self.0.iter().rev().scan(false, |hit_call, frame| {
+            if *hit_call {
+                return None;
+            }
+            if matches!(frame, StackFrame::Call(_)) {
+                *hit_call = true;
+            }
+            Some(frame)
+        })
+    }
+}
+
 impl ModelTreeBuilderMut for Stack {
     fn model_tree_builder_mut(&mut self) -> &mut ModelTreeBuilder {
         self.top_mut().model_tree_builder_mut()
@@ -196,9 +210,7 @@ impl ModelTreeBuilderMut for Stack {
 impl Lookup for Stack {
     fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
         let name = name.as_ref();
-        self.0
-            .iter()
-            .rev()
+        self.current_call_scope()
             .find_map(|frame| frame.look_up_local(name))
     }
 }
@@ -207,7 +219,8 @@ impl StackRead for Stack {
     type Frame = StackFrame;
 
     fn get_local(&self, name: &Name) -> Option<&Value> {
-        self.0.iter().rev().find_map(|frame| frame.get_local(name))
+        self.current_call_scope()
+            .find_map(|frame| frame.get_local(name))
     }
 
     fn top(&self) -> &StackFrame {
