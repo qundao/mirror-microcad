@@ -616,15 +616,7 @@ pub mod geo2d {
             assert_eq!(model.element, Self::element());
 
             Ok(Circle {
-                radius: TryFrom::try_from(
-                    model
-                        .get_property("radius")
-                        .ok_or(BuiltinError::PropertyNotFound {
-                            name: String::from("radius"),
-                        })?
-                        .value
-                        .clone(),
-                )?,
+                radius: TryFrom::try_from(model.get_property_value("radius"))?,
             })
         }
     }
