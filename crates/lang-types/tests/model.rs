@@ -23,9 +23,9 @@ mod model {
 
     /// A Circle model with a radius
     pub fn circle(name: &str, radius: f64) -> Model {
-        Model::new(element::BuiltinWorkpiece::Primitive2D(
-            BuiltinId::from_name("__mu::geo2d::Circle"),
-        ))
+        Model::new(element::BuiltinWorkpiece::Primitive(BuiltinId::from_name(
+            "__mu::geo2d::Circle",
+        )))
         .with_name(name)
         .with_properties(Arguments::from(tuple!(radius = Length::mm(radius))))
     }
@@ -80,7 +80,7 @@ fn test_deduce_output_type_fallback() {
     let mut tree = ModelTree::new(group_model);
 
     // Child model has a concrete output type
-    let child_model = Model::new(BuiltinWorkpiece::Primitive2D(BuiltinId::from(
+    let child_model = Model::new(BuiltinWorkpiece::Primitive(BuiltinId::from(
         "__mu::geo2d::Circle",
     )));
     tree.append(child_model);

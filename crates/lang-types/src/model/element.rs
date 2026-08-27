@@ -43,9 +43,8 @@ impl Ty for WorkbenchKind {
 #[derive(Debug, Display, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub enum BuiltinWorkpiece {
     /// A parametric 2D primitive.
-    Primitive2D(BuiltinId),
-    /// A parametric 3D primitive.
-    Primitive3D,
+    Primitive(BuiltinId),
+
     /// An affine transformation.
     AffineTransform(AffineTransform),
     /// Boolean operation
@@ -57,8 +56,7 @@ pub enum BuiltinWorkpiece {
 impl BuiltinWorkpiece {
     fn output_type(&self) -> ModelOutputType {
         match self {
-            BuiltinWorkpiece::Primitive2D(_) => ModelOutputType::Geometry2D,
-            BuiltinWorkpiece::Primitive3D => ModelOutputType::Geometry3D,
+            BuiltinWorkpiece::Primitive(_) => ModelOutputType::Geometry2D,
             BuiltinWorkpiece::AffineTransform(_) | BuiltinWorkpiece::BooleanOp(_) => {
                 ModelOutputType::NotDetermined
             }
