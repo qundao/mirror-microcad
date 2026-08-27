@@ -112,6 +112,11 @@ impl BuiltinPrimitive {
     ) -> Self {
         Self { info, ty, f }
     }
+
+    /// Get the function type
+    pub fn ty(&self) -> FunctionType {
+        (self.ty)()
+    }
 }
 
 #[derive(Debug, Clone)]
