@@ -2,16 +2,34 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang_base::Identifier;
-use microcad_lang_eval::find_multi_match;
+use microcad_lang_eval::ArgumentMatch;
 use microcad_lang_types::{
-    ArgumentValue, ArgumentValueList, Length, Tuple, Type, argument_value, arguments,
-    function_type, list, tuple,
+    ArgumentValue, ArgumentValueList, CallSignature, Length, Tuple, Type, argument_value,
+    arguments, call_signature, function_type, list, tuple,
 };
+
+struct ArgumentMatchDummy {
+    pub signature: CallSignature,
+    pub default: Tuple,
+}
+
+impl ArgumentMatch for ArgumentMatchDummy {
+    fn call_signature(&self) -> CallSignature {
+        self.signature.clone()
+    }
+
+    fn default_values(&self) -> Tuple {
+        self.default.clone()
+    }
+}
 
 #[test]
 fn argument_matching() {
-    let ty = function_type!((a: Type::scalar(), b: Type::length(), c: Type::scalar(), d: Type::length()));
-    let defaults = tuple!(d = Length::mm(4.0));
+    let dummy = ArgumentMatchDummy {
+        signature: call_signature!(a: Type::scalar(), b: Type::length(), c: Type::scalar(), d: Type::length()),
+        default: tuple!(d = Length::mm(4.0)),
+    };
+
     let arguments: ArgumentValueList = [
         argument_value!(a = 1.0),
         argument_value!(b = Length::mm(2.0)),
@@ -20,8 +38,9 @@ fn argument_matching() {
     .into_iter()
     .collect();
 
-    let result =
-        microcad_lang_eval::find_match(&arguments, &ty, &defaults).expect("expect valid arguments");
+    let result = dummy
+        .find_match(&arguments)
+        .expect("expect valid arguments");
 
     assert_eq!(
         result,
@@ -31,18 +50,23 @@ fn argument_matching() {
 
 #[test]
 fn argument_match_fail() {
-    let ty = function_type!((x: Type::scalar(), y: Type::scalar(), z: Type::scalar()));
+    let dummy = ArgumentMatchDummy {
+        signature: call_signature!(x: Type::scalar(), y: Type::scalar(), z: Type::scalar()),
+        default: tuple!(),
+    };
+
     let arguments: ArgumentValueList = [argument_value!(x = 1.0), argument_value!(Length::mm(1.0))]
         .into_iter()
         .collect();
-    assert!(microcad_lang_eval::find_match(&arguments, &ty, &Default::default()).is_err());
+    assert!(dummy.find_match(&arguments).is_err());
 }
 
 #[test]
 fn multi_match_cartesian_product() {
-    // Function signature: f(a: Length, b: Length) -> Length
-    let fn_ty = function_type!((a: Type::length(), b: Type::length()) -> Type::length());
-    let default_parameters = Tuple::default();
+    let dummy = ArgumentMatchDummy {
+        signature: call_signature!(a: Type::length(), b: Type::length()),
+        default: tuple!(),
+    };
 
     // f(a = [1.0, 2.0], b = [10.0, 20.0, 30.0])
     let args: ArgumentValueList = [
@@ -52,7 +76,7 @@ fn multi_match_cartesian_product() {
     .into_iter()
     .collect();
 
-    let result = find_multi_match(&args, &fn_ty, &default_parameters).unwrap();
+    let result = dummy.find_multi_match(&args).unwrap();
 
     // 2 x 3 = 6 combinations expected
     assert_eq!(result.len(), 6);

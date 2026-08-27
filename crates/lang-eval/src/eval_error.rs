@@ -86,6 +86,10 @@ pub enum EvalError {
     #[error("Missing arguments: {0}")]
     MissingArguments(IdentifierList),
 
+    /// Unexpected arguments
+    #[error("Unexpected arguments: {0}")]
+    UnexpectedArguments(IdentifierList),
+
     /// Arguments match by identifier but have incompatible types
     #[error("Arguments match by identifier but have incompatible types: {0}")]
     IdMatchButNotType(String),

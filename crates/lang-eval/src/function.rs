@@ -11,7 +11,6 @@ use microcad_package::symbol;
 use crate::{
     CallTrait, Eval, EvalContext, EvalError, EvalResult,
     context::{FunctionFrame, FunctionScopeFrame},
-    find_match,
 };
 
 pub enum FlowSignal {
@@ -103,13 +102,14 @@ impl Eval<FlowSignal> for symbol::function::If {
 
 impl Eval<FlowSignal> for symbol::function::Call {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
+        use crate::argument_match::ArgumentMatch;
         match &self.path {
             symbol::Path::Resolved(symbol::SymbolId::Builtin(builtin_id)) => {
                 let args = self.args.eval(context)?;
 
                 match context.builtins.get(*builtin_id) {
                     Some(BuiltinItem::Function(f)) => {
-                        let args = find_match(&args, &f.ty(), &tuple!())?;
+                        let args = f.find_match(&args)?;
 
                         Ok(FlowSignal::Yield(f.call_isolated(args)?))
                     }
@@ -233,7 +233,8 @@ impl Eval<FlowSignal> for Box<[symbol::FunctionStatement]> {
 
 impl CallTrait<Value> for symbol::Function {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Value> {
-        match crate::find_match(args, &self.ty(), &self.default_parameters()) {
+        use crate::ArgumentMatch;
+        match self.find_match(args) {
             Ok(args) => context.scope(FunctionFrame::new(args), |context| {
                 Ok(self.statements.eval(context)?.into_value())
             }),

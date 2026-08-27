@@ -6,15 +6,11 @@
 use crate::{
     CallTrait, Eval, EvalContext, EvalError, EvalResult,
     context::{WorkbenchFrame, WorkbenchGroupFrame},
-    find_match,
 };
 
 use microcad_builtin::{BuiltinEvalContext, BuiltinItem};
 use microcad_lang_base::{SrcReferrer, element::Visibility};
-use microcad_package::{
-    SymbolId,
-    symbol::{self, ParameterList},
-};
+use microcad_package::{SymbolId, symbol};
 
 use microcad_lang_types::{
     ArgumentValue, ArgumentValueList, ModelTree, Value,
@@ -166,18 +162,19 @@ impl Eval<ArgumentValueList> for symbol::workbench::ArgumentList {
 
 impl Eval for symbol::workbench::Call {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+        use crate::ArgumentMatch;
         match &self.path {
             symbol::Path::Resolved(symbol::SymbolId::Builtin(builtin_id)) => {
                 let args = self.args.eval(context)?;
 
                 match context.builtins.get(*builtin_id) {
                     Some(BuiltinItem::Function(f)) => {
-                        let args = find_match(&args, &f.ty(), &tuple!())?;
+                        let args = f.find_match(&args)?;
 
                         Ok(f.call_isolated(args)?)
                     }
                     Some(BuiltinItem::Primitive(p)) => {
-                        let args = find_match(&args, &(p.ty)(), &tuple!())?;
+                        let args = p.find_match(&args)?;
                         Ok((p.f)(args, &mut BuiltinEvalContext::default())?.into())
                     }
                     None => unimplemented!("Function not found: {builtin_id}"),
@@ -270,15 +267,12 @@ impl CallTrait<Properties> for symbol::workbench::Init {
 
 impl CallTrait<ModelTree> for symbol::Workbench {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<ModelTree> {
+        use crate::ArgumentMatch;
         // Find correct inits
 
         let mut models = Vec::new();
 
-        match crate::find_multi_match(
-            args,
-            &self.signature.ty(),
-            &self.signature.parameters.default_values(),
-        ) {
+        match self.find_multi_match(args) {
             Ok(arguments) => {
                 for args in arguments {
                     let model: ModelTree = context.scope(
