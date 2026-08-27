@@ -5,8 +5,6 @@
 
 use microcad_lang_lower::ir;
 
-use microcad_lang_lower::ir::Visibility;
-
 pub use workbench::{Workbench, WorkbenchExpression, WorkbenchKind, WorkbenchStatement};
 
 pub use microcad_lang_base::{Identifier, SymbolId};
@@ -40,7 +38,7 @@ pub mod workbench {
     pub type If = ir::If<WorkbenchExpression>;
 }
 
-pub use ir::{Attributes, ConstantValue, Parameter, ParameterList};
+pub use ir::{Attributes, ConstantValue, ExprSpec, Parameter, ParameterList, Visibility};
 
 pub use function::{Function, FunctionExpression, FunctionStatement};
 
