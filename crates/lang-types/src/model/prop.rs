@@ -188,3 +188,13 @@ impl From<Arguments> for Properties {
         Self::inputs(args)
     }
 }
+
+impl FromIterator<Property> for Properties {
+    fn from_iter<T: IntoIterator<Item = Property>>(iter: T) -> Self {
+        let mut props = Properties::new();
+        iter.into_iter().for_each(|property| {
+            props.set_property(property);
+        });
+        props
+    }
+}
