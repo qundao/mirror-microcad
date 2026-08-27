@@ -215,15 +215,22 @@ pub struct WorkbenchSignature {
 impl WorkbenchSignature {
     /// Create a new Workbench signature
     pub fn new(kind: WorkbenchKind, parameters: impl Into<ir::ParameterList>) -> Self {
+        let parameters = parameters.into();
         Self {
             kind,
-            parameters: parameters.into(),
-            inits: Default::default(),
+            inits: vec![Init::new(parameters.clone())].into_boxed_slice(), // Default init
+            parameters,
         }
     }
 
     pub fn with_inits(mut self, inits: impl IntoIterator<Item = ir::Init>) -> Self {
-        self.inits = inits.into_iter().collect();
+        // 1. New inits go at the front (indices 0..N)
+        let mut combined: Vec<_> = inits.into_iter().collect();
+
+        // 2. Original self.inits are placed AFTER the new inits
+        combined.extend(self.inits.into_vec());
+
+        self.inits = combined.into_boxed_slice();
         self
     }
 }

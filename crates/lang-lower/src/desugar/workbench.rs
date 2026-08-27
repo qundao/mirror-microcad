@@ -168,7 +168,7 @@ impl Desugar<ast::Expression> for ir::WorkbenchExpression {
     }
 }
 
-impl Desugar<ast::StatementList> for Box<[ir::Init]> {
+impl Desugar<ast::StatementList> for Vec<ir::Init> {
     fn desugar(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
         fn is_init(stmt: &ast::Statement) -> bool {
             matches!(stmt, ast::Statement::Init(_))
@@ -219,12 +219,15 @@ impl Desugar<ast::StatementList> for Box<[ir::Init]> {
                 })?;
         }
 
-        extract_statements(node, |stmt| {
-            Ok(match stmt {
-                ast::Statement::Init(init) => Some(ir::Init::desugar(init, context)?),
-                _ => None,
-            })
-        })
+        Ok(Vec::from_iter(
+            extract_statements(node, |stmt| {
+                Ok(match stmt {
+                    ast::Statement::Init(init) => Some(ir::Init::desugar(init, context)?),
+                    _ => None,
+                })
+            })?
+            .into_iter(),
+        ))
     }
 }
 
@@ -321,6 +324,13 @@ impl Desugar<ast::StatementList> for ir::desugared::WorkbenchItems {
 
 impl Desugar<ast::def::Workbench> for ir::desugared::Workbench {
     fn desugar(node: &ast::def::Workbench, context: &mut LowerContext) -> LowerResult<Self> {
+        let parameters = ir::ParameterList::desugar(&node.parameters, context)?;
+        let mut inits: Vec<ir::Init> = Vec::desugar(&node.body.statements, context)?;
+
+        // Add parameters as default initializer.
+        // This makes evaluation easier, because then we can simply trait the workbench parameters as default initializer.
+        inits.push(ir::Init::new(parameters.clone()));
+
         Ok(Self {
             meta: ir::Meta {
                 name: Some(ir::Identifier::desugar(&node.id, context)?),
@@ -331,8 +341,8 @@ impl Desugar<ast::def::Workbench> for ir::desugared::Workbench {
             attr: crate::desugar::attribute::outer_with_doc(&node.doc, &node.attr, context)?
                 .extend(ir::Attributes::desugar(&node.body.statements, context)?),
             kind: node.kind,
-            parameters: ir::ParameterList::desugar(&node.parameters, context)?,
-            inits: Box::desugar(&node.body.statements, context)?,
+            parameters,
+            inits: inits.into_boxed_slice(),
             items: ir::desugared::WorkbenchItems::desugar(&node.body.statements, context)?,
             statements: Box::desugar(&node.body.statements, context)?,
         })
