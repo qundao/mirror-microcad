@@ -6,7 +6,7 @@
 use crate::ir::{self, ExprSpec};
 
 use microcad_lang_base::{Identifier, SrcRef};
-use microcad_lang_types::{FunctionTypeParameters, Tuple};
+use microcad_lang_types::{CallSignature, Tuple, Ty};
 use microcad_macros::{Identifiable, SrcReferrer};
 
 use serde::{Deserialize, Serialize};
@@ -42,6 +42,16 @@ impl Parameter {
             default_value: None,
             src_ref: SrcRef::none(),
         }
+    }
+}
+
+/// Returns the type for this parameter (assuming the default value has been evaluated).
+impl Ty for Parameter {
+    fn ty(&self) -> microcad_lang_types::Type {
+        self.default_value
+            .as_ref()
+            .map(|value| value.value().map(|value| value.ty()).unwrap_or_default())
+            .unwrap_or(self.ty.ty.clone())
     }
 }
 
@@ -87,7 +97,10 @@ impl ParameterList {
     pub fn iter(&self) -> std::slice::Iter<'_, ir::Parameter> {
         self.parameters.iter()
     }
+}
 
+/// Helper methods for argument matching
+impl ParameterList {
     /// Return default values for this parameters, assuming all constant expression have been folded into values.
     pub fn default_values(&self) -> Tuple {
         Tuple::from_iter(self.parameters.iter().filter_map(|param| {
@@ -99,21 +112,12 @@ impl ParameterList {
     }
 
     /// Function type parameters
-    pub fn function_type_parameters(&self) -> FunctionTypeParameters {
+    pub fn call_signature(&self) -> CallSignature {
         use microcad_lang_types::Ty;
-        FunctionTypeParameters(
+        CallSignature::new(
             self.iter()
-                .map(|param| {
-                    match param
-                        .default_value
-                        .as_ref()
-                        .and_then(|expr| expr.value().cloned())
-                    {
-                        Some(value) => (param.id.clone(), value.ty()),
-                        None => (param.id.clone(), param.ty.ty.clone()),
-                    }
-                })
-                .collect(),
+                .map(|param| (param.id.clone(), param.ty()))
+                .collect::<Vec<_>>(),
         )
     }
 }

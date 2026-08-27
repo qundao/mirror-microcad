@@ -71,18 +71,58 @@ pub struct InitStatement {
     pub src_ref: SrcRef,
 }
 
+/// Builder methods for testing
+impl InitStatement {
+    pub fn new(name: impl AsRef<str>, expr: impl Into<WorkbenchExpression>) -> Self {
+        Self {
+            name: Identifier::from(name.as_ref()),
+            expression: expr.into(),
+            src_ref: SrcRef::none(),
+        }
+    }
+
+    pub fn with_src_ref(mut self, src_ref: SrcRef) -> Self {
+        self.src_ref = src_ref;
+        self
+    }
+}
+
+/// A workbench initializer that can be called.
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Init {
-    /// SrcRef of the `init` keyword
-    pub keyword_ref: SrcRef,
-    /// Attributes.
-    pub attr: ir::Attributes,
     /// Parameter list for this init definition
     pub parameters: ir::ParameterList,
     /// Body if the init definition
     pub statements: Box<[InitStatement]>,
+    /// SrcRef of the `init` keyword
+    pub keyword_ref: SrcRef,
+    /// Attributes.
+    pub attr: ir::Attributes,
     /// Source reference
     pub src_ref: SrcRef,
+}
+
+/// Builder methods for testing
+impl Init {
+    /// Construct new initializer
+    pub fn new(parameters: impl Into<ir::ParameterList>) -> Self {
+        Self {
+            parameters: parameters.into(),
+            statements: Default::default(),
+            keyword_ref: Default::default(),
+            attr: Default::default(),
+            src_ref: Default::default(),
+        }
+    }
+
+    /// Add statements to this initializer
+    pub fn with_statements(mut self, statements: impl IntoIterator<Item = InitStatement>) -> Self {
+        self.statements = statements
+            .into_iter()
+            .collect::<Vec<_>>()
+            .into_boxed_slice();
+        self
+    }
 }
 
 /// Node marker, e.g. `@input`.
@@ -191,10 +231,7 @@ impl WorkbenchSignature {
 impl WorkbenchSignature {
     pub fn ty(&self) -> FunctionType {
         use microcad_lang_types::Ty;
-        FunctionType::new(
-            self.parameters.function_type_parameters(),
-            Some(self.kind.ty()),
-        )
+        FunctionType::new(self.parameters.call_signature(), Some(self.kind.ty()))
     }
 }
 

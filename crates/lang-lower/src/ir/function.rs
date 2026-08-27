@@ -41,7 +41,7 @@ impl FunctionSignature {
 impl FunctionSignature {
     pub fn ty(&self) -> FunctionType {
         FunctionType {
-            parameters: Some(self.parameters.function_type_parameters()),
+            call_ty: self.parameters.call_signature(),
             return_ty: self.return_type.as_ref().map(|ty| Box::new(ty.ty.clone())),
         }
     }
