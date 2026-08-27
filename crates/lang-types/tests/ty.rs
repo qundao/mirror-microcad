@@ -11,10 +11,7 @@ fn test_tuple_type_match() {
     let args = TupleType {
         named: [
             (Identifier::no_ref("x"), Type::Integer),
-            (
-                Identifier::no_ref("y"),
-                Type::List(Box::new(Type::Integer)),
-            ),
+            (Identifier::no_ref("y"), Type::List(Box::new(Type::Integer))),
         ]
         .into_iter()
         .collect(),
@@ -75,7 +72,7 @@ fn function_type_macro() {
     let ft = function_type!((lhs: Type::Integer, rhs: Type::Integer) -> Type::Integer);
     assert!(!ft.is_variadic());
     assert_eq!(ft.return_ty, Some(Box::new(Type::Integer)));
-    assert_eq!(ft.parameters.as_ref().unwrap().0.len(), 2);
+    assert_eq!(ft.call_ty.parameters.as_ref().unwrap().0.len(), 2);
 
     // 4. Named parameters without return type
     let ft = function_type!((lhs: Type::Integer, rhs: Type::Integer));
@@ -89,8 +86,7 @@ fn parameter_sorting_canonicalization() {
     let ft1 = function_type!((a: Type::Integer, b: Type::String) -> Type::Bool);
     let ft2 = function_type!((b: Type::String, a: Type::Integer) -> Type::Bool);
 
-    // Order-independent equality after sorting
-    assert_eq!(ft1, ft2);
+    // Order-independent matching
     assert!(ft1.matches(&ft2));
 }
 

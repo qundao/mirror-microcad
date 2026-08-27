@@ -8,68 +8,140 @@ use serde::{Deserialize, Serialize};
 
 use crate::Type;
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
-pub struct FunctionTypeParameters(pub Vec<(Identifier, Type)>);
+pub type CallParameter = (Identifier, Type);
 
-impl std::fmt::Display for FunctionTypeParameters {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            self.0
-                .iter()
-                .map(|(id, ty)| format!("{id}: {ty}"))
-                .collect::<Vec<String>>()
-                .join(", ")
-        )
-    }
-}
+/// A list of call parameters
+#[derive(Debug, Default, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+pub struct CallParameters(pub Vec<CallParameter>);
 
-impl FunctionTypeParameters {
-    /// Create a new SignatureParameter
-    pub fn new(mut parameters: Vec<(Identifier, Type)>) -> Self {
+impl CallParameters {
+    pub fn sorted(&self) -> Self {
+        let mut parameters = self.0.clone();
         parameters.sort_by_key(|(id, _)| id.clone());
         Self(parameters)
+    }
+
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
+
+    pub fn iter(&self) -> impl Iterator<Item = &CallParameter> {
+        self.0.iter()
     }
 
     /// Check if a signature matches another.
     ///
     /// Two signature match, if the have the same identifiers and all types match.
-    pub fn matches(&self, other: &FunctionTypeParameters) -> bool {
-        self.0.len() == other.0.len()
-            && self
-                .0
+    pub fn matches(&self, other: &CallParameters) -> bool {
+        let lhs_sorted = self.sorted();
+        let rhs_sorted = other.sorted();
+
+        lhs_sorted.len() == rhs_sorted.len()
+            && lhs_sorted
                 .iter()
-                .zip(&other.0)
+                .zip(&rhs_sorted.0)
                 .all(|((lhs_id, lhs_ty), (rhs_id, rhs_ty))| {
                     lhs_id == rhs_id && lhs_ty.matches(rhs_ty)
                 })
     }
 
-    pub fn matches_multiplicity(&self, other: &FunctionTypeParameters) -> bool {
-        self.0.len() == other.0.len()
-            && self
-                .0
+    pub fn matches_multiplicity(&self, other: &CallParameters) -> bool {
+        let lhs_sorted = self.sorted();
+        let rhs_sorted = other.sorted();
+
+        lhs_sorted.len() == rhs_sorted.len()
+            && lhs_sorted
                 .iter()
-                .zip(&other.0)
+                .zip(&rhs_sorted.0)
                 .all(|((lhs_id, lhs_ty), (rhs_id, rhs_ty))| {
                     lhs_id == rhs_id && (lhs_ty.matches(rhs_ty) || lhs_ty.is_list_of(rhs_ty))
                 })
     }
 }
 
-impl From<Vec<(Identifier, Type)>> for FunctionTypeParameters {
-    fn from(parameters: Vec<(Identifier, Type)>) -> Self {
-        Self::new(parameters)
+impl From<Vec<CallParameter>> for CallParameters {
+    fn from(parameters: Vec<CallParameter>) -> Self {
+        Self(parameters)
     }
 }
 
 /// A type signature for any callable (builtins, functions, workbenches).
+///
+/// Each parameter in a call has type. The parameter list is optional.
+/// If it is `None`, we have a variadic call signature.
+#[derive(Debug, Default, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+pub struct CallSignature {
+    pub parameters: Option<CallParameters>,
+}
+
+impl CallSignature {
+    /// Create a new signature with a parameter type list.
+    pub fn new(parameters: impl Into<CallParameters>) -> Self {
+        Self {
+            parameters: Some(parameters.into()),
+        }
+    }
+
+    pub fn variadic() -> Self {
+        Self { parameters: None }
+    }
+
+    /// Returns true if the call type can accept any arguments.
+    pub fn is_variadic(&self) -> bool {
+        self.parameters.is_none()
+    }
+
+    /// Check if two call signatures match
+    pub fn matches(&self, other: &CallSignature) -> bool {
+        match (&self.parameters, &other.parameters) {
+            // A variadic signature cannot metch a signature with specified signature parameters.
+            (None, Some(_)) => false,
+            // A variadic can accept any function
+            (Some(lhs), Some(rhs)) if lhs.matches(rhs) => true,
+            (Some(lhs), Some(rhs)) if !lhs.matches(rhs) => false,
+            _ => true,
+        }
+    }
+
+    pub fn matches_multiplicity(&self, other: &CallSignature) -> bool {
+        match (&self.parameters, &other.parameters) {
+            // A variadic signature cannot metch a signature with specified signature parameters.
+            (None, Some(_)) => false,
+            // A variadic can accept any function
+            (Some(lhs), Some(rhs)) if lhs.matches_multiplicity(rhs) => true,
+            (Some(lhs), Some(rhs)) if !lhs.matches_multiplicity(rhs) => false,
+            _ => true,
+        }
+    }
+}
+
+impl std::fmt::Display for CallSignature {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "({})",
+            match self.is_variadic() {
+                true => String::from("*"),
+                false => {
+                    self.parameters
+                        .as_ref()
+                        .unwrap()
+                        .iter()
+                        .map(|(id, ty)| format!("{id}: {ty}"))
+                        .collect::<Vec<String>>()
+                        .join(", ")
+                }
+            }
+        )
+    }
+}
+
+/// A type signature for any callable with return type (builtins, functions, workbenches).
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct FunctionType {
     /// Parameters, sorted by id.
     /// The signature is variadic of this list is none.
-    pub parameters: Option<FunctionTypeParameters>,
+    pub call_ty: CallSignature,
 
     /// Optional return value.
     /// If this value is None, the callable is not expected to return anything.
@@ -77,46 +149,31 @@ pub struct FunctionType {
 }
 
 impl FunctionType {
-    pub fn new(parameters: impl Into<FunctionTypeParameters>, return_ty: Option<Type>) -> Self {
+    pub fn new(call_ty: impl Into<CallSignature>, return_ty: Option<Type>) -> Self {
         Self {
-            parameters: Some(parameters.into()),
+            call_ty: call_ty.into(),
             return_ty: return_ty.map(Box::new),
         }
     }
 
-    pub fn new_variadic(return_ty: Option<Type>) -> Self {
+    pub fn variadic(return_ty: Option<Type>) -> Self {
         Self {
-            parameters: None,
+            call_ty: CallSignature::variadic(),
             return_ty: return_ty.map(Box::new),
         }
     }
 
     pub fn is_variadic(&self) -> bool {
-        self.parameters.is_none()
+        self.call_ty.is_variadic()
     }
 
     /// Check if a function call `(...) -> Type` matches `(...) -> Type`
     pub fn matches(&self, other: &FunctionType) -> bool {
-        match (&self.parameters, &other.parameters) {
-            // A variadic function cannot call a function with specified signature parameters.
-            (None, Some(_)) => false,
-            // A variadic can accept any function
-            (Some(lhs), Some(rhs)) if lhs.matches(rhs) => self.match_return_type(other),
-            (Some(lhs), Some(rhs)) if !lhs.matches(rhs) => false,
-            _ => self.match_return_type(other),
-        }
+        self.call_ty.matches(&other.call_ty) && self.match_return_type(other)
     }
 
     pub fn matches_multiplicity(&self, other: &FunctionType) -> bool {
-        match (&self.parameters, &other.parameters) {
-            // A variadic function cannot call a function with specified signature parameters.
-            (None, Some(_)) => false,
-            // A variadic can accept any function
-            (Some(lhs), Some(rhs)) if lhs.matches_multiplicity(rhs) => {
-                self.match_return_type(other)
-            }
-            _ => self.match_return_type(other),
-        }
+        self.call_ty.matches_multiplicity(&other.call_ty) && self.match_return_type(other)
     }
 
     pub fn match_return_type(&self, other: &FunctionType) -> bool {
@@ -131,14 +188,48 @@ impl FunctionType {
 
 impl std::fmt::Display for FunctionType {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self.parameters {
-            Some(parameters) => write!(f, "({parameters})"),
-            None => write!(f, "(*)"),
-        }?;
+        write!(f, "{}", self.call_ty)?;
 
         match &self.return_ty {
             Some(ty) => write!(f, " -> {ty}"),
             None => Ok(()),
         }
     }
+}
+
+#[macro_export]
+macro_rules! function_type {
+    // 1. Variadic with return type: function_type!(* -> ReturnTy)
+    ((*) -> $ret:expr) => {
+        $crate::FunctionType::variadic(Some($ret))
+    };
+
+    // 2. Variadic without return type: function_type!(*)
+    ((*)) => {
+        $crate::FunctionType::variadic(None)
+    };
+
+    // 3. Named parameters with return type: function_type!((a: TypeA, b: TypeB) -> ReturnTy)
+    (($( $param:ident : $ty:expr ),*) -> $ret:expr) => {
+        $crate::FunctionType::new(
+            $crate::CallSignature::new(vec![
+                $(
+                    ($crate::Identifier::from(stringify!($param)), $ty)
+                ),*
+            ]),
+            Some($ret),
+        )
+    };
+
+    // 4. Named parameters without return type: function_type!((a: TypeA, b: TypeB))
+    (($( $param:ident : $ty:expr ),* $(,)?)) => {
+        $crate::FunctionType::new(
+            $crate::CallSignature::new(vec![
+                $(
+                    ($crate::Identifier::from(stringify!($param)), $ty)
+                ),*
+            ]),
+            None,
+        )
+    };
 }

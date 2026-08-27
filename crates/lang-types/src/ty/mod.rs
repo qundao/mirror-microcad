@@ -20,7 +20,7 @@ pub use r#type::*;
 pub use type_list::*;
 pub use unit::*;
 
-pub use function_type::{FunctionType, FunctionTypeParameters};
+pub use function_type::{CallParameter, CallParameters, CallSignature, FunctionType};
 
 use crate::{BinaryOperator, UnaryOperator};
 
@@ -52,14 +52,11 @@ pub enum TypeError {
     #[error("Invalid type: {0}")]
     InvalidType(Type),
 
-    #[error("Non matching signature parameters: {a} != {b}")]
-    NonMatchingSignatureParameterList {
-        a: function_type::FunctionTypeParameters,
-        b: function_type::FunctionTypeParameters,
-    },
+    #[error("Non matching call signature parameters: {a} != {b}")]
+    NonMatchingSignatureParameterList { a: CallSignature, b: CallSignature },
 
-    #[error("Non matching signature: {a} != {b}")]
-    NonMatchingSignature { a: FunctionType, b: FunctionType },
+    #[error("Non matching function types: {a} != {b}")]
+    NonMatchingFunctionTypes { a: FunctionType, b: FunctionType },
 
     #[error("Incompatible types '{lhs}' and '{rhs}'")]
     BinaryOpIncompatibleTypes {
