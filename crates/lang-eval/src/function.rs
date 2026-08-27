@@ -109,7 +109,7 @@ impl Eval<FlowSignal> for symbol::function::Call {
 
                 match context.builtins.get(*builtin_id) {
                     Some(BuiltinItem::Function(f)) => {
-                        let args = f.find_match(&args)?;
+                        let args = f.argument_match(&args)?;
 
                         Ok(FlowSignal::Yield(f.call_isolated(args)?))
                     }
@@ -234,7 +234,7 @@ impl Eval<FlowSignal> for Box<[symbol::FunctionStatement]> {
 impl CallTrait<Value> for symbol::Function {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Value> {
         use crate::ArgumentMatch;
-        match self.find_match(args) {
+        match self.argument_match(args) {
             Ok(args) => context.scope(FunctionFrame::new(args), |context| {
                 Ok(self.statements.eval(context)?.into_value())
             }),

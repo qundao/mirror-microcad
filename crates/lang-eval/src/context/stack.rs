@@ -65,11 +65,11 @@ impl Lookup for FunctionScopeFrame {
 }
 
 #[derive(Debug)]
-pub struct WorkbenchFrame {
+pub struct WorkpieceFrame {
     pub builder: ModelTreeBuilder,
 }
 
-impl WorkbenchFrame {
+impl WorkpieceFrame {
     pub fn new(workpiece: Workpiece) -> Self {
         Self {
             builder: ModelTreeBuilder::new(Element::Workpiece(workpiece)),
@@ -77,13 +77,13 @@ impl WorkbenchFrame {
     }
 }
 
-impl ModelTreeBuilderMut for WorkbenchFrame {
+impl ModelTreeBuilderMut for WorkpieceFrame {
     fn model_tree_builder_mut(&mut self) -> &mut ModelTreeBuilder {
         &mut self.builder
     }
 }
 
-impl Lookup for WorkbenchFrame {
+impl Lookup for WorkpieceFrame {
     fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
         self.builder.get_property(name).map(|prop| &prop.value)
     }
@@ -129,7 +129,7 @@ pub enum StackFrame {
     Call(CallFrame),
     Function(FunctionFrame),
     FunctionScope(FunctionScopeFrame),
-    Workbench(WorkbenchFrame),
+    Workbench(WorkpieceFrame),
     WorkbenchGroup(WorkbenchGroupFrame),
     WorkbenchInit(WorkbenchInitFrame),
 }

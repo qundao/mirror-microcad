@@ -16,7 +16,11 @@ pub trait ArgumentMatch {
 
     fn default_values(&self) -> Tuple;
 
-    fn find_match(&self, arguments: &ArgumentValueList) -> EvalResult<Arguments> {
+    fn is_matching(&self, arguments: &ArgumentValueList) -> bool {
+        self.argument_match(arguments).is_ok() // TODO Implement a custom and more performant algorithm here.
+    }
+
+    fn argument_match(&self, arguments: &ArgumentValueList) -> EvalResult<Arguments> {
         use microcad_lang_types::Ty;
 
         let call_signature = self.call_signature();
@@ -87,7 +91,6 @@ pub trait ArgumentMatch {
         // 4. Try to find positional arguments by type
         arguments.args.iter().for_each(|arg| {
             if arg.id.is_none() {
-                println!("{}", arg.value);
                 if let Some(ref mut match_arg) = matched_args
                     .iter_mut()
                     .filter(|match_arg| match_arg.value.is_none())
@@ -120,9 +123,9 @@ pub trait ArgumentMatch {
         )))
     }
 
-    fn find_multi_match(&self, arguments: &ArgumentValueList) -> EvalResult<Vec<Arguments>> {
+    fn argument_multi_match(&self, arguments: &ArgumentValueList) -> EvalResult<Vec<Arguments>> {
         // Step 1: Bind base arguments and resolve default values
-        let base_args = self.find_match(arguments)?;
+        let base_args = self.argument_match(arguments)?;
 
         let call_signature = self.call_signature();
         if call_signature.is_variadic() {

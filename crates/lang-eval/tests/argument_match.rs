@@ -39,7 +39,7 @@ fn argument_matching() {
     .collect();
 
     let result = dummy
-        .find_match(&arguments)
+        .argument_match(&arguments)
         .expect("expect valid arguments");
 
     assert_eq!(
@@ -58,7 +58,7 @@ fn argument_match_fail() {
     let arguments: ArgumentValueList = [argument_value!(x = 1.0), argument_value!(Length::mm(1.0))]
         .into_iter()
         .collect();
-    assert!(dummy.find_match(&arguments).is_err());
+    assert!(dummy.argument_match(&arguments).is_err());
 }
 
 #[test]
@@ -76,7 +76,7 @@ fn multi_match_cartesian_product() {
     .into_iter()
     .collect();
 
-    let result = dummy.find_multi_match(&args).unwrap();
+    let result = dummy.argument_multi_match(&args).unwrap();
 
     // 2 x 3 = 6 combinations expected
     assert_eq!(result.len(), 6);

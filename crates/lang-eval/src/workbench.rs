@@ -5,7 +5,7 @@
 
 use crate::{
     CallTrait, Eval, EvalContext, EvalError, EvalResult,
-    context::{WorkbenchFrame, WorkbenchGroupFrame},
+    context::{WorkbenchGroupFrame, WorkpieceFrame},
 };
 
 use microcad_builtin::{BuiltinEvalContext, BuiltinItem};
@@ -169,12 +169,12 @@ impl Eval for symbol::workbench::Call {
 
                 match context.builtins.get(*builtin_id) {
                     Some(BuiltinItem::Function(f)) => {
-                        let args = f.find_match(&args)?;
+                        let args = f.argument_match(&args)?;
 
                         Ok(f.call_isolated(args)?)
                     }
                     Some(BuiltinItem::Primitive(p)) => {
-                        let args = p.find_match(&args)?;
+                        let args = p.argument_match(&args)?;
                         Ok((p.f)(args, &mut BuiltinEvalContext::default())?.into())
                     }
                     None => unimplemented!("Function not found: {builtin_id}"),
@@ -267,33 +267,56 @@ impl CallTrait<Properties> for symbol::workbench::Init {
 
 impl CallTrait<ModelTree> for symbol::Workbench {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<ModelTree> {
-        use crate::ArgumentMatch;
-        // Find correct inits
-
-        let mut models = Vec::new();
-
-        match self.find_multi_match(args) {
-            Ok(arguments) => {
-                for args in arguments {
-                    let model: ModelTree = context.scope(
-                        WorkbenchFrame::new(Workpiece::new(self.signature.kind)),
-                        |context| -> EvalResult<ModelTree> {
-                            context.model_tree_builder_mut().add_model_properties(
-                                Properties::from(args).into_iter().map(|(_, prop)| prop),
-                            );
-                            self.statements
-                                .iter()
-                                .try_for_each(|stmt| stmt.eval(context))?;
-                            Ok(context.model_tree_builder_mut().build())
-                        },
-                    )?;
-
-                    models.push(model);
-                }
-            }
-            Err(_) => todo!(),
+        fn eval_to_model(
+            workbench: &symbol::Workbench,
+            input_properties: Properties,
+            context: &mut EvalContext,
+        ) -> EvalResult<ModelTree> {
+            context.scope(
+                WorkpieceFrame::new(Workpiece::new(workbench.signature.kind)),
+                |context| -> EvalResult<ModelTree> {
+                    context
+                        .model_tree_builder_mut()
+                        .add_model_properties(input_properties.into_iter().map(|(_, prop)| prop));
+                    workbench
+                        .statements
+                        .iter()
+                        .try_for_each(|stmt| stmt.eval(context))?;
+                    Ok(context.model_tree_builder_mut().build())
+                },
+            )
         }
 
-        Ok(ModelTree::to_multiplicity(models))
+        use crate::ArgumentMatch;
+
+        let matching_inits: Vec<_> = self
+            .signature
+            .inits
+            .iter()
+            .filter(|iter| iter.is_matching(args))
+            .collect();
+
+        match matching_inits.len() {
+            0 => todo!("Error handling: No matching init"),
+            1 => {
+                let init = matching_inits.first().unwrap();
+                let mut models = Vec::new();
+
+                match init.argument_multi_match(args) {
+                    Ok(arguments) => {
+                        for args in arguments {
+                            let properties = Properties::from(args);
+                            models.push(eval_to_model(&self, properties, context)?);
+                        }
+                    }
+                    Err(_) => todo!(),
+                }
+
+                Ok(ModelTree::to_multiplicity(models))
+            }
+            _n => {
+                todo!("Ambiguous initializer");
+            }
+        }
     }
 }
