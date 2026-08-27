@@ -228,13 +228,6 @@ impl WorkbenchSignature {
     }
 }
 
-impl WorkbenchSignature {
-    pub fn ty(&self) -> FunctionType {
-        use microcad_lang_types::Ty;
-        FunctionType::new(self.parameters.call_signature(), Some(self.kind.ty()))
-    }
-}
-
 /// Workbench definition, e.g `sketch`, `part` or `op`.
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Workbench {

@@ -7,7 +7,7 @@ use crate::{CastInto, ir};
 
 use derive_more::From;
 use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
-use microcad_lang_types::{FunctionType, Tuple, Value};
+use microcad_lang_types::Value;
 use serde::{Deserialize, Serialize};
 
 /// Parameters and return type of a function
@@ -34,20 +34,6 @@ impl FunctionSignature {
     pub fn with_return_type(mut self, ty: impl Into<ir::Type>) -> Self {
         self.return_type = Some(ty.into());
         self
-    }
-}
-
-/// Retrieval methods for evaluation
-impl FunctionSignature {
-    pub fn ty(&self) -> FunctionType {
-        FunctionType {
-            call_ty: self.parameters.call_signature(),
-            return_ty: self.return_type.as_ref().map(|ty| Box::new(ty.ty.clone())),
-        }
-    }
-
-    pub fn default_parameter_values(&self) -> Tuple {
-        self.parameters.default_values()
     }
 }
 
@@ -174,14 +160,4 @@ pub struct Function {
     pub signature: ir::FunctionSignature,
     /// Function statements
     pub statements: Box<[ir::FunctionStatement]>,
-}
-
-impl Function {
-    pub fn ty(&self) -> FunctionType {
-        self.signature.ty()
-    }
-
-    pub fn default_parameters(&self) -> Tuple {
-        self.signature.default_parameter_values()
-    }
 }
