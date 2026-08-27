@@ -31,14 +31,13 @@ pub mod workbench {
     use microcad_lang_lower::ir;
 
     pub use ir::{
-        Workbench, WorkbenchExpression, WorkbenchKind, WorkbenchSignature, WorkbenchStatement,
+        Group, Init, InitStatement, Marker, Workbench, WorkbenchExpression, WorkbenchKind,
+        WorkbenchSignature, WorkbenchStatement,
     };
     pub type Call = ir::Call<WorkbenchExpression>;
     pub type Argument = ir::Argument<WorkbenchExpression>;
     pub type ArgumentList = ir::ArgumentList<WorkbenchExpression>;
     pub type If = ir::If<WorkbenchExpression>;
-    pub type Group = ir::Group;
-    pub type Marker = ir::Marker;
 }
 
 pub use ir::{Attributes, ConstantValue, Parameter, ParameterList};
