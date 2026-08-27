@@ -113,3 +113,28 @@ impl BuiltinInfo {
             .unwrap_or("")
     }
 }
+
+#[macro_export]
+macro_rules! builtin_info {
+    // Helper: Modules (Only takes a module identifier)
+    (
+        $doc:literal
+        $mod_name:ident
+    ) => {
+        $crate::BuiltinInfo::new(concat!("__mu::", stringify!($mod_name))).with_doc($doc)
+    };
+
+    // Helper: Functions/Constants
+    (
+        $doc:literal
+        $mod_name:ident::$fn_name:ident
+    ) => {
+        $crate::BuiltinInfo::new(concat!(
+            "__mu::",
+            stringify!($mod_name),
+            "::",
+            stringify!($fn_name)
+        ))
+        .with_doc($doc)
+    };
+}
