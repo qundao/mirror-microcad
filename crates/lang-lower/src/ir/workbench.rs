@@ -105,14 +105,23 @@ pub struct Init {
 /// Builder methods for testing
 impl Init {
     /// Construct new initializer
-    pub fn new(parameters: impl Into<ir::ParameterList>) -> Self {
+    pub fn default_init(parameters: impl Into<ir::ParameterList>) -> Self {
+        let parameters = parameters.into();
         Self {
-            parameters: parameters.into(),
+            parameters: parameters.clone(),
             statements: Default::default(),
             keyword_ref: Default::default(),
             attr: Default::default(),
             src_ref: Default::default(),
         }
+        .with_statements(parameters.iter().map(|parameter| {
+            ir::InitStatement::new(
+                parameter.id.clone(),
+                ir::Path::Resolved(microcad_lang_base::SymbolId::Local(
+                    parameter.id.id().clone(),
+                )),
+            )
+        }))
     }
 
     /// Add statements to this initializer
@@ -218,7 +227,7 @@ impl WorkbenchSignature {
         let parameters = parameters.into();
         Self {
             kind,
-            inits: vec![Init::new(parameters.clone())].into_boxed_slice(), // Default init
+            inits: vec![Init::default_init(parameters.clone())].into_boxed_slice(), // Default init
             parameters,
         }
     }

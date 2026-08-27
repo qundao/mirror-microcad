@@ -329,7 +329,7 @@ impl Desugar<ast::def::Workbench> for ir::desugared::Workbench {
 
         // Add parameters as default initializer.
         // This makes evaluation easier, because then we can simply trait the workbench parameters as default initializer.
-        inits.push(ir::Init::new(parameters.clone()));
+        inits.push(ir::Init::default_init(parameters.clone()));
 
         Ok(Self {
             meta: ir::Meta {
