@@ -7,11 +7,12 @@ use std::sync::Arc;
 
 use cgmath::SquareMatrix;
 
-use microcad_core::{self as core, CalcBounds3D};
+use microcad_core::{self as core, CalcBounds3D, Mat4};
 
 use microcad_hash::{HashId, ToHash, hash_id};
 use microcad_lang_types::{
-    ModelNodeRef,
+    ModelNodeRef, ModelTree,
+    math::ToFloat,
     model::{ModelType, NodeId},
 };
 
@@ -66,12 +67,12 @@ impl GeometryOutput {
 /// The model output when a model has been processed.
 #[derive(Debug, Clone)]
 pub struct RenderOutput {
-    /// The output (2D/3D) this render output was expected to produce.
+    /// The output (2D/3D) this render output is expected to produce.
     pub output_type: ModelType,
     /// Local transformation matrix.
-    pub local_matrix: Option<core::Mat4>,
+    pub local_matrix: core::Mat4,
     /// World transformation matrix.
-    pub world_matrix: Option<core::Mat4>,
+    pub world_matrix: core::Mat4,
     /// The render resolution, calculated from transformation matrix.
     pub resolution: Option<RenderResolution>,
     /// The output geometry.
@@ -81,7 +82,7 @@ pub struct RenderOutput {
     /// Computed model hash.
     hash: HashId,
 
-    _model_node_id: NodeId,
+    model_node_id: NodeId,
 }
 
 impl RenderOutput {
@@ -89,29 +90,22 @@ impl RenderOutput {
     pub fn new<'tree>(model: ModelNodeRef<'tree>) -> Self {
         let output_type = model.output_type();
         let hash = hash_id!(model);
-        let local_matrix = Some(core::Mat4::identity()); /*
-        TODO: Get local matrix transform for element
-        model
-        .element()
-        .get_affine_transform()?
-        .map(|affine_transform| affine_transform.mat3d());
-         */
+        let local_matrix = model.local_matrix().to_float();
 
         RenderOutput {
             output_type,
             local_matrix,
-            world_matrix: None,
+            world_matrix: Mat4::identity(),
             resolution: None,
             geometry: None,
             attributes: RenderAttributes::default(), // TODO: Get render attributes from model.into(),
             hash,
-            _model_node_id: model.id,
+            model_node_id: model.id,
         }
     }
 
-    /// Set the world matrix for render output.
-    pub fn set_world_matrix(&mut self, m: core::Mat4) {
-        self.world_matrix = Some(m);
+    pub fn model<'a>(&self, tree: &'a ModelTree) -> ModelNodeRef<'a> {
+        ModelNodeRef::new(self.model_node_id, &tree.arena)
     }
 
     /// Set the 2D geometry as render output.
