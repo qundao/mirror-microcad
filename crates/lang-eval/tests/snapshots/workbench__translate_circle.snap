@@ -2,7 +2,7 @@
 source: crates/lang-eval/tests/workbench.rs
 expression: model
 ---
-x = 1mm, y = 2mm, z = 0mm
+Translate(1mm, 2mm, 0mm)
       x: Length = 1mm
       y: Length = 2mm
       z: Length = 0mm
