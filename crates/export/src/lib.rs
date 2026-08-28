@@ -3,7 +3,7 @@
 
 //! Export models to files
 
-use microcad_lang_types::{ModelNodeRef, ModelOutputType, Value};
+use microcad_lang_types::{ModelNodeRef, ModelType, Value};
 use thiserror::Error;
 
 pub mod ply;
@@ -51,5 +51,5 @@ pub trait Exporter {
     ) -> Result<Value, ExportError>;
 
     /// The model type this export is supposed to access.
-    fn model_type(&self) -> ModelOutputType;
+    fn model_type(&self) -> ModelType;
 }

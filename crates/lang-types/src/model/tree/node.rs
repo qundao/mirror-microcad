@@ -5,7 +5,7 @@
 
 use microcad_lang_base::Identifier;
 
-use crate::{Model, ModelOutputType, model};
+use crate::{Model, ModelType, model};
 
 pub type Node = microcad_lang_base::tree::Node<Model>;
 pub type NodeRef<'a> = microcad_lang_base::tree::NodeRef<'a, Model>;
@@ -16,7 +16,7 @@ pub type NodeId = microcad_lang_base::tree::NodeId;
 pub trait NodeExt<'a> {
     fn name(&self) -> Option<&Identifier>;
 
-    fn deduce_output_type(&self) -> ModelOutputType;
+    fn deduce_output_type(&self) -> ModelType;
 
     fn into_group_child(self) -> Option<NodeRef<'a>>;
 
@@ -29,14 +29,14 @@ impl<'a> NodeExt<'a> for NodeRef<'a> {
     }
 
     /// Deduce output type from element or children.
-    fn deduce_output_type(&self) -> ModelOutputType {
+    fn deduce_output_type(&self) -> ModelType {
         let output_type = self.element.output_type();
 
-        if output_type == ModelOutputType::NotDetermined {
+        if output_type == ModelType::NotDetermined {
             // Fallback: iterate over children and deduce
             for child in self.children() {
                 let child_type = child.deduce_output_type();
-                if child_type != ModelOutputType::NotDetermined {
+                if child_type != ModelType::NotDetermined {
                     return child_type;
                 }
             }

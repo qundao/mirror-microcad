@@ -15,7 +15,7 @@ pub use attribute::*;
 pub use cache::*;
 pub use context::*;
 use microcad_core::{Geometry, Geometry2D, Scalar};
-use microcad_lang_types::model::ModelOutputType;
+use microcad_lang_types::model::ModelType;
 pub use output::*;
 pub use render::{RenderPrimitive, RenderResolution};
 
@@ -27,7 +27,7 @@ use thiserror::Error;
 pub enum RenderError {
     /// Invalid output type.
     #[error("Invalid output type: {0}")]
-    InvalidOutputType(ModelOutputType),
+    InvalidOutputType(ModelType),
 
     #[error("Builtin error")]
     BuiltinError(#[from] BuiltinError),
@@ -55,7 +55,7 @@ impl RenderHooks {
     }
 
     pub fn insert<C: BuiltinConstruct + Render>(&mut self) {
-        self.hooks.insert(C::item().id(), |ctx| {
+        self.hooks.insert(C::ITEM.id(), |ctx| {
             C::from_model(ctx.model().get())?.render(ctx)
         });
     }

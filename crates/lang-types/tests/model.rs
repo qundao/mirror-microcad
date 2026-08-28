@@ -3,7 +3,7 @@
 
 use microcad_lang_base::BuiltinId;
 use microcad_lang_types::{
-    Arguments, Identifier, Length, Model, ModelOutputType, ModelTree, Value, arguments,
+    Arguments, Identifier, Length, Model, ModelType, ModelTree, Value, arguments,
     model::{
         AffineTransform, BooleanOp, Element, NodeExt,
         element::{self, BuiltinWorkpiece},
@@ -89,7 +89,7 @@ fn test_deduce_output_type_fallback() {
     let root_ref = tree.root();
     let deduced_type = root_ref.deduce_output_type();
 
-    assert_ne!(deduced_type, ModelOutputType::NotDetermined);
+    assert_ne!(deduced_type, ModelType::NotDetermined);
 }
 
 #[test]

@@ -123,7 +123,7 @@ fn translate_circle() {
 
     let mut context = EvalContext::new();
     let model: ModelTree = expr.eval(&mut context).expect("No error");
-    let prop = model.get_property_value("radius");
+    let prop = model.get_property_value("radius"); // We should be able to access the property.
     assert_eq!(prop, Value::from(Length::mm(4.0)));
 
     insta::assert_snapshot!("translate_circle", model)

@@ -7,7 +7,7 @@ use std::fmt::Write;
 
 use geo::line_string;
 use microcad_core::{Geometries2D, Geometry2D};
-use microcad_lang_types::{Model, ModelNodeRef, ModelOutputType, Value};
+use microcad_lang_types::{Model, ModelNodeRef, ModelType, Value};
 
 use wkt::ToWkt;
 
@@ -92,7 +92,7 @@ impl Exporter for WktExporter {
         Ok(Value::None)
     }
 
-    fn model_type(&self) -> ModelOutputType {
-        ModelOutputType::Geometry2D
+    fn model_type(&self) -> ModelType {
+        ModelType::Geometry2D
     }
 }

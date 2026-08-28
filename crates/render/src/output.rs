@@ -12,7 +12,7 @@ use microcad_core::{self as core, CalcBounds3D};
 use microcad_hash::{HashId, ToHash, hash_id};
 use microcad_lang_types::{
     ModelNodeRef,
-    model::{ModelOutputType, NodeId},
+    model::{ModelType, NodeId},
 };
 
 use crate::{RenderAttributes, RenderResolution, RenderResult};
@@ -67,7 +67,7 @@ impl GeometryOutput {
 #[derive(Debug, Clone)]
 pub struct RenderOutput {
     /// The output (2D/3D) this render output was expected to produce.
-    pub output_type: ModelOutputType,
+    pub output_type: ModelType,
     /// Local transformation matrix.
     pub local_matrix: Option<core::Mat4>,
     /// World transformation matrix.
@@ -129,7 +129,7 @@ impl RenderOutput {
         self.resolution = Some(render_resolution);
     }
 
-    pub fn output_type(&self) -> ModelOutputType {
+    pub fn output_type(&self) -> ModelType {
         self.output_type
     }
 }
@@ -140,10 +140,10 @@ impl std::fmt::Display for RenderOutput {
             f,
             "{output_type} ({hash}): {geo} {resolution}",
             output_type = match self.output_type {
-                ModelOutputType::Geometry2D => "2D",
-                ModelOutputType::Geometry3D => "3D",
-                ModelOutputType::Any => "Any",
-                ModelOutputType::NotDetermined => "?",
+                ModelType::Geometry2D => "2D",
+                ModelType::Geometry3D => "3D",
+                ModelType::Any => "Any",
+                ModelType::NotDetermined => "?",
             },
             hash = self.to_hash(),
             geo = match &self.geometry {

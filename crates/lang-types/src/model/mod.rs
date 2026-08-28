@@ -30,9 +30,9 @@ pub use attribute::{Attribute, AttributeAccess, Attributes};
 
 pub use creator::Creator;
 pub use element::{BuiltinWorkpiece, Element, Workpiece};
-pub use output_type::ModelOutputType;
+pub use output_type::ModelType;
 
-use crate::{Arguments, Ty, Type, Value};
+use crate::{Arguments, Ty, Type, Value, ValueError, ValueResult};
 
 #[derive(Debug, Default, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub struct Model {
@@ -91,7 +91,7 @@ impl Model {
 
 /// Accessor functions
 impl Model {
-    pub fn output_type(&self) -> ModelOutputType {
+    pub fn output_type(&self) -> ModelType {
         self.element.output_type()
     }
 
@@ -103,6 +103,13 @@ impl Model {
         self.get_property(name)
             .map(|property| property.value.clone())
             .unwrap_or_default()
+    }
+
+    pub fn get_property_as<T: TryFrom<Value, Error = ValueError>>(
+        &self,
+        name: impl AsRef<str>,
+    ) -> ValueResult<T> {
+        T::try_from(self.get_property_value(name))
     }
 }
 

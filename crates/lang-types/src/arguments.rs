@@ -188,3 +188,19 @@ macro_rules! argument_value {
     };
     () => {};
 }
+
+#[macro_export]
+macro_rules! parse_args {
+    // Single item with custom string key override: `self_: Rc<ModelTree> => "self"`
+    ($args:expr, $( $name:ident : $ty:ty $(=> $key:expr)? ),* $(,)?) => {
+        $(
+            let $name: $ty = $args.try_get(
+                parse_args!(@key $name $(=> $key)?)
+            )?;
+        )*
+    };
+
+    // Helper rules to select explicit key or fallback to stringify!
+    (@key $name:ident => $key:expr) => { $key };
+    (@key $name:ident) => { stringify!($name) };
+}

@@ -3,7 +3,7 @@
 
 //! STL exporter.
 
-use microcad_lang_types::{ModelNodeRef, ModelOutputType, Value};
+use microcad_lang_types::{ModelNodeRef, ModelType, Value};
 
 use crate::{ExportError, Exporter, ExporterParameters};
 
@@ -26,7 +26,7 @@ impl Exporter for StlExporter {
         Ok(Value::None)*/
     }
 
-    fn model_type(&self) -> ModelOutputType {
-        ModelOutputType::Geometry3D
+    fn model_type(&self) -> ModelType {
+        ModelType::Geometry3D
     }
 }

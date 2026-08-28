@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     Ty, Type, Value,
-    model::{AffineTransform, BooleanOp, ModelOutputType},
+    model::{AffineTransform, BooleanOp, ModelType},
 };
 
 #[derive(Debug, Display, Clone, Hash, PartialEq, Serialize, Deserialize)]
@@ -31,9 +31,9 @@ impl Workpiece {
 impl Ty for WorkbenchKind {
     fn ty(&self) -> crate::Type {
         match self {
-            WorkbenchKind::Sketch => Type::Model(ModelOutputType::Geometry2D),
-            WorkbenchKind::Part => Type::Model(ModelOutputType::Geometry3D),
-            WorkbenchKind::Op => Type::Model(ModelOutputType::Any),
+            WorkbenchKind::Sketch => Type::Model(ModelType::Geometry2D),
+            WorkbenchKind::Part => Type::Model(ModelType::Geometry3D),
+            WorkbenchKind::Op => Type::Model(ModelType::Any),
         }
     }
 }
@@ -54,11 +54,11 @@ pub enum BuiltinWorkpiece {
 }
 
 impl BuiltinWorkpiece {
-    fn output_type(&self) -> ModelOutputType {
+    fn output_type(&self) -> ModelType {
         match self {
-            BuiltinWorkpiece::Primitive(_) => ModelOutputType::Geometry2D,
+            BuiltinWorkpiece::Primitive(_) => ModelType::Geometry2D,
             BuiltinWorkpiece::AffineTransform(_) | BuiltinWorkpiece::BooleanOp(_) => {
-                ModelOutputType::NotDetermined
+                ModelType::NotDetermined
             }
             _ => todo!(),
         }
@@ -89,12 +89,12 @@ pub enum Element {
 }
 
 impl Element {
-    pub fn output_type(&self) -> ModelOutputType {
+    pub fn output_type(&self) -> ModelType {
         use Element::*;
         match &self {
             Workpiece(workpiece) => workpiece.kind.into(),
             BuiltinWorkpiece(builtin_workpiece) => builtin_workpiece.output_type(),
-            Group | Multiplicity | InputPlaceholder | Value(_) => ModelOutputType::NotDetermined,
+            Group | Multiplicity | InputPlaceholder | Value(_) => ModelType::NotDetermined,
         }
     }
 }

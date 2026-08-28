@@ -200,7 +200,7 @@ pub(crate) fn builtin_fn_impl(attr: TokenStream, item: TokenStream) -> TokenStre
         pub static #static_name: BuiltinItem = builtin_item!(
             Function
             #doc_comment
-            #mod_name::#name( microcad_lang_types::function_type!(#formatted_params #return_type))
+            #mod_name::#name(microcad_lang_types::function_type!(#formatted_params #return_type))
         );
     }
     .into()

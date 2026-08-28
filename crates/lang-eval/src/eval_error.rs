@@ -5,7 +5,7 @@
 
 use microcad_builtin::BuiltinError;
 use microcad_lang_base::{Identifier, IdentifierList, Name, SrcRef, element::WorkbenchKind};
-use microcad_lang_types::{Type, ValueError, model::ModelOutputType, ty::TypeList};
+use microcad_lang_types::{Type, ValueError, model::ModelType, ty::TypeList};
 use miette::Diagnostic;
 
 use thiserror::Error;
@@ -143,8 +143,8 @@ pub enum EvalError {
     #[error("The {kind} workbench produced a {produced} output, but expected a {expected} output.")]
     WorkbenchInvalidOutput {
         kind: WorkbenchKind,
-        produced: ModelOutputType,
-        expected: ModelOutputType,
+        produced: ModelType,
+        expected: ModelType,
     },
 
     /// Cannot call operation without workpiece, e.g. `op()`.
