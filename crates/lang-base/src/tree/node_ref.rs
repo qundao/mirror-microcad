@@ -95,7 +95,7 @@ impl<'a, T> NodeMut<'a, T> {
     /// Mutates the payload of all nodes in this subtree in-place.
     /// The closure receives a short-lived `NodeRef` (for inspecting topology)
     /// and a `&mut T` payload to update.
-    pub fn transform<F>(self, mut f: F)
+    pub fn transform<F>(&mut self, mut f: F)
     where
         F: FnMut(NodeRef<'_, T>, &mut T),
     {
@@ -147,7 +147,7 @@ mod tests {
         );
 
         let child_id = root_id.children(&arena).next().unwrap();
-        let node_mut = NodeMut::new(root_id, &mut arena);
+        let mut node_mut = NodeMut::new(root_id, &mut arena);
 
         // Mutate all payload values in the subtree
         node_mut.transform(|_node_ref, payload| {
@@ -173,7 +173,7 @@ mod tests {
         let child_id = root_id.children(&arena).next().unwrap();
         let grandchild_id = child_id.children(&arena).next().unwrap();
 
-        let node_mut = NodeMut::new(root_id, &mut arena);
+        let mut node_mut = NodeMut::new(root_id, &mut arena);
 
         // Use NodeRef topology inspection (counting ancestor depth)
         node_mut.transform(|node_ref, payload| {
