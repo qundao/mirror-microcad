@@ -5960,6 +5960,7 @@ dependencies = [
  "microcad-builtin",
  "microcad-core",
  "microcad-hash",
+ "microcad-lang-base",
  "microcad-lang-types",
  "miette",
  "pretty_assertions",
