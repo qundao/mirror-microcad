@@ -1,7 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! µcad built-in compiler library.
+//! µcad compiler built-in library.
 //!
 //! Every compiler built-in starts with `__mu` prefix.
 //!
@@ -627,7 +627,8 @@ pub mod ops {
     use microcad_lang_base::BuiltinInfo;
     use microcad_lang_types::{
         Length, Model, ModelTree, ModelType, Type, function_type,
-        model::{AffineTransform, BooleanOp, Element, element::BuiltinWorkpiece},
+        math::AffineTransform,
+        model::{BooleanOp, Element, element::BuiltinWorkpiece},
         parse_args,
     };
     use microcad_macros::__mu;

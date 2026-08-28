@@ -4,7 +4,7 @@
 //! µcad built-in errors.
 
 use microcad_lang_base::BuiltinId;
-use microcad_lang_types::{TypeError, ValueError, model::Element};
+use microcad_lang_types::{TypeError, ValueError};
 use miette::Diagnostic;
 use thiserror::Error;
 

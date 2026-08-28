@@ -12,10 +12,7 @@ use microcad_lang_base::PushDiag;
 pub use registry::BuiltinRegistry;
 
 use derive_more::{Debug, From};
-use microcad_lang_types::{
-    Arguments, FunctionType, Model, ModelTree, Value,
-    model::{self, BuiltinWorkpiece},
-};
+use microcad_lang_types::{Arguments, FunctionType, Model, ModelTree, Value, model};
 
 pub use microcad_lang_base::{BuiltinId, BuiltinInfo};
 pub use microcad_macros::__mu;
