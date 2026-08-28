@@ -8,12 +8,15 @@ mod cache;
 mod context;
 mod output;
 mod render;
+mod tree;
 
 use microcad_hash::HashMap;
 
 pub use attribute::*;
 pub use cache::*;
 pub use context::*;
+pub use tree::*;
+
 use microcad_core::{Geometry, Geometry2D, Scalar};
 use microcad_lang_types::model::ModelType;
 pub use output::*;

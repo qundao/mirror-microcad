@@ -86,7 +86,7 @@ pub struct RenderOutput {
 
 impl RenderOutput {
     /// Create new render output for model.
-    pub fn new<'tree>(model: ModelNodeRef<'tree>) -> RenderResult<Self> {
+    pub fn new<'tree>(model: ModelNodeRef<'tree>) -> Self {
         let output_type = model.output_type();
         let hash = hash_id!(model);
         let local_matrix = Some(core::Mat4::identity()); /*
@@ -97,7 +97,7 @@ impl RenderOutput {
         .map(|affine_transform| affine_transform.mat3d());
          */
 
-        Ok(RenderOutput {
+        RenderOutput {
             output_type,
             local_matrix,
             world_matrix: None,
@@ -106,7 +106,7 @@ impl RenderOutput {
             attributes: RenderAttributes::default(), // TODO: Get render attributes from model.into(),
             hash,
             _model_node_id: model.id,
-        })
+        }
     }
 
     /// Set the world matrix for render output.
