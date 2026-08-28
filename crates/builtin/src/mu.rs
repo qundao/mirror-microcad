@@ -586,18 +586,13 @@ pub mod color {
 /// Built-in 2D primitives
 #[builtin_mod]
 pub mod geo2d {
-    use microcad_lang_base::BuiltinInfo;
-    use microcad_lang_types::{Length, Model, ModelOutputType, Type, function_type};
+    use microcad_lang_types::{Length, Model, ModelType, Type, function_type};
 
-    use crate::{BuiltinConstruct, BuiltinPrimitive};
+    use crate::{BuiltinConstruct, BuiltinPrimitiveCall};
 
     use super::*;
 
-    pub static CIRCLE: BuiltinItem = BuiltinItem::Primitive(BuiltinPrimitive::new(
-        BuiltinInfo::new("__mu::geo2d::Circle"),
-        || function_type!((radius: Type::length()) -> Type::Model(ModelOutputType::Geometry2D)),
-        Circle::call,
-    ));
+    pub static CIRCLE: &'static BuiltinItem = Circle::ITEM;
 
     /// A circle with a radius.
     #[derive(Serialize, Deserialize, Debug)]
@@ -607,19 +602,21 @@ pub mod geo2d {
     }
 
     impl BuiltinConstruct for Circle {
-        fn item() -> &'static BuiltinItem {
-            &CIRCLE
-        }
+        const ITEM: &'static BuiltinItem = &builtin_item!(
+            Primitive
+            "A circle with a radius."
+            geo2d::Circle(function_type!((radius: Type::length()) -> Type::Model(ModelType::Geometry2D)))
+        );
 
         fn from_model(model: &Model) -> Result<Self, BuiltinError> {
-            // TODO Assertion if Model is a circle primitive
-            assert_eq!(model.element, Self::element());
-
+            Self::check_element(model)?;
             Ok(Circle {
-                radius: TryFrom::try_from(model.get_property_value("radius"))?,
+                radius: model.get_property_as("radius")?,
             })
         }
     }
+
+    impl BuiltinPrimitiveCall for Circle {}
 }
 
 /// Built-in Operations
@@ -629,30 +626,48 @@ pub mod ops {
 
     use microcad_lang_base::BuiltinInfo;
     use microcad_lang_types::{
-        Length, Model, ModelOutputType, ModelTree, Type, function_type,
+        Length, Model, ModelTree, ModelType, Type, function_type,
         model::{AffineTransform, BooleanOp, Element, element::BuiltinWorkpiece},
+        parse_args,
     };
     use microcad_macros::__mu;
 
-    use crate::BuiltinOperation;
+    use crate::{BuiltinConstruct, BuiltinOperation, construct_from_model};
 
     use super::*;
 
-    pub static TRANSLATE: BuiltinItem = BuiltinItem::Operation(BuiltinOperation::new(
-        BuiltinInfo::new("__mu::ops::translate"),
-        || function_type!((self: Type::Model(ModelOutputType::Any), x: Type::length(), y: Type::length(), z: Type::length()) -> Type::Model(ModelOutputType::Any)),
-        translate,
-    ));
+    pub struct Translate {
+        pub x: Length,
+        pub y: Length,
+        pub z: Length,
+    }
+
+    impl BuiltinConstruct for Translate {
+        const ITEM: &'static BuiltinItem = &BuiltinItem::Operation(BuiltinOperation::new(
+            BuiltinInfo::new("__mu::ops::translate"),
+            || function_type!((self: Type::Model(ModelType::Any), x: Type::length(), y: Type::length(), z: Type::length()) -> Type::Model(ModelType::Any)),
+            translate,
+        ));
+
+        fn from_model(model: &Model) -> Result<Self, BuiltinError> {
+            construct_from_model!(model, Translate { x, y, z })
+        }
+    }
+
+    pub static TRANSLATE: &'static BuiltinItem = Translate::ITEM;
 
     //#[builtin_op(ops::translate(self: Model, x: Length, y: Length, z: Length) -> Model)]
     pub fn translate(
         args: Arguments,
         _ctx: &mut BuiltinEvalContext,
     ) -> Result<ModelTree, BuiltinError> {
-        let self_: Rc<ModelTree> = args.try_get("self")?;
-        let x: Length = args.try_get("x")?;
-        let y: Length = args.try_get("y")?;
-        let z: Length = args.try_get("z")?;
+        parse_args!(
+            args,
+            self_: Rc<ModelTree> => "self",
+            x: Length,
+            y: Length,
+            z: Length,
+        );
 
         let mut tree = ModelTree::new(
             Model::new(BuiltinWorkpiece::AffineTransform(
@@ -666,19 +681,28 @@ pub mod ops {
         Ok(tree)
     }
 
-    pub static DIFFERENCE: BuiltinItem = BuiltinItem::Operation(BuiltinOperation::new(
-        BuiltinInfo::new("__mu::ops::difference"),
-        || function_type!((self: Type::Model(ModelOutputType::Any)) -> Type::Model(ModelOutputType::Any)),
-        difference,
-    ));
-
     pub struct Difference;
+
+    impl BuiltinConstruct for Difference {
+        const ITEM: &'static BuiltinItem = &BuiltinItem::Operation(BuiltinOperation::new(
+            BuiltinInfo::new("__mu::ops::difference"),
+            || function_type!((self: Type::Model(ModelType::Any)) -> Type::Model(ModelType::Any)),
+            difference,
+        ));
+
+        fn from_model(model: &Model) -> Result<Self, BuiltinError> {
+            Self::check_element(model)?;
+            Ok(Difference)
+        }
+    }
+
+    pub static DIFFERENCE: &'static BuiltinItem = Difference::ITEM;
 
     pub fn difference(
         args: Arguments,
         _ctx: &mut BuiltinEvalContext,
     ) -> Result<ModelTree, BuiltinError> {
-        let self_: Rc<ModelTree> = args.try_get("self")?;
+        parse_args!(args, self_: Rc<ModelTree> => "self");
 
         // Create a tree for the groups first.
         let mut group_tree = ModelTree::new(Model::new(Element::Group));
@@ -694,14 +718,22 @@ pub mod ops {
     }
 
     pub struct Extrude {
-        height: Length,
+        pub height: Length,
     }
 
-    pub static EXTRUDE: BuiltinItem = BuiltinItem::Operation(BuiltinOperation::new(
-        BuiltinInfo::new("__mu::ops::extrude"),
-        || function_type!((self: Type::Model(ModelOutputType::Geometry2D), height: Type::length()) -> Type::Model(ModelOutputType::Geometry3D)),
-        extrude,
-    ));
+    impl BuiltinConstruct for Extrude {
+        const ITEM: &'static BuiltinItem = &BuiltinItem::Operation(BuiltinOperation::new(
+            BuiltinInfo::new("__mu::ops::extrude"),
+            || function_type!((self: Type::Model(ModelType::Geometry2D), height: Type::length()) -> Type::Model(ModelType::Geometry3D)),
+            extrude,
+        ));
+
+        fn from_model(model: &Model) -> Result<Self, BuiltinError> {
+            construct_from_model!(model, Extrude { height })
+        }
+    }
+
+    pub static EXTRUDE: &'static BuiltinItem = Extrude::ITEM;
 
     pub fn extrude(
         args: Arguments,

@@ -4,7 +4,7 @@
 //! µcad built-in errors.
 
 use microcad_lang_base::BuiltinId;
-use microcad_lang_types::{TypeError, ValueError};
+use microcad_lang_types::{TypeError, ValueError, model::Element};
 use miette::Diagnostic;
 use thiserror::Error;
 
@@ -57,4 +57,7 @@ pub enum BuiltinError {
 
     #[error("Property not found: {name}")]
     PropertyNotFound { name: String },
+
+    #[error("Element mismatch: {expected} != {actual}")]
+    ElementMismatch { expected: String, actual: String },
 }

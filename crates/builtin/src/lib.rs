@@ -123,21 +123,33 @@ impl BuiltinPrimitive {
 }
 
 pub trait BuiltinConstruct: Sized {
-    /// Returns the static metadata item for this primitive.
-    fn item() -> &'static BuiltinItem;
+    const ITEM: &'static BuiltinItem;
 
     /// Returns the primitive element descriptor.
     fn element() -> model::Element {
-        model::BuiltinWorkpiece::Primitive(Self::item().id()).into()
+        model::BuiltinWorkpiece::Primitive(Self::ITEM.id()).into()
     }
 
-    /// Call this builtin with builtin with arguments and evaluate it into a model.
-    fn call(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Model, BuiltinError> {
-        Ok(Model::new(Self::element()).with_properties(args))
+    fn check_element(model: &Model) -> Result<(), BuiltinError> {
+        if model.element == Self::element() {
+            Ok(())
+        } else {
+            Err(BuiltinError::ElementMismatch {
+                expected: Self::element().to_string(),
+                actual: model.element.clone().to_string(),
+            })
+        }
     }
 
     /// Constructs the Rust struct representation from a evaluated `Model`.
     fn from_model(model: &Model) -> Result<Self, BuiltinError>;
+}
+
+pub trait BuiltinPrimitiveCall: BuiltinConstruct {
+    /// Call this builtin with builtin with arguments and evaluate it into a model.
+    fn call(args: Arguments, _ctx: &mut BuiltinEvalContext) -> Result<Model, BuiltinError> {
+        Ok(Model::new(Self::element()).with_properties(args))
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -342,9 +354,21 @@ macro_rules! builtin_item {
         $mod_name:ident::$struct_name:ident ( $func_ty:expr )
     ) => {
         $crate::BuiltinItem::Primitive($crate::BuiltinPrimitive::new(
-            $crate::builtin_info!($doc $mod_name::$fn_name),
+            $crate::builtin_info!($doc $mod_name::$struct_name),
             || $func_ty,
             $struct_name::call,
         ))
     };
+}
+
+#[macro_export]
+macro_rules! construct_from_model {
+    ($model:expr, $struct:ident { $( $field:ident ),* $(,)? }) => {{
+        Self::check_element($model)?;
+        Ok($struct {
+            $(
+                $field: $model.get_property_as(stringify!($field))?,
+            )*
+        })
+    }};
 }
