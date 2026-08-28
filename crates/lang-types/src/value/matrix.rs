@@ -3,9 +3,16 @@
 
 //! Matrix value type
 
-use crate::{Mat2, Mat3, Mat4, MatrixType, Scalar, Ty, Type};
+use crate::{MatrixType, Scalar, Ty, Type};
 
 use serde::{Deserialize, Serialize};
+
+/// 2D matrix type.
+pub type Mat2 = cgmath::Matrix2<Scalar>;
+/// 3D matrix type.
+pub type Mat3 = cgmath::Matrix3<Scalar>;
+/// 4D matrix type.
+pub type Mat4 = cgmath::Matrix4<Scalar>;
 
 /// Matrix type
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

@@ -60,6 +60,16 @@ impl std::fmt::Display for Attribute {
 #[derive(Clone, Default, Debug, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Attributes(pub Vec<Attribute>);
 
+impl Attributes {
+    /// Returns the first `ResolutionAttribute` if present.
+    pub fn resolution(&self) -> Option<&ResolutionAttribute> {
+        self.0.iter().find_map(|attr| match attr {
+            Attribute::Resolution(res) => Some(res),
+            _ => None,
+        })
+    }
+}
+
 pub trait AttributeAccess {
     /// Gets the value of the first attribute matching `name`.
     ///

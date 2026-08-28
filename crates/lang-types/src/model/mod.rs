@@ -19,20 +19,19 @@ pub use tree::{
     NodeId, NodeMut, NodeRef,
 };
 
-mod operation;
-
-pub use operation::{AffineTransform, BooleanOp};
-
 use microcad_lang_base::{HashId, Identifier};
 use serde::{Deserialize, Serialize};
 
 pub use attribute::{Attribute, AttributeAccess, Attributes};
 
 pub use creator::Creator;
-pub use element::{BuiltinWorkpiece, Element, Workpiece};
+pub use element::{BooleanOp, BuiltinWorkpiece, Element, Workpiece};
 pub use output_type::ModelType;
 
-use crate::{Arguments, Ty, Type, Value, ValueError, ValueResult};
+use crate::{
+    Arguments, Mat4, Ty, Type, Value, ValueError, ValueResult,
+    model::attribute::ResolutionAttribute,
+};
 
 #[derive(Debug, Default, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub struct Model {
@@ -83,10 +82,6 @@ impl Model {
         self.properties = properties.into();
         self
     }
-
-    fn is_multiplicity(&self) -> bool {
-        matches!(self.element, Element::Multiplicity)
-    }
 }
 
 /// Accessor functions
@@ -110,6 +105,21 @@ impl Model {
         name: impl AsRef<str>,
     ) -> ValueResult<T> {
         T::try_from(self.get_property_value(name))
+    }
+
+    pub fn local_matrix(&self) -> Mat4 {
+        use crate::math::{FromFloat, Mat4F};
+        use cgmath::SquareMatrix;
+
+        match &self.element {
+            Element::BuiltinWorkpiece(BuiltinWorkpiece::AffineTransform(t)) => t.matrix(),
+            _ => Mat4::from_float(Mat4F::identity()),
+        }
+    }
+
+    /// Get resolution of this model from attributes.
+    pub fn resolution(&self) -> Option<&ResolutionAttribute> {
+        self.attr.resolution()
     }
 }
 

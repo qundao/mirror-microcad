@@ -20,7 +20,10 @@ pub use ty::{
     CallParameter, CallParameters, CallSignature, FunctionType, MatrixType, QuantityType,
     TupleType, Ty, Type, TypeError, TypeResult, Unit,
 };
-pub use value::{List, Quantity, Tuple, Value, ValueAccess, ValueError, ValueList, ValueResult};
+pub use value::{
+    List, Mat2, Mat3, Mat4, Matrix, Quantity, Tuple, Value, ValueAccess, ValueError, ValueList,
+    ValueResult,
+};
 
 pub use model::{Model, ModelTree, ModelType, NodeMut as ModelNodeMut, NodeRef as ModelNodeRef};
 
@@ -41,24 +44,9 @@ pub type Vec2 = cgmath::Vector2<Scalar>;
 pub type Vec3 = cgmath::Vector3<Scalar>;
 /// 4D vector type.
 pub type Vec4 = cgmath::Vector4<Scalar>;
-/// 2D matrix type.
-pub type Mat2 = cgmath::Matrix2<Scalar>;
-/// 3D matrix type.
-pub type Mat3 = cgmath::Matrix3<Scalar>;
-/// 4D matrix type.
-pub type Mat4 = cgmath::Matrix4<Scalar>;
+
 /// Primitive angle type in radians.
 pub type Angle = cgmath::Rad<Scalar>;
-
-pub type ScalarF = f64;
-
-pub type AngleF = cgmath::Rad<ScalarF>;
-
-/// 3D vector type.
-pub type Vec3F = cgmath::Vector3<ScalarF>;
-
-/// Matrix 3x3 floating point type.
-pub type Mat3F = cgmath::Matrix3<ScalarF>;
 
 /// A length in mm
 #[derive(

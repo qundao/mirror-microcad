@@ -7,10 +7,18 @@ use derive_more::{Display, From};
 use microcad_lang_base::{BuiltinId, SrcRef, element::WorkbenchKind};
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    Ty, Type, Value,
-    model::{AffineTransform, BooleanOp, ModelType},
-};
+use crate::{Ty, Type, Value, math::AffineTransform, model::ModelType};
+
+/// Boolean operations
+#[derive(Clone, Copy, Debug, Display, Hash, PartialEq, Serialize, Deserialize)]
+pub enum BooleanOp {
+    /// Computes the union R = P ∪ Q
+    Union,
+    /// computes the difference R = P ∖ Q
+    Difference,
+    /// computes the intersection R = P ∩ Q
+    Intersect,
+}
 
 #[derive(Debug, Display, Clone, Hash, PartialEq, Serialize, Deserialize)]
 #[display("{kind}")]
@@ -44,7 +52,6 @@ impl Ty for WorkbenchKind {
 pub enum BuiltinWorkpiece {
     /// A parametric 2D primitive.
     Primitive(BuiltinId),
-
     /// An affine transformation.
     AffineTransform(AffineTransform),
     /// Boolean operation

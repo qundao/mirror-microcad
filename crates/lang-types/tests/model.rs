@@ -3,17 +3,16 @@
 
 use microcad_lang_base::BuiltinId;
 use microcad_lang_types::{
-    Arguments, Identifier, Length, Model, ModelType, ModelTree, Value, arguments,
+    Arguments, Identifier, Length, Model, ModelTree, ModelType, Value, arguments,
+    math::AffineTransform,
     model::{
-        AffineTransform, BooleanOp, Element, NodeExt,
+        BooleanOp, Element, NodeExt,
         element::{self, BuiltinWorkpiece},
     },
     tuple,
 };
 
 mod model {
-    use microcad_lang_types::{Length, model::AffineTransform};
-
     use super::*;
 
     /// A Group model with name

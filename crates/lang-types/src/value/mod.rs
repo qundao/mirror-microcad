@@ -28,7 +28,7 @@ pub use value_error::*;
 pub use value_list::*;
 
 use crate::{
-    Angle, Color, Integer, Length, Mat3, Model, ModelTree, QuantityType, Scalar, Type, Vec2, Vec3,
+    Angle, Color, Integer, Length, Model, ModelTree, QuantityType, Scalar, Type, Vec2, Vec3,
 };
 
 use derive_more::{Display, From};
