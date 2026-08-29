@@ -18,15 +18,18 @@ use cgmath::{InnerSpace, SquareMatrix};
 /// Helper function to return rotation X,Y,Z rotation matrices.
 fn rotation_matrices_xyz(x: Angle, y: Angle, z: Angle) -> (Mat3F, Mat3F, Mat3F) {
     (
-        Mat3F::from_angle_x(x.to_float()),
-        Mat3F::from_angle_y(y.to_float()),
-        Mat3F::from_angle_z(z.to_float()),
+        Mat3F::from_angle_x(x.into_float()),
+        Mat3F::from_angle_y(y.into_float()),
+        Mat3F::from_angle_z(z.into_float()),
     )
 }
 
 pub fn rotate_around_axis(angle: Angle, x: Scalar, y: Scalar, z: Scalar) -> Mat3 {
     let axis = Vec3::new(x, y, z);
-    Mat3::from_float(Mat3F::from_axis_angle(axis.to_float(), angle.to_float()))
+    Mat3::from_float(Mat3F::from_axis_angle(
+        axis.into_float(),
+        angle.into_float(),
+    ))
 }
 
 pub fn rotate_xyz(x: Angle, y: Angle, z: Angle) -> Mat3 {
@@ -44,7 +47,7 @@ pub fn orient_to_z(target: Vec3) -> Mat3 {
     use crate::math::Vec3F;
 
     let z_axis = Vec3F::unit_z();
-    let target = target.to_float().normalize();
+    let target = target.into_float().normalize();
 
     // Handle edge case where target is already Z
     if (target - z_axis).magnitude2() < 1e-6 {
@@ -77,8 +80,8 @@ pub fn orient_to_z(target: Vec3) -> Mat3 {
 pub fn align_vectors_rodrigues(from: Vec3, to: Vec3) -> Mat3 {
     use crate::math::Vec3F;
 
-    let from = from.to_float().normalize();
-    let to = to.to_float().normalize();
+    let from = from.into_float().normalize();
+    let to = to.into_float().normalize();
 
     let c = from.dot(to);
 

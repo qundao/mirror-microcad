@@ -31,8 +31,8 @@ pub type Mat3F = cgmath::Matrix3<ScalarF>;
 pub type Mat4F = cgmath::Matrix4<ScalarF>;
 
 /// Lossy conversion to floating-point representation (e.g. for GPU rendering).
-pub trait ToFloat<Target> {
-    fn to_float(&self) -> Target;
+pub trait IntoFloat<Target> {
+    fn into_float(self) -> Target;
 }
 
 /// Quantized conversion back into exact fixed-point spatial representation.
@@ -42,9 +42,9 @@ pub trait FromFloat<Source> {
 
 // --- Scalar Implementations ---
 
-impl ToFloat<ScalarF> for Scalar {
+impl IntoFloat<ScalarF> for Scalar {
     #[inline]
-    fn to_float(&self) -> ScalarF {
+    fn into_float(self) -> ScalarF {
         self.to_num::<ScalarF>()
     }
 }
@@ -58,10 +58,10 @@ impl FromFloat<ScalarF> for Scalar {
 
 // --- Angle Implementations ---
 
-impl ToFloat<AngleF> for Angle {
+impl IntoFloat<AngleF> for Angle {
     #[inline]
-    fn to_float(&self) -> AngleF {
-        cgmath::Rad(self.0.to_float())
+    fn into_float(self) -> AngleF {
+        cgmath::Rad(self.0.into_float())
     }
 }
 
@@ -77,11 +77,11 @@ impl FromFloat<AngleF> for Angle {
 macro_rules! impl_vec_convert {
     ($fixed_type:ident, $float_type:ident, $($elem:ident),+ $(,)?) => {
         // Fixed -> Float Vector
-        impl ToFloat<$float_type> for $fixed_type {
+        impl IntoFloat<$float_type> for $fixed_type {
             #[inline]
-            fn to_float(&self) -> $float_type {
+            fn into_float(self) -> $float_type {
                 $float_type::new(
-                    $( self.$elem.to_float() ),+
+                    $( self.$elem.into_float() ),+
                 )
             }
         }
@@ -112,11 +112,11 @@ impl_vec_convert!(Vec4, Vec4F, x, y, z, w);
 macro_rules! impl_matrix_convert {
     ($fixed_type:ident, $float_type:ident, $($col:ident . $elem:ident),+ $(,)?) => {
         // Fixed -> Float Matrix
-                impl ToFloat<$float_type> for $fixed_type {
+                impl IntoFloat<$float_type> for $fixed_type {
                     #[inline]
-                    fn to_float(&self) -> $float_type {
+                    fn into_float(self) -> $float_type {
                         $float_type::new(
-                            $( self.$col.$elem.to_float() ),+
+                            $( self.$col.$elem.into_float() ),+
                         )
                     }
                 }

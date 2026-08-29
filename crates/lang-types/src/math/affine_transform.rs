@@ -41,11 +41,11 @@ pub enum AffineTransform {
 
 impl AffineTransform {
     pub fn matrix(&self) -> Mat4 {
-        use math::{FromFloat, Mat4F, ToFloat};
+        use math::{FromFloat, IntoFloat, Mat4F};
 
         match self {
             AffineTransform::Translation { x, y, z } => {
-                let v = Vec3::new(x.0, y.0, z.0).to_float();
+                let v = Vec3::new(x.0, y.0, z.0).into_float();
                 let mat_f = Mat4F::from_translation(v);
                 Mat4::from_float(mat_f)
             }
@@ -59,12 +59,15 @@ impl AffineTransform {
                 math::mat3_to_mat4(math::rotate_zyx(*z, *y, *x))
             }
             AffineTransform::Scale(v) => {
-                let mat_f =
-                    Mat4F::from_nonuniform_scale(v.x.to_float(), v.y.to_float(), v.z.to_float());
+                let mat_f = Mat4F::from_nonuniform_scale(
+                    v.x.into_float(),
+                    v.y.into_float(),
+                    v.z.into_float(),
+                );
                 Mat4::from_float(mat_f)
             }
             AffineTransform::UniformScale(s) => {
-                let s_f = s.to_float();
+                let s_f = s.into_float();
                 let mat_f = Mat4F::from_scale(s_f);
                 Mat4::from_float(mat_f)
             }
