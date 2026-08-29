@@ -8,8 +8,10 @@
 
 use crate::{Angle, Mat2, Mat3, Mat4, Scalar, Vec2, Vec3, Vec4};
 
+/// Floating point scalar
 pub type ScalarF = f64;
 
+/// Floating point angle
 pub type AngleF = cgmath::Rad<ScalarF>;
 
 /// 2D floating point vector type.
@@ -30,22 +32,52 @@ pub type Mat3F = cgmath::Matrix3<ScalarF>;
 /// Matrix 4x4 floating point type.
 pub type Mat4F = cgmath::Matrix4<ScalarF>;
 
-/// Lossy conversion to floating-point representation (e.g. for GPU rendering).
-pub trait IntoFloat<Target> {
-    fn into_float(self) -> Target;
-}
-
-/// Quantized conversion back into exact fixed-point spatial representation.
+/// Quantized conversion back into exact fixed-point representation.
 pub trait FromFloat<Source> {
     fn from_float(val: Source) -> Self;
 }
 
+/// Convert a float from fixed point number.
+pub trait FromFixed<Source> {
+    fn from_fixed(val: Source) -> Self;
+}
+
+/// Lossy conversion to floating-point representation.
+pub trait IntoFloat<Target> {
+    fn into_float(self) -> Target;
+}
+
+impl<T, Target> IntoFloat<Target> for T
+where
+    Target: FromFixed<T>,
+{
+    #[inline]
+    fn into_float(self) -> Target {
+        Target::from_fixed(self)
+    }
+}
+
+/// Lossy conversion to floating-point representation.
+pub trait IntoFixed<Target> {
+    fn into_fixed(self) -> Target;
+}
+
+impl<T, Target> IntoFixed<Target> for T
+where
+    Target: FromFloat<T>,
+{
+    #[inline]
+    fn into_fixed(self) -> Target {
+        Target::from_float(self)
+    }
+}
+
 // --- Scalar Implementations ---
 
-impl IntoFloat<ScalarF> for Scalar {
+impl FromFixed<Scalar> for ScalarF {
     #[inline]
-    fn into_float(self) -> ScalarF {
-        self.to_num::<ScalarF>()
+    fn from_fixed(val: Scalar) -> Self {
+        val.to_num()
     }
 }
 
@@ -58,10 +90,10 @@ impl FromFloat<ScalarF> for Scalar {
 
 // --- Angle Implementations ---
 
-impl IntoFloat<AngleF> for Angle {
+impl FromFixed<Angle> for AngleF {
     #[inline]
-    fn into_float(self) -> AngleF {
-        cgmath::Rad(self.0.into_float())
+    fn from_fixed(val: Angle) -> Self {
+        cgmath::Rad(ScalarF::from_fixed(val.0))
     }
 }
 
@@ -77,11 +109,11 @@ impl FromFloat<AngleF> for Angle {
 macro_rules! impl_vec_convert {
     ($fixed_type:ident, $float_type:ident, $($elem:ident),+ $(,)?) => {
         // Fixed -> Float Vector
-        impl IntoFloat<$float_type> for $fixed_type {
+        impl FromFixed<$fixed_type> for $float_type {
             #[inline]
-            fn into_float(self) -> $float_type {
+            fn from_fixed(val: $fixed_type) -> Self {
                 $float_type::new(
-                    $( self.$elem.into_float() ),+
+                    $( crate::math::ScalarF::from_fixed(val.$elem) ),+
                 )
             }
         }
@@ -112,24 +144,24 @@ impl_vec_convert!(Vec4, Vec4F, x, y, z, w);
 macro_rules! impl_matrix_convert {
     ($fixed_type:ident, $float_type:ident, $($col:ident . $elem:ident),+ $(,)?) => {
         // Fixed -> Float Matrix
-                impl IntoFloat<$float_type> for $fixed_type {
-                    #[inline]
-                    fn into_float(self) -> $float_type {
-                        $float_type::new(
-                            $( self.$col.$elem.into_float() ),+
-                        )
-                    }
-                }
+        impl FromFixed<$fixed_type> for $float_type {
+            #[inline]
+            fn from_fixed(val: $fixed_type) -> Self {
+                $float_type::new(
+                    $( crate::math::ScalarF::from_fixed(val.$col.$elem) ),+
+                )
+            }
+        }
 
-                // Float -> Fixed Matrix
-                impl FromFloat<$float_type> for $fixed_type {
-                    #[inline]
-                    fn from_float(val: $float_type) -> Self {
-                        $fixed_type::new(
-                            $( crate::Scalar::from_float(val.$col.$elem) ),+
-                        )
-                    }
-                }
+        // Float -> Fixed Matrix
+        impl FromFloat<$float_type> for $fixed_type {
+            #[inline]
+            fn from_float(val: $float_type) -> Self {
+                $fixed_type::new(
+                    $( crate::Scalar::from_float(val.$col.$elem) ),+
+                )
+            }
+        }
     };
 }
 

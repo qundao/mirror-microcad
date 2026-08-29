@@ -18,28 +18,26 @@ use cgmath::{InnerSpace, SquareMatrix};
 /// Helper function to return rotation X,Y,Z rotation matrices.
 fn rotation_matrices_xyz(x: Angle, y: Angle, z: Angle) -> (Mat3F, Mat3F, Mat3F) {
     (
-        Mat3F::from_angle_x(x.into_float()),
-        Mat3F::from_angle_y(y.into_float()),
-        Mat3F::from_angle_z(z.into_float()),
+        Mat3F::from_angle_x(AngleF::from_fixed(x)),
+        Mat3F::from_angle_y(AngleF::from_fixed(y)),
+        Mat3F::from_angle_z(AngleF::from_fixed(z)),
     )
 }
 
 pub fn rotate_around_axis(angle: Angle, x: Scalar, y: Scalar, z: Scalar) -> Mat3 {
     let axis = Vec3::new(x, y, z);
-    Mat3::from_float(Mat3F::from_axis_angle(
-        axis.into_float(),
-        angle.into_float(),
-    ))
+    let angle: AngleF = angle.into_float();
+    Mat3F::from_axis_angle(axis.into_float(), angle).into_fixed()
 }
 
 pub fn rotate_xyz(x: Angle, y: Angle, z: Angle) -> Mat3 {
     let (x, y, z) = rotation_matrices_xyz(x, y, z);
-    Mat3::from_float(x * y * z)
+    (x * y * z).into_fixed()
 }
 
 pub fn rotate_zyx(z: Angle, y: Angle, x: Angle) -> Mat3 {
     let (x, y, z) = rotation_matrices_xyz(x, y, z);
-    Mat3::from_float(z * y * x)
+    (z * y * x).into_fixed()
 }
 
 /// Rotation matrix to orient a vector
@@ -47,7 +45,7 @@ pub fn orient_to_z(target: Vec3) -> Mat3 {
     use crate::math::Vec3F;
 
     let z_axis = Vec3F::unit_z();
-    let target = target.into_float().normalize();
+    let target = Vec3F::from_fixed(target).normalize();
 
     // Handle edge case where target is already Z
     if (target - z_axis).magnitude2() < 1e-6 {
@@ -74,19 +72,19 @@ pub fn orient_to_z(target: Vec3) -> Mat3 {
     let dot = z_axis.dot(target).clamp(-1.0, 1.0); // avoid NaNs
     let angle = cgmath::Rad(dot.acos());
 
-    Mat3::from_float(Mat3F::from_axis_angle(rotation_axis, angle))
+    Mat3F::from_axis_angle(rotation_axis, angle).into_fixed()
 }
 
 pub fn align_vectors_rodrigues(from: Vec3, to: Vec3) -> Mat3 {
     use crate::math::Vec3F;
 
-    let from = from.into_float().normalize();
-    let to = to.into_float().normalize();
+    let from = Vec3F::from_fixed(from).normalize();
+    let to = Vec3F::from_fixed(to).normalize();
 
     let c = from.dot(to);
 
     if c > 1.0 - 1e-6 {
-        return Mat3::from_float(Mat3F::identity());
+        return Mat3F::identity().into_fixed();
     }
     if c < -1.0 + 1e-6 {
         let perp_axis = if from.x.abs() > 0.9 {
@@ -95,10 +93,7 @@ pub fn align_vectors_rodrigues(from: Vec3, to: Vec3) -> Mat3 {
             Vec3F::unit_x()
         };
         let axis = from.cross(perp_axis).normalize();
-        return Mat3::from_float(Mat3F::from_axis_angle(
-            axis,
-            cgmath::Rad(std::f64::consts::PI),
-        ));
+        return Mat3F::from_axis_angle(axis, cgmath::Rad(std::f64::consts::PI)).into_fixed();
     }
 
     let v = from.cross(to);
@@ -108,7 +103,7 @@ pub fn align_vectors_rodrigues(from: Vec3, to: Vec3) -> Mat3 {
 
     // R = I + vx + vx^2 * (1 / (1 + c))
     let k = 1.0 / (1.0 + c);
-    Mat3::from_float(Mat3F::identity() + vx + (vx * vx) * k)
+    (Mat3F::identity() + vx + (vx * vx) * k).into_fixed()
 }
 
 pub fn mat3_to_mat4(mat3: Mat3) -> Mat4 {

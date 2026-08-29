@@ -5,7 +5,10 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::{Angle, Length, Mat4, Scalar, Vec3, math};
+use crate::{
+    Angle, Length, Mat4, Scalar, Vec3,
+    math::{self, IntoFixed},
+};
 
 /// Transformation matrix
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -67,9 +70,9 @@ impl AffineTransform {
                 Mat4::from_float(mat_f)
             }
             AffineTransform::UniformScale(s) => {
-                let s_f = s.into_float();
+                let s_f = (*s).into_float();
                 let mat_f = Mat4F::from_scale(s_f);
-                Mat4::from_float(mat_f)
+                mat_f.into_fixed()
             }
             AffineTransform::Arbitrary(m) => *m,
         }
