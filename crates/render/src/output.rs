@@ -12,7 +12,7 @@ use microcad_core::{self as core, CalcBounds3D, Mat4};
 use microcad_hash::{HashId, ToHash, hash_id};
 use microcad_lang_types::{
     ModelNodeRef, ModelTree,
-    math::ToFloat,
+    math::IntoFloat,
     model::{ModelType, NodeId},
 };
 
@@ -90,7 +90,7 @@ impl RenderOutput {
     pub fn new<'tree>(model: ModelNodeRef<'tree>) -> Self {
         let output_type = model.output_type();
         let hash = hash_id!(model);
-        let local_matrix = model.local_matrix().to_float();
+        let local_matrix = model.local_matrix().into_float();
 
         RenderOutput {
             output_type,
