@@ -29,7 +29,7 @@ pub use element::{BooleanOp, BuiltinWorkpiece, Element, Workpiece};
 pub use output_type::ModelType;
 
 use crate::{
-    Arguments, Mat4, Ty, Type, Value, ValueError, ValueResult,
+    Arguments, Mat4, Ty, Type, Value, ValueError, ValueResult, math::AffineTransform,
     model::attribute::ResolutionAttribute,
 };
 
@@ -132,6 +132,14 @@ impl AttributeAccess for Model {
 impl From<Element> for Model {
     fn from(element: Element) -> Self {
         Self::new(element)
+    }
+}
+
+impl From<AffineTransform> for Model {
+    fn from(transform: AffineTransform) -> Self {
+        Self::new(Element::BuiltinWorkpiece(
+            BuiltinWorkpiece::AffineTransform(Box::new(transform)),
+        ))
     }
 }
 

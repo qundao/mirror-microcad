@@ -53,7 +53,7 @@ pub enum BuiltinWorkpiece {
     /// A parametric 2D primitive.
     Primitive(BuiltinId),
     /// An affine transformation.
-    AffineTransform(AffineTransform),
+    AffineTransform(Box<AffineTransform>),
     /// Boolean operation
     BooleanOp(BooleanOp),
     /// Extrude

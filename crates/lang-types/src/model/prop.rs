@@ -120,7 +120,7 @@ impl Properties {
     pub fn set_property(&mut self, property: impl Into<Property>) -> &Property {
         let property = property.into();
         let name = property.name.clone();
-        self.props.insert(name.clone(), property.into());
+        self.props.insert(name.clone(), property);
         self.props.get(&name).expect("Property was just inserted")
     }
 

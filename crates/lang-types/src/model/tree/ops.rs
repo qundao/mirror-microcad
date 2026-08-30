@@ -83,7 +83,6 @@ impl model::ModelTree {
 
         // 2. Recursively search children
         node.children()
-            .into_iter()
             .flat_map(|child| self._get_properties_recursive(child.id, target_id.as_ref()))
             .collect()
     }
