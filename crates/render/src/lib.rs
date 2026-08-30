@@ -79,7 +79,7 @@ impl<T: RenderPrimitive> Render for T {
 }
 
 impl Render for mu::ops::Difference {
-    fn render(&self, context: &mut RenderContext) -> RenderResult<GeometryOutput> {
+    fn render(&self, _context: &mut RenderContext) -> RenderResult<GeometryOutput> {
         todo!()
         /*context.update(|context, node| {
             let outputs = Vec::new();
@@ -94,7 +94,7 @@ impl Render for mu::ops::Difference {
 }
 
 impl Render for mu::ops::Extrude {
-    fn render(&self, context: &mut RenderContext) -> RenderResult<GeometryOutput> {
+    fn render(&self, _context: &mut RenderContext) -> RenderResult<GeometryOutput> {
         todo!()
         /*context.update(|context, node| {
             let outputs = Vec::new();

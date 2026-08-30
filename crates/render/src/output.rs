@@ -16,7 +16,7 @@ use microcad_lang_types::{
     model::{ModelType, NodeId},
 };
 
-use crate::{RenderAttributes, RenderResolution, RenderResult};
+use crate::{RenderAttributes, RenderResolution};
 
 /// Geometry output to be stored in the render cache.
 #[non_exhaustive]
