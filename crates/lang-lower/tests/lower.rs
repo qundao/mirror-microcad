@@ -225,6 +225,7 @@ snapshot_test!(builtin => ok);
 
 test_diagnostic!(unexpected_statements);
 test_diagnostic!(init);
+test_diagnostic!(init_statement);
 
 /// Test serialization
 #[test_that::test]

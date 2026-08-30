@@ -4,7 +4,7 @@
 use crate::{
     CastInto, Desugar, LowerContext, LowerError, LowerResult,
     desugar::{attribute::outer_with_doc, extract_statements, for_each_statement},
-    ir,
+    ir::{self, ReturnStatement, WorkbenchExpression},
 };
 
 use microcad_builtin::__mu;
@@ -53,6 +53,58 @@ impl Desugar<ast::LocalAssignment> for ir::InitStatement {
         }
 
         Ok(stmt)
+    }
+}
+
+impl ir::Init {
+    /// Fill up missing parameters or with default parameters.
+    pub(crate) fn fill_up_and_check(
+        &mut self,
+        inputs: &ir::ParameterList,
+        context: &mut LowerContext,
+    ) {
+        if inputs == &self.parameters {
+            context.diag(LowerError::DuplicatedDefaultInitializer {
+                src_ref: self.src_ref,
+            });
+            return;
+        }
+
+        self.statements.iter().for_each(|stmt| {
+            if inputs.get_by_name(&stmt.name).is_none() {
+                context.diag(LowerError::NotAnInputProperty {
+                    name: stmt.name.clone(),
+                    possible_inputs: inputs.names().cloned().collect(),
+                })
+            }
+        });
+
+        let mut new_statements = Vec::new();
+
+        inputs.iter().for_each(|param| {
+            match (self.find_statement(&param.id), &param.default_value) {
+                (None, Some(default_value)) => {
+                    let expr: WorkbenchExpression = default_value.clone().cast_into();
+                    new_statements.push(ir::InitStatement::new(&param.id, expr));
+                }
+                (None, None) => {
+                    context.diag(LowerError::InputNotInitialized {
+                        name: param.id.clone(),
+                        src_ref: self.src_ref,
+                        param_src_ref: param.src_ref,
+                    });
+                }
+                (Some(_), _) => {}
+            }
+        });
+
+        self.statements = self
+            .statements
+            .to_vec()
+            .into_iter()
+            .chain(new_statements)
+            .collect::<Vec<_>>()
+            .into_boxed_slice();
     }
 }
 
@@ -333,6 +385,10 @@ impl Desugar<ast::def::Workbench> for ir::desugared::Workbench {
     fn desugar(node: &ast::def::Workbench, context: &mut LowerContext) -> LowerResult<Self> {
         let parameters = ir::ParameterList::desugar(&node.parameters, context)?;
         let mut inits: Vec<ir::Init> = Vec::desugar(&node.body.statements, context)?;
+
+        inits
+            .iter_mut()
+            .for_each(|init| init.fill_up_and_check(&parameters, context));
 
         // Add parameters as default initializer.
         // This makes evaluation easier, because then we can simply trait the workbench parameters as default initializer.

@@ -98,6 +98,11 @@ impl ParameterList {
     pub fn iter(&self) -> std::slice::Iter<'_, ir::Parameter> {
         self.parameters.iter()
     }
+
+    /// Return an iterator over parameters
+    pub(crate) fn names(&self) -> impl Iterator<Item = &ir::Identifier> {
+        self.iter().map(|param| &param.id)
+    }
 }
 
 impl std::fmt::Display for ParameterList {

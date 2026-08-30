@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_builtin::BuiltinError;
-use microcad_lang_base::{Identifier, Refer, SrcRef, SrcReferrer};
+use microcad_lang_base::{Identifier, IdentifierList, Refer, SrcRef, SrcReferrer};
 use microcad_lang_parse::ast;
 use microcad_lang_types::{TypeError, ValueError};
 use miette::Diagnostic;
@@ -156,6 +156,27 @@ pub enum LowerError {
         #[label("Remove this type annotation")]
         src_ref: SrcRef,
     },
+
+    #[error("This is not a workbench input property: {name}")]
+    #[diagnostic(code(lower::not_an_input_property))]
+    NotAnInputProperty {
+        name: microcad_lang_base::Identifier,
+        #[help("Possible inputs")]
+        possible_inputs: IdentifierList,
+    },
+
+    #[error("Input `{name}` not initialized")]
+    #[diagnostic(code(lower::input_not_initalized))]
+    InputNotInitialized {
+        name: Identifier,
+        src_ref: SrcRef,
+        #[label("The input to be initialized has been defined here")]
+        param_src_ref: SrcRef,
+    },
+
+    #[error("This initializer is equivant to the default initializer and will not be called")]
+    #[diagnostic(code(lower::duplicated_default_initializer), severity = "Warning")]
+    DuplicatedDefaultInitializer { src_ref: SrcRef },
 }
 
 /// Result with lower error
@@ -165,7 +186,7 @@ impl SrcReferrer for LowerError {
     fn src_ref(&self) -> SrcRef {
         use LowerError::*;
         match self {
-            ValueError(_) | LowerError::BuiltinError(_) => SrcRef::none(),
+            ValueError(_) | BuiltinError(_) => SrcRef::none(),
             DuplicateArgument { id, .. } => id.src_ref(),
             StatementNotAllowed { src_ref }
             | InvalidGlobPattern(src_ref)
@@ -189,6 +210,9 @@ impl SrcReferrer for LowerError {
             UnsupportedKeyValueAttribute { src_ref, .. } => *src_ref,
             UnsupportedTagAttribute { tag } => tag.src_ref(),
             InvalidInitStatement { src_ref, .. } => *src_ref,
+            InputNotInitialized { src_ref, .. } => *src_ref,
+            NotAnInputProperty { name, .. } => name.src_ref(),
+            DuplicatedDefaultInitializer { src_ref } => *src_ref,
         }
     }
 }
