@@ -29,7 +29,7 @@ pub use error::ResolveError;
 pub use resolver::Resolver;
 
 /// Result type of any resolve.
-pub type ResolveResult<T> = std::result::Result<T, ResolveError>;
+pub type ResolveResult<T> = std::result::Result<T, Box<ResolveError>>;
 
 /// Resolve Context
 pub struct ResolveContext {

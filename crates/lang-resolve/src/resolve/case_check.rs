@@ -22,7 +22,8 @@ pub trait CaseCheck {
                         expected,
                         actual,
                         src_ref: id.src_ref(),
-                    })
+                    }
+                    .into())
                 }
             }
             None => Ok(()),
