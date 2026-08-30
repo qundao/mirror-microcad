@@ -592,7 +592,7 @@ pub mod geo2d {
 
     use super::*;
 
-    pub static CIRCLE: &'static BuiltinItem = Circle::ITEM;
+    pub static CIRCLE: &BuiltinItem = Circle::ITEM;
 
     /// A circle with a radius.
     #[derive(Serialize, Deserialize, Debug)]
@@ -655,7 +655,7 @@ pub mod ops {
         }
     }
 
-    pub static TRANSLATE: &'static BuiltinItem = Translate::ITEM;
+    pub static TRANSLATE: &BuiltinItem = Translate::ITEM;
 
     //#[builtin_op(ops::translate(self: Model, x: Length, y: Length, z: Length) -> Model)]
     pub fn translate(
@@ -671,10 +671,7 @@ pub mod ops {
         );
 
         let mut tree = ModelTree::new(
-            Model::new(BuiltinWorkpiece::AffineTransform(
-                AffineTransform::Translation { x, y, z },
-            ))
-            .with_op_properties(args),
+            Model::from(AffineTransform::Translation { x, y, z }).with_op_properties(args),
         );
 
         tree.append(Rc::unwrap_or_clone(self_));
@@ -697,7 +694,7 @@ pub mod ops {
         }
     }
 
-    pub static DIFFERENCE: &'static BuiltinItem = Difference::ITEM;
+    pub static DIFFERENCE: &BuiltinItem = Difference::ITEM;
 
     pub fn difference(
         args: Arguments,
@@ -734,7 +731,7 @@ pub mod ops {
         }
     }
 
-    pub static EXTRUDE: &'static BuiltinItem = Extrude::ITEM;
+    pub static EXTRUDE: &BuiltinItem = Extrude::ITEM;
 
     pub fn extrude(
         args: Arguments,

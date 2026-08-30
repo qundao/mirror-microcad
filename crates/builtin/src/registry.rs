@@ -38,8 +38,8 @@ impl BuiltinRegistry {
         .iter()
         .for_each(|module| registry.register(module));
 
-        registry.register(&mu::geo2d::CIRCLE);
-        registry.register(&mu::ops::TRANSLATE);
+        registry.register(mu::geo2d::CIRCLE);
+        registry.register(mu::ops::TRANSLATE);
 
         registry
     }
