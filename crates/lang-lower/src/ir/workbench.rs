@@ -3,7 +3,7 @@
 
 //! Workbench definition syntax element
 
-use crate::{CastInto, ir};
+use crate::{CastInto, LowerContext, ir};
 
 use derive_more::{Display, From};
 use microcad_lang_base::{Identifier, SingleIdentifier, SrcRef, SrcReferrer, element::Visibility};
@@ -122,6 +122,12 @@ impl Init {
                 )),
             )
         }))
+    }
+
+    pub fn find_statement(&self, name: impl AsRef<str>) -> Option<&InitStatement> {
+        self.statements
+            .iter()
+            .find(|stmt| &stmt.name == name.as_ref())
     }
 
     /// Add statements to this initializer

@@ -39,13 +39,20 @@ impl Desugar<ast::ExpressionStatement> for Option<ir::InitStatement> {
 
 impl Desugar<ast::LocalAssignment> for ir::InitStatement {
     fn desugar(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
-        // TODO Check attributes in node
-
-        Ok(Self {
+        let stmt = Self {
             name: ir::Identifier::desugar(&node.id, context)?,
             expression: ir::WorkbenchExpression::desugar(node.expr.as_ref(), context)?,
             src_ref: context.span_to_src_ref(&node.span),
-        })
+        };
+
+        if let Some(ty) = &node.ty {
+            context.diag(LowerError::InvalidInitStatement {
+                src_ref: context.span_to_src_ref(&ty.span()),
+                stmt_src_ref: stmt.src_ref,
+            });
+        }
+
+        Ok(stmt)
     }
 }
 
@@ -64,13 +71,15 @@ impl Desugar<ast::Init> for ir::Init {
             Ok(())
         })?;
 
-        Ok(Self {
+        let init = Self {
             attr: crate::desugar::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
             keyword_ref: context.span_to_src_ref(&node.keyword_span),
             parameters: ir::ParameterList::desugar(&node.parameters, context)?,
             statements: Box::desugar(&node.body.statements, context)?,
             src_ref: context.span_to_src_ref(&node.span),
-        })
+        };
+
+        Ok(init)
     }
 }
 

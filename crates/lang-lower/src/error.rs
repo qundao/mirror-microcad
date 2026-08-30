@@ -146,6 +146,16 @@ pub enum LowerError {
         #[label("Tag attribute")]
         tag: ir::Identifier,
     },
+
+    /// Type annotation not allowed (in an if statement)
+    #[error("Invalid initializer")]
+    InvalidInitStatement {
+        #[label("Invalid initializer statement")]
+        stmt_src_ref: SrcRef,
+
+        #[label("Remove this type annotation")]
+        src_ref: SrcRef,
+    },
 }
 
 /// Result with lower error
@@ -153,30 +163,32 @@ pub type LowerResult<T> = Result<T, LowerError>;
 
 impl SrcReferrer for LowerError {
     fn src_ref(&self) -> SrcRef {
+        use LowerError::*;
         match self {
-            LowerError::ValueError(_) | LowerError::BuiltinError(_) => SrcRef::none(),
-            LowerError::DuplicateArgument { id, .. } => id.src_ref(),
-            LowerError::StatementNotAllowed { src_ref }
-            | LowerError::InvalidGlobPattern(src_ref)
-            | LowerError::UseGlobAlias(src_ref)
-            | LowerError::InvalidLiteral { src_ref, .. }
-            | LowerError::InvalidExpression { src_ref }
-            | LowerError::InvalidRangeType { src_ref }
-            | LowerError::ImplicitWorkbenchReturn { src_ref } => *src_ref,
-            LowerError::ParseIntError(parse_int_error) => parse_int_error.src_ref(),
-            LowerError::InvalidIdentifier(id) => id.src_ref(),
-            LowerError::UnknownUnit(unit) => unit.src_ref(),
-            LowerError::UnknownType(ty) => ty.src_ref(),
-            LowerError::TypeError(ty) => ty.src_ref(),
-            LowerError::AstParser(err) => err.src_ref(),
-            LowerError::Unreachable { src_ref, .. } => *src_ref,
-            LowerError::InvalidConstantExpression { src_ref } => *src_ref,
-            LowerError::InnerDocAfterInnerAttribute { src_ref } => *src_ref,
-            LowerError::InnerAttributeAfterStatement { src_ref } => *src_ref,
-            LowerError::FunctionStatementIgnored(src_ref) => *src_ref,
-            LowerError::UnsupportedCommandAttribute { src_ref, .. } => *src_ref,
-            LowerError::UnsupportedKeyValueAttribute { src_ref, .. } => *src_ref,
-            LowerError::UnsupportedTagAttribute { tag } => tag.src_ref(),
+            ValueError(_) | LowerError::BuiltinError(_) => SrcRef::none(),
+            DuplicateArgument { id, .. } => id.src_ref(),
+            StatementNotAllowed { src_ref }
+            | InvalidGlobPattern(src_ref)
+            | UseGlobAlias(src_ref)
+            | InvalidLiteral { src_ref, .. }
+            | InvalidExpression { src_ref }
+            | InvalidRangeType { src_ref }
+            | ImplicitWorkbenchReturn { src_ref } => *src_ref,
+            ParseIntError(parse_int_error) => parse_int_error.src_ref(),
+            InvalidIdentifier(id) => id.src_ref(),
+            UnknownUnit(unit) => unit.src_ref(),
+            UnknownType(ty) => ty.src_ref(),
+            TypeError(ty) => ty.src_ref(),
+            AstParser(err) => err.src_ref(),
+            Unreachable { src_ref, .. } => *src_ref,
+            InvalidConstantExpression { src_ref } => *src_ref,
+            InnerDocAfterInnerAttribute { src_ref } => *src_ref,
+            InnerAttributeAfterStatement { src_ref } => *src_ref,
+            FunctionStatementIgnored(src_ref) => *src_ref,
+            UnsupportedCommandAttribute { src_ref, .. } => *src_ref,
+            UnsupportedKeyValueAttribute { src_ref, .. } => *src_ref,
+            UnsupportedTagAttribute { tag } => tag.src_ref(),
+            InvalidInitStatement { src_ref, .. } => *src_ref,
         }
     }
 }
