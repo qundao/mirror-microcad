@@ -56,7 +56,7 @@ impl Cli {
         }
     }
 
-    /// Retrieve render parameters from resolution string.
+    // Retrieve render parameters from resolution string.
     /*pub fn render_params(&self, resolution: &str) -> mu::Result<mu::RenderParameters> {
         Ok(mu::RenderParameters::from_str(resolution)?.with_empty_cache())
     }*/

@@ -25,7 +25,7 @@ pub struct Export {
 }
 
 impl RunCommand for Export {
-    fn run(&self, cli: &Cli) -> miette::Result<()> {
+    fn run(&self, _cli: &Cli) -> miette::Result<()> {
         todo!()
         /*
         use microcad_driver::prelude as mu;
