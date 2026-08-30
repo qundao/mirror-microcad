@@ -83,12 +83,9 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
 
         let mut md = Markdown::default();
 
-        match (self.name(), self.doc()) {
-            (Some(id), Some(doc)) => {
-                md = parse(format!("# {id}\n{doc}"));
-            }
-            _ => {}
-        };
+        if let (Some(id), Some(doc)) = (self.name(), self.doc()) {
+            md = parse(format!("# {id}\n{doc}"));
+        }
 
         {
             // Generate list of sub-modules

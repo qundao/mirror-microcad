@@ -83,7 +83,7 @@ impl MdBook {
                 .try_for_each(|symbol| self_._generate_summary(writer, symbol, depth))
         }
 
-        let path = Self::symbol_path(symbol.clone());
+        let path = Self::symbol_path(symbol);
 
         if let Some(id) = symbol.name() {
             entry(writer, id, path, depth)?;
@@ -138,10 +138,7 @@ impl MdBook {
         Ok(symbol
             .descendants()
             .try_for_each(|symbol| {
-                let path = &self
-                    .path
-                    .join("src")
-                    .join(Self::symbol_path(symbol.clone()));
+                let path = &self.path.join("src").join(Self::symbol_path(symbol));
                 std::fs::create_dir_all(path.parent().expect("A parent"))?;
                 match symbol.def() {
                     SymbolDef::Source(_) | SymbolDef::InlineModule(_) | SymbolDef::Workbench(_) => {
@@ -171,10 +168,8 @@ impl MdBook {
 
 impl DocGen for MdBook {
     fn doc_gen<'a>(&self, symbol: SymbolNodeRef<'a>) -> Result<(), Box<dyn Error>> {
-        std::fs::create_dir_all(self.path.join("src"))?;
-
         Config.write_to_file(self.path.join("book.toml"))?;
-        self.write_summary(symbol.clone())?;
+        self.write_summary(symbol)?;
         self.write_symbol(symbol)
     }
 }

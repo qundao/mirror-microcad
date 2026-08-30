@@ -214,7 +214,7 @@ impl BuiltinMdbook {
 
     pub fn write(&self, path: impl AsRef<std::path::Path>) -> Result<(), md::MdBookError> {
         let path = path.as_ref();
-        std::fs::create_dir_all(&path)?;
+        std::fs::create_dir_all(path)?;
         crate::mdbook::Config.write_to_file(path.join("book.toml"))?;
 
         let mdbook = self.to_mdbook();
