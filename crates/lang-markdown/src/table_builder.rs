@@ -19,7 +19,7 @@ impl Alignment {
         }
     }
 
-    fn to_delimiter(&self, width: usize) -> String {
+    fn to_delimiter(self, width: usize) -> String {
         let width = width.max(3);
         match self {
             Alignment::Left => format!(":{:-<width$}", "", width = width - 1),
@@ -167,7 +167,11 @@ impl std::fmt::Display for TableBuilder {
             for i in 0..self.columns.len() {
                 let cell = row.get(i).map(String::as_str).unwrap_or("");
                 let align = self.columns[i].align;
-                write!(f, " {} |", align.format_cell(cell, widths[i]))?;
+                write!(
+                    f,
+                    " {} |",
+                    align.format_cell(cell, widths.get(i).copied().unwrap_or(0))
+                )?;
             }
             writeln!(f)?;
         }

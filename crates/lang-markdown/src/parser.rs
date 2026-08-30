@@ -212,7 +212,7 @@ impl Parse for Markdown {
                 }
                 current_section
                     .content
-                    .push(Block::Table(Table::from_iter(content.into_iter())));
+                    .push(Block::Table(Table::from_iter(content)));
             } else if trimmed.starts_with(">") {
                 let mut content = vec![line.to_string()];
                 while let Some((_, line)) = context.next() {
@@ -224,9 +224,7 @@ impl Parse for Markdown {
                 }
                 current_section
                     .content
-                    .push(Block::BlockQuote(BlockQuote::from_iter(
-                        content.into_iter(),
-                    )));
+                    .push(Block::BlockQuote(BlockQuote::from_iter(content)));
             }
             // 4. Text
             else {
