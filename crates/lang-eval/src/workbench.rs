@@ -188,10 +188,7 @@ impl Eval for symbol::workbench::Call {
                         let multi_args = op.argument_multi_match(&args)?;
                         let mut models = Vec::new();
                         for args in multi_args {
-                            models.push(ModelTree::from((op.f)(
-                                args,
-                                &mut BuiltinEvalContext::default(),
-                            )?));
+                            models.push((op.f)(args, &mut BuiltinEvalContext::default())?);
                         }
 
                         Ok(ModelTree::to_multiplicity(models).into())
@@ -333,7 +330,7 @@ impl CallTrait<ModelTree> for symbol::Workbench {
                                 },
                             )?;
 
-                            models.push(eval_to_model(&self, properties, context)?);
+                            models.push(eval_to_model(self, properties, context)?);
                         }
                     }
                     Err(_) => todo!(),

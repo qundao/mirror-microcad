@@ -30,10 +30,7 @@ pub trait ArgumentMatch {
             return Ok(Arguments::from(Tuple {
                 named: arguments
                     .iter()
-                    .filter_map(|arg| match &arg.id {
-                        Some(id) => Some((id.clone(), arg.value.clone())),
-                        None => None,
-                    })
+                    .filter_map(|arg| arg.id.as_ref().map(|id| (id.clone(), arg.value.clone())))
                     .collect(),
                 positional: arguments
                     .iter()
@@ -90,14 +87,13 @@ pub trait ArgumentMatch {
 
         // 4. Try to find positional arguments by type
         arguments.args.iter().for_each(|arg| {
-            if arg.id.is_none() {
-                if let Some(ref mut match_arg) = matched_args
+            if arg.id.is_none()
+                && let Some(ref mut match_arg) = matched_args
                     .iter_mut()
                     .filter(|match_arg| match_arg.value.is_none())
-                    .find(|match_arg| &match_arg.ty == &arg.value.ty())
-                {
-                    match_arg.value = Some(arg.value.clone());
-                }
+                    .find(|match_arg| match_arg.ty == arg.value.ty())
+            {
+                match_arg.value = Some(arg.value.clone());
             }
         });
 
@@ -192,10 +188,11 @@ impl ArgumentMatch for ParameterList {
     fn default_values(&self) -> Tuple {
         use microcad_package::symbol::ExprSpec;
         Tuple::from_iter(self.parameters.iter().filter_map(|param| {
-            match param.default_value.as_ref().and_then(|expr| expr.value()) {
-                Some(value) => Some((param.id.clone(), value.clone())),
-                None => None,
-            }
+            param
+                .default_value
+                .as_ref()
+                .and_then(|expr| expr.value())
+                .map(|value| (param.id.clone(), value.clone()))
         }))
     }
 
