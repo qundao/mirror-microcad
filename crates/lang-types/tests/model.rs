@@ -36,11 +36,9 @@ mod model {
         let z = Length::mm(z_mm);
 
         let args = arguments!(x = x, y = y, z = z);
-        Model::new(element::BuiltinWorkpiece::AffineTransform(
-            AffineTransform::Translation { x, y, z },
-        ))
-        .with_name("translate")
-        .with_op_properties(args)
+        Model::from(AffineTransform::Translation { x, y, z })
+            .with_name("translate")
+            .with_op_properties(args)
     }
 }
 
@@ -281,12 +279,16 @@ fn test_replace_input_placeholders_multiplicity() {
     for (idx, branch) in branches.iter().enumerate() {
         // Verify branch is still translate transform
         assert_eq!(branch.name(), Some(&Identifier::from("translate")));
-        assert!(matches!(
-            branch.element,
-            Element::BuiltinWorkpiece(BuiltinWorkpiece::AffineTransform(
-                AffineTransform::Translation { .. }
-            ))
-        ));
+        if let Element::BuiltinWorkpiece(BuiltinWorkpiece::AffineTransform(ref transform)) =
+            branch.element
+        {
+            assert!(matches!(**transform, AffineTransform::Translation { .. }));
+        } else {
+            panic!(
+                "Expected BuiltinWorkpiece::AffineTransform, got {:?}",
+                branch.element
+            );
+        }
 
         // Verify children under translate
         let branch_children: Vec<_> = branch.children().collect();
