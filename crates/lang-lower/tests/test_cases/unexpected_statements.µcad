@@ -19,7 +19,7 @@ init() {} // error: lower::unexpected_statement
 42; // ok
 
 
-sketch B() {
+sketch B(a: Length) {
     sketch A() {} // error: lower::unexpected_statement
 
     mod b {} // error: lower::unexpected_statement
@@ -29,7 +29,7 @@ sketch B() {
     fn d() {} // ok
     use e; // ok
     const F = 42; // ok
-    init() {} // ok
+    init() {a = 42mm;} // ok
     return 42; // error: lower::unexpected_statement
     #![g] // error: lower::inner_attr_after_stmt
     h = 42; // ok
@@ -53,7 +53,7 @@ mod module {
     const A = 42; // ok
     a = 42; // error: lower::unexpected_statement
 
-    sketch A() {
+    sketch A(foo: Integer) {
         init() {
             prop foo = 42; // error: lower::unexpected_statement
             foo = 42; // ok

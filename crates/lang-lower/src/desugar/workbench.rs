@@ -81,6 +81,26 @@ impl ir::Init {
 
         let mut new_statements = Vec::new();
 
+        self.parameters.iter().for_each(|param| {
+            match (self.find_statement(&param.id), &param.default_value) {
+                (None, Some(default_value)) => {
+                    let expr: WorkbenchExpression = default_value.clone().cast_into();
+                    new_statements.push(ir::InitStatement::new(&param.id, expr));
+                }
+                _ => {}
+            }
+        });
+
+        self.statements = self
+            .statements
+            .to_vec()
+            .into_iter()
+            .chain(new_statements)
+            .collect::<Vec<_>>()
+            .into_boxed_slice();
+
+        let mut new_statements = Vec::new();
+
         inputs.iter().for_each(|param| {
             match (self.find_statement(&param.id), &param.default_value) {
                 (None, Some(default_value)) => {
