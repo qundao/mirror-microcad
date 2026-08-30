@@ -114,7 +114,7 @@ impl Desugar<ast::Expression> for ir::FunctionExpression {
                             path: __mu!(core::member_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
-                                Self::Path(ir::Path::from(t.name.to_string())),
+                                Self::Value(ir::ConstantValue::from_value(t.name.clone())),
                             ]),
                             src_ref,
                         }),

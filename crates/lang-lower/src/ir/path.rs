@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::MakeHumanReadable;
 
-#[derive(Clone, Debug, From, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, From, Hash, PartialEq, Eq, Serialize, Deserialize)]
 pub struct UnresolvedPath {
     pub is_absolute: bool,
     pub parts: Box<[Identifier]>,
@@ -60,7 +60,7 @@ impl std::fmt::Display for UnresolvedPath {
     }
 }
 
-#[derive(Clone, Debug, Display, From, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Display, From, Hash, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Path {
     /// A Path that has been resolved into a `SymbolId`.
     Resolved(SymbolId),

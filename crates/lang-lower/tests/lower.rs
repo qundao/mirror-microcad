@@ -4,39 +4,24 @@
 use microcad_lang_base::{
     Artifact, CompilationResult, DiagRenderOptions, MICROCAD_EXTENSION, Source,
 };
-use microcad_lang_lower::{self as lower, Desugar, Ir, LowerContext, LowerResult, ir};
+use microcad_lang_lower::{self as lower, Ir, LowerContext};
 use microcad_lang_parse::{
     self as parse, Ast, Parse,
     ast::visitor::{ExpectedDiagnostic, ExpectedDiagnostics},
 };
 
+mod common;
+
 use parse::ast;
 
 use test_that::prelude::*;
-
-fn source_from_test_file(name: &str) -> Source {
-    Source::load(format!("tests/test_cases/{name}.{}", MICROCAD_EXTENSION)).expect("No error")
-}
-
-/// Get intermediate representation and diagnostics.
-fn ir_from_source(source: &Source) -> CompilationResult<Ir> {
-    let ast = parse::parse(source)?.0;
-    let mut context = LowerContext::from(source);
-    lower::lower(&mut context, &ast)
-}
-
-fn desugar(source: &Source) -> LowerResult<ir::desugared::Source> {
-    let ast = parse::parse(source).expect("No parse error").0;
-    let mut context = LowerContext::from(source);
-    ir::desugared::Source::desugar(ast.tree(), &mut context)
-}
 
 macro_rules! desugar_unit_test {
     ($name:ident => |$ir:ident| $body:block) => {
         #[test_that::test]
         fn $name() {
-            let source = source_from_test_file(stringify!($name));
-            desugar(&source).expect("No error")
+            let source = common::source_from_test_file(stringify!($name));
+            common::desugar(&source).expect("No error")
         }
     };
 }
@@ -63,8 +48,8 @@ macro_rules! snapshot_test {
         #[test_that::test]
         fn $name() {
             let name = stringify!($name);
-            let source = source_from_test_file(name);
-            match ir_from_source(&source) {
+            let source = common::source_from_test_file(name);
+            match common::ir_from_source(&source) {
                 Ok((ir, diag)) => {
                     if diag.has_errors() || diag.has_warnings() {
                         panic!("{diag:?}");
@@ -106,7 +91,7 @@ macro_rules! test_diagnostic {
         #[test]
         fn $name() {
             let filename = stringify!($name);
-            let source = source_from_test_file(filename);
+            let source = common::source_from_test_file(filename);
             let parse_context = microcad_lang_parse::ParseContext::from(&source);
             let ast = Ast::parse(&parse_context).unwrap();
             let mut context = microcad_lang_lower::LowerContext::new(&source);
@@ -230,8 +215,8 @@ test_diagnostic!(init_statement);
 /// Test serialization
 #[test_that::test]
 fn serde_circle() {
-    let source = source_from_test_file("circle");
-    let in_ir = ir_from_source(&source).unwrap().0;
+    let source = common::source_from_test_file("circle");
+    let in_ir = common::ir_from_source(&source).unwrap().0;
 
     // 1. Serialize/Deserialize
     let serialized = in_ir.to_ron().expect("No error");

@@ -9,7 +9,7 @@ mod mut_visitor;
 pub use mut_visitor::*;
 
 pub trait ConstantVisitor: Sized {
-    fn visit_path(&mut self, _path: &ir::Path) {}
+    fn visit_path<'a>(&mut self, _path: &'a ir::Path) {}
     fn visit_name(&mut self, _name: &ir::Identifier) {}
 
     fn visit_parameter(&mut self, parameter: &ir::Parameter) {
@@ -216,8 +216,9 @@ pub trait FnVisitor: ConstantVisitor {
 }
 
 pub trait Visitor: FnVisitor + WorkbenchVisitor + ConstantVisitor {
-    fn visit_tree(&mut self, ir: &ir::Tree) {
-        ir.root()
+    fn visit_tree(&mut self, ir_tree: &ir::Tree) {
+        ir_tree
+            .root()
             .descendants()
             .for_each(|node| self.visit_node(node));
     }
@@ -228,6 +229,7 @@ pub trait Visitor: FnVisitor + WorkbenchVisitor + ConstantVisitor {
 
     fn visit_item(&mut self, item: &ir::IrItem) {
         self.visit_meta(&item.meta);
+        self.visit_def(&item.def);
     }
 
     fn visit_source(&mut self, source: &ir::Source) {

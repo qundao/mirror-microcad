@@ -5,6 +5,8 @@ use microcad_lang_base::{self as base};
 use microcad_lang_lower::{Desugar, LowerContext, ir};
 use microcad_lang_parse::ast;
 
+mod common;
+
 #[test]
 fn outer_doc_block() {
     // An AST still has the /// prefix
