@@ -220,15 +220,12 @@ impl Desugar<ast::StatementList> for Vec<ir::Init> {
                 })?;
         }
 
-        Ok(Vec::from_iter(
-            extract_statements(node, |stmt| {
-                Ok(match stmt {
-                    ast::Statement::Init(init) => Some(ir::Init::desugar(init, context)?),
-                    _ => None,
-                })
-            })?
-            .into_iter(),
-        ))
+        Ok(Vec::from_iter(extract_statements(node, |stmt| {
+            Ok(match stmt {
+                ast::Statement::Init(init) => Some(ir::Init::desugar(init, context)?),
+                _ => None,
+            })
+        })?))
     }
 }
 
