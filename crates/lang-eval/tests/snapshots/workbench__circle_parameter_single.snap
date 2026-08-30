@@ -3,6 +3,6 @@ source: crates/lang-eval/tests/workbench.rs
 expression: model
 ---
 sketch
-[in]  radius: Length = 4mm
+|   - radius [in]: Length = 4mm
 └── 0x1801bf438d8b094
-    [in]  radius: Length = 4mm
+        - radius [in]: Length = 4mm

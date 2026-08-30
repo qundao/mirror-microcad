@@ -4,4 +4,4 @@ expression: model
 ---
 Group
 └── 0x1801bf438d8b094
-    [in]  radius: Length = 4mm
+        - radius [in]: Length = 4mm

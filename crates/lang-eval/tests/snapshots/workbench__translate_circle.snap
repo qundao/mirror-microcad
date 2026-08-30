@@ -3,8 +3,8 @@ source: crates/lang-eval/tests/workbench.rs
 expression: model
 ---
 Translate(1mm, 2mm, 0mm)
-      x: Length = 1mm
-      y: Length = 2mm
-      z: Length = 0mm
+|   - x: Length = 1mm
+|   - y: Length = 2mm
+|   - z: Length = 0mm
 └── 0x1801bf438d8b094
-    [in]  radius: Length = 4mm
+        - radius [in]: Length = 4mm
