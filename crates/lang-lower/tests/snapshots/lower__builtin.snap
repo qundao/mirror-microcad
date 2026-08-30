@@ -78,11 +78,11 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             args: (
                                                 src_ref: "5:21 @ 0xb68464fb05014e73 (117..125)",
                                                 args: [
-                                                    Unnamed(Constant(((
+                                                    Unnamed(Value(((
                                                         value: Quantity("1"),
                                                         src_ref: "5:21 @ 0xb68464fb05014e73 (117..120)",
                                                     )))),
-                                                    Unnamed(Constant(((
+                                                    Unnamed(Value(((
                                                         value: Quantity("2"),
                                                         src_ref: "5:26 @ 0xb68464fb05014e73 (122..125)",
                                                     )))),

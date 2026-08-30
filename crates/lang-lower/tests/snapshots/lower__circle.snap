@@ -114,7 +114,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                     value: "x",
                                                                     src_ref: "6:45 @ 0x6fea70d2e98e16db (192..193)",
                                                                 )),
-                                                                expr: Constant(((
+                                                                expr: Value(((
                                                                     value: Quantity("0mm"),
                                                                     src_ref: "6:49 @ 0x6fea70d2e98e16db (196..201)",
                                                                 ))),
@@ -125,7 +125,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                     value: "y",
                                                                     src_ref: "6:56 @ 0x6fea70d2e98e16db (203..204)",
                                                                 )),
-                                                                expr: Constant(((
+                                                                expr: Value(((
                                                                     value: Quantity("0mm"),
                                                                     src_ref: "6:60 @ 0x6fea70d2e98e16db (207..212)",
                                                                 ))),
@@ -187,7 +187,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                             value: "x",
                                                                             src_ref: "7:38 @ 0x6fea70d2e98e16db (254..255)",
                                                                         )),
-                                                                        expr: Constant(((
+                                                                        expr: Value(((
                                                                             value: Quantity("0mm"),
                                                                             src_ref: "7:42 @ 0x6fea70d2e98e16db (258..263)",
                                                                         ))),
@@ -198,7 +198,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                             value: "y",
                                                                             src_ref: "7:49 @ 0x6fea70d2e98e16db (265..266)",
                                                                         )),
-                                                                        expr: Constant(((
+                                                                        expr: Value(((
                                                                             value: Quantity("0mm"),
                                                                             src_ref: "7:53 @ 0x6fea70d2e98e16db (269..274)",
                                                                         ))),
@@ -264,7 +264,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                         value: "rhs",
                                                                         src_ref: "None",
                                                                     )),
-                                                                    expr: Constant(((
+                                                                    expr: Value(((
                                                                         value: Quantity("2"),
                                                                         src_ref: "8:29 @ 0x6fea70d2e98e16db (307..310)",
                                                                     ))),
@@ -317,7 +317,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                             value: "x",
                                                                             src_ref: "6:45 @ 0x6fea70d2e98e16db (192..193)",
                                                                         )),
-                                                                        expr: Constant(((
+                                                                        expr: Value(((
                                                                             value: Quantity("0mm"),
                                                                             src_ref: "6:49 @ 0x6fea70d2e98e16db (196..201)",
                                                                         ))),
@@ -328,7 +328,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                             value: "y",
                                                                             src_ref: "6:56 @ 0x6fea70d2e98e16db (203..204)",
                                                                         )),
-                                                                        expr: Constant(((
+                                                                        expr: Value(((
                                                                             value: Quantity("0mm"),
                                                                             src_ref: "6:60 @ 0x6fea70d2e98e16db (207..212)",
                                                                         ))),
@@ -520,7 +520,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                             value: "z",
                                                             src_ref: "12:59 @ 0x6fea70d2e98e16db (409..410)",
                                                         )),
-                                                        expr: Constant(((
+                                                        expr: Value(((
                                                             value: Quantity("0mm"),
                                                             src_ref: "12:63 @ 0x6fea70d2e98e16db (413..418)",
                                                         ))),

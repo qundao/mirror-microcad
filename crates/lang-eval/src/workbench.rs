@@ -215,7 +215,7 @@ impl Eval<Value> for symbol::WorkbenchExpression {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         match &self {
             symbol::WorkbenchExpression::Invalid => unreachable!(),
-            symbol::WorkbenchExpression::Constant(constant_value) => {
+            symbol::WorkbenchExpression::Value(constant_value) => {
                 Ok(constant_value.value().clone())
             }
             symbol::WorkbenchExpression::Path(path) => path.eval(context),

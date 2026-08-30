@@ -9,7 +9,7 @@ use derive_more::{Display, From};
 use microcad_lang_base::{Identifier, SingleIdentifier, SrcRef, SrcReferrer, element::Visibility};
 
 pub use microcad_lang_base::element::WorkbenchKind;
-use microcad_lang_types::{FunctionType, Value};
+use microcad_lang_types::Value;
 use serde::{Deserialize, Serialize};
 
 /// Each WorkbenchStatement eventually evals into a [`Models`]
@@ -155,7 +155,7 @@ impl Marker {
 #[derive(Debug, Clone, From, PartialEq, Hash, Serialize, Deserialize)]
 pub enum WorkbenchExpression {
     Invalid,
-    Constant(ir::ConstantValue),
+    Value(ir::ConstantValue),
     Path(ir::Path),
     Group(ir::Group),
     If(ir::If<WorkbenchExpression>),
@@ -168,7 +168,7 @@ impl SrcReferrer for WorkbenchExpression {
         use WorkbenchExpression::*;
         match &self {
             Invalid => SrcRef::none(),
-            Constant(literal) => literal.src_ref(),
+            Value(literal) => literal.src_ref(),
             Path(name) => name.src_ref(),
             Group(group) => group.src_ref,
             If(if_) => if_.src_ref,
@@ -183,7 +183,7 @@ impl ir::ExprSpec for WorkbenchExpression {
 
     fn value(&self) -> Option<&Value> {
         match &self {
-            WorkbenchExpression::Constant(constant) => Some(constant.value()),
+            WorkbenchExpression::Value(constant) => Some(constant.value()),
             _ => None,
         }
     }
@@ -202,7 +202,7 @@ impl CastInto<ir::WorkbenchExpression> for ir::ConstantExpression {
     fn cast_into(self: ir::ConstantExpression) -> ir::WorkbenchExpression {
         match self {
             ir::ConstantExpression::Invalid => ir::WorkbenchExpression::Invalid,
-            ir::ConstantExpression::Constant(literal) => ir::WorkbenchExpression::Constant(literal),
+            ir::ConstantExpression::Value(literal) => ir::WorkbenchExpression::Value(literal),
             ir::ConstantExpression::Path(name) => ir::WorkbenchExpression::Path(name),
             ir::ConstantExpression::Call(call) => ir::WorkbenchExpression::Call(call.cast_into()),
         }

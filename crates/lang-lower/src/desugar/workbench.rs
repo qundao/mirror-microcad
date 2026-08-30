@@ -106,9 +106,9 @@ impl Desugar<ast::Expression> for ir::WorkbenchExpression {
             ast::Expression::Literal(ast::Literal {
                 literal: ast::LiteralKind::String(s),
                 ..
-            }) => Self::Constant(ir::ConstantValue::from_value(s.content.clone())),
+            }) => Self::Value(ir::ConstantValue::from_value(s.content.clone())),
             ast::Expression::Literal(expr) => {
-                Self::Constant(ir::ConstantValue::desugar(expr, context)?)
+                Self::Value(ir::ConstantValue::desugar(expr, context)?)
             }
             ast::Expression::String(s) => Self::Call(ir::Call::desugar(s, context)?.cast_into()),
             ast::Expression::Tuple(t) => Self::Call(ir::Call::desugar(t, context)?),

@@ -89,7 +89,7 @@ pub trait ExprSpec: Serialize + SrcReferrer + SingleIdentifier {
 
 pub enum ConstantExpression {
     Invalid,
-    Constant(ir::ConstantValue),
+    Value(ir::ConstantValue),
     Path(ir::Path),
     Call(ir::Call<ConstantExpression>),
 }
@@ -107,7 +107,7 @@ impl SrcReferrer for ConstantExpression {
     fn src_ref(&self) -> SrcRef {
         match &self {
             ConstantExpression::Invalid => SrcRef::none(),
-            ConstantExpression::Constant(literal) => literal.src_ref(),
+            ConstantExpression::Value(literal) => literal.src_ref(),
             ConstantExpression::Path(name) => name.src_ref(),
             ConstantExpression::Call(call) => call.src_ref,
         }
@@ -119,7 +119,7 @@ impl ExprSpec for ConstantExpression {
 
     fn value(&self) -> Option<&Value> {
         match &self {
-            ConstantExpression::Constant(constant) => Some(constant.value()),
+            ConstantExpression::Value(constant) => Some(constant.value()),
             _ => None,
         }
     }
@@ -128,7 +128,7 @@ impl ExprSpec for ConstantExpression {
 impl std::fmt::Display for ConstantExpression {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match &self {
-            ConstantExpression::Constant(literal) => write!(f, "{literal}"),
+            ConstantExpression::Value(literal) => write!(f, "{literal}"),
             ConstantExpression::Path(path) => write!(f, "{path}"),
             _ => unimplemented!(),
         }

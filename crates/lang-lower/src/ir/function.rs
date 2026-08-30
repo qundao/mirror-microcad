@@ -63,7 +63,7 @@ pub struct Scope {
 #[derive(Debug, Clone, Hash, From, PartialEq, Serialize, Deserialize)]
 pub enum FunctionExpression {
     Invalid,
-    Constant(ir::ConstantValue),
+    Value(ir::ConstantValue),
     Path(ir::Path),
     Scope(Scope),
     If(ir::If<FunctionExpression>),
@@ -84,7 +84,7 @@ impl ir::ExprSpec for FunctionExpression {
 
     fn value(&self) -> Option<&Value> {
         match &self {
-            FunctionExpression::Constant(constant) => Some(constant.value()),
+            FunctionExpression::Value(constant) => Some(constant.value()),
             _ => None,
         }
     }
@@ -94,7 +94,7 @@ impl CastInto<ir::FunctionExpression> for ir::ConstantExpression {
     fn cast_into(self: ir::ConstantExpression) -> ir::FunctionExpression {
         match self {
             ir::ConstantExpression::Invalid => ir::FunctionExpression::Invalid,
-            ir::ConstantExpression::Constant(literal) => ir::FunctionExpression::Constant(literal),
+            ir::ConstantExpression::Value(literal) => ir::FunctionExpression::Value(literal),
             ir::ConstantExpression::Path(path) => ir::FunctionExpression::Path(path),
             ir::ConstantExpression::Call(call) => ir::FunctionExpression::Call(call.cast_into()),
         }
@@ -105,7 +105,7 @@ impl SrcReferrer for FunctionExpression {
     fn src_ref(&self) -> SrcRef {
         match &self {
             FunctionExpression::Invalid => SrcRef::none(),
-            FunctionExpression::Constant(literal) => literal.src_ref(),
+            FunctionExpression::Value(literal) => literal.src_ref(),
             FunctionExpression::Path(name) => name.src_ref(),
             FunctionExpression::Scope(scope) => scope.src_ref,
             FunctionExpression::If(if_expr) => if_expr.src_ref,

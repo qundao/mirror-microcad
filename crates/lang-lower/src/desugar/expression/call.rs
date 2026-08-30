@@ -149,7 +149,7 @@ pub fn lower_spec(
         .as_ref()
         .and_then(|r| r.as_ref().ok())
         .copied()
-        .map(|w| ir::ConstantExpression::Constant(ir::ConstantValue::from_value(w as i64)))
+        .map(|w| ir::ConstantExpression::Value(ir::ConstantValue::from_value(w as i64)))
         .unwrap_or(ir::ConstantExpression::Invalid);
 
     let precision = spec
@@ -157,7 +157,7 @@ pub fn lower_spec(
         .as_ref()
         .and_then(|r| r.as_ref().ok())
         .copied()
-        .map(|p| ir::ConstantExpression::Constant(ir::ConstantValue::from_value(p as i64)))
+        .map(|p| ir::ConstantExpression::Value(ir::ConstantValue::from_value(p as i64)))
         .unwrap_or(ir::ConstantExpression::Invalid);
 
     Ok(ir::Call {
@@ -183,7 +183,7 @@ impl Desugar<ast::FormatString> for ir::Call<ir::ConstantExpression> {
                 ast::StringPart::Expression(expr_part) => {
                     // Flush accumulated string literal first
                     if !pending_str.is_empty() {
-                        args_vec.push(ir::ConstantExpression::Constant(
+                        args_vec.push(ir::ConstantExpression::Value(
                             ir::ConstantValue::from_value(std::mem::take(&mut pending_str)),
                         ));
                     }
@@ -204,7 +204,7 @@ impl Desugar<ast::FormatString> for ir::Call<ir::ConstantExpression> {
 
         // Flush remaining trailing string content
         if !pending_str.is_empty() {
-            args_vec.push(ir::ConstantExpression::Constant(
+            args_vec.push(ir::ConstantExpression::Value(
                 ir::ConstantValue::from_value(pending_str),
             ));
         }
