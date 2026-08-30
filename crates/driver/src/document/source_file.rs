@@ -88,9 +88,9 @@ impl SourceFile {
     }
 
     pub fn from_file(path: impl AsRef<std::path::Path>) -> mu::Result<Self> {
-        Ok(Self::load_from_file(mu::locate::to_url(
+        Self::load_from_file(mu::locate::to_url(
             path.as_ref().as_os_str().to_str().unwrap(),
-        )?)?)
+        )?)
     }
 }
 

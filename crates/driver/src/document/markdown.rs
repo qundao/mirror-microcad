@@ -68,9 +68,8 @@ impl mu::commands::Format for mu::document::Markdown {
 
 impl mu::commands::Sync for mu::document::Markdown {
     fn sync(&self) -> mu::Result {
-        Ok(self
-            .markdown
+        self.markdown
             .write_to_file(self.location.path().expect("Location must be a path"))
-            .into_diagnostic()?)
+            .into_diagnostic()
     }
 }
