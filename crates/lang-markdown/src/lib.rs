@@ -9,6 +9,7 @@ mod markdown;
 mod mdbook;
 mod parser;
 mod section;
+pub mod table_builder;
 
 pub use block::Block;
 pub use code_block::{CodeBlock, CodeBlockHeader};

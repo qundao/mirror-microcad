@@ -7,12 +7,13 @@ use microcad_builtin::{
     BuiltinConstant, BuiltinFunction, BuiltinItem, BuiltinModule, BuiltinOperation,
     BuiltinPrimitive, BuiltinRegistry,
 };
-use microcad_lang_markdown::{self as md, WriteToFile};
-
-use crate::{
-    md::{Column, TableBuilder, ToMd},
-    mdbook::Summary,
+use microcad_lang_markdown as md;
+use microcad_lang_markdown::{
+    WriteToFile,
+    table_builder::{Column, TableBuilder},
 };
+
+use crate::{md::ToMd, mdbook::Summary};
 
 #[derive(Debug, Default)]
 pub struct BuiltinMdbook {

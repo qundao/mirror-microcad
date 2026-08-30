@@ -3,7 +3,6 @@
 
 //! Generate a single markdown file for symbol.
 
-mod table_builder;
 mod to_md;
 
 use std::error::Error;
@@ -12,8 +11,6 @@ use crate::DocGen;
 use microcad_lang_markdown::WriteToFile;
 use microcad_package::{SymbolDef, SymbolNodeExt, SymbolNodeRef};
 pub(crate) use to_md::ToMd;
-
-pub(crate) use table_builder::{Alignment, Column, TableBuilder};
 
 /// Markdown generator that generates a markdown documentation file for each source file.
 pub struct Md {
