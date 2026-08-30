@@ -194,9 +194,8 @@ impl<T: Artifact> StageResult<T> {
 
     /// Return the diagnostics.
     pub fn diagnostics(&self) -> Option<&Diagnostics> {
-        match &self.0 {
-            Some(Ok((_, diags))) | Some(Err(diags)) => Some(diags),
-            None => None,
+        match self.0.as_ref()? {
+            Ok((_, diags)) | Err(diags) => Some(diags),
         }
     }
 
