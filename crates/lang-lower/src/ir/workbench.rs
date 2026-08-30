@@ -12,6 +12,9 @@ pub use microcad_lang_base::element::WorkbenchKind;
 use microcad_lang_types::Value;
 use serde::{Deserialize, Serialize};
 
+pub type WorkbenchCall = ir::Call<ir::WorkbenchExpression>;
+pub type WorkbenchIf = ir::If<ir::WorkbenchExpression>;
+
 /// Each WorkbenchStatement eventually evals into a [`Models`]
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
 pub struct WorkbenchStatement {

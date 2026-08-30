@@ -10,6 +10,10 @@ use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
 use microcad_lang_types::Value;
 use serde::{Deserialize, Serialize};
 
+pub type FunctionCall = ir::Call<ir::FunctionExpression>;
+pub type FunctionIf = ir::If<ir::FunctionExpression>;
+pub type FunctionLocalAssignment = ir::LocalAssignment<ir::FunctionExpression>;
+
 /// Parameters and return type of a function
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub struct FunctionSignature {
@@ -66,8 +70,8 @@ pub enum FunctionExpression {
     Value(ir::ConstantValue),
     Path(ir::Path),
     Scope(Scope),
-    If(ir::If<FunctionExpression>),
-    Call(ir::Call<FunctionExpression>),
+    If(FunctionIf),
+    Call(FunctionCall),
 }
 
 impl SingleIdentifier for FunctionExpression {
@@ -125,7 +129,7 @@ pub struct ReturnStatement {
 #[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
 pub enum FunctionStatement {
     /// `a = 42`
-    Local(ir::LocalAssignment<FunctionExpression>),
+    Local(FunctionLocalAssignment),
     /// `{ a = 23; a }`
     Scope(ir::Scope),
     /// `print("Test");`

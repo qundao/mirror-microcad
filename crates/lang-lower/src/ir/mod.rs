@@ -12,6 +12,7 @@ pub mod expression;
 pub mod function;
 pub mod parameter;
 pub mod path;
+pub mod visitor;
 pub mod workbench;
 
 pub mod desugared;
