@@ -53,15 +53,29 @@ impl TreeState {
             self.prefix.clone()
         };
 
-        // 3. Multiline lines use the continuation prefix
-        for line in lines {
-            writeln!(f, "{}{}", continuation_prefix, line)?;
-        }
-
-        // 4. Recurse children using continuation_prefix + branch marker
         let children: Vec<_> = node.children().collect();
         let count = children.len();
 
+        // 3. Multiline lines use the continuation prefix
+        for line in lines {
+            let mut remainder = line;
+            let mut indent_count = 0;
+
+            // Strip every 4-space prefix and count how many times it appears
+            while let Some(stripped) = remainder.strip_prefix("    ") {
+                remainder = stripped;
+                indent_count += 1;
+            }
+
+            if indent_count > 0 && count > 0 {
+                let pipes = "|   ".repeat(indent_count);
+                writeln!(f, "{continuation_prefix}{pipes}{remainder}")?;
+            } else {
+                writeln!(f, "{continuation_prefix}{line}")?;
+            }
+        }
+
+        // 4. Recurse children using continuation_prefix + branch marker
         for (idx, child) in children.into_iter().enumerate() {
             let is_last = idx == count - 1;
             let branch = if is_last { "└── " } else { "├── " };

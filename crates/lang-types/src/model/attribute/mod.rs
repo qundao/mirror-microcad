@@ -46,7 +46,7 @@ impl std::fmt::Display for Attribute {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "#[{id} = {value}]",
+            "# {id} = {value}",
             id = self.id(),
             value = match &self {
                 Attribute::Color(color) => format!("{color}"),
@@ -67,6 +67,11 @@ impl Attributes {
             Attribute::Resolution(res) => Some(res),
             _ => None,
         })
+    }
+
+    /// Iterator over properties
+    pub fn iter(&self) -> impl Iterator<Item = &Attribute> {
+        self.0.iter()
     }
 }
 

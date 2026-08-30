@@ -141,8 +141,12 @@ impl std::fmt::Display for Model {
             write!(f, "{name}: ")?;
         }
         writeln!(f, "{}", self.element)?;
-        write!(f, "{}", self.attr)?;
-        write!(f, "{}", self.properties)
+        self.attr
+            .iter()
+            .try_for_each(|attr| writeln!(f, "    {attr}"))?;
+        self.properties
+            .iter()
+            .try_for_each(|(_, prop)| writeln!(f, "    {prop}"))
     }
 }
 

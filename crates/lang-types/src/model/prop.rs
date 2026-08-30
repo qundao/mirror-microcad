@@ -59,20 +59,17 @@ impl Property {
 
 impl std::fmt::Display for Property {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        // Choose key icon based on visibility
-        let ty = match self.ty {
-            PropertyType::Hidden => "     ",
-            PropertyType::Input => "[in] ",
-            PropertyType::Output => "[out]",
-        };
-
-        // Render as: 🔑 .radius: Length = 5mm
         write!(
             f,
-            "{ty} {}: {} = {}",
-            self.name,
-            self.value.ty(),
-            self.value
+            "- {name}{property_type}: {ty} = {value}",
+            name = self.name,
+            property_type = match self.ty {
+                PropertyType::Hidden => "",
+                PropertyType::Input => " [in]",
+                PropertyType::Output => " [out]",
+            },
+            ty = self.value.ty(),
+            value = self.value
         )
     }
 }
