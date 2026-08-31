@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0xa18f78da53e23991",
-        output_hash: "0xa2edd5bc1f036abb",
+        output_hash: "0xd3c5a894c7c8c8ab",
         tree: (
             root: (
                 index1: 1,
@@ -501,14 +501,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                         ],
                                                                         src_ref: "12:35 @ 0x6fea70d2e98e16db (385..391)",
                                                                     )))),
-                                                                    Unnamed(Path(Unresolved((
-                                                                        is_absolute: false,
-                                                                        parts: [
-                                                                            ((
-                                                                                value: "x",
-                                                                                src_ref: "None",
-                                                                            )),
-                                                                        ],
+                                                                    Unnamed(Value(((
+                                                                        value: String("x"),
                                                                         src_ref: "None",
                                                                     )))),
                                                                 ],
@@ -537,14 +531,8 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                         ],
                                                                         src_ref: "12:49 @ 0x6fea70d2e98e16db (399..405)",
                                                                     )))),
-                                                                    Unnamed(Path(Unresolved((
-                                                                        is_absolute: false,
-                                                                        parts: [
-                                                                            ((
-                                                                                value: "y",
-                                                                                src_ref: "None",
-                                                                            )),
-                                                                        ],
+                                                                    Unnamed(Value(((
+                                                                        value: String("y"),
                                                                         src_ref: "None",
                                                                     )))),
                                                                 ],
