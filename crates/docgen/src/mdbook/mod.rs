@@ -134,12 +134,11 @@ impl MdBook {
         self._generate_summary(writer, symbol, 0)
     }
 
-    fn write_symbol<'a>(&self, symbol: SymbolNodeRef<'a>) -> Result<(), Box<dyn Error>> {
+    fn write_symbols<'a>(&self, symbol: SymbolNodeRef<'a>) -> Result<(), Box<dyn Error>> {
         Ok(symbol
             .descendants()
             .try_for_each(|symbol| {
                 let path = &self.path.join("src").join(Self::symbol_path(symbol));
-                std::fs::create_dir_all(path.parent().expect("A parent"))?;
                 match symbol.def() {
                     SymbolDef::Source(_) | SymbolDef::InlineModule(_) | SymbolDef::Workbench(_) => {
                         symbol.to_md().write_to_file(path)
@@ -170,6 +169,6 @@ impl DocGen for MdBook {
     fn doc_gen<'a>(&self, symbol: SymbolNodeRef<'a>) -> Result<(), Box<dyn Error>> {
         Config.write_to_file(self.path.join("book.toml"))?;
         self.write_summary(symbol)?;
-        self.write_symbol(symbol)
+        self.write_symbols(symbol)
     }
 }
