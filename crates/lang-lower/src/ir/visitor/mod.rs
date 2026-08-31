@@ -9,7 +9,12 @@ mod mut_visitor;
 pub use mut_visitor::*;
 
 pub trait ConstantVisitor: Sized {
-    fn visit_path<'a>(&mut self, _path: &'a ir::Path) {}
+    fn visit_constant(&mut self, constant: &ir::Constant) {
+        self.visit_attr(&constant.attr);
+        self.visit_constant_expr(&constant.expr);
+    }
+
+    fn visit_path(&mut self, _path: &ir::Path) {}
     fn visit_name(&mut self, _name: &ir::Identifier) {}
 
     fn visit_parameter(&mut self, parameter: &ir::Parameter) {
@@ -29,7 +34,7 @@ pub trait ConstantVisitor: Sized {
 
     fn visit_constant_expr(&mut self, expr: &ir::ConstantExpression) {
         match &expr {
-            ir::ConstantExpression::Invalid => todo!(),
+            ir::ConstantExpression::Invalid => {}
             ir::ConstantExpression::Value(value) => self.visit_constant_value(value),
             ir::ConstantExpression::Path(path) => self.visit_path(path),
             ir::ConstantExpression::Call(call) => self.visit_constant_call(call),
@@ -61,7 +66,7 @@ pub trait WorkbenchStatementVisitor: ConstantVisitor {
 
     fn visit_workbench_expr(&mut self, expr: &ir::workbench::WorkbenchExpression) {
         match &expr {
-            ir::WorkbenchExpression::Invalid => todo!(),
+            ir::WorkbenchExpression::Invalid => {}
             ir::WorkbenchExpression::Value(constant_value) => {
                 self.visit_constant_value(constant_value)
             }
@@ -145,7 +150,7 @@ pub trait FnVisitor: ConstantVisitor {
 
     fn visit_fn_expr(&mut self, expr: &ir::function::FunctionExpression) {
         match expr {
-            ir::FunctionExpression::Invalid => todo!(),
+            ir::FunctionExpression::Invalid => {}
             ir::FunctionExpression::Value(value) => self.visit_constant_value(value),
             ir::FunctionExpression::Path(path) => self.visit_path(path),
             ir::FunctionExpression::Scope(scope) => self.visit_fn_scope(scope),
@@ -240,12 +245,8 @@ pub trait Visitor: FnVisitor + WorkbenchVisitor + ConstantVisitor {
     }
 
     fn visit_meta(&mut self, _meta: &ir::Meta) {}
-
     fn visit_inline_module(&self, _inline_module: &ir::InlineModule) {}
-    fn visit_constant(&mut self, constant: &ir::Constant);
-
     fn visit_file_module(&self, _file_module: &ir::FileModule) {}
-
     fn visit_alias(&self, _alias: &ir::Alias) {}
     fn visit_wildcard(&self, _wildpath: &ir::Wildcard) {}
 

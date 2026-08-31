@@ -4,7 +4,7 @@
 use crate::{
     CastInto, Desugar, LowerContext, LowerError, LowerResult,
     desugar::{attribute::outer_with_doc, extract_statements, for_each_statement},
-    ir::{self, ReturnStatement, WorkbenchExpression},
+    ir,
 };
 
 use microcad_builtin::__mu;
@@ -63,6 +63,7 @@ impl ir::Init {
         inputs: &ir::ParameterList,
         context: &mut LowerContext,
     ) {
+        // Check if an initializer is equal to default initializer
         if inputs == &self.parameters {
             context.diag(LowerError::DuplicatedDefaultInitializer {
                 src_ref: self.src_ref,
@@ -70,6 +71,7 @@ impl ir::Init {
             return;
         }
 
+        // Check for statements that
         self.statements.iter().for_each(|stmt| {
             if inputs.get_by_name(&stmt.name).is_none() {
                 context.diag(LowerError::NotAnInputProperty {
@@ -79,52 +81,35 @@ impl ir::Init {
             }
         });
 
-        let mut new_statements = Vec::new();
+        // Convert existing boxed slice to Vec once to mutate in-place without reallocating
+        let mut statements = std::mem::take(&mut self.statements).into_vec();
 
-        self.parameters.iter().for_each(|param| {
-            match (self.find_statement(&param.id), &param.default_value) {
-                (None, Some(default_value)) => {
-                    let expr: WorkbenchExpression = default_value.clone().cast_into();
-                    new_statements.push(ir::InitStatement::new(&param.id, expr));
+        // Helper closure to check parameters, emit missing errors, and append default statements
+        let mut apply_defaults = |params: &ir::ParameterList, check_missing: bool| {
+            params.iter().for_each(|param| {
+                let found = statements.iter().any(|stmt| stmt.name == param.id);
+                match (found, &param.default_value) {
+                    (false, Some(default_value)) => {
+                        let expr: ir::WorkbenchExpression = default_value.clone().cast_into();
+                        statements.push(ir::InitStatement::new(&param.id, expr));
+                    }
+                    (false, None) if check_missing => {
+                        context.diag(LowerError::InputNotInitialized {
+                            name: param.id.clone(),
+                            src_ref: self.src_ref,
+                            param_src_ref: param.src_ref,
+                        });
+                    }
+                    _ => {}
                 }
-                _ => {}
-            }
-        });
+            })
+        };
 
-        self.statements = self
-            .statements
-            .to_vec()
-            .into_iter()
-            .chain(new_statements)
-            .collect::<Vec<_>>()
-            .into_boxed_slice();
+        // Fill defaults from self.parameters, then inputs (emitting missing-init errors for inputs)
+        apply_defaults(&self.parameters, false);
+        apply_defaults(inputs, true);
 
-        let mut new_statements = Vec::new();
-
-        inputs.iter().for_each(|param| {
-            match (self.find_statement(&param.id), &param.default_value) {
-                (None, Some(default_value)) => {
-                    let expr: WorkbenchExpression = default_value.clone().cast_into();
-                    new_statements.push(ir::InitStatement::new(&param.id, expr));
-                }
-                (None, None) => {
-                    context.diag(LowerError::InputNotInitialized {
-                        name: param.id.clone(),
-                        src_ref: self.src_ref,
-                        param_src_ref: param.src_ref,
-                    });
-                }
-                (Some(_), _) => {}
-            }
-        });
-
-        self.statements = self
-            .statements
-            .to_vec()
-            .into_iter()
-            .chain(new_statements)
-            .collect::<Vec<_>>()
-            .into_boxed_slice();
+        self.statements = statements.into_boxed_slice();
     }
 }
 

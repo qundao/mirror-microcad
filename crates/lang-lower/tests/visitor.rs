@@ -7,7 +7,6 @@ use microcad_lang_lower::ir::visitor::{
 };
 use microcad_macros::__mu;
 use std::collections::HashSet;
-use test_that::assert_that;
 
 /// A visitor that collects references to all `ir::Path` instances found in the IR tree.
 #[derive(Debug, Default)]
@@ -38,14 +37,7 @@ impl ConstantVisitor for PathCollector {
 impl WorkbenchStatementVisitor for PathCollector {}
 impl WorkbenchVisitor for PathCollector {}
 impl FnVisitor for PathCollector {}
-
-// 3. Root visitor implementation
-impl Visitor for PathCollector {
-    fn visit_constant(&mut self, constant: &ir::Constant) {
-        self.visit_attr(&constant.attr);
-        self.visit_constant_expr(&constant.expr);
-    }
-}
+impl Visitor for PathCollector {}
 
 #[test]
 fn path_collector() {
@@ -57,24 +49,21 @@ fn path_collector() {
     collector.visit_tree(&ir.tree);
     println!("Found {} paths", collector.paths.len());
 
-    for path in &collector.paths {
+    let paths = collector.collect_unique(&ir.tree);
+    for path in &paths {
         println!("{path}");
     }
 
     assert!(
-        collector
-            .paths
-            .contains(&ir::Path::Resolved(microcad_lang_base::SymbolId::Builtin(
-                __mu!(geo2d::Circle),
-            )))
+        paths.contains(&ir::Path::Resolved(microcad_lang_base::SymbolId::Builtin(
+            __mu!(geo2d::Circle),
+        )))
     );
 
     assert!(
-        collector
-            .paths
-            .contains(&ir::Path::Resolved(microcad_lang_base::SymbolId::Builtin(
-                __mu!(core::member_access),
-            )))
+        paths.contains(&ir::Path::Resolved(microcad_lang_base::SymbolId::Builtin(
+            __mu!(core::member_access),
+        )))
     );
 
     println!("{}", ir.to_ron().expect("No error"))

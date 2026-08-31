@@ -3,7 +3,7 @@
 
 //! Workbench definition syntax element
 
-use crate::{CastInto, LowerContext, ir};
+use crate::{CastInto, ir};
 
 use derive_more::{Display, From};
 use microcad_lang_base::{Identifier, SingleIdentifier, SrcRef, SrcReferrer, element::Visibility};
