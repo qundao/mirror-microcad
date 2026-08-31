@@ -1,10 +1,8 @@
 // Copyright © 2026 The µcad authors <info@ucad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{
-    Artifact, CompilationResult, DiagRenderOptions, MICROCAD_EXTENSION, Source,
-};
-use microcad_lang_lower::{self as lower, Ir, LowerContext};
+use microcad_lang_base::{Artifact, DiagRenderOptions};
+use microcad_lang_lower::{self as lower, Ir};
 use microcad_lang_parse::{
     self as parse, Ast, Parse,
     ast::visitor::{ExpectedDiagnostic, ExpectedDiagnostics},

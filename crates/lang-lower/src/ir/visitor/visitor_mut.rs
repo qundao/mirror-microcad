@@ -5,39 +5,36 @@
 
 use crate::ir;
 
-mod visitor_mut;
-pub use visitor_mut::*;
-
 /// Visitor for IR leaf nodes.
-pub trait LeafVisitor: Sized {
-    fn visit_path(&mut self, _path: &ir::Path) {}
-    fn visit_name(&mut self, _name: &ir::Identifier) {}
+pub trait LeafVisitorMut: Sized {
+    fn visit_path(&mut self, _path: &mut ir::Path) {}
+    fn visit_name(&mut self, _name: &mut ir::Identifier) {}
 }
 
 /// Visitor for items containing constant expressions.
-pub trait ConstantVisitor: LeafVisitor {
-    fn visit_constant(&mut self, constant: &ir::Constant) {
-        self.visit_attr(&constant.attr);
-        self.visit_constant_expr(&constant.expr);
+pub trait ConstantVisitorMut: LeafVisitorMut {
+    fn visit_constant(&mut self, constant: &mut ir::Constant) {
+        self.visit_attr(&mut constant.attr);
+        self.visit_constant_expr(&mut constant.expr);
     }
 
-    fn visit_parameter(&mut self, parameter: &ir::Parameter) {
-        self.visit_name(&parameter.id);
-        if let Some(default_value) = &parameter.default_value {
+    fn visit_parameter(&mut self, parameter: &mut ir::Parameter) {
+        self.visit_name(&mut parameter.id);
+        if let Some(default_value) = &mut parameter.default_value {
             self.visit_constant_expr(default_value)
         }
     }
 
-    fn visit_parameter_list(&mut self, parameter_list: &ir::ParameterList) {
+    fn visit_parameter_list(&mut self, parameter_list: &mut ir::ParameterList) {
         parameter_list
-            .iter()
+            .iter_mut()
             .for_each(|param| self.visit_parameter(param));
     }
 
     fn visit_attr(&mut self, _attr: &ir::Attributes) {}
 
-    fn visit_constant_expr(&mut self, expr: &ir::ConstantExpression) {
-        match &expr {
+    fn visit_constant_expr(&mut self, expr: &mut ir::ConstantExpression) {
+        match expr {
             ir::ConstantExpression::Invalid => {}
             ir::ConstantExpression::Value(value) => self.visit_constant_value(value),
             ir::ConstantExpression::Path(path) => self.visit_path(path),
@@ -45,9 +42,9 @@ pub trait ConstantVisitor: LeafVisitor {
         }
     }
 
-    fn visit_constant_call(&mut self, call: &ir::Call<ir::ConstantExpression>) {
-        self.visit_path(&call.path);
-        call.args.args.iter().for_each(|arg| match arg {
+    fn visit_constant_call(&mut self, call: &mut ir::Call<ir::ConstantExpression>) {
+        self.visit_path(&mut call.path);
+        call.args.args.iter_mut().for_each(|arg| match arg {
             ir::Argument::Unnamed(expr) => self.visit_constant_expr(expr),
             ir::Argument::Named { name, expr, .. } | ir::Argument::AutoNamed { name, expr } => {
                 self.visit_name(name);
@@ -60,17 +57,17 @@ pub trait ConstantVisitor: LeafVisitor {
 }
 
 /// Visitor for workbench statements and expressions.
-pub trait WorkbenchStatementVisitor: ConstantVisitor {
-    fn visit_workbench_statement(&mut self, statement: &ir::workbench::WorkbenchStatement) {
-        self.visit_attr(&statement.attr);
-        if let Some(name) = &statement.name {
+pub trait WorkbenchStatementVisitorMut: ConstantVisitorMut {
+    fn visit_workbench_statement(&mut self, statement: &mut ir::workbench::WorkbenchStatement) {
+        self.visit_attr(&mut statement.attr);
+        if let Some(name) = &mut statement.name {
             self.visit_name(name);
         }
-        self.visit_workbench_expr(&statement.expression);
+        self.visit_workbench_expr(&mut statement.expression);
     }
 
-    fn visit_workbench_expr(&mut self, expr: &ir::workbench::WorkbenchExpression) {
-        match &expr {
+    fn visit_workbench_expr(&mut self, expr: &mut ir::workbench::WorkbenchExpression) {
+        match expr {
             ir::WorkbenchExpression::Invalid => {}
             ir::WorkbenchExpression::Value(constant_value) => {
                 self.visit_constant_value(constant_value)
@@ -83,9 +80,9 @@ pub trait WorkbenchStatementVisitor: ConstantVisitor {
         }
     }
 
-    fn visit_workbench_call(&mut self, call: &ir::workbench::WorkbenchCall) {
-        self.visit_path(&call.path);
-        call.args.args.iter().for_each(|arg| match arg {
+    fn visit_workbench_call(&mut self, call: &mut ir::workbench::WorkbenchCall) {
+        self.visit_path(&mut call.path);
+        call.args.args.iter_mut().for_each(|arg| match arg {
             ir::Argument::Unnamed(expr) => self.visit_workbench_expr(expr),
             ir::Argument::Named { name, expr, .. } | ir::Argument::AutoNamed { name, expr } => {
                 self.visit_name(name);
@@ -94,68 +91,68 @@ pub trait WorkbenchStatementVisitor: ConstantVisitor {
         });
     }
 
-    fn visit_workbench_if(&mut self, if_: &ir::workbench::WorkbenchIf) {
-        self.visit_workbench_expr(&if_.cond);
-        self.visit_workbench_group(&if_.body);
-        if let Some(body_else) = &if_.body_else {
+    fn visit_workbench_if(&mut self, if_: &mut ir::workbench::WorkbenchIf) {
+        self.visit_workbench_expr(&mut if_.cond);
+        self.visit_workbench_group(&mut if_.body);
+        if let Some(body_else) = &mut if_.body_else {
             self.visit_workbench_group(body_else);
         }
-        if let Some(next_if) = &if_.next_if {
+        if let Some(next_if) = &mut if_.next_if {
             self.visit_workbench_if(next_if);
         }
     }
 
-    fn visit_workbench_group(&mut self, group: &ir::workbench::Group) {
+    fn visit_workbench_group(&mut self, group: &mut ir::workbench::Group) {
         self.visit_attr(&group.attr);
         group
             .statements
-            .iter()
+            .iter_mut()
             .for_each(|statement| self.visit_workbench_statement(statement));
     }
 }
 
 /// Visitor for workbenches
-pub trait WorkbenchVisitor: WorkbenchStatementVisitor {
-    fn visit_workbench(&mut self, workbench: &ir::workbench::Workbench) {
-        self.visit_attr(&workbench.attr);
-        self.visit_workbench_signature(&workbench.signature);
+pub trait WorkbenchVisitorMut: WorkbenchStatementVisitorMut {
+    fn visit_workbench(&mut self, workbench: &mut ir::workbench::Workbench) {
+        self.visit_attr(&mut workbench.attr);
+        self.visit_workbench_signature(&mut workbench.signature);
 
         workbench
             .statements
-            .iter()
+            .iter_mut()
             .for_each(|stmt| self.visit_workbench_statement(stmt))
     }
 
-    fn visit_workbench_signature(&mut self, signature: &ir::workbench::WorkbenchSignature) {
-        self.visit_parameter_list(&signature.parameters);
+    fn visit_workbench_signature(&mut self, signature: &mut ir::workbench::WorkbenchSignature) {
+        self.visit_parameter_list(&mut signature.parameters);
         signature
             .inits
-            .iter()
+            .iter_mut()
             .for_each(|init| self.visit_workbench_init(init));
     }
 
-    fn visit_workbench_init(&mut self, init: &ir::workbench::Init) {
-        self.visit_attr(&init.attr);
-        self.visit_parameter_list(&init.parameters);
-        init.statements.iter().for_each(|init_statement| {
-            self.visit_name(&init_statement.name);
-            self.visit_workbench_expr(&init_statement.expression);
+    fn visit_workbench_init(&mut self, init: &mut ir::workbench::Init) {
+        self.visit_attr(&mut init.attr);
+        self.visit_parameter_list(&mut init.parameters);
+        init.statements.iter_mut().for_each(|init_statement| {
+            self.visit_name(&mut init_statement.name);
+            self.visit_workbench_expr(&mut init_statement.expression);
         });
     }
 }
 
 /// Visitor for functions.
-pub trait FnVisitor: ConstantVisitor {
-    fn visit_fn(&mut self, function: &ir::function::Function) {
-        self.visit_attr(&function.attr);
-        self.visit_fn_signature(&function.signature);
+pub trait FnVisitorMut: ConstantVisitorMut {
+    fn visit_fn(&mut self, function: &mut ir::function::Function) {
+        self.visit_attr(&mut function.attr);
+        self.visit_fn_signature(&mut function.signature);
         function
             .statements
-            .iter()
+            .iter_mut()
             .for_each(|stmt| self.visit_fn_statement(stmt));
     }
 
-    fn visit_fn_expr(&mut self, expr: &ir::function::FunctionExpression) {
+    fn visit_fn_expr(&mut self, expr: &mut ir::function::FunctionExpression) {
         match expr {
             ir::FunctionExpression::Invalid => {}
             ir::FunctionExpression::Value(value) => self.visit_constant_value(value),
@@ -166,32 +163,32 @@ pub trait FnVisitor: ConstantVisitor {
         }
     }
 
-    fn visit_fn_signature(&mut self, signature: &ir::function::FunctionSignature) {
-        self.visit_parameter_list(&signature.parameters);
+    fn visit_fn_signature(&mut self, signature: &mut ir::function::FunctionSignature) {
+        self.visit_parameter_list(&mut signature.parameters);
     }
 
-    fn visit_fn_scope(&mut self, scope: &ir::function::Scope) {
+    fn visit_fn_scope(&mut self, scope: &mut ir::function::Scope) {
         scope
             .statements
-            .iter()
+            .iter_mut()
             .for_each(|stmt| self.visit_fn_statement(stmt))
     }
 
     fn visit_fn_local_assignment(
         &mut self,
-        local_assignment: &ir::function::FunctionLocalAssignment,
+        local_assignment: &mut ir::function::FunctionLocalAssignment,
     ) {
-        self.visit_name(&local_assignment.id);
-        self.visit_fn_expr(&local_assignment.expression);
+        self.visit_name(&mut local_assignment.id);
+        self.visit_fn_expr(&mut local_assignment.expression);
     }
 
-    fn visit_return_statement(&mut self, return_statement: &ir::function::ReturnStatement) {
-        if let Some(expr) = &return_statement.expr {
+    fn visit_return_statement(&mut self, return_statement: &mut ir::function::ReturnStatement) {
+        if let Some(expr) = &mut return_statement.expr {
             self.visit_fn_expr(expr);
         }
     }
 
-    fn visit_fn_statement(&mut self, stmt: &ir::function::FunctionStatement) {
+    fn visit_fn_statement(&mut self, stmt: &mut ir::function::FunctionStatement) {
         match stmt {
             ir::FunctionStatement::Local(local_assignment) => {
                 self.visit_fn_local_assignment(local_assignment)
@@ -205,9 +202,9 @@ pub trait FnVisitor: ConstantVisitor {
             }
         }
     }
-    fn visit_fn_call(&mut self, call: &ir::function::FunctionCall) {
-        self.visit_path(&call.path);
-        call.args.args.iter().for_each(|arg| match &arg {
+    fn visit_fn_call(&mut self, call: &mut ir::function::FunctionCall) {
+        self.visit_path(&mut call.path);
+        call.args.args.iter_mut().for_each(|arg| match arg {
             ir::Argument::Unnamed(expr) => self.visit_fn_expr(expr),
             ir::Argument::Named { name, expr, .. } | ir::Argument::AutoNamed { name, expr } => {
                 self.visit_name(name);
@@ -215,50 +212,45 @@ pub trait FnVisitor: ConstantVisitor {
             }
         });
     }
-    fn visit_fn_if(&mut self, if_: &ir::FunctionIf) {
-        self.visit_fn_expr(&if_.cond);
-        self.visit_fn_scope(&if_.body);
-        if let Some(body_else) = &if_.body_else {
+    fn visit_fn_if(&mut self, if_: &mut ir::FunctionIf) {
+        self.visit_fn_expr(&mut if_.cond);
+        self.visit_fn_scope(&mut if_.body);
+        if let Some(body_else) = &mut if_.body_else {
             self.visit_fn_scope(body_else);
         }
-        if let Some(next_if) = &if_.next_if {
+        if let Some(next_if) = &mut if_.next_if {
             self.visit_fn_if(next_if);
         }
     }
 }
 
 /// Visitor for an IR tree.
-pub trait Visitor: FnVisitor + WorkbenchVisitor + ConstantVisitor {
-    fn visit_tree(&mut self, ir_tree: &ir::Tree) {
-        ir_tree
-            .root()
-            .descendants()
-            .for_each(|node| self.visit_node(node));
+pub trait VisitorMut: FnVisitorMut + WorkbenchVisitorMut + ConstantVisitorMut {
+    fn visit_tree(&mut self, ir_tree: &mut ir::Tree) {
+        ir_tree.root_mut().transform(|node, item| {
+            self.visit_item(item);
+        })
     }
 
-    fn visit_node<'a>(&mut self, node: ir::NodeRef<'a>) {
-        self.visit_item(node.get());
+    fn visit_item(&mut self, item: &mut ir::IrItem) {
+        self.visit_meta(&mut item.meta);
+        self.visit_def(&mut item.def);
     }
 
-    fn visit_item(&mut self, item: &ir::IrItem) {
-        self.visit_meta(&item.meta);
-        self.visit_def(&item.def);
-    }
-
-    fn visit_source(&mut self, source: &ir::Source) {
+    fn visit_source(&mut self, source: &mut ir::Source) {
         source
             .statements
-            .iter()
+            .iter_mut()
             .for_each(|stmt| self.visit_workbench_statement(stmt));
     }
 
-    fn visit_meta(&mut self, _meta: &ir::Meta) {}
-    fn visit_inline_module(&self, _inline_module: &ir::InlineModule) {}
-    fn visit_file_module(&self, _file_module: &ir::FileModule) {}
-    fn visit_alias(&self, _alias: &ir::Alias) {}
-    fn visit_wildcard(&self, _wildcard: &ir::Wildcard) {}
+    fn visit_meta(&mut self, _meta: &mut ir::Meta) {}
+    fn visit_inline_module(&self, _inline_module: &mut ir::InlineModule) {}
+    fn visit_file_module(&self, _file_module: &mut ir::FileModule) {}
+    fn visit_alias(&self, _alias: &mut ir::Alias) {}
+    fn visit_wildcard(&self, _wildcard: &mut ir::Wildcard) {}
 
-    fn visit_def(&mut self, def: &ir::Def) {
+    fn visit_def(&mut self, def: &mut ir::Def) {
         match def {
             ir::Def::Source(source) => {
                 self.visit_source(source);

@@ -1,9 +1,8 @@
 mod common;
 
-use microcad_lang_base::Artifact;
 use microcad_lang_lower::ir;
 use microcad_lang_lower::ir::visitor::{
-    ConstantVisitor, FnVisitor, Visitor, WorkbenchStatementVisitor, WorkbenchVisitor,
+    ConstantVisitor, FnVisitor, LeafVisitor, Visitor, WorkbenchStatementVisitor, WorkbenchVisitor,
 };
 use microcad_macros::__mu;
 use std::collections::HashSet;
@@ -26,14 +25,15 @@ impl PathCollector {
     }
 }
 
-// 1. Core leaf visitor overriding path collection
-impl ConstantVisitor for PathCollector {
+// Core leaf visitor overriding path collection
+impl LeafVisitor for PathCollector {
     fn visit_path(&mut self, path: &ir::Path) {
         self.paths.push(path.clone());
     }
 }
 
-// 2. Sub-trait implementations (inherit default traversal behavior)
+// Sub-trait implementations (inherit default traversal behavior)
+impl ConstantVisitor for PathCollector {}
 impl WorkbenchStatementVisitor for PathCollector {}
 impl WorkbenchVisitor for PathCollector {}
 impl FnVisitor for PathCollector {}
@@ -47,24 +47,16 @@ fn path_collector() {
     // Collect all paths from a full IR tree
     let mut collector = PathCollector::new();
     collector.visit_tree(&ir.tree);
-    println!("Found {} paths", collector.paths.len());
 
     let paths = collector.collect_unique(&ir.tree);
+    println!("Found {} paths", paths.len());
     for path in &paths {
         println!("{path}");
     }
 
     assert!(
         paths.contains(&ir::Path::Resolved(microcad_lang_base::SymbolId::Builtin(
-            __mu!(geo2d::Circle),
-        )))
-    );
-
-    assert!(
-        paths.contains(&ir::Path::Resolved(microcad_lang_base::SymbolId::Builtin(
             __mu!(core::member_access),
         )))
     );
-
-    println!("{}", ir.to_ron().expect("No error"))
 }

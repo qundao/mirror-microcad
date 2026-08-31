@@ -99,6 +99,11 @@ impl ParameterList {
         self.parameters.iter()
     }
 
+    /// Returns a mutable iterator over the parameters.
+    pub fn iter_mut(&mut self) -> std::slice::IterMut<'_, ir::Parameter> {
+        self.parameters.iter_mut()
+    }
+
     /// Return an iterator over parameters
     pub(crate) fn names(&self) -> impl Iterator<Item = &ir::Identifier> {
         self.iter().map(|param| &param.id)

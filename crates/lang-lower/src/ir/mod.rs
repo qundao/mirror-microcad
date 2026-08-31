@@ -183,6 +183,10 @@ impl Tree {
     pub fn root<'a>(&'a self) -> NodeRef<'a> {
         NodeRef::new(self.root, &self.arena)
     }
+
+    pub fn root_mut<'a>(&'a mut self) -> NodeMut<'a> {
+        NodeMut::new(self.root, &mut self.arena)
+    }
 }
 
 pub type Arena = microcad_lang_base::tree::Arena<IrItem>;
