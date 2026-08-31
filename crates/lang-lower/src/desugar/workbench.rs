@@ -215,7 +215,10 @@ impl Desugar<ast::Expression> for ir::WorkbenchExpression {
                             path: __mu!(core::attribute_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
-                                Self::Path(ir::Path::from(a.name.to_string())),
+                                Self::Value(ir::ConstantValue::new(
+                                    a.name.clone(),
+                                    context.span_to_src_ref(&a.span),
+                                )),
                             ]),
                             src_ref,
                         }),
@@ -223,7 +226,10 @@ impl Desugar<ast::Expression> for ir::WorkbenchExpression {
                             path: __mu!(core::member_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
-                                Self::Value(ir::ConstantValue::from_value(t.name.clone())),
+                                Self::Value(ir::ConstantValue::new(
+                                    t.name.clone(),
+                                    context.span_to_src_ref(&t.span),
+                                )),
                             ]),
                             src_ref,
                         }),

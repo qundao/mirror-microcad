@@ -14,6 +14,10 @@ use serde::{Deserialize, Serialize};
 pub struct ConstantValue(pub Refer<Value>);
 
 impl ConstantValue {
+    pub fn new(value: impl Into<Value>, src_ref: SrcRef) -> Self {
+        Self(Refer::new(value.into(), src_ref))
+    }
+
     /// Return value of literal.
     pub fn value(&self) -> &Value {
         &self.0.value

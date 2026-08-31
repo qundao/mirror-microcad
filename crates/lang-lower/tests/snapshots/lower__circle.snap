@@ -503,7 +503,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                     )))),
                                                                     Unnamed(Value(((
                                                                         value: String("x"),
-                                                                        src_ref: "None",
+                                                                        src_ref: "12:42 @ 0x6fea70d2e98e16db (392..393)",
                                                                     )))),
                                                                 ],
                                                             ),
@@ -533,7 +533,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                     )))),
                                                                     Unnamed(Value(((
                                                                         value: String("y"),
-                                                                        src_ref: "None",
+                                                                        src_ref: "12:56 @ 0x6fea70d2e98e16db (406..407)",
                                                                     )))),
                                                                 ],
                                                             ),
