@@ -17,7 +17,7 @@ use serde::{Deserialize, Serialize};
 pub type Name = crate::CompactString;
 
 /// Symbol id
-#[derive(Debug, Display, Hash, PartialEq, From, Clone, Serialize, Deserialize)]
+#[derive(Debug, Display, Hash, PartialEq, Eq, From, Clone, Serialize, Deserialize)]
 pub enum SymbolId {
     /// A builtin symbol.
     Builtin(BuiltinId),
