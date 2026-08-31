@@ -11,10 +11,7 @@ use microcad_lang_types::{
 };
 use microcad_package::{
     SymbolId,
-    symbol::{
-        self, Attributes, ConstantValue, Parameter, Path, WorkbenchExpression, WorkbenchStatement,
-        workbench,
-    },
+    symbol::{self, Attributes, ConstantValue, Parameter, Path, WorkbenchStatement, workbench},
 };
 
 /// Expressions used for testing
