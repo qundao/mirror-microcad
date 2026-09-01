@@ -104,10 +104,6 @@ impl Eval<Value> for symbol::SymbolId {
                 }
             },
             SymbolId::Item(node_id) => context.eval_constant_symbol(*node_id),
-            SymbolId::External { package_name, id } => {
-                let symbol = context.look_up_external_symbol(package_name, *id).unwrap();
-                symbol.eval(context)
-            }
         }
     }
 }

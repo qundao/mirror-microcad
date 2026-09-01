@@ -7,7 +7,7 @@ use microcad_package::symbol;
 pub use stack::*;
 
 use microcad_builtin::BuiltinRegistry;
-use microcad_lang_base::Name;
+use microcad_lang_base::{LookUpName, Name};
 use microcad_lang_types::{Value, model::ModelTreeBuilderMut};
 
 use crate::{EvalError, EvalResult};
@@ -21,6 +21,12 @@ pub struct EvalContext {
     pub builtins: BuiltinRegistry,
 
     pub arena: microcad_lang_types::model::Arena,
+}
+
+impl LookUpName for EvalContext {
+    fn look_up_built_in_name(&self, builtin_id: &microcad_builtin::BuiltinId) -> Option<Name> {
+        self.builtins.look_up_built_in_name(builtin_id)
+    }
 }
 
 impl EvalContext {

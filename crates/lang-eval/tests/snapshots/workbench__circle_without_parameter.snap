@@ -2,6 +2,6 @@
 source: crates/lang-eval/tests/workbench.rs
 expression: model
 ---
-sketch
-└── 0x1801bf438d8b094
+Workpiece(sketch)
+└── Builtin(!0x1801bf438d8b094)
         - radius [in]: Length = 4mm

@@ -3,15 +3,15 @@ source: crates/lang-eval/tests/workbench.rs
 expression: model
 ---
 Multiplicity
-├── sketch
+├── Workpiece(sketch)
 │   |   - radius [in]: Length = 1mm
-│   └── 0x1801bf438d8b094
+│   └── Builtin(!0x1801bf438d8b094)
 │           - radius [in]: Length = 1mm
-├── sketch
+├── Workpiece(sketch)
 │   |   - radius [in]: Length = 2mm
-│   └── 0x1801bf438d8b094
+│   └── Builtin(!0x1801bf438d8b094)
 │           - radius [in]: Length = 2mm
-└── sketch
+└── Workpiece(sketch)
     |   - radius [in]: Length = 3mm
-    └── 0x1801bf438d8b094
+    └── Builtin(!0x1801bf438d8b094)
             - radius [in]: Length = 3mm

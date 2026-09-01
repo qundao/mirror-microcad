@@ -4,5 +4,5 @@ expression: model
 ---
 Group
 |   - a [out]: Length = 4mm
-└── 0x1801bf438d8b094
+└── Builtin(!0x1801bf438d8b094)
         - radius [in]: Length = 4mm
