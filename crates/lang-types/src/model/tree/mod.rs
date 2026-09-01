@@ -7,7 +7,7 @@ mod builder;
 mod node;
 mod ops;
 
-use microcad_lang_base::{DisplayWithCtx, LookUpName, TreeState};
+use microcad_lang_base::{DisplayWithContext, DisplayWithCtx, LookUpName, TreeState};
 pub use node::{ModelNodeId, Node, NodeExt, NodeMut, NodeRef};
 
 pub use builder::{BuildModelTreeError, ModelTreeBuilder, ModelTreeBuilderMut};
@@ -181,8 +181,13 @@ impl std::hash::Hash for ModelTree {
 
 impl std::fmt::Display for ModelTree {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ctx = TreeState::new();
-        self.root().fmt_with_ctx(f, &mut ctx)
+        self.root().fmt(f)
+    }
+}
+
+impl<Ctx: LookUpName> DisplayWithCtx<Ctx> for ModelTree {
+    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &Ctx) -> std::fmt::Result {
+        self.root().fmt_with_ctx(f, ctx)
     }
 }
 
