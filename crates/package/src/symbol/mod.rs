@@ -5,50 +5,46 @@
 
 use microcad_lang_lower::ir;
 
-pub use workbench::{Workbench, WorkbenchExpression, WorkbenchKind, WorkbenchStatement};
-
-pub use microcad_lang_base::{Identifier, SymbolId};
-
-/// Function definitions from IR.
-/// TODO Check if this can be moved to IR eventually.
-pub mod function {
-    use microcad_lang_lower::ir;
-
-    pub use ir::{Function, FunctionExpression, FunctionSignature, FunctionStatement};
-    pub type Call = ir::Call<FunctionExpression>;
-    pub type Argument = ir::Argument<FunctionExpression>;
-    pub type ArgumentList = ir::ArgumentList<FunctionExpression>;
-    pub type If = ir::If<FunctionExpression>;
-    pub type Scope = ir::Scope;
-    pub type ReturnStatement = ir::ReturnStatement;
-}
-
-/// Workbench definitions from IR.
-/// TODO Check if this can be moved to IR eventually.
-pub mod workbench {
-    use microcad_lang_lower::ir;
-
-    pub use ir::{
-        Group, Init, InitStatement, Marker, Workbench, WorkbenchExpression, WorkbenchKind,
-        WorkbenchSignature, WorkbenchStatement,
-    };
-    pub type Call = ir::Call<WorkbenchExpression>;
-    pub type Argument = ir::Argument<WorkbenchExpression>;
-    pub type ArgumentList = ir::ArgumentList<WorkbenchExpression>;
-    pub type If = ir::If<WorkbenchExpression>;
-}
-
-pub use ir::{Attributes, ConstantValue, ExprSpec, Parameter, ParameterList, Visibility};
-
-pub use function::{Function, FunctionExpression, FunctionStatement};
-
 use std::hash::Hash;
 
 use serde::{Deserialize, Serialize};
 
 use derive_more::From;
 
-pub use microcad_lang_lower::ir::Path;
+pub use microcad_lang_base::{Identifier, SymbolId};
+
+/// Function definitions from IR.
+pub mod function {
+    use microcad_lang_lower::ir;
+
+    pub use ir::{
+        Function, FunctionCall, FunctionExpression, FunctionIf, FunctionSignature,
+        FunctionStatement, ReturnStatement, Scope,
+    };
+    pub type Argument = ir::Argument<FunctionExpression>;
+    pub type ArgumentList = ir::ArgumentList<FunctionExpression>;
+}
+
+pub use function::{Function, FunctionExpression, FunctionStatement};
+
+/// Workbench definitions from IR.
+pub mod workbench {
+    use microcad_lang_lower::ir;
+
+    pub use ir::{
+        Group, Init, InitStatement, Marker, Workbench, WorkbenchCall, WorkbenchExpression,
+        WorkbenchIf, WorkbenchKind, WorkbenchSignature, WorkbenchStatement,
+    };
+    pub type Argument = ir::Argument<WorkbenchExpression>;
+    pub type ArgumentList = ir::ArgumentList<WorkbenchExpression>;
+}
+
+pub use workbench::{Workbench, WorkbenchExpression, WorkbenchKind, WorkbenchStatement};
+
+pub use ir::{
+    Alias, Attributes, Constant, ConstantValue, ExprSpec, Parameter, ParameterList, Path, Source,
+    Visibility, Wildcard,
+};
 
 #[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct InlineModule;
@@ -57,7 +53,7 @@ pub struct InlineModule;
 #[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
 pub enum SymbolDef {
     /// Source file symbol.
-    Source(ir::Source),
+    Source(Source),
     /// Inline Module symbol: `mod foo {}`
     InlineModule(InlineModule),
     /// Workbench symbol.
@@ -65,11 +61,11 @@ pub enum SymbolDef {
     /// Function symbol.
     Function(Function),
     /// Constant.
-    Constant(ir::Constant),
+    Constant(Constant),
     /// Alias of a pub use statement.
-    Alias(ir::Alias),
+    Alias(Alias),
     /// Use all available symbols in the module with the given name.
-    Wildcard(ir::Wildcard),
+    Wildcard(Wildcard),
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
