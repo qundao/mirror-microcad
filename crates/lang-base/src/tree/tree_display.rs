@@ -3,7 +3,10 @@
 
 //! Display and Debug traits for tree-like output.
 
-use crate::tree::NodeRef;
+use crate::{
+    DisplayWithCtx, LookUpName,
+    tree::{NodeRef, node_ref::DisplayWithPrefix},
+};
 
 /// Formatting state passed down through tree nodes.
 #[derive(Clone, Debug, Default)]
@@ -14,80 +17,19 @@ pub struct TreeState {
 
 impl TreeState {
     pub fn new() -> Self {
-        Self {
-            prefix: String::new(),
-        }
+        Self::default()
+    }
+}
+
+impl LookUpName for TreeState {}
+
+impl DisplayWithPrefix for TreeState {
+    fn prefix(&self) -> String {
+        self.prefix.clone()
     }
 
-    /// Helper to format a node and recurse through its children.
-    pub fn write_node<'a, T, F, R>(
-        &self,
-        f: &mut std::fmt::Formatter<'_>,
-        node: &NodeRef<'a, T>,
-        format_content: F,
-        recurse_child: R,
-    ) -> std::fmt::Result
-    where
-        F: FnOnce(&NodeRef<'a, T>) -> String,
-        R: Fn(&NodeRef<'a, T>, &mut std::fmt::Formatter<'_>, TreeState) -> std::fmt::Result,
-    {
-        let content = format_content(node);
-        let mut lines = content.lines();
-
-        // 1. Output first line using the current prefix (may end with ├── or └── or be empty at root)
-        if let Some(first_line) = lines.next() {
-            writeln!(f, "{}{}", self.prefix, first_line)?;
-        } else {
-            writeln!(f, "{}", self.prefix)?;
-        }
-
-        // 2. Compute continuation prefix for multiline content AND children.
-        // Convert any trailing branch symbol into its continuation equivalent:
-        // "├── " -> "│   "
-        // "└── " -> "    "
-        let continuation_prefix = if let Some(base) = self.prefix.strip_suffix("├── ") {
-            format!("{base}│   ")
-        } else if let Some(base) = self.prefix.strip_suffix("└── ") {
-            format!("{base}    ")
-        } else {
-            self.prefix.clone()
-        };
-
-        let children: Vec<_> = node.children().collect();
-        let count = children.len();
-
-        // 3. Multiline lines use the continuation prefix
-        for line in lines {
-            let mut remainder = line;
-            let mut indent_count = 0;
-
-            // Strip every 4-space prefix and count how many times it appears
-            while let Some(stripped) = remainder.strip_prefix("    ") {
-                remainder = stripped;
-                indent_count += 1;
-            }
-
-            if indent_count > 0 && count > 0 {
-                let pipes = "|   ".repeat(indent_count);
-                writeln!(f, "{continuation_prefix}{pipes}{remainder}")?;
-            } else {
-                writeln!(f, "{continuation_prefix}{line}")?;
-            }
-        }
-
-        // 4. Recurse children using continuation_prefix + branch marker
-        for (idx, child) in children.into_iter().enumerate() {
-            let is_last = idx == count - 1;
-            let branch = if is_last { "└── " } else { "├── " };
-
-            let child_state = TreeState {
-                prefix: format!("{continuation_prefix}{branch}"),
-            };
-
-            recurse_child(&child, f, child_state)?;
-        }
-
-        Ok(())
+    fn set_prefix(&mut self, prefix: String) {
+        self.prefix = prefix;
     }
 }
 
@@ -105,17 +47,13 @@ pub trait TreeDebug {
 // TreeDisplay Implementation
 // =========================================================================
 
-impl<'a, T> TreeDisplay for NodeRef<'a, T>
+impl<'a, Ctx, T> DisplayWithCtx<Ctx> for NodeRef<'a, T>
 where
-    T: std::fmt::Display,
+    T: DisplayWithCtx<Ctx>,
+    Ctx: DisplayWithPrefix,
 {
-    fn tree_fmt(&self, f: &mut std::fmt::Formatter<'_>, state: TreeState) -> std::fmt::Result {
-        state.write_node(
-            f,
-            self,
-            |node| node.get().to_string(),
-            |child, f, s| child.tree_fmt(f, s),
-        )
+    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &mut Ctx) -> std::fmt::Result {
+        self.write_node(f, self, ctx)
     }
 }
 
@@ -132,21 +70,17 @@ where
         f: &mut std::fmt::Formatter<'_>,
         state: TreeState,
     ) -> std::fmt::Result {
-        state.write_node(
-            f,
-            self,
-            |node| format!("[id: {:?}] {:?}", node.id, node.get()),
-            |child, f, s| child.tree_debug_fmt(f, s),
-        )
+        todo!()
     }
 }
 
 impl<'a, T> std::fmt::Display for NodeRef<'a, T>
 where
-    T: std::fmt::Display,
+    T: std::fmt::Display + DisplayWithCtx<TreeState>,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.tree_fmt(f, TreeState::new())
+        let mut ctx = TreeState::default();
+        self.fmt_with_ctx(f, &mut ctx)
     }
 }
 

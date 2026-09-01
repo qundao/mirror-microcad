@@ -21,8 +21,6 @@ mod version;
 
 pub use compact_str::{CompactString, ToCompactString};
 
-pub use id::{BuiltinId, BuiltinInfo, HashId, Name, SymbolId, hash_id};
-
 /// URL to locate sources.
 pub use url::Url;
 
@@ -37,15 +35,17 @@ pub const MICROCAD_EXTENSION: &str = "µcad";
 pub use artifact::{Artifact, ArtifactError, ArtifactHeader, ArtifactKind, StageResult};
 pub use diag::{DiagRenderOptions, Diagnostic, Diagnostics, PushDiag};
 pub use element::{Identifier, IdentifierList};
+pub use fs::{FileSystem, VirtualFileSystem};
+pub use id::{
+    BuiltinId, BuiltinInfo, DefaultContext, DisplayWithContext, DisplayWithCtx, HashId, LookUpName,
+    Name, SymbolId, hash_id,
+};
 pub use output::{Capture, Output, Stdout};
 pub use rc::{Rc, RcMut};
+pub use source::{Source, SourceKind, SourceLocation, SourceMap, TextEdit};
 pub use src_ref::{LineCol, LineIndex, Refer, Span, SpanToSrcRef, Spanned, SrcRef, SrcReferrer};
 pub use tree::{FormatTree, TreeDisplay, TreeState};
 pub use version::{LanguageVersion, MICROCAD_VERSION, Stability, Version, VersionAnnotation};
-
-pub use source::{Source, SourceKind, SourceLocation, SourceMap, TextEdit};
-
-pub use fs::{FileSystem, VirtualFileSystem};
 
 impl SourceCode for Source {
     fn read_span<'a>(

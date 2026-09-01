@@ -3,6 +3,7 @@
 
 //! Index-based tree node reference helpers.
 
+use crate::DisplayWithCtx;
 pub use crate::tree::{Arena, NodeId};
 
 /// A convenience wrapper pairing a `NodeId` with a borrowed `Arena`.
@@ -36,6 +37,83 @@ impl<'a, T> NodeRef<'a, T> {
         self.arena[self.id]
             .parent()
             .map(|parent_id| NodeRef::new(parent_id, self.arena))
+    }
+}
+
+pub trait DisplayWithPrefix: Sized {
+    fn prefix(&self) -> String;
+
+    fn set_prefix(&mut self, prefix: String);
+}
+
+impl<'a, T> NodeRef<'a, T> {
+    /// Helper to format a node and recurse through its children.
+    pub fn write_node<Ctx>(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+        node: &NodeRef<'a, T>,
+        ctx: &mut Ctx,
+    ) -> std::fmt::Result
+    where
+        T: DisplayWithCtx<Ctx>,
+        Ctx: DisplayWithPrefix,
+    {
+        let content = node.get().to_string_with_ctx(ctx);
+        let mut lines = content.lines();
+
+        let prefix = ctx.prefix();
+
+        // 1. Output first line using the current prefix (may end with ├── or └── or be empty at root)
+        if let Some(first_line) = lines.next() {
+            writeln!(f, "{prefix}{first_line}")?;
+        } else {
+            writeln!(f, "{prefix}")?;
+        }
+
+        // 2. Compute continuation prefix for multiline content AND children.
+        // Convert any trailing branch symbol into its continuation equivalent:
+        // "├── " -> "│   "
+        // "└── " -> "    "
+        let continuation_prefix = if let Some(base) = prefix.strip_suffix("├── ") {
+            format!("{base}│   ")
+        } else if let Some(base) = prefix.strip_suffix("└── ") {
+            format!("{base}    ")
+        } else {
+            prefix.clone()
+        };
+
+        let children: Vec<_> = node.children().collect();
+        let count = children.len();
+
+        // 3. Multiline lines use the continuation prefix
+        for line in lines {
+            let mut remainder = line;
+            let mut indent_count = 0;
+
+            // Strip every 4-space prefix and count how many times it appears
+            while let Some(stripped) = remainder.strip_prefix("    ") {
+                remainder = stripped;
+                indent_count += 1;
+            }
+
+            if indent_count > 0 && count > 0 {
+                let pipes = "|   ".repeat(indent_count);
+                writeln!(f, "{continuation_prefix}{pipes}{remainder}")?;
+            } else {
+                writeln!(f, "{continuation_prefix}{line}")?;
+            }
+        }
+
+        // 4. Recurse children using continuation_prefix + branch marker
+        for (idx, child) in children.into_iter().enumerate() {
+            let is_last = idx == count - 1;
+            let branch = if is_last { "└── " } else { "├── " };
+
+            ctx.set_prefix(format!("{continuation_prefix}{branch}"));
+            child.write_node(f, &child, ctx)?;
+        }
+
+        Ok(())
     }
 }
 
