@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0xa18f78da53e23991",
-        output_hash: "0xe8acbc86d891f2",
+        output_hash: "0xa72a70c6ac388820",
         tree: (
             root: (
                 index1: 1,
@@ -254,40 +254,22 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                         value: "center",
                                                         src_ref: "None",
                                                     )),
-                                                    expression: Call((
-                                                        path: HumanReadable(
-                                                            name: "__mu::core::tuple",
-                                                            id: Builtin(("0x8546b16eecadcdcc")),
-                                                        ),
-                                                        args: (
-                                                            src_ref: "None",
-                                                            args: [
-                                                                Named(
-                                                                    name: ((
-                                                                        value: "x",
-                                                                        src_ref: "7:38 @ 0x6fea70d2e98e16db (254..255)",
-                                                                    )),
-                                                                    expr: Value(((
-                                                                        value: Quantity("0mm"),
-                                                                        src_ref: "7:42 @ 0x6fea70d2e98e16db (258..263)",
-                                                                    ))),
-                                                                    src_ref: "7:38 @ 0x6fea70d2e98e16db (254..263)",
-                                                                ),
-                                                                Named(
-                                                                    name: ((
-                                                                        value: "y",
-                                                                        src_ref: "7:49 @ 0x6fea70d2e98e16db (265..266)",
-                                                                    )),
-                                                                    expr: Value(((
-                                                                        value: Quantity("0mm"),
-                                                                        src_ref: "7:53 @ 0x6fea70d2e98e16db (269..274)",
-                                                                    ))),
-                                                                    src_ref: "7:49 @ 0x6fea70d2e98e16db (265..274)",
-                                                                ),
+                                                    expression: Value(((
+                                                        value: Tuple((
+                                                            positional: [],
+                                                            named: [
+                                                                (((
+                                                                    value: "x",
+                                                                    src_ref: "7:38 @ 0x6fea70d2e98e16db (254..255)",
+                                                                )), Quantity("0mm")),
+                                                                (((
+                                                                    value: "y",
+                                                                    src_ref: "7:49 @ 0x6fea70d2e98e16db (265..266)",
+                                                                )), Quantity("0mm")),
                                                             ],
-                                                        ),
-                                                        src_ref: "7:37 @ 0x6fea70d2e98e16db (253..275)",
-                                                    )),
+                                                        )),
+                                                        src_ref: "None",
+                                                    ))),
                                                     src_ref: "None",
                                                 ),
                                             ],

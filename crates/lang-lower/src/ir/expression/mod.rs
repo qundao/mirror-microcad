@@ -77,7 +77,7 @@ where
 }
 
 /// Specification trait for an expression.
-pub trait ExprSpec: Serialize + SrcReferrer + SingleIdentifier {
+pub trait ExprSpec: Serialize + SrcReferrer + SingleIdentifier + From<Value> {
     type Body;
 
     /// Test if an expression holds a constant value.
@@ -111,6 +111,12 @@ impl SrcReferrer for ConstantExpression {
             ConstantExpression::Path(name) => name.src_ref(),
             ConstantExpression::Call(call) => call.src_ref,
         }
+    }
+}
+
+impl From<Value> for ConstantExpression {
+    fn from(value: Value) -> Self {
+        Self::Value(ir::ConstantValue::from_value(value))
     }
 }
 

@@ -172,6 +172,12 @@ pub enum WorkbenchExpression {
     Marker(Marker),
 }
 
+impl From<Value> for WorkbenchExpression {
+    fn from(value: Value) -> Self {
+        Self::Value(ir::ConstantValue::from_value(value))
+    }
+}
+
 impl SrcReferrer for WorkbenchExpression {
     fn src_ref(&self) -> SrcRef {
         use WorkbenchExpression::*;

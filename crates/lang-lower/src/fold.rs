@@ -9,16 +9,18 @@ use microcad_lang_types::{Arguments, Value};
 
 use crate::{LowerContext, ir};
 
-/// A v
+/// A visitor to fold expressions into constant values.
 pub struct Fold<'a, 'source> {
     context: &'a mut LowerContext<'source>,
 }
 
 impl<'a, 'source> Fold<'a, 'source> {
+    /// Create a new fold visitor.
     pub fn new(context: &'a mut LowerContext<'source>) -> Self {
         Self { context }
     }
 
+    /// Try to get the value from a path `__mu::math::PI` => `3.14159...`
     fn path_to_value(&mut self, path: &mut ir::Path) -> Option<Value> {
         match path.symbol_id() {
             Some(SymbolId::Builtin(builtin_id)) => match self.context.builtins.get(*builtin_id) {
@@ -29,6 +31,7 @@ impl<'a, 'source> Fold<'a, 'source> {
         }
     }
 
+    /// Try to compute the value from a call.
     fn call_to_value<Expr: ir::ExprSpec, F>(
         &mut self,
         call: &mut ir::Call<Expr>,
@@ -62,6 +65,15 @@ impl<'a, 'source> Fold<'a, 'source> {
             None => None,
         }
     }
+
+    fn expr<Expr: ir::ExprSpec>(expr: &mut Expr, value: Option<Value>) {
+        match value {
+            Some(value) => {
+                *expr = Expr::from(value);
+            }
+            None => {}
+        }
+    }
 }
 
 impl<Expr: ir::ExprSpec> ir::ArgumentList<Expr> {
@@ -88,32 +100,59 @@ impl<'a, 'source> ir::visitor::LeafVisitorMut for Fold<'a, 'source> {}
 
 impl<'a, 'source> ir::visitor::ConstantVisitorMut for Fold<'a, 'source> {
     fn visit_constant_expr(&mut self, expr: &mut ir::ConstantExpression) {
-        match expr {
-            ir::ConstantExpression::Invalid | ir::ConstantExpression::Value(_) => {}
-
-            // Fold builtin constants into values
-            ir::ConstantExpression::Path(path) => match self.path_to_value(path) {
-                Some(value) => {
-                    *expr = ir::ConstantExpression::Value(ir::ConstantValue::from_value(value));
-                }
-                None => {}
-            },
-
-            // Fold built-in calls
+        let value = match expr {
+            ir::ConstantExpression::Invalid | ir::ConstantExpression::Value(_) => None,
+            ir::ConstantExpression::Path(path) => self.path_to_value(path),
             ir::ConstantExpression::Call(call) => {
-                match self.call_to_value(call, |fold, expr| fold.visit_constant_expr(expr)) {
-                    Some(value) => {
-                        *expr = ir::ConstantExpression::Value(ir::ConstantValue::from_value(value));
-                    }
-                    None => {}
-                }
+                self.call_to_value(call, |fold, expr| fold.visit_constant_expr(expr))
             }
-        }
+        };
+        Self::expr(expr, value)
     }
 }
 
 // Sub-trait implementations (inherit default traversal behavior)
-impl<'a, 'source> ir::visitor::WorkbenchStatementVisitorMut for Fold<'a, 'source> {}
+impl<'a, 'source> ir::visitor::WorkbenchStatementVisitorMut for Fold<'a, 'source> {
+    fn visit_workbench_expr(&mut self, expr: &mut ir::workbench::WorkbenchExpression) {
+        let value = match expr {
+            ir::WorkbenchExpression::Invalid | ir::WorkbenchExpression::Value(_) => None,
+            ir::WorkbenchExpression::Path(path) => self.path_to_value(path),
+            ir::WorkbenchExpression::Call(call) => {
+                self.call_to_value(call, |fold, expr| fold.visit_workbench_expr(expr))
+            }
+            ir::WorkbenchExpression::Group(group) => {
+                return self.visit_workbench_group(group);
+            }
+            ir::WorkbenchExpression::If(if_) => {
+                return self.visit_workbench_if(if_);
+            }
+            ir::WorkbenchExpression::Marker(_) => {
+                return;
+            }
+        };
+        Self::expr(expr, value)
+    }
+}
+
 impl<'a, 'source> ir::visitor::WorkbenchVisitorMut for Fold<'a, 'source> {}
-impl<'a, 'source> ir::visitor::FnVisitorMut for Fold<'a, 'source> {}
+
+impl<'a, 'source> ir::visitor::FnVisitorMut for Fold<'a, 'source> {
+    fn visit_fn_expr(&mut self, expr: &mut ir::function::FunctionExpression) {
+        let value = match expr {
+            ir::FunctionExpression::Invalid | ir::FunctionExpression::Value(_) => None,
+            ir::FunctionExpression::Path(path) => self.path_to_value(path),
+            ir::FunctionExpression::Call(call) => {
+                self.call_to_value(call, |fold, expr| fold.visit_fn_expr(expr))
+            }
+            ir::FunctionExpression::Scope(scope) => {
+                return self.visit_fn_scope(scope);
+            }
+            ir::FunctionExpression::If(if_) => {
+                return self.visit_fn_if(if_);
+            }
+        };
+        Self::expr(expr, value)
+    }
+}
+
 impl<'a, 'source> ir::visitor::VisitorMut for Fold<'a, 'source> {}

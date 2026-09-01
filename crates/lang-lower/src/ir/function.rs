@@ -83,6 +83,12 @@ impl SingleIdentifier for FunctionExpression {
     }
 }
 
+impl From<Value> for FunctionExpression {
+    fn from(value: Value) -> Self {
+        Self::Value(ir::ConstantValue::from_value(value))
+    }
+}
+
 impl ir::ExprSpec for FunctionExpression {
     type Body = Scope;
 
