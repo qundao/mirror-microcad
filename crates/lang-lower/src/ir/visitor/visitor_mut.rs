@@ -226,13 +226,17 @@ pub trait FnVisitorMut: ConstantVisitorMut {
 
 /// Visitor for an IR tree.
 pub trait VisitorMut: FnVisitorMut + WorkbenchVisitorMut + ConstantVisitorMut {
+    fn visit(&mut self, ir: &mut crate::Ir) {
+        self.visit_tree(&mut ir.tree);
+    }
+
     fn visit_tree(&mut self, ir_tree: &mut ir::Tree) {
         ir_tree.root_mut().transform(|node, item| {
-            self.visit_item(item);
+            self.visit_item(node, item);
         })
     }
 
-    fn visit_item(&mut self, item: &mut ir::IrItem) {
+    fn visit_item<'a>(&mut self, _node: ir::NodeRef<'a>, item: &mut ir::IrItem) {
         self.visit_meta(&mut item.meta);
         self.visit_def(&mut item.def);
     }

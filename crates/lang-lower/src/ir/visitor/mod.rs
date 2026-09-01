@@ -5,8 +5,11 @@
 
 use crate::ir;
 
+mod human_readable;
 mod visitor_mut;
 pub use visitor_mut::*;
+
+pub use human_readable::MakeHumanReadable;
 
 /// Visitor for IR leaf nodes.
 pub trait LeafVisitor: Sized {

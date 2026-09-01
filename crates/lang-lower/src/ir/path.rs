@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use derive_more::{Display, From};
-use microcad_lang_base::{BuiltinId, Identifier, SingleIdentifier, SrcRef, SrcReferrer, SymbolId};
+use microcad_lang_base::{
+    BuiltinId, Identifier, Name, SingleIdentifier, SrcRef, SrcReferrer, SymbolId,
+};
 use miette::SourceSpan;
 use serde::{Deserialize, Serialize};
-
-use crate::MakeHumanReadable;
 
 #[derive(Clone, Debug, From, Hash, PartialEq, Eq, Serialize, Deserialize)]
 pub struct UnresolvedPath {
@@ -66,25 +66,24 @@ pub enum Path {
     Resolved(SymbolId),
     /// A path that still needs to be resolved by the symbol resolver.
     Unresolved(UnresolvedPath),
-    /// A human readable path.
-    #[display("{path}{}", id.as_ref().map(|id| format!("@{id}")).unwrap_or_default())]
-    HumanReadable { path: String, id: Option<SymbolId> },
+    /// A human readable resolved path.
+    #[display("{name}[{id}]")]
+    HumanReadable { name: Name, id: SymbolId },
+}
+
+impl Path {
+    /// Return the symbol id of this path, if it has been resolved
+    pub fn symbol_id(&self) -> Option<&SymbolId> {
+        match &self {
+            Path::Resolved(id) | Path::HumanReadable { id, .. } => Some(id),
+            Path::Unresolved(_) => None,
+        }
+    }
 }
 
 impl From<BuiltinId> for Path {
     fn from(id: BuiltinId) -> Self {
         Self::Resolved(SymbolId::Builtin(id))
-    }
-}
-
-impl MakeHumanReadable for Path {
-    fn make_human_readable<U: crate::Unresolver>(&mut self, unresolver: &U) {
-        if let Path::Resolved(id) = self {
-            *self = Path::HumanReadable {
-                path: unresolver.unresolve(id.clone()),
-                id: Some(id.clone()),
-            };
-        }
     }
 }
 

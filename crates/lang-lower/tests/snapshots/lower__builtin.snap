@@ -74,7 +74,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             src_ref: "None",
                                         ),
                                         expression: Call((
-                                            path: Resolved(Builtin(("0x2a1ad822686b2491"))),
+                                            path: HumanReadable(
+                                                name: "__mu::core::add",
+                                                id: Builtin(("0x2a1ad822686b2491")),
+                                            ),
                                             args: (
                                                 src_ref: "5:21 @ 0xb68464fb05014e73 (117..125)",
                                                 args: [

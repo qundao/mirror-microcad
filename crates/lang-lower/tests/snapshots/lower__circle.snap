@@ -105,7 +105,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                     src_ref: "None",
                                                 ),
                                                 default_value: Some(Call((
-                                                    path: Resolved(Builtin(("0x8546b16eecadcdcc"))),
+                                                    path: HumanReadable(
+                                                        name: "__mu::core::tuple",
+                                                        id: Builtin(("0x8546b16eecadcdcc")),
+                                                    ),
                                                     args: (
                                                         src_ref: "None",
                                                         args: [
@@ -178,7 +181,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                             src_ref: "None",
                                                         ),
                                                         default_value: Some(Call((
-                                                            path: Resolved(Builtin(("0x8546b16eecadcdcc"))),
+                                                            path: HumanReadable(
+                                                                name: "__mu::core::tuple",
+                                                                id: Builtin(("0x8546b16eecadcdcc")),
+                                                            ),
                                                             args: (
                                                                 src_ref: "None",
                                                                 args: [
@@ -238,7 +244,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                         src_ref: "8:9 @ 0x6fea70d2e98e16db (287..293)",
                                                     )),
                                                     expression: Call((
-                                                        path: Resolved(Builtin(("0x43186122764a895d"))),
+                                                        path: HumanReadable(
+                                                            name: "__mu::core::div",
+                                                            id: Builtin(("0x43186122764a895d")),
+                                                        ),
                                                         args: (
                                                             src_ref: "None",
                                                             args: [
@@ -282,7 +291,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                         src_ref: "None",
                                                     )),
                                                     expression: Call((
-                                                        path: Resolved(Builtin(("0x8546b16eecadcdcc"))),
+                                                        path: HumanReadable(
+                                                            name: "__mu::core::tuple",
+                                                            id: Builtin(("0x8546b16eecadcdcc")),
+                                                        ),
                                                         args: (
                                                             src_ref: "None",
                                                             args: [
@@ -346,7 +358,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                             src_ref: "None",
                                                         ),
                                                         default_value: Some(Call((
-                                                            path: Resolved(Builtin(("0x8546b16eecadcdcc"))),
+                                                            path: HumanReadable(
+                                                                name: "__mu::core::tuple",
+                                                                id: Builtin(("0x8546b16eecadcdcc")),
+                                                            ),
                                                             args: (
                                                                 src_ref: "None",
                                                                 args: [
@@ -405,7 +420,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                         value: "center",
                                                         src_ref: "None",
                                                     )),
-                                                    expression: Path(Resolved(Local("center"))),
+                                                    expression: Path(HumanReadable(
+                                                        name: "center",
+                                                        id: Local("center"),
+                                                    )),
                                                     src_ref: "None",
                                                 ),
                                                 (
@@ -413,7 +431,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                         value: "radius",
                                                         src_ref: "None",
                                                     )),
-                                                    expression: Path(Resolved(Local("radius"))),
+                                                    expression: Path(HumanReadable(
+                                                        name: "radius",
+                                                        id: Local("radius"),
+                                                    )),
                                                     src_ref: "None",
                                                 ),
                                             ],
@@ -451,7 +472,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             src_ref: "None",
                                         ),
                                         expression: Call((
-                                            path: Resolved(Builtin(("0xbdbd29f374bc5c03"))),
+                                            path: HumanReadable(
+                                                name: "__mu::ops::translate",
+                                                id: Builtin(("0xbdbd29f374bc5c03")),
+                                            ),
                                             args: (
                                                 src_ref: "12:31 @ 0x6fea70d2e98e16db (381..418)",
                                                 args: [
@@ -461,7 +485,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                             src_ref: "None",
                                                         )),
                                                         expr: Call((
-                                                            path: Resolved(Builtin(("0x1801bf438d8b094"))),
+                                                            path: HumanReadable(
+                                                                name: "__mu::geo2d::Circle",
+                                                                id: Builtin(("0x1801bf438d8b094")),
+                                                            ),
                                                             args: (
                                                                 src_ref: "11:25 @ 0x6fea70d2e98e16db (343..349)",
                                                                 args: [
@@ -487,7 +514,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                             src_ref: "12:31 @ 0x6fea70d2e98e16db (381..382)",
                                                         )),
                                                         expr: Call((
-                                                            path: Resolved(Builtin(("0x27c18356c4cfecef"))),
+                                                            path: HumanReadable(
+                                                                name: "__mu::core::member_access",
+                                                                id: Builtin(("0x27c18356c4cfecef")),
+                                                            ),
                                                             args: (
                                                                 src_ref: "None",
                                                                 args: [
@@ -517,7 +547,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                             src_ref: "12:45 @ 0x6fea70d2e98e16db (395..396)",
                                                         )),
                                                         expr: Call((
-                                                            path: Resolved(Builtin(("0x27c18356c4cfecef"))),
+                                                            path: HumanReadable(
+                                                                name: "__mu::core::member_access",
+                                                                id: Builtin(("0x27c18356c4cfecef")),
+                                                            ),
                                                             args: (
                                                                 src_ref: "None",
                                                                 args: [

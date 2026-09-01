@@ -1,5 +1,6 @@
 mod common;
 
+use microcad_lang_base::SymbolId;
 use microcad_lang_lower::ir;
 use microcad_lang_lower::ir::visitor::{
     ConstantVisitor, FnVisitor, LeafVisitor, Visitor, WorkbenchStatementVisitor, WorkbenchVisitor,
@@ -54,9 +55,12 @@ fn path_collector() {
         println!("{path}");
     }
 
-    assert!(
-        paths.contains(&ir::Path::Resolved(microcad_lang_base::SymbolId::Builtin(
-            __mu!(core::member_access),
-        )))
-    );
+    let symbol_ids: Vec<_> = paths
+        .iter()
+        .filter_map(|path| path.symbol_id())
+        .cloned()
+        .collect();
+
+    assert!(symbol_ids.contains(&SymbolId::Builtin(__mu!(geo2d::Circle))));
+    assert!(symbol_ids.contains(&SymbolId::Builtin(__mu!(core::member_access))));
 }

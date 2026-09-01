@@ -13,7 +13,8 @@ mod scaffold;
 
 use microcad_builtin::BuiltinRegistry;
 use microcad_lang_base::{
-    CompilationResult, Diagnostics, HashId, Source, Span, SpanToSrcRef, SrcRef, SymbolId, hash_id,
+    CompilationResult, Diagnostics, HashId, LookUpName, Source, Span, SpanToSrcRef, SrcRef,
+    SymbolId, hash_id,
 };
 
 pub use ir::CastInto;
@@ -36,40 +37,6 @@ pub trait Unresolver {
     fn unresolve(&self, id: impl Into<SymbolId>) -> String;
 }
 
-pub trait MakeHumanReadable {
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U);
-}
-
-impl<T> MakeHumanReadable for Box<T>
-where
-    T: MakeHumanReadable,
-{
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        self.as_mut().make_human_readable(unresolver);
-    }
-}
-
-impl<T> MakeHumanReadable for Box<[T]>
-where
-    T: MakeHumanReadable,
-{
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        self.iter_mut()
-            .for_each(|expr| expr.make_human_readable(unresolver));
-    }
-}
-
-impl<T> MakeHumanReadable for Option<T>
-where
-    T: MakeHumanReadable,
-{
-    fn make_human_readable<U: Unresolver>(&mut self, unresolver: &U) {
-        if let Some(s) = self.as_mut() {
-            s.make_human_readable(unresolver);
-        }
-    }
-}
-
 impl Desugar<Ast> for ir::desugared::Source {
     fn desugar(node: &Ast, context: &mut LowerContext) -> LowerResult<Self> {
         ir::desugared::Source::desugar(node.tree(), context)
@@ -82,6 +49,15 @@ pub struct LowerContext<'source> {
     pub node_id_stack: Vec<ir::NodeId>,
     pub builtins: BuiltinRegistry,
     pub errors: Vec<LowerError>,
+}
+
+impl<'source> LookUpName for LowerContext<'source> {
+    fn look_up_built_in_name(
+        &self,
+        builtin_id: &microcad_builtin::BuiltinId,
+    ) -> Option<microcad_lang_base::Name> {
+        self.builtins.look_up_built_in_name(builtin_id)
+    }
 }
 
 impl<'source> LowerContext<'source> {

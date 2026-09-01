@@ -12,7 +12,12 @@ pub fn desugar(source: &Source) -> LowerResult<ir::desugared::Source> {
 pub fn ir_from_source(source: &Source) -> CompilationResult<lower::Ir> {
     let ast = parse::parse(source)?.0;
     let mut context = LowerContext::from(source);
-    lower::lower(&mut context, &ast)
+    let (mut ir, diag) = lower::lower(&mut context, &ast)?;
+
+    use microcad_lang_lower::ir::visitor::VisitorMut;
+    ir::visitor::MakeHumanReadable::new(&context).visit(&mut ir);
+
+    Ok((ir, diag))
 }
 
 pub fn source_from_test_file(name: &str) -> Source {
