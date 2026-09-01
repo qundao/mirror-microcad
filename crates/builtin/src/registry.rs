@@ -3,7 +3,7 @@
 
 //! µcad built-in registry.
 
-use microcad_lang_base::{BuiltinId, HashMap};
+use microcad_lang_base::{BuiltinId, BuiltinInfo, HashMap, LookUpName, ToCompactString};
 
 use crate::{BuiltinItem, BuiltinModule};
 
@@ -40,6 +40,7 @@ impl BuiltinRegistry {
 
         registry.register(mu::geo2d::CIRCLE);
         registry.register(mu::ops::TRANSLATE);
+        registry.register(mu::ops::EXTRUDE);
 
         registry
     }
@@ -70,5 +71,12 @@ impl BuiltinRegistry {
 
     pub fn modules(&self) -> impl Iterator<Item = &&'static BuiltinModule> {
         self.modules.iter()
+    }
+}
+
+impl LookUpName for BuiltinRegistry {
+    fn look_up_built_in_name(&self, id: &BuiltinId) -> Option<microcad_lang_base::Name> {
+        self.get(*id)
+            .map(|builtin| builtin.name().to_compact_string())
     }
 }
