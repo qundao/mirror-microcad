@@ -61,24 +61,25 @@ pub enum Stability {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct VersionAnnotation {
     /// The version when the symbol was introduced to the DSL.
-    pub introduced: Version,
+    pub introduced: Option<Version>,
 
     /// Current stability state of the symbol.
     pub stability: Stability,
 }
 
 impl VersionAnnotation {
-    /// Creates a standard stable version annotation.
-    pub const fn stable(introduced: Version) -> Self {
-        Self {
-            introduced,
-            stability: Stability::Stable,
-        }
-    }
+    /// Helper for stable/core symbols without a specific version lock
+    pub const STABLE_CORE: Self = Self {
+        introduced: None,
+        stability: Stability::Stable,
+    };
 
     /// Checks if the symbol is available at a given target DSL version.
     pub fn is_available_at(&self, target_version: &Version) -> bool {
-        target_version >= &self.introduced
+        match &self.introduced {
+            Some(introduced) => target_version >= &introduced,
+            None => true,
+        }
     }
 
     /// Checks if the symbol is deprecated at a given target DSL version.
