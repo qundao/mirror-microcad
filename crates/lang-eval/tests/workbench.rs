@@ -27,7 +27,7 @@ pub mod helper {
 
     /// __mu::geo2d::Circle(radius = expr)
     pub fn call_circle(radius: impl Into<Expr>) -> Expr {
-        workbench::Call::builtin(__mu!(geo2d::Circle))
+        workbench::WorkbenchCall::builtin(__mu!(geo2d::Circle))
             .with_args(vec![workbench::Argument::named("radius", radius)])
             .into()
     }
@@ -39,7 +39,7 @@ pub mod helper {
         y: impl Into<Expr>,
         z: impl Into<Expr>,
     ) -> Expr {
-        workbench::Call::builtin(__mu!(ops::translate))
+        workbench::WorkbenchCall::builtin(__mu!(ops::translate))
             .with_args(vec![
                 workbench::Argument::named("self", self_),
                 workbench::Argument::named("x", x),
@@ -227,7 +227,7 @@ fn circle_init() {
         )])
         .with_statements([workbench::InitStatement::new(
             "radius",
-            workbench::Call::builtin(__mu!(core::div)).with_args(
+            workbench::WorkbenchCall::builtin(__mu!(core::div)).with_args(
                 workbench::ArgumentList::from_iter([
                     workbench::Argument::named("lhs", local("diameter")),
                     workbench::Argument::named("rhs", symbol::ConstantValue::from_value(2.0)),

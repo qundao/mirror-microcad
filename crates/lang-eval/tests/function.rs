@@ -9,7 +9,7 @@ use microcad_lang_eval::{CallTrait, EvalContext};
 use microcad_lang_types::{ArgumentValueList, Type, Value, argument_value};
 use microcad_package::symbol::{
     Attributes, ConstantValue, Function, FunctionExpression, FunctionStatement, Parameter, Path,
-    function::{self, Argument, ArgumentList, Call, If, Scope},
+    function,
 };
 
 fn statements<T>(a: impl Iterator<Item = T>) -> Box<[FunctionStatement]>
@@ -25,7 +25,7 @@ fn name_expr(name: &str) -> FunctionExpression {
     FunctionExpression::Path(Path::Resolved(SymbolId::Local(name.to_compact_string())))
 }
 
-fn scope<T>(a: impl Iterator<Item = T>) -> Scope
+fn scope<T>(a: impl Iterator<Item = T>) -> function::Scope
 where
     T: Into<FunctionStatement>,
 {
@@ -35,8 +35,8 @@ where
     }
 }
 
-fn arg(name: &str, expr: FunctionExpression) -> Argument {
-    Argument::Named {
+fn arg(name: &str, expr: FunctionExpression) -> function::Argument {
+    function::Argument::Named {
         name: Identifier::no_ref(name),
         expr,
         src_ref: SrcRef::none(),
@@ -80,9 +80,9 @@ fn add() {
         .with_return_type(Type::Integer),
         statements: statements(
             [FunctionStatement::Tail(
-                Call {
+                function::FunctionCall {
                     path: __mu!(core::add),
-                    args: ArgumentList::from_iter(
+                    args: function::ArgumentList::from_iter(
                         [arg("lhs", name_expr("a")), arg("rhs", name_expr("b"))].into_iter(),
                     ),
                     src_ref: SrcRef::none(),
@@ -114,12 +114,12 @@ fn if_a_greater_than() {
         ])
         .with_return_type(Type::Integer),
         statements: statements(
-            [If {
+            [function::FunctionIf {
                 src_ref: SrcRef::none(),
                 if_ref: SrcRef::none(),
-                cond: FunctionExpression::Call(Call {
+                cond: FunctionExpression::Call(function::FunctionCall {
                     path: __mu!(core::gt),
-                    args: ArgumentList::from_iter(
+                    args: function::ArgumentList::from_iter(
                         [arg("lhs", name_expr("a")), arg("rhs", name_expr("b"))].into_iter(),
                     ),
                     src_ref: SrcRef::none(),

@@ -77,7 +77,7 @@ impl Eval<FlowSignal> for symbol::function::Scope {
     }
 }
 
-impl Eval<FlowSignal> for symbol::function::If {
+impl Eval<FlowSignal> for symbol::function::FunctionIf {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
         // 1. Evaluate condition expression
         let cond_signal = self.cond.eval(context)?;
@@ -100,7 +100,7 @@ impl Eval<FlowSignal> for symbol::function::If {
     }
 }
 
-impl Eval<FlowSignal> for symbol::function::Call {
+impl Eval<FlowSignal> for symbol::function::FunctionCall {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<FlowSignal> {
         use crate::argument_match::ArgumentMatch;
         match &self.path {

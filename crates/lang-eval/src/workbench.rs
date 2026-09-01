@@ -35,7 +35,7 @@ impl Eval<Value> for symbol::workbench::Group {
     }
 }
 
-impl Eval<Value> for symbol::workbench::If {
+impl Eval<Value> for symbol::workbench::WorkbenchIf {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         let cond: Value = self.cond.eval(context)?;
         let cond: bool = cond.try_into()?;
@@ -155,7 +155,7 @@ impl Eval<ArgumentValueList> for symbol::workbench::ArgumentList {
     }
 }
 
-impl Eval for symbol::workbench::Call {
+impl Eval for symbol::workbench::WorkbenchCall {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         use crate::ArgumentMatch;
         match &self.path {
