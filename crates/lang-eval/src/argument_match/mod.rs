@@ -14,7 +14,9 @@ use crate::{EvalError, EvalResult};
 pub trait ArgumentMatch {
     fn call_signature(&self) -> CallSignature;
 
-    fn default_values(&self) -> Tuple;
+    fn default_values(&self) -> Tuple {
+        Tuple::default()
+    }
 
     fn is_matching(&self, arguments: &ArgumentValueList) -> bool {
         self.argument_match(arguments).is_ok() // TODO Implement a custom and more performant algorithm here.
@@ -237,23 +239,9 @@ impl ArgumentMatch for Function {
     }
 }
 
-impl ArgumentMatch for Workbench {
-    fn call_signature(&self) -> CallSignature {
-        self.signature.parameters.call_signature()
-    }
-
-    fn default_values(&self) -> Tuple {
-        self.signature.parameters.default_values()
-    }
-}
-
 impl ArgumentMatch for microcad_builtin::BuiltinFunction {
     fn call_signature(&self) -> CallSignature {
         self.ty().call_ty.clone()
-    }
-
-    fn default_values(&self) -> Tuple {
-        Tuple::default()
     }
 }
 
@@ -261,18 +249,10 @@ impl ArgumentMatch for microcad_builtin::BuiltinPrimitive {
     fn call_signature(&self) -> CallSignature {
         self.ty().call_ty.clone()
     }
-
-    fn default_values(&self) -> Tuple {
-        Tuple::default()
-    }
 }
 
 impl ArgumentMatch for microcad_builtin::BuiltinOperation {
     fn call_signature(&self) -> CallSignature {
         (self.ty)().call_ty.clone()
-    }
-
-    fn default_values(&self) -> Tuple {
-        Tuple::default()
     }
 }
