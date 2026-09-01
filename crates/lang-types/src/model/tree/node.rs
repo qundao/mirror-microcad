@@ -10,7 +10,7 @@ use crate::{Model, ModelType, model};
 pub type Node = microcad_lang_base::tree::Node<Model>;
 pub type NodeRef<'a> = microcad_lang_base::tree::NodeRef<'a, Model>;
 pub type NodeMut<'a> = microcad_lang_base::tree::NodeMut<'a, Model>;
-pub type NodeId = microcad_lang_base::tree::NodeId;
+pub type ModelNodeId = microcad_lang_base::tree::NodeId;
 
 /// Extension trait for [`SymbolNode`] .
 pub trait NodeExt<'a> {

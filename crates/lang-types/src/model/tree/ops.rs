@@ -9,9 +9,9 @@ impl model::ModelTree {
     /// Static helper to copy a sub-tree from `source_arena` into a target `ModelArena`.
     pub(super) fn adopt_tree_to_arena(
         target_arena: &mut model::Arena,
-        source_id: model::NodeId,
+        source_id: model::ModelNodeId,
         source_arena: &model::Arena,
-    ) -> model::NodeId {
+    ) -> model::ModelNodeId {
         let source_node = model::NodeRef::new(source_id, source_arena);
 
         // Create matching node in target arena
@@ -28,11 +28,11 @@ impl model::ModelTree {
 
     /// Recursive helper to reconstruct the tree, replacing placeholders.
     pub(super) fn replace_placeholders_recursive(
-        current_id: model::NodeId,
+        current_id: model::ModelNodeId,
         source_arena: &model::Arena,
         input_model: &model::ModelTree,
         target_arena: &mut model::Arena,
-    ) -> model::NodeId {
+    ) -> model::ModelNodeId {
         let current_node = model::NodeRef::new(current_id, source_arena);
 
         // --- MATCH PLACEHOLDER ---
@@ -64,7 +64,7 @@ impl model::ModelTree {
     /// Recursive depth-first helper to search nodes in `self.arena`.
     pub(super) fn _get_properties_recursive(
         &self,
-        current_id: model::NodeId,
+        current_id: model::ModelNodeId,
         target_id: impl AsRef<str>,
     ) -> Vec<&model::Property> {
         let node = model::NodeRef::new(current_id, &self.arena);

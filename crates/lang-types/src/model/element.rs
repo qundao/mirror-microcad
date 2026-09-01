@@ -3,8 +3,10 @@
 
 //! Element of a [`Model`].
 
+use std::fmt::Pointer;
+
 use derive_more::{Display, From};
-use microcad_lang_base::{BuiltinId, SrcRef, element::WorkbenchKind};
+use microcad_lang_base::{BuiltinId, DisplayWithCtx, LookUpName, SrcRef, element::WorkbenchKind};
 use serde::{Deserialize, Serialize};
 
 use crate::{Ty, Type, Value, math::AffineTransform, model::ModelType};
@@ -24,6 +26,7 @@ pub enum BooleanOp {
 #[display("{kind}")]
 pub struct Workpiece {
     pub kind: WorkbenchKind,
+    // TODO pub symbol_node_id: SymbolNodeId,
     pub src_ref: SrcRef,
 }
 
@@ -72,8 +75,22 @@ impl BuiltinWorkpiece {
     }
 }
 
+impl<Ctx> DisplayWithCtx<Ctx> for BuiltinWorkpiece
+where
+    Ctx: LookUpName,
+{
+    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &mut Ctx) -> std::fmt::Result {
+        match self {
+            BuiltinWorkpiece::Primitive(builtin_id) => builtin_id.fmt_with_ctx(f, ctx),
+            BuiltinWorkpiece::AffineTransform(affine_transform) => write!(f, "{affine_transform}"),
+            BuiltinWorkpiece::BooleanOp(boolean_op) => write!(f, "{boolean_op}"),
+            BuiltinWorkpiece::Operation(builtin_id) => builtin_id.fmt_with_ctx(f, ctx),
+        }
+    }
+}
+
 /// An element defines the entity of a [`Model`].
-#[derive(Clone, Debug, Display, Hash, PartialEq, Default, From, Serialize, Deserialize)]
+#[derive(Clone, Debug, Hash, PartialEq, Default, From, Serialize, Deserialize)]
 pub enum Element {
     #[default]
     /// A group element is created by a body `{}`.
@@ -102,6 +119,21 @@ impl Element {
             Workpiece(workpiece) => workpiece.kind.into(),
             BuiltinWorkpiece(builtin_workpiece) => builtin_workpiece.output_type(),
             Group | Multiplicity | InputPlaceholder | Value(_) => ModelType::NotDetermined,
+        }
+    }
+}
+
+impl<Ctx: LookUpName> DisplayWithCtx<Ctx> for Element {
+    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &mut Ctx) -> std::fmt::Result {
+        match &self {
+            Element::Group => write!(f, "Group"),
+            Element::Value(value) => write!(f, "Value({value})"),
+            Element::Workpiece(workpiece) => write!(f, "Workpiece({workpiece})"),
+            Element::BuiltinWorkpiece(builtin_workpiece) => {
+                write!(f, "Builtin({})", builtin_workpiece.to_string_with_ctx(ctx))
+            }
+            Element::Multiplicity => write!(f, "Multiplicity"),
+            Element::InputPlaceholder => write!(f, "InputPlaceholder"),
         }
     }
 }

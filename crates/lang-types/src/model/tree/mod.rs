@@ -7,7 +7,8 @@ mod builder;
 mod node;
 mod ops;
 
-pub use node::{Node, NodeExt, NodeId, NodeMut, NodeRef};
+use microcad_lang_base::{DisplayWithCtx, LookUpName, TreeState};
+pub use node::{ModelNodeId, Node, NodeExt, NodeMut, NodeRef};
 
 pub use builder::{BuildModelTreeError, ModelTreeBuilder, ModelTreeBuilderMut};
 
@@ -22,7 +23,7 @@ use crate::{
 /// A model tree with a root node.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Artifact)]
 pub struct ModelTree {
-    pub root: NodeId,
+    pub root: ModelNodeId,
     pub arena: Arena,
 }
 
@@ -114,7 +115,11 @@ impl ModelTree {
     }
 
     /// Recursively copies a sub-tree from `source_arena` into `self.arena`.
-    pub(crate) fn adopt_tree(&mut self, source_id: NodeId, source_arena: &Arena) -> NodeId {
+    pub(crate) fn adopt_tree(
+        &mut self,
+        source_id: ModelNodeId,
+        source_arena: &Arena,
+    ) -> ModelNodeId {
         Self::adopt_tree_to_arena(&mut self.arena, source_id, source_arena)
     }
 
@@ -176,7 +181,8 @@ impl std::hash::Hash for ModelTree {
 
 impl std::fmt::Display for ModelTree {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.root().fmt(f)
+        let mut ctx = TreeState::new();
+        self.root().fmt_with_ctx(f, &mut ctx)
     }
 }
 

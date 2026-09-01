@@ -15,11 +15,11 @@ pub use prop::{GetProperty, Properties, Property, PropertyType};
 mod tree;
 
 pub use tree::{
-    Arena, BuildModelTreeError, ModelTree, ModelTreeBuilder, ModelTreeBuilderMut, Node, NodeExt,
-    NodeId, NodeMut, NodeRef,
+    Arena, BuildModelTreeError, ModelNodeId, ModelTree, ModelTreeBuilder, ModelTreeBuilderMut,
+    Node, NodeExt, NodeMut, NodeRef,
 };
 
-use microcad_lang_base::{HashId, Identifier};
+use microcad_lang_base::{DisplayWithCtx, HashId, Identifier, LookUpName};
 use serde::{Deserialize, Serialize};
 
 pub use attribute::{Attribute, AttributeAccess, Attributes};
@@ -143,18 +143,26 @@ impl From<AffineTransform> for Model {
     }
 }
 
-impl std::fmt::Display for Model {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl<Ctx: LookUpName> DisplayWithCtx<Ctx> for Model {
+    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &mut Ctx) -> std::fmt::Result {
         if let Some(name) = &self.name {
             write!(f, "{name}: ")?;
         }
-        writeln!(f, "{}", self.element)?;
+
+        self.element.fmt_with_ctx(f, ctx)?;
+        writeln!(f)?;
         self.attr
             .iter()
             .try_for_each(|attr| writeln!(f, "    {attr}"))?;
         self.properties
             .iter()
             .try_for_each(|(_, prop)| writeln!(f, "    {prop}"))
+    }
+}
+
+impl std::fmt::Display for Model {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.fmt_with_ctx(f, &mut microcad_lang_base::DefaultContext)
     }
 }
 
