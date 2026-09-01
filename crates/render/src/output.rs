@@ -13,7 +13,7 @@ use microcad_hash::{HashId, ToHash, hash_id};
 use microcad_lang_types::{
     ModelNodeRef, ModelTree,
     math::IntoFloat,
-    model::{ModelType, NodeId},
+    model::{ModelType, ModelNodeId},
 };
 
 use crate::{RenderAttributes, RenderResolution};
@@ -82,7 +82,7 @@ pub struct RenderOutput {
     /// Computed model hash.
     hash: HashId,
 
-    model_node_id: NodeId,
+    model_node_id: ModelNodeId,
 }
 
 impl RenderOutput {
