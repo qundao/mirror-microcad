@@ -4,10 +4,10 @@
 //! Tests for evaluating workbenches.
 
 use microcad_builtin::__mu;
-use microcad_lang_base::SrcRef;
+use microcad_lang_base::{DisplayWithCtx, SrcRef};
 use microcad_lang_eval::{CallTrait, Eval, EvalContext};
 use microcad_lang_types::{
-    ArgumentValueList, Length, ModelTree, Type, Value, argument_value, list,
+    ArgumentValue, ArgumentValueList, Length, ModelTree, Type, Value, argument_value, list,
 };
 use microcad_package::{
     SymbolId,
@@ -64,20 +64,41 @@ pub mod helper {
     }
 }
 
+/// Evaluate something into a model tree and test snapshot
+pub fn eval_to_model_test<T: Eval<ModelTree>>(name: &str, t: T) -> ModelTree {
+    let mut context = EvalContext::new();
+    let model: ModelTree = t.eval(&mut context).expect("No error");
+    insta::assert_snapshot!(name, model.to_string_with_ctx(&context));
+    model
+}
+
+/// Call a workbench with arguments to produce a model tree and test snapshot
+pub fn call_workbench<T: CallTrait<ModelTree>>(
+    name: &str,
+    workbench: &T,
+    arg_iter: impl IntoIterator<Item = ArgumentValue>,
+) -> ModelTree {
+    let mut context = EvalContext::new();
+    let model: ModelTree = workbench
+        .call(&ArgumentValueList::from_iter(arg_iter), &mut context)
+        .expect("No error");
+    insta::assert_snapshot!(name, model.to_string_with_ctx(&context));
+    model
+}
+
 /// { __mu::geo2d::Circle(radius = 4.0mm); }
 #[test]
 fn group() {
     use helper::*;
 
-    let group = symbol::workbench::Group {
-        src_ref: SrcRef::none(),
-        attr: Attributes::default(),
-        statements: statements([WorkbenchStatement::expr(call_circle(length(4.0)))]),
-    };
-
-    let mut context = EvalContext::new();
-    let model: ModelTree = group.eval(&mut context).expect("No error");
-    insta::assert_snapshot!("group", model)
+    eval_to_model_test(
+        "group",
+        symbol::workbench::Group {
+            src_ref: SrcRef::none(),
+            attr: Attributes::default(),
+            statements: statements([WorkbenchStatement::expr(call_circle(length(4.0)))]),
+        },
+    );
 }
 
 /// {
@@ -88,22 +109,20 @@ fn group() {
 fn group_with_property() {
     use helper::*;
 
-    let group = symbol::workbench::Group {
-        src_ref: SrcRef::none(),
-        attr: Attributes::default(),
-        statements: statements([
-            WorkbenchStatement::prop("a", length(4.0)),
-            WorkbenchStatement::expr(call_circle(local("a"))),
-        ]),
-    };
-
-    let mut context = EvalContext::new();
-    let model: ModelTree = group.eval(&mut context).expect("No error");
+    let model = eval_to_model_test(
+        "group_with_property",
+        symbol::workbench::Group {
+            src_ref: SrcRef::none(),
+            attr: Attributes::default(),
+            statements: statements([
+                WorkbenchStatement::prop("a", length(4.0)),
+                WorkbenchStatement::expr(call_circle(local("a"))),
+            ]),
+        },
+    );
 
     let prop = model.get_property_value("a");
     assert_eq!(prop, Value::from(Length::mm(4.0)));
-
-    insta::assert_snapshot!("group_with_property", model)
 }
 
 /// __mu::geo2d::Circle(radius = 4.0mm).translate(x = 1.0mm, y = 2.0mm, z = 0.0mm)
@@ -111,19 +130,18 @@ fn group_with_property() {
 fn translate_circle() {
     use helper::*;
 
-    let expr = call_translate(
-        call_circle(length(4.0)),
-        length(1.0),
-        length(2.0),
-        length(0.0),
+    let model = eval_to_model_test(
+        "translate_circle",
+        call_translate(
+            call_circle(length(4.0)),
+            length(1.0),
+            length(2.0),
+            length(0.0),
+        ),
     );
 
-    let mut context = EvalContext::new();
-    let model: ModelTree = expr.eval(&mut context).expect("No error");
     let prop = model.get_property_value("radius"); // We should be able to access the property.
     assert_eq!(prop, Value::from(Length::mm(4.0)));
-
-    insta::assert_snapshot!("translate_circle", model)
 }
 
 /// sketch Circle() { __mu::geo2d::Circle(radius = 4.0mm); }
@@ -140,12 +158,7 @@ fn circle_without_parameter() {
         statements: statements([WorkbenchStatement::expr(call_circle(length(4.0)))]),
     };
 
-    let mut context = EvalContext::new();
-    let model = workbench
-        .call(&ArgumentValueList::default(), &mut context)
-        .expect("No eval error");
-
-    insta::assert_snapshot!("circle_without_parameter", model)
+    call_workbench("circle_without_parameter", &workbench, []);
 }
 
 /// sketch Circle(radius: Length) { __mu::geo2d::Circle(radius); }
@@ -169,34 +182,26 @@ fn circle_parameter() {
 
     {
         let radius = Length::mm(4.0);
-        let mut context = EvalContext::new();
-        let model = workbench
-            .call(
-                &ArgumentValueList::from_iter([argument_value!(radius = radius)]),
-                &mut context,
-            )
-            .expect("No eval error");
+        let model = call_workbench(
+            "circle_parameter_single",
+            &workbench,
+            [argument_value!(radius = radius)],
+        );
 
         let prop = model.get_property_value("radius");
         assert_eq!(prop, Value::from(radius));
-
-        insta::assert_snapshot!("circle_parameter_single", model);
     }
 
     {
         let radius = list![Length::mm(1.0), Length::mm(2.0), Length::mm(3.0)];
-        let mut context = EvalContext::new();
-        let model = workbench
-            .call(
-                &ArgumentValueList::from_iter([argument_value!(radius = radius.clone())]),
-                &mut context,
-            )
-            .expect("No eval error");
+        let model = call_workbench(
+            "circle_parameter_multi",
+            &workbench,
+            [argument_value!(radius = radius.clone())],
+        );
 
         let prop = model.get_property_value("radius");
         assert_eq!(prop, Value::from(radius));
-
-        insta::assert_snapshot!("circle_parameter_multi", model);
     }
 }
 
@@ -235,18 +240,14 @@ fn circle_init() {
     };
 
     let diameter = Length::mm(8.0);
-    let mut context = EvalContext::new();
-    let model = workbench
-        .call(
-            &ArgumentValueList::from_iter([argument_value!(diameter = diameter)]),
-            &mut context,
-        )
-        .expect("No eval error");
+    let model = call_workbench(
+        "circle_init",
+        &workbench,
+        [argument_value!(diameter = diameter)],
+    );
 
     let prop = model.get_property_value("radius");
     assert_eq!(prop, Value::from(Length::mm(4.0)));
-
-    insta::assert_snapshot!("circle_init", model);
 }
 
 /*
