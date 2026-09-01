@@ -5,15 +5,21 @@
 
 use microcad_builtin::BuiltinItem;
 use microcad_lang_base::SymbolId;
-use microcad_lang_types::{ArgumentValue, ArgumentValueList, Arguments};
+use microcad_lang_types::Arguments;
 
 use crate::{
     LowerContext,
     ir::{self, ConstantValue},
 };
 
-pub struct Fold<'source> {
-    context: &'source mut LowerContext<'source>,
+pub struct Fold<'a, 'source> {
+    context: &'a mut LowerContext<'source>,
+}
+
+impl<'a, 'source> Fold<'a, 'source> {
+    pub fn new(context: &'a mut LowerContext<'source>) -> Self {
+        Self { context }
+    }
 }
 
 impl<Expr: ir::ExprSpec> ir::ArgumentList<Expr> {
@@ -36,9 +42,9 @@ impl<Expr: ir::ExprSpec> ir::ArgumentList<Expr> {
     }
 }
 
-impl<'source> ir::visitor::LeafVisitorMut for Fold<'source> {}
+impl<'a, 'source> ir::visitor::LeafVisitorMut for Fold<'a, 'source> {}
 
-impl<'source> ir::visitor::ConstantVisitorMut for Fold<'source> {
+impl<'a, 'source> ir::visitor::ConstantVisitorMut for Fold<'a, 'source> {
     fn visit_constant_expr(&mut self, expr: &mut ir::ConstantExpression) {
         match expr {
             ir::ConstantExpression::Invalid | ir::ConstantExpression::Value(_) => {}
@@ -90,3 +96,9 @@ impl<'source> ir::visitor::ConstantVisitorMut for Fold<'source> {
         }
     }
 }
+
+// Sub-trait implementations (inherit default traversal behavior)
+impl<'a, 'source> ir::visitor::WorkbenchStatementVisitorMut for Fold<'a, 'source> {}
+impl<'a, 'source> ir::visitor::WorkbenchVisitorMut for Fold<'a, 'source> {}
+impl<'a, 'source> ir::visitor::FnVisitorMut for Fold<'a, 'source> {}
+impl<'a, 'source> ir::visitor::VisitorMut for Fold<'a, 'source> {}

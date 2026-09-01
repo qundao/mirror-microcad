@@ -143,7 +143,13 @@ pub fn lower<'source>(context: &mut LowerContext<'source>, ast: &Ast) -> Compila
 
     let root = ir.scaffold(context);
     let arena = std::mem::take(&mut context.arena);
-    let tree = ir::Tree::from((root, arena));
+    let mut tree = ir::Tree::from((root, arena));
+
+    {
+        use crate::ir::visitor::VisitorMut;
+        fold::Fold::new(context).visit_tree(&mut tree);
+    }
+
     let ir = Ir {
         input_hash: ast.output_hash(),
         output_hash: hash_id!(tree),
