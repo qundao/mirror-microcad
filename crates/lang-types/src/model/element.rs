@@ -79,7 +79,7 @@ impl<Ctx> DisplayWithCtx<Ctx> for BuiltinWorkpiece
 where
     Ctx: LookUpName,
 {
-    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &mut Ctx) -> std::fmt::Result {
+    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &Ctx) -> std::fmt::Result {
         match self {
             BuiltinWorkpiece::Primitive(builtin_id) => builtin_id.fmt_with_ctx(f, ctx),
             BuiltinWorkpiece::AffineTransform(affine_transform) => write!(f, "{affine_transform}"),
@@ -124,7 +124,7 @@ impl Element {
 }
 
 impl<Ctx: LookUpName> DisplayWithCtx<Ctx> for Element {
-    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &mut Ctx) -> std::fmt::Result {
+    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &Ctx) -> std::fmt::Result {
         match &self {
             Element::Group => write!(f, "Group"),
             Element::Value(value) => write!(f, "Value({value})"),

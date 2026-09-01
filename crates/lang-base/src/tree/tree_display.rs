@@ -38,6 +38,16 @@ pub trait TreeDisplay {
     fn tree_fmt(&self, f: &mut std::fmt::Formatter<'_>, state: TreeState) -> std::fmt::Result;
 }
 
+/// Display a tree with a context to look up symbol names.
+pub trait TreeDisplayWithCtx<Ctx> {
+    fn tree_fmt_with_ctx(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+        ctx: &Ctx,
+        state: TreeState,
+    ) -> std::fmt::Result;
+}
+
 /// Trait for displaying a developer-facing diagnostic tree hierarchy.
 pub trait TreeDebug {
     fn tree_debug_fmt(&self, f: &mut std::fmt::Formatter<'_>, state: TreeState)
@@ -52,8 +62,8 @@ where
     T: DisplayWithCtx<Ctx>,
     Ctx: DisplayWithPrefix,
 {
-    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &mut Ctx) -> std::fmt::Result {
-        self.write_node(f, self, ctx)
+    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &Ctx) -> std::fmt::Result {
+        self.write_node(f, self, ctx, TreeState::default())
     }
 }
 

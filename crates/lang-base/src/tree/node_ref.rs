@@ -3,8 +3,8 @@
 
 //! Index-based tree node reference helpers.
 
-use crate::DisplayWithCtx;
 pub use crate::tree::{Arena, NodeId};
+use crate::{DisplayWithCtx, TreeState};
 
 /// A convenience wrapper pairing a `NodeId` with a borrowed `Arena`.
 pub struct NodeRef<'a, T> {
@@ -52,7 +52,8 @@ impl<'a, T> NodeRef<'a, T> {
         &self,
         f: &mut std::fmt::Formatter<'_>,
         node: &NodeRef<'a, T>,
-        ctx: &mut Ctx,
+        ctx: &Ctx,
+        tree_state: TreeState,
     ) -> std::fmt::Result
     where
         T: DisplayWithCtx<Ctx>,
@@ -61,7 +62,7 @@ impl<'a, T> NodeRef<'a, T> {
         let content = node.get().to_string_with_ctx(ctx);
         let mut lines = content.lines();
 
-        let prefix = ctx.prefix();
+        let prefix = tree_state.prefix;
 
         // 1. Output first line using the current prefix (may end with ├── or └── or be empty at root)
         if let Some(first_line) = lines.next() {
@@ -109,8 +110,10 @@ impl<'a, T> NodeRef<'a, T> {
             let is_last = idx == count - 1;
             let branch = if is_last { "└── " } else { "├── " };
 
-            ctx.set_prefix(format!("{continuation_prefix}{branch}"));
-            child.write_node(f, &child, ctx)?;
+            let state = TreeState {
+                prefix: format!("{continuation_prefix}{branch}"),
+            };
+            child.write_node(f, &child, ctx, state)?;
         }
 
         Ok(())

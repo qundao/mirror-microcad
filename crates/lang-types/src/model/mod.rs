@@ -144,7 +144,7 @@ impl From<AffineTransform> for Model {
 }
 
 impl<Ctx: LookUpName> DisplayWithCtx<Ctx> for Model {
-    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &mut Ctx) -> std::fmt::Result {
+    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &Ctx) -> std::fmt::Result {
         if let Some(name) = &self.name {
             write!(f, "{name}: ")?;
         }

@@ -59,15 +59,12 @@ pub struct DefaultContext;
 impl LookUpName for DefaultContext {}
 
 pub trait DisplayWithCtx<Ctx>: Sized {
-    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &mut Ctx) -> std::fmt::Result;
+    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &Ctx) -> std::fmt::Result;
 
     /// Renders the object to a String using the provided context.
-    fn to_string_with_ctx(&self, ctx: &mut Ctx) -> String {
+    fn to_string_with_ctx(&self, ctx: &Ctx) -> String {
         let mut output = String::new();
-        let adapter = DisplayWithContext {
-            value: self,
-            ctx: std::cell::UnsafeCell::new(ctx),
-        };
+        let adapter = DisplayWithContext { value: self, ctx };
 
         let _ = std::fmt::write(&mut output, format_args!("{adapter}"));
         output
@@ -77,19 +74,16 @@ pub trait DisplayWithCtx<Ctx>: Sized {
 pub struct DisplayWithContext<'a, T, Ctx> {
     pub value: &'a T,
     // UnsafeCell allows us to extract the mutable reference inside `fmt`
-    pub ctx: std::cell::UnsafeCell<&'a mut Ctx>,
+    pub ctx: &'a Ctx,
 }
 
 impl<'a, T: DisplayWithCtx<Ctx>, Ctx> std::fmt::Display for DisplayWithContext<'a, T, Ctx> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        // SAFETY: `DisplayWithContext` is used transiently within a single thread during formatting,
-        // so dereferencing `UnsafeCell` to reborrow `&mut Ctx` is safe.
-        let ctx = unsafe { &mut *self.ctx.get() };
-        self.value.fmt_with_ctx(f, ctx)
+        self.value.fmt_with_ctx(f, &self.ctx)
     }
 }
 impl<Ctx: LookUpName> DisplayWithCtx<Ctx> for BuiltinId {
-    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &mut Ctx) -> std::fmt::Result {
+    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &Ctx) -> std::fmt::Result {
         match ctx.look_up_built_in_name(self) {
             Some(name) => write!(f, "{name}[{id}]", id = self),
             None => write!(f, "!{}", self),
@@ -98,7 +92,7 @@ impl<Ctx: LookUpName> DisplayWithCtx<Ctx> for BuiltinId {
 }
 
 impl<Ctx: LookUpName> DisplayWithCtx<Ctx> for NodeId {
-    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &mut Ctx) -> std::fmt::Result {
+    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &Ctx) -> std::fmt::Result {
         match ctx.look_up_item_name(self) {
             Some(name) => write!(f, "{name}[{id}]", id = hash_id!(self)),
             None => write!(f, "!{}", self),
@@ -107,7 +101,7 @@ impl<Ctx: LookUpName> DisplayWithCtx<Ctx> for NodeId {
 }
 
 impl<Ctx: LookUpName> DisplayWithCtx<Ctx> for SymbolId {
-    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &mut Ctx) -> std::fmt::Result {
+    fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &Ctx) -> std::fmt::Result {
         match self {
             SymbolId::Builtin(builtin_id) => builtin_id.fmt_with_ctx(f, ctx),
             SymbolId::Local(name) => write!(f, "@Local({name})"),
