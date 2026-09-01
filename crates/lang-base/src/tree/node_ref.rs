@@ -40,15 +40,78 @@ impl<'a, T> NodeRef<'a, T> {
     }
 }
 
-pub trait DisplayWithPrefix: Sized {
-    fn prefix(&self) -> String;
-
-    fn set_prefix(&mut self, prefix: String);
-}
-
 impl<'a, T> NodeRef<'a, T> {
     /// Helper to format a node and recurse through its children.
-    pub fn write_node<Ctx>(
+    pub fn write_node(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+        tree_state: TreeState,
+    ) -> std::fmt::Result
+    where
+        T: std::fmt::Display,
+    {
+        let content = self.get().to_string();
+        let mut lines = content.lines();
+
+        let prefix = tree_state.prefix;
+
+        // 1. Output first line using the current prefix (may end with ├── or └── or be empty at root)
+        if let Some(first_line) = lines.next() {
+            writeln!(f, "{prefix}{first_line}")?;
+        } else {
+            writeln!(f, "{prefix}")?;
+        }
+
+        // 2. Compute continuation prefix for multiline content AND children.
+        // Convert any trailing branch symbol into its continuation equivalent:
+        // "├── " -> "│   "
+        // "└── " -> "    "
+        let continuation_prefix = if let Some(base) = prefix.strip_suffix("├── ") {
+            format!("{base}│   ")
+        } else if let Some(base) = prefix.strip_suffix("└── ") {
+            format!("{base}    ")
+        } else {
+            prefix.clone()
+        };
+
+        let children: Vec<_> = self.children().collect();
+        let count = children.len();
+
+        // 3. Multiline lines use the continuation prefix
+        for line in lines {
+            let mut remainder = line;
+            let mut indent_count = 0;
+
+            // Strip every 4-space prefix and count how many times it appears
+            while let Some(stripped) = remainder.strip_prefix("    ") {
+                remainder = stripped;
+                indent_count += 1;
+            }
+
+            if indent_count > 0 && count > 0 {
+                let pipes = "|   ".repeat(indent_count);
+                writeln!(f, "{continuation_prefix}{pipes}{remainder}")?;
+            } else {
+                writeln!(f, "{continuation_prefix}{line}")?;
+            }
+        }
+
+        // 4. Recurse children using continuation_prefix + branch marker
+        for (idx, child) in children.into_iter().enumerate() {
+            let is_last = idx == count - 1;
+            let branch = if is_last { "└── " } else { "├── " };
+
+            let state = TreeState {
+                prefix: format!("{continuation_prefix}{branch}"),
+            };
+            child.write_node(f, state)?;
+        }
+
+        Ok(())
+    }
+
+    /// Helper to format a node and recurse through its children.
+    pub fn write_node_with_ctx<Ctx>(
         &self,
         f: &mut std::fmt::Formatter<'_>,
         node: &NodeRef<'a, T>,
@@ -57,7 +120,6 @@ impl<'a, T> NodeRef<'a, T> {
     ) -> std::fmt::Result
     where
         T: DisplayWithCtx<Ctx>,
-        Ctx: DisplayWithPrefix,
     {
         let content = node.get().to_string_with_ctx(ctx);
         let mut lines = content.lines();
@@ -113,7 +175,7 @@ impl<'a, T> NodeRef<'a, T> {
             let state = TreeState {
                 prefix: format!("{continuation_prefix}{branch}"),
             };
-            child.write_node(f, &child, ctx, state)?;
+            child.write_node_with_ctx(f, &child, ctx, state)?;
         }
 
         Ok(())

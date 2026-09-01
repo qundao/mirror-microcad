@@ -3,10 +3,7 @@
 
 //! Display and Debug traits for tree-like output.
 
-use crate::{
-    DisplayWithCtx, LookUpName,
-    tree::{NodeRef, node_ref::DisplayWithPrefix},
-};
+use crate::{DisplayWithCtx, tree::NodeRef};
 
 /// Formatting state passed down through tree nodes.
 #[derive(Clone, Debug, Default)]
@@ -18,18 +15,6 @@ pub struct TreeState {
 impl TreeState {
     pub fn new() -> Self {
         Self::default()
-    }
-}
-
-impl LookUpName for TreeState {}
-
-impl DisplayWithPrefix for TreeState {
-    fn prefix(&self) -> String {
-        self.prefix.clone()
-    }
-
-    fn set_prefix(&mut self, prefix: String) {
-        self.prefix = prefix;
     }
 }
 
@@ -60,10 +45,32 @@ pub trait TreeDebug {
 impl<'a, Ctx, T> DisplayWithCtx<Ctx> for NodeRef<'a, T>
 where
     T: DisplayWithCtx<Ctx>,
-    Ctx: DisplayWithPrefix,
 {
     fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &Ctx) -> std::fmt::Result {
-        self.write_node(f, self, ctx, TreeState::default())
+        self.write_node_with_ctx(f, self, ctx, TreeState::default())
+    }
+}
+
+impl<'a, T> TreeDisplay for NodeRef<'a, T>
+where
+    T: std::fmt::Display,
+{
+    fn tree_fmt(&self, f: &mut std::fmt::Formatter<'_>, state: TreeState) -> std::fmt::Result {
+        self.write_node(f, state)
+    }
+}
+
+impl<'a, T, Ctx> TreeDisplayWithCtx<Ctx> for NodeRef<'a, T>
+where
+    T: DisplayWithCtx<Ctx>,
+{
+    fn tree_fmt_with_ctx(
+        &self,
+        f: &mut std::fmt::Formatter<'_>,
+        ctx: &Ctx,
+        state: TreeState,
+    ) -> std::fmt::Result {
+        self.write_node_with_ctx(f, self, ctx, state)
     }
 }
 
@@ -86,11 +93,10 @@ where
 
 impl<'a, T> std::fmt::Display for NodeRef<'a, T>
 where
-    T: std::fmt::Display + DisplayWithCtx<TreeState>,
+    T: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut ctx = TreeState::default();
-        self.fmt_with_ctx(f, &mut ctx)
+        self.tree_fmt(f, TreeState::default())
     }
 }
 
