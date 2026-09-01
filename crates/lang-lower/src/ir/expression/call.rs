@@ -49,6 +49,14 @@ impl<Expr> Argument<Expr> {
             Argument::Named { name, .. } | Argument::AutoNamed { name, .. } => Some(name),
         }
     }
+
+    pub fn expr(&self) -> &Expr {
+        match self {
+            Argument::Unnamed(expr)
+            | Argument::Named { expr, .. }
+            | Argument::AutoNamed { expr, .. } => expr,
+        }
+    }
 }
 
 impl<Expr> SrcReferrer for Argument<Expr>

@@ -9,6 +9,7 @@ mod error;
 pub use error::{LowerError, LowerResult};
 
 mod desugar;
+mod fold;
 mod scaffold;
 
 use microcad_builtin::BuiltinRegistry;
