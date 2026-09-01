@@ -59,23 +59,6 @@ where
     }
 }
 
-impl<Expr> std::fmt::Display for If<Expr>
-where
-    Expr: ExprSpec + std::fmt::Display,
-    Expr::Body: std::fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, "if {cond} {body}", cond = self.cond, body = self.body)?;
-        if let Some(next) = &self.next_if {
-            writeln!(f, "else {next}")?;
-        }
-        if let Some(body) = &self.body_else {
-            writeln!(f, "else {body}")?;
-        }
-        Ok(())
-    }
-}
-
 /// Specification trait for an expression.
 pub trait ExprSpec: Serialize + SrcReferrer + SingleIdentifier + From<Value> {
     type Body;
@@ -127,16 +110,6 @@ impl ExprSpec for ConstantExpression {
         match &self {
             ConstantExpression::Value(constant) => Some(constant.value()),
             _ => None,
-        }
-    }
-}
-
-impl std::fmt::Display for ConstantExpression {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self {
-            ConstantExpression::Value(literal) => write!(f, "{literal}"),
-            ConstantExpression::Path(path) => write!(f, "{path}"),
-            _ => unimplemented!(),
         }
     }
 }

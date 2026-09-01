@@ -168,21 +168,6 @@ impl<Expr> Default for ArgumentList<Expr> {
     }
 }
 
-impl<Expr> std::fmt::Display for ArgumentList<Expr>
-where
-    Expr: std::fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", {
-            self.args
-                .iter()
-                .map(|arg| arg.to_string())
-                .collect::<Vec<_>>()
-                .join(", ")
-        })
-    }
-}
-
 impl<Expr> From<Vec<Argument<Expr>>> for ArgumentList<Expr> {
     fn from(args: Vec<Argument<Expr>>) -> Self {
         Self {

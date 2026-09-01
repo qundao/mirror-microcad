@@ -8,6 +8,7 @@
 pub mod assignment;
 pub mod attribute;
 pub mod cast_into;
+pub mod display;
 pub mod expression;
 pub mod function;
 pub mod parameter;

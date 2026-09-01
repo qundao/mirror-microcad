@@ -1,7 +1,9 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Function definition syntax element
+//! Item desugared from AST. These items will be scaffolded into the IR.
+//!
+//! The attributes and meta will be further processed during the scaffolding step.
 
 use microcad_macros::Scaffold;
 use serde::{Deserialize, Serialize};

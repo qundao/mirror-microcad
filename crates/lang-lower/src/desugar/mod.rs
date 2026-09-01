@@ -7,7 +7,6 @@ mod attribute;
 mod constant;
 mod expression;
 mod function;
-mod lang_type;
 mod module;
 mod parameter;
 mod source;

@@ -56,16 +56,6 @@ impl Ty for Parameter {
     }
 }
 
-impl std::fmt::Display for Parameter {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{id}: {ty}", id = self.id, ty = self.ty)?;
-        match &self.default_value {
-            Some(v) => write!(f, " = {v}"),
-            _ => Ok(()),
-        }
-    }
-}
-
 /// Parameter list, sorted by id.
 #[derive(Debug, Clone, SrcReferrer, Hash, PartialEq, Serialize, Deserialize)]
 pub struct ParameterList {
@@ -107,20 +97,6 @@ impl ParameterList {
     /// Return an iterator over parameters
     pub(crate) fn names(&self) -> impl Iterator<Item = &ir::Identifier> {
         self.iter().map(|param| &param.id)
-    }
-}
-
-impl std::fmt::Display for ParameterList {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            self.parameters
-                .iter()
-                .map(|p| p.to_string())
-                .collect::<Vec<_>>()
-                .join(", ")
-        )
     }
 }
 

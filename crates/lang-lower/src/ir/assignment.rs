@@ -36,21 +36,6 @@ impl<T> LocalAssignment<T> {
     }
 }
 
-impl<Expr> std::fmt::Display for LocalAssignment<Expr>
-where
-    Expr: std::fmt::Display,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(
-            f,
-            "{id}: {ty} = {expr}",
-            id = self.id,
-            ty = self.ty,
-            expr = self.expression
-        )
-    }
-}
-
 macro_rules! impl_cast_into {
     ($ty:ident) => {
         impl<Source, Target> CastInto<$ty<Target>> for $ty<Source>
