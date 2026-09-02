@@ -6,7 +6,6 @@
 pub mod commands;
 mod config;
 pub mod document;
-pub mod locate;
 pub mod prelude;
 //mod session;
 mod watcher;

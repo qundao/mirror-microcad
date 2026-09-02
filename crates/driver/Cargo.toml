@@ -37,6 +37,3 @@ microcad-lang-parse = { workspace = true }
 microcad-lang-resolve = { workspace = true }
 microcad-lang-types = { workspace = true }
 microcad-std = { workspace = true }
-
-[dev-dependencies]
-tempfile = "3.27"

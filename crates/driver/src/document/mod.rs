@@ -54,7 +54,7 @@ impl Document {
 
     /// Open a document from a location str.
     pub fn open(location: impl AsRef<str>) -> mu::Result<Self> {
-        Self::new(crate::locate::to_url(location.as_ref())?)
+        Self::new(mu::locate::to_url(location.as_ref())?)
     }
 }
 

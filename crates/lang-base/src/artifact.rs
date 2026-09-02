@@ -174,15 +174,13 @@ pub trait Artifact: Sized {
 
 /// The result of a compilation stage.
 #[derive(Debug)]
-pub struct StageResult<T: Artifact>(Option<Result<(T, Diagnostics), Diagnostics>>);
-
-impl<T: Artifact> Default for StageResult<T> {
-    fn default() -> Self {
-        Self(None)
-    }
-}
+pub struct StageResult<T: Artifact>(Option<CompilationResult<T>>);
 
 impl<T: Artifact> StageResult<T> {
+    pub fn new(result: CompilationResult<T>) -> Self {
+        Self(Some(result))
+    }
+
     pub fn reset(&mut self) {
         self.0 = None;
     }
@@ -212,9 +210,14 @@ impl<T: Artifact> StageResult<T> {
         matches!(self.0, Some(Ok(_)))
     }
 }
+impl<T: Artifact> Default for StageResult<T> {
+    fn default() -> Self {
+        Self(None)
+    }
+}
 
 impl<T: Artifact> From<CompilationResult<T>> for StageResult<T> {
     fn from(result: CompilationResult<T>) -> Self {
-        Self(Some(result))
+        Self::new(result)
     }
 }

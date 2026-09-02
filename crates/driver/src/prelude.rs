@@ -51,7 +51,7 @@ pub use crate::commands;
 pub use crate::document;
 
 pub use crate::install_std;
-pub use crate::locate;
+pub use resolve::locate;
 
 pub use microcad_lang_format::format;
 
