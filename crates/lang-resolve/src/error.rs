@@ -1,16 +1,24 @@
-// Copyright © 2026 The µcad authors <info@microcad.xyz>
+// Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Errors that occur during resolving symbol trees.
+//! A resolve error
 
 use microcad_lang_base::{HashId, SrcRef, SrcReferrer, element::Case};
+
 use microcad_lang_types::Type;
 use miette::Diagnostic;
 use thiserror::Error;
 
-/// Resolve error.
+use crate::locate::LocateError;
+
 #[derive(Debug, Error, Diagnostic)]
 pub enum ResolveError {
+    #[error("IO Error: {0}")]
+    IOError(#[from] std::io::Error),
+
+    #[error("{0}")]
+    Locate(#[from] LocateError),
+
     #[error("Wrong case")]
     #[diagnostic(severity = "warning")]
     WrongCase {
@@ -32,6 +40,8 @@ pub enum ResolveError {
     NoSourceWithHash(HashId),
 }
 
+pub type ResolveResult<T> = Result<T, ResolveError>;
+
 impl SrcReferrer for ResolveError {
     fn src_ref(&self) -> SrcRef {
         match self {
@@ -39,7 +49,7 @@ impl SrcReferrer for ResolveError {
             ResolveError::TypeMismatch {
                 specified_src_ref, ..
             } => *specified_src_ref,
-            ResolveError::NoSourceWithHash(_) => SrcRef::none(),
+            _ => SrcRef::none(),
         }
     }
 }

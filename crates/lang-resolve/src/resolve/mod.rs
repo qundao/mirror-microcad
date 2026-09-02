@@ -11,25 +11,20 @@
 //! 5) `bind`: Resolve [`mir::Path`] to [`SymbolId`]s/[`LocalId`]s.
 //! 6) `case_check`: Validate identifier casing rules.
 //! 7) `type_check`: Verify expression types.
-//! 8) `normalize`: Canonicalize and simplify expressions.
-//! 9) `reduce`: Lower to RST and evaluate attributes.
+
 //!
 //! Each sub-step is implemented in a separate module.
 
 mod bind;
 mod case_check;
-mod error;
 mod resolver;
 mod type_check;
 
 use microcad_lang_base::{CompilationResult, Diagnostics};
 
-pub use error::ResolveError;
-
 pub use resolver::Resolver;
 
-/// Result type of any resolve.
-pub type ResolveResult<T> = std::result::Result<T, Box<ResolveError>>;
+use crate::error::ResolveError;
 
 /// Resolve Context
 pub struct ResolveContext {

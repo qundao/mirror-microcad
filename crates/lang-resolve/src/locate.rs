@@ -1,0 +1,136 @@
+// Copyright © 2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+//! Function to locate microcad documents.
+
+use microcad_lang_base::{MICROCAD_EXTENSIONS, Url};
+use miette::Diagnostic;
+use thiserror::Error;
+
+#[derive(Error, Diagnostic, Debug)]
+pub enum LocateError {
+    #[error("No µcad file found at: {path}")]
+    #[diagnostic(
+        code(microcad::locate::file_not_found),
+        help("Ensure the file exists or has a supported extension (.µcad, .mcad, .ucad)")
+    )]
+    FileNotFound { path: std::path::PathBuf },
+
+    #[error("Invalid file URL path: {url}")]
+    #[diagnostic(code(microcad::locate::invalid_file_url))]
+    InvalidFileUrl { url: Url },
+
+    #[error("Failed to convert path '{path}' to a valid file URL")]
+    #[diagnostic(code(microcad::locate::url_conversion_failed))]
+    UrlConversionFailed { path: std::path::PathBuf },
+
+    #[error("Failed to find absolute path for: {path}")]
+    #[diagnostic(code(microcad::locate::canonicalize_failed))]
+    CanonicalizeFailed {
+        path: std::path::PathBuf,
+        #[source]
+        source: std::io::Error,
+    },
+}
+
+/// Return `true` if given path has a valid microcad extension
+pub fn is_microcad_file(path: impl AsRef<std::path::Path>) -> bool {
+    let path = path.as_ref();
+    path.is_file()
+        && path
+            .extension()
+            .map(|ext| {
+                MICROCAD_EXTENSIONS
+                    .iter()
+                    .any(|extension| *extension == ext)
+            })
+            .unwrap_or(false)
+}
+
+/// Retrieve actual path of µcad file, even if this path does not have an extension or is a folder.
+///
+/// It is agnostic about file extension and will always return the file with the extension that actually exists.
+/// If the path is a directory, it will be checked if the directory contains a `mod` file with µcad extension.
+///
+/// - my/library/my_design.µcad -> my/library/my_design.µcad
+/// - my/library/my_design -> my/library/my_design.µcad # In case the extension of the existing file is `.µcad`.
+/// - my/library/my_design -> my/library/my_design.mcad # In case the extension of the existing file is `.mcad`.
+/// - my/library/my_design -> my/library/my_design.ucad # In case the extension of the existing file is `.ucad`.
+/// - my/library/my_design -> my/library/my_design/mod.µcad # `my_design` is directory and a module.
+/// Retrieve actual path of µcad file, even if this path does not have an extension or is a folder.
+pub fn resolved_path(path: impl AsRef<std::path::Path>) -> Result<std::path::PathBuf, LocateError> {
+    let path = path.as_ref();
+
+    // If the path already has a supported extension, check if it exists.
+    if is_microcad_file(path) {
+        return Ok(path.to_path_buf());
+    }
+
+    // If not, try all supported extensions.
+    for ext in MICROCAD_EXTENSIONS {
+        let mut with_ext = path.to_path_buf();
+        with_ext.set_extension(ext);
+        if with_ext.exists() {
+            return Ok(with_ext);
+        }
+    }
+
+    // If the path is a directory, look for a `mod` file with any supported extension.
+    if path.is_dir() {
+        for ext in MICROCAD_EXTENSIONS {
+            let mut mod_path = path.to_path_buf();
+            mod_path.push(format!("mod.{ext}"));
+            if mod_path.exists() {
+                return Ok(mod_path);
+            }
+        }
+    }
+
+    Err(LocateError::FileNotFound {
+        path: path.to_path_buf(),
+    })
+}
+
+/// Convert an input (e.g. from command line) into a valid and unique URL to be used for any source.
+pub fn to_url(input: impl AsRef<str>) -> Result<Url, LocateError> {
+    let input = input.as_ref();
+
+    // 1. Handle the special __builtin case
+    if input == "__builtin" {
+        return Ok(Url::parse("builtin:///builtin").expect("static builtin URL is valid"));
+    }
+
+    // Try to parse as a formal URL (e.g., https://, file://, mcad://)
+    match Url::parse(input) {
+        Ok(url) => match url.scheme() {
+            // If we have a file scheme, try to resolve the file.
+            "file" => {
+                let path = url
+                    .to_file_path()
+                    .map_err(|_| LocateError::InvalidFileUrl { url: url.clone() })?;
+                let resolved = resolved_path(path)?;
+                Url::from_file_path(&resolved)
+                    .map_err(|_| LocateError::UrlConversionFailed { path: resolved })
+            }
+            _ => Ok(url),
+        },
+
+        Err(_) => {
+            // 3. Fallback: Treat input as a raw filesystem path
+            let local_path = std::path::PathBuf::from(input);
+            let resolved = resolved_path(local_path)?;
+
+            // Canonicalize to absolute path to ensure the URL is valid
+            let absolute_path = std::fs::canonicalize(&resolved).map_err(|source| {
+                LocateError::CanonicalizeFailed {
+                    path: resolved.clone(),
+                    source,
+                }
+            })?;
+
+            Url::from_file_path(&absolute_path).map_err(|_| LocateError::UrlConversionFailed {
+                path: absolute_path,
+            })
+        }
+    }
+}

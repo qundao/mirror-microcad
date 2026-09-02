@@ -33,8 +33,9 @@ microcad-lang-parse = { workspace = true, optional = true }
 
 
 [dev-dependencies]
-test-that = "0.5"
 insta = "1.48.0"
+tempfile = "3.27"
+test-that = "0.5"
 
 [features]
 default = [

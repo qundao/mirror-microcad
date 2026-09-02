@@ -5,4 +5,14 @@
 
 mod resolve;
 
-pub use resolve::{ResolveContext, ResolveResult, resolve};
+mod error;
+
+mod source_unit;
+
+pub mod locate;
+
+pub use source_unit::SourceUnit;
+
+pub use error::{ResolveError, ResolveResult};
+
+pub use resolve::{ResolveContext, resolve};
