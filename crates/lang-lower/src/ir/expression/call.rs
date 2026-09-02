@@ -164,11 +164,8 @@ impl<Expr: ir::ExprSpec> ArgumentList<Expr> {
     /// Extract first argument value of unnamed arguments.
     pub fn extract_first_unnamed_arg_expr(&self) -> Option<&Expr> {
         for arg in self.args.iter() {
-            match arg {
-                ir::Argument::Unnamed(expr) => {
-                    return Some(expr);
-                }
-                _ => {}
+            if let ir::Argument::Unnamed(expr) = arg {
+                return Some(expr);
             }
         }
 
