@@ -39,6 +39,10 @@ impl Identifier {
         &self.0.value
     }
 
+    pub fn as_str(&self) -> &str {
+        &self.id().as_str()
+    }
+
     /// Return first character of the identifier.
     pub fn short_id(&self) -> ShortId {
         let parts = self
