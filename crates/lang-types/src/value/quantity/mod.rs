@@ -34,6 +34,11 @@ impl Quantity {
         }
     }
 
+    pub fn with_unit(mut self, unit: Unit) -> Self {
+        self.unit = unit;
+        self
+    }
+
     /// Transforms the internal value using a closure.
     pub fn map<F>(self, f: F) -> Self
     where

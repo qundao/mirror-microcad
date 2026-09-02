@@ -19,7 +19,9 @@ impl std::ops::Add for Quantity {
     fn add(self, rhs: Self) -> Self::Output {
         let lhs = self;
         match (lhs.quantity_type + rhs.quantity_type)? {
-            Type::Quantity(ty) => Ok(Quantity::new(lhs.value + rhs.value, ty).into()),
+            Type::Quantity(ty) => Ok(Quantity::new(lhs.value + rhs.value, ty)
+                .with_unit(lhs.unit)
+                .into()),
             _ => unreachable!(),
         }
     }
@@ -47,7 +49,9 @@ impl std::ops::Sub for Quantity {
     fn sub(self, rhs: Self) -> Self::Output {
         let lhs = self;
         match (lhs.quantity_type - rhs.quantity_type)? {
-            Type::Quantity(ty) => Ok(Quantity::new(lhs.value - rhs.value, ty).into()),
+            Type::Quantity(ty) => Ok(Quantity::new(lhs.value - rhs.value, ty)
+                .with_unit(lhs.unit)
+                .into()),
             _ => unreachable!(),
         }
     }
