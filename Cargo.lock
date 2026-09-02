@@ -5723,7 +5723,6 @@ dependencies = [
  "miette",
  "notify",
  "serde",
- "tempfile",
  "thiserror 2.0.20",
  "toml",
  "url",
@@ -5909,6 +5908,7 @@ dependencies = [
  "postcard",
  "semver",
  "serde",
+ "tempfile",
  "test-that",
  "thiserror 2.0.20",
 ]
