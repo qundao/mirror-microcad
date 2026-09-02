@@ -181,6 +181,13 @@ impl BuiltinItem {
         self.info().name
     }
 
+    pub fn value(&self) -> Value {
+        match self {
+            BuiltinItem::Constant(builtin_constant) => builtin_constant.value(),
+            _ => Value::default(),
+        }
+    }
+
     pub fn call_fn(
         &self,
         args: Arguments,
