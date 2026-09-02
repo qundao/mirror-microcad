@@ -388,7 +388,7 @@ fn op_rotate() {
                 workbench::Init::new(vec![
                     Parameter::new("angle", Type::angle()),
                     Parameter::new("axis", Type::Any).with_default(
-                        constant::ConstantExpression::Path(symbol::Path::Resolved(__mu!(math::Z))),
+                        constant::ConstantExpression::from(microcad_builtin::mu::math::Z.value()),
                     ),
                 ])
                 .with_statements([workbench::InitStatement::new(
@@ -479,11 +479,11 @@ fn op_rotate() {
     }
 
     // Test calling (angle = 90.0) via init(angle, axis)
-    /* TODO call_workbench(
+    call_workbench(
         "rotate_angle_axis_default_arg",
         &workbench,
         [argument_value!(angle = Value::deg(90.0))],
-    );*/
+    );
 }
 
 /*

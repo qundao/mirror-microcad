@@ -12,7 +12,7 @@ use miette::Diagnostic;
 
 use thiserror::Error;
 
-use crate::{ArgumentMatchError, argument_match};
+use crate::ArgumentMatchError;
 
 /// Evaluation error.
 #[derive(Debug, Error, Diagnostic)]
@@ -33,114 +33,42 @@ pub enum EvalError {
         err: ArgumentMatchError,
     },
 
-    /// List index out of bounds.
-    #[error("List index out of bounds: {index} >= {len}")]
-    ListIndexOutOfBounds {
-        /// Wrong index
-        index: usize,
-        /// Length of list
-        len: usize,
-    },
-
-    /// Parameter type mismatch.
-    #[error("Type mismatch for `{id}`: expected {expected}, got {found}")]
-    TypeMismatch {
-        /// Parameter name
-        id: Identifier,
-        /// Expected type
-        expected: Type,
-        /// Found type
-        found: Type,
-    },
-
-    /// List elements have different types.
-    #[error("List elements have different types: {0}")]
-    ListElementsDifferentTypes(TypeList),
-
-    /// Argument count mismatch.
-    #[error("Argument count mismatch: expected {expected}, got {found} in {args}")]
-    ArgumentCountMismatch {
-        /// Argument list including the error
-        args: String,
-        /// Expected number of arguments
-        expected: usize,
-        /// Found number of arguments
-        found: usize,
-    },
-
-    /// Assertion failed.
-    #[error("Assertion failed: {0}")]
-    AssertionFailed(String),
-
-    /// Different type expected.
-    #[error("Expected type `{expected}`, found type `{found}")]
-    ExpectedType {
-        /// Expected type.
-        expected: Type,
-        /// Found type.
-        found: Type,
-    },
-
-    /// No locals  available on stack.
-    #[error("Local stack needed to store {0}")]
-    LocalStackEmpty(Identifier),
-
-    /// Unexpected stack frame type
-    #[error("Unexpected stack frame of type '{1}' cannot store {0}")]
-    WrongStackFrame(Identifier, &'static str),
-
-    /// Unexpected element within expression.
-    #[error("Unexpected {0} {1} within expression")]
-    UnexpectedNested(&'static str, Identifier),
-
-    /// Arguments match by identifier but have incompatible types
-    #[error("Arguments match by identifier but have incompatible types: {0}")]
-    IdMatchButNotType(String),
-
     /// Trying to use multiplicity where it is not allowed
     #[error("Multiplicity not allowed '{0}'")]
     MultiplicityNotAllowed(IdentifierList),
 
-    /// An error if you try to mix 2d and 3d geometries.
-    #[error("Cannot mix 2d and 3d geometries")]
-    CannotMixGeometry,
-
     /// A condition of an if statement is not a boolean
-    #[error("If condition is not a boolean: {condition}")]
+    #[error("If condition is not a boolean: {err}")]
     IfConditionIsNotBool {
-        condition: String,
+        src_ref: SrcRef,
+
         #[label("Not a boolean")]
-        src_ref: SrcRef,
+        condition_src_ref: SrcRef,
+
+        err: ValueError,
     },
 
     /// Workbench didn't find a initialization routine matching the given arguments
-    #[error("Workbench {name} cannot find initialization for those arguments")]
-    #[diagnostic(help("Possible initializations: \n\t{}", possible_params.join("\n\t")))]
+    #[error("Workbench `{path}` cannot find initialization for those arguments")]
+    #[diagnostic(help("Possible initializations: \n\t{}", inits.join("\n\t")))]
     NoInitializationFound {
-        #[label("Got: {name}( {actual_params} )")]
+        #[label("Got: {path}( {arguments} )")]
         src_ref: SrcRef,
-        name: Identifier,
-        actual_params: String,
-        possible_params: Vec<String>,
+        path: String,
+        arguments: String,
+        inits: Vec<String>,
     },
+
     /// Workbench didn't find a initialization routine matching the given arguments
-    #[error("Workbench {name} has ambiguous initialization for those arguments")]
-    #[diagnostic(help("Ambiguous initializations: \n\t{}", ambiguous_params.join("\n\t")))]
+    #[error("Workbench `{path}` has ambiguous initialization for those arguments")]
+    #[diagnostic(help("Ambiguous initializations: \n\t{}", inits.join("\n\t")))]
     AmbiguousInitialization {
-        #[label("Got: {name}( {actual_params} )")]
+        #[label("Got: {path}( {arguments} )")]
         src_ref: SrcRef,
-        name: Identifier,
-        actual_params: String,
-        ambiguous_params: Vec<String>,
+        path: String,
+        arguments: String,
+        inits: Vec<String>,
     },
-
-    /// Initializer missed to set a property from plan
-    #[error("Building plan incomplete. Missing properties: {0}")]
-    BuildingPlanIncomplete(IdentifierList),
-
-    /// This errors happens if the expression is supposed to produce models but did not.
-    #[error("This expression statement did not produce any model")]
-    EmptyModelExpression,
 
     /// This error happens if the workbench produced a different output type.
     #[error("The {kind} workbench produced a {produced} output, but expected a {expected} output.")]

@@ -14,6 +14,11 @@ use microcad_lang_types::{
 pub trait Lookup {
     /// Local a local or property value by traversing up the stack
     fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value>;
+
+    /// Current symbol name
+    fn current_symbol_name(&self) -> Option<String> {
+        None
+    }
 }
 
 /// A map of locals.
@@ -145,6 +150,16 @@ pub struct CallFrame {
     pub path: microcad_package::symbol::Path,
 }
 
+impl Lookup for CallFrame {
+    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
+        None
+    }
+
+    fn current_symbol_name(&self) -> Option<String> {
+        Some(self.path.to_string())
+    }
+}
+
 #[derive(Debug)]
 pub struct SourceFrame {
     pub builder: ModelTreeBuilder,
@@ -230,6 +245,13 @@ impl Lookup for StackFrame {
             StackFrame::Source(source) => source.look_up_local(name),
         }
     }
+
+    fn current_symbol_name(&self) -> Option<String> {
+        match &self {
+            StackFrame::Call(call) => call.current_symbol_name(),
+            _ => None,
+        }
+    }
 }
 
 /// A generic stack.
@@ -261,6 +283,11 @@ impl Lookup for Stack {
         let name = name.as_ref();
         self.current_call_scope()
             .find_map(|frame| frame.look_up_local(name))
+    }
+
+    fn current_symbol_name(&self) -> Option<String> {
+        self.current_call_scope()
+            .find_map(|frame| frame.current_symbol_name())
     }
 }
 

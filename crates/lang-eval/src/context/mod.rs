@@ -106,6 +106,10 @@ impl Lookup for EvalContext {
     fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
         self.stack.look_up_local(name)
     }
+
+    fn current_symbol_name(&self) -> Option<String> {
+        self.stack.current_symbol_name()
+    }
 }
 
 impl StackRead for EvalContext {

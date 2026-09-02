@@ -5,11 +5,11 @@
 
 use crate::{
     CallTrait, Eval, EvalContext, EvalError, EvalResult,
-    context::{WorkbenchGroupFrame, WorkbenchInitFrame, WorkpieceFrame},
+    context::{Lookup, WorkbenchGroupFrame, WorkbenchInitFrame, WorkpieceFrame},
 };
 
 use microcad_builtin::{BuiltinEvalContext, BuiltinItem};
-use microcad_lang_base::{DisplayWithCtx, SrcReferrer, ToCompactString, element::Visibility};
+use microcad_lang_base::{DisplayWithCtx, SrcReferrer, element::Visibility};
 use microcad_package::{SymbolId, symbol};
 
 use microcad_lang_types::{
@@ -38,7 +38,13 @@ impl Eval<Value> for symbol::workbench::Group {
 impl Eval<Value> for symbol::workbench::WorkbenchIf {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         let cond: Value = self.cond.eval(context)?;
-        let cond: bool = cond.try_into()?;
+        let cond: bool = cond.try_into().map_err(|err| {
+            Box::new(EvalError::IfConditionIsNotBool {
+                condition_src_ref: self.cond.src_ref(),
+                src_ref: self.src_ref,
+                err,
+            })
+        })?;
 
         if cond {
             self.body.eval(context)
@@ -312,7 +318,17 @@ impl CallTrait<ModelTree> for symbol::Workbench {
             .collect();
 
         match matching_inits.len() {
-            0 => todo!("Error handling: No matching init"),
+            0 => Err(Box::new(EvalError::NoInitializationFound {
+                src_ref: self.signature.parameters.src_ref,
+                path: context.current_symbol_name().unwrap_or_default(),
+                arguments: args.to_string(),
+                inits: self
+                    .signature
+                    .inits
+                    .iter()
+                    .map(|init| init.to_string())
+                    .collect(),
+            })),
             1 => {
                 let init = matching_inits.first().unwrap();
                 let mut models = Vec::new();
@@ -343,9 +359,12 @@ impl CallTrait<ModelTree> for symbol::Workbench {
 
                 Ok(ModelTree::to_multiplicity(models))
             }
-            _n => {
-                todo!("Ambiguous initializer");
-            }
+            _n => Err(Box::new(EvalError::AmbiguousInitialization {
+                src_ref: self.signature.parameters.src_ref,
+                path: context.current_symbol_name().unwrap_or_default(),
+                arguments: args.to_string(),
+                inits: matching_inits.iter().map(|init| init.to_string()).collect(),
+            })),
         }
     }
 }
