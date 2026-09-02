@@ -63,6 +63,13 @@ impl Type {
         Self::List(Box::new(Type::Any))
     }
 
+    pub fn mat3() -> Self {
+        Self::Matrix(MatrixType {
+            rows: 3,
+            columns: 3,
+        })
+    }
+
     /// Short-cut for a matrix type.
     pub fn matrix(rows: usize, columns: usize) -> Self {
         Self::Matrix(MatrixType::new(rows, columns))
