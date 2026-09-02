@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0xa18f78da53e23991",
-        output_hash: "0xe72529f1bc2a4da4",
+        output_hash: "0x7695ceca04d87dc5",
         tree: (
             root: (
                 index1: 1,
@@ -44,6 +44,14 @@ expression: "ir.to_ron().expect(\"No error\")"
                             def: Source((
                                 statements: [],
                             )),
+                            doc: (
+                                content: "",
+                                src_ref: "0:1 @ 0x6fea70d2e98e16db (0..423)",
+                            ),
+                            ver: (
+                                introduced: None,
+                                stability: Stable,
+                            ),
                         )),
                     ),
                     (
@@ -67,15 +75,6 @@ expression: "ir.to_ron().expect(\"No error\")"
                                 keyword_src_ref: "6:5 @ 0x6fea70d2e98e16db (152..158)",
                             ),
                             def: Workbench((
-                                attr: (
-                                    doc: (
-                                        content: "Circle definition with an offset.\n\nExamples:\n* With radius `r`: `Circle(r = 10.0mm);`\n* With diameter `d`: `Circle(d = 5.0mm);`",
-                                        src_ref: "1:1 @ 0x6fea70d2e98e16db (1..148)",
-                                    ),
-                                    kv_exprs: [],
-                                    commands: [],
-                                    tags: [],
-                                ),
                                 signature: (
                                     kind: Sketch,
                                     parameters: (
@@ -511,6 +510,14 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     ),
                                 ],
                             )),
+                            doc: (
+                                content: "Circle definition with an offset.\n\nExamples:\n* With radius `r`: `Circle(r = 10.0mm);`\n* With diameter `d`: `Circle(d = 5.0mm);`",
+                                src_ref: "1:1 @ 0x6fea70d2e98e16db (1..148)",
+                            ),
+                            ver: (
+                                introduced: None,
+                                stability: Stable,
+                            ),
                         )),
                     ),
                 ],

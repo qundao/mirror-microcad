@@ -20,7 +20,6 @@ pub trait LeafVisitor: Sized {
 /// Visitor for items containing constant expressions.
 pub trait ConstantVisitor: LeafVisitor {
     fn visit_constant(&mut self, constant: &ir::Constant) {
-        self.visit_attr(&constant.attr);
         self.visit_constant_expr(&constant.expr);
     }
 
@@ -120,7 +119,6 @@ pub trait WorkbenchExpressionVisitor: ConstantVisitor {
 /// Visitor for workbenches
 pub trait WorkbenchVisitor: WorkbenchExpressionVisitor {
     fn visit_workbench(&mut self, workbench: &ir::workbench::Workbench) {
-        self.visit_attr(&workbench.attr);
         self.visit_workbench_signature(&workbench.signature);
 
         workbench
@@ -150,7 +148,6 @@ pub trait WorkbenchVisitor: WorkbenchExpressionVisitor {
 /// Visitor for functions.
 pub trait FnVisitor: ConstantVisitor {
     fn visit_fn(&mut self, function: &ir::function::Function) {
-        self.visit_attr(&function.attr);
         self.visit_fn_signature(&function.signature);
         function
             .statements

@@ -5,7 +5,7 @@
 
 use crate::ir;
 
-impl<Expr> std::fmt::Display for ir::ArgumentList<Expr>
+impl<Expr: ir::ExprSpec> std::fmt::Display for ir::ArgumentList<Expr>
 where
     Expr: std::fmt::Display,
 {
@@ -17,6 +17,14 @@ where
                 .collect::<Vec<_>>()
                 .join(", ")
         })
+    }
+}
+
+impl std::fmt::Display for ir::DocBlock {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.content
+            .lines()
+            .try_for_each(|line| writeln!(f, "/// {line}"))
     }
 }
 

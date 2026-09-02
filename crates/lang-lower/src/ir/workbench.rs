@@ -262,8 +262,6 @@ impl WorkbenchSignature {
 /// Workbench definition, e.g `sketch`, `part` or `op`.
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Workbench {
-    /// Attributes, combined from Inner and OuterAttributes
-    pub attr: ir::Attributes,
     /// Workbench Kind
     pub signature: WorkbenchSignature,
     /// The actual statements to build the Model

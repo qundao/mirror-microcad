@@ -5,7 +5,7 @@
 
 use crate::ir;
 
-use microcad_lang_base::SrcRef;
+use microcad_lang_base::{SrcRef, SrcReferrer};
 
 use microcad_macros::SrcReferrer;
 use serde::{Deserialize, Serialize};
@@ -37,14 +37,6 @@ impl DocBlock {
     }
 }
 
-impl std::fmt::Display for DocBlock {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.content
-            .lines()
-            .try_for_each(|line| writeln!(f, "/// {line}"))
-    }
-}
-
 /// Key-value attribute pair, e.g. `#[layer = "Test"]`
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct KvExpr {
@@ -65,13 +57,19 @@ pub struct Tag {
     pub name: ir::Identifier,
 }
 
+impl SrcReferrer for Tag {
+    fn src_ref(&self) -> SrcRef {
+        self.name.src_ref()
+    }
+}
+
 #[derive(Debug, Default, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Attributes {
     /// Documentation
     pub doc: ir::DocBlock,
     /// Key-value expressions: #[color = "red"]
     pub kv_exprs: Box<[KvExpr]>,
-    /// Commands: #[export("file.svg")] #[deprecate(since = "0.2.0")]
+    /// Commands: #[export("file.svg")] #[deprecated(since = "0.2.0")]
     pub commands: Box<[Command]>,
     /// Tags: #[deprecated]
     pub tags: Box<[Tag]>,

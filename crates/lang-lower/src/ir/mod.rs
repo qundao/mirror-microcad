@@ -35,7 +35,7 @@ pub use microcad_lang_base::{Identifier, element::Visibility};
 pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Ty, Unit};
 
 use derive_more::{Deref, Display, From};
-use microcad_lang_base::SrcRef;
+use microcad_lang_base::{SrcRef, VersionAnnotation};
 use serde::{Deserialize, Serialize};
 
 use crate::ir;
@@ -57,7 +57,7 @@ impl From<microcad_lang_types::Type> for Type {
     }
 }
 
-/// Symbol content
+/// Symbol meta data
 #[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Meta {
     pub name: Option<Identifier>,
@@ -74,37 +74,23 @@ pub struct Meta {
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Alias {
-    /// Attributes, combined from Inner and OuterAttributes
-    pub attr: ir::Attributes,
-
     pub path: Path,
 }
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Wildcard {
-    /// Attributes, combined from Inner and OuterAttributes
-    pub attr: ir::Attributes,
-
     pub path: Path,
 }
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
-pub struct InlineModule {
-    /// Attributes, combined from Inner and OuterAttributes
-    pub attr: ir::Attributes,
-}
+pub struct InlineModule {}
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
-pub struct FileModule {
-    /// Attributes
-    pub attr: ir::Attributes,
-}
+pub struct FileModule {}
 
 /// A constant definition: `const FOO: Length = 32mm`.
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Constant {
-    /// Attributes,
-    pub attr: ir::Attributes,
     /// Type of the constant
     pub ty: ir::Type,
     /// Expression type
@@ -145,6 +131,10 @@ pub struct IrItem {
     pub meta: Meta,
     /// Item definition
     pub def: Def,
+    /// Item documentation
+    pub doc: DocBlock,
+    /// Item version annotation
+    pub ver: VersionAnnotation,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

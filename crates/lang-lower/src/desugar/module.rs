@@ -7,7 +7,7 @@ use crate::{
     ir,
 };
 
-use microcad_lang_base::SpanToSrcRef;
+use microcad_lang_base::{PushDiag, SpanToSrcRef};
 use microcad_lang_parse::ast;
 
 impl Desugar<ast::def::FileModule> for ir::desugared::FileModule {
@@ -48,7 +48,9 @@ impl Desugar<ast::StatementList> for ir::desugared::InlineModuleItems {
             use ast::Statement::*;
             match stmt {
                 FileModule(_) | Return(_) | Expression(_) | LocalAssignment(_) | Property(_)
-                | Init(_) | Error(_) => context.diag(LowerError::StatementNotAllowed { src_ref }),
+                | Init(_) | Error(_) => {
+                    context.push_diag(LowerError::StatementNotAllowed { src_ref })
+                }
                 _ => {}
             }
             Ok(())

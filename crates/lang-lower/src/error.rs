@@ -177,6 +177,49 @@ pub enum LowerError {
     #[error("This initializer is equivant to the default initializer and will not be called")]
     #[diagnostic(code(lower::duplicated_default_initializer), severity = "Warning")]
     DuplicatedDefaultInitializer { src_ref: SrcRef },
+
+    #[error("Conflicting stability attributes found")]
+    #[diagnostic(
+        code(microcad::lower::conflicting_stability),
+        help(
+            "A symbol can only have one stability level (e.g., choose between #[stable], #[experimental], or #[deprecated])"
+        )
+    )]
+    ConflictingStability {
+        #[label("conflicting attribute here")]
+        src_ref: SrcRef,
+    },
+
+    #[error("Duplicate #[{attr}] attribute")]
+    #[diagnostic(code(microcad::lower::duplicate_attribute))]
+    DuplicateAttribute {
+        attr: String,
+        #[label("duplicate attribute")]
+        src_ref: SrcRef,
+    },
+
+    #[error("Invalid version format '{value}'")]
+    #[diagnostic(
+        code(microcad::lower::invalid_version_string),
+        help("Version must follow semantic versioning, e.g., \"0.2.0\"")
+    )]
+    InvalidVersionString {
+        value: String,
+        #[label("invalid version string")]
+        src_ref: SrcRef,
+    },
+
+    #[error("Attribute #[{attr}] requires a '{arg}' argument")]
+    #[diagnostic(
+        code(microcad::lower::missing_attribute_argument),
+        help("Provide the argument like #[{attr}({arg} = \"...\")]")
+    )]
+    MissingAttributeArgument {
+        attr: String,
+        arg: String,
+        #[label("missing argument")]
+        src_ref: SrcRef,
+    },
 }
 
 /// Result with lower error
@@ -213,6 +256,10 @@ impl SrcReferrer for LowerError {
             InputNotInitialized { src_ref, .. } => *src_ref,
             NotAnInputProperty { name, .. } => name.src_ref(),
             DuplicatedDefaultInitializer { src_ref } => *src_ref,
+            ConflictingStability { src_ref } => *src_ref,
+            DuplicateAttribute { src_ref, .. } => *src_ref,
+            InvalidVersionString { src_ref, .. } => *src_ref,
+            MissingAttributeArgument { src_ref, .. } => *src_ref,
         }
     }
 }

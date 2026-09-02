@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0xb3b97c5b5fc7a57e",
-        output_hash: "0xe42dd2bfb996dbc3",
+        output_hash: "0x3cd2c8b4753e69b5",
         tree: (
             root: (
                 index1: 1,
@@ -76,6 +76,14 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     ),
                                 ],
                             )),
+                            doc: (
+                                content: "",
+                                src_ref: "0:1 @ 0xb68464fb05014e73 (0..141)",
+                            ),
+                            ver: (
+                                introduced: None,
+                                stability: Stable,
+                            ),
                         )),
                     ),
                     (
@@ -102,17 +110,16 @@ expression: "ir.to_ron().expect(\"No error\")"
                                 keyword_src_ref: "0:1 @ 0xb68464fb05014e73 (0..3)",
                             ),
                             def: Alias((
-                                attr: (
-                                    doc: (
-                                        content: "",
-                                        src_ref: "None",
-                                    ),
-                                    kv_exprs: [],
-                                    commands: [],
-                                    tags: [],
-                                ),
                                 path: Resolved(Builtin(("0xa1730e22ab78d7d8"))),
                             )),
+                            doc: (
+                                content: "",
+                                src_ref: "None",
+                            ),
+                            ver: (
+                                introduced: None,
+                                stability: Stable,
+                            ),
                         )),
                     ),
                     (
@@ -139,17 +146,16 @@ expression: "ir.to_ron().expect(\"No error\")"
                                 keyword_src_ref: "1:1 @ 0xb68464fb05014e73 (21..24)",
                             ),
                             def: Alias((
-                                attr: (
-                                    doc: (
-                                        content: "",
-                                        src_ref: "None",
-                                    ),
-                                    kv_exprs: [],
-                                    commands: [],
-                                    tags: [],
-                                ),
                                 path: Resolved(Builtin(("0x5da4622536ec034"))),
                             )),
+                            doc: (
+                                content: "",
+                                src_ref: "None",
+                            ),
+                            ver: (
+                                introduced: None,
+                                stability: Stable,
+                            ),
                         )),
                     ),
                 ],

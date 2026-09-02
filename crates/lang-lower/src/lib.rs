@@ -14,8 +14,8 @@ mod scaffold;
 
 use microcad_builtin::BuiltinRegistry;
 use microcad_lang_base::{
-    CompilationResult, Diagnostics, HashId, LookUpName, Source, Span, SpanToSrcRef, SrcRef,
-    SymbolId, hash_id,
+    CompilationResult, Diagnostics, HashId, LookUpName, PushDiag, Source, Span, SpanToSrcRef,
+    SrcRef, SymbolId, hash_id,
 };
 
 pub use ir::CastInto;
@@ -72,10 +72,6 @@ impl<'source> LowerContext<'source> {
         }
     }
 
-    pub fn diag(&mut self, err: impl Into<LowerError>) {
-        self.errors.push(err.into());
-    }
-
     pub fn top_node(&self) -> &ir::NodeId {
         self.node_id_stack.last().unwrap()
     }
@@ -94,6 +90,12 @@ impl<'source> LowerContext<'source> {
         children.scaffold(self);
         self.node_id_stack.pop();
         node_id
+    }
+}
+
+impl<'source> PushDiag<LowerError> for LowerContext<'source> {
+    fn push_diag(&mut self, err: impl Into<LowerError>) {
+        self.errors.push(err.into());
     }
 }
 
@@ -136,7 +138,7 @@ pub fn lower<'source>(context: &mut LowerContext<'source>, ast: &Ast) -> Compila
         Err(fatal_error) => {
             let errors = std::mem::take(&mut context.errors);
             // Ensure the fatal error is logged in the diagnostics
-            context.diag(fatal_error);
+            context.push_diag(fatal_error);
             return Err(errors.into());
         }
     };

@@ -7,7 +7,7 @@ mod call;
 mod literal;
 
 use microcad_builtin::{__mu, BuiltinError};
-use microcad_lang_base::{Identifier, SpanToSrcRef};
+use microcad_lang_base::{Identifier, PushDiag, SpanToSrcRef};
 use microcad_lang_parse::ast;
 use microcad_lang_types::{Scalar, Value};
 
@@ -68,7 +68,7 @@ impl Desugar<ast::SymbolPath> for ir::Path {
             if context.builtins.get(id).is_some() {
                 return Ok(id.into());
             } else {
-                context.diag(BuiltinError::NoBuiltin {
+                context.push_diag(BuiltinError::NoBuiltin {
                     full_name: path.to_string(),
                     id,
                 });
@@ -175,7 +175,7 @@ impl Desugar<ast::Expression> for ir::ConstantExpression {
             }
             ast::Expression::UnaryOperation(unop) => Self::Call(ir::Call::desugar(unop, context)?),
             expr => {
-                context.diag(LowerError::InvalidConstantExpression {
+                context.push_diag(LowerError::InvalidConstantExpression {
                     src_ref: context.span_to_src_ref(&expr.span()),
                 });
                 Self::Invalid

@@ -8,7 +8,7 @@ use crate::{
 };
 
 use microcad_builtin::__mu;
-use microcad_lang_base::{Identifier, SpanToSrcRef, SrcRef, SrcReferrer};
+use microcad_lang_base::{Identifier, PushDiag, SpanToSrcRef, SrcRef, SrcReferrer};
 use microcad_lang_parse::ast;
 
 impl Desugar<ast::def::Function> for ir::Attributes {
@@ -39,7 +39,7 @@ impl Desugar<ast::Body> for ir::Scope {
             match stmt {
                 FileModule(_) | Const(_) | Use(_) | InlineModule(_) | Init(_) | Workbench(_)
                 | Function(_) | Property(_) | InnerAttribute(_) | InnerDocComment(_) | Error(_) => {
-                    context.diag(LowerError::StatementNotAllowed { src_ref });
+                    context.push_diag(LowerError::StatementNotAllowed { src_ref });
                 }
                 _ => {}
             }
@@ -189,11 +189,11 @@ impl Desugar<ast::Statement> for Option<ir::FunctionStatement> {
                     | BinaryOperation(_)
                     | UnaryOperation(_)
                     | ElementAccess(_) => {
-                        context.diag(LowerError::FunctionStatementIgnored(src_ref));
+                        context.push_diag(LowerError::FunctionStatementIgnored(src_ref));
                         None
                     }
                     ast::Expression::Marker(_) | ast::Expression::Error(_) => {
-                        context.diag(LowerError::StatementNotAllowed { src_ref });
+                        context.push_diag(LowerError::StatementNotAllowed { src_ref });
                         None
                     }
                     ast::Expression::Call(call) => Some(ir::Call::desugar(call, context)?.into()),
@@ -226,7 +226,7 @@ impl Desugar<ast::StatementList> for Box<[ir::FunctionStatement]> {
             let src_ref = stmt.src_ref();
             if return_src_ref.is_some() {
                 // We've already hit a return, so everything after it is unreachable dead code.
-                context.diag(LowerError::Unreachable {
+                context.push_diag(LowerError::Unreachable {
                     src_ref,
                     last_ref: return_src_ref,
                 });
@@ -247,7 +247,7 @@ impl Desugar<ast::StatementList> for ir::desugared::FunctionItems {
             use ast::Statement::*;
             match stmt {
                 Init(_) | Workbench(_) | InlineModule(_) | FileModule(_) | Property(_)
-                | Error(_) => context.diag(LowerError::StatementNotAllowed { src_ref }),
+                | Error(_) => context.push_diag(LowerError::StatementNotAllowed { src_ref }),
                 _ => {}
             }
             Ok(())

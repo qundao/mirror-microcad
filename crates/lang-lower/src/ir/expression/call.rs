@@ -8,6 +8,7 @@ use derive_more::Display;
 use microcad_builtin::BuiltinId;
 use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
 
+use microcad_lang_types::Value;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
@@ -156,6 +157,28 @@ impl<Expr> ArgumentList<Expr> {
     /// translate(self = Circle(radius = 4.0), x = 1.0mm, y = 1.0mm, z = 1.0mm)
     pub fn desugar_method(self, expr: impl Into<Expr>) -> Self {
         self.prepended(Argument::named("self", expr))
+    }
+}
+
+impl<Expr: ir::ExprSpec> ArgumentList<Expr> {
+    /// Extract argument value from named arguments.
+    pub fn extract_arg_value(&self, name: impl AsRef<str>) -> Option<&Value> {
+        let arg_name = name.as_ref();
+
+        for arg in self.args.iter() {
+            match arg {
+                ir::Argument::Named {
+                    name,
+                    expr,
+                    src_ref,
+                } if name.to_string().as_str() == arg_name => {
+                    return expr.value();
+                }
+                _ => {}
+            }
+        }
+
+        None
     }
 }
 
