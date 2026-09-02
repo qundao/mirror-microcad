@@ -8,8 +8,7 @@ use microcad_lang_base::{Identifier, SrcRef, SymbolId, ToCompactString};
 use microcad_lang_eval::{CallTrait, EvalContext};
 use microcad_lang_types::{ArgumentValueList, Type, Value, argument_value};
 use microcad_package::symbol::{
-    Attributes, ConstantValue, Function, FunctionExpression, FunctionStatement, Parameter, Path,
-    function,
+    ConstantValue, Function, FunctionExpression, FunctionStatement, Parameter, Path, function,
 };
 
 fn statements<T>(a: impl Iterator<Item = T>) -> Box<[FunctionStatement]>

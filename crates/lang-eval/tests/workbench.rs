@@ -11,7 +11,7 @@ use microcad_lang_types::{
 };
 use microcad_package::{
     SymbolId,
-    symbol::{self, Attributes, ConstantValue, Parameter, Path, WorkbenchStatement, workbench},
+    symbol::{self, ConstantValue, Parameter, Path, WorkbenchStatement, workbench},
 };
 
 /// Expressions used for testing
@@ -95,7 +95,7 @@ fn group() {
         "group",
         symbol::workbench::Group {
             src_ref: SrcRef::none(),
-            attr: Attributes::default(),
+            attr: symbol::ModelAttributes::default(),
             statements: statements([WorkbenchStatement::expr(call_circle(length(4.0)))]),
         },
     );
@@ -113,7 +113,7 @@ fn group_with_property() {
         "group_with_property",
         symbol::workbench::Group {
             src_ref: SrcRef::none(),
-            attr: Attributes::default(),
+            attr: symbol::ModelAttributes::default(),
             statements: statements([
                 WorkbenchStatement::prop("a", length(4.0)),
                 WorkbenchStatement::expr(call_circle(local("a"))),
