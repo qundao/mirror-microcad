@@ -9,7 +9,7 @@ use crate::{
 };
 
 use microcad_builtin::{BuiltinEvalContext, BuiltinItem};
-use microcad_lang_base::{SrcReferrer, element::Visibility};
+use microcad_lang_base::{DisplayWithCtx, SrcReferrer, element::Visibility};
 use microcad_package::{SymbolId, symbol};
 
 use microcad_lang_types::{
@@ -189,7 +189,10 @@ impl Eval for symbol::workbench::WorkbenchCall {
 
                         Ok(ModelTree::to_multiplicity(models).into())
                     }
-                    None => unimplemented!("Function not found: {builtin_id}"),
+                    None => unimplemented!(
+                        "Builtin not found: {}",
+                        builtin_id.to_string_with_ctx(context)
+                    ),
                     _ => todo!(),
                 }
             }
