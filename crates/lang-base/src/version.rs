@@ -77,7 +77,7 @@ impl VersionAnnotation {
     /// Checks if the symbol is available at a given target DSL version.
     pub fn is_available_at(&self, target_version: &Version) -> bool {
         match &self.introduced {
-            Some(introduced) => target_version >= &introduced,
+            Some(introduced) => target_version >= introduced,
             None => true,
         }
     }

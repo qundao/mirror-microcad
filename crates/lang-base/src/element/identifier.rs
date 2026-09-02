@@ -40,7 +40,7 @@ impl Identifier {
     }
 
     pub fn as_str(&self) -> &str {
-        &self.id().as_str()
+        self.id().as_str()
     }
 
     /// Return first character of the identifier.

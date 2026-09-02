@@ -114,14 +114,13 @@ impl<'a, T> NodeRef<'a, T> {
     pub fn write_node_with_ctx<Ctx>(
         &self,
         f: &mut std::fmt::Formatter<'_>,
-        node: &NodeRef<'a, T>,
         ctx: &Ctx,
         tree_state: TreeState,
     ) -> std::fmt::Result
     where
         T: DisplayWithCtx<Ctx>,
     {
-        let content = node.get().to_string_with_ctx(ctx);
+        let content = self.get().to_string_with_ctx(ctx);
         let mut lines = content.lines();
 
         let prefix = tree_state.prefix;
@@ -145,7 +144,7 @@ impl<'a, T> NodeRef<'a, T> {
             prefix.clone()
         };
 
-        let children: Vec<_> = node.children().collect();
+        let children: Vec<_> = self.children().collect();
         let count = children.len();
 
         // 3. Multiline lines use the continuation prefix
@@ -175,7 +174,7 @@ impl<'a, T> NodeRef<'a, T> {
             let state = TreeState {
                 prefix: format!("{continuation_prefix}{branch}"),
             };
-            child.write_node_with_ctx(f, &child, ctx, state)?;
+            child.write_node_with_ctx(f, ctx, state)?;
         }
 
         Ok(())

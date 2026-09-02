@@ -47,7 +47,7 @@ where
     T: DisplayWithCtx<Ctx>,
 {
     fn fmt_with_ctx(&self, f: &mut std::fmt::Formatter<'_>, ctx: &Ctx) -> std::fmt::Result {
-        self.write_node_with_ctx(f, self, ctx, TreeState::default())
+        self.write_node_with_ctx(f, ctx, TreeState::default())
     }
 }
 
@@ -70,7 +70,7 @@ where
         ctx: &Ctx,
         state: TreeState,
     ) -> std::fmt::Result {
-        self.write_node_with_ctx(f, self, ctx, state)
+        self.write_node_with_ctx(f, ctx, state)
     }
 }
 

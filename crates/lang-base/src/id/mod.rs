@@ -79,7 +79,7 @@ pub struct DisplayWithContext<'a, T, Ctx> {
 
 impl<'a, T: DisplayWithCtx<Ctx>, Ctx> std::fmt::Display for DisplayWithContext<'a, T, Ctx> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.value.fmt_with_ctx(f, &self.ctx)
+        self.value.fmt_with_ctx(f, self.ctx)
     }
 }
 impl<Ctx: LookUpName> DisplayWithCtx<Ctx> for BuiltinId {
