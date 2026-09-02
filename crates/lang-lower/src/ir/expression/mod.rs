@@ -10,6 +10,7 @@ pub use call::*;
 use derive_more::From;
 pub use literal::*;
 use microcad_lang_types::Value;
+use strum::IntoStaticStr;
 
 use crate::{CastInto, ir};
 use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
@@ -68,8 +69,7 @@ pub trait ExprSpec: Serialize + SrcReferrer + SingleIdentifier + From<Value> {
 }
 
 /// An expression that can be evaluated during `resolve` phase.
-#[derive(Debug, Clone, From, PartialEq, Hash, Serialize, Deserialize)]
-
+#[derive(Debug, Clone, From, IntoStaticStr, PartialEq, Hash, Serialize, Deserialize)]
 pub enum ConstantExpression {
     Invalid,
     Value(ir::ConstantValue),

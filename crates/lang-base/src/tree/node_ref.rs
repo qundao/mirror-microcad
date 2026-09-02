@@ -79,6 +79,11 @@ impl<'a, T> NodeRef<'a, T> {
 
         // 3. Multiline lines use the continuation prefix
         for line in lines {
+            if line.is_empty() && count > 0 {
+                writeln!(f, "|")?;
+                break;
+            }
+
             let mut remainder = line;
             let mut indent_count = 0;
 

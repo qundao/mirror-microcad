@@ -9,6 +9,7 @@ use derive_more::From;
 use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
 use microcad_lang_types::Value;
 use serde::{Deserialize, Serialize};
+use strum::IntoStaticStr;
 
 pub type FunctionCall = ir::Call<ir::FunctionExpression>;
 pub type FunctionIf = ir::If<ir::FunctionExpression>;
@@ -49,7 +50,7 @@ pub struct Scope {
 }
 
 #[non_exhaustive]
-#[derive(Debug, Clone, Hash, From, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, From, IntoStaticStr, PartialEq, Serialize, Deserialize)]
 pub enum FunctionExpression {
     Invalid,
     Value(ir::ConstantValue),

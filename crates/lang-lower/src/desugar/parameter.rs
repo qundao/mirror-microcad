@@ -1,7 +1,7 @@
 // Copyright © 2025-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{Desugar, LowerContext, LowerError, LowerResult, desugar::sort_and_check, ir};
+use crate::{Desugar, LowerContext, LowerError, LowerResult, desugar::check_for_duplicates, ir};
 
 use microcad_lang_base::{PushDiag, SpanToSrcRef};
 use microcad_lang_parse::ast;
@@ -63,7 +63,7 @@ impl Desugar<ast::ParameterList> for ir::ParameterList {
         }
 
         Ok(ir::ParameterList {
-            parameters: sort_and_check(parameters, context)?,
+            parameters: check_for_duplicates(parameters, context)?,
             src_ref: context.span_to_src_ref(&node.span),
         })
     }

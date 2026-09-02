@@ -53,7 +53,7 @@ macro_rules! snapshot_test {
         }
     };
 
-    // A successful snapshot test with errors.
+    // A successful snapshot test with (expected) errors.
     ($name:ident => error) => {
         #[test]
         fn $name() {

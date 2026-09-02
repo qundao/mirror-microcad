@@ -16,6 +16,7 @@ use microcad_lang_base::{
 pub use microcad_lang_base::element::WorkbenchKind;
 use microcad_lang_types::Value;
 use serde::{Deserialize, Serialize};
+use strum::IntoStaticStr;
 
 pub type WorkbenchCall = ir::Call<ir::WorkbenchExpression>;
 pub type WorkbenchIf = ir::If<ir::WorkbenchExpression>;
@@ -181,7 +182,7 @@ impl Marker {
 }
 
 #[non_exhaustive]
-#[derive(Debug, Clone, From, PartialEq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, From, PartialEq, IntoStaticStr, Hash, Serialize, Deserialize)]
 pub enum WorkbenchExpression {
     Invalid,
     Value(ir::ConstantValue),

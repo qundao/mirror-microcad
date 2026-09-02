@@ -9,6 +9,7 @@ pub use miette::Severity;
 
 mod artifact;
 mod diag;
+pub mod display;
 pub mod element;
 mod fs;
 mod id;
@@ -34,11 +35,12 @@ pub const MICROCAD_EXTENSION: &str = "µcad";
 
 pub use artifact::{Artifact, ArtifactError, ArtifactHeader, ArtifactKind, StageResult};
 pub use diag::{DiagRenderOptions, Diagnostic, Diagnostics, PushDiag};
+pub use display::DisplayOneLine;
 pub use element::{Identifier, IdentifierList};
 pub use fs::{FileSystem, VirtualFileSystem};
 pub use id::{
-    BuiltinId, BuiltinInfo, DefaultContext, DisplayWithContext, DisplayWithCtx, HashId, LookUpName,
-    Name, SymbolId, hash_id,
+    BuiltinId, BuiltinInfo, DefaultContext, DisplayWithCtx, DisplayWithCtxHelper, HashId,
+    LookUpName, Name, SymbolId, hash_id,
 };
 pub use output::{Capture, Output, Stdout};
 pub use rc::{Rc, RcMut};
@@ -76,28 +78,6 @@ pub trait GetSourceByHash {
     fn get_source_by_hash(&'_ self, hash: HashId) -> Option<&Source>;
 }
 
-/// Shortens given string to it's first line and to `max_chars` characters.
-pub fn shorten(what: &str, max_chars: usize) -> String {
-    let short: String = what
-        .chars()
-        .enumerate()
-        .filter_map(|(p, ch)| {
-            if p == max_chars {
-                Some('…')
-            } else if p < max_chars {
-                if ch == '\n' { Some('⏎') } else { Some(ch) }
-            } else {
-                None
-            }
-        })
-        .collect();
-
-    if cfg!(feature = "ansi-color") && short.contains('\x1b') {
-        short + "\x1b[0m"
-    } else {
-        short
-    }
-}
 
 /// Check if the element only includes one identifier
 pub trait SingleIdentifier {

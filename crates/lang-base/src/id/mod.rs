@@ -13,6 +13,8 @@ pub use builtin::{BuiltinId, BuiltinInfo};
 
 use serde::{Deserialize, Serialize};
 
+use crate::display::shorten;
+
 /// Name type (base of all identifiers)
 pub type Name = crate::CompactString;
 
@@ -64,20 +66,32 @@ pub trait DisplayWithCtx<Ctx>: Sized {
     /// Renders the object to a String using the provided context.
     fn to_string_with_ctx(&self, ctx: &Ctx) -> String {
         let mut output = String::new();
-        let adapter = DisplayWithContext { value: self, ctx };
+        let adapter = DisplayWithCtxHelper { value: self, ctx };
 
         let _ = std::fmt::write(&mut output, format_args!("{adapter}"));
         output
     }
+
+    /// Only show first line of the string.
+    /// The line break `\n` is not included.
+    fn to_one_line_with_ctx(&self, ctx: &Ctx) -> String {
+        let line: String = self
+            .to_string_with_ctx(ctx)
+            .lines()
+            .map(|line| line.to_string())
+            .next()
+            .unwrap_or_default();
+        shorten(&line, 80)
+    }
 }
 
-pub struct DisplayWithContext<'a, T, Ctx> {
+pub struct DisplayWithCtxHelper<'a, T, Ctx> {
     pub value: &'a T,
     // UnsafeCell allows us to extract the mutable reference inside `fmt`
     pub ctx: &'a Ctx,
 }
 
-impl<'a, T: DisplayWithCtx<Ctx>, Ctx> std::fmt::Display for DisplayWithContext<'a, T, Ctx> {
+impl<'a, T: DisplayWithCtx<Ctx>, Ctx> std::fmt::Display for DisplayWithCtxHelper<'a, T, Ctx> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.value.fmt_with_ctx(f, self.ctx)
     }

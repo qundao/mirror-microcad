@@ -27,6 +27,7 @@ pub use function::*;
 use microcad_lang_types::Value;
 pub use parameter::*;
 pub use path::{Path, UnresolvedPath};
+use strum::IntoStaticStr;
 pub use workbench::*;
 
 pub use source::{ExportAttribute, Source, SourceStatement};
@@ -104,7 +105,7 @@ impl Constant {
 }
 
 /// IR item definition
-#[derive(Debug, Clone, Hash, From, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, From, PartialEq, Serialize, Deserialize, IntoStaticStr)]
 pub enum Def {
     /// Source file symbol.
     Source(Source),

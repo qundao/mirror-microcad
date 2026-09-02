@@ -97,13 +97,14 @@ where
         .try_for_each(|stmt| check(stmt, context))
 }
 
-/// Named and check for duplicates
-pub fn sort_and_check<T>(mut named: Vec<T>, context: &mut LowerContext) -> LowerResult<Box<[T]>>
+/// Sort by name and check for duplicates
+pub fn check_for_duplicates<T>(named: Vec<T>, context: &mut LowerContext) -> LowerResult<Box<[T]>>
 where
-    T: Identifiable + SrcReferrer,
+    T: Identifiable + SrcReferrer + Clone,
 {
-    named.sort_by_key(|lhs| lhs.id());
-    named
+    let mut sorted = named.clone();
+    sorted.sort_by_key(|lhs| lhs.id());
+    sorted
         .windows(2)
         .filter_map(|pair| {
             if pair[0].id() == pair[1].id() {

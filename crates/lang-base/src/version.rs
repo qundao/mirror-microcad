@@ -9,6 +9,8 @@ pub const MICROCAD_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub use semver::Version;
 
+use crate::DisplayOneLine;
+
 /// Storage for µcad language version
 #[derive(Debug, Display, PartialEq, Serialize, Deserialize)]
 #[display("{_0}")]
@@ -99,3 +101,44 @@ impl Default for VersionAnnotation {
         Self::STABLE
     }
 }
+
+impl std::fmt::Display for VersionAnnotation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        // 1. Format the stability status
+        match &self.stability {
+            Stability::Stable => write!(f, "stable")?,
+            Stability::Experimental => write!(f, "experimental")?,
+            Stability::Deprecated {
+                since,
+                note,
+                removal_in,
+            } => {
+                write!(f, "deprecated")?;
+
+                let mut parts = Vec::new();
+                if let Some(v) = since {
+                    parts.push(format!("since {v}"));
+                }
+                if let Some(v) = removal_in {
+                    parts.push(format!("removal in {v}"));
+                }
+                if let Some(n) = note {
+                    parts.push(format!("\"{n}\""));
+                }
+
+                if !parts.is_empty() {
+                    write!(f, " ({})", parts.join(", "))?;
+                }
+            }
+        }
+
+        // 2. Format the introduction version (if present)
+        if let Some(introduced) = &self.introduced {
+            write!(f, " (introduced in v{introduced})")?;
+        }
+
+        Ok(())
+    }
+}
+
+impl DisplayOneLine for VersionAnnotation {}
