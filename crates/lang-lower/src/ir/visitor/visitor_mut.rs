@@ -273,10 +273,14 @@ pub trait VisitorMut:
     }
 
     fn visit_meta(&mut self, _meta: &mut ir::Meta) {}
-    fn visit_inline_module(&self, _inline_module: &mut ir::InlineModule) {}
-    fn visit_file_module(&self, _file_module: &mut ir::FileModule) {}
-    fn visit_alias(&self, _alias: &mut ir::Alias) {}
-    fn visit_wildcard(&self, _wildcard: &mut ir::Wildcard) {}
+    fn visit_inline_module(&mut self, _inline_module: &mut ir::InlineModule) {}
+    fn visit_file_module(&mut self, _file_module: &mut ir::FileModule) {}
+    fn visit_alias(&mut self, alias: &mut ir::Alias) {
+        self.visit_path(&mut alias.path);
+    }
+    fn visit_wildcard(&mut self, wildcard: &mut ir::Wildcard) {
+        self.visit_path(&mut wildcard.path);
+    }
 
     fn visit_def(&mut self, def: &mut ir::Def) {
         match def {

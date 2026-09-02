@@ -9,8 +9,8 @@ expression: "ir.to_ron().expect(\"No error\")"
         kind: Ir,
     ),
     payload: (
-        input_hash: "0xb3b97c5b5fc7a57e",
-        output_hash: "0xfe1ef74a3564a9d6",
+        input_hash: "0xaaabf7f7afd157fc",
+        output_hash: "0x3e2c7131a5031876",
         tree: (
             root: (
                 index1: 1,
@@ -38,7 +38,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                     src_ref: "None",
                                 ))),
                                 vis: Public,
-                                src_ref: "0:1 @ 0xb68464fb05014e73 (0..141)",
+                                src_ref: "0:1 @ 0x854d12f674b9e225 (0..191)",
                                 keyword_src_ref: "None",
                             ),
                             def: Source((
@@ -51,41 +51,47 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             name: None,
                                             layer: None,
                                         ),
-                                        src_ref: "5:1 @ 0xb68464fb05014e73 (97..126)",
+                                        src_ref: "5:1 @ 0x854d12f674b9e225 (97..138)",
                                         name: Some(((
                                             value: "a",
-                                            src_ref: "5:1 @ 0xb68464fb05014e73 (97..98)",
+                                            src_ref: "5:1 @ 0x854d12f674b9e225 (97..98)",
                                         ))),
                                         ty: (
                                             ty: Any,
                                             src_ref: "None",
                                         ),
-                                        expression: Call((
-                                            path: HumanReadable(
-                                                name: "__mu::core::add",
-                                                id: Builtin(("0x2a1ad822686b2491")),
-                                            ),
-                                            args: (
-                                                src_ref: "5:21 @ 0xb68464fb05014e73 (117..125)",
-                                                args: [
-                                                    Unnamed(Value(((
-                                                        value: Quantity("1"),
-                                                        src_ref: "5:21 @ 0xb68464fb05014e73 (117..120)",
-                                                    )))),
-                                                    Unnamed(Value(((
-                                                        value: Quantity("2"),
-                                                        src_ref: "5:26 @ 0xb68464fb05014e73 (122..125)",
-                                                    )))),
-                                                ],
-                                            ),
-                                            src_ref: "5:5 @ 0xb68464fb05014e73 (101..126)",
-                                        )),
+                                        expression: Value(((
+                                            value: Quantity("3"),
+                                            src_ref: "None",
+                                        ))),
+                                    ),
+                                    (
+                                        exports: [],
+                                        attr: (
+                                            color: None,
+                                            resolution: None,
+                                            name: None,
+                                            layer: None,
+                                        ),
+                                        src_ref: "6:1 @ 0x854d12f674b9e225 (153..166)",
+                                        name: Some(((
+                                            value: "b",
+                                            src_ref: "6:1 @ 0x854d12f674b9e225 (153..154)",
+                                        ))),
+                                        ty: (
+                                            ty: Any,
+                                            src_ref: "None",
+                                        ),
+                                        expression: Value(((
+                                            value: Quantity("3"),
+                                            src_ref: "None",
+                                        ))),
                                     ),
                                 ],
                             )),
                             doc: (
                                 content: "",
-                                src_ref: "0:1 @ 0xb68464fb05014e73 (0..141)",
+                                src_ref: "0:1 @ 0x854d12f674b9e225 (0..191)",
                             ),
                             ver: (
                                 introduced: None,
@@ -110,14 +116,17 @@ expression: "ir.to_ron().expect(\"No error\")"
                             meta: (
                                 name: Some(((
                                     value: "sub",
-                                    src_ref: "0:17 @ 0xb68464fb05014e73 (16..19)",
+                                    src_ref: "0:17 @ 0x854d12f674b9e225 (16..19)",
                                 ))),
                                 vis: Private,
-                                src_ref: "0:1 @ 0xb68464fb05014e73 (0..19)",
-                                keyword_src_ref: "0:1 @ 0xb68464fb05014e73 (0..3)",
+                                src_ref: "0:1 @ 0x854d12f674b9e225 (0..19)",
+                                keyword_src_ref: "0:1 @ 0x854d12f674b9e225 (0..3)",
                             ),
                             def: Alias((
-                                path: Resolved(Builtin(("0xa1730e22ab78d7d8"))),
+                                path: HumanReadable(
+                                    name: "__mu::core::sub",
+                                    id: Builtin(("0xa1730e22ab78d7d8")),
+                                ),
                             )),
                             doc: (
                                 content: "",
@@ -146,14 +155,17 @@ expression: "ir.to_ron().expect(\"No error\")"
                             meta: (
                                 name: Some(((
                                     value: "multiply",
-                                    src_ref: "1:24 @ 0xb68464fb05014e73 (44..52)",
+                                    src_ref: "1:24 @ 0x854d12f674b9e225 (44..52)",
                                 ))),
                                 vis: Private,
-                                src_ref: "1:1 @ 0xb68464fb05014e73 (21..52)",
-                                keyword_src_ref: "1:1 @ 0xb68464fb05014e73 (21..24)",
+                                src_ref: "1:1 @ 0x854d12f674b9e225 (21..52)",
+                                keyword_src_ref: "1:1 @ 0x854d12f674b9e225 (21..24)",
                             ),
                             def: Alias((
-                                path: Resolved(Builtin(("0x5da4622536ec034"))),
+                                path: HumanReadable(
+                                    name: "__mu::core::mul",
+                                    id: Builtin(("0x5da4622536ec034")),
+                                ),
                             )),
                             doc: (
                                 content: "",

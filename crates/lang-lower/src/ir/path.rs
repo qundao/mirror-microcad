@@ -20,7 +20,7 @@ impl UnresolvedPath {
     pub fn builtin_id(&self) -> Option<BuiltinId> {
         if let Some(prefix) = self.parts.first()
             && !self.is_absolute
-            && &prefix.to_string() == "__mu"
+            && prefix.as_str() == "__mu"
         {
             Some(BuiltinId::from(self.to_string().as_str()))
         } else {

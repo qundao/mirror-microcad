@@ -278,10 +278,14 @@ pub trait Visitor: SourceVisitor + FnVisitor + WorkbenchVisitor + ConstantVisito
     }
 
     fn visit_meta(&mut self, _meta: &ir::Meta) {}
-    fn visit_inline_module(&self, _inline_module: &ir::InlineModule) {}
-    fn visit_file_module(&self, _file_module: &ir::FileModule) {}
-    fn visit_alias(&self, _alias: &ir::Alias) {}
-    fn visit_wildcard(&self, _wildcard: &ir::Wildcard) {}
+    fn visit_inline_module(&mut self, _inline_module: &ir::InlineModule) {}
+    fn visit_file_module(&mut self, _file_module: &ir::FileModule) {}
+    fn visit_alias(&mut self, alias: &ir::Alias) {
+        self.visit_path(&alias.path);
+    }
+    fn visit_wildcard(&mut self, wildcard: &ir::Wildcard) {
+        self.visit_path(&wildcard.path);
+    }
 
     fn visit_def(&mut self, def: &ir::Def) {
         match def {
