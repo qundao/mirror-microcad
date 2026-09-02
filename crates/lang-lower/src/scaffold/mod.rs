@@ -150,6 +150,12 @@ impl ir::Attributes {
     /// Evaluates `#[introduced]`, `#[stable]`, `#[experimental]`, and `#[deprecated]` attributes.
     /// Any parsing errors, duplicate attributes, or conflicting stability declarations
     /// are recorded into `ctx` via `push_diag`.
+    ///
+    /// #[introduced(version = "0.2.0")]
+    /// #[stable]
+    /// #[experimental]
+    /// #[deprecated]
+    /// #[deprecated(since = "0.5.0", note = "Use ... instead", removal_in = "0.6.0")]
     pub fn fetch_ver(&self, ctx: &mut LowerContext) -> VersionAnnotation {
         /// Sets the stability state, emitting a diagnostic if stability was already declared.
         fn set_stability(

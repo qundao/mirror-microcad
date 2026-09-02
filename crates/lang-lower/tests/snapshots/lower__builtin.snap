@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0xb3b97c5b5fc7a57e",
-        output_hash: "0x3cd2c8b4753e69b5",
+        output_hash: "0x54b11219745bf336",
         tree: (
             root: (
                 index1: 1,
@@ -44,6 +44,12 @@ expression: "ir.to_ron().expect(\"No error\")"
                             def: Source((
                                 statements: [
                                     (
+                                        attr: (
+                                            color: None,
+                                            resolution: None,
+                                            name: None,
+                                            layer: None,
+                                        ),
                                         src_ref: "5:1 @ 0xb68464fb05014e73 (97..126)",
                                         name: Some(((
                                             value: "a",

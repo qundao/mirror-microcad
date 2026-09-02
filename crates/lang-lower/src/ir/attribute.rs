@@ -5,7 +5,7 @@
 
 use crate::ir;
 
-use microcad_lang_base::{SrcRef, SrcReferrer};
+use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
 
 use microcad_macros::SrcReferrer;
 use serde::{Deserialize, Serialize};
@@ -108,5 +108,21 @@ impl Attributes {
         self.tags = extend_boxed_slices(self.tags, rhs.tags);
 
         self
+    }
+
+    pub fn fetch_kv_expr(&self, arg: impl AsRef<str>) -> Option<ir::ConstantExpression> {
+        let arg = arg.as_ref();
+        self.kv_exprs
+            .iter()
+            .find_map(|KvExpr { name, expr, .. }| match name.single_identifier() {
+                Some(ident) => {
+                    if ident.as_str() == arg {
+                        Some(expr.clone())
+                    } else {
+                        None
+                    }
+                }
+                None => None,
+            })
     }
 }

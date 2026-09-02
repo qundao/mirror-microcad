@@ -15,10 +15,19 @@ use serde::{Deserialize, Serialize};
 pub type WorkbenchCall = ir::Call<ir::WorkbenchExpression>;
 pub type WorkbenchIf = ir::If<ir::WorkbenchExpression>;
 
+/// Expressions of attributes that can be attached to a model.
+#[derive(Debug, Default, PartialEq, Clone, Hash, Serialize, Deserialize)]
+pub struct ModelAttributes {
+    pub color: Option<ir::ConstantExpression>,
+    pub resolution: Option<ir::ConstantExpression>,
+    pub name: Option<ir::ConstantExpression>,
+    pub layer: Option<ir::ConstantExpression>,
+}
+
 /// Each WorkbenchStatement eventually evals into a [`Models`]
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
 pub struct WorkbenchStatement {
-    pub attr: ir::Attributes,
+    pub attr: ModelAttributes,
     pub src_ref: SrcRef,
     pub visibility: ir::Visibility, // public = property
     pub keyword_src_ref: SrcRef,

@@ -8,6 +8,11 @@ use serde::{Deserialize, Serialize};
 
 use crate::ir;
 
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
+pub struct ExportAttribute {
+    file: ir::ConstantExpression,
+}
+
 /// A statement in a source file.
 ///
 /// Source file statements are similar to workbench statements with the following features
@@ -16,6 +21,7 @@ use crate::ir;
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct SourceStatement {
     //pub exports: Vec<ExportAttribute>,
+    pub attr: ir::ModelAttributes,
     pub src_ref: SrcRef,
     pub name: Option<ir::Identifier>,
     pub ty: ir::Type,

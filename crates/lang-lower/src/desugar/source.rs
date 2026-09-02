@@ -36,6 +36,7 @@ impl Desugar<ast::StatementList> for ir::desugared::SourceItems {
 impl Desugar<ast::ExpressionStatement> for ir::SourceStatement {
     fn desugar(node: &ast::ExpressionStatement, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
+            attr: ir::ModelAttributes::desugar(&node.attr, context)?,
             src_ref: context.span_to_src_ref(&node.span),
             name: None,
             ty: ir::Type::default(),
@@ -47,6 +48,7 @@ impl Desugar<ast::ExpressionStatement> for ir::SourceStatement {
 impl Desugar<ast::LocalAssignment> for ir::SourceStatement {
     fn desugar(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
+            attr: ir::ModelAttributes::desugar(&node.attr, context)?,
             src_ref: context.span_to_src_ref(&node.span),
             name: Some(ir::Identifier::desugar(&node.id, context)?),
             ty: ir::Type::desugar(&node.ty, context)?,

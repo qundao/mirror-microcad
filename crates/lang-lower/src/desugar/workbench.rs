@@ -304,7 +304,7 @@ impl Desugar<ast::StatementList> for Vec<ir::Init> {
 impl Desugar<ast::LocalAssignment> for ir::WorkbenchStatement {
     fn desugar(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            attr: ir::Attributes::desugar(&node.attr, context)?,
+            attr: ir::ModelAttributes::desugar(&node.attr, context)?,
             src_ref: context.span_to_src_ref(&node.span),
             visibility: ir::Visibility::Private,
             keyword_src_ref: SrcRef::none(),
@@ -318,7 +318,7 @@ impl Desugar<ast::LocalAssignment> for ir::WorkbenchStatement {
 impl Desugar<ast::PropertyAssignment> for ir::WorkbenchStatement {
     fn desugar(node: &ast::PropertyAssignment, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            attr: outer_with_doc(&node.doc, &node.attr, context)?,
+            attr: ir::ModelAttributes::desugar(&node.attr, context)?,
             src_ref: context.span_to_src_ref(&node.span),
             visibility: ir::Visibility::Public,
             keyword_src_ref: context.span_to_src_ref(&node.keyword_span),
@@ -329,10 +329,23 @@ impl Desugar<ast::PropertyAssignment> for ir::WorkbenchStatement {
     }
 }
 
+impl Desugar<ast::Attributes> for ir::ModelAttributes {
+    fn desugar(node: &ast::Attributes, context: &mut LowerContext) -> LowerResult<Self> {
+        let attr = ir::Attributes::desugar(node, context)?;
+
+        Ok(Self {
+            color: attr.fetch_kv_expr("color"),
+            resolution: attr.fetch_kv_expr("resolution"),
+            name: attr.fetch_kv_expr("name"),
+            layer: attr.fetch_kv_expr("layer"),
+        })
+    }
+}
+
 impl Desugar<ast::ExpressionStatement> for ir::WorkbenchStatement {
     fn desugar(node: &ast::ExpressionStatement, context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
-            attr: ir::Attributes::desugar(&node.attr, context)?,
+            attr: ir::ModelAttributes::desugar(&node.attr, context)?,
             src_ref: context.span_to_src_ref(&node.span),
             visibility: ir::Visibility::Public,
             keyword_src_ref: SrcRef::none(),

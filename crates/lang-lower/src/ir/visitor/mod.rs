@@ -63,6 +63,29 @@ pub trait ConstantVisitor: LeafVisitor {
 
 /// Visitor for workbench statements and expressions.
 pub trait WorkbenchExpressionVisitor: ConstantVisitor {
+    fn visit_workbench_statement(&mut self, statement: &ir::workbench::WorkbenchStatement) {
+        self.visit_model_attributes(&statement.attr);
+        if let Some(name) = &statement.name {
+            self.visit_name(name);
+        }
+        self.visit_workbench_expr(&statement.expression);
+    }
+
+    fn visit_model_attributes(&mut self, attr: &ir::ModelAttributes) {
+        if let Some(expr) = &attr.color {
+            self.visit_constant_expr(expr);
+        }
+        if let Some(expr) = &attr.layer {
+            self.visit_constant_expr(expr);
+        }
+        if let Some(expr) = &attr.name {
+            self.visit_constant_expr(expr);
+        }
+        if let Some(expr) = &attr.resolution {
+            self.visit_constant_expr(expr);
+        }
+    }
+
     fn visit_workbench_expr(&mut self, expr: &ir::workbench::WorkbenchExpression) {
         match &expr {
             ir::WorkbenchExpression::Invalid => {}
@@ -105,14 +128,6 @@ pub trait WorkbenchExpressionVisitor: ConstantVisitor {
             .statements
             .iter()
             .for_each(|statement| self.visit_workbench_statement(statement));
-    }
-
-    fn visit_workbench_statement(&mut self, statement: &ir::workbench::WorkbenchStatement) {
-        self.visit_attr(&statement.attr);
-        if let Some(name) = &statement.name {
-            self.visit_name(name);
-        }
-        self.visit_workbench_expr(&statement.expression);
     }
 }
 
@@ -239,6 +254,7 @@ pub trait SourceVisitor: WorkbenchExpressionVisitor {
         if let Some(name) = &statement.name {
             self.visit_name(name);
         }
+        self.visit_model_attributes(&statement.attr);
         self.visit_workbench_expr(&statement.expression);
     }
 }

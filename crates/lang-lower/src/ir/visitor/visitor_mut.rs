@@ -58,11 +58,26 @@ pub trait ConstantVisitorMut: LeafVisitorMut {
 /// Visitor for workbench statements and expressions.
 pub trait WorkbenchExpressionVisitorMut: ConstantVisitorMut {
     fn visit_workbench_statement(&mut self, statement: &mut ir::workbench::WorkbenchStatement) {
-        self.visit_attr(&mut statement.attr);
+        self.visit_model_attributes(&mut statement.attr);
         if let Some(name) = &mut statement.name {
             self.visit_name(name);
         }
         self.visit_workbench_expr(&mut statement.expression);
+    }
+
+    fn visit_model_attributes(&mut self, attr: &mut ir::ModelAttributes) {
+        if let Some(expr) = &mut attr.color {
+            self.visit_constant_expr(expr);
+        }
+        if let Some(expr) = &mut attr.layer {
+            self.visit_constant_expr(expr);
+        }
+        if let Some(expr) = &mut attr.name {
+            self.visit_constant_expr(expr);
+        }
+        if let Some(expr) = &mut attr.resolution {
+            self.visit_constant_expr(expr);
+        }
     }
 
     fn visit_workbench_expr(&mut self, expr: &mut ir::workbench::WorkbenchExpression) {
@@ -233,6 +248,7 @@ pub trait SourceVisitorMut: ConstantVisitorMut + WorkbenchVisitorMut {
         if let Some(name) = &mut statement.name {
             self.visit_name(name);
         }
+        self.visit_model_attributes(&mut statement.attr);
         self.visit_workbench_expr(&mut statement.expression);
     }
 }
