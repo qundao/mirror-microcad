@@ -1,7 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Workbench definition syntax element evaluation
+//! Workbench evaluation
 
 use crate::{
     CallTrait, Eval, EvalContext, EvalError, EvalResult,

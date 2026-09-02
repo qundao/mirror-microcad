@@ -145,6 +145,31 @@ pub struct CallFrame {
     pub path: microcad_package::symbol::Path,
 }
 
+#[derive(Debug)]
+pub struct SourceFrame {
+    pub builder: ModelTreeBuilder,
+}
+
+impl SourceFrame {
+    pub fn new() -> Self {
+        Self {
+            builder: ModelTreeBuilder::new(Element::Group),
+        }
+    }
+}
+
+impl Lookup for SourceFrame {
+    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
+        self.builder.get_property(name).map(|prop| &prop.value)
+    }
+}
+
+impl ModelTreeBuilderMut for SourceFrame {
+    fn model_tree_builder_mut(&mut self) -> &mut ModelTreeBuilder {
+        &mut self.builder
+    }
+}
+
 #[derive(Debug, From)]
 pub enum StackFrame {
     Call(CallFrame),
@@ -153,6 +178,7 @@ pub enum StackFrame {
     Workbench(WorkpieceFrame),
     WorkbenchGroup(WorkbenchGroupFrame),
     WorkbenchInit(WorkbenchInitFrame),
+    Source(SourceFrame),
 }
 
 impl StackFrame {
@@ -182,6 +208,7 @@ impl ModelTreeBuilderMut for StackFrame {
             StackFrame::WorkbenchGroup(workbench_group_frame) => {
                 workbench_group_frame.model_tree_builder_mut()
             }
+            StackFrame::Source(source) => source.model_tree_builder_mut(),
             _ => panic!("No model tree builder"),
         }
     }
@@ -200,6 +227,7 @@ impl Lookup for StackFrame {
                 workbench_group_frame.look_up_local(name)
             }
             StackFrame::WorkbenchInit(init) => init.look_up_local(name),
+            StackFrame::Source(source) => source.look_up_local(name),
         }
     }
 }

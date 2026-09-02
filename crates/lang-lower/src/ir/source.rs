@@ -3,7 +3,7 @@
 
 //! A compiler artifact to be persisted, e.g. an IR written and read from file.
 
-use microcad_lang_base::SrcRef;
+use microcad_lang_base::{Identifier, SrcRef};
 use serde::{Deserialize, Serialize};
 
 use crate::ir;
@@ -26,6 +26,33 @@ pub struct SourceStatement {
     pub name: Option<ir::Identifier>,
     pub ty: ir::Type,
     pub expression: ir::WorkbenchExpression,
+}
+
+/// Builder methods for testing
+impl SourceStatement {
+    /// Create an assignment statement: `id = expr;`
+    pub fn assignment(id: impl AsRef<str>, expr: impl Into<ir::WorkbenchExpression>) -> Self {
+        SourceStatement {
+            exports: Box::default(),
+            attr: Default::default(),
+            src_ref: Default::default(),
+            name: Some(Identifier::from(id.as_ref())),
+            ty: Default::default(),
+            expression: expr.into(),
+        }
+    }
+
+    /// Create an expression statement: `expr;`
+    pub fn expr(expr: impl Into<ir::WorkbenchExpression>) -> Self {
+        SourceStatement {
+            exports: Box::default(),
+            attr: Default::default(),
+            src_ref: Default::default(),
+            name: None,
+            ty: Default::default(),
+            expression: expr.into(),
+        }
+    }
 }
 
 /// A desugared source file.

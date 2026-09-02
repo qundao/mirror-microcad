@@ -6,7 +6,7 @@
 use microcad_lang_base::{Identifier, IdentifierList};
 use microcad_lang_types::{ArgumentValueList, Arguments, CallSignature, Tuple, Type, Value};
 use microcad_package::symbol::{
-    Function, ParameterList, Workbench, function::FunctionSignature, workbench::Init,
+    Function, ParameterList, function::FunctionSignature, workbench::Init,
 };
 
 use crate::{EvalError, EvalResult};

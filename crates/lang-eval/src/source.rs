@@ -1,0 +1,53 @@
+// Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+//! Source evaluation
+
+use microcad_lang_types::{
+    ModelTree, Value,
+    model::{ModelTreeBuilderMut, Property, PropertyType},
+};
+use microcad_package::symbol;
+
+use crate::{Eval, EvalContext, EvalResult, context::SourceFrame};
+
+impl Eval<()> for symbol::SourceStatement {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<()> {
+        match &self.name {
+            // If we have an id, this becomes a property in the current model
+            Some(name) => {
+                let property = Property {
+                    name: name.clone(),
+                    value: self.expression.eval(context)?,
+                    src_ref: self.src_ref,
+                    ty: PropertyType::Hidden,
+                };
+                context
+                    .model_tree_builder_mut()
+                    .add_model_property(property);
+            }
+            // If we have no id, we have a child model.
+            None => {
+                let value: Value = self.expression.eval(context)?;
+                // It might be that the value is none, because an if expression might not produce a model when its condition is not fulfilled
+                if !value.is_none() {
+                    context
+                        .model_tree_builder_mut()
+                        .add_model_child(ModelTree::from(value));
+                }
+            }
+        }
+        Ok(())
+    }
+}
+
+impl Eval<ModelTree> for symbol::Source {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<ModelTree> {
+        context.scope(SourceFrame::new(), |context| -> EvalResult<ModelTree> {
+            self.statements
+                .iter()
+                .try_for_each(|stmt| stmt.eval(context))?;
+            Ok(context.model_tree_builder_mut().build())
+        })
+    }
+}

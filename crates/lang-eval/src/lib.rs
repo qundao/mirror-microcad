@@ -8,6 +8,7 @@ mod argument_match;
 mod context;
 mod eval_error;
 mod function;
+mod source;
 mod workbench;
 
 pub use argument_match::*;

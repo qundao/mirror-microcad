@@ -11,12 +11,16 @@ use microcad_lang_types::{
 };
 use microcad_package::{
     SymbolId,
-    symbol::{self, ConstantValue, Parameter, Path, WorkbenchStatement, workbench},
+    symbol::{
+        self, ConstantValue, Parameter, Path, SourceStatement, WorkbenchStatement, workbench,
+    },
 };
 
 /// Expressions used for testing
 pub mod helper {
-    use microcad_package::symbol::{WorkbenchExpression as Expr, WorkbenchStatement};
+    use microcad_package::symbol::{
+        SourceStatement, WorkbenchExpression as Expr, WorkbenchStatement,
+    };
 
     use super::*;
 
@@ -54,9 +58,18 @@ pub mod helper {
         symbol::Path::Resolved(SymbolId::Local(name.into())).into()
     }
 
-    pub fn statements(
+    pub fn workbench_statements(
         statements: impl IntoIterator<Item = WorkbenchStatement>,
     ) -> Box<[WorkbenchStatement]> {
+        statements
+            .into_iter()
+            .collect::<Vec<_>>()
+            .into_boxed_slice()
+    }
+
+    pub fn source_statements(
+        statements: impl IntoIterator<Item = SourceStatement>,
+    ) -> Box<[SourceStatement]> {
         statements
             .into_iter()
             .collect::<Vec<_>>()
@@ -96,7 +109,7 @@ fn group() {
         symbol::workbench::Group {
             src_ref: SrcRef::none(),
             attr: symbol::ModelAttributes::default(),
-            statements: statements([WorkbenchStatement::expr(call_circle(length(4.0)))]),
+            statements: workbench_statements([WorkbenchStatement::expr(call_circle(length(4.0)))]),
         },
     );
 }
@@ -114,7 +127,7 @@ fn group_with_property() {
         symbol::workbench::Group {
             src_ref: SrcRef::none(),
             attr: symbol::ModelAttributes::default(),
-            statements: statements([
+            statements: workbench_statements([
                 WorkbenchStatement::prop("a", length(4.0)),
                 WorkbenchStatement::expr(call_circle(local("a"))),
             ]),
@@ -154,7 +167,7 @@ fn circle_without_parameter() {
             symbol::WorkbenchKind::Sketch,
             vec![], // No parameters
         ),
-        statements: statements([WorkbenchStatement::expr(call_circle(length(4.0)))]),
+        statements: workbench_statements([WorkbenchStatement::expr(call_circle(length(4.0)))]),
     };
 
     call_workbench("circle_without_parameter", &workbench, []);
@@ -173,7 +186,7 @@ fn circle_parameter() {
             symbol::WorkbenchKind::Sketch,
             vec![Parameter::new("radius", Type::length())],
         ),
-        statements: statements([WorkbenchStatement::expr(call_circle(Path::Resolved(
+        statements: workbench_statements([WorkbenchStatement::expr(call_circle(Path::Resolved(
             SymbolId::Local("radius".into()),
         )))]),
     };
@@ -231,7 +244,7 @@ fn circle_init() {
                 ]),
             ),
         )])]),
-        statements: statements([WorkbenchStatement::expr(call_circle(Path::Resolved(
+        statements: workbench_statements([WorkbenchStatement::expr(call_circle(Path::Resolved(
             SymbolId::Local("radius".into()),
         )))]),
     };
@@ -245,6 +258,22 @@ fn circle_init() {
 
     let prop = model.get_property_value("radius");
     assert_eq!(prop, Value::from(Length::mm(4.0)));
+}
+
+/// a = 32mm;
+/// __mu::geo2d::Circle(radius = a);
+#[test]
+fn circle_source() {
+    use helper::*;
+
+    let source = symbol::Source {
+        statements: source_statements([
+            SourceStatement::assignment("a", length(32.0)),
+            SourceStatement::expr(call_circle(local("a"))),
+        ]),
+    };
+
+    eval_to_model_test("source", source);
 }
 
 /*

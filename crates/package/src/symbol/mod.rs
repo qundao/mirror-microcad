@@ -45,7 +45,7 @@ pub use workbench::{
 
 pub use ir::{
     Alias, Constant, ConstantValue, ExportAttribute, ExprSpec, Parameter, ParameterList, Path,
-    Source, Visibility, Wildcard,
+    Source, SourceStatement, Visibility, Wildcard,
 };
 
 #[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
