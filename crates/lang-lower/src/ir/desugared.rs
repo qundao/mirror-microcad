@@ -143,5 +143,5 @@ pub struct Source {
     /// Items that will become Symbols
     pub items: SourceItems,
     /// Workbench statements
-    pub statements: Box<[ir::WorkbenchStatement]>,
+    pub statements: Box<[ir::SourceStatement]>,
 }

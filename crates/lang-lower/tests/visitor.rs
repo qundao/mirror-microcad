@@ -3,7 +3,8 @@ mod common;
 use microcad_lang_base::SymbolId;
 use microcad_lang_lower::ir;
 use microcad_lang_lower::ir::visitor::{
-    ConstantVisitor, FnVisitor, LeafVisitor, Visitor, WorkbenchStatementVisitor, WorkbenchVisitor,
+    ConstantVisitor, FnVisitor, LeafVisitor, SourceVisitor, Visitor, WorkbenchExpressionVisitor,
+    WorkbenchVisitor,
 };
 use microcad_macros::__mu;
 use std::collections::HashSet;
@@ -35,9 +36,10 @@ impl LeafVisitor for PathCollector {
 
 // Sub-trait implementations (inherit default traversal behavior)
 impl ConstantVisitor for PathCollector {}
-impl WorkbenchStatementVisitor for PathCollector {}
+impl WorkbenchExpressionVisitor for PathCollector {}
 impl WorkbenchVisitor for PathCollector {}
 impl FnVisitor for PathCollector {}
+impl SourceVisitor for PathCollector {}
 impl Visitor for PathCollector {}
 
 #[test]

@@ -210,6 +210,7 @@ impl<T: Artifact> StageResult<T> {
         matches!(self.0, Some(Ok(_)))
     }
 }
+
 impl<T: Artifact> Default for StageResult<T> {
     fn default() -> Self {
         Self(None)

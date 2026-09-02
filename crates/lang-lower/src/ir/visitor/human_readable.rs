@@ -38,7 +38,11 @@ impl<'a, Ctx: LookUpName> ir::visitor::LeafVisitorMut for MakeHumanReadable<'a, 
 
 // Sub-trait implementations (inherit default traversal behavior)
 impl<'a, Ctx: LookUpName> ir::visitor::ConstantVisitorMut for MakeHumanReadable<'a, Ctx> {}
-impl<'a, Ctx: LookUpName> ir::visitor::WorkbenchStatementVisitorMut for MakeHumanReadable<'a, Ctx> {}
+impl<'a, Ctx: LookUpName> ir::visitor::WorkbenchExpressionVisitorMut
+    for MakeHumanReadable<'a, Ctx>
+{
+}
 impl<'a, Ctx: LookUpName> ir::visitor::WorkbenchVisitorMut for MakeHumanReadable<'a, Ctx> {}
 impl<'a, Ctx: LookUpName> ir::visitor::FnVisitorMut for MakeHumanReadable<'a, Ctx> {}
+impl<'a, Ctx: LookUpName> ir::visitor::SourceVisitorMut for MakeHumanReadable<'a, Ctx> {}
 impl<'a, Ctx: LookUpName> ir::visitor::VisitorMut for MakeHumanReadable<'a, Ctx> {}

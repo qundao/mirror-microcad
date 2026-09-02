@@ -57,7 +57,7 @@ pub trait ConstantVisitorMut: LeafVisitorMut {
 }
 
 /// Visitor for workbench statements and expressions.
-pub trait WorkbenchStatementVisitorMut: ConstantVisitorMut {
+pub trait WorkbenchExpressionVisitorMut: ConstantVisitorMut {
     fn visit_workbench_statement(&mut self, statement: &mut ir::workbench::WorkbenchStatement) {
         self.visit_attr(&mut statement.attr);
         if let Some(name) = &mut statement.name {
@@ -112,7 +112,7 @@ pub trait WorkbenchStatementVisitorMut: ConstantVisitorMut {
 }
 
 /// Visitor for workbenches
-pub trait WorkbenchVisitorMut: WorkbenchStatementVisitorMut {
+pub trait WorkbenchVisitorMut: WorkbenchExpressionVisitorMut {
     fn visit_workbench(&mut self, workbench: &mut ir::workbench::Workbench) {
         self.visit_attr(&mut workbench.attr);
         self.visit_workbench_signature(&mut workbench.signature);
@@ -224,8 +224,26 @@ pub trait FnVisitorMut: ConstantVisitorMut {
     }
 }
 
+pub trait SourceVisitorMut: ConstantVisitorMut + WorkbenchVisitorMut {
+    fn visit_source(&mut self, source: &mut ir::Source) {
+        source
+            .statements
+            .iter_mut()
+            .for_each(|stmt| self.visit_source_statement(stmt));
+    }
+
+    fn visit_source_statement(&mut self, statement: &mut ir::SourceStatement) {
+        if let Some(name) = &mut statement.name {
+            self.visit_name(name);
+        }
+        self.visit_workbench_expr(&mut statement.expression);
+    }
+}
+
 /// Visitor for an IR tree.
-pub trait VisitorMut: FnVisitorMut + WorkbenchVisitorMut + ConstantVisitorMut {
+pub trait VisitorMut:
+    SourceVisitorMut + FnVisitorMut + WorkbenchVisitorMut + ConstantVisitorMut
+{
     fn visit(&mut self, ir: &mut crate::Ir) {
         self.visit_tree(&mut ir.tree);
     }
@@ -239,13 +257,6 @@ pub trait VisitorMut: FnVisitorMut + WorkbenchVisitorMut + ConstantVisitorMut {
     fn visit_item<'a>(&mut self, _node: ir::NodeRef<'a>, item: &mut ir::IrItem) {
         self.visit_meta(&mut item.meta);
         self.visit_def(&mut item.def);
-    }
-
-    fn visit_source(&mut self, source: &mut ir::Source) {
-        source
-            .statements
-            .iter_mut()
-            .for_each(|stmt| self.visit_workbench_statement(stmt));
     }
 
     fn visit_meta(&mut self, _meta: &mut ir::Meta) {}

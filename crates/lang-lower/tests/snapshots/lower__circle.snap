@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0xa18f78da53e23991",
-        output_hash: "0xa72a70c6ac388820",
+        output_hash: "0xe72529f1bc2a4da4",
         tree: (
             root: (
                 index1: 1,
@@ -42,15 +42,6 @@ expression: "ir.to_ron().expect(\"No error\")"
                                 keyword_src_ref: "None",
                             ),
                             def: Source((
-                                attr: (
-                                    doc: (
-                                        content: "",
-                                        src_ref: "0:1 @ 0x6fea70d2e98e16db (0..423)",
-                                    ),
-                                    kv_exprs: [],
-                                    commands: [],
-                                    tags: [],
-                                ),
                                 statements: [],
                             )),
                         )),

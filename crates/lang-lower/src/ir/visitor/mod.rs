@@ -63,15 +63,7 @@ pub trait ConstantVisitor: LeafVisitor {
 }
 
 /// Visitor for workbench statements and expressions.
-pub trait WorkbenchStatementVisitor: ConstantVisitor {
-    fn visit_workbench_statement(&mut self, statement: &ir::workbench::WorkbenchStatement) {
-        self.visit_attr(&statement.attr);
-        if let Some(name) = &statement.name {
-            self.visit_name(name);
-        }
-        self.visit_workbench_expr(&statement.expression);
-    }
-
+pub trait WorkbenchExpressionVisitor: ConstantVisitor {
     fn visit_workbench_expr(&mut self, expr: &ir::workbench::WorkbenchExpression) {
         match &expr {
             ir::WorkbenchExpression::Invalid => {}
@@ -115,10 +107,18 @@ pub trait WorkbenchStatementVisitor: ConstantVisitor {
             .iter()
             .for_each(|statement| self.visit_workbench_statement(statement));
     }
+
+    fn visit_workbench_statement(&mut self, statement: &ir::workbench::WorkbenchStatement) {
+        self.visit_attr(&statement.attr);
+        if let Some(name) = &statement.name {
+            self.visit_name(name);
+        }
+        self.visit_workbench_expr(&statement.expression);
+    }
 }
 
 /// Visitor for workbenches
-pub trait WorkbenchVisitor: WorkbenchStatementVisitor {
+pub trait WorkbenchVisitor: WorkbenchExpressionVisitor {
     fn visit_workbench(&mut self, workbench: &ir::workbench::Workbench) {
         self.visit_attr(&workbench.attr);
         self.visit_workbench_signature(&workbench.signature);
@@ -230,8 +230,24 @@ pub trait FnVisitor: ConstantVisitor {
     }
 }
 
+pub trait SourceVisitor: WorkbenchExpressionVisitor {
+    fn visit_source(&mut self, source: &ir::Source) {
+        source
+            .statements
+            .iter()
+            .for_each(|stmt| self.visit_source_statement(stmt));
+    }
+
+    fn visit_source_statement(&mut self, statement: &ir::SourceStatement) {
+        if let Some(name) = &statement.name {
+            self.visit_name(name);
+        }
+        self.visit_workbench_expr(&statement.expression);
+    }
+}
+
 /// Visitor for an IR tree.
-pub trait Visitor: FnVisitor + WorkbenchVisitor + ConstantVisitor {
+pub trait Visitor: SourceVisitor + FnVisitor + WorkbenchVisitor + ConstantVisitor {
     fn visit_tree(&mut self, ir_tree: &ir::Tree) {
         ir_tree
             .root()
@@ -246,13 +262,6 @@ pub trait Visitor: FnVisitor + WorkbenchVisitor + ConstantVisitor {
     fn visit_item(&mut self, item: &ir::IrItem) {
         self.visit_meta(&item.meta);
         self.visit_def(&item.def);
-    }
-
-    fn visit_source(&mut self, source: &ir::Source) {
-        source
-            .statements
-            .iter()
-            .for_each(|stmt| self.visit_workbench_statement(stmt));
     }
 
     fn visit_meta(&mut self, _meta: &ir::Meta) {}

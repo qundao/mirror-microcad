@@ -112,7 +112,7 @@ impl<'a, 'source> ir::visitor::ConstantVisitorMut for Fold<'a, 'source> {
 }
 
 // Sub-trait implementations (inherit default traversal behavior)
-impl<'a, 'source> ir::visitor::WorkbenchStatementVisitorMut for Fold<'a, 'source> {
+impl<'a, 'source> ir::visitor::WorkbenchExpressionVisitorMut for Fold<'a, 'source> {
     fn visit_workbench_expr(&mut self, expr: &mut ir::workbench::WorkbenchExpression) {
         let value = match expr {
             ir::WorkbenchExpression::Invalid | ir::WorkbenchExpression::Value(_) => None,
@@ -155,4 +155,5 @@ impl<'a, 'source> ir::visitor::FnVisitorMut for Fold<'a, 'source> {
     }
 }
 
+impl<'a, 'source> ir::visitor::SourceVisitorMut for Fold<'a, 'source> {}
 impl<'a, 'source> ir::visitor::VisitorMut for Fold<'a, 'source> {}

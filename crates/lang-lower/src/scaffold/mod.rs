@@ -128,7 +128,6 @@ impl Scaffold for ir::desugared::Source {
             ir::IrItem {
                 meta: self.meta,
                 def: ir::Source {
-                    attr: self.attr,
                     statements: self.statements,
                 }
                 .into(),

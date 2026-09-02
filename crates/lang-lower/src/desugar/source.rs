@@ -33,6 +33,48 @@ impl Desugar<ast::StatementList> for ir::desugared::SourceItems {
     }
 }
 
+impl Desugar<ast::ExpressionStatement> for ir::SourceStatement {
+    fn desugar(node: &ast::ExpressionStatement, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
+            src_ref: context.span_to_src_ref(&node.span),
+            name: None,
+            ty: ir::Type::default(),
+            expression: ir::WorkbenchExpression::desugar(&node.expr, context)?,
+        })
+    }
+}
+
+impl Desugar<ast::LocalAssignment> for ir::SourceStatement {
+    fn desugar(node: &ast::LocalAssignment, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Self {
+            src_ref: context.span_to_src_ref(&node.span),
+            name: Some(ir::Identifier::desugar(&node.id, context)?),
+            ty: ir::Type::desugar(&node.ty, context)?,
+            expression: ir::WorkbenchExpression::desugar(node.expr.as_ref(), context)?,
+        })
+    }
+}
+
+impl Desugar<ast::ExpressionStatement> for Option<ir::SourceStatement> {
+    fn desugar(node: &ast::ExpressionStatement, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(Some(ir::SourceStatement::desugar(node, context)?))
+    }
+}
+
+impl Desugar<ast::Statement> for Option<ir::SourceStatement> {
+    fn desugar(stmt: &ast::Statement, context: &mut LowerContext) -> LowerResult<Self> {
+        Ok(match stmt {
+            ast::Statement::LocalAssignment(local_assignment) => {
+                Some(ir::SourceStatement::desugar(local_assignment, context)?)
+            }
+            ast::Statement::Expression(expression_statement) => {
+                Some(ir::SourceStatement::desugar(expression_statement, context)?)
+            }
+            _ => None,
+        })
+    }
+}
+
 impl Desugar<ast::Source> for ir::desugared::Source {
     fn desugar(node: &ast::Source, context: &mut LowerContext) -> LowerResult<Self> {
         let statements = &node.statements;

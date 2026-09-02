@@ -13,6 +13,7 @@ pub mod expression;
 pub mod function;
 pub mod parameter;
 pub mod path;
+pub mod source;
 pub mod visitor;
 pub mod workbench;
 
@@ -27,6 +28,8 @@ use microcad_lang_types::Value;
 pub use parameter::*;
 pub use path::{Path, UnresolvedPath};
 pub use workbench::*;
+
+pub use source::{Source, SourceStatement};
 
 pub use microcad_lang_base::{Identifier, element::Visibility};
 pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Ty, Unit};
@@ -67,16 +70,6 @@ pub struct Meta {
 
     /// Source code reference of symbol's keyword
     pub keyword_src_ref: SrcRef,
-}
-
-/// A desugared source file.
-#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Source {
-    /// Attributes, combined from Inner and OuterAttributes
-    pub attr: ir::Attributes,
-
-    /// Workbench statements
-    pub statements: Box<[ir::WorkbenchStatement]>,
 }
 
 #[derive(Debug, Hash, Clone, PartialEq, Serialize, Deserialize)]
