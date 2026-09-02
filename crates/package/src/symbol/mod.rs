@@ -43,9 +43,19 @@ pub use workbench::{
     ModelAttributes, Workbench, WorkbenchExpression, WorkbenchKind, WorkbenchStatement,
 };
 
+pub mod constant {
+    use microcad_lang_lower::ir;
+
+    pub use ir::{Constant, ConstantExpression, ConstantValue};
+
+    pub type Argument = ir::Argument<ir::ConstantExpression>;
+    pub type ArgumentList = ir::ArgumentList<ir::ConstantExpression>;
+}
+
 pub use ir::{
-    Alias, Constant, ConstantValue, ExportAttribute, ExprSpec, Parameter, ParameterList, Path,
-    Source, SourceStatement, Visibility, Wildcard,
+    Alias, Argument, ArgumentList, Call, Constant, ConstantExpression, ConstantValue,
+    ExportAttribute, ExprSpec, Parameter, ParameterList, Path, Source, SourceStatement, Visibility,
+    Wildcard,
 };
 
 #[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
