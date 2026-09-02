@@ -131,14 +131,15 @@ impl ModelTree {
 
     /// Returns a new `ModelTree` where every `Element::InputPlaceholder` node
     /// (and its descendants) is replaced with a deep copy of `input_model`.
-    pub fn replace_input_placeholders(&self, input_model: &ModelTree) -> Self {
+    pub fn replace_input_placeholders(&self, input_model: impl Into<ModelTree>) -> Self {
         let mut new_arena = Arena::new();
+        let model_tree: ModelTree = input_model.into();
 
         // Recursively build the transformed tree starting from root
         let new_root = Self::replace_placeholders_recursive(
             self.root,
             &self.arena,
-            input_model,
+            &model_tree,
             &mut new_arena,
         );
 
