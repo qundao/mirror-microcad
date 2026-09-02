@@ -626,7 +626,7 @@ pub mod ops {
 
     use microcad_lang_base::BuiltinInfo;
     use microcad_lang_types::{
-        Length, Model, ModelTree, ModelType, Type, function_type,
+        Length, Mat3, Model, ModelTree, ModelType, Type, function_type,
         math::AffineTransform,
         model::{BooleanOp, Element, element::BuiltinWorkpiece},
         parse_args,
@@ -672,6 +672,44 @@ pub mod ops {
 
         let mut tree = ModelTree::new(
             Model::from(AffineTransform::Translation { x, y, z }).with_op_properties(args),
+        );
+
+        tree.append(Rc::unwrap_or_clone(self_));
+
+        Ok(tree)
+    }
+
+    pub struct Rotate {
+        pub matrix: Mat3,
+    }
+
+    impl BuiltinConstruct for Rotate {
+        const ITEM: &'static BuiltinItem = &BuiltinItem::Operation(BuiltinOperation::new(
+            BuiltinInfo::new("__mu::ops::rotate"),
+            || function_type!((self: Type::Model(ModelType::Any), matrix: Type::mat3()) -> Type::Model(ModelType::Any)),
+            rotate,
+        ));
+
+        fn from_model(model: &Model) -> Result<Self, BuiltinError> {
+            construct_from_model!(model, Rotate { matrix })
+        }
+    }
+
+    pub static ROTATE: &BuiltinItem = Rotate::ITEM;
+
+    //#[builtin_op(ops::translate(self: Model, x: Length, y: Length, z: Length) -> Model)]
+    pub fn rotate(
+        args: Arguments,
+        _ctx: &mut BuiltinEvalContext,
+    ) -> Result<ModelTree, BuiltinError> {
+        parse_args!(
+            args,
+            self_: Rc<ModelTree> => "self",
+            matrix: Mat3,
+        );
+
+        let mut tree = ModelTree::new(
+            Model::from(AffineTransform::RotateMatrix { m: matrix }).with_op_properties(args),
         );
 
         tree.append(Rc::unwrap_or_clone(self_));

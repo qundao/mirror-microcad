@@ -41,6 +41,7 @@ impl BuiltinRegistry {
         registry.register(mu::geo2d::CIRCLE);
         registry.register(mu::ops::TRANSLATE);
         registry.register(mu::ops::EXTRUDE);
+        registry.register(mu::ops::ROTATE);
 
         registry
     }
