@@ -46,19 +46,19 @@ impl std::str::FromStr for LanguageVersion {
 }
 
 /// Represents the stability level of a symbol in µcad.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Stability {
     Experimental,
     Stable,
     Deprecated {
-        since: Version,
+        since: Option<Version>,
         note: Option<String>,
         removal_in: Option<Version>,
     },
 }
 
 /// Version annotation for a symbol in µcad.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Hash, PartialEq, Eq, Serialize, Deserialize)]
 pub struct VersionAnnotation {
     /// The version when the symbol was introduced to the DSL.
     pub introduced: Option<Version>,
@@ -69,7 +69,7 @@ pub struct VersionAnnotation {
 
 impl VersionAnnotation {
     /// Helper for stable/core symbols without a specific version lock
-    pub const STABLE_CORE: Self = Self {
+    pub const STABLE: Self = Self {
         introduced: None,
         stability: Stability::Stable,
     };
@@ -85,8 +85,17 @@ impl VersionAnnotation {
     /// Checks if the symbol is deprecated at a given target DSL version.
     pub fn is_deprecated_at(&self, target_version: &Version) -> bool {
         match &self.stability {
-            Stability::Deprecated { since, .. } => target_version >= since,
+            Stability::Deprecated {
+                since: Some(since), ..
+            } => target_version >= since,
+            Stability::Deprecated { since: None, .. } => true,
             _ => false,
         }
+    }
+}
+
+impl Default for VersionAnnotation {
+    fn default() -> Self {
+        Self::STABLE
     }
 }
