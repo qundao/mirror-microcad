@@ -3,7 +3,16 @@
 [![Crates.io](https://img.shields.io/crates/v/microcad-lang-resolve.svg)](https://crates.io/crates/microcad-lang-resolve)
 [![Documentation](https://docs.rs/microcad-lang-resolve/badge.svg)](https://docs.rs/microcad-lang-resolve/)
 
-This crates contains the implementation for resolving intermediate representations into symbols.
+This crate contains the implementation for resolving intermediate representations into library symbols.
+
+This crate provides the µcad library API which provides data structures for accessing and calling workbenches and functions.
+
+A library consists of:
+
+* Symbols represented as a resolved symbol tree (RST).
+* A manifest file `mu.toml` containing metadata, a list of dependencies to other libraries.
+* Examples
+* Documentation as markdown
 
 ## ❤️ Support the project
 

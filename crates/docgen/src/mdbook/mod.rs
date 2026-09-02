@@ -9,7 +9,7 @@ mod summary;
 use std::{error::Error, io::Write};
 
 use microcad_lang_markdown::WriteToFile;
-use microcad_package::{SymbolDef, SymbolNodeExt, SymbolNodeRef};
+use microcad_lang_resolve::{SymbolDef, SymbolNodeExt, SymbolNodeRef};
 
 use crate::{DocGen, md::ToMd};
 pub use summary::{Summary, SummaryEntry};

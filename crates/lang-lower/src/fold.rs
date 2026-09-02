@@ -67,11 +67,8 @@ impl<'a, 'source> Fold<'a, 'source> {
     }
 
     fn expr<Expr: ir::ExprSpec>(expr: &mut Expr, value: Option<Value>) {
-        match value {
-            Some(value) => {
-                *expr = Expr::from(value);
-            }
-            None => {}
+        if let Some(value) = value {
+            *expr = Expr::from(value);
         }
     }
 }

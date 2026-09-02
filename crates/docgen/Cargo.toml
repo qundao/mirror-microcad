@@ -26,7 +26,7 @@ clap = { version = "4", features = ["derive"], optional = true }
 
 microcad-builtin = { workspace = true }
 microcad-lang-markdown = { workspace = true }
-microcad-package = { workspace = true }
+microcad-lang-resolve = { workspace = true }
 
 [[bin]]
 name = "microcad-docgen-builtin"

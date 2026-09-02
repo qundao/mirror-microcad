@@ -4,7 +4,7 @@
 //! Microcad micro markdown parser and writer
 
 use microcad_lang_markdown::{Block, Markdown, Section};
-use microcad_package::{SymbolDef, SymbolNodeExt, SymbolNodeRef, symbol};
+use microcad_lang_resolve::{SymbolDef, SymbolNodeExt, SymbolNodeRef, symbol};
 
 /// Helper function to parse markdown from a string, but any occurring parse error will lead to a panic.
 ///
@@ -56,7 +56,7 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
             }
         }
 
-        use microcad_package::symbol::WorkbenchKind;
+        use microcad_lang_resolve::symbol::WorkbenchKind;
         fn symbol_list<'a, P>(symbol: SymbolNodeRef<'a>, md: &mut Markdown, heading: &str, p: P)
         where
             P: FnMut(&SymbolNodeRef<'a>) -> bool,

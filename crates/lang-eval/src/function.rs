@@ -5,8 +5,8 @@
 
 use microcad_builtin::BuiltinItem;
 use microcad_lang_base::{SrcRef, SrcReferrer, ToCompactString};
+use microcad_lang_resolve::symbol;
 use microcad_lang_types::{ArgumentValue, ArgumentValueList, Value};
-use microcad_package::symbol;
 
 use crate::{
     CallTrait, Eval, EvalContext, EvalError, EvalResult,

@@ -40,7 +40,7 @@ pub enum ResolveError {
     NoSourceWithHash(HashId),
 }
 
-pub type ResolveResult<T> = Result<T, ResolveError>;
+pub type ResolveResult<T> = Result<T, Box<ResolveError>>;
 
 impl SrcReferrer for ResolveError {
     fn src_ref(&self) -> SrcRef {
@@ -51,5 +51,17 @@ impl SrcReferrer for ResolveError {
             } => *specified_src_ref,
             _ => SrcRef::none(),
         }
+    }
+}
+
+impl From<std::io::Error> for Box<ResolveError> {
+    fn from(value: std::io::Error) -> Self {
+        Box::new(value.into())
+    }
+}
+
+impl From<LocateError> for Box<ResolveError> {
+    fn from(value: LocateError) -> Self {
+        Box::new(value.into())
     }
 }

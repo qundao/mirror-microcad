@@ -16,3 +16,12 @@ pub use source_unit::SourceUnit;
 pub use error::{ResolveError, ResolveResult};
 
 pub use resolve::{ResolveContext, resolve};
+
+pub mod library;
+pub mod symbol;
+
+pub use library::{Manifest, ManifestError};
+
+pub use symbol::{
+    SymbolDef, SymbolId, SymbolNode, SymbolNodeExt, SymbolNodeMut, SymbolNodeRef, SymbolTree,
+};

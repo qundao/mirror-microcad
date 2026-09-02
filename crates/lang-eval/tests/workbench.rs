@@ -6,26 +6,22 @@
 use microcad_builtin::__mu;
 use microcad_lang_base::{DisplayWithCtx, SrcRef};
 use microcad_lang_eval::{CallTrait, Eval, EvalContext};
-use microcad_lang_types::{
-    ArgumentValue, ArgumentValueList, Length, ModelTree, Type, Value, argument_value, list, tuple,
-};
-use microcad_package::{
+use microcad_lang_resolve::{
     SymbolId,
     symbol::{
-        self, ConstantValue, Parameter, Path, SourceStatement, WorkbenchExpression,
-        WorkbenchStatement, constant, workbench,
+        self, ConstantExpression, ConstantValue, ExprSpec, Parameter, Path, SourceStatement,
+        WorkbenchExpression, WorkbenchStatement, constant, workbench,
     },
+};
+
+use microcad_builtin::BuiltinId;
+
+use microcad_lang_types::{
+    ArgumentValue, ArgumentValueList, Length, ModelTree, Type, Value, argument_value, list, tuple,
 };
 
 /// Expressions used for testing
 pub mod helper {
-    use microcad_builtin::BuiltinId;
-    use microcad_lang_types::Integer;
-    use microcad_package::symbol::{
-        ConstantExpression, ExprSpec, SourceStatement, WorkbenchExpression, WorkbenchStatement,
-        workbench::ArgumentList,
-    };
-
     use super::*;
 
     /// length literal expression: `4.0mm`

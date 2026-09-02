@@ -25,6 +25,7 @@ use microcad_lang_base::{CompilationResult, Diagnostics};
 pub use resolver::Resolver;
 
 use crate::error::ResolveError;
+use crate::symbol;
 
 /// Resolve Context
 pub struct ResolveContext {
@@ -36,7 +37,7 @@ pub struct ResolveContext {
 ///
 /// The workspace can be resolved in two modes:
 /// - `Lib`: We resolve the workspace as a library by loading the `lib.mu` file, if it exists.
-///          If it does not exist, we load every file in the workspace root directory.
+///   If it does not exist, we load every file in the workspace root directory.
 /// - `Source`: We resolve a single source file within the workspace and only load its dependencies.
 ///
 /// Optionally, the workspace can contain a `mu.toml` manifest file.
@@ -125,7 +126,7 @@ impl ResolveContext {
     }
 }
 
-pub fn resolve(_resolver: Box<dyn Resolver>) -> CompilationResult<microcad_package::SymbolTree> {
+pub fn resolve(_resolver: Box<dyn Resolver>) -> CompilationResult<symbol::SymbolTree> {
     /*
     let mut context = ResolveContext::new(resolver);
 

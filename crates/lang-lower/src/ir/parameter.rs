@@ -3,7 +3,7 @@
 
 //! µcad parameter syntax elements
 
-use crate::ir::{self, ConstantExpression};
+use crate::ir;
 
 use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_types::Ty;

@@ -21,7 +21,6 @@ members = [
     "crates/lang-types",
     "crates/lsp",
     "crates/macros",
-    "crates/package",
     "crates/render",
     "crates/std",
     "crates/viewer",
@@ -53,7 +52,6 @@ default-members = [
     "crates/lang-resolve",
     "crates/lang-types",
     "crates/macros",
-    "crates/package",
     "crates/render",
     "crates/std",
 
@@ -96,7 +94,6 @@ microcad-lang-resolve = { path = "crates/lang-resolve", version = "0.6.0" }
 microcad-lang-types = { path = "crates/lang-types", version = "0.6.0" }
 microcad-lsp = { path = "crates/lsp", version = "0.6.0" }
 microcad-macros = { path = "crates/macros", version = "0.6.0" }
-microcad-package = { path = "crates/package", version = "0.6.0" }
 microcad-render = { path = "crates/render", version = "0.6.0" }
 microcad-std = { path = "crates/std", version = "0.6.0" }
 microcad-viewer-ipc = { path = "crates/viewer-ipc", version = "0.6.0" }

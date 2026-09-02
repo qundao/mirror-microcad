@@ -21,12 +21,12 @@ postcard = { version = "1.1", features = ["alloc"] }
 semver = { version = "1.0", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
 thiserror = "2.0"
+toml = { version = "1.1.4", optional = true }
 
 microcad-lang-base = { workspace = true }
 microcad-macros = { workspace = true }
 microcad-lang-lower = { workspace = true }
 microcad-lang-types = { workspace = true }
-microcad-package = { workspace = true }
 
 # Dependent on parse feature
 microcad-lang-parse = { workspace = true, optional = true }
@@ -39,7 +39,8 @@ test-that = "0.5"
 
 [features]
 default = [
-    #"io",    # This feature is supposed to be removed once we have a file handling abstraction.
+    "io",    # This feature is supposed to be removed once we have a file handling abstraction.
     "parse", # This feature is supposed to removed once we have an abstraction in `microcad-driver`
 ]
 parse = ["dep:microcad-lang-parse"]
+io = ["dep:toml"]

@@ -5694,7 +5694,7 @@ dependencies = [
  "log",
  "microcad-builtin",
  "microcad-lang-markdown",
- "microcad-package",
+ "microcad-lang-resolve",
  "miette",
  "serde",
  "thiserror 2.0.20",
@@ -5818,9 +5818,9 @@ dependencies = [
  "log",
  "microcad-builtin",
  "microcad-lang-base",
+ "microcad-lang-resolve",
  "microcad-lang-types",
  "microcad-macros",
- "microcad-package",
  "miette",
  "pretty_assertions",
  "rustc-hash 2.1.3",
@@ -5903,7 +5903,6 @@ dependencies = [
  "microcad-lang-parse",
  "microcad-lang-types",
  "microcad-macros",
- "microcad-package",
  "miette",
  "postcard",
  "semver",
@@ -5911,6 +5910,7 @@ dependencies = [
  "tempfile",
  "test-that",
  "thiserror 2.0.20",
+ "toml",
 ]
 
 [[package]]
@@ -5966,27 +5966,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 3.0.4",
-]
-
-[[package]]
-name = "microcad-package"
-version = "0.6.0"
-dependencies = [
- "custom_debug",
- "derive_more",
- "insta",
- "log",
- "microcad-lang-base",
- "microcad-lang-lower",
- "microcad-lang-types",
- "microcad-macros",
- "miette",
- "postcard",
- "semver",
- "serde",
- "test-that",
- "thiserror 2.0.20",
- "toml",
 ]
 
 [[package]]

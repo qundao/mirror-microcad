@@ -6,10 +6,10 @@
 use microcad_builtin::__mu;
 use microcad_lang_base::{Identifier, SrcRef, SymbolId, ToCompactString};
 use microcad_lang_eval::{CallTrait, EvalContext};
-use microcad_lang_types::{ArgumentValueList, Type, Value, argument_value};
-use microcad_package::symbol::{
+use microcad_lang_resolve::symbol::{
     ConstantValue, Function, FunctionExpression, FunctionStatement, Parameter, Path, function,
 };
+use microcad_lang_types::{ArgumentValueList, Type, Value, argument_value};
 
 fn statements<T>(a: impl Iterator<Item = T>) -> Box<[FunctionStatement]>
 where
@@ -28,7 +28,7 @@ fn scope<T>(a: impl Iterator<Item = T>) -> function::Scope
 where
     T: Into<FunctionStatement>,
 {
-    microcad_package::symbol::function::Scope {
+    function::Scope {
         statements: statements(a),
         src_ref: SrcRef::none(),
     }

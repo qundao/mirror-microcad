@@ -16,7 +16,7 @@ pub use mdbook::MdBook;
 /// builtin documentation generator.
 pub use builtin::BuiltinMdbook;
 
-use microcad_package::SymbolNodeRef;
+use microcad_lang_resolve::SymbolNodeRef;
 use std::error::Error;
 
 /// Documentation generator for a symbol.

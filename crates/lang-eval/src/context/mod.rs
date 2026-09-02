@@ -3,11 +3,11 @@
 
 mod stack;
 
-use microcad_package::symbol;
 pub use stack::*;
 
 use microcad_builtin::BuiltinRegistry;
 use microcad_lang_base::{LookUpName, Name};
+use microcad_lang_resolve::symbol;
 use microcad_lang_types::{Value, model::ModelTreeBuilderMut};
 
 use crate::{EvalError, EvalResult};

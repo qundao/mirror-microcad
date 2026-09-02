@@ -22,7 +22,7 @@ thiserror = "2.0.17"
 microcad-lang-base = { workspace = true }
 microcad-macros = { workspace = true }
 microcad-lang-types = { workspace = true }
-microcad-package = { workspace = true }
+microcad-lang-resolve = { workspace = true }
 microcad-builtin = { workspace = true }
 
 [dev-dependencies]

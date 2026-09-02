@@ -4,10 +4,10 @@
 //! Argument match trait
 
 use microcad_lang_base::{Identifier, IdentifierList};
-use microcad_lang_types::{ArgumentValueList, Arguments, CallSignature, Tuple, Type, Value};
-use microcad_package::symbol::{
+use microcad_lang_resolve::symbol::{
     Function, ParameterList, function::FunctionSignature, workbench::Init,
 };
+use microcad_lang_types::{ArgumentValueList, Arguments, CallSignature, Tuple, Type, Value};
 use miette::Diagnostic;
 use thiserror::Error;
 
@@ -105,12 +105,9 @@ pub trait ArgumentMatch {
         });
 
         if !unexpected_arguments.is_empty() {
-            return Err(
-                ArgumentMatchError::UnexpectedArguments(IdentifierList::from_iter(
-                    unexpected_arguments,
-                ))
-                .into(),
-            );
+            return Err(ArgumentMatchError::UnexpectedArguments(
+                IdentifierList::from_iter(unexpected_arguments),
+            ));
         }
 
         // 4. Try to find positional arguments by type
@@ -137,10 +134,9 @@ pub trait ArgumentMatch {
             .collect();
 
         if !missing_arguments.is_empty() {
-            return Err(
-                ArgumentMatchError::MissingArguments(IdentifierList::from_iter(missing_arguments))
-                    .into(),
-            );
+            return Err(ArgumentMatchError::MissingArguments(
+                IdentifierList::from_iter(missing_arguments),
+            ));
         }
 
         Ok(Arguments::from_iter(matched_args.into_iter().map(
@@ -220,7 +216,7 @@ pub trait ArgumentMatch {
 impl ArgumentMatch for ParameterList {
     /// Return default values for this parameters, assuming all constant expression have been folded into values.
     fn default_values(&self) -> Tuple {
-        use microcad_package::symbol::ExprSpec;
+        use microcad_lang_resolve::symbol::ExprSpec;
         Tuple::from_iter(self.parameters.iter().filter_map(|param| {
             param
                 .default_value

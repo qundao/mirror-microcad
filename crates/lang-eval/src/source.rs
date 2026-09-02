@@ -3,11 +3,11 @@
 
 //! Source evaluation
 
+use microcad_lang_resolve::symbol;
 use microcad_lang_types::{
     ModelTree, Value,
     model::{ModelTreeBuilderMut, Property, PropertyType},
 };
-use microcad_package::symbol;
 
 use crate::{Eval, EvalContext, EvalResult, context::SourceFrame};
 

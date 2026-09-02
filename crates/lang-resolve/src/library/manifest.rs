@@ -31,14 +31,13 @@ pub enum ManifestError {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Manifest {
-    pub package: PackageSection,
+    pub library: LibrarySection,
     pub dependencies: HashMap<String, Dependency>,
-    pub lib: Option<LibSection>,
 }
 
 /// `package` descriptor.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PackageSection {
+pub struct LibrarySection {
     /// Mandatory package name.
     pub name: String,
     /// A short description of the library.
@@ -51,11 +50,6 @@ pub struct PackageSection {
     pub documentation: Option<Url>,
     /// License
     pub license: Option<String>,
-}
-
-/// Library `lib` descriptor.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct LibSection {
     /// Do not load the standard library by default.
     pub no_std: Option<bool>,
 }

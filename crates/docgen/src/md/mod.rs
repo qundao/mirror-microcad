@@ -9,7 +9,7 @@ use std::error::Error;
 
 use crate::DocGen;
 use microcad_lang_markdown::WriteToFile;
-use microcad_package::{SymbolDef, SymbolNodeExt, SymbolNodeRef};
+use microcad_lang_resolve::{SymbolDef, SymbolNodeExt, SymbolNodeRef};
 pub(crate) use to_md::ToMd;
 
 /// Markdown generator that generates a markdown documentation file for each source file.

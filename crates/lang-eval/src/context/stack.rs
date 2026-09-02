@@ -3,6 +3,7 @@
 
 use derive_more::From;
 use microcad_lang_base::{HashMap, Name, ToCompactString};
+use microcad_lang_resolve::symbol;
 use microcad_lang_types::{
     Arguments, Value,
     model::{
@@ -147,11 +148,11 @@ impl Lookup for WorkbenchInitFrame {
 
 #[derive(Debug)]
 pub struct CallFrame {
-    pub path: microcad_package::symbol::Path,
+    pub path: symbol::Path,
 }
 
 impl Lookup for CallFrame {
-    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
+    fn look_up_local(&self, _name: impl AsRef<str>) -> Option<&Value> {
         None
     }
 

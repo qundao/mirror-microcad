@@ -10,7 +10,7 @@ use crate::{
 
 use microcad_builtin::{BuiltinEvalContext, BuiltinItem};
 use microcad_lang_base::{DisplayWithCtx, SrcReferrer, element::Visibility};
-use microcad_package::{SymbolId, symbol};
+use microcad_lang_resolve::{SymbolId, symbol};
 
 use microcad_lang_types::{
     ArgumentValue, ArgumentValueList, ModelTree, Value,
