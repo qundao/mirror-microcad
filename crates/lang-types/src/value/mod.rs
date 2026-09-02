@@ -18,6 +18,7 @@ mod value_list;
 
 use std::rc::Rc;
 
+use fixed::traits::ToFixed;
 pub use list::*;
 pub use matrix::*;
 use microcad_lang_base::{CompactString, ToCompactString};
@@ -28,7 +29,7 @@ pub use value_error::*;
 pub use value_list::*;
 
 use crate::{
-    Angle, Color, Integer, Length, Model, ModelTree, QuantityType, Scalar, Type, Vec2, Vec3,
+    Angle, Color, Integer, Length, Model, ModelTree, QuantityType, Scalar, Type, Unit, Vec2, Vec3,
 };
 
 use derive_more::{Display, From};
@@ -59,6 +60,29 @@ pub enum Value {
     Matrix(Rc<Matrix>),
     /// A model tree
     Model(Rc<ModelTree>),
+}
+
+/// Builder methods, mainly for testing
+impl Value {
+    /// Create angle from scalar in  degrees
+    pub fn deg(angle: crate::math::ScalarF) -> Self {
+        Quantity::new(angle.to_radians().to_fixed(), QuantityType::Angle)
+            .with_unit(Unit::Deg)
+            .into()
+    }
+
+    /// Create a lange from scalar in mm
+    pub fn mm(l: crate::math::ScalarF) -> Self {
+        Quantity::new(l.to_fixed(), QuantityType::Length)
+            .with_unit(Unit::Millimeter)
+            .into()
+    }
+
+    pub fn list<T: Into<Value>>(iter: impl IntoIterator<Item = T>) -> Self {
+        Self::List(Rc::new(List::from_values(
+            iter.into_iter().map(|t| t.into()).collect(),
+        )))
+    }
 }
 
 impl Value {
@@ -202,7 +226,7 @@ impl TryFrom<Value> for Angle {
         match value {
             Value::Quantity(Quantity {
                 value,
-                quantity_type: QuantityType::Length,
+                quantity_type: QuantityType::Angle,
                 ..
             }) => Ok(cgmath::Rad(value)),
             _ => Err(ValueError::CannotConvert(value.to_string(), "Angle".into())),
@@ -220,6 +244,20 @@ impl TryFrom<Value> for Rc<ModelTree> {
                 value.to_string(),
                 "ModelTree".into(),
             )),
+        }
+    }
+}
+
+impl TryFrom<Value> for Mat3 {
+    type Error = ValueError;
+
+    fn try_from(value: Value) -> Result<Self, Self::Error> {
+        if let Value::Matrix(m) = &value
+            && let Matrix::Matrix3(matrix3) = m.as_ref()
+        {
+            Ok(*matrix3)
+        } else {
+            Err(ValueError::CannotConvert(value.to_string(), "Mat3".into()))
         }
     }
 }
