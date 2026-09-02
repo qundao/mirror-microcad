@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::desugar::{extract_statements, for_each_statement};
+use crate::ir::source::ExportAttribute;
 use crate::{Desugar, LowerContext, LowerError, LowerResult, ir};
 
-use microcad_lang_base::{PushDiag, SpanToSrcRef};
+use microcad_lang_base::{PushDiag, SingleIdentifier, SpanToSrcRef};
 use microcad_lang_parse::ast;
 
 /// Helper function to get outer attributes
@@ -247,5 +248,27 @@ impl Desugar<ast::StatementList> for ir::Attributes {
             commands: Box::<[ir::Command]>::desugar(statements, context)?,
             tags: Box::<[ir::Tag]>::desugar(statements, context)?,
         })
+    }
+}
+
+impl ir::Attributes {
+    pub(crate) fn fetch_exports(&self) -> LowerResult<Box<[ExportAttribute]>> {
+        let exports: Vec<_> = self
+            .commands
+            .iter()
+            .filter_map(|command| match command.path.single_identifier() {
+                Some(ident) => match ident.as_str() {
+                    "export" => command
+                        .argument_list
+                        .extract_named_arg_expr("file")
+                        .or(command.argument_list.extract_first_unnamed_arg_expr())
+                        .map(|expr| ExportAttribute { file: expr.clone() }),
+                    _ => None,
+                },
+                _ => None,
+            })
+            .collect();
+
+        Ok(exports.into_boxed_slice())
     }
 }

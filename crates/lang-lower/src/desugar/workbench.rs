@@ -3,7 +3,7 @@
 
 use crate::{
     CastInto, Desugar, LowerContext, LowerError, LowerResult,
-    desugar::{attribute::outer_with_doc, extract_statements, for_each_statement},
+    desugar::{extract_statements, for_each_statement},
     ir,
 };
 
@@ -158,7 +158,7 @@ impl Desugar<ast::Body> for ir::Group {
 
         Ok(Self {
             src_ref: context.span_to_src_ref(&node.span),
-            attr: ir::Attributes::desugar(statements, context)?,
+            attr: ir::ModelAttributes::desugar(statements, context)?,
             statements: Box::desugar(statements, context)?,
         })
     }
@@ -329,16 +329,28 @@ impl Desugar<ast::PropertyAssignment> for ir::WorkbenchStatement {
     }
 }
 
-impl Desugar<ast::Attributes> for ir::ModelAttributes {
-    fn desugar(node: &ast::Attributes, context: &mut LowerContext) -> LowerResult<Self> {
-        let attr = ir::Attributes::desugar(node, context)?;
-
+impl Desugar<ir::Attributes> for ir::ModelAttributes {
+    fn desugar(attr: &ir::Attributes, _context: &mut LowerContext) -> LowerResult<Self> {
         Ok(Self {
             color: attr.fetch_kv_expr("color"),
             resolution: attr.fetch_kv_expr("resolution"),
             name: attr.fetch_kv_expr("name"),
             layer: attr.fetch_kv_expr("layer"),
         })
+    }
+}
+
+impl Desugar<ast::StatementList> for ir::ModelAttributes {
+    fn desugar(node: &ast::StatementList, context: &mut LowerContext) -> LowerResult<Self> {
+        let attr = ir::Attributes::desugar(node, context)?;
+        Self::desugar(&attr, context)
+    }
+}
+
+impl Desugar<ast::Attributes> for ir::ModelAttributes {
+    fn desugar(node: &ast::Attributes, context: &mut LowerContext) -> LowerResult<Self> {
+        let attr = ir::Attributes::desugar(node, context)?;
+        Self::desugar(&attr, context)
     }
 }
 

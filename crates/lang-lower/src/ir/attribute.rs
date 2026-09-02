@@ -63,6 +63,9 @@ impl SrcReferrer for Tag {
     }
 }
 
+/// Crate internal struct for attributes.
+///
+/// These attributes will be desugared into item-specific attributes.
 #[derive(Debug, Default, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Attributes {
     /// Documentation

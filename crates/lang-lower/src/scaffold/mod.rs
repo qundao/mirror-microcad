@@ -4,9 +4,9 @@
 //! Scaffolding builds the tree from desugared IR items.
 
 use microcad_lang_base::{
-    LanguageVersion, PushDiag, SingleIdentifier, SrcReferrer, Stability, Version, VersionAnnotation,
+    PushDiag, SingleIdentifier, SrcReferrer, Stability, Version, VersionAnnotation,
 };
-use microcad_lang_types::{Value, ValueError};
+use microcad_lang_types::Value;
 
 use crate::{LowerContext, LowerError, ir};
 

@@ -123,7 +123,7 @@ pub trait WorkbenchExpressionVisitor: ConstantVisitor {
     }
 
     fn visit_workbench_group(&mut self, group: &ir::workbench::Group) {
-        self.visit_attr(&group.attr);
+        self.visit_model_attributes(&group.attr);
         group
             .statements
             .iter()

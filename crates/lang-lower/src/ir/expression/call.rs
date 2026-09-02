@@ -161,6 +161,40 @@ impl<Expr> ArgumentList<Expr> {
 }
 
 impl<Expr: ir::ExprSpec> ArgumentList<Expr> {
+    /// Extract first argument value of unnamed arguments.
+    pub fn extract_first_unnamed_arg_expr(&self) -> Option<&Expr> {
+        for arg in self.args.iter() {
+            match arg {
+                ir::Argument::Unnamed(expr) => {
+                    return Some(expr);
+                }
+                _ => {}
+            }
+        }
+
+        None
+    }
+
+    /// Extract argument value from named arguments.
+    pub fn extract_named_arg_expr(&self, name: impl AsRef<str>) -> Option<&Expr> {
+        let arg_name = name.as_ref();
+
+        for arg in self.args.iter() {
+            match arg {
+                ir::Argument::Named {
+                    name,
+                    expr,
+                    src_ref,
+                } if name.to_string().as_str() == arg_name => {
+                    return Some(expr);
+                }
+                _ => {}
+            }
+        }
+
+        None
+    }
+
     /// Extract argument value from named arguments.
     pub fn extract_arg_value(&self, name: impl AsRef<str>) -> Option<&Value> {
         let arg_name = name.as_ref();

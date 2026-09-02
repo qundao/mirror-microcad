@@ -29,7 +29,7 @@ pub use parameter::*;
 pub use path::{Path, UnresolvedPath};
 pub use workbench::*;
 
-pub use source::{Source, SourceStatement};
+pub use source::{ExportAttribute, Source, SourceStatement};
 
 pub use microcad_lang_base::{Identifier, element::Visibility};
 pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Ty, Unit};

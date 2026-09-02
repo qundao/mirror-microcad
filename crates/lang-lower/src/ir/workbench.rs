@@ -68,7 +68,7 @@ impl WorkbenchStatement {
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
 pub struct Group {
     pub src_ref: SrcRef,
-    pub attr: ir::Attributes,
+    pub attr: ModelAttributes,
     pub statements: Box<[WorkbenchStatement]>,
 }
 

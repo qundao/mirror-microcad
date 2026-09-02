@@ -117,7 +117,7 @@ pub trait WorkbenchExpressionVisitorMut: ConstantVisitorMut {
     }
 
     fn visit_workbench_group(&mut self, group: &mut ir::workbench::Group) {
-        self.visit_attr(&group.attr);
+        self.visit_model_attributes(&mut group.attr);
         group
             .statements
             .iter_mut()
