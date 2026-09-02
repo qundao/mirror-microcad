@@ -3,7 +3,7 @@
 
 //! µcad parameter syntax elements
 
-use crate::ir;
+use crate::ir::{self, ConstantExpression};
 
 use microcad_lang_base::{Identifier, SrcRef};
 use microcad_lang_types::Ty;
@@ -42,6 +42,11 @@ impl Parameter {
             default_value: None,
             src_ref: SrcRef::none(),
         }
+    }
+
+    pub fn with_default(mut self, expr: impl Into<ir::ConstantExpression>) -> Self {
+        self.default_value = Some(expr.into());
+        self
     }
 }
 

@@ -128,24 +128,31 @@ pub struct Init {
 
 /// Builder methods for testing
 impl Init {
-    /// Construct new initializer
-    pub fn default_init(parameters: impl Into<ir::ParameterList>) -> Self {
-        let parameters = parameters.into();
+    pub fn new(parameters: impl Into<ir::ParameterList>) -> Self {
         Self {
-            parameters: parameters.clone(),
+            parameters: parameters.into(),
             statements: Default::default(),
             keyword_ref: Default::default(),
             attr: Default::default(),
             src_ref: Default::default(),
         }
-        .with_statements(parameters.iter().map(|parameter| {
-            ir::InitStatement::new(
-                parameter.id.clone(),
-                ir::Path::Resolved(microcad_lang_base::SymbolId::Local(
-                    parameter.id.id().clone(),
-                )),
-            )
-        }))
+    }
+
+    /// Construct new initializer
+    pub fn default_init(parameters: impl Into<ir::ParameterList>) -> Self {
+        let parameters = parameters.into();
+        let statements: Vec<_> = parameters
+            .iter()
+            .map(|parameter| {
+                ir::InitStatement::new(
+                    parameter.id.clone(),
+                    ir::Path::Resolved(microcad_lang_base::SymbolId::Local(
+                        parameter.id.id().clone(),
+                    )),
+                )
+            })
+            .collect();
+        Self::new(parameters).with_statements(statements)
     }
 
     pub fn find_statement(&self, name: impl AsRef<str>) -> Option<&InitStatement> {
@@ -175,6 +182,14 @@ pub struct Marker {
 }
 
 impl Marker {
+    /// Create a new input marker
+    pub fn input() -> Self {
+        Self {
+            id: "input".into(),
+            src_ref: SrcRef::none(),
+        }
+    }
+
     /// Returns true if the marker is an input placeholder
     pub fn is_input_placeholder(&self) -> bool {
         &self.id == "input"
@@ -245,6 +260,12 @@ impl CastInto<ir::WorkbenchExpression> for ir::ConstantExpression {
     }
 }
 
+impl From<ir::ConstantExpression> for WorkbenchExpression {
+    fn from(value: ir::ConstantExpression) -> Self {
+        value.cast_into()
+    }
+}
+
 /// A workbench signature consists of the workbench kind, a parameter list and statements
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct WorkbenchSignature {
@@ -266,6 +287,18 @@ impl WorkbenchSignature {
             inits: vec![Init::default_init(parameters.clone())].into_boxed_slice(), // Default init
             parameters,
         }
+    }
+
+    pub fn sketch(parameters: impl Into<ir::ParameterList>) -> Self {
+        Self::new(WorkbenchKind::Sketch, parameters)
+    }
+
+    pub fn part(parameters: impl Into<ir::ParameterList>) -> Self {
+        Self::new(WorkbenchKind::Part, parameters)
+    }
+
+    pub fn op(parameters: impl Into<ir::ParameterList>) -> Self {
+        Self::new(WorkbenchKind::Op, parameters)
     }
 
     pub fn with_inits(mut self, inits: impl IntoIterator<Item = ir::Init>) -> Self {
