@@ -3,8 +3,6 @@
 
 //! Element of a [`Model`].
 
-use std::fmt::Pointer;
-
 use derive_more::{Display, From};
 use microcad_lang_base::{BuiltinId, DisplayWithCtx, LookUpName, SrcRef, element::WorkbenchKind};
 use serde::{Deserialize, Serialize};

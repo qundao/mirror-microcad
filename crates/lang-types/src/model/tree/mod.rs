@@ -7,7 +7,7 @@ mod builder;
 mod node;
 mod ops;
 
-use microcad_lang_base::{DisplayWithContext, DisplayWithCtx, LookUpName, TreeState};
+use microcad_lang_base::{DisplayWithCtx, LookUpName};
 pub use node::{ModelNodeId, Node, NodeExt, NodeMut, NodeRef};
 
 pub use builder::{BuildModelTreeError, ModelTreeBuilder, ModelTreeBuilderMut};
@@ -154,7 +154,7 @@ impl ModelTree {
         let properties = self.get_properties_recursive(id);
         match properties.len() {
             0 => Value::None,
-            1 => Value::from(properties.first().unwrap().value.clone()),
+            1 => properties.first().unwrap().value.clone(),
             _ => List::from_iter(
                 properties
                     .into_iter()

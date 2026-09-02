@@ -162,7 +162,7 @@ impl<Ctx: LookUpName> DisplayWithCtx<Ctx> for Model {
 
 impl std::fmt::Display for Model {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.fmt_with_ctx(f, &mut microcad_lang_base::DefaultContext)
+        self.fmt_with_ctx(f, &microcad_lang_base::DefaultContext)
     }
 }
 
