@@ -3,7 +3,8 @@
 
 //! Item desugared from AST. These items will be scaffolded into the IR.
 //!
-//! The attributes and meta will be further processed during the scaffolding step.
+//! All these items are crate-internal, because they further processed during the scaffolding step.
+//! E.g., the attributes and meta will be further processed into item-specific structs.
 
 use microcad_macros::Scaffold;
 use serde::{Deserialize, Serialize};
@@ -13,7 +14,7 @@ use crate::ir;
 /// `use std::geo2d::Circle as C` => (path = "std::geo2d::Circle", id = "C")
 /// `use std::geo2d::Circle` => (path = "std::geo2d::Circle", id = "Circle")
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Alias {
+pub(crate) struct Alias {
     pub meta: ir::Meta,
     pub attr: ir::Attributes,
     pub path: ir::Path,
@@ -21,7 +22,7 @@ pub struct Alias {
 
 /// `use std::geo2d::*`
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Wildcard {
+pub(crate) struct Wildcard {
     pub meta: ir::Meta,
     pub attr: ir::Attributes,
     pub path: ir::Path,
@@ -29,14 +30,14 @@ pub struct Wildcard {
 
 /// Aliases lowered from `use` statements.
 #[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize, Scaffold)]
-pub struct Aliases {
+pub(crate) struct Aliases {
     pub explicit_aliases: Box<[Alias]>,
     pub wildcards: Box<[Wildcard]>,
 }
 
 /// A constant definition: `const FOO: Length = 32mm`.
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Constant {
+pub(crate) struct Constant {
     pub meta: ir::Meta,
     pub attr: ir::Attributes,
     pub ty: ir::Type,
@@ -44,7 +45,7 @@ pub struct Constant {
 }
 
 #[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize, Scaffold)]
-pub struct FunctionItems {
+pub(crate) struct FunctionItems {
     /// use ...
     pub aliases: Aliases,
     /// const FOO =
@@ -52,7 +53,7 @@ pub struct FunctionItems {
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Function {
+pub(crate) struct Function {
     pub meta: ir::Meta,
     pub attr: ir::Attributes,
     pub items: FunctionItems,
@@ -65,14 +66,14 @@ pub struct Function {
 
 /// Inline module definition.
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct InlineModule {
+pub(crate) struct InlineModule {
     pub meta: ir::Meta,
     pub attr: ir::Attributes,
     pub items: InlineModuleItems,
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct FileModule {
+pub(crate) struct FileModule {
     pub meta: ir::Meta,
     pub attr: ir::Attributes,
 }
@@ -89,7 +90,7 @@ pub struct InlineModuleItems {
 
 /// Workbench items that will be resolved into Symbols
 #[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize, Scaffold)]
-pub struct WorkbenchItems {
+pub(crate) struct WorkbenchItems {
     /// `use`
     pub aliases: Aliases,
     /// `const`
@@ -100,7 +101,7 @@ pub struct WorkbenchItems {
 
 /// Workbench definition, e.g `sketch`, `part` or `op`.
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Workbench {
+pub(crate) struct Workbench {
     pub meta: ir::Meta,
     /// Attributes
     pub attr: ir::Attributes,
@@ -118,7 +119,7 @@ pub struct Workbench {
 
 /// Items of a source file that will become symbols.
 #[derive(Debug, Clone, Default, Hash, PartialEq, Serialize, Deserialize, Scaffold)]
-pub struct SourceItems {
+pub(crate) struct SourceItems {
     /// List of file modules: `mod foo;`.
     pub file_modules: Box<[FileModule]>,
     /// Inline modules: `mod bar {...}`.
@@ -135,7 +136,7 @@ pub struct SourceItems {
 
 /// A desugared source file.
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Source {
+pub(crate) struct Source {
     /// Meta data.
     pub meta: ir::Meta,
     /// Attributes

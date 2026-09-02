@@ -13,6 +13,9 @@ mod source;
 mod r#type;
 mod workbench;
 
+#[cfg(test)]
+mod tests;
+
 use microcad_builtin::BuiltinError;
 use microcad_lang_base::{Identifiable, PushDiag, Refer, SpanToSrcRef, Spanned, SrcReferrer};
 use microcad_lang_parse::ast;

@@ -36,8 +36,6 @@ pub trait ConstantVisitor: LeafVisitor {
             .for_each(|param| self.visit_parameter(param));
     }
 
-    fn visit_attr(&mut self, _attr: &ir::Attributes) {}
-
     fn visit_constant_expr(&mut self, expr: &ir::ConstantExpression) {
         match &expr {
             ir::ConstantExpression::Invalid => {}

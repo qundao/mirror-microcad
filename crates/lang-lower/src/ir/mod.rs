@@ -17,7 +17,7 @@ pub mod source;
 pub mod visitor;
 pub mod workbench;
 
-pub mod desugared;
+pub(crate) mod desugared;
 
 pub use assignment::*;
 pub use attribute::*;

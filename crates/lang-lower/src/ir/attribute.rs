@@ -67,7 +67,7 @@ impl SrcReferrer for Tag {
 ///
 /// These attributes will be desugared into item-specific attributes.
 #[derive(Debug, Default, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Attributes {
+pub(crate) struct Attributes {
     /// Documentation
     pub doc: ir::DocBlock,
     /// Key-value expressions: #[color = "red"]
@@ -79,13 +79,6 @@ pub struct Attributes {
 }
 
 impl Attributes {
-    pub fn is_empty(&self) -> bool {
-        self.doc.is_empty()
-            && self.kv_exprs.is_empty()
-            && self.commands.is_empty()
-            && self.tags.is_empty()
-    }
-
     /// Consumes both `self` and `rhs`, returning a merged `Attributes` with appended fields.
     pub fn extend(mut self, rhs: Self) -> Self {
         /// Helper function to combine two `Box<[T]>` without reallocating if one side is empty.
