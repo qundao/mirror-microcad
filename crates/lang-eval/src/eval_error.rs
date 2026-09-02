@@ -4,11 +4,15 @@
 //! Evaluation error
 
 use microcad_builtin::BuiltinError;
-use microcad_lang_base::{Identifier, IdentifierList, Name, SrcRef, element::WorkbenchKind};
+use microcad_lang_base::{
+    Identifier, IdentifierList, Name, SrcRef, SrcReferrer, ToCompactString, element::WorkbenchKind,
+};
 use microcad_lang_types::{Type, ValueError, model::ModelType, ty::TypeList};
 use miette::Diagnostic;
 
 use thiserror::Error;
+
+use crate::{ArgumentMatchError, argument_match};
 
 /// Evaluation error.
 #[derive(Debug, Error, Diagnostic)]
@@ -21,6 +25,13 @@ pub enum EvalError {
     /// Builtin error
     #[error("Builtin error: {0}")]
     BuiltinError(#[from] BuiltinError),
+
+    #[error("Argument match error: {err}")]
+    ArgumentMatch {
+        symbol_name: Name,
+        context_src_ref: SrcRef,
+        err: ArgumentMatchError,
+    },
 
     /// List index out of bounds.
     #[error("List index out of bounds: {index} >= {len}")]
@@ -81,14 +92,6 @@ pub enum EvalError {
     /// Unexpected element within expression.
     #[error("Unexpected {0} {1} within expression")]
     UnexpectedNested(&'static str, Identifier),
-
-    /// Missing arguments
-    #[error("Missing arguments: {0}")]
-    MissingArguments(IdentifierList),
-
-    /// Unexpected arguments
-    #[error("Unexpected arguments: {0}")]
-    UnexpectedArguments(IdentifierList),
 
     /// Arguments match by identifier but have incompatible types
     #[error("Arguments match by identifier but have incompatible types: {0}")]
@@ -241,6 +244,20 @@ pub enum EvalError {
         #[label("This symbol could not be found in any package")]
         src_ref: SrcRef,
     },
+}
+
+impl EvalError {
+    pub fn argument_match(
+        src_ref: impl SrcReferrer,
+        symbol_name: impl AsRef<str>,
+        err: ArgumentMatchError,
+    ) -> Box<Self> {
+        Box::new(Self::ArgumentMatch {
+            symbol_name: symbol_name.as_ref().to_compact_string(),
+            context_src_ref: src_ref.src_ref(),
+            err,
+        })
+    }
 }
 
 impl From<BuiltinError> for Box<EvalError> {

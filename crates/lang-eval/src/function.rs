@@ -109,7 +109,9 @@ impl Eval<FlowSignal> for symbol::function::FunctionCall {
 
                 match context.builtins.get(*builtin_id) {
                     Some(BuiltinItem::Function(f)) => {
-                        let args = f.argument_match(&args)?;
+                        let args = f.argument_match(&args).map_err(|err| {
+                            EvalError::argument_match(self, f.info.item_name(), err)
+                        })?;
 
                         Ok(FlowSignal::Yield(f.call_isolated(args)?))
                     }

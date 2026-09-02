@@ -8,8 +8,29 @@ use microcad_lang_types::{ArgumentValueList, Arguments, CallSignature, Tuple, Ty
 use microcad_package::symbol::{
     Function, ParameterList, function::FunctionSignature, workbench::Init,
 };
+use miette::Diagnostic;
+use thiserror::Error;
 
-use crate::{EvalError, EvalResult};
+#[derive(Error, Debug, Diagnostic)]
+pub enum ArgumentMatchError {
+    /// Multiplicity (variadic expansion) is not supported for variadic call signatures.
+    #[error("Multiplicity `({arguments})` is not allowed for variadic call signatures")]
+    #[diagnostic(help(
+        "Pass arguments explicitly instead of using variadic expansion on multi-matches."
+    ))]
+    MultiMatchNotAllowedForVariadic {
+        /// Name of the symbol or call signature
+        arguments: String,
+    },
+
+    /// Missing arguments
+    #[error("Missing arguments: {0}")]
+    MissingArguments(IdentifierList),
+
+    /// Unexpected arguments
+    #[error("Unexpected arguments: {0}")]
+    UnexpectedArguments(IdentifierList),
+}
 
 pub trait ArgumentMatch {
     fn call_signature(&self) -> CallSignature;
@@ -22,7 +43,10 @@ pub trait ArgumentMatch {
         self.argument_match(arguments).is_ok() // TODO Implement a custom and more performant algorithm here.
     }
 
-    fn argument_match(&self, arguments: &ArgumentValueList) -> EvalResult<Arguments> {
+    fn argument_match(
+        &self,
+        arguments: &ArgumentValueList,
+    ) -> Result<Arguments, ArgumentMatchError> {
         use microcad_lang_types::Ty;
 
         let call_signature = self.call_signature();
@@ -81,10 +105,12 @@ pub trait ArgumentMatch {
         });
 
         if !unexpected_arguments.is_empty() {
-            return Err(EvalError::UnexpectedArguments(IdentifierList::from_iter(
-                unexpected_arguments,
-            ))
-            .into());
+            return Err(
+                ArgumentMatchError::UnexpectedArguments(IdentifierList::from_iter(
+                    unexpected_arguments,
+                ))
+                .into(),
+            );
         }
 
         // 4. Try to find positional arguments by type
@@ -112,7 +138,8 @@ pub trait ArgumentMatch {
 
         if !missing_arguments.is_empty() {
             return Err(
-                EvalError::MissingArguments(IdentifierList::from_iter(missing_arguments)).into(),
+                ArgumentMatchError::MissingArguments(IdentifierList::from_iter(missing_arguments))
+                    .into(),
             );
         }
 
@@ -121,13 +148,18 @@ pub trait ArgumentMatch {
         )))
     }
 
-    fn argument_multi_match(&self, arguments: &ArgumentValueList) -> EvalResult<Vec<Arguments>> {
+    fn argument_multi_match(
+        &self,
+        arguments: &ArgumentValueList,
+    ) -> Result<Vec<Arguments>, ArgumentMatchError> {
         // Step 1: Bind base arguments and resolve default values
         let base_args = self.argument_match(arguments)?;
 
         let call_signature = self.call_signature();
         if call_signature.is_variadic() {
-            todo!("Error: No multi match possible for variadic call signatures");
+            return Err(ArgumentMatchError::MultiMatchNotAllowedForVariadic {
+                arguments: arguments.to_string(),
+            });
         }
 
         // Step 2: Extract parameter metadata

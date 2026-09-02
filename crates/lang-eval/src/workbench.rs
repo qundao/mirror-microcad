@@ -9,7 +9,7 @@ use crate::{
 };
 
 use microcad_builtin::{BuiltinEvalContext, BuiltinItem};
-use microcad_lang_base::{DisplayWithCtx, SrcReferrer, element::Visibility};
+use microcad_lang_base::{DisplayWithCtx, SrcReferrer, ToCompactString, element::Visibility};
 use microcad_package::{SymbolId, symbol};
 
 use microcad_lang_types::{
@@ -164,12 +164,16 @@ impl Eval for symbol::workbench::WorkbenchCall {
 
                 match context.builtins.get(*builtin_id) {
                     Some(BuiltinItem::Function(f)) => {
-                        let args = f.argument_match(&args)?;
+                        let args = f.argument_match(&args).map_err(|err| {
+                            EvalError::argument_match(self, f.info.item_name(), err)
+                        })?;
 
                         Ok(f.call_isolated(args)?)
                     }
                     Some(BuiltinItem::Primitive(p)) => {
-                        let multi_args = p.argument_multi_match(&args)?;
+                        let multi_args = p.argument_multi_match(&args).map_err(|err| {
+                            EvalError::argument_match(self, p.info.item_name(), err)
+                        })?;
                         let mut models = Vec::new();
                         for args in multi_args {
                             models.push(ModelTree::from((p.f)(
@@ -181,7 +185,9 @@ impl Eval for symbol::workbench::WorkbenchCall {
                         Ok(ModelTree::to_multiplicity(models).into())
                     }
                     Some(BuiltinItem::Operation(op)) => {
-                        let multi_args = op.argument_multi_match(&args)?;
+                        let multi_args = op.argument_multi_match(&args).map_err(|err| {
+                            EvalError::argument_match(self, op.info.item_name(), err)
+                        })?;
                         let mut models = Vec::new();
                         for args in multi_args {
                             models.push((op.f)(args, &mut BuiltinEvalContext::default())?);

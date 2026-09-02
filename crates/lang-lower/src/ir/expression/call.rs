@@ -272,6 +272,12 @@ pub struct Call<Expr: ir::ExprSpec> {
     pub src_ref: SrcRef,
 }
 
+impl<Expr: ir::ExprSpec> SrcReferrer for Call<Expr> {
+    fn src_ref(&self) -> SrcRef {
+        self.src_ref
+    }
+}
+
 /// Builder methods
 impl<Expr: ir::ExprSpec> Call<Expr> {
     pub fn builtin(builtin_id: BuiltinId) -> Self {
