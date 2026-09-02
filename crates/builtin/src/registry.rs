@@ -3,7 +3,7 @@
 
 //! µcad built-in registry.
 
-use microcad_lang_base::{BuiltinId, BuiltinInfo, HashMap, LookUpName, ToCompactString};
+use microcad_lang_base::{BuiltinId, HashMap, LookUpName, ToCompactString};
 
 use crate::{BuiltinItem, BuiltinModule};
 

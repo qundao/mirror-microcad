@@ -14,7 +14,7 @@ pub use item::{
 
 pub mod mu;
 mod registry;
-use microcad_lang_base::{DisplayWithCtx, LookUpName, PushDiag};
+use microcad_lang_base::{DisplayWithCtx, PushDiag};
 pub use registry::BuiltinRegistry;
 
 use derive_more::Debug;
@@ -65,10 +65,10 @@ pub trait BuiltinConstruct: Sized {
         if model.element == Self::element() {
             Ok(())
         } else {
-            let mut default_ctx = microcad_lang_base::DefaultContext;
+            let default_ctx = microcad_lang_base::DefaultContext;
             Err(BuiltinError::ElementMismatch {
-                expected: Self::element().to_string_with_ctx(&mut default_ctx),
-                actual: model.element.clone().to_string_with_ctx(&mut default_ctx),
+                expected: Self::element().to_string_with_ctx(&default_ctx),
+                actual: model.element.clone().to_string_with_ctx(&default_ctx),
             })
         }
     }
