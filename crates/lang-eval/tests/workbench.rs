@@ -150,7 +150,6 @@ fn circle_without_parameter() {
     use helper::*;
 
     let workbench = symbol::Workbench {
-        attr: Attributes::default(),
         signature: workbench::WorkbenchSignature::new(
             symbol::WorkbenchKind::Sketch,
             vec![], // No parameters
@@ -170,7 +169,6 @@ fn circle_parameter() {
     use helper::*;
 
     let workbench = symbol::Workbench {
-        attr: Attributes::default(),
         signature: workbench::WorkbenchSignature::new(
             symbol::WorkbenchKind::Sketch,
             vec![Parameter::new("radius", Type::length())],
@@ -216,7 +214,6 @@ fn circle_init() {
     use helper::*;
 
     let workbench = symbol::Workbench {
-        attr: Attributes::default(),
         signature: workbench::WorkbenchSignature::new(
             symbol::WorkbenchKind::Sketch,
             vec![Parameter::new("radius", Type::length())],

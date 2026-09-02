@@ -56,7 +56,6 @@ fn return_a() {
             }]
             .into_iter(),
         ),
-        attr: Attributes::default(),
     };
 
     let mut context = EvalContext::new();
@@ -91,7 +90,6 @@ fn add() {
             )]
             .into_iter(),
         ),
-        attr: Attributes::default(),
     };
 
     let mut context = EvalContext::new();
@@ -140,7 +138,6 @@ fn if_a_greater_than() {
             }]
             .into_iter(),
         ),
-        attr: Attributes::default(),
     };
 
     let mut context = EvalContext::new();
