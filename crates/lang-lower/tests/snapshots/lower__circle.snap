@@ -10,7 +10,7 @@ expression: "ir.to_ron().expect(\"No error\")"
     ),
     payload: (
         input_hash: "0xa18f78da53e23991",
-        output_hash: "0x8dd54ac1b689b443",
+        output_hash: "0x6e3d2f879eb5ef68",
         tree: (
             root: (
                 index1: 1,
@@ -269,9 +269,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                     content: "",
                                                     src_ref: "7:5 @ 0x6fea70d2e98e16db (221..221)",
                                                 ),
-                                                kv_exprs: [],
-                                                commands: [],
-                                                tags: [],
+                                                ver: (
+                                                    introduced: None,
+                                                    stability: Stable,
+                                                ),
                                             ),
                                             src_ref: "7:5 @ 0x6fea70d2e98e16db (221..323)",
                                         ),
@@ -362,9 +363,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                     content: "",
                                                     src_ref: "None",
                                                 ),
-                                                kv_exprs: [],
-                                                commands: [],
-                                                tags: [],
+                                                ver: (
+                                                    introduced: None,
+                                                    stability: Stable,
+                                                ),
                                             ),
                                             src_ref: "None",
                                         ),

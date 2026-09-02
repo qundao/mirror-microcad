@@ -3,10 +3,15 @@
 
 //! Workbench definition syntax element
 
-use crate::{CastInto, ir};
+use crate::{
+    CastInto,
+    ir::{self, DocBlock},
+};
 
 use derive_more::{Display, From};
-use microcad_lang_base::{Identifier, SingleIdentifier, SrcRef, SrcReferrer, element::Visibility};
+use microcad_lang_base::{
+    Identifier, SingleIdentifier, SrcRef, SrcReferrer, VersionAnnotation, element::Visibility,
+};
 
 pub use microcad_lang_base::element::WorkbenchKind;
 use microcad_lang_types::Value;
@@ -99,6 +104,12 @@ impl InitStatement {
     }
 }
 
+#[derive(Debug, Default, Clone, Hash, PartialEq, Serialize, Deserialize)]
+pub struct InitAttributes {
+    pub doc: DocBlock,
+    pub ver: VersionAnnotation,
+}
+
 /// A workbench initializer that can be called.
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Init {
@@ -109,7 +120,7 @@ pub struct Init {
     /// SrcRef of the `init` keyword
     pub keyword_ref: SrcRef,
     /// Attributes.
-    pub attr: ir::Attributes,
+    pub attr: InitAttributes,
     /// Source reference
     pub src_ref: SrcRef,
 }

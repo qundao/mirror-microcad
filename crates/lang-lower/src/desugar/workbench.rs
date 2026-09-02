@@ -113,6 +113,18 @@ impl ir::Init {
     }
 }
 
+impl Desugar<ast::Init> for ir::InitAttributes {
+    fn desugar(node: &ast::Init, context: &mut LowerContext) -> LowerResult<Self> {
+        let doc = ir::DocBlock::desugar(&node.doc, context)?;
+        let attr = ir::Attributes::desugar(&node.attr, context)?;
+
+        Ok(Self {
+            doc,
+            ver: attr.fetch_ver(context),
+        })
+    }
+}
+
 impl Desugar<ast::Init> for ir::Init {
     fn desugar(node: &ast::Init, context: &mut LowerContext) -> LowerResult<Self> {
         for_each_statement(&node.body.statements, context, |stmt, context| {
@@ -129,7 +141,7 @@ impl Desugar<ast::Init> for ir::Init {
         })?;
 
         let init = Self {
-            attr: crate::desugar::attribute::outer_with_doc(&node.doc, &node.attr, context)?,
+            attr: ir::InitAttributes::desugar(node, context)?,
             keyword_ref: context.span_to_src_ref(&node.keyword_span),
             parameters: ir::ParameterList::desugar(&node.parameters, context)?,
             statements: Box::desugar(&node.body.statements, context)?,

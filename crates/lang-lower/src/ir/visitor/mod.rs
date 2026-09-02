@@ -151,13 +151,15 @@ pub trait WorkbenchVisitor: WorkbenchExpressionVisitor {
     }
 
     fn visit_workbench_init(&mut self, init: &ir::workbench::Init) {
-        self.visit_attr(&init.attr);
+        self.visit_workbench_init_attr(&init.attr);
         self.visit_parameter_list(&init.parameters);
         init.statements.iter().for_each(|init_statement| {
             self.visit_name(&init_statement.name);
             self.visit_workbench_expr(&init_statement.expression);
         });
     }
+
+    fn visit_workbench_init_attr(&mut self, _attr: &ir::workbench::InitAttributes) {}
 }
 
 /// Visitor for functions.
