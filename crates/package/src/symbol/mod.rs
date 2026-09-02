@@ -32,18 +32,20 @@ pub mod workbench {
     use microcad_lang_lower::ir;
 
     pub use ir::{
-        Group, Init, InitStatement, Marker, Workbench, WorkbenchCall, WorkbenchExpression,
-        WorkbenchIf, WorkbenchKind, WorkbenchSignature, WorkbenchStatement,
+        Group, Init, InitStatement, Marker, ModelAttributes, Workbench, WorkbenchCall,
+        WorkbenchExpression, WorkbenchIf, WorkbenchKind, WorkbenchSignature, WorkbenchStatement,
     };
     pub type Argument = ir::Argument<WorkbenchExpression>;
     pub type ArgumentList = ir::ArgumentList<WorkbenchExpression>;
 }
 
-pub use workbench::{Workbench, WorkbenchExpression, WorkbenchKind, WorkbenchStatement};
+pub use workbench::{
+    ModelAttributes, Workbench, WorkbenchExpression, WorkbenchKind, WorkbenchStatement,
+};
 
 pub use ir::{
-    Alias, Attributes, Constant, ConstantValue, ExprSpec, Parameter, ParameterList, Path, Source,
-    Visibility, Wildcard,
+    Alias, Constant, ConstantValue, ExportAttribute, ExprSpec, Parameter, ParameterList, Path,
+    Source, Visibility, Wildcard,
 };
 
 #[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
