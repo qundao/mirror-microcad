@@ -46,3 +46,29 @@ macro_rules! call_builtin {
             .with_args($crate::argument_list!( $( $args )* ))
     };
 }
+
+#[macro_export]
+macro_rules! expr {
+    // A literal without unit
+    ($lit:literal) => {
+        Value::from($lit)
+    };
+    // Angle in degrees
+    ($lit:literal deg) => {
+        Value::deg($lit)
+    };
+    // Length in millimeter
+    ($lit:literal mm) => {
+        Value::mm($lit)
+    };
+    // A local identifier
+    ($id:ident) => {
+        symbol::Path::Resolved(SymbolId::Local(stringify!($id).into()))
+    };
+    ($id:ident.$field:ident) => {
+        call_builtin!(core::member_access(
+            lhs = expr!($id),
+            name = Value::from(stringify!($field))
+        ))
+    };
+}
