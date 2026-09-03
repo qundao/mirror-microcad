@@ -4,40 +4,23 @@
 //! Tests for evaluating functions.
 
 use microcad_builtin::__mu;
-use microcad_lang_base::{Identifier, SrcRef, SymbolId, ToCompactString};
+use microcad_lang_base::{SrcRef, SymbolId, ToCompactString, boxed};
 use microcad_lang_eval::{CallTrait, EvalContext};
-use microcad_lang_resolve::symbol::{
-    ConstantValue, Function, FunctionExpression, FunctionStatement, Parameter, Path, function,
+use microcad_lang_resolve::{
+    call_builtin,
+    symbol::{
+        ConstantValue, Function, FunctionExpression, FunctionStatement, Parameter, Path, function,
+    },
 };
 use microcad_lang_types::{ArgumentValueList, Type, Value, argument_value};
-
-fn statements<T>(a: impl Iterator<Item = T>) -> Box<[FunctionStatement]>
-where
-    T: Into<FunctionStatement>,
-{
-    a.map(|stmt| stmt.into())
-        .collect::<Vec<FunctionStatement>>()
-        .into_boxed_slice()
-}
 
 fn name_expr(name: &str) -> FunctionExpression {
     FunctionExpression::Path(Path::Resolved(SymbolId::Local(name.to_compact_string())))
 }
 
-fn scope<T>(a: impl Iterator<Item = T>) -> function::Scope
-where
-    T: Into<FunctionStatement>,
-{
+fn scope(a: impl Iterator<Item = FunctionStatement>) -> function::Scope {
     function::Scope {
-        statements: statements(a),
-        src_ref: SrcRef::none(),
-    }
-}
-
-fn arg(name: &str, expr: FunctionExpression) -> function::Argument {
-    function::Argument::Named {
-        name: Identifier::no_ref(name),
-        expr,
+        statements: boxed(a),
         src_ref: SrcRef::none(),
     }
 }
@@ -47,14 +30,12 @@ fn return_a() {
     let f = function::Function {
         signature: function::FunctionSignature::new(vec![Parameter::new("a", Type::Integer)])
             .with_return_type(Type::Integer),
-        statements: statements(
-            [function::ReturnStatement {
-                expr: Some(name_expr("a")),
-                keyword_src_ref: SrcRef::none(),
-                src_ref: SrcRef::none(),
-            }]
-            .into_iter(),
-        ),
+        statements: boxed([function::ReturnStatement {
+            expr: Some(name_expr("a")),
+            keyword_src_ref: SrcRef::none(),
+            src_ref: SrcRef::none(),
+        }
+        .into()]),
     };
 
     let mut context = EvalContext::new();
@@ -76,19 +57,9 @@ fn add() {
             Parameter::new("b", Type::Integer),
         ])
         .with_return_type(Type::Integer),
-        statements: statements(
-            [FunctionStatement::Tail(
-                function::FunctionCall {
-                    path: __mu!(core::add),
-                    args: function::ArgumentList::from_iter(
-                        [arg("lhs", name_expr("a")), arg("rhs", name_expr("b"))].into_iter(),
-                    ),
-                    src_ref: SrcRef::none(),
-                }
-                .into(),
-            )]
-            .into_iter(),
-        ),
+        statements: boxed([FunctionStatement::Tail(
+            call_builtin!(core::add(lhs = name_expr("a"), rhs = name_expr("b"))).into(),
+        )]),
     };
 
     let mut context = EvalContext::new();
@@ -110,29 +81,22 @@ fn if_a_greater_than() {
             Parameter::new("b", Type::Integer),
         ])
         .with_return_type(Type::Integer),
-        statements: statements(
-            [function::FunctionIf {
-                src_ref: SrcRef::none(),
-                if_ref: SrcRef::none(),
-                cond: FunctionExpression::Call(function::FunctionCall {
-                    path: __mu!(core::gt),
-                    args: function::ArgumentList::from_iter(
-                        [arg("lhs", name_expr("a")), arg("rhs", name_expr("b"))].into_iter(),
-                    ),
-                    src_ref: SrcRef::none(),
-                })
-                .into(),
-                body: scope([FunctionStatement::Tail(ConstantValue::new(2).into())].into_iter())
-                    .into(),
-                else_ref: None,
-                body_else: Some(
-                    scope([FunctionStatement::Tail(ConstantValue::new(4).into())].into_iter())
-                        .into(),
-                ),
-                next_if: None,
-            }]
-            .into_iter(),
-        ),
+        statements: boxed([function::FunctionIf {
+            src_ref: SrcRef::none(),
+            if_ref: SrcRef::none(),
+            cond: FunctionExpression::Call(call_builtin!(core::gt(
+                lhs = name_expr("a"),
+                rhs = name_expr("b"),
+            )))
+            .into(),
+            body: scope([FunctionStatement::Tail(ConstantValue::new(2).into())].into_iter()).into(),
+            else_ref: None,
+            body_else: Some(
+                scope([FunctionStatement::Tail(ConstantValue::new(4).into())].into_iter()).into(),
+            ),
+            next_if: None,
+        }
+        .into()]),
     };
 
     let mut context = EvalContext::new();

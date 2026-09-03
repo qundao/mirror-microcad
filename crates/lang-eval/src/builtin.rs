@@ -5,7 +5,7 @@ use microcad_builtin::{
     BuiltinEvalContext, BuiltinFunction, BuiltinItem, BuiltinOperation, BuiltinPrimitive,
 };
 use microcad_lang_base::PushDiag;
-use microcad_lang_types::{ArgumentValueList, ModelTree, Value};
+use microcad_lang_types::{ArgumentValueList, ModelTree};
 
 use crate::{ArgumentMatch, CallTrait, EvalContext, EvalError, EvalResult, context::ContextScope};
 
