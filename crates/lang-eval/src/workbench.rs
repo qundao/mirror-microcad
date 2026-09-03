@@ -5,10 +5,12 @@
 
 use crate::{
     CallTrait, Eval, EvalContext, EvalError, EvalResult,
-    context::{Lookup, WorkbenchGroupFrame, WorkbenchInitFrame, WorkpieceFrame},
+    context::{
+        BuiltinItemFrame, ContextScope, WorkbenchGroupFrame, WorkbenchInitFrame, WorkpieceFrame,
+    },
 };
 
-use microcad_builtin::{BuiltinEvalContext, BuiltinItem};
+use microcad_builtin::{BuiltinEvalContext, BuiltinItem, BuiltinPrimitive};
 use microcad_lang_base::{DisplayWithCtx, PushDiag, SrcRef, SrcReferrer, element::Visibility};
 use microcad_lang_resolve::{SymbolId, symbol};
 
@@ -93,7 +95,7 @@ impl Eval<Value> for symbol::SymbolDef {
 
 impl Eval<Value> for symbol::SymbolId {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
-        use crate::context::Lookup;
+        use crate::context::ContextScope;
 
         match &self {
             SymbolId::Builtin(builtin_id) => match context.builtins.get(*builtin_id) {
@@ -158,36 +160,43 @@ impl Eval<ArgumentValueList> for symbol::workbench::ArgumentList {
     }
 }
 
-impl CallTrait<Value> for BuiltinItem {
+impl CallTrait<Value> for BuiltinPrimitive {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Value> {
         use crate::ArgumentMatch;
 
+        let multi_args = self
+            .argument_multi_match(&args)
+            .map_err(|err| EvalError::argument_match(SrcRef::none(), self.info.item_name(), err))?;
+        let mut models = Vec::new();
+        for args in multi_args {
+            models.push(ModelTree::from((self.f)(
+                args,
+                &mut BuiltinEvalContext::default(),
+            )?));
+        }
+
+        Ok(ModelTree::to_multiplicity(models).into())
+    }
+}
+
+impl CallTrait<Value> for BuiltinItem {
+    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Value> {
+        use crate::ArgumentMatch;
+        let src_ref = context.current_symbol_src_ref();
+
         match self {
             BuiltinItem::Function(f) => {
-                let args = f.argument_match(&args).map_err(|err| {
-                    EvalError::argument_match(SrcRef::none(), f.info.item_name(), err)
-                })?;
+                let args = f
+                    .argument_match(&args)
+                    .map_err(|err| EvalError::argument_match(src_ref, f.info.item_name(), err))?;
 
                 Ok(f.call_isolated(args)?)
             }
-            BuiltinItem::Primitive(p) => {
-                let multi_args = p.argument_multi_match(&args).map_err(|err| {
-                    EvalError::argument_match(SrcRef::none(), p.info.item_name(), err)
-                })?;
-                let mut models = Vec::new();
-                for args in multi_args {
-                    models.push(ModelTree::from((p.f)(
-                        args,
-                        &mut BuiltinEvalContext::default(),
-                    )?));
-                }
-
-                Ok(ModelTree::to_multiplicity(models).into())
-            }
+            BuiltinItem::Primitive(p) => p.call(args, context),
             BuiltinItem::Operation(op) => {
-                let multi_args = op.argument_multi_match(&args).map_err(|err| {
-                    EvalError::argument_match(SrcRef::none(), op.info.item_name(), err)
-                })?;
+                let multi_args = op
+                    .argument_multi_match(&args)
+                    .map_err(|err| EvalError::argument_match(src_ref, op.info.item_name(), err))?;
                 let mut models = Vec::new();
                 for args in multi_args {
                     models.push((op.f)(args, &mut BuiltinEvalContext::default())?);
@@ -205,9 +214,12 @@ impl Eval for symbol::workbench::WorkbenchCall {
         match &self.path {
             symbol::Path::Resolved(symbol::SymbolId::Builtin(builtin_id)) => {
                 let args = self.args.eval(context)?;
-
-                match context.builtins.get(*builtin_id) {
-                    Some(item) => item.call(&args, context),
+                let item = context.builtins.get(*builtin_id);
+                let src_ref = context.current_symbol_src_ref();
+                match item {
+                    Some(item) => context.scope(BuiltinItemFrame::new(src_ref, item), |ctx| {
+                        item.call(&args, ctx)
+                    }),
                     None => unimplemented!(
                         "Builtin not found: {}",
                         builtin_id.to_string_with_ctx(context)

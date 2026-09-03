@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use derive_more::From;
-use microcad_lang_base::{HashMap, Name, ToCompactString};
+use microcad_builtin::{BuiltinEvalContext, BuiltinItem};
+use microcad_lang_base::{HashMap, Name, SrcRef, SrcReferrer, ToCompactString};
 use microcad_lang_resolve::symbol;
 use microcad_lang_types::{
     Arguments, Value,
@@ -12,13 +13,20 @@ use microcad_lang_types::{
     },
 };
 
-pub trait Lookup {
+pub trait ContextScope {
     /// Local a local or property value by traversing up the stack
-    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value>;
+    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
+        None
+    }
 
     /// Current symbol name
     fn current_symbol_name(&self) -> Option<String> {
         None
+    }
+
+    /// Current source referrer
+    fn current_symbol_src_ref(&self) -> SrcRef {
+        SrcRef::none()
     }
 }
 
@@ -26,7 +34,7 @@ pub trait Lookup {
 #[derive(Debug, Default)]
 pub struct LocalTable(HashMap<Name, Value>);
 
-impl Lookup for LocalTable {
+impl ContextScope for LocalTable {
     fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
         self.0.get(&Name::from(name.as_ref()))
     }
@@ -37,7 +45,7 @@ pub struct FunctionFrame {
     pub locals: LocalTable,
 }
 
-impl Lookup for FunctionFrame {
+impl ContextScope for FunctionFrame {
     fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
         self.locals.look_up_local(name)
     }
@@ -67,7 +75,7 @@ impl FunctionScopeFrame {
     }
 }
 
-impl Lookup for FunctionScopeFrame {
+impl ContextScope for FunctionScopeFrame {
     fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
         self.locals.look_up_local(name)
     }
@@ -92,7 +100,7 @@ impl ModelTreeBuilderMut for WorkpieceFrame {
     }
 }
 
-impl Lookup for WorkpieceFrame {
+impl ContextScope for WorkpieceFrame {
     fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
         self.builder.get_property(name).map(|prop| &prop.value)
     }
@@ -111,7 +119,7 @@ impl WorkbenchGroupFrame {
     }
 }
 
-impl Lookup for WorkbenchGroupFrame {
+impl ContextScope for WorkbenchGroupFrame {
     fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
         self.builder.get_property(name).map(|prop| &prop.value)
     }
@@ -140,24 +148,29 @@ impl WorkbenchInitFrame {
     }
 }
 
-impl Lookup for WorkbenchInitFrame {
+impl ContextScope for WorkbenchInitFrame {
     fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
         self.properties.get_property(name).map(|prop| &prop.value)
     }
 }
 
 #[derive(Debug)]
-pub struct CallFrame {
+pub struct SymbolCallFrame {
     pub path: symbol::Path,
+    pub src_ref: SrcRef,
 }
 
-impl Lookup for CallFrame {
+impl ContextScope for SymbolCallFrame {
     fn look_up_local(&self, _name: impl AsRef<str>) -> Option<&Value> {
         None
     }
 
     fn current_symbol_name(&self) -> Option<String> {
         Some(self.path.to_string())
+    }
+
+    fn current_symbol_src_ref(&self) -> SrcRef {
+        self.src_ref
     }
 }
 
@@ -174,7 +187,7 @@ impl SourceFrame {
     }
 }
 
-impl Lookup for SourceFrame {
+impl ContextScope for SourceFrame {
     fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
         self.builder.get_property(name).map(|prop| &prop.value)
     }
@@ -186,15 +199,56 @@ impl ModelTreeBuilderMut for SourceFrame {
     }
 }
 
+#[derive(Debug)]
+pub struct BuiltinItemFrame {
+    src_ref: SrcRef,
+    item: &'static BuiltinItem,
+}
+
+impl BuiltinItemFrame {
+    pub fn new(src_ref: impl SrcReferrer, item: &'static BuiltinItem) -> Self {
+        Self {
+            src_ref: src_ref.src_ref(),
+            item,
+        }
+    }
+}
+
+impl ContextScope for BuiltinItemFrame {
+    fn current_symbol_name(&self) -> Option<String> {
+        Some(self.item.name().to_string())
+    }
+
+    fn current_symbol_src_ref(&self) -> SrcRef {
+        self.src_ref
+    }
+}
+
 #[derive(Debug, From)]
 pub enum StackFrame {
-    Call(CallFrame),
+    /// Active frame for any calls.
+    Call(SymbolCallFrame),
+
+    /// Active frame inside a function scope.
     Function(FunctionFrame),
+
+    /// Active frame for local function scope bindings.
     FunctionScope(FunctionScopeFrame),
+
+    /// Active frame when evaluating a workbench or workpiece execution context.
     Workbench(WorkpieceFrame),
+
+    /// Active frame when evaluating statements within a workbench group block.
     WorkbenchGroup(WorkbenchGroupFrame),
+
+    /// Active frame when evaluating inside a workbench `init` block.
     WorkbenchInit(WorkbenchInitFrame),
+
+    /// Active frame when evaluating top-level statements in a source file.
     Source(SourceFrame),
+
+    /// Active frame during built-in execution.
+    BuiltinCall(BuiltinItemFrame),
 }
 
 impl StackFrame {
@@ -230,10 +284,10 @@ impl ModelTreeBuilderMut for StackFrame {
     }
 }
 
-impl Lookup for StackFrame {
+impl ContextScope for StackFrame {
     fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
         match &self {
-            StackFrame::Call(_) => None,
+            StackFrame::Call(_) | StackFrame::BuiltinCall(_) => None,
             StackFrame::Function(function_frame) => function_frame.look_up_local(name),
             StackFrame::FunctionScope(function_scope_frame) => {
                 function_scope_frame.look_up_local(name)
@@ -250,7 +304,16 @@ impl Lookup for StackFrame {
     fn current_symbol_name(&self) -> Option<String> {
         match &self {
             StackFrame::Call(call) => call.current_symbol_name(),
+            StackFrame::BuiltinCall(call) => call.current_symbol_name(),
             _ => None,
+        }
+    }
+
+    fn current_symbol_src_ref(&self) -> SrcRef {
+        match &self {
+            StackFrame::Call(call) => call.current_symbol_src_ref(),
+            StackFrame::BuiltinCall(call) => call.current_symbol_src_ref(),
+            _ => SrcRef::none(),
         }
     }
 }
@@ -279,7 +342,7 @@ impl ModelTreeBuilderMut for Stack {
     }
 }
 
-impl Lookup for Stack {
+impl ContextScope for Stack {
     fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
         let name = name.as_ref();
         self.current_call_scope()
@@ -289,6 +352,13 @@ impl Lookup for Stack {
     fn current_symbol_name(&self) -> Option<String> {
         self.current_call_scope()
             .find_map(|frame| frame.current_symbol_name())
+    }
+
+    fn current_symbol_src_ref(&self) -> SrcRef {
+        self.current_call_scope()
+            .find(|frame| frame.current_symbol_src_ref() != SrcRef::none())
+            .map(|frame| frame.current_symbol_src_ref())
+            .unwrap_or_default()
     }
 }
 

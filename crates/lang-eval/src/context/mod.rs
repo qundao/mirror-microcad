@@ -97,7 +97,7 @@ impl EvalContext {
     }
 }
 
-impl Lookup for EvalContext {
+impl ContextScope for EvalContext {
     fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
         self.stack.look_up_local(name)
     }
