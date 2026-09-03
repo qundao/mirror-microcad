@@ -86,15 +86,6 @@ impl EvalContext {
         use crate::Eval;
         symbol.eval(self)
     }
-
-    /// Local up a symbol by its node id in an external package
-    pub(crate) fn look_up_external_symbol(
-        &self,
-        _dep_name: &str,
-        _node_id: symbol::SymbolNodeId,
-    ) -> Option<symbol::SymbolDef> {
-        todo!()
-    }
 }
 
 impl ContextScope for EvalContext {

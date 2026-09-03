@@ -10,7 +10,10 @@ use crate::{
     },
 };
 
-use microcad_builtin::{BuiltinEvalContext, BuiltinItem, BuiltinPrimitive};
+use microcad_builtin::{
+    BuiltinError, BuiltinEvalContext, BuiltinFunction, BuiltinItem, BuiltinOperation,
+    BuiltinPrimitive,
+};
 use microcad_lang_base::{DisplayWithCtx, PushDiag, SrcRef, SrcReferrer, element::Visibility};
 use microcad_lang_resolve::{SymbolId, symbol};
 
@@ -160,55 +163,6 @@ impl Eval<ArgumentValueList> for symbol::workbench::ArgumentList {
     }
 }
 
-impl CallTrait<Value> for BuiltinPrimitive {
-    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Value> {
-        use crate::ArgumentMatch;
-
-        let multi_args = self
-            .argument_multi_match(&args)
-            .map_err(|err| EvalError::argument_match(SrcRef::none(), self.info.item_name(), err))?;
-        let mut models = Vec::new();
-        for args in multi_args {
-            models.push(ModelTree::from((self.f)(
-                args,
-                &mut BuiltinEvalContext::default(),
-            )?));
-        }
-
-        Ok(ModelTree::to_multiplicity(models).into())
-    }
-}
-
-impl CallTrait<Value> for BuiltinItem {
-    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Value> {
-        use crate::ArgumentMatch;
-        let src_ref = context.current_symbol_src_ref();
-
-        match self {
-            BuiltinItem::Function(f) => {
-                let args = f
-                    .argument_match(&args)
-                    .map_err(|err| EvalError::argument_match(src_ref, f.info.item_name(), err))?;
-
-                Ok(f.call_isolated(args)?)
-            }
-            BuiltinItem::Primitive(p) => p.call(args, context),
-            BuiltinItem::Operation(op) => {
-                let multi_args = op
-                    .argument_multi_match(&args)
-                    .map_err(|err| EvalError::argument_match(src_ref, op.info.item_name(), err))?;
-                let mut models = Vec::new();
-                for args in multi_args {
-                    models.push((op.f)(args, &mut BuiltinEvalContext::default())?);
-                }
-
-                Ok(ModelTree::to_multiplicity(models).into())
-            }
-            _ => todo!(),
-        }
-    }
-}
-
 impl Eval for symbol::workbench::WorkbenchCall {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         match &self.path {
@@ -220,11 +174,10 @@ impl Eval for symbol::workbench::WorkbenchCall {
                     Some(item) => context.scope(BuiltinItemFrame::new(src_ref, item), |ctx| {
                         item.call(&args, ctx)
                     }),
-                    None => unimplemented!(
-                        "Builtin not found: {}",
-                        builtin_id.to_string_with_ctx(context)
-                    ),
-                    _ => todo!(),
+                    None => context.catch(EvalError::BuiltinNotFound {
+                        name: builtin_id.to_string_with_ctx(context),
+                        src_ref: context.current_symbol_src_ref(),
+                    }),
                 }
             }
             path => context.catch(EvalError::SymbolCannotBeCalled {

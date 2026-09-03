@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use derive_more::From;
-use microcad_builtin::{BuiltinEvalContext, BuiltinItem};
+use microcad_builtin::BuiltinItem;
 use microcad_lang_base::{HashMap, Name, SrcRef, SrcReferrer, ToCompactString};
 use microcad_lang_resolve::symbol;
 use microcad_lang_types::{
@@ -15,7 +15,7 @@ use microcad_lang_types::{
 
 pub trait ContextScope {
     /// Local a local or property value by traversing up the stack
-    fn look_up_local(&self, name: impl AsRef<str>) -> Option<&Value> {
+    fn look_up_local(&self, _name: impl AsRef<str>) -> Option<&Value> {
         None
     }
 

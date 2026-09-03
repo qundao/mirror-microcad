@@ -172,6 +172,13 @@ pub enum EvalError {
         #[label("This symbol could not be found in any package")]
         src_ref: SrcRef,
     },
+
+    #[error("Built-in not found: {name}")]
+    BuiltinNotFound {
+        name: String,
+        #[label("Built-in was called from here")]
+        src_ref: SrcRef,
+    },
 }
 
 impl EvalError {
