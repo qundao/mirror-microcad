@@ -7,10 +7,10 @@ use microcad_builtin::__mu;
 use microcad_lang_base::{DisplayWithCtx, boxed};
 use microcad_lang_eval::{CallTrait, Eval, EvalContext};
 use microcad_lang_resolve::{
-    SymbolId, argument_list, call_builtin,
+    SymbolId, call_builtin, expr,
     symbol::{
-        self, ConstantExpression, ExprSpec, Parameter, Path, SourceStatement, WorkbenchExpression,
-        WorkbenchStatement, workbench,
+        self, ExprSpec, Parameter, Path, SourceStatement, WorkbenchExpression, WorkbenchStatement,
+        workbench,
     },
 };
 
@@ -21,18 +21,13 @@ use microcad_macros::parameter_list;
 
 /// Expressions used for testing
 pub mod helper {
-    use microcad_lang_resolve::call_builtin;
+    use microcad_lang_resolve::{call_builtin, expr};
 
     use super::*;
 
     /// __mu::geo2d::Circle(radius = expr)
     pub fn call_circle(radius: impl Into<WorkbenchExpression>) -> WorkbenchExpression {
         call_builtin!(geo2d::Circle(radius = radius)).into()
-    }
-
-    /// Local expression with `name`
-    pub fn local(name: &str) -> ConstantExpression {
-        symbol::Path::Resolved(SymbolId::Local(name.into())).into()
     }
 
     /// call __mu::core::member_access
@@ -55,11 +50,11 @@ pub mod helper {
     /// [1..n] / n * 360°
     pub fn polar_expr() -> symbol::ConstantExpression {
         // [1..n]
-        let range = call_builtin!(core::range(start = Value::from(1), end = local("n")));
+        let range = call_builtin!(core::range(start = expr!(1), end = expr!(n)));
         // / n
-        let div = call_builtin!(core::div(lhs = range, rhs = local("n")));
+        let div = call_builtin!(core::div(lhs = range, rhs = expr!(n)));
         // * 360°
-        let mul = call_builtin!(core::mul(lhs = div, rhs = Value::deg(360.0)));
+        let mul = call_builtin!(core::mul(lhs = div, rhs = expr!(360.0 deg)));
         mul.into()
     }
 }
@@ -90,11 +85,11 @@ pub fn call_workbench<T: CallTrait<ModelTree>>(
 /// { __mu::geo2d::Circle(radius = 4.0mm); }
 #[test]
 fn group() {
-    use helper::*;
-
     eval_to_model_test(
         "group",
-        symbol::workbench::Group::new([WorkbenchStatement::expr(call_circle(Value::mm(4.0)))]),
+        symbol::workbench::Group::new([WorkbenchStatement::expr(call_builtin!(geo2d::Circle(
+            radius = expr!(4.0 mm)
+        )))]),
     );
 }
 
@@ -104,46 +99,42 @@ fn group() {
 /// }
 #[test]
 fn group_with_property() {
-    use helper::*;
-
     let model = eval_to_model_test(
         "group_with_property",
         symbol::workbench::Group::new([
             WorkbenchStatement::prop("a", Value::mm(4.0)),
-            WorkbenchStatement::expr(call_circle(local("a"))),
+            WorkbenchStatement::expr(call_builtin!(geo2d::Circle(radius = expr!(a)))),
         ]),
     );
 
     let prop = model.get_property_value("a");
-    assert_eq!(prop, Value::from(Length::mm(4.0)));
+    assert_eq!(prop, expr!(4.0 mm));
 }
 
 /// __mu::geo2d::Circle(radius = 4.0mm).translate(x = 1.0mm, y = 2.0mm, z = 0.0mm)
 #[test]
 fn translate_circle() {
-    use helper::*;
-
     let model = eval_to_model_test(
         "translate_circle",
         call_builtin!(ops::translate(
-            self = call_circle(Value::mm(4.0)),
-            x = Value::mm(1.0),
-            y = Value::mm(2.0),
-            z = Value::mm(0.0)
+            self = call_builtin!(geo2d::Circle(radius = expr!(4.0 mm))),
+            x = expr!(1.0 mm),
+            y = expr!(2.0 mm),
+            z = expr!(0.0 mm),
         )),
     );
 
     let prop = model.get_property_value("radius"); // We should be able to access the property.
-    assert_eq!(prop, Value::from(Length::mm(4.0)));
+    assert_eq!(prop, Value::mm(4.0));
 }
 
 /// sketch Circle() { __mu::geo2d::Circle(radius = 4.0mm); }
 #[test]
 fn circle_without_parameter() {
-    use helper::*;
-
-    let workbench = symbol::Workbench::sketch(vec![])
-        .with_statements([WorkbenchStatement::expr(call_circle(Value::mm(4.0)))]);
+    let workbench =
+        symbol::Workbench::sketch(parameter_list!()).with_statements([WorkbenchStatement::expr(
+            call_builtin!(geo2d::Circle(radius = expr!(4.0 mm))),
+        )]);
 
     call_workbench("circle_without_parameter", &workbench, []);
 }
@@ -154,24 +145,20 @@ fn circle_without_parameter() {
 /// Call multi: Circle([1.0mm, 2.0mm, 3.0mm]);
 #[test]
 fn circle_parameter() {
-    use helper::*;
-
     let workbench = symbol::Workbench::sketch(parameter_list!(radius: Length)).with_statements([
-        WorkbenchStatement::expr(call_circle(Path::Resolved(SymbolId::Local(
-            "radius".into(),
-        )))),
+        WorkbenchStatement::expr(call_builtin!(geo2d::Circle(radius = expr!(radius)))),
     ]);
 
     {
-        let radius = Length::mm(4.0);
+        let radius = expr!(4.0 mm);
         let model = call_workbench(
             "circle_parameter_single",
             &workbench,
-            [argument_value!(radius = radius)],
+            [argument_value!(radius = radius.clone())],
         );
 
         let prop = model.get_property_value("radius");
-        assert_eq!(prop, Value::from(radius));
+        assert_eq!(prop, radius);
     }
 
     {
@@ -199,13 +186,10 @@ fn circle_init() {
 
     let workbench = symbol::Workbench::sketch(parameter_list!(radius: Length))
         .with_inits([
-            workbench::Init::default_init(parameter_list!(diameter: Length)).with_statements([
+            workbench::Init::new(parameter_list!(diameter: Length)).with_statements([
                 workbench::InitStatement::new(
                     "radius",
-                    workbench::WorkbenchCall::builtin(__mu!(core::div)).with_args(argument_list!(
-                        lhs = local("diameter"),
-                        rhs = Value::from(2.0)
-                    )),
+                    call_builtin!(core::div(lhs = expr!(diameter), rhs = expr!(2.0))),
                 ),
             ]),
         ])
@@ -221,7 +205,7 @@ fn circle_init() {
     );
 
     let prop = model.get_property_value("radius");
-    assert_eq!(prop, Value::from(Length::mm(4.0)));
+    assert_eq!(prop, expr!(4.0 mm));
 }
 
 /// a = 32mm;
@@ -233,7 +217,7 @@ fn circle_source() {
     let source = symbol::Source {
         statements: boxed([
             SourceStatement::assignment("a", Value::mm(32.0)),
-            SourceStatement::expr(call_circle(local("a"))),
+            SourceStatement::expr(call_circle(expr!(a))),
         ]),
     };
 
@@ -249,7 +233,7 @@ fn polar_expr_test() {
         statements: boxed([
             SourceStatement::assignment("n", Value::from(4)),
             SourceStatement::assignment("a", polar_expr()),
-            SourceStatement::expr(local("a")),
+            SourceStatement::expr(expr!(a)),
         ]),
     };
 
@@ -282,10 +266,10 @@ fn op_rotate() {
             .with_statements([workbench::InitStatement::new(
                 "matrix",
                 call_builtin!(math::rotate_around_axis(
-                    angle = local("angle"),
-                    x = get(local("axis"), "x"),
-                    y = get(local("axis"), "y"),
-                    z = get(local("axis"), "z")
+                    angle = expr!(angle),
+                    x = expr!(axis.x),
+                    y = expr!(axis.y),
+                    z = expr!(axis.z),
                 )),
             )]),
             // init(x = 0°, y = 0°, z = 0°)
@@ -296,11 +280,7 @@ fn op_rotate() {
             ))
             .with_statements([workbench::InitStatement::new(
                 "matrix",
-                call_builtin!(math::rotate_xyz(
-                    x = local("x"),
-                    y = local("y"),
-                    z = local("z")
-                )),
+                call_builtin!(math::rotate_xyz(x = expr!(x), y = expr!(y), z = expr!(z))),
             )]),
             // init(roll = 0°, pitch = 0°, yaw = 0°)
             workbench::Init::new(parameter_list!(
@@ -311,15 +291,15 @@ fn op_rotate() {
             .with_statements([workbench::InitStatement::new(
                 "matrix",
                 call_builtin!(math::rotate_xyz(
-                    x = local("roll"),
-                    y = local("pitch"),
-                    z = local("yaw")
+                    x = expr!(roll),
+                    y = expr!(pitch),
+                    z = expr!(yaw)
                 )),
             )]),
         ])
         .with_statements([WorkbenchStatement::expr(call_builtin!(ops::rotate(
             self = input(),
-            matrix = local("matrix")
+            matrix = expr!(matrix)
         )))]);
 
     let mut context = EvalContext::new();

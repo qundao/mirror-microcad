@@ -47,15 +47,7 @@ pub struct WorkbenchStatement {
 impl WorkbenchStatement {
     /// Construct an expression that will eventually produce a model, `__mu::geo2d::Circle(radius = 4.0mm)`.
     pub fn expr(expr: impl Into<WorkbenchExpression>) -> Self {
-        Self {
-            attr: Default::default(),
-            src_ref: Default::default(),
-            visibility: Default::default(),
-            keyword_src_ref: Default::default(),
-            name: None,
-            ty: Default::default(),
-            expression: expr.into(),
-        }
+        Self::from(expr.into())
     }
 
     /// Construct a property, `prop a = 42mm`.
@@ -68,6 +60,20 @@ impl WorkbenchStatement {
             keyword_src_ref: Default::default(),
             ty: Default::default(),
             expression: expr.into(),
+        }
+    }
+}
+
+impl From<WorkbenchExpression> for WorkbenchStatement {
+    fn from(expression: WorkbenchExpression) -> Self {
+        Self {
+            attr: Default::default(),
+            src_ref: Default::default(),
+            visibility: Default::default(),
+            keyword_src_ref: Default::default(),
+            name: None,
+            ty: Default::default(),
+            expression,
         }
     }
 }
