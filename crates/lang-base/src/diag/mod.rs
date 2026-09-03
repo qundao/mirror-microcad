@@ -16,7 +16,7 @@ mod diagnostics;
 pub use diagnostic::Diagnostic;
 pub use diagnostics::{DiagRenderOptions, Diagnostics};
 
-pub trait PushDiag<E: miette::Diagnostic> {
+pub trait PushDiag<E> {
     fn push_diag(&mut self, err: impl Into<E>);
 
     fn capture<T: Default>(&mut self, result: Result<T, impl Into<E>>) -> T {
@@ -27,5 +27,11 @@ pub trait PushDiag<E: miette::Diagnostic> {
                 T::default()
             }
         }
+    }
+
+    /// Pushes the error and returns default value, so evaluation can continue.
+    fn catch<T: Default>(&mut self, err: impl Into<E>) -> Result<T, E> {
+        self.push_diag(err);
+        Ok(T::default())
     }
 }
