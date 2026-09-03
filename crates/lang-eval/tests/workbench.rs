@@ -10,13 +10,14 @@ use microcad_lang_resolve::{
     SymbolId, argument_list, call_builtin,
     symbol::{
         self, ConstantExpression, ExprSpec, Parameter, Path, SourceStatement, WorkbenchExpression,
-        WorkbenchStatement, constant, workbench,
+        WorkbenchStatement, workbench,
     },
 };
 
 use microcad_lang_types::{
-    ArgumentValue, ArgumentValueList, Length, ModelTree, Type, Value, argument_value, list, tuple,
+    ArgumentValue, ArgumentValueList, Length, ModelTree, Value, argument_value, list, tuple,
 };
+use microcad_macros::parameter_list;
 
 /// Expressions used for testing
 pub mod helper {
@@ -24,34 +25,9 @@ pub mod helper {
 
     use super::*;
 
-    /// length literal expression: `4.0mm`
-    pub fn length(v: f64) -> ConstantExpression {
-        Value::mm(v).into()
-    }
-
-    /// integer literal expression: `4`
-    pub fn integer(n: i32) -> ConstantExpression {
-        Value::from(n).into()
-    }
-
-    /// angle in degrees expression: `360°`
-    pub fn deg(v: f64) -> ConstantExpression {
-        Value::deg(v).into()
-    }
-
     /// __mu::geo2d::Circle(radius = expr)
     pub fn call_circle(radius: impl Into<WorkbenchExpression>) -> WorkbenchExpression {
         call_builtin!(geo2d::Circle(radius = radius)).into()
-    }
-
-    /// __mu::ops::translate(self, x, y, z)
-    pub fn call_translate(
-        self_: impl Into<WorkbenchExpression>,
-        x: impl Into<WorkbenchExpression>,
-        y: impl Into<WorkbenchExpression>,
-        z: impl Into<WorkbenchExpression>,
-    ) -> WorkbenchExpression {
-        call_builtin!(ops::translate(self = self_, x = x, y = y, z = z)).into()
     }
 
     /// Local expression with `name`
@@ -118,7 +94,7 @@ fn group() {
 
     eval_to_model_test(
         "group",
-        symbol::workbench::Group::new([WorkbenchStatement::expr(call_circle(length(4.0)))]),
+        symbol::workbench::Group::new([WorkbenchStatement::expr(call_circle(Value::mm(4.0)))]),
     );
 }
 
@@ -133,7 +109,7 @@ fn group_with_property() {
     let model = eval_to_model_test(
         "group_with_property",
         symbol::workbench::Group::new([
-            WorkbenchStatement::prop("a", length(4.0)),
+            WorkbenchStatement::prop("a", Value::mm(4.0)),
             WorkbenchStatement::expr(call_circle(local("a"))),
         ]),
     );
@@ -150,10 +126,10 @@ fn translate_circle() {
     let model = eval_to_model_test(
         "translate_circle",
         call_builtin!(ops::translate(
-            self = call_circle(length(4.0)),
-            x = length(1.0),
-            y = length(2.0),
-            z = length(0.0)
+            self = call_circle(Value::mm(4.0)),
+            x = Value::mm(1.0),
+            y = Value::mm(2.0),
+            z = Value::mm(0.0)
         )),
     );
 
@@ -167,7 +143,7 @@ fn circle_without_parameter() {
     use helper::*;
 
     let workbench = symbol::Workbench::sketch(vec![])
-        .with_statements([WorkbenchStatement::expr(call_circle(length(4.0)))]);
+        .with_statements([WorkbenchStatement::expr(call_circle(Value::mm(4.0)))]);
 
     call_workbench("circle_without_parameter", &workbench, []);
 }
@@ -180,10 +156,11 @@ fn circle_without_parameter() {
 fn circle_parameter() {
     use helper::*;
 
-    let workbench = symbol::Workbench::sketch(vec![Parameter::new("radius", Type::length())])
-        .with_statements([WorkbenchStatement::expr(call_circle(Path::Resolved(
-            SymbolId::Local("radius".into()),
-        )))]);
+    let workbench = symbol::Workbench::sketch(parameter_list!(radius: Length)).with_statements([
+        WorkbenchStatement::expr(call_circle(Path::Resolved(SymbolId::Local(
+            "radius".into(),
+        )))),
+    ]);
 
     {
         let radius = Length::mm(4.0);
@@ -220,18 +197,18 @@ fn circle_parameter() {
 fn circle_init() {
     use helper::*;
 
-    let workbench = symbol::Workbench::sketch(vec![Parameter::new("radius", Type::length())])
-        .with_inits([workbench::Init::default_init(vec![Parameter::new(
-            "diameter",
-            Type::length(),
-        )])
-        .with_statements([workbench::InitStatement::new(
-            "radius",
-            workbench::WorkbenchCall::builtin(__mu!(core::div)).with_args(argument_list!(
-                lhs = local("diameter"),
-                rhs = Value::from(2.0)
-            )),
-        )])])
+    let workbench = symbol::Workbench::sketch(parameter_list!(radius: Length))
+        .with_inits([
+            workbench::Init::default_init(parameter_list!(diameter: Length)).with_statements([
+                workbench::InitStatement::new(
+                    "radius",
+                    workbench::WorkbenchCall::builtin(__mu!(core::div)).with_args(argument_list!(
+                        lhs = local("diameter"),
+                        rhs = Value::from(2.0)
+                    )),
+                ),
+            ]),
+        ])
         .with_statements([WorkbenchStatement::expr(call_circle(Path::Resolved(
             SymbolId::Local("radius".into()),
         )))]);
@@ -255,7 +232,7 @@ fn circle_source() {
 
     let source = symbol::Source {
         statements: boxed([
-            SourceStatement::assignment("a", length(32.0)),
+            SourceStatement::assignment("a", Value::mm(32.0)),
             SourceStatement::expr(call_circle(local("a"))),
         ]),
     };
@@ -270,7 +247,7 @@ fn polar_expr_test() {
 
     let source = symbol::Source {
         statements: boxed([
-            SourceStatement::assignment("n", integer(4)),
+            SourceStatement::assignment("n", Value::from(4)),
             SourceStatement::assignment("a", polar_expr()),
             SourceStatement::expr(local("a")),
         ]),
@@ -295,17 +272,13 @@ fn polar_expr_test() {
 #[test]
 fn op_rotate() {
     use helper::*;
-    use microcad_lang_types::Type;
 
-    let workbench = symbol::Workbench::op(vec![Parameter::new("matrix", Type::mat3())])
+    let workbench = symbol::Workbench::op(parameter_list!(matrix: Mat3))
         .with_inits([
             // init(angle: Angle, axis = __mu::math::Z)
-            workbench::Init::new(vec![
-                Parameter::new("angle", Type::angle()),
-                Parameter::new("axis", Type::Any).with_default(constant::ConstantExpression::from(
-                    microcad_builtin::mu::math::Z.value(),
-                )),
-            ])
+            workbench::Init::new(
+                parameter_list!(angle: Angle, axis: Any = microcad_builtin::mu::math::Z.value()),
+            )
             .with_statements([workbench::InitStatement::new(
                 "matrix",
                 call_builtin!(math::rotate_around_axis(
@@ -316,11 +289,11 @@ fn op_rotate() {
                 )),
             )]),
             // init(x = 0°, y = 0°, z = 0°)
-            workbench::Init::new(vec![
-                Parameter::new("x", Type::angle()).with_default(deg(0.0)),
-                Parameter::new("y", Type::angle()).with_default(deg(0.0)),
-                Parameter::new("z", Type::angle()).with_default(deg(0.0)),
-            ])
+            workbench::Init::new(parameter_list!(
+                x: Angle = Value::deg(0.0),
+                y: Angle = Value::deg(0.0),
+                z: Angle = Value::deg(0.0),
+            ))
             .with_statements([workbench::InitStatement::new(
                 "matrix",
                 call_builtin!(math::rotate_xyz(
@@ -330,11 +303,11 @@ fn op_rotate() {
                 )),
             )]),
             // init(roll = 0°, pitch = 0°, yaw = 0°)
-            workbench::Init::new(vec![
-                Parameter::new("roll", Type::angle()).with_default(deg(0.0)),
-                Parameter::new("pitch", Type::angle()).with_default(deg(0.0)),
-                Parameter::new("yaw", Type::angle()).with_default(deg(0.0)),
-            ])
+            workbench::Init::new(parameter_list!(
+                roll: Angle = Value::deg(0.0),
+                pitch: Angle = Value::deg(0.0),
+                yaw: Angle = Value::deg(0.0),
+            ))
             .with_statements([workbench::InitStatement::new(
                 "matrix",
                 call_builtin!(math::rotate_xyz(
@@ -350,7 +323,7 @@ fn op_rotate() {
         )))]);
 
     let mut context = EvalContext::new();
-    let input_shape: Value = call_circle(length(4.0)).eval(&mut context).unwrap();
+    let input_shape: Value = call_circle(Value::mm(4.0)).eval(&mut context).unwrap();
 
     // Test calling (angle = 90.0, axis = (x = 0, y = 0, z = 1)) via init(angle, axis)
     call_workbench(

@@ -14,6 +14,7 @@ mod derive_src_referrer;
 mod derive_visit;
 mod helpers;
 mod include_inner_docs;
+mod parameter_list;
 mod test_builtin_fn;
 
 pub(crate) mod prelude {
@@ -99,4 +100,10 @@ pub fn derive_visit(input: TokenStream) -> TokenStream {
 #[proc_macro]
 pub fn include_inner_docs(input: TokenStream) -> TokenStream {
     include_inner_docs::include_inner_docs_impl(input)
+}
+
+/// Generate a parameter list µcad builtin types.
+#[proc_macro]
+pub fn parameter_list(input: TokenStream) -> TokenStream {
+    parameter_list::parameter_list_impl(input)
 }
