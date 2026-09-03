@@ -34,7 +34,7 @@ impl FlowSignal {
     }
 
     /// Unwrap the inner `Value` or return an evaluation error if it was `Continue`.
-    pub fn expect_value(self, src_ref: SrcRef) -> EvalResult<Value> {
+    pub fn expect_value(self, src_ref: SrcRef) -> EvalResult {
         match self {
             FlowSignal::Yield(val) | FlowSignal::Return(val) => Ok(val),
             FlowSignal::Continue => Err(EvalError::ExpectedExpression { src_ref }.into()),
@@ -227,8 +227,8 @@ impl Eval<FlowSignal> for Box<[symbol::FunctionStatement]> {
     }
 }
 
-impl CallTrait<Value> for symbol::Function {
-    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Value> {
+impl CallTrait for symbol::Function {
+    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult {
         use crate::ArgumentMatch;
         match self.argument_match(args) {
             Ok(args) => context.scope(FunctionFrame::new(args), |context| {

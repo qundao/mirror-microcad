@@ -30,7 +30,7 @@ pub trait Eval<T = Value> {
 
 impl<T> Eval<ModelTree> for T
 where
-    T: Eval<Value>,
+    T: Eval,
 {
     fn eval(&self, context: &mut EvalContext) -> EvalResult<ModelTree> {
         let value: Value = self.eval(context)?;
@@ -39,7 +39,7 @@ where
 }
 
 /// Trait for calls with argument list.
-pub trait CallTrait<T> {
+pub trait CallTrait<T = Value> {
     /// Evaluate call into value (if possible).
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<T>;
 }

@@ -41,9 +41,9 @@ impl Eval<()> for symbol::SourceStatement {
     }
 }
 
-impl Eval<Value> for symbol::Source {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
-        context.scope(SourceFrame::new(), |context| -> EvalResult<Value> {
+impl Eval for symbol::Source {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult {
+        context.scope(SourceFrame::new(), |context| -> EvalResult {
             self.statements
                 .iter()
                 .try_for_each(|stmt| stmt.eval(context))?;

@@ -9,8 +9,8 @@ use microcad_lang_types::{ArgumentValueList, ModelTree, Value};
 
 use crate::{ArgumentMatch, CallTrait, EvalContext, EvalError, EvalResult, context::ContextScope};
 
-impl CallTrait<Value> for BuiltinPrimitive {
-    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Value> {
+impl CallTrait for BuiltinPrimitive {
+    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult {
         use crate::ArgumentMatch;
 
         let multi_args = self.argument_multi_match(&args).map_err(|err| {
@@ -28,8 +28,8 @@ impl CallTrait<Value> for BuiltinPrimitive {
     }
 }
 
-impl CallTrait<Value> for BuiltinFunction {
-    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Value> {
+impl CallTrait for BuiltinFunction {
+    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult {
         let src_ref = context.current_symbol_src_ref();
         let name = context.current_symbol_name().unwrap_or_default();
         let args = self
@@ -40,8 +40,8 @@ impl CallTrait<Value> for BuiltinFunction {
     }
 }
 
-impl CallTrait<Value> for BuiltinOperation {
-    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Value> {
+impl CallTrait for BuiltinOperation {
+    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult {
         let src_ref = context.current_symbol_src_ref();
         let name = context.current_symbol_name().unwrap_or_default();
         let multi_args = self
@@ -56,8 +56,8 @@ impl CallTrait<Value> for BuiltinOperation {
     }
 }
 
-impl CallTrait<Value> for BuiltinItem {
-    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<Value> {
+impl CallTrait for BuiltinItem {
+    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult {
         match self {
             BuiltinItem::Function(f) => f.call(args, context),
             BuiltinItem::Primitive(p) => p.call(args, context),

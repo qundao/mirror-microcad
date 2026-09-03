@@ -89,7 +89,7 @@ pub mod helper {
 }
 
 /// Evaluate something into a model tree and test snapshot
-pub fn eval_to_model_test<T: Eval<Value>>(name: &str, t: T) -> ModelTree {
+pub fn eval_to_model_test<T: Eval>(name: &str, t: T) -> ModelTree {
     let mut context = EvalContext::new();
     let value: Value = t.eval(&mut context).expect("No error");
     let model: ModelTree = value.into();

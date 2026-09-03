@@ -7,7 +7,7 @@ use microcad_builtin::BuiltinError;
 use microcad_lang_base::{
     Identifier, IdentifierList, Name, SrcRef, SrcReferrer, ToCompactString, element::WorkbenchKind,
 };
-use microcad_lang_types::{Type, ValueError, model::ModelType};
+use microcad_lang_types::{Type, Value, ValueError, model::ModelType};
 use miette::Diagnostic;
 
 use thiserror::Error;
@@ -208,7 +208,7 @@ impl From<ValueError> for Box<EvalError> {
 }
 
 /// Result type of any evaluation.
-pub type EvalResult<T> = std::result::Result<T, Box<EvalError>>;
+pub type EvalResult<T = Value> = std::result::Result<T, Box<EvalError>>;
 
 impl From<Box<EvalError>> for miette::Report {
     fn from(value: Box<EvalError>) -> Self {

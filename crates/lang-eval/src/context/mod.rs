@@ -70,10 +70,7 @@ impl EvalContext {
         self.stack.top_mut()
     }
 
-    pub(crate) fn eval_constant_symbol(
-        &mut self,
-        node_id: symbol::SymbolNodeId,
-    ) -> EvalResult<Value> {
+    pub(crate) fn eval_constant_symbol(&mut self, node_id: symbol::SymbolNodeId) -> EvalResult {
         /// Local up a symbol by its node id in the current package
         fn look_up_symbol(_node_id: symbol::SymbolNodeId) -> Option<symbol::SymbolDef> {
             todo!()

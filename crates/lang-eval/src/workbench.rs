@@ -19,8 +19,8 @@ use microcad_lang_types::{
     model::{Element, ModelTreeBuilderMut, Properties, Property, PropertyType, Workpiece},
 };
 
-impl Eval<Value> for symbol::workbench::Group {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+impl Eval for symbol::workbench::Group {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult {
         context.scope(WorkbenchGroupFrame::new(), |context| {
             self.statements
                 .iter()
@@ -30,8 +30,8 @@ impl Eval<Value> for symbol::workbench::Group {
     }
 }
 
-impl Eval<Value> for symbol::workbench::WorkbenchIf {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+impl Eval for symbol::workbench::WorkbenchIf {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult {
         let cond: Value = self.cond.eval(context)?;
         let cond: bool = match cond.try_into() {
             Ok(cond) => cond,
@@ -63,8 +63,8 @@ impl Eval<ModelTree> for symbol::workbench::Marker {
     }
 }
 
-impl Eval<Value> for BuiltinItem {
-    fn eval(&self, _context: &mut EvalContext) -> EvalResult<Value> {
+impl Eval for BuiltinItem {
+    fn eval(&self, _context: &mut EvalContext) -> EvalResult {
         match self {
             BuiltinItem::Constant(builtin_constant) => Ok(builtin_constant.value()),
             _ => todo!("Error handling: Builtin constant expected"),
@@ -72,8 +72,8 @@ impl Eval<Value> for BuiltinItem {
     }
 }
 
-impl Eval<Value> for symbol::SymbolDef {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+impl Eval for symbol::SymbolDef {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult {
         match self {
             symbol::SymbolDef::Constant(constant) => match constant.value() {
                 Some(value) => Ok(value.clone()),
@@ -86,8 +86,8 @@ impl Eval<Value> for symbol::SymbolDef {
     }
 }
 
-impl Eval<Value> for symbol::SymbolId {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+impl Eval for symbol::SymbolId {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult {
         use crate::context::ContextScope;
 
         match &self {
@@ -109,8 +109,8 @@ impl Eval<Value> for symbol::SymbolId {
     }
 }
 
-impl Eval<Value> for symbol::Path {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+impl Eval for symbol::Path {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult {
         match self {
             symbol::Path::Resolved(symbol_id)
             | symbol::Path::HumanReadable { id: symbol_id, .. } => symbol_id.eval(context),
@@ -154,7 +154,7 @@ impl Eval<ArgumentValueList> for symbol::workbench::ArgumentList {
 }
 
 impl Eval for symbol::workbench::WorkbenchCall {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult {
         match &self.path {
             symbol::Path::Resolved(symbol::SymbolId::Builtin(builtin_id)) => {
                 let args = self.args.eval(context)?;
@@ -178,8 +178,8 @@ impl Eval for symbol::workbench::WorkbenchCall {
     }
 }
 
-impl Eval<Value> for symbol::WorkbenchExpression {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+impl Eval for symbol::WorkbenchExpression {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult {
         match &self {
             symbol::WorkbenchExpression::Invalid => unreachable!(),
             symbol::WorkbenchExpression::Value(constant_value) => {
