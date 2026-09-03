@@ -78,7 +78,6 @@ pub trait GetSourceByHash {
     fn get_source_by_hash(&'_ self, hash: HashId) -> Option<&Source>;
 }
 
-
 /// Check if the element only includes one identifier
 pub trait SingleIdentifier {
     /// If the element only includes one identifier, return it
@@ -128,4 +127,9 @@ pub trait WriteToFile: std::fmt::Display {
         write!(writer, "{self}")?;
         writer.flush()
     }
+}
+
+/// Helper function construct a `Box<[T]>` for in iterator of `T`.
+pub fn boxed<T>(iter: impl IntoIterator<Item = T>) -> Box<[T]> {
+    iter.into_iter().collect::<Vec<_>>().into_boxed_slice()
 }
