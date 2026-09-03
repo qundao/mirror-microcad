@@ -289,15 +289,27 @@ pub struct WorkbenchSignature {
     pub inits: Box<[ir::Init]>,
 }
 
+/// Workbench definition, e.g `sketch`, `part` or `op`.
+#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
+pub struct Workbench {
+    /// Workbench Kind
+    pub signature: WorkbenchSignature,
+    /// The actual statements to build the Model
+    pub statements: Box<[ir::WorkbenchStatement]>,
+}
+
 /// Builder methods for testing
-impl WorkbenchSignature {
+impl Workbench {
     /// Create a new Workbench signature
     pub fn new(kind: WorkbenchKind, parameters: impl Into<ir::ParameterList>) -> Self {
         let parameters = parameters.into();
         Self {
-            kind,
-            inits: boxed([Init::default_init(parameters.clone())]), // Default init
-            parameters,
+            signature: WorkbenchSignature {
+                kind,
+                inits: boxed([Init::default_init(parameters.clone())]), // Default init
+                parameters,
+            },
+            statements: Default::default(),
         }
     }
 
@@ -318,18 +330,18 @@ impl WorkbenchSignature {
         let mut combined: Vec<_> = inits.into_iter().collect();
 
         // 2. Original self.inits are placed AFTER the new inits
-        combined.extend(self.inits.into_vec());
+        combined.extend(self.signature.inits.into_vec());
 
-        self.inits = combined.into_boxed_slice();
+        self.signature.inits = combined.into_boxed_slice();
         self
     }
-}
 
-/// Workbench definition, e.g `sketch`, `part` or `op`.
-#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
-pub struct Workbench {
-    /// Workbench Kind
-    pub signature: WorkbenchSignature,
-    /// The actual statements to build the Model
-    pub statements: Box<[ir::WorkbenchStatement]>,
+    /// Set statements of this workbench
+    pub fn with_statements(
+        mut self,
+        statements: impl IntoIterator<Item = WorkbenchStatement>,
+    ) -> Self {
+        self.statements = boxed(statements);
+        self
+    }
 }

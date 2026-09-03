@@ -195,13 +195,8 @@ fn translate_circle() {
 fn circle_without_parameter() {
     use helper::*;
 
-    let workbench = symbol::Workbench {
-        signature: workbench::WorkbenchSignature::new(
-            symbol::WorkbenchKind::Sketch,
-            vec![], // No parameters
-        ),
-        statements: boxed([WorkbenchStatement::expr(call_circle(length(4.0)))]),
-    };
+    let workbench = symbol::Workbench::sketch(vec![])
+        .with_statements([WorkbenchStatement::expr(call_circle(length(4.0)))]);
 
     call_workbench("circle_without_parameter", &workbench, []);
 }
@@ -214,15 +209,10 @@ fn circle_without_parameter() {
 fn circle_parameter() {
     use helper::*;
 
-    let workbench = symbol::Workbench {
-        signature: workbench::WorkbenchSignature::new(
-            symbol::WorkbenchKind::Sketch,
-            vec![Parameter::new("radius", Type::length())],
-        ),
-        statements: boxed([WorkbenchStatement::expr(call_circle(Path::Resolved(
+    let workbench = symbol::Workbench::sketch(vec![Parameter::new("radius", Type::length())])
+        .with_statements([WorkbenchStatement::expr(call_circle(Path::Resolved(
             SymbolId::Local("radius".into()),
-        )))]),
-    };
+        )))]);
 
     {
         let radius = Length::mm(4.0);
@@ -259,11 +249,7 @@ fn circle_parameter() {
 fn circle_init() {
     use helper::*;
 
-    let workbench = symbol::Workbench {
-        signature: workbench::WorkbenchSignature::new(
-            symbol::WorkbenchKind::Sketch,
-            vec![Parameter::new("radius", Type::length())],
-        )
+    let workbench = symbol::Workbench::sketch(vec![Parameter::new("radius", Type::length())])
         .with_inits([workbench::Init::default_init(vec![Parameter::new(
             "diameter",
             Type::length(),
@@ -274,11 +260,10 @@ fn circle_init() {
                 lhs = local("diameter"),
                 rhs = Value::from(2.0)
             )),
-        )])]),
-        statements: boxed([WorkbenchStatement::expr(call_circle(Path::Resolved(
+        )])])
+        .with_statements([WorkbenchStatement::expr(call_circle(Path::Resolved(
             SymbolId::Local("radius".into()),
-        )))]),
-    };
+        )))]);
 
     let diameter = Length::mm(8.0);
     let model = call_workbench(
@@ -341,60 +326,58 @@ fn op_rotate() {
     use helper::*;
     use microcad_lang_types::Type;
 
-    let workbench = symbol::Workbench {
-        signature: workbench::WorkbenchSignature::op(vec![Parameter::new("matrix", Type::mat3())])
-            .with_inits([
-                // init(angle: Angle, axis = __mu::math::Z)
-                workbench::Init::new(vec![
-                    Parameter::new("angle", Type::angle()),
-                    Parameter::new("axis", Type::Any).with_default(
-                        constant::ConstantExpression::from(microcad_builtin::mu::math::Z.value()),
+    let workbench = symbol::Workbench::op(vec![Parameter::new("matrix", Type::mat3())])
+        .with_inits([
+            // init(angle: Angle, axis = __mu::math::Z)
+            workbench::Init::new(vec![
+                Parameter::new("angle", Type::angle()),
+                Parameter::new("axis", Type::Any).with_default(constant::ConstantExpression::from(
+                    microcad_builtin::mu::math::Z.value(),
+                )),
+            ])
+            .with_statements([workbench::InitStatement::new(
+                "matrix",
+                call(
+                    __mu!(math::rotate_around_axis),
+                    argument_list!(
+                        angle = local("angle"),
+                        x = get(local("axis"), "x"),
+                        y = get(local("axis"), "y"),
+                        z = get(local("axis"), "z")
                     ),
-                ])
-                .with_statements([workbench::InitStatement::new(
-                    "matrix",
-                    call(
-                        __mu!(math::rotate_around_axis),
-                        argument_list!(
-                            angle = local("angle"),
-                            x = get(local("axis"), "x"),
-                            y = get(local("axis"), "y"),
-                            z = get(local("axis"), "z")
-                        ),
-                    ),
-                )]),
-                // init(x = 0°, y = 0°, z = 0°)
-                workbench::Init::new(vec![
-                    Parameter::new("x", Type::angle()).with_default(deg(0.0)),
-                    Parameter::new("y", Type::angle()).with_default(deg(0.0)),
-                    Parameter::new("z", Type::angle()).with_default(deg(0.0)),
-                ])
-                .with_statements([workbench::InitStatement::new(
-                    "matrix",
-                    call(
-                        __mu!(math::rotate_xyz),
-                        argument_list!(x = local("x"), y = local("y"), z = local("z")),
-                    ),
-                )]),
-                // init(roll = 0°, pitch = 0°, yaw = 0°)
-                workbench::Init::new(vec![
-                    Parameter::new("roll", Type::angle()).with_default(deg(0.0)),
-                    Parameter::new("pitch", Type::angle()).with_default(deg(0.0)),
-                    Parameter::new("yaw", Type::angle()).with_default(deg(0.0)),
-                ])
-                .with_statements([workbench::InitStatement::new(
-                    "matrix",
-                    call(
-                        __mu!(math::rotate_xyz),
-                        argument_list!(x = local("roll"), y = local("pitch"), z = local("yaw")),
-                    ),
-                )]),
-            ]),
-        statements: boxed([WorkbenchStatement::expr(call(
+                ),
+            )]),
+            // init(x = 0°, y = 0°, z = 0°)
+            workbench::Init::new(vec![
+                Parameter::new("x", Type::angle()).with_default(deg(0.0)),
+                Parameter::new("y", Type::angle()).with_default(deg(0.0)),
+                Parameter::new("z", Type::angle()).with_default(deg(0.0)),
+            ])
+            .with_statements([workbench::InitStatement::new(
+                "matrix",
+                call(
+                    __mu!(math::rotate_xyz),
+                    argument_list!(x = local("x"), y = local("y"), z = local("z")),
+                ),
+            )]),
+            // init(roll = 0°, pitch = 0°, yaw = 0°)
+            workbench::Init::new(vec![
+                Parameter::new("roll", Type::angle()).with_default(deg(0.0)),
+                Parameter::new("pitch", Type::angle()).with_default(deg(0.0)),
+                Parameter::new("yaw", Type::angle()).with_default(deg(0.0)),
+            ])
+            .with_statements([workbench::InitStatement::new(
+                "matrix",
+                call(
+                    __mu!(math::rotate_xyz),
+                    argument_list!(x = local("roll"), y = local("pitch"), z = local("yaw")),
+                ),
+            )]),
+        ])
+        .with_statements([WorkbenchStatement::expr(call(
             __mu!(ops::rotate),
             argument_list!(self = input(), matrix = local("matrix")),
-        ))]),
-    };
+        ))]);
 
     let mut context = EvalContext::new();
     let input_shape: Value = call_circle(length(4.0)).eval(&mut context).unwrap();
