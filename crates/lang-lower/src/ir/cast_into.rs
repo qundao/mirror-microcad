@@ -3,7 +3,7 @@
 
 //! CastInto Trait
 
-use microcad_lang_base::{Identifier, Refer};
+use microcad_lang_base::{Identifier, Refer, boxed};
 
 pub trait CastInto<T> {
     fn cast_into(self) -> T;
@@ -14,10 +14,7 @@ where
     A: CastInto<B>,
 {
     fn cast_into(self) -> Box<[B]> {
-        self.into_iter()
-            .map(|a| a.cast_into())
-            .collect::<Vec<B>>()
-            .into_boxed_slice()
+        boxed(self.into_iter().map(|a| a.cast_into()))
     }
 }
 

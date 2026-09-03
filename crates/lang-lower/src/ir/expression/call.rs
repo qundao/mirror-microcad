@@ -6,7 +6,7 @@
 use crate::{CastInto, ir};
 use derive_more::Display;
 use microcad_builtin::BuiltinId;
-use microcad_lang_base::{Identifier, SrcRef, SrcReferrer};
+use microcad_lang_base::{Identifier, SrcRef, SrcReferrer, boxed};
 
 use microcad_lang_types::Value;
 use serde::{Deserialize, Serialize};
@@ -121,14 +121,14 @@ impl<Expr: ir::ExprSpec> From<Expr> for Argument<Expr> {
     }
 }
 
-/// *Ordered map* of arguments in a [`Call`].
+/// Arguments in a [`Call`].
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
 #[serde(bound(serialize = "Expr: Serialize", deserialize = "Expr: Deserialize<'de>"))]
 pub struct ArgumentList<Expr> {
     /// Source code reference
     pub src_ref: SrcRef,
 
-    /// The unnamed arguments.
+    /// The arguments in the list
     pub args: Box<[Argument<Expr>]>,
 }
 
@@ -238,11 +238,7 @@ where
     fn from_iter<T: IntoIterator<Item = S>>(iter: T) -> Self {
         Self {
             src_ref: SrcRef::default(),
-            args: iter
-                .into_iter()
-                .map(|arg| arg.into())
-                .collect::<Vec<_>>()
-                .into_boxed_slice(),
+            args: boxed(iter.into_iter().map(|arg| arg.into())),
         }
     }
 }

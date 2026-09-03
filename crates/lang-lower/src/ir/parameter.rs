@@ -5,7 +5,7 @@
 
 use crate::ir;
 
-use microcad_lang_base::{Identifier, SrcRef};
+use microcad_lang_base::{Identifier, SrcRef, boxed};
 use microcad_lang_types::Ty;
 use microcad_macros::{Identifiable, SrcReferrer};
 
@@ -111,20 +111,14 @@ where
 {
     fn from_iter<T: IntoIterator<Item = P>>(iter: T) -> Self {
         Self {
-            parameters: iter
-                .into_iter()
-                .map(|p| p.into())
-                .collect::<Vec<_>>()
-                .into_boxed_slice(),
+            parameters: boxed(iter.into_iter().map(|p| p.into())),
             src_ref: SrcRef::none(),
         }
     }
 }
 
 impl From<Vec<ir::Parameter>> for ParameterList {
-    fn from(mut params: Vec<ir::Parameter>) -> Self {
-        params.sort_by(|a, b| a.id.cmp(&b.id));
-
+    fn from(params: Vec<ir::Parameter>) -> Self {
         Self {
             parameters: params.into_boxed_slice(),
             src_ref: SrcRef::none(),

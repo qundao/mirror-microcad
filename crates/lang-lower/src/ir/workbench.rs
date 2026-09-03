@@ -10,7 +10,8 @@ use crate::{
 
 use derive_more::{Display, From};
 use microcad_lang_base::{
-    Identifier, SingleIdentifier, SrcRef, SrcReferrer, VersionAnnotation, element::Visibility,
+    Identifier, SingleIdentifier, SrcRef, SrcReferrer, VersionAnnotation, boxed,
+    element::Visibility,
 };
 
 pub use microcad_lang_base::element::WorkbenchKind;
@@ -81,10 +82,7 @@ pub struct Group {
 impl Group {
     pub fn new(statements: impl IntoIterator<Item = WorkbenchStatement>) -> Self {
         Self {
-            statements: statements
-                .into_iter()
-                .collect::<Vec<_>>()
-                .into_boxed_slice(),
+            statements: boxed(statements),
             attr: Default::default(),
             src_ref: Default::default(),
         }
@@ -178,12 +176,9 @@ impl Init {
         Self::new(parameters).with_statements(statements)
     }
 
-    /// Add statements to this initializer
+    /// Set statements of this initializer
     pub fn with_statements(mut self, statements: impl IntoIterator<Item = InitStatement>) -> Self {
-        self.statements = statements
-            .into_iter()
-            .collect::<Vec<_>>()
-            .into_boxed_slice();
+        self.statements = boxed(statements);
         self
     }
 }
@@ -301,7 +296,7 @@ impl WorkbenchSignature {
         let parameters = parameters.into();
         Self {
             kind,
-            inits: vec![Init::default_init(parameters.clone())].into_boxed_slice(), // Default init
+            inits: boxed([Init::default_init(parameters.clone())]), // Default init
             parameters,
         }
     }
