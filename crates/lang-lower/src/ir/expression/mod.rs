@@ -99,7 +99,7 @@ impl SrcReferrer for ConstantExpression {
 
 impl From<Value> for ConstantExpression {
     fn from(value: Value) -> Self {
-        Self::Value(ir::ConstantValue::from_value(value))
+        Self::Value(ir::ConstantValue::new(value))
     }
 }
 

@@ -122,16 +122,12 @@ fn if_a_greater_than() {
                     src_ref: SrcRef::none(),
                 })
                 .into(),
-                body: scope(
-                    [FunctionStatement::Tail(ConstantValue::from_value(2).into())].into_iter(),
-                )
-                .into(),
+                body: scope([FunctionStatement::Tail(ConstantValue::new(2).into())].into_iter())
+                    .into(),
                 else_ref: None,
                 body_else: Some(
-                    scope(
-                        [FunctionStatement::Tail(ConstantValue::from_value(4).into())].into_iter(),
-                    )
-                    .into(),
+                    scope([FunctionStatement::Tail(ConstantValue::new(4).into())].into_iter())
+                        .into(),
                 ),
                 next_if: None,
             }]

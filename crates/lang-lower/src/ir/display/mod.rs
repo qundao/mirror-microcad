@@ -30,11 +30,8 @@ impl std::fmt::Display for ir::Meta {
             microcad_lang_base::element::Visibility::Private => {}
         };
 
-        match &self.name {
-            Some(name) => {
-                write!(f, "{name}:")?;
-            }
-            None => {}
+        if let Some(name) = &self.name {
+            write!(f, "{name}:")?;
         }
         Ok(())
     }

@@ -112,7 +112,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                     ty: Any,
                                                     src_ref: "None",
                                                 ),
-                                                default_value: Some(Value(((
+                                                default_value: Some(Value((
                                                     value: Tuple((
                                                         positional: [],
                                                         named: [
@@ -127,7 +127,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                         ],
                                                     )),
                                                     src_ref: "None",
-                                                )))),
+                                                ))),
                                                 src_ref: "6:34 @ 0x6fea70d2e98e16db (181..213)",
                                             ),
                                         ],
@@ -170,7 +170,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                             ty: Any,
                                                             src_ref: "None",
                                                         ),
-                                                        default_value: Some(Value(((
+                                                        default_value: Some(Value((
                                                             value: Tuple((
                                                                 positional: [],
                                                                 named: [
@@ -185,7 +185,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                 ],
                                                             )),
                                                             src_ref: "None",
-                                                        )))),
+                                                        ))),
                                                         src_ref: "7:27 @ 0x6fea70d2e98e16db (243..275)",
                                                     ),
                                                 ],
@@ -227,10 +227,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                         value: "rhs",
                                                                         src_ref: "None",
                                                                     )),
-                                                                    expr: Value(((
+                                                                    expr: Value((
                                                                         value: Quantity("2"),
                                                                         src_ref: "8:29 @ 0x6fea70d2e98e16db (307..310)",
-                                                                    ))),
+                                                                    )),
                                                                     src_ref: "8:29 @ 0x6fea70d2e98e16db (307..310)",
                                                                 ),
                                                             ],
@@ -244,7 +244,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                         value: "center",
                                                         src_ref: "None",
                                                     )),
-                                                    expression: Value(((
+                                                    expression: Value((
                                                         value: Tuple((
                                                             positional: [],
                                                             named: [
@@ -259,7 +259,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                             ],
                                                         )),
                                                         src_ref: "None",
-                                                    ))),
+                                                    )),
                                                     src_ref: "None",
                                                 ),
                                             ],
@@ -312,7 +312,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                             ty: Any,
                                                             src_ref: "None",
                                                         ),
-                                                        default_value: Some(Value(((
+                                                        default_value: Some(Value((
                                                             value: Tuple((
                                                                 positional: [],
                                                                 named: [
@@ -327,7 +327,7 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                 ],
                                                             )),
                                                             src_ref: "None",
-                                                        )))),
+                                                        ))),
                                                         src_ref: "6:34 @ 0x6fea70d2e98e16db (181..213)",
                                                     ),
                                                 ],
@@ -448,10 +448,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                         ],
                                                                         src_ref: "12:35 @ 0x6fea70d2e98e16db (385..391)",
                                                                     )))),
-                                                                    Unnamed(Value(((
+                                                                    Unnamed(Value((
                                                                         value: String("x"),
                                                                         src_ref: "12:42 @ 0x6fea70d2e98e16db (392..393)",
-                                                                    )))),
+                                                                    ))),
                                                                 ],
                                                             ),
                                                             src_ref: "12:35 @ 0x6fea70d2e98e16db (385..393)",
@@ -481,10 +481,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                                         ],
                                                                         src_ref: "12:49 @ 0x6fea70d2e98e16db (399..405)",
                                                                     )))),
-                                                                    Unnamed(Value(((
+                                                                    Unnamed(Value((
                                                                         value: String("y"),
                                                                         src_ref: "12:56 @ 0x6fea70d2e98e16db (406..407)",
-                                                                    )))),
+                                                                    ))),
                                                                 ],
                                                             ),
                                                             src_ref: "12:49 @ 0x6fea70d2e98e16db (399..407)",
@@ -496,10 +496,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                                             value: "z",
                                                             src_ref: "12:59 @ 0x6fea70d2e98e16db (409..410)",
                                                         )),
-                                                        expr: Value(((
+                                                        expr: Value((
                                                             value: Quantity("0mm"),
                                                             src_ref: "12:63 @ 0x6fea70d2e98e16db (413..418)",
-                                                        ))),
+                                                        )),
                                                         src_ref: "12:59 @ 0x6fea70d2e98e16db (409..418)",
                                                     ),
                                                 ],

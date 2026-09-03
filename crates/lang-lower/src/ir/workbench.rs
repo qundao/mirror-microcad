@@ -73,9 +73,22 @@ impl WorkbenchStatement {
 
 #[derive(Debug, PartialEq, Clone, Hash, Serialize, Deserialize)]
 pub struct Group {
-    pub src_ref: SrcRef,
-    pub attr: ModelAttributes,
     pub statements: Box<[WorkbenchStatement]>,
+    pub attr: Box<ModelAttributes>,
+    pub src_ref: SrcRef,
+}
+
+impl Group {
+    pub fn new(statements: impl IntoIterator<Item = WorkbenchStatement>) -> Self {
+        Self {
+            statements: statements
+                .into_iter()
+                .collect::<Vec<_>>()
+                .into_boxed_slice(),
+            attr: Default::default(),
+            src_ref: Default::default(),
+        }
+    }
 }
 
 /// Each WorkbenchStatement eventually evals into a [`Models`]
@@ -210,7 +223,7 @@ pub enum WorkbenchExpression {
 
 impl From<Value> for WorkbenchExpression {
     fn from(value: Value) -> Self {
-        Self::Value(ir::ConstantValue::from_value(value))
+        ir::ConstantValue::new(value).into()
     }
 }
 

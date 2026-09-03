@@ -34,13 +34,9 @@ impl std::fmt::Display for ir::WorkbenchStatement {
         };
 
         // TODO Display attributes and exports
-        match &self.name {
-            Some(name) => {
-                write!(f, "{name}: {ty}", ty = self.ty)?;
-            }
-            None => {}
+        if let Some(name) = &self.name {
+            write!(f, "{name}: {ty}", ty = self.ty)?;
         };
-
         write!(f, "{}", self.expression)
     }
 }

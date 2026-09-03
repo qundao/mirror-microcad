@@ -60,10 +60,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             ty: Any,
                                             src_ref: "None",
                                         ),
-                                        expression: Value(((
+                                        expression: Value((
                                             value: Quantity("3"),
                                             src_ref: "None",
-                                        ))),
+                                        )),
                                     ),
                                     (
                                         exports: [],
@@ -82,10 +82,10 @@ expression: "ir.to_ron().expect(\"No error\")"
                                             ty: Any,
                                             src_ref: "None",
                                         ),
-                                        expression: Value(((
+                                        expression: Value((
                                             value: Quantity("3"),
                                             src_ref: "None",
-                                        ))),
+                                        )),
                                     ),
                                 ],
                             )),

@@ -26,18 +26,18 @@ pub mod helper {
 
     /// length literal expression: `4.0mm`
     pub fn length(v: f64) -> ConstantExpression {
-        ConstantValue::from_value(Length::mm(v)).into()
+        ConstantValue::new(Length::mm(v)).into()
     }
 
     /// integer literal expression: `4`
     pub fn integer(n: i32) -> ConstantExpression {
-        ConstantValue::from_value(n).into()
+        ConstantValue::new(n).into()
     }
 
     /// angle in degrees expression: `360°`
     pub fn deg(v: f64) -> ConstantExpression {
         let value = Value::deg(v);
-        ConstantValue::from_value(value).into()
+        ConstantValue::new(value).into()
     }
 
     /// Any call to an op
@@ -172,11 +172,7 @@ fn group() {
 
     eval_to_model_test(
         "group",
-        symbol::workbench::Group {
-            src_ref: SrcRef::none(),
-            attr: symbol::ModelAttributes::default(),
-            statements: workbench_statements([WorkbenchStatement::expr(call_circle(length(4.0)))]),
-        },
+        symbol::workbench::Group::new([WorkbenchStatement::expr(call_circle(length(4.0)))]),
     );
 }
 
@@ -190,14 +186,10 @@ fn group_with_property() {
 
     let model = eval_to_model_test(
         "group_with_property",
-        symbol::workbench::Group {
-            src_ref: SrcRef::none(),
-            attr: symbol::ModelAttributes::default(),
-            statements: workbench_statements([
-                WorkbenchStatement::prop("a", length(4.0)),
-                WorkbenchStatement::expr(call_circle(local("a"))),
-            ]),
-        },
+        symbol::workbench::Group::new([
+            WorkbenchStatement::prop("a", length(4.0)),
+            WorkbenchStatement::expr(call_circle(local("a"))),
+        ]),
     );
 
     let prop = model.get_property_value("a");
@@ -306,7 +298,7 @@ fn circle_init() {
             workbench::WorkbenchCall::builtin(__mu!(core::div)).with_args(
                 workbench::ArgumentList::from_iter([
                     workbench::Argument::named("lhs", local("diameter")),
-                    workbench::Argument::named("rhs", symbol::ConstantValue::from_value(2.0)),
+                    workbench::Argument::named("rhs", symbol::ConstantValue::new(2.0)),
                 ]),
             ),
         )])]),

@@ -170,7 +170,7 @@ impl Desugar<ast::Body> for ir::Group {
 
         Ok(Self {
             src_ref: context.span_to_src_ref(&node.span),
-            attr: ir::ModelAttributes::desugar(statements, context)?,
+            attr: ir::ModelAttributes::desugar(statements, context)?.into(),
             statements: Box::desugar(statements, context)?,
         })
     }
@@ -184,7 +184,7 @@ impl Desugar<ast::Expression> for ir::WorkbenchExpression {
             ast::Expression::Literal(ast::Literal {
                 literal: ast::LiteralKind::String(s),
                 ..
-            }) => Self::Value(ir::ConstantValue::from_value(s.content.clone())),
+            }) => Self::Value(ir::ConstantValue::new(s.content.clone())),
             ast::Expression::Literal(expr) => {
                 Self::Value(ir::ConstantValue::desugar(expr, context)?)
             }
@@ -212,10 +212,10 @@ impl Desugar<ast::Expression> for ir::WorkbenchExpression {
                             path: __mu!(core::attribute_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
-                                Self::Value(ir::ConstantValue::new(
-                                    a.name.clone(),
-                                    context.span_to_src_ref(&a.span),
-                                )),
+                                Self::Value(
+                                    ir::ConstantValue::new(a.name.clone())
+                                        .with_src_ref(context.span_to_src_ref(&a.span)),
+                                ),
                             ]),
                             src_ref,
                         }),
@@ -223,10 +223,10 @@ impl Desugar<ast::Expression> for ir::WorkbenchExpression {
                             path: __mu!(core::member_access),
                             args: ir::ArgumentList::from_iter([
                                 lhs,
-                                Self::Value(ir::ConstantValue::new(
-                                    t.name.clone(),
-                                    context.span_to_src_ref(&t.span),
-                                )),
+                                Self::Value(
+                                    ir::ConstantValue::new(t.name.clone())
+                                        .with_src_ref(context.span_to_src_ref(&t.span)),
+                                ),
                             ]),
                             src_ref,
                         }),
