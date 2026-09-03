@@ -6,7 +6,7 @@ mod stack;
 pub use stack::*;
 
 use microcad_builtin::BuiltinRegistry;
-use microcad_lang_base::{LookUpName, Name};
+use microcad_lang_base::{LookUpName, Name, PushDiag};
 use microcad_lang_resolve::symbol;
 use microcad_lang_types::{Value, model::ModelTreeBuilderMut};
 
@@ -16,7 +16,7 @@ use crate::{EvalError, EvalResult};
 pub struct EvalContext {
     stack: Stack,
 
-    diag: Vec<EvalError>,
+    diag: Vec<Box<EvalError>>,
 
     pub builtins: BuiltinRegistry,
 
@@ -60,11 +60,6 @@ impl EvalContext {
         // 4. Run the closure. When `_guard` goes out of scope right after this,
         // it will execute `self.stack.pop()` even if `f` panics or short-circuits.
         f(_guard.0)
-    }
-
-    /// Push a diagnostic
-    pub fn diag(&mut self, diag: impl Into<EvalError>) {
-        self.diag.push(diag.into());
     }
 
     pub fn top(&self) -> &StackFrame {
@@ -141,5 +136,11 @@ impl StackWrite for EvalContext {
 impl ModelTreeBuilderMut for EvalContext {
     fn model_tree_builder_mut(&mut self) -> &mut microcad_lang_types::model::ModelTreeBuilder {
         self.top_mut().model_tree_builder_mut()
+    }
+}
+
+impl PushDiag<Box<EvalError>> for EvalContext {
+    fn push_diag(&mut self, err: impl Into<Box<EvalError>>) {
+        self.diag.push(err.into())
     }
 }

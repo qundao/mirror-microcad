@@ -4,7 +4,7 @@
 //! Tests for evaluating workbenches.
 
 use microcad_builtin::__mu;
-use microcad_lang_base::{DisplayWithCtx, SrcRef};
+use microcad_lang_base::{DisplayWithCtx, boxed};
 use microcad_lang_eval::{CallTrait, Eval, EvalContext};
 use microcad_lang_resolve::{
     SymbolId,
@@ -95,24 +95,6 @@ pub mod helper {
     /// TODO: Might be replaced with `self` in the future
     pub fn input() -> WorkbenchExpression {
         symbol::workbench::Marker::input().into()
-    }
-
-    pub fn workbench_statements(
-        statements: impl IntoIterator<Item = WorkbenchStatement>,
-    ) -> Box<[WorkbenchStatement]> {
-        statements
-            .into_iter()
-            .collect::<Vec<_>>()
-            .into_boxed_slice()
-    }
-
-    pub fn source_statements(
-        statements: impl IntoIterator<Item = SourceStatement>,
-    ) -> Box<[SourceStatement]> {
-        statements
-            .into_iter()
-            .collect::<Vec<_>>()
-            .into_boxed_slice()
     }
 
     /// [1..n] / n * 360°
@@ -225,7 +207,7 @@ fn circle_without_parameter() {
             symbol::WorkbenchKind::Sketch,
             vec![], // No parameters
         ),
-        statements: workbench_statements([WorkbenchStatement::expr(call_circle(length(4.0)))]),
+        statements: boxed([WorkbenchStatement::expr(call_circle(length(4.0)))]),
     };
 
     call_workbench("circle_without_parameter", &workbench, []);
@@ -244,7 +226,7 @@ fn circle_parameter() {
             symbol::WorkbenchKind::Sketch,
             vec![Parameter::new("radius", Type::length())],
         ),
-        statements: workbench_statements([WorkbenchStatement::expr(call_circle(Path::Resolved(
+        statements: boxed([WorkbenchStatement::expr(call_circle(Path::Resolved(
             SymbolId::Local("radius".into()),
         )))]),
     };
@@ -302,7 +284,7 @@ fn circle_init() {
                 ]),
             ),
         )])]),
-        statements: workbench_statements([WorkbenchStatement::expr(call_circle(Path::Resolved(
+        statements: boxed([WorkbenchStatement::expr(call_circle(Path::Resolved(
             SymbolId::Local("radius".into()),
         )))]),
     };
@@ -325,7 +307,7 @@ fn circle_source() {
     use helper::*;
 
     let source = symbol::Source {
-        statements: source_statements([
+        statements: boxed([
             SourceStatement::assignment("a", length(32.0)),
             SourceStatement::expr(call_circle(local("a"))),
         ]),
@@ -340,7 +322,7 @@ fn polar_expr_test() {
     use helper::*;
 
     let source = symbol::Source {
-        statements: source_statements([
+        statements: boxed([
             SourceStatement::assignment("n", integer(4)),
             SourceStatement::assignment("a", polar_expr()),
             SourceStatement::expr(local("a")),
@@ -426,7 +408,7 @@ fn op_rotate() {
                     ),
                 )]),
             ]),
-        statements: workbench_statements([WorkbenchStatement::expr(call(
+        statements: boxed([WorkbenchStatement::expr(call(
             __mu!(ops::rotate),
             vec![
                 workbench::Argument::named("self", input()),
