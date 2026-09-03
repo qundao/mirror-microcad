@@ -7,7 +7,7 @@ use microcad_builtin::__mu;
 use microcad_lang_base::{DisplayWithCtx, boxed};
 use microcad_lang_eval::{CallTrait, Eval, EvalContext};
 use microcad_lang_resolve::{
-    SymbolId,
+    SymbolId, argument_list,
     symbol::{
         self, ConstantExpression, ConstantValue, ExprSpec, Parameter, Path, SourceStatement,
         WorkbenchExpression, WorkbenchStatement, constant, workbench,
@@ -22,6 +22,8 @@ use microcad_lang_types::{
 
 /// Expressions used for testing
 pub mod helper {
+    use microcad_lang_resolve::argument_list;
+
     use super::*;
 
     /// length literal expression: `4.0mm`
@@ -51,7 +53,7 @@ pub mod helper {
     /// __mu::geo2d::Circle(radius = expr)
     pub fn call_circle(radius: impl Into<WorkbenchExpression>) -> WorkbenchExpression {
         workbench::WorkbenchCall::builtin(__mu!(geo2d::Circle))
-            .with_args(vec![workbench::Argument::named("radius", radius)])
+            .with_args(argument_list!(radius = radius))
             .into()
     }
 
@@ -63,12 +65,7 @@ pub mod helper {
         z: impl Into<WorkbenchExpression>,
     ) -> WorkbenchExpression {
         workbench::WorkbenchCall::builtin(__mu!(ops::translate))
-            .with_args(vec![
-                workbench::Argument::named("self", self_),
-                workbench::Argument::named("x", x),
-                workbench::Argument::named("y", y),
-                workbench::Argument::named("z", z),
-            ])
+            .with_args(argument_list!(self = self_, x = x, y = y, z = z,))
             .into()
     }
 
@@ -99,26 +96,22 @@ pub mod helper {
 
     /// [1..n] / n * 360°
     pub fn polar_expr() -> symbol::ConstantExpression {
-        use symbol::constant::Argument as Arg;
         // [1..n]
         let range = call(
             __mu!(core::range),
-            vec![
-                Arg::named("start", integer(1)),
-                Arg::named("end", local("n")),
-            ],
+            argument_list!(start = Value::from(1), end = local("n")),
         );
 
         // [1..n] / n
         let div = call(
             __mu!(core::div),
-            vec![Arg::named("lhs", range), Arg::named("rhs", local("n"))],
+            argument_list!(lhs = range, rhs = local("n")),
         );
 
         // * 360°
         let mul = call(
             __mu!(core::mul),
-            vec![Arg::named("lhs", div), Arg::named("rhs", Value::deg(360.0))],
+            argument_list!(lhs = div, rhs = Value::deg(360.0)),
         );
 
         mul.into()
@@ -277,12 +270,10 @@ fn circle_init() {
         )])
         .with_statements([workbench::InitStatement::new(
             "radius",
-            workbench::WorkbenchCall::builtin(__mu!(core::div)).with_args(
-                workbench::ArgumentList::from_iter([
-                    workbench::Argument::named("lhs", local("diameter")),
-                    workbench::Argument::named("rhs", symbol::ConstantValue::new(2.0)),
-                ]),
-            ),
+            workbench::WorkbenchCall::builtin(__mu!(core::div)).with_args(argument_list!(
+                lhs = local("diameter"),
+                rhs = Value::from(2.0)
+            )),
         )])]),
         statements: boxed([WorkbenchStatement::expr(call_circle(Path::Resolved(
             SymbolId::Local("radius".into()),
@@ -349,7 +340,6 @@ fn polar_expr_test() {
 fn op_rotate() {
     use helper::*;
     use microcad_lang_types::Type;
-    use symbol::workbench::Argument as Arg;
 
     let workbench = symbol::Workbench {
         signature: workbench::WorkbenchSignature::op(vec![Parameter::new("matrix", Type::mat3())])
@@ -365,12 +355,12 @@ fn op_rotate() {
                     "matrix",
                     call(
                         __mu!(math::rotate_around_axis),
-                        vec![
-                            Arg::named("angle", local("angle")),
-                            Arg::named("x", get(local("axis"), "x")),
-                            Arg::named("y", get(local("axis"), "y")),
-                            Arg::named("z", get(local("axis"), "z")),
-                        ],
+                        argument_list!(
+                            angle = local("angle"),
+                            x = get(local("axis"), "x"),
+                            y = get(local("axis"), "y"),
+                            z = get(local("axis"), "z")
+                        ),
                     ),
                 )]),
                 // init(x = 0°, y = 0°, z = 0°)
@@ -383,11 +373,7 @@ fn op_rotate() {
                     "matrix",
                     call(
                         __mu!(math::rotate_xyz),
-                        vec![
-                            Arg::named("x", local("x")),
-                            Arg::named("y", local("y")),
-                            Arg::named("z", local("z")),
-                        ],
+                        argument_list!(x = local("x"), y = local("y"), z = local("z")),
                     ),
                 )]),
                 // init(roll = 0°, pitch = 0°, yaw = 0°)
@@ -400,20 +386,13 @@ fn op_rotate() {
                     "matrix",
                     call(
                         __mu!(math::rotate_xyz),
-                        vec![
-                            Arg::named("x", local("roll")),
-                            Arg::named("y", local("pitch")),
-                            Arg::named("z", local("yaw")),
-                        ],
+                        argument_list!(x = local("roll"), y = local("pitch"), z = local("yaw")),
                     ),
                 )]),
             ]),
         statements: boxed([WorkbenchStatement::expr(call(
             __mu!(ops::rotate),
-            vec![
-                workbench::Argument::named("self", input()),
-                workbench::Argument::named("matrix", local("matrix")),
-            ],
+            argument_list!(self = input(), matrix = local("matrix")),
         ))]),
     };
 

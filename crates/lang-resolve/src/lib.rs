@@ -25,3 +25,15 @@ pub use library::{Manifest, ManifestError};
 pub use symbol::{
     SymbolDef, SymbolId, SymbolNode, SymbolNodeExt, SymbolNodeMut, SymbolNodeRef, SymbolTree,
 };
+
+#[macro_export]
+macro_rules! argument_list {
+    ( $( $key:ident = $val:expr ),* $(,)? ) => {
+        $crate::symbol::ArgumentList::from_iter(
+        [
+            $(
+                $crate::symbol::Argument::named(stringify!($key), $val)
+            ),*
+        ])
+    };
+}

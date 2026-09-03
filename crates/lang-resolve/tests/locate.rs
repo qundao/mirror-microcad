@@ -3,7 +3,6 @@
 
 use microcad_lang_base::Url;
 use microcad_lang_resolve::locate;
-use miette::IntoDiagnostic;
 
 #[test]
 fn test_builtin_resolution() {
