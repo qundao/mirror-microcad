@@ -37,3 +37,12 @@ macro_rules! argument_list {
         ])
     };
 }
+
+#[macro_export]
+macro_rules! call_builtin {
+    // Matches any path (e.g. core::mul or core::math::mul) followed by standard argument syntax
+    ( $module:ident::$name:ident ( $( $args:tt )* ) ) => {
+        $crate::symbol::Call::builtin(__mu!( $module::$name ))
+            .with_args($crate::argument_list!( $( $args )* ))
+    };
+}

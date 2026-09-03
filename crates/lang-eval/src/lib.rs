@@ -18,7 +18,7 @@ pub use eval_error::*;
 pub use context::EvalContext;
 
 pub use microcad_lang_resolve::symbol;
-use microcad_lang_types::{ArgumentValueList, Value};
+use microcad_lang_types::{ArgumentValueList, ModelTree, Value};
 
 /// Evaluation trait.
 ///
@@ -26,6 +26,16 @@ use microcad_lang_types::{ArgumentValueList, Value};
 pub trait Eval<T = Value> {
     /// Evaluate a syntax element into a type `T`.
     fn eval(&self, context: &mut EvalContext) -> EvalResult<T>;
+}
+
+impl<T> Eval<ModelTree> for T
+where
+    T: Eval<Value>,
+{
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<ModelTree> {
+        let value: Value = self.eval(context)?;
+        Ok(value.into())
+    }
 }
 
 /// Trait for calls with argument list.

@@ -7,14 +7,12 @@ use microcad_builtin::__mu;
 use microcad_lang_base::{DisplayWithCtx, boxed};
 use microcad_lang_eval::{CallTrait, Eval, EvalContext};
 use microcad_lang_resolve::{
-    SymbolId, argument_list,
+    SymbolId, argument_list, call_builtin,
     symbol::{
-        self, ConstantExpression, ConstantValue, ExprSpec, Parameter, Path, SourceStatement,
-        WorkbenchExpression, WorkbenchStatement, constant, workbench,
+        self, ConstantExpression, ExprSpec, Parameter, Path, SourceStatement, WorkbenchExpression,
+        WorkbenchStatement, constant, workbench,
     },
 };
-
-use microcad_builtin::BuiltinId;
 
 use microcad_lang_types::{
     ArgumentValue, ArgumentValueList, Length, ModelTree, Type, Value, argument_value, list, tuple,
@@ -22,51 +20,38 @@ use microcad_lang_types::{
 
 /// Expressions used for testing
 pub mod helper {
-    use microcad_lang_resolve::argument_list;
+    use microcad_lang_resolve::call_builtin;
 
     use super::*;
 
     /// length literal expression: `4.0mm`
     pub fn length(v: f64) -> ConstantExpression {
-        ConstantValue::new(Length::mm(v)).into()
+        Value::mm(v).into()
     }
 
     /// integer literal expression: `4`
     pub fn integer(n: i32) -> ConstantExpression {
-        ConstantValue::new(n).into()
+        Value::from(n).into()
     }
 
     /// angle in degrees expression: `360°`
     pub fn deg(v: f64) -> ConstantExpression {
-        let value = Value::deg(v);
-        ConstantValue::new(value).into()
-    }
-
-    /// Any call to an op
-    pub fn call<Expr: ExprSpec>(
-        id: BuiltinId,
-        args: impl Into<symbol::ArgumentList<Expr>>,
-    ) -> symbol::Call<Expr> {
-        symbol::Call::builtin(id).with_args(args)
+        Value::deg(v).into()
     }
 
     /// __mu::geo2d::Circle(radius = expr)
     pub fn call_circle(radius: impl Into<WorkbenchExpression>) -> WorkbenchExpression {
-        workbench::WorkbenchCall::builtin(__mu!(geo2d::Circle))
-            .with_args(argument_list!(radius = radius))
-            .into()
+        call_builtin!(geo2d::Circle(radius = radius)).into()
     }
 
-    /// __mu::op::translate(self, x, y, z)
+    /// __mu::ops::translate(self, x, y, z)
     pub fn call_translate(
         self_: impl Into<WorkbenchExpression>,
         x: impl Into<WorkbenchExpression>,
         y: impl Into<WorkbenchExpression>,
         z: impl Into<WorkbenchExpression>,
     ) -> WorkbenchExpression {
-        workbench::WorkbenchCall::builtin(__mu!(ops::translate))
-            .with_args(argument_list!(self = self_, x = x, y = y, z = z,))
-            .into()
+        call_builtin!(ops::translate(self = self_, x = x, y = y, z = z)).into()
     }
 
     /// Local expression with `name`
@@ -79,13 +64,10 @@ pub mod helper {
     where
         Expr: From<symbol::Call<Expr>>,
     {
-        Expr::from(call(
-            __mu!(core::member_access),
-            vec![
-                symbol::Argument::named("lhs", lhs),
-                symbol::Argument::named("name", Value::from(name.as_ref().to_string())),
-            ],
-        ))
+        Expr::from(call_builtin!(core::member_access(
+            lhs = lhs,
+            name = Value::from(name.as_ref().to_string())
+        )))
     }
 
     /// Input placeholder: @input
@@ -97,31 +79,20 @@ pub mod helper {
     /// [1..n] / n * 360°
     pub fn polar_expr() -> symbol::ConstantExpression {
         // [1..n]
-        let range = call(
-            __mu!(core::range),
-            argument_list!(start = Value::from(1), end = local("n")),
-        );
-
-        // [1..n] / n
-        let div = call(
-            __mu!(core::div),
-            argument_list!(lhs = range, rhs = local("n")),
-        );
-
+        let range = call_builtin!(core::range(start = Value::from(1), end = local("n")));
+        // / n
+        let div = call_builtin!(core::div(lhs = range, rhs = local("n")));
         // * 360°
-        let mul = call(
-            __mu!(core::mul),
-            argument_list!(lhs = div, rhs = Value::deg(360.0)),
-        );
-
+        let mul = call_builtin!(core::mul(lhs = div, rhs = Value::deg(360.0)));
         mul.into()
     }
 }
 
 /// Evaluate something into a model tree and test snapshot
-pub fn eval_to_model_test<T: Eval<ModelTree>>(name: &str, t: T) -> ModelTree {
+pub fn eval_to_model_test<T: Eval<Value>>(name: &str, t: T) -> ModelTree {
     let mut context = EvalContext::new();
-    let model: ModelTree = t.eval(&mut context).expect("No error");
+    let value: Value = t.eval(&mut context).expect("No error");
+    let model: ModelTree = value.into();
     insta::assert_snapshot!(name, model.to_string_with_ctx(&context));
     model
 }
@@ -178,12 +149,12 @@ fn translate_circle() {
 
     let model = eval_to_model_test(
         "translate_circle",
-        call_translate(
-            call_circle(length(4.0)),
-            length(1.0),
-            length(2.0),
-            length(0.0),
-        ),
+        call_builtin!(ops::translate(
+            self = call_circle(length(4.0)),
+            x = length(1.0),
+            y = length(2.0),
+            z = length(0.0)
+        )),
     );
 
     let prop = model.get_property_value("radius"); // We should be able to access the property.
@@ -337,15 +308,12 @@ fn op_rotate() {
             ])
             .with_statements([workbench::InitStatement::new(
                 "matrix",
-                call(
-                    __mu!(math::rotate_around_axis),
-                    argument_list!(
-                        angle = local("angle"),
-                        x = get(local("axis"), "x"),
-                        y = get(local("axis"), "y"),
-                        z = get(local("axis"), "z")
-                    ),
-                ),
+                call_builtin!(math::rotate_around_axis(
+                    angle = local("angle"),
+                    x = get(local("axis"), "x"),
+                    y = get(local("axis"), "y"),
+                    z = get(local("axis"), "z")
+                )),
             )]),
             // init(x = 0°, y = 0°, z = 0°)
             workbench::Init::new(vec![
@@ -355,10 +323,11 @@ fn op_rotate() {
             ])
             .with_statements([workbench::InitStatement::new(
                 "matrix",
-                call(
-                    __mu!(math::rotate_xyz),
-                    argument_list!(x = local("x"), y = local("y"), z = local("z")),
-                ),
+                call_builtin!(math::rotate_xyz(
+                    x = local("x"),
+                    y = local("y"),
+                    z = local("z")
+                )),
             )]),
             // init(roll = 0°, pitch = 0°, yaw = 0°)
             workbench::Init::new(vec![
@@ -368,16 +337,17 @@ fn op_rotate() {
             ])
             .with_statements([workbench::InitStatement::new(
                 "matrix",
-                call(
-                    __mu!(math::rotate_xyz),
-                    argument_list!(x = local("roll"), y = local("pitch"), z = local("yaw")),
-                ),
+                call_builtin!(math::rotate_xyz(
+                    x = local("roll"),
+                    y = local("pitch"),
+                    z = local("yaw")
+                )),
             )]),
         ])
-        .with_statements([WorkbenchStatement::expr(call(
-            __mu!(ops::rotate),
-            argument_list!(self = input(), matrix = local("matrix")),
-        ))]);
+        .with_statements([WorkbenchStatement::expr(call_builtin!(ops::rotate(
+            self = input(),
+            matrix = local("matrix")
+        )))]);
 
     let mut context = EvalContext::new();
     let input_shape: Value = call_circle(length(4.0)).eval(&mut context).unwrap();

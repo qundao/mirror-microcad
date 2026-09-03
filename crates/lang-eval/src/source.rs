@@ -41,13 +41,13 @@ impl Eval<()> for symbol::SourceStatement {
     }
 }
 
-impl Eval<ModelTree> for symbol::Source {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<ModelTree> {
-        context.scope(SourceFrame::new(), |context| -> EvalResult<ModelTree> {
+impl Eval<Value> for symbol::Source {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+        context.scope(SourceFrame::new(), |context| -> EvalResult<Value> {
             self.statements
                 .iter()
                 .try_for_each(|stmt| stmt.eval(context))?;
-            Ok(context.model_tree_builder_mut().build())
+            Ok(context.model_tree_builder_mut().build().into())
         })
     }
 }

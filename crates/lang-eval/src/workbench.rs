@@ -10,11 +10,8 @@ use crate::{
     },
 };
 
-use microcad_builtin::{
-    BuiltinError, BuiltinEvalContext, BuiltinFunction, BuiltinItem, BuiltinOperation,
-    BuiltinPrimitive,
-};
-use microcad_lang_base::{DisplayWithCtx, PushDiag, SrcRef, SrcReferrer, element::Visibility};
+use microcad_builtin::BuiltinItem;
+use microcad_lang_base::{DisplayWithCtx, PushDiag, SrcReferrer, element::Visibility};
 use microcad_lang_resolve::{SymbolId, symbol};
 
 use microcad_lang_types::{
@@ -22,21 +19,14 @@ use microcad_lang_types::{
     model::{Element, ModelTreeBuilderMut, Properties, Property, PropertyType, Workpiece},
 };
 
-impl Eval<ModelTree> for symbol::workbench::Group {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<ModelTree> {
+impl Eval<Value> for symbol::workbench::Group {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
         context.scope(WorkbenchGroupFrame::new(), |context| {
             self.statements
                 .iter()
                 .try_for_each(|stmt| stmt.eval(context))?;
-            Ok(context.model_tree_builder_mut().build())
+            Ok(context.model_tree_builder_mut().build().into())
         })
-    }
-}
-
-impl Eval<Value> for symbol::workbench::Group {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
-        let model_tree: ModelTree = self.eval(context)?;
-        Ok(model_tree.into())
     }
 }
 
@@ -202,13 +192,6 @@ impl Eval<Value> for symbol::WorkbenchExpression {
             symbol::WorkbenchExpression::Marker(marker) => Ok(marker.eval(context)?.into()),
             _ => unimplemented!(),
         }
-    }
-}
-
-impl Eval<ModelTree> for symbol::WorkbenchExpression {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<ModelTree> {
-        let value: Value = self.eval(context)?;
-        Ok(value.into())
     }
 }
 
