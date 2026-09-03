@@ -27,16 +27,14 @@ fn scope(a: impl Iterator<Item = FunctionStatement>) -> function::Scope {
 
 #[test]
 fn return_a() {
-    let f = function::Function {
-        signature: function::FunctionSignature::new(vec![Parameter::new("a", Type::Integer)])
-            .with_return_type(Type::Integer),
-        statements: boxed([function::ReturnStatement {
+    let f = function::Function::new(vec![Parameter::new("a", Type::Integer)])
+        .with_return_type(Type::Integer)
+        .with_statements([function::ReturnStatement {
             expr: Some(name_expr("a")),
             keyword_src_ref: SrcRef::none(),
             src_ref: SrcRef::none(),
         }
-        .into()]),
-    };
+        .into()]);
 
     let mut context = EvalContext::new();
     let result = f
@@ -51,16 +49,14 @@ fn return_a() {
 
 #[test]
 fn add() {
-    let f = function::Function {
-        signature: function::FunctionSignature::new(vec![
-            Parameter::new("a", Type::Integer),
-            Parameter::new("b", Type::Integer),
-        ])
-        .with_return_type(Type::Integer),
-        statements: boxed([FunctionStatement::Tail(
-            call_builtin!(core::add(lhs = name_expr("a"), rhs = name_expr("b"))).into(),
-        )]),
-    };
+    let f = function::Function::new(vec![
+        Parameter::new("a", Type::Integer),
+        Parameter::new("b", Type::Integer),
+    ])
+    .with_return_type(Type::Integer)
+    .with_statements([FunctionStatement::Tail(
+        call_builtin!(core::add(lhs = name_expr("a"), rhs = name_expr("b"))).into(),
+    )]);
 
     let mut context = EvalContext::new();
     let result = f
@@ -75,29 +71,27 @@ fn add() {
 
 #[test]
 fn if_a_greater_than() {
-    let f = Function {
-        signature: function::FunctionSignature::new(vec![
-            Parameter::new("a", Type::Integer),
-            Parameter::new("b", Type::Integer),
-        ])
-        .with_return_type(Type::Integer),
-        statements: boxed([function::FunctionIf {
-            src_ref: SrcRef::none(),
-            if_ref: SrcRef::none(),
-            cond: FunctionExpression::Call(call_builtin!(core::gt(
-                lhs = name_expr("a"),
-                rhs = name_expr("b"),
-            )))
-            .into(),
-            body: scope([FunctionStatement::Tail(ConstantValue::new(2).into())].into_iter()).into(),
-            else_ref: None,
-            body_else: Some(
-                scope([FunctionStatement::Tail(ConstantValue::new(4).into())].into_iter()).into(),
-            ),
-            next_if: None,
-        }
-        .into()]),
-    };
+    let f = Function::new(vec![
+        Parameter::new("a", Type::Integer),
+        Parameter::new("b", Type::Integer),
+    ])
+    .with_return_type(Type::Integer)
+    .with_statements([function::FunctionIf {
+        src_ref: SrcRef::none(),
+        if_ref: SrcRef::none(),
+        cond: FunctionExpression::Call(call_builtin!(core::gt(
+            lhs = name_expr("a"),
+            rhs = name_expr("b"),
+        )))
+        .into(),
+        body: scope([FunctionStatement::Tail(ConstantValue::new(2).into())].into_iter()).into(),
+        else_ref: None,
+        body_else: Some(
+            scope([FunctionStatement::Tail(ConstantValue::new(4).into())].into_iter()).into(),
+        ),
+        next_if: None,
+    }
+    .into()]);
 
     let mut context = EvalContext::new();
     let result = f

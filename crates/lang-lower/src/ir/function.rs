@@ -6,7 +6,7 @@
 use crate::{CastInto, ir};
 
 use derive_more::From;
-use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer};
+use microcad_lang_base::{SingleIdentifier, SrcRef, SrcReferrer, boxed};
 use microcad_lang_types::Value;
 use serde::{Deserialize, Serialize};
 use strum::IntoStaticStr;
@@ -27,17 +27,28 @@ pub struct FunctionSignature {
 }
 
 /// Builder methods for testing.
-impl FunctionSignature {
+impl Function {
     pub fn new(parameters: impl Into<ir::ParameterList>) -> Self {
         Self {
-            parameters: parameters.into(),
-            return_type: None,
-            src_ref: SrcRef::none(),
+            signature: FunctionSignature {
+                parameters: parameters.into(),
+                return_type: None,
+                src_ref: SrcRef::none(),
+            },
+            statements: Default::default(),
         }
     }
 
     pub fn with_return_type(mut self, ty: impl Into<ir::Type>) -> Self {
-        self.return_type = Some(ty.into());
+        self.signature.return_type = Some(ty.into());
+        self
+    }
+
+    pub fn with_statements(
+        mut self,
+        statements: impl IntoIterator<Item = FunctionStatement>,
+    ) -> Self {
+        self.statements = boxed(statements);
         self
     }
 }
