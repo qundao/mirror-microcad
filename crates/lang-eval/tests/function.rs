@@ -26,6 +26,19 @@ fn scope(a: impl Iterator<Item = FunctionStatement>) -> function::Scope {
     }
 }
 
+fn assert_eval(
+    f: &impl CallTrait,
+    args: impl IntoIterator<Item = microcad_lang_types::ArgumentValue>,
+    expected: impl Into<Value>,
+) {
+    let mut context = EvalContext::new();
+    let result = f
+        .call(&ArgumentValueList::from_iter(args), &mut context)
+        .expect("No eval error");
+
+    assert_eq!(result, expected.into());
+}
+
 #[test]
 fn return_a() {
     let f = function::Function::new(parameter_list!(a: Integer))
@@ -37,15 +50,7 @@ fn return_a() {
         }
         .into()]);
 
-    let mut context = EvalContext::new();
-    let result = f
-        .call(
-            &ArgumentValueList::from_iter([argument_value!(a = 2)]),
-            &mut context,
-        )
-        .expect("No eval error");
-
-    assert_eq!(result, Value::from(2))
+    assert_eval(&f, [argument_value!(a = 2)], 2);
 }
 
 #[test]
@@ -56,15 +61,7 @@ fn add() {
             call_builtin!(core::add(lhs = name_expr("a"), rhs = name_expr("b"))).into(),
         )]);
 
-    let mut context = EvalContext::new();
-    let result = f
-        .call(
-            &ArgumentValueList::from_iter([argument_value!(a = 1), argument_value!(b = 3)]),
-            &mut context,
-        )
-        .expect("No eval error");
-
-    assert_eq!(result, Value::from(4));
+    assert_eval(&f, [argument_value!(a = 1), argument_value!(b = 3)], 4);
 }
 
 #[test]
@@ -88,23 +85,6 @@ fn if_a_greater_than() {
         }
         .into()]);
 
-    let mut context = EvalContext::new();
-    let result = f
-        .call(
-            &ArgumentValueList::from_iter([argument_value!(a = 1), argument_value!(b = 3)]),
-            &mut context,
-        )
-        .expect("No eval error");
-
-    assert_eq!(result, Value::from(4));
-
-    let mut context = EvalContext::new();
-    let result = f
-        .call(
-            &ArgumentValueList::from_iter([argument_value!(a = 3), argument_value!(b = 1)]),
-            &mut context,
-        )
-        .expect("No eval error");
-
-    assert_eq!(result, Value::from(2))
+    assert_eval(&f, [argument_value!(a = 1), argument_value!(b = 3)], 4);
+    assert_eval(&f, [argument_value!(a = 3), argument_value!(b = 1)], 2);
 }
