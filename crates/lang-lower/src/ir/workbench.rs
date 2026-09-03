@@ -139,8 +139,18 @@ pub struct Init {
     pub src_ref: SrcRef,
 }
 
+impl Init {
+    /// Find init statement by its name.
+    pub fn find_statement(&self, name: impl AsRef<str>) -> Option<&InitStatement> {
+        self.statements
+            .iter()
+            .find(|stmt| &stmt.name == name.as_ref())
+    }
+}
+
 /// Builder methods for testing
 impl Init {
+    /// Construct new initializer
     pub fn new(parameters: impl Into<ir::ParameterList>) -> Self {
         Self {
             parameters: parameters.into(),
@@ -151,7 +161,7 @@ impl Init {
         }
     }
 
-    /// Construct new initializer
+    /// Construct new default initializer
     pub fn default_init(parameters: impl Into<ir::ParameterList>) -> Self {
         let parameters = parameters.into();
         let statements: Vec<_> = parameters
@@ -166,12 +176,6 @@ impl Init {
             })
             .collect();
         Self::new(parameters).with_statements(statements)
-    }
-
-    pub fn find_statement(&self, name: impl AsRef<str>) -> Option<&InitStatement> {
-        self.statements
-            .iter()
-            .find(|stmt| &stmt.name == name.as_ref())
     }
 
     /// Add statements to this initializer
