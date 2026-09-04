@@ -7,7 +7,7 @@ pub use stack::*;
 
 use microcad_builtin::BuiltinRegistry;
 use microcad_lang_base::{LookUpName, Name, PushDiag};
-use microcad_lang_resolve::symbol;
+use microcad_lang_resolve::library::symbol;
 use microcad_lang_types::{Value, model::ModelTreeBuilderMut};
 
 use crate::{EvalError, EvalResult};

@@ -5,7 +5,7 @@
 
 use microcad_builtin::BuiltinItem;
 use microcad_lang_base::{PushDiag, SrcRef, SrcReferrer, ToCompactString};
-use microcad_lang_resolve::symbol;
+use microcad_lang_resolve::library::symbol;
 use microcad_lang_types::{ArgumentValue, ArgumentValueList, Value};
 
 use crate::{

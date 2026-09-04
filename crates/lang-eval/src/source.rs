@@ -3,7 +3,7 @@
 
 //! Source evaluation
 
-use microcad_lang_resolve::symbol;
+use microcad_lang_resolve::library::symbol;
 use microcad_lang_types::{
     ModelTree, Value,
     model::{ModelTreeBuilderMut, Property, PropertyType},

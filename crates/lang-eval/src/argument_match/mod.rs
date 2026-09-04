@@ -4,7 +4,7 @@
 //! Argument match trait
 
 use microcad_lang_base::{Identifier, IdentifierList};
-use microcad_lang_resolve::symbol::{
+use microcad_lang_resolve::library::symbol::{
     Function, ParameterList, function::FunctionSignature, workbench::Init,
 };
 use microcad_lang_types::{ArgumentValueList, Arguments, CallSignature, Tuple, Type, Value};
@@ -216,7 +216,7 @@ pub trait ArgumentMatch {
 impl ArgumentMatch for ParameterList {
     /// Return default values for this parameters, assuming all constant expression have been folded into values.
     fn default_values(&self) -> Tuple {
-        use microcad_lang_resolve::symbol::ExprSpec;
+        use microcad_lang_resolve::library::symbol::ExprSpec;
         Tuple::from_iter(self.parameters.iter().filter_map(|param| {
             param
                 .default_value

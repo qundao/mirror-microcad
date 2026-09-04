@@ -8,7 +8,7 @@ use microcad_lang_base::{DisplayWithCtx, boxed};
 use microcad_lang_eval::{CallTrait, Eval, EvalContext};
 use microcad_lang_resolve::{
     SymbolId, call_builtin, expr,
-    symbol::{
+    library::symbol::{
         self, ExprSpec, Parameter, Path, SourceStatement, WorkbenchExpression, WorkbenchStatement,
         workbench,
     },
@@ -328,7 +328,7 @@ fn op_rotate() {
             ],
         );
 
-        let model = model.replace_input_placeholders(input_shape);
+        let model = model.replace_input_placeholders(&input_shape.into());
 
         insta::assert_snapshot!("rotate_model_replaced", model.to_string_with_ctx(&context));
     }

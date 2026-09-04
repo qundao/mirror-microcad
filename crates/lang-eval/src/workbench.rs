@@ -12,7 +12,7 @@ use crate::{
 
 use microcad_builtin::BuiltinItem;
 use microcad_lang_base::{DisplayWithCtx, PushDiag, SrcReferrer, element::Visibility};
-use microcad_lang_resolve::{SymbolId, symbol};
+use microcad_lang_resolve::{SymbolId, library::symbol};
 
 use microcad_lang_types::{
     ArgumentValue, ArgumentValueList, ModelTree, Value,

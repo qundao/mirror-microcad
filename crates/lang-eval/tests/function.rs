@@ -8,7 +8,7 @@ use microcad_lang_base::{SrcRef, SymbolId, ToCompactString, boxed};
 use microcad_lang_eval::{CallTrait, EvalContext};
 use microcad_lang_resolve::{
     call_builtin,
-    symbol::{
+    library::symbol::{
         ConstantValue, Function, FunctionExpression, FunctionStatement, Parameter, Path, function,
     },
 };

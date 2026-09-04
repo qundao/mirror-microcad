@@ -17,7 +17,7 @@ pub use eval_error::*;
 
 pub use context::EvalContext;
 
-pub use microcad_lang_resolve::symbol;
+pub use microcad_lang_resolve::library::symbol;
 use microcad_lang_types::{ArgumentValueList, ModelTree, Value};
 
 /// Evaluation trait.
