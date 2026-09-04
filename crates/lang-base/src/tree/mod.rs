@@ -13,7 +13,6 @@ pub use node_ref::{NodeMut, NodeRef};
 pub use tree_display::{FormatTree, TreeDisplay, TreeState};
 
 /// Static helper to copy a sub-tree from `source_arena` into a target `ModelArena`.
-
 pub fn adopt_tree_to_arena<Target, Source>(
     target_arena: &mut Arena<Target>,
     source_id: NodeId,

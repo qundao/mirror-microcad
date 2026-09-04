@@ -9,7 +9,7 @@ use miette::Diagnostic as MietteDiagnostic;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use crate::{CompilationResult, Diagnostic, Diagnostics, LanguageVersion, SrcReferrer};
+use crate::{CompilationResult, Diagnostics, LanguageVersion, SrcReferrer};
 
 #[derive(Debug, Error, MietteDiagnostic)]
 pub enum ArtifactError {

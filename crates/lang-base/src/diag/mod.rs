@@ -19,6 +19,15 @@ pub use diagnostics::{DiagRenderOptions, Diagnostics};
 pub trait PushDiag<E> {
     fn push_diag(&mut self, err: impl Into<E>);
 
+    fn append_diags<T>(&mut self, errors: impl IntoIterator<Item = T>)
+    where
+        T: Into<E>,
+    {
+        for err in errors {
+            self.push_diag(err);
+        }
+    }
+
     fn capture<T: Default>(&mut self, result: Result<T, impl Into<E>>) -> T {
         match result {
             Ok(t) => t,
@@ -30,7 +39,7 @@ pub trait PushDiag<E> {
     }
 
     /// Pushes the error and returns default value, so evaluation can continue.
-    fn catch<T: Default>(&mut self, err: impl Into<E>) -> Result<T, E> {
+    fn catch<T: Default>(&mut self, err: impl Into<E>) -> Result<T, Box<E>> {
         self.push_diag(err);
         Ok(T::default())
     }
