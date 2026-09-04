@@ -185,9 +185,14 @@ impl<T: Artifact> StageResult<T> {
         self.0 = None;
     }
 
-    /// Return the artifacts.
+    /// Return a reference to artifact.
     pub fn artifact(&self) -> Option<&T> {
         self.0.as_ref()?.as_ref().ok().map(|(val, _)| val)
+    }
+
+    /// Fetch this artifact
+    pub fn fetch_artifact(self) -> Option<T> {
+        self.0?.ok().map(|(val, _)| val)
     }
 
     /// Return the diagnostics.
@@ -206,7 +211,7 @@ impl<T: Artifact> StageResult<T> {
     }
 
     /// Returns true if this compilation stage has been successful.
-    pub fn is_success(&self) -> bool {
+    pub fn is_ok(&self) -> bool {
         matches!(self.0, Some(Ok(_)))
     }
 }

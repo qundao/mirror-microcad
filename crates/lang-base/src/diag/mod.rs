@@ -34,4 +34,8 @@ pub trait PushDiag<E> {
         self.push_diag(err);
         Ok(T::default())
     }
+
+    fn err<T>(&mut self, err: impl Into<E>) -> Result<T, E> {
+        Err(err.into())
+    }
 }

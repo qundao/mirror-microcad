@@ -3,11 +3,10 @@
 
 pub trait DisplayOneLine: std::fmt::Display {
     fn fmt_one_line(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut adapter = OneLineWriter::new(f);
-        use std::fmt::Write;
-        write!(adapter, "{self}")
+        write!(f, "{}", self.to_string_one_line())
     }
 
+    // Re-implement this function if you want a custom one-liner.
     fn to_string_one_line(&self) -> String {
         let full = self.to_string();
         let line = full.lines().next().unwrap_or("");

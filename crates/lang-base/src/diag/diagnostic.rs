@@ -63,6 +63,15 @@ impl From<Diagnostic> for miette::Report {
     }
 }
 
+impl From<&'static str> for Diagnostic {
+    fn from(value: &'static str) -> Self {
+        Self {
+            report: miette::miette!(value),
+            src_ref: SrcRef::none(),
+        }
+    }
+}
+
 impl SrcReferrer for Diagnostic {
     fn src_ref(&self) -> SrcRef {
         self.src_ref
