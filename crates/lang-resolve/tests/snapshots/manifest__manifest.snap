@@ -1,0 +1,53 @@
+---
+source: crates/lang-resolve/tests/manifest.rs
+expression: manifest
+---
+Manifest {
+    library: LibrarySection {
+        name: "test-lib",
+        description: Some(
+            "A test library",
+        ),
+        version: Version {
+            major: 0,
+            minor: 1,
+            patch: 0,
+        },
+        authors: Some(
+            [
+                "John Doe",
+                "Jane Doe",
+            ],
+        ),
+        documentation: Some(
+            Url {
+                scheme: "https",
+                cannot_be_a_base: false,
+                username: "",
+                password: None,
+                host: Some(
+                    Domain(
+                        "mu.xyz",
+                    ),
+                ),
+                port: None,
+                path: "/test-lib",
+                query: None,
+                fragment: None,
+            },
+        ),
+        license: Some(
+            "GPLv3",
+        ),
+        no_std: Some(
+            true,
+        ),
+    },
+    dependencies: {
+        "a": Dependency {
+            path: Some(
+                "../std",
+            ),
+        },
+    },
+}

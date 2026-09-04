@@ -24,8 +24,7 @@ use microcad_lang_base::{CompilationResult, Diagnostics};
 
 pub use resolver::Resolver;
 
-use crate::error::ResolveError;
-use crate::symbol;
+use crate::{Library, error::ResolveError, library::symbol};
 
 /// Resolve Context
 pub struct ResolveContext {
@@ -126,7 +125,7 @@ impl ResolveContext {
     }
 }
 
-pub fn resolve(_resolver: Box<dyn Resolver>) -> CompilationResult<symbol::SymbolTree> {
+pub fn resolve(_resolver: Box<dyn Resolver>) -> CompilationResult<Library> {
     /*
     let mut context = ResolveContext::new(resolver);
 

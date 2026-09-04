@@ -5,7 +5,6 @@
 
 use microcad_lang_base::Url;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 use thiserror::Error;
 
 /// Manifest error.
@@ -29,20 +28,20 @@ pub enum ManifestError {
     NotFound { path: std::path::PathBuf },
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub struct Manifest {
     pub library: LibrarySection,
-    pub dependencies: HashMap<String, Dependency>,
+    pub dependencies: std::collections::BTreeMap<String, Dependency>,
 }
 
 /// `package` descriptor.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub struct LibrarySection {
-    /// Mandatory package name.
+    /// Mandatory library name.
     pub name: String,
     /// A short description of the library.
     pub description: Option<String>,
-    /// Mandatory package version.
+    /// Mandatory library version.
     pub version: semver::Version,
     /// Authors of the library.
     pub authors: Option<Vec<String>>,
@@ -54,7 +53,7 @@ pub struct LibrarySection {
     pub no_std: Option<bool>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub struct Dependency {
     pub path: Option<std::path::PathBuf>,
 }

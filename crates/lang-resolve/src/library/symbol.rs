@@ -54,16 +54,23 @@ pub mod constant {
 
 pub use ir::{
     Alias, Argument, ArgumentList, Call, Constant, ConstantExpression, ConstantValue,
-    ExportAttribute, ExprSpec, Parameter, ParameterList, Path, Source, SourceStatement, Visibility,
-    Wildcard,
+    ExportAttribute, ExprSpec, InlineModule, Meta, Parameter, ParameterList, Path, Source,
+    SourceStatement, Visibility, Wildcard,
 };
 
-#[derive(Debug, Default, Hash, Clone, PartialEq, Serialize, Deserialize)]
-pub struct InlineModule;
+use crate::{
+    Library,
+    library::{LibraryRoot, symbol_path::SymbolAbsPath},
+};
 
 /// Symbol definition
 #[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
 pub enum SymbolDef {
+    Root(LibraryRoot),
+
+    /// External Library dependency
+    Library(Library),
+
     /// Source file symbol.
     Source(Source),
     /// Inline Module symbol: `mod foo {}`
@@ -82,9 +89,46 @@ pub enum SymbolDef {
 
 #[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
 pub struct Symbol {
-    pub meta: ir::Meta,
+    pub meta: Meta,
     pub doc: Option<ir::DocBlock>,
     pub def: SymbolDef,
+}
+
+impl Symbol {
+    pub fn root(root: LibraryRoot) -> Self {
+        Self {
+            meta: Meta {
+                vis: Visibility::Public,
+                ..Default::default()
+            },
+            doc: None,
+            def: SymbolDef::Root(root),
+        }
+    }
+
+    pub fn mu() -> Self {
+        Self {
+            meta: Meta {
+                name: Some("mu".into()),
+                vis: Visibility::Public,
+                ..Default::default()
+            },
+            doc: None,
+            def: SymbolDef::InlineModule(InlineModule {}),
+        }
+    }
+
+    pub fn library(lib: Library) -> Self {
+        Self {
+            meta: Meta {
+                name: lib.name().map(|name| name.clone().into()), // TODO Check if library actually has a name and how to handle anonymous libraries
+                vis: Visibility::Public,
+                ..Default::default()
+            },
+            doc: None,
+            def: SymbolDef::Library(lib),
+        }
+    }
 }
 
 pub type SymbolArena = microcad_lang_base::tree::Arena<Symbol>;
@@ -92,57 +136,6 @@ pub type SymbolNode = microcad_lang_base::tree::Node<Symbol>;
 pub type SymbolNodeRef<'a> = microcad_lang_base::tree::NodeRef<'a, Symbol>;
 pub type SymbolNodeMut<'a> = microcad_lang_base::tree::NodeMut<'a, Symbol>;
 pub type SymbolNodeId = microcad_lang_base::tree::NodeId;
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct SymbolTree {
-    /// The symbol root.
-    pub root: SymbolNodeId,
-
-    /// Symbol node id of `mu` symbol that contains all external dependen
-    pub mu: SymbolNodeId,
-
-    pub arena: SymbolArena,
-}
-
-pub struct SymbolAbsPath {
-    pub parts: Vec<Identifier>,
-}
-
-impl SymbolAbsPath {
-    /// Returns an iterator over references to the path components (from root to leaf).
-    pub fn iter(&self) -> std::slice::Iter<'_, Identifier> {
-        self.parts.iter()
-    }
-}
-
-// 1. Enables: for part in &abs_path { ... }
-impl<'a> IntoIterator for &'a SymbolAbsPath {
-    type Item = &'a Identifier;
-    type IntoIter = std::slice::Iter<'a, Identifier>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.iter()
-    }
-}
-
-// 2. Enables: for part in abs_path { ... } (takes ownership)
-impl IntoIterator for SymbolAbsPath {
-    type Item = Identifier;
-    type IntoIter = std::vec::IntoIter<Identifier>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.parts.into_iter()
-    }
-}
-
-// 3. Enables indexing: abs_path[0]
-impl std::ops::Index<usize> for SymbolAbsPath {
-    type Output = Identifier;
-
-    fn index(&self, index: usize) -> &Self::Output {
-        &self.parts[index]
-    }
-}
 
 /// Extension trait for [`SymbolNode`] .
 pub trait SymbolNodeExt {

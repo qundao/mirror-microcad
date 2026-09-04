@@ -18,21 +18,19 @@ pub use error::{ResolveError, ResolveResult};
 pub use resolve::{ResolveContext, resolve};
 
 pub mod library;
-pub mod symbol;
 
-pub use library::{Manifest, ManifestError};
-
-pub use symbol::{
-    SymbolDef, SymbolId, SymbolNode, SymbolNodeExt, SymbolNodeMut, SymbolNodeRef, SymbolTree,
+pub use library::{
+    Library, Manifest, ManifestError,
+    symbol::{SymbolDef, SymbolId, SymbolNode, SymbolNodeExt, SymbolNodeMut, SymbolNodeRef},
 };
 
 #[macro_export]
 macro_rules! argument_list {
     ( $( $key:ident = $val:expr ),* $(,)? ) => {
-        $crate::symbol::ArgumentList::from_iter(
+        $crate::library::symbol::ArgumentList::from_iter(
         [
             $(
-                $crate::symbol::Argument::named(stringify!($key), $val)
+                $crate::library::symbol::Argument::named(stringify!($key), $val)
             ),*
         ])
     };
@@ -42,7 +40,7 @@ macro_rules! argument_list {
 macro_rules! call_builtin {
     // Matches any path (e.g. core::mul or core::math::mul) followed by standard argument syntax
     ( $module:ident::$name:ident ( $( $args:tt )* ) ) => {
-        $crate::symbol::Call::builtin(__mu!( $module::$name ))
+        $crate::library::symbol::Call::builtin(__mu!( $module::$name ))
             .with_args($crate::argument_list!( $( $args )* ))
     };
 }

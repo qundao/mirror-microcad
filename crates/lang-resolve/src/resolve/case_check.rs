@@ -3,7 +3,7 @@
 
 use microcad_lang_base::{SrcReferrer, element::Case};
 
-use crate::symbol;
+use crate::library::symbol;
 use crate::{ResolveResult, resolve::ResolveError};
 
 /// Check case
@@ -34,10 +34,10 @@ impl CaseCheck for symbol::SymbolDef {
     fn expected_case(&self) -> Option<Case> {
         use symbol::SymbolDef::*;
         match &self {
-            Source(_) | InlineModule(_) | Function(_) => Some(Case::LowerSnake),
+            Source(_) | InlineModule(_) | Function(_) | Library(_) => Some(Case::LowerSnake),
             Workbench(_) => Some(Case::Pascal),
             Constant(_) => Some(Case::UpperSnake),
-            Alias(_) | Wildcard(_) => None,
+            Alias(_) | Wildcard(_) | Root(_) => None,
         }
     }
 }
