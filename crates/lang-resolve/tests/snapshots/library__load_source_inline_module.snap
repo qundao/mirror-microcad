@@ -4,7 +4,7 @@ expression: library
 ---
 Root [pub]
 ├── mu: InlineModule [pub]
-└── inline_module: Source [pub]
+└── inline_module: SourceFile Loaded(tests/test_cases/inline_module.µcad) [pub]
     ├── b: InlineModule [pub] /// This inline module has documentation
     │   ├── d: InlineModule [pub]
     │   │   └── E: Constant Any: Value(42mm)
