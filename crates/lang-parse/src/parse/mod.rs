@@ -98,11 +98,18 @@ pub fn input<'input, 'tokens>(
 /// Build an abstract syntax tree from a list of tokens
 pub fn parse<'tokens>(
     tokens: &'tokens [Spanned<Token<'tokens>>],
+    context: &ParseContext,
 ) -> Result<ast::Source, ParseErrors> {
     parser()
         .parse(input(tokens))
         .into_result()
-        .map_err(|errors| errors.into())
+        .map_err(|errors| {
+            errors
+                .into_iter()
+                .map(|error| ParseError::new(error, context))
+                .collect::<Vec<_>>()
+                .into()
+        })
 }
 
 const STRUCTURAL_TOKENS: &[Token] = &[
@@ -1565,6 +1572,13 @@ impl crate::Parse for ast::Literal {
         literal()
             .parse(crate::parse::input(&tokens))
             .into_result()
-            .map_err(|errors| errors.into())
+            .map_err(|errors| {
+                ParseErrors::from(
+                    errors
+                        .into_iter()
+                        .map(|err| ParseError::new(err, context))
+                        .collect::<Vec<_>>(),
+                )
+            })
     }
 }

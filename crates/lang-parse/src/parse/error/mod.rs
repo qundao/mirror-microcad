@@ -3,9 +3,10 @@
 
 mod rich;
 
+use crate::ParseContext;
 use crate::parse::error::rich::RichPattern;
 use crate::token::Token;
-use microcad_lang_base::Span;
+use microcad_lang_base::{Span, SpanToSrcRef, SrcRef};
 use miette::{Diagnostic, LabeledSpan};
 pub use rich::{Rich, RichReason};
 use std::error::Error;
@@ -20,32 +21,26 @@ pub type RichError<'tokens> = Rich<'tokens, Token<'tokens>, Span, ParseErrorKind
 #[derive(Debug)]
 pub struct ParseError {
     /// The span of the source that caused the error
-    pub span: Span,
-    error: RichError<'static>,
+    pub src_ref: SrcRef,
+    pub error: RichError<'static>,
 }
 
 impl ParseError {
-    pub(crate) fn new<'tokens>(error: RichError<'tokens>) -> Self {
+    pub(crate) fn new<'tokens>(error: RichError<'tokens>, context: &ParseContext) -> Self {
         Self {
-            span: error.span().clone(),
+            src_ref: context.span_to_src_ref(error.span()),
             error: error.map_token(Token::into_owned).into_owned(),
         }
     }
 }
 
 /// Parse error collection.
-#[derive(Debug, Error, derive_more::Deref, miette::Diagnostic, Default)]
+#[derive(Debug, Error, derive_more::Deref, derive_more::From, miette::Diagnostic, Default)]
 pub struct ParseErrors(#[related] pub Vec<ParseError>);
 
 impl std::fmt::Display for ParseErrors {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{} parse errors", self.0.len())
-    }
-}
-
-impl<'tokens> From<Vec<RichError<'tokens>>> for ParseErrors {
-    fn from(errors: Vec<RichError<'tokens>>) -> Self {
-        Self(errors.into_iter().map(ParseError::new).collect())
     }
 }
 
@@ -130,8 +125,8 @@ impl Diagnostic for ParseError {
         };
         Some(Box::new(once(LabeledSpan::new(
             Some(msg),
-            self.span.start,
-            self.span.len(),
+            self.src_ref.start,
+            self.src_ref.len(),
         ))))
     }
 }

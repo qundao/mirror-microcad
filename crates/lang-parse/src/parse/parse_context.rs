@@ -17,11 +17,10 @@ pub struct ParseContext<'source> {
 impl<'source> ParseContext<'source> {
     /// Return diagnostics for parser errors
     pub fn diagnostics(&self, errors: ParseErrors) -> Diagnostics {
-        use microcad_lang_base::SpanToSrcRef;
         let mut diag_list = Diagnostics::default();
         for err in errors.0 {
             diag_list.push(Diagnostic {
-                src_ref: self.span_to_src_ref(&err.span),
+                src_ref: err.src_ref,
                 report: err.into(),
             })
         }

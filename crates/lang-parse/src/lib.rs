@@ -76,7 +76,8 @@ pub trait Parse: Sized {
 #[cfg(feature = "parser")]
 impl Parse for Ast {
     fn parse(context: &ParseContext) -> Result<Self, ParseErrors> {
-        let tree = parse::parse(&lex(context.source.code()).collect::<Vec<_>>())?;
+        let tokens = lex(context.source.code()).collect::<Vec<_>>();
+        let tree = parse::parse(&tokens, context)?;
 
         Ok(Self {
             input_hash: context.source.hash_id(),
