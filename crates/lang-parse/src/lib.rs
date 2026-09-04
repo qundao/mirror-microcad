@@ -17,7 +17,7 @@ pub mod token;
 #[cfg(feature = "parser")]
 use microcad_lang_base::ToHash;
 #[cfg(feature = "parser")]
-pub use parse::{ParseContext, ParseError, ParseErrors, parsers};
+pub use parse::{ParseContext, ParseError, parsers};
 
 /// Contains the parser.
 #[cfg(feature = "parser")]
@@ -26,7 +26,7 @@ mod parse;
 /// Contains the lexer (aka tokenizer).
 mod lex;
 
-use microcad_lang_base::{CompilationResult, Diagnostics, HashId};
+use microcad_lang_base::{CompilationResult, HashId};
 use microcad_macros::Artifact;
 
 pub use lex::lex;
@@ -70,12 +70,12 @@ pub trait Parse: Sized {
     /// Parse from a context.
     ///
     /// The context also contains the source string.
-    fn parse(context: &ParseContext) -> Result<Self, ParseErrors>;
+    fn parse(context: &ParseContext) -> Result<Self, Vec<ParseError>>;
 }
 
 #[cfg(feature = "parser")]
 impl Parse for Ast {
-    fn parse(context: &ParseContext) -> Result<Self, ParseErrors> {
+    fn parse(context: &ParseContext) -> Result<Self, Vec<ParseError>> {
         let tokens = lex(context.source.code()).collect::<Vec<_>>();
         let tree = parse::parse(&tokens, context)?;
 
@@ -89,10 +89,12 @@ impl Parse for Ast {
 
 /// Parse a source into an abstract syntax tree.
 #[cfg(feature = "parser")]
-pub fn parse<'source>(context: impl Into<ParseContext<'source>>) -> CompilationResult<Ast> {
+pub fn parse<'source>(
+    context: impl Into<ParseContext<'source>>,
+) -> CompilationResult<Ast, ParseError> {
     let context = context.into();
     match Ast::parse(&context) {
-        Ok(ast) => Ok((ast, Diagnostics::default())), // FIXME: Right now, the parser can only return errors and no warnings
-        Err(errors) => Err(context.diagnostics(errors)),
+        Ok(ast) => Ok((ast, vec![])), // FIXME: Right now, the parser can only return errors and no warnings
+        Err(errors) => Err(errors),
     }
 }

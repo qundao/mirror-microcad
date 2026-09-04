@@ -5,7 +5,7 @@
 
 use std::string::ParseError;
 
-use microcad_lang_base::{HashId, SrcRef, SrcReferrer, element::Case};
+use microcad_lang_base::{CompileError, HashId, SrcRef, SrcReferrer, element::Case};
 
 use microcad_lang_lower::LowerError;
 use microcad_lang_types::Type;
@@ -77,3 +77,5 @@ impl From<LocateError> for Box<ResolveError> {
         Box::new(value.into())
     }
 }
+
+impl CompileError for ResolveError {}

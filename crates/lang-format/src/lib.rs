@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang_base::{CompilationResult, Diagnostics, Source};
-use microcad_lang_parse::{Ast, ast, parse};
+use microcad_lang_parse::{Ast, ParseError, ast, parse};
 
 mod expression;
 mod extras;
@@ -130,7 +130,10 @@ pub fn format_ast(ast: &Ast, config: &FormatConfig) -> String {
 }
 
 /// Format an AST into a new AST and a new Source
-pub fn format(source: &Source, config: &FormatConfig) -> CompilationResult<(Ast, Source)> {
+pub fn format(
+    source: &Source,
+    config: &FormatConfig,
+) -> CompilationResult<(Ast, Source), ParseError> {
     let (ast, _) = parse(source)?;
     let code = format_ast(&ast, config);
     let source = Source::new(source.location.clone(), code);

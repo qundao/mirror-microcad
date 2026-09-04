@@ -4,6 +4,7 @@
 //! Parser tests
 #![cfg(feature = "parser")]
 
+use microcad_lang_base::Diagnostics;
 use test_case::test_case;
 
 #[test_case("single int", "1")]
@@ -232,8 +233,9 @@ fn test_parser(name: &str, input: &str) -> miette::Result<()> {
     });
 
     // 2. Extract Diagnostics
-    let diag_ref = result.as_ref().map_or_else(|d| d, |(_, d)| d);
-    let diag_str = diag_ref
+    let errors = result.map_or_else(|errors| errors, |(_, errors)| errors);
+    let diagnostics = Diagnostics::from(errors);
+    let diag_str = diagnostics
         .render_to_string(
             &&source,
             &DiagRenderOptions {

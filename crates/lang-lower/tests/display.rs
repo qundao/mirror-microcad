@@ -14,15 +14,17 @@ macro_rules! snapshot_test_display {
             let name = stringify!($name);
             let source = common::source_from_test_file(name);
             match common::ir_from_source(&source) {
-                Ok((ir, diag)) => {
-                    if diag.has_errors() || diag.has_warnings() {
-                        panic!("{diag:?}");
+                Ok((ir, errors)) => {
+                    let diags = microcad_lang_base::Diagnostics::from(errors);
+                    if diags.has_errors() || diags.has_warnings() {
+                        panic!("{diags:?}");
                     }
                     insta::assert_snapshot!(name, ir);
                 }
-                Err(err) => panic!(
+                Err(errors) => panic!(
                     "{}",
-                    err.render_to_string(&&source, &DiagRenderOptions::default())
+                    microcad_lang_base::Diagnostics::from(errors)
+                        .render_to_string(&&source, &DiagRenderOptions::default())
                         .expect("No error")
                 ),
             }

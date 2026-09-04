@@ -165,6 +165,16 @@ impl SpanToSrcRef for &Source {
     }
 }
 
+impl GetSourceByHash for Source {
+    fn get_source_by_hash(&self, hash: HashId) -> Option<&Self> {
+        if hash == self.hash_id() {
+            Some(self)
+        } else {
+            None
+        }
+    }
+}
+
 impl<'a> GetSourceByHash for &'a Source {
     fn get_source_by_hash(&self, hash: HashId) -> Option<&'a Source> {
         if hash == self.hash_id() {

@@ -14,8 +14,8 @@ mod scaffold;
 
 use microcad_builtin::BuiltinRegistry;
 use microcad_lang_base::{
-    CompilationResult, Diagnostics, HashId, LookUpName, PushDiag, Source, Span, SpanToSrcRef,
-    SrcRef, SymbolId, hash_id,
+    CompilationResult, HashId, LookUpName, PushDiag, Source, Span, SpanToSrcRef, SrcRef, SymbolId,
+    hash_id,
 };
 
 pub use ir::CastInto;
@@ -131,15 +131,18 @@ impl Unresolver for BuiltinRegistry {
     }
 }
 
-pub fn lower<'source>(context: &mut LowerContext<'source>, ast: &Ast) -> CompilationResult<Ir> {
+pub fn lower<'source>(
+    context: &mut LowerContext<'source>,
+    ast: &Ast,
+) -> CompilationResult<Ir, LowerError> {
     // Short-circuit on fatal errors
     let ir = match ir::desugared::Source::desugar(ast.tree(), context) {
         Ok(ir) => ir,
         Err(fatal_error) => {
-            let errors = std::mem::take(&mut context.errors);
             // Ensure the fatal error is logged in the diagnostics
             context.push_diag(fatal_error);
-            return Err(errors.into());
+            let errors = std::mem::take(&mut context.errors);
+            return Err(errors);
         }
     };
 
@@ -159,10 +162,10 @@ pub fn lower<'source>(context: &mut LowerContext<'source>, ast: &Ast) -> Compila
     };
 
     let errors = std::mem::take(&mut context.errors);
-    let diagnostics: Diagnostics = errors.into();
-    if diagnostics.has_errors() {
-        Err(diagnostics)
+
+    if !errors.is_empty() {
+        Err(errors)
     } else {
-        Ok((ir, diagnostics))
+        Ok((ir, errors))
     }
 }

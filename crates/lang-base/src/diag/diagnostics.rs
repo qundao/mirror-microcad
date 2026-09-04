@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{GetSourceByHash, SrcReferrer, diag::*};
+use crate::{GetSourceByHash, SrcReferrer, artifact::CompileError, diag::*};
 
 use miette::Severity;
 use std::io::IsTerminal;
@@ -118,10 +118,7 @@ impl Diagnostics {
         lines
     }
 
-    pub fn push<E>(&mut self, err: E)
-    where
-        E: Into<miette::Report> + SrcReferrer,
-    {
+    pub fn push<E: CompileError>(&mut self, err: E) {
         let src_ref = err.src_ref(); // Extract the metadata
         let report = err.into(); // Convert to miette::Report
 
@@ -158,11 +155,22 @@ impl Diagnostics {
 
 impl<E> From<Vec<E>> for Diagnostics
 where
-    E: Into<miette::Report> + SrcReferrer,
+    E: CompileError,
 {
     fn from(errors: Vec<E>) -> Self {
         let mut diags = Self::default();
         errors.into_iter().for_each(|err| diags.push(err));
+        diags
+    }
+}
+
+impl<E> FromIterator<E> for Diagnostics
+where
+    E: CompileError,
+{
+    fn from_iter<T: IntoIterator<Item = E>>(iter: T) -> Self {
+        let mut diags = Self::default();
+        iter.into_iter().for_each(|err| diags.push(err));
         diags
     }
 }

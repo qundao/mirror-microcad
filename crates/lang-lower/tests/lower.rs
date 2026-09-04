@@ -38,17 +38,22 @@ macro_rules! snapshot_test {
             let name = stringify!($name);
             let source = common::source_from_test_file(name);
             match common::ir_from_source(&source) {
-                Ok((ir, diag)) => {
-                    if diag.has_errors() || diag.has_warnings() {
-                        panic!("{diag:?}");
+                Ok((ir, errors)) => {
+                    let diags = microcad_lang_base::Diagnostics::from(errors);
+                    if diags.has_errors() || diags.has_warnings() {
+                        panic!("{diags:?}");
                     }
                     insta::assert_snapshot!(name, ir.to_ron().expect("No error"));
                 }
-                Err(err) => panic!(
-                    "{}",
-                    err.render_to_string(&&source, &DiagRenderOptions::default())
-                        .expect("No error")
-                ),
+                Err(errors) => {
+                    let diags = microcad_lang_base::Diagnostics::from(errors);
+                    panic!(
+                        "{}",
+                        diags
+                            .render_to_string(&&source, &DiagRenderOptions::default())
+                            .expect("No error")
+                    )
+                }
             }
         }
     };
@@ -92,7 +97,8 @@ macro_rules! test_diagnostic {
                         panic!("Test '{}' was expected to fail, but succeeded.", filename);
                     }
                 }
-                Err(diags) => {
+                Err(errors) => {
+                    let diags = microcad_lang_base::Diagnostics::from(errors);
                     let observed = ExpectedDiagnostics::new(
                         diags
                             .iter()

@@ -6,7 +6,7 @@ mod helpers;
 mod parse_context;
 pub mod parsers;
 
-pub use error::{ParseError, ParseErrorKind, ParseErrors, RichError};
+pub use error::{ParseError, ParseErrorKind, RichError};
 pub use parse_context::ParseContext;
 
 use crate::{
@@ -99,7 +99,7 @@ pub fn input<'input, 'tokens>(
 pub fn parse<'tokens>(
     tokens: &'tokens [Spanned<Token<'tokens>>],
     context: &ParseContext,
-) -> Result<ast::Source, ParseErrors> {
+) -> Result<ast::Source, Vec<ParseError>> {
     parser()
         .parse(input(tokens))
         .into_result()
@@ -108,7 +108,6 @@ pub fn parse<'tokens>(
                 .into_iter()
                 .map(|error| ParseError::new(error, context))
                 .collect::<Vec<_>>()
-                .into()
         })
 }
 
@@ -1561,7 +1560,7 @@ fn parser<'tokens>()
 }
 
 impl crate::Parse for ast::Literal {
-    fn parse(context: &ParseContext) -> Result<Self, ParseErrors> {
+    fn parse(context: &ParseContext) -> Result<Self, Vec<ParseError>> {
         fn literal<'tokens>()
         -> impl Parser<'tokens, ParserInput<'tokens, 'tokens>, ast::Literal, Extra<'tokens>>
         {
@@ -1573,12 +1572,10 @@ impl crate::Parse for ast::Literal {
             .parse(crate::parse::input(&tokens))
             .into_result()
             .map_err(|errors| {
-                ParseErrors::from(
-                    errors
-                        .into_iter()
-                        .map(|err| ParseError::new(err, context))
-                        .collect::<Vec<_>>(),
-                )
+                errors
+                    .into_iter()
+                    .map(|err| ParseError::new(err, context))
+                    .collect::<Vec<_>>()
             })
     }
 }

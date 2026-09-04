@@ -20,11 +20,11 @@ mod case_check;
 mod resolver;
 mod type_check;
 
-use microcad_lang_base::{CompilationResult, Diagnostic, Diagnostics, PushDiag};
+use microcad_lang_base::{CompilationResult, PushDiag};
 
 pub use resolver::Resolver;
 
-use crate::{Library, error::ResolveError, library::symbol};
+use crate::{Library, error::ResolveError};
 
 /// Resolve Context
 pub struct ResolveContext {
@@ -130,7 +130,7 @@ impl ResolveContext {
     }
 }
 
-pub fn resolve(_resolver: Box<dyn Resolver>) -> CompilationResult<Library> {
+pub fn resolve(_resolver: Box<dyn Resolver>) -> CompilationResult<Library, ResolveError> {
     /*
     let mut context = ResolveContext::new(resolver);
 

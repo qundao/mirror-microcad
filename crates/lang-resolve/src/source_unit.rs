@@ -4,16 +4,16 @@
 //! A source unit that can be compiled into an IR.
 
 use microcad_lang_base::{Diagnostic, Source, StageResult};
-use microcad_lang_lower::{Ir, LowerContext};
-use microcad_lang_parse::Ast;
+use microcad_lang_lower::{Ir, LowerContext, LowerError};
+use microcad_lang_parse::{Ast, ParseError};
 
 use crate::{ResolveResult, locate};
 
 /// A µcad source file document.
 pub struct SourceUnit {
     pub source: Source,
-    pub ast: StageResult<Ast>,
-    pub ir: StageResult<Ir>,
+    pub ast: StageResult<Ast, ParseError>,
+    pub ir: StageResult<Ir, LowerError>,
     //pub model: Option<mu::CompilationResult<mu::Model>>,
 }
 
@@ -46,11 +46,6 @@ impl SourceUnit {
                 ir: StageResult::default(),
             }),
         }
-    }
-
-    /// Return iterator over diagnostics
-    pub fn diagnostics(&self) -> impl Iterator<Item = &Diagnostic> {
-        self.ast.diag_iter().chain(self.ir.diag_iter())
     }
 
     pub fn is_ok(&self) -> bool {

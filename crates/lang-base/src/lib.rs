@@ -33,7 +33,9 @@ pub const MICROCAD_EXTENSIONS: &[&str] = &["mu", "µcad", "mcad", "ucad"];
 /// Default extension for µcad files.
 pub const MICROCAD_EXTENSION: &str = "µcad";
 
-pub use artifact::{Artifact, ArtifactError, ArtifactHeader, ArtifactKind, StageResult};
+pub use artifact::{
+    Artifact, ArtifactError, ArtifactHeader, ArtifactKind, CompileError, StageResult,
+};
 pub use diag::{DiagRenderOptions, Diagnostic, Diagnostics, PushDiag};
 pub use display::DisplayOneLine;
 pub use element::{Identifier, IdentifierList};
@@ -106,7 +108,7 @@ pub trait Identifiable {
 }
 
 /// A result that contains the compilation artifact bundled with diagnostics.
-pub type CompilationResult<T> = Result<(T, Diagnostics), Diagnostics>;
+pub type CompilationResult<T, E> = Result<(T, Vec<E>), Vec<E>>;
 
 /// Write the display output of type to file.
 #[cfg(feature = "io")]

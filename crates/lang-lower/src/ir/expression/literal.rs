@@ -4,7 +4,7 @@
 //! µcad literal syntax elements
 
 use derive_more::Display;
-use microcad_lang_base::{Refer, SrcRef};
+use microcad_lang_base::SrcRef;
 use microcad_lang_types::{Type, Value, ty};
 use microcad_macros::SrcReferrer;
 use serde::{Deserialize, Serialize};

@@ -9,7 +9,7 @@ use miette::Diagnostic as MietteDiagnostic;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use crate::{CompilationResult, Diagnostic, Diagnostics, LanguageVersion};
+use crate::{CompilationResult, Diagnostic, Diagnostics, LanguageVersion, SrcReferrer};
 
 #[derive(Debug, Error, MietteDiagnostic)]
 pub enum ArtifactError {
@@ -172,12 +172,14 @@ pub trait Artifact: Sized {
     }
 }
 
+pub trait CompileError: Into<miette::Report> + SrcReferrer {}
+
 /// The result of a compilation stage.
 #[derive(Debug)]
-pub struct StageResult<T: Artifact>(Option<CompilationResult<T>>);
+pub struct StageResult<T: Artifact, E: CompileError>(Option<CompilationResult<T, E>>);
 
-impl<T: Artifact> StageResult<T> {
-    pub fn new(result: CompilationResult<T>) -> Self {
+impl<T: Artifact, E: CompileError> StageResult<T, E> {
+    pub fn new(result: CompilationResult<T, E>) -> Self {
         Self(Some(result))
     }
 
@@ -195,19 +197,28 @@ impl<T: Artifact> StageResult<T> {
         self.0?.ok().map(|(val, _)| val)
     }
 
-    /// Return the diagnostics.
-    pub fn diagnostics(&self) -> Option<&Diagnostics> {
-        match self.0.as_ref()? {
-            Ok((_, diags)) | Err(diags) => Some(diags),
+    /// Return a slice of errors.
+    pub fn errors(&self) -> &[E] {
+        match self.0.as_ref() {
+            Some(Ok((_, errors))) | Some(Err(errors)) => errors,
+            None => &[],
         }
     }
 
-    /// Return an iterator over the diagnostics.
-    pub fn diag_iter<'a>(&'a self) -> Box<dyn Iterator<Item = &'a Diagnostic> + 'a> {
-        match &self.diagnostics() {
-            Some(diags) => Box::new(diags.iter()),
-            None => Box::new(std::iter::empty()),
+    pub fn fetch_errors(self) -> Vec<E> {
+        match self.0 {
+            Some(Ok((_, errors))) | Some(Err(errors)) => errors,
+            None => Vec::new(),
         }
+    }
+
+    /// Return the diagnostics.
+    pub fn diagnostics(self) -> Diagnostics {
+        let mut diags = Diagnostics::default();
+        self.fetch_errors()
+            .into_iter()
+            .for_each(|err| diags.push(err));
+        diags
     }
 
     /// Returns true if this compilation stage has been successful.
@@ -216,14 +227,14 @@ impl<T: Artifact> StageResult<T> {
     }
 }
 
-impl<T: Artifact> Default for StageResult<T> {
+impl<T: Artifact, E: CompileError> Default for StageResult<T, E> {
     fn default() -> Self {
         Self(None)
     }
 }
 
-impl<T: Artifact> From<CompilationResult<T>> for StageResult<T> {
-    fn from(result: CompilationResult<T>) -> Self {
+impl<T: Artifact, E: CompileError> From<CompilationResult<T, E>> for StageResult<T, E> {
+    fn from(result: CompilationResult<T, E>) -> Self {
         Self::new(result)
     }
 }

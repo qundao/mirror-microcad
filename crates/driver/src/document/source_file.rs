@@ -5,6 +5,7 @@ use crate::Result;
 use crate::prelude as mu;
 
 use microcad_lang_base::ArtifactKind;
+use microcad_lang_base::Diagnostics;
 use microcad_lang_base::{Artifact, DiagRenderOptions};
 
 use miette::Diagnostic;
@@ -29,8 +30,8 @@ pub enum SourceError {
 /// A µcad source file document.
 pub struct SourceFile {
     pub source: mu::Source,
-    pub ast: mu::StageResult<mu::Ast>,
-    pub ir: mu::StageResult<mu::Ir>,
+    pub ast: mu::StageResult<mu::Ast, mu::parse::ParseError>,
+    pub ir: mu::StageResult<mu::Ir, mu::lower::LowerError>,
     //pub model: Option<mu::CompilationResult<mu::Model>>,
 }
 
@@ -63,8 +64,10 @@ impl SourceFile {
     }
 
     /// Return iterator over diagnostics
-    pub fn diagnostics(&self) -> impl Iterator<Item = &mu::Diagnostic> {
-        self.ast.diag_iter().chain(self.ir.diag_iter())
+    pub fn diagnostics(self) -> Diagnostics {
+        let mut diags = self.ast.diagnostics();
+        diags.append(self.ir.diagnostics());
+        diags
     }
 
     /// Loads the code from the file specified in the `url`.

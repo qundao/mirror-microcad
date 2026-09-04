@@ -6,7 +6,8 @@ mod rich;
 use crate::ParseContext;
 use crate::parse::error::rich::RichPattern;
 use crate::token::Token;
-use microcad_lang_base::{Span, SpanToSrcRef, SrcRef};
+use microcad_lang_base::{CompileError, Span, SpanToSrcRef, SrcRef};
+use microcad_macros::SrcReferrer;
 use miette::{Diagnostic, LabeledSpan};
 pub use rich::{Rich, RichReason};
 use std::error::Error;
@@ -18,11 +19,12 @@ use thiserror::Error;
 pub type RichError<'tokens> = Rich<'tokens, Token<'tokens>, Span, ParseErrorKind>;
 
 /// An error from building the abstract syntax tree
-#[derive(Debug)]
+#[derive(Debug, SrcReferrer)]
 pub struct ParseError {
     /// The span of the source that caused the error
-    pub src_ref: SrcRef,
     pub error: RichError<'static>,
+    /// Source code reference.
+    pub src_ref: SrcRef,
 }
 
 impl ParseError {
@@ -34,15 +36,7 @@ impl ParseError {
     }
 }
 
-/// Parse error collection.
-#[derive(Debug, Error, derive_more::Deref, derive_more::From, miette::Diagnostic, Default)]
-pub struct ParseErrors(#[related] pub Vec<ParseError>);
-
-impl std::fmt::Display for ParseErrors {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{} parse errors", self.0.len())
-    }
-}
+impl CompileError for ParseError {}
 
 #[derive(Debug, Error, Clone, Diagnostic)]
 pub enum ParseErrorKind {

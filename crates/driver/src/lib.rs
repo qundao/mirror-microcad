@@ -10,6 +10,7 @@ pub mod prelude;
 //mod session;
 mod watcher;
 
+use microcad_lang_base::{DiagRenderOptions, Diagnostics};
 use microcad_lang_types::Value;
 
 /// We use [`miette::Result`] throught-out this crate.
@@ -42,12 +43,17 @@ pub fn value_from_str(s: &str) -> Result<Value> {
 
     let source = mu::Source::from(s);
     let parse_context = mu::parse::ParseContext::from(&source);
-    mu::ir::ConstantValue::desugar(
-        &mu::ast::Literal::parse(&parse_context)?,
-        &mut mu::lower::LowerContext::from(&source),
-    )
-    .map_err(|err| err.into())
-    .map(|lit| lit.value().clone())
+    let node = mu::ast::Literal::parse(&parse_context).map_err(|errors| {
+        miette::miette!(
+            Diagnostics::from(errors)
+                .render_to_string(&source, &DiagRenderOptions::default())
+                .unwrap()
+        )
+    })?;
+
+    mu::ir::ConstantValue::desugar(&node, &mut mu::lower::LowerContext::from(&source))
+        .map_err(|err| err.into())
+        .map(|lit| lit.value().clone())
 }
 
 /// Install standard library (if it is not installed already).
