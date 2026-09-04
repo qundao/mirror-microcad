@@ -16,7 +16,7 @@ use crate::{EvalError, EvalResult};
 pub struct EvalContext {
     stack: Stack,
 
-    diag: Vec<Box<EvalError>>,
+    diag: Vec<EvalError>,
 
     pub builtins: BuiltinRegistry,
 
@@ -127,8 +127,8 @@ impl ModelTreeBuilderMut for EvalContext {
     }
 }
 
-impl PushDiag<Box<EvalError>> for EvalContext {
-    fn push_diag(&mut self, err: impl Into<Box<EvalError>>) {
+impl PushDiag<EvalError> for EvalContext {
+    fn push_diag(&mut self, err: impl Into<EvalError>) {
         self.diag.push(err.into())
     }
 }

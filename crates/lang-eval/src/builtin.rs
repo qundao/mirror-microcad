@@ -33,7 +33,7 @@ impl CallTrait for BuiltinFunction {
         let src_ref = context.current_symbol_src_ref();
         let name = context.current_symbol_name().unwrap_or_default();
         let args = self
-            .argument_match(&args)
+            .argument_match(args)
             .map_err(|err| EvalError::argument_match(src_ref, name, err))?;
 
         Ok(self.call_isolated(args)?)
@@ -45,7 +45,7 @@ impl CallTrait for BuiltinOperation {
         let src_ref = context.current_symbol_src_ref();
         let name = context.current_symbol_name().unwrap_or_default();
         let multi_args = self
-            .argument_multi_match(&args)
+            .argument_multi_match(args)
             .map_err(|err| EvalError::argument_match(src_ref, name, err))?;
         let mut models = Vec::new();
         for args in multi_args {
