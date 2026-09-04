@@ -6,6 +6,7 @@
 use microcad_lang_base::{Diagnostic, Source, StageResult};
 use microcad_lang_lower::{Ir, LowerContext};
 use microcad_lang_parse::Ast;
+use miette::IntoDiagnostic;
 
 use crate::{ResolveResult, locate};
 
@@ -51,5 +52,9 @@ impl SourceUnit {
     /// Return iterator over diagnostics
     pub fn diagnostics(&self) -> impl Iterator<Item = &Diagnostic> {
         self.ast.diag_iter().chain(self.ir.diag_iter())
+    }
+
+    pub fn is_ok(&self) -> bool {
+        self.ast.is_ok() && self.ir.is_ok()
     }
 }

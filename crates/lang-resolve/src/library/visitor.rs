@@ -15,9 +15,9 @@ use crate::{
     library::{Symbol, symbol},
 };
 
-/// Visitor for an IR tree.
+/// Visitor for a Library tree.
 pub trait Visitor: SourceVisitor + FnVisitor + WorkbenchVisitor + ConstantVisitor {
-    fn visit_library(&mut self, library: &Library) {
+    fn visit(&mut self, library: &Library) {
         library
             .root()
             .descendants()
@@ -33,8 +33,19 @@ pub trait Visitor: SourceVisitor + FnVisitor + WorkbenchVisitor + ConstantVisito
         self.visit_def(&symbol.def);
     }
 
+    fn visit_file_path(&mut self, _path: &std::path::Path) {}
+
     fn visit_meta(&mut self, _meta: &Meta) {}
     fn visit_inline_module(&mut self, _inline_module: &symbol::InlineModule) {}
+    fn visit_file_module(&mut self, file_module: &symbol::FileModule) {
+        match file_module {
+            symbol::FileModule::NotLoaded => {}
+            symbol::FileModule::Loaded { path, source } => {
+                self.visit_file_path(path);
+                self.visit_source(source);
+            }
+        }
+    }
 
     fn visit_alias(&mut self, alias: &symbol::Alias) {
         self.visit_path(&alias.path);
@@ -50,11 +61,11 @@ pub trait Visitor: SourceVisitor + FnVisitor + WorkbenchVisitor + ConstantVisito
                 Some(entry) => self.visit_source(entry),
                 None => {}
             },
-            Library(library) => self.visit_library(library),
             Source(source) => {
                 self.visit_source(source);
             }
             InlineModule(inline_module) => self.visit_inline_module(inline_module),
+            FileModule(file_module) => self.visit_file_module(file_module),
             Workbench(workbench) => self.visit_workbench(workbench),
             Function(function) => self.visit_fn(function),
             Constant(constant) => self.visit_constant(constant),

@@ -3,14 +3,22 @@
 
 pub mod manifest;
 
+mod display;
+
 pub mod symbol;
 pub mod symbol_path;
 pub mod visitor;
 
 pub use manifest::{Dependency, LibrarySection, Manifest, ManifestError};
+use microcad_lang_base::{
+    Diagnostic, PushDiag,
+    tree::{self, adopt_tree_to_arena},
+};
 use serde::{Deserialize, Serialize};
 
 pub use symbol::*;
+
+use crate::{ResolveContext, ResolveError, ResolveResult, SourceUnit};
 
 #[derive(Debug, Default, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub struct LibraryRoot {
@@ -74,14 +82,27 @@ impl Library {
         }
     }
 
-    /// Add a library dependency
-    pub fn add_library(&mut self, lib: Library) -> SymbolNodeId {
-        self.mu.append_value(Symbol::library(lib), &mut self.arena)
+    pub fn append_symbol(&mut self, symbol: impl Into<Symbol>) -> SymbolNodeId {
+        self.root.append_value(symbol.into(), &mut self.arena)
     }
 
-    pub fn append_symbol(symbol: impl Into<Symbol>) {
-        todo!()
-    }
+    pub fn load_source(
+        &mut self,
+        path: impl AsRef<std::path::Path>,
+        context: &mut ResolveContext,
+    ) -> ResolveResult<()> {
+        let source_unit = SourceUnit::load(path)?;
 
-    pub fn load_source(&mut self, path: impl AsRef<std::path::Path>) {}
+        match source_unit.ir.fetch_artifact() {
+            Some(ir) => {
+                tree::adopt_tree_to_arena::<Symbol, microcad_lang_lower::ir::Item>(
+                    &mut self.arena,
+                    ir.tree.root_id(),
+                    ir.tree.arena(),
+                );
+                Ok(())
+            }
+            None => todo!("Error handling"),
+        }
+    }
 }

@@ -45,6 +45,7 @@ macro_rules! call_builtin {
     };
 }
 
+/// Construct an that is guaranteed to be convertable via `.into()` into an expression.
 #[macro_export]
 macro_rules! expr {
     // A literal without unit

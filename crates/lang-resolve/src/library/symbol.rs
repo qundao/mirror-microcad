@@ -3,9 +3,11 @@
 
 //! µcad resolved symbol tree (RST).
 
-use microcad_lang_lower::ir;
+use microcad_lang_base::VersionAnnotation;
+use microcad_lang_lower::ir::{self, Def, DocBlock};
+use strum::IntoStaticStr;
 
-use std::hash::Hash;
+use std::hash::{BuildHasherDefault, Hash};
 
 use serde::{Deserialize, Serialize};
 
@@ -58,23 +60,31 @@ pub use ir::{
     SourceStatement, Visibility, Wildcard,
 };
 
-use crate::{
-    Library,
-    library::{LibraryRoot, symbol_path::SymbolAbsPath},
-};
+use crate::library::{LibraryRoot, symbol_path::SymbolAbsPath};
+
+#[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
+pub enum FileModule {
+    NotLoaded,
+    Loaded {
+        /// Relative path from project root of loaded file module
+        path: std::path::PathBuf,
+        /// Source.
+        source: Source,
+    },
+}
 
 /// Symbol definition
-#[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, From, IntoStaticStr, Hash, PartialEq, Serialize, Deserialize)]
 pub enum SymbolDef {
     Root(LibraryRoot),
 
-    /// External Library dependency
-    Library(Library),
-
-    /// Source file symbol.
+    /// Source symbol.
     Source(Source),
     /// Inline Module symbol: `mod foo {}`
     InlineModule(InlineModule),
+
+    FileModule(FileModule),
+
     /// Workbench symbol.
     Workbench(Workbench),
     /// Function symbol.
@@ -87,11 +97,43 @@ pub enum SymbolDef {
     Wildcard(Wildcard),
 }
 
-#[derive(Debug, Clone, Hash, PartialEq, Serialize, Deserialize)]
+/// An Ir Item holds a definition and meta data
+#[derive(Debug, Clone, Hash, From, PartialEq, Serialize, Deserialize)]
 pub struct Symbol {
+    /// Item metadata
     pub meta: Meta,
-    pub doc: Option<ir::DocBlock>,
+    /// Item definition
     pub def: SymbolDef,
+    /// Item documentation
+    pub doc: DocBlock,
+    /// Item version annotation
+    pub ver: VersionAnnotation,
+}
+
+impl From<ir::Def> for SymbolDef {
+    fn from(def: ir::Def) -> Self {
+        match def {
+            ir::Def::Source(source) => SymbolDef::Source(source),
+            ir::Def::InlineModule(inline_module) => SymbolDef::InlineModule(inline_module),
+            ir::Def::FileModule(_) => SymbolDef::FileModule(FileModule::NotLoaded),
+            ir::Def::Workbench(workbench) => SymbolDef::Workbench(workbench),
+            ir::Def::Function(function) => SymbolDef::Function(function),
+            ir::Def::Constant(constant) => SymbolDef::Constant(constant),
+            ir::Def::Alias(alias) => SymbolDef::Alias(alias),
+            ir::Def::Wildcard(wildcard) => SymbolDef::Wildcard(wildcard),
+        }
+    }
+}
+
+impl From<ir::Item> for Symbol {
+    fn from(item: ir::Item) -> Self {
+        Self {
+            meta: item.meta,
+            def: item.def.into(),
+            doc: item.doc,
+            ver: item.ver,
+        }
+    }
 }
 
 impl Symbol {
@@ -101,8 +143,9 @@ impl Symbol {
                 vis: Visibility::Public,
                 ..Default::default()
             },
-            doc: None,
             def: SymbolDef::Root(root),
+            doc: Default::default(),
+            ver: Default::default(),
         }
     }
 
@@ -113,20 +156,9 @@ impl Symbol {
                 vis: Visibility::Public,
                 ..Default::default()
             },
-            doc: None,
+            doc: DocBlock::default(),
+            ver: VersionAnnotation::default(),
             def: SymbolDef::InlineModule(InlineModule {}),
-        }
-    }
-
-    pub fn library(lib: Library) -> Self {
-        Self {
-            meta: Meta {
-                name: lib.name().map(|name| name.clone().into()), // TODO Check if library actually has a name and how to handle anonymous libraries
-                vis: Visibility::Public,
-                ..Default::default()
-            },
-            doc: None,
-            def: SymbolDef::Library(lib),
         }
     }
 }
@@ -179,6 +211,6 @@ impl<'a> SymbolNodeExt for SymbolNodeRef<'a> {
     }
 
     fn doc(&self) -> Option<&String> {
-        self.get().doc.as_ref().map(|doc| &doc.content)
+        Some(&self.get().doc.content)
     }
 }

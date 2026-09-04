@@ -3,8 +3,11 @@
 
 //! A resolve error
 
+use std::string::ParseError;
+
 use microcad_lang_base::{HashId, SrcRef, SrcReferrer, element::Case};
 
+use microcad_lang_lower::LowerError;
 use microcad_lang_types::Type;
 use miette::Diagnostic;
 use thiserror::Error;
@@ -15,6 +18,12 @@ use crate::locate::LocateError;
 pub enum ResolveError {
     #[error("IO Error: {0}")]
     IOError(#[from] std::io::Error),
+
+    #[error("{0}")]
+    LowerError(#[from] LowerError),
+
+    #[error("{0}")]
+    ParseError(#[from] ParseError),
 
     #[error("{0}")]
     Locate(#[from] LocateError),

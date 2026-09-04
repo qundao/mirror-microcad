@@ -20,7 +20,7 @@ mod case_check;
 mod resolver;
 mod type_check;
 
-use microcad_lang_base::{CompilationResult, Diagnostics};
+use microcad_lang_base::{CompilationResult, Diagnostic, Diagnostics, PushDiag};
 
 pub use resolver::Resolver;
 
@@ -28,8 +28,14 @@ use crate::{Library, error::ResolveError, library::symbol};
 
 /// Resolve Context
 pub struct ResolveContext {
-    pub resolver: Box<dyn Resolver>,
-    pub diagnostics: Diagnostics,
+    // pub resolver: Box<dyn Resolver>,
+    pub diag: Vec<Box<ResolveError>>,
+}
+
+impl PushDiag<Box<ResolveError>> for ResolveContext {
+    fn push_diag(&mut self, err: impl Into<Box<ResolveError>>) {
+        self.diag.push(err.into());
+    }
 }
 
 /// The scaffolding step builds the unresolved tree from a workspace directory.
@@ -53,10 +59,9 @@ pub struct ResolveContext {
 /// |   ... # More files
 /// ├── baz.mu
 impl ResolveContext {
-    pub fn new(resolver: Box<dyn Resolver>) -> Self {
+    pub fn new() -> Self {
         Self {
-            resolver,
-            diagnostics: Diagnostics::default(),
+            diag: Default::default(),
         }
     }
 
