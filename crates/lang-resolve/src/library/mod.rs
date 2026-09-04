@@ -95,11 +95,13 @@ impl Library {
 
         match source_unit.ir.fetch_artifact() {
             Some(ir) => {
-                tree::adopt_tree_to_arena::<Symbol, microcad_lang_lower::ir::Item>(
+                println!("{ir}");
+                let id = tree::adopt_tree_to_arena::<Symbol, microcad_lang_lower::ir::Item>(
                     &mut self.arena,
                     ir.tree.root_id(),
                     ir.tree.arena(),
                 );
+                self.root.append(id, &mut self.arena);
                 Ok(())
             }
             None => todo!("Error handling"),
