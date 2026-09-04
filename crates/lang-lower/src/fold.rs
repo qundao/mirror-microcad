@@ -58,10 +58,7 @@ impl<'a, 'source> Fold<'a, 'source> {
         };
 
         match call.args.into_arguments() {
-            Some(arguments) => match builtin_fn.call_isolated(arguments) {
-                Ok(value) => Some(value),
-                Err(_) => None,
-            },
+            Some(arguments) => builtin_fn.call_isolated(arguments).ok(),
             None => None,
         }
     }
