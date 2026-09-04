@@ -38,7 +38,7 @@ impl DocGen for Md {
     fn doc_gen<'a>(&self, symbol: SymbolNodeRef<'a>) -> Result<(), Box<dyn Error>> {
         symbol
             .descendants()
-            .filter(|symbol| matches!(symbol.def(), SymbolDef::Source(_)))
+            .filter(|symbol| matches!(symbol.def(), SymbolDef::SourceFile(_)))
             .try_for_each(|symbol| self.write_md_file(symbol))
     }
 }

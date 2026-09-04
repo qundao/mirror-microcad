@@ -42,7 +42,7 @@ impl MdBook {
             .map(|id| id.to_string())
             .collect();
         match symbol.def {
-            SymbolDef::Source(..) | SymbolDef::InlineModule(..) => path.join("README.md"),
+            SymbolDef::SourceFile(..) | SymbolDef::InlineModule(..) => path.join("README.md"),
             _ => {
                 let mut path = path.clone();
                 path.set_extension("md");
@@ -99,7 +99,7 @@ impl MdBook {
                 .filter(|symbol| {
                     matches!(
                         symbol.def(),
-                        SymbolDef::Source(..) | SymbolDef::InlineModule(..)
+                        SymbolDef::SourceFile(..) | SymbolDef::InlineModule(..)
                     )
                 })
                 .cloned()
@@ -140,9 +140,10 @@ impl MdBook {
             .try_for_each(|symbol| {
                 let path = &self.path.join("src").join(Self::symbol_path(symbol));
                 match symbol.def() {
-                    SymbolDef::Source(_) | SymbolDef::InlineModule(_) | SymbolDef::Workbench(_) => {
-                        symbol.to_md().write_to_file(path)
-                    }
+                    SymbolDef::SourceFile(_)
+                    | SymbolDef::InlineModule(_)
+                    | SymbolDef::Function(_)
+                    | SymbolDef::Workbench(_) => symbol.to_md().write_to_file(path),
                     _ => Ok(()),
                 }
             })

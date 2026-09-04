@@ -43,7 +43,7 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
                 let link = format!(
                     "- [`{id}`]({filename})",
                     filename = match symbol.def {
-                        SymbolDef::InlineModule(_) | SymbolDef::Source(_) => format!("./{id}"),
+                        SymbolDef::InlineModule(_) | SymbolDef::SourceFile(_) => format!("./{id}"),
                         _ => format!("./{id}.md"),
                     }
                 );
@@ -92,7 +92,7 @@ impl<'a> ToMd for SymbolNodeRef<'a> {
             symbol_list(*self, &mut md, "Sub-modules", |symbol| {
                 matches!(
                     symbol.def(),
-                    SymbolDef::InlineModule(_) | SymbolDef::Source(_)
+                    SymbolDef::InlineModule(_) | SymbolDef::SourceFile(_)
                 )
             });
 
