@@ -36,7 +36,7 @@ pub use microcad_lang_base::{Identifier, element::Visibility};
 pub use microcad_lang_types::ty::{MatrixType, QuantityType, TupleType, Ty, Unit};
 
 use derive_more::{Deref, Display, From};
-use microcad_lang_base::{SrcRef, VersionAnnotation};
+use microcad_lang_base::{CompactString, SrcRef, ToCompactString, VersionAnnotation};
 use serde::{Deserialize, Serialize};
 
 use crate::ir;
@@ -136,6 +136,17 @@ pub struct Item {
     pub doc: DocBlock,
     /// Item version annotation
     pub ver: VersionAnnotation,
+}
+
+impl Item {
+    pub fn name(&self) -> CompactString {
+        self.meta
+            .name
+            .as_ref()
+            .cloned()
+            .unwrap_or_default()
+            .to_compact_string()
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
