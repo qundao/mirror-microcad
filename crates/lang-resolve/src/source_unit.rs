@@ -3,7 +3,7 @@
 
 //! A source unit that can be compiled into an IR.
 
-use microcad_lang_base::{Diagnostic, Source, StageResult};
+use microcad_lang_base::{Source, StageResult};
 use microcad_lang_lower::{Ir, LowerContext, LowerError};
 use microcad_lang_parse::{Ast, ParseError};
 

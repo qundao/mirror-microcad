@@ -4,10 +4,10 @@
 //! µcad resolved symbol tree (RST).
 
 use microcad_lang_base::VersionAnnotation;
-use microcad_lang_lower::ir::{self, Def, DocBlock};
+use microcad_lang_lower::ir;
 use strum::IntoStaticStr;
 
-use std::hash::{BuildHasherDefault, Hash};
+use std::hash::Hash;
 
 use serde::{Deserialize, Serialize};
 
@@ -55,7 +55,7 @@ pub mod constant {
 }
 
 pub use ir::{
-    Alias, Argument, ArgumentList, Call, Constant, ConstantExpression, ConstantValue,
+    Alias, Argument, ArgumentList, Call, Constant, ConstantExpression, ConstantValue, DocBlock,
     ExportAttribute, ExprSpec, InlineModule, Meta, Parameter, ParameterList, Path, Source,
     SourceStatement, Visibility, Wildcard,
 };
@@ -115,12 +115,9 @@ impl Symbol {
     ) -> Self {
         Self {
             meta: item.meta.clone(),
-            def: SymbolDef::SourceFile(SourceFile::Loaded {
-                path,
-                source: source,
-            }),
             doc: item.doc.clone(),
             ver: item.ver.clone(),
+            def: SymbolDef::SourceFile(SourceFile::Loaded { path, source }),
         }
     }
 }

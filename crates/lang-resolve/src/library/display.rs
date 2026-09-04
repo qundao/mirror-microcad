@@ -1,7 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{DisplayOneLine, Stability, VersionAnnotation};
+use microcad_lang_base::{DisplayOneLine, Stability};
 use microcad_lang_lower::ir::Visibility;
 
 use crate::{
@@ -95,7 +95,7 @@ impl std::fmt::Display for SourceFile {
 impl DisplayOneLine for SourceFile {
     fn to_string_one_line(&self) -> String {
         match self {
-            SourceFile::NotLoaded => format!("NotLoaded"),
+            SourceFile::NotLoaded => "NotLoaded".to_string(),
             SourceFile::Loaded { path, .. } => format!("Loaded({})", path.display()),
         }
     }

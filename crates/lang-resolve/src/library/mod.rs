@@ -10,10 +10,8 @@ pub mod symbol_path;
 pub mod visitor;
 
 pub use manifest::{Dependency, LibrarySection, Manifest, ManifestError};
-use microcad_lang_base::{
-    Diagnostic, PushDiag,
-    tree::{self, NodeRef, adopt_tree_to_arena},
-};
+use microcad_lang_base::tree;
+
 use microcad_lang_lower::ir;
 use serde::{Deserialize, Serialize};
 
@@ -27,12 +25,6 @@ pub struct LibraryRoot {
     manifest: Option<Manifest>,
     /// Optional lib.rs file
     entry: Option<Source>,
-}
-
-impl LibraryRoot {
-    fn load(_path: impl AsRef<std::path::Path>) -> miette::Result<Self> {
-        todo!()
-    }
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -78,7 +70,7 @@ impl Library {
 
     pub fn library_root(&self) -> &LibraryRoot {
         match &self.root().get().def {
-            SymbolDef::Root(library_root) => &library_root,
+            SymbolDef::Root(library_root) => library_root,
             _ => panic!("This should not happen"),
         }
     }
