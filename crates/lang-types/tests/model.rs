@@ -267,7 +267,7 @@ fn test_replace_input_placeholders_multiplicity() {
     let circle_tree = ModelTree::new(model::circle("Circle", 5.0));
 
     // 3. Perform replacement
-    let result_tree = template_tree.replace_input_placeholders(circle_tree);
+    let result_tree = template_tree.replace_input_placeholders(&circle_tree);
 
     // 4. Assertions
     let root = result_tree.root();

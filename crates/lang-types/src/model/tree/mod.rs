@@ -7,7 +7,7 @@ mod builder;
 mod node;
 mod ops;
 
-use microcad_lang_base::{DisplayWithCtx, LookUpName};
+use microcad_lang_base::{DisplayWithCtx, LookUpName, tree};
 pub use node::{ModelNodeId, Node, NodeExt, NodeMut, NodeRef};
 
 pub use builder::{BuildModelTreeError, ModelTreeBuilder, ModelTreeBuilderMut};
@@ -105,8 +105,8 @@ impl ModelTree {
         root.append(group_id, &mut arena);
 
         // 3. Adopt both self's root and rhs's root into the new arena under Group
-        let lhs_root_id = Self::adopt_tree_to_arena(&mut arena, self.root, &self.arena);
-        let rhs_root_id = Self::adopt_tree_to_arena(&mut arena, rhs.root, &rhs.arena);
+        let lhs_root_id = tree::adopt_tree_to_arena(&mut arena, self.root, &self.arena);
+        let rhs_root_id = tree::adopt_tree_to_arena(&mut arena, rhs.root, &rhs.arena);
 
         group_id.append(lhs_root_id, &mut arena);
         group_id.append(rhs_root_id, &mut arena);
@@ -120,7 +120,7 @@ impl ModelTree {
         source_id: ModelNodeId,
         source_arena: &Arena,
     ) -> ModelNodeId {
-        Self::adopt_tree_to_arena(&mut self.arena, source_id, source_arena)
+        tree::adopt_tree_to_arena(&mut self.arena, source_id, source_arena)
     }
 
     pub fn append(&mut self, child: impl Into<ModelTree>) {
@@ -131,22 +131,20 @@ impl ModelTree {
 
     /// Returns a new `ModelTree` where every `Element::InputPlaceholder` node
     /// (and its descendants) is replaced with a deep copy of `input_model`.
-    pub fn replace_input_placeholders(&self, input_model: impl Into<ModelTree>) -> Self {
-        let mut new_arena = Arena::new();
-        let model_tree: ModelTree = input_model.into();
+    pub fn replace_input_placeholders(&self, input_model: &ModelTree) -> Self {
+        let mut arena = Arena::new();
 
         // Recursively build the transformed tree starting from root
-        let new_root = Self::replace_placeholders_recursive(
+        let root = tree::replace_recursive(
             self.root,
             &self.arena,
-            &model_tree,
-            &mut new_arena,
+            input_model.root,
+            &input_model.arena,
+            &mut arena,
+            &|node| node.element == crate::model::element::Element::InputPlaceholder,
         );
 
-        Self {
-            root: new_root,
-            arena: new_arena,
-        }
+        Self { root, arena }
     }
 
     /// If there are several properties

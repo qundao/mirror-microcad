@@ -22,7 +22,7 @@ fn load_mu_toml() {
                 description: some(eq("A test library".to_string())),
                 version: eq(semver::Version::parse("0.1.0").unwrap()),
                 authors: some(eq(vec!["John Doe".to_string(), "Jane Doe".to_string()])),
-                documentation: some(eq("https://mu.xyz/test-lib".parse().unwrap())),
+                documentation: some(eq("https://mu.xyz/test_lib".parse().unwrap())),
                 license: some(eq("GPLv3".to_string())),
                 no_std: some(eq(true))
             }),
