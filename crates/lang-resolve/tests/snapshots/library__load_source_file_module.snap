@@ -1,0 +1,9 @@
+---
+source: crates/lang-resolve/tests/library.rs
+expression: library
+---
+Root [pub]
+├── mu: InlineModule [pub]
+└── file_module: Source [pub]
+    ├── sub: FileModule NotLoaded
+    └── foo: FileModule NotLoaded [pub]

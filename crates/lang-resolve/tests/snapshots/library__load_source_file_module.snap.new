@@ -1,0 +1,12 @@
+---
+source: crates/lang-resolve/tests/library.rs
+assertion_line: 29
+expression: library
+---
+Root [pub]
+├── mu: InlineModule [pub]
+└── file_module: Source [pub]
+    ├── mod: Source [pub]
+    └── foo: Source [pub]
+        ├── bar: Source [pub]
+        └── FOO: Constant Any: Value(42mm) [pub]

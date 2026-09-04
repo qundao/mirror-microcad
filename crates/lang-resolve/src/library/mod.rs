@@ -12,13 +12,13 @@ pub mod visitor;
 pub use manifest::{Dependency, LibrarySection, Manifest, ManifestError};
 use microcad_lang_base::{
     Diagnostic, PushDiag,
-    tree::{self, adopt_tree_to_arena},
+    tree::{self, NodeRef, adopt_tree_to_arena},
 };
 use serde::{Deserialize, Serialize};
 
 pub use symbol::*;
 
-use crate::{ResolveContext, ResolveError, ResolveResult, SourceUnit};
+use crate::{ResolveContext, ResolveError, ResolveResult, SourceUnit, locate};
 
 #[derive(Debug, Default, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub struct LibraryRoot {
@@ -86,25 +86,53 @@ impl Library {
         self.root.append_value(symbol.into(), &mut self.arena)
     }
 
+    pub fn _load_source(
+        &mut self,
+        path: impl AsRef<std::path::Path>,
+        parent_id: SymbolNodeId,
+        context: &mut ResolveContext,
+    ) -> ResolveResult<SymbolNodeId> {
+        let source_unit = SourceUnit::load(&path)?;
+
+        match source_unit.ir.fetch_artifact() {
+            Some(ir) => {
+                let id = {
+                    let source_arena = ir.tree.arena();
+                    let source_node = ir.tree.root();
+
+                    // Create matching node in target arena
+                    let new_id = self.arena.new_node(source_node.get().clone().into());
+
+                    // Traverse children recursively
+                    for child in source_node.children() {
+                        let item = child.get();
+                        let child_id = match child.get().def {
+                            microcad_lang_lower::ir::Def::FileModule(_) => {
+                                let mut path_no_ext = path.as_ref().to_path_buf();
+                                path_no_ext.set_extension("");
+                                let path = locate::resolved_path(path_no_ext.join(item.name()))?;
+                                self._load_source(path, new_id, context)?
+                            }
+                            _ => tree::adopt_tree_to_arena(&mut self.arena, child.id, source_arena),
+                        };
+                        new_id.append(child_id, &mut self.arena);
+                    }
+
+                    new_id
+                };
+
+                parent_id.append(id, &mut self.arena);
+                Ok(id)
+            }
+            None => todo!("Error handling"),
+        }
+    }
+
     pub fn load_source(
         &mut self,
         path: impl AsRef<std::path::Path>,
         context: &mut ResolveContext,
-    ) -> ResolveResult<()> {
-        let source_unit = SourceUnit::load(path)?;
-
-        match source_unit.ir.fetch_artifact() {
-            Some(ir) => {
-                println!("{ir}");
-                let id = tree::adopt_tree_to_arena::<Symbol, microcad_lang_lower::ir::Item>(
-                    &mut self.arena,
-                    ir.tree.root_id(),
-                    ir.tree.arena(),
-                );
-                self.root.append(id, &mut self.arena);
-                Ok(())
-            }
-            None => todo!("Error handling"),
-        }
+    ) -> ResolveResult<SymbolNodeId> {
+        self._load_source(path, self.root, context)
     }
 }
