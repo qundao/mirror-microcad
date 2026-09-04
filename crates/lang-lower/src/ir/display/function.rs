@@ -86,3 +86,5 @@ impl std::fmt::Display for ir::Function {
         super::fmt_statements(&self.statements, f)
     }
 }
+
+impl DisplayOneLine for ir::Function {}
