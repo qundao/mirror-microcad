@@ -4,20 +4,16 @@
 //! Tests for evaluating functions.
 
 use microcad_builtin::__mu;
-use microcad_lang_base::{SrcRef, SymbolId, ToCompactString, boxed};
+use microcad_lang_base::{SrcRef, SymbolId, boxed};
 use microcad_lang_eval::{CallTrait, EvalContext};
 use microcad_lang_resolve::{
-    call_builtin,
+    call_builtin, expr,
     library::symbol::{
-        ConstantValue, Function, FunctionExpression, FunctionStatement, Parameter, Path, function,
+        self, ConstantValue, Function, FunctionExpression, FunctionStatement, Parameter, function,
     },
 };
 use microcad_lang_types::{ArgumentValueList, Type, Value, argument_value};
 use microcad_macros::parameter_list;
-
-fn name_expr(name: &str) -> FunctionExpression {
-    FunctionExpression::Path(Path::Resolved(SymbolId::Local(name.to_compact_string())))
-}
 
 fn scope(a: impl Iterator<Item = FunctionStatement>) -> function::Scope {
     function::Scope {
@@ -44,7 +40,7 @@ fn return_a() {
     let f = function::Function::new(parameter_list!(a: Integer))
         .with_return_type(Type::Integer)
         .with_statements([function::ReturnStatement {
-            expr: Some(name_expr("a")),
+            expr: Some(expr!(a).into()),
             keyword_src_ref: SrcRef::none(),
             src_ref: SrcRef::none(),
         }
@@ -53,14 +49,16 @@ fn return_a() {
     assert_eval(&f, [argument_value!(a = 2)], 2);
 }
 
+/// Test a function `f(a: Integer, b: Integer) -> Integer` that return the sum of `a` and `b`.
 #[test]
 fn add() {
     let f = function::Function::new(parameter_list!(a: Integer, b: Integer))
         .with_return_type(Type::Integer)
         .with_statements([FunctionStatement::Tail(
-            call_builtin!(core::add(lhs = name_expr("a"), rhs = name_expr("b"))).into(),
+            call_builtin!(core::add(lhs = expr!(a), rhs = expr!(b))).into(),
         )]);
 
+    // Call the function with `f(a = 1, b = 3)`
     assert_eval(&f, [argument_value!(a = 1), argument_value!(b = 3)], 4);
 }
 
@@ -71,10 +69,9 @@ fn if_a_greater_than() {
         .with_statements([function::FunctionIf {
             src_ref: SrcRef::none(),
             if_ref: SrcRef::none(),
-            cond: FunctionExpression::Call(call_builtin!(core::gt(
-                lhs = name_expr("a"),
-                rhs = name_expr("b"),
-            )))
+            cond: FunctionExpression::Call(call_builtin!(
+                core::gt(lhs = expr!(a), rhs = expr!(b),)
+            ))
             .into(),
             body: scope([FunctionStatement::Tail(ConstantValue::new(2).into())].into_iter()).into(),
             else_ref: None,
