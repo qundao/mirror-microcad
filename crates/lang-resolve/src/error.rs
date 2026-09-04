@@ -47,6 +47,9 @@ pub enum ResolveError {
     },
     #[error("No source with hash: {0}")]
     NoSourceWithHash(HashId),
+
+    #[error("Error compiling file: {path}", path = path.display())]
+    CompileError { path: std::path::PathBuf },
 }
 
 pub type ResolveResult<T> = Result<T, Box<ResolveError>>;

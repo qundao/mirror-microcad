@@ -6,7 +6,6 @@
 use microcad_lang_base::{Diagnostic, Source, StageResult};
 use microcad_lang_lower::{Ir, LowerContext};
 use microcad_lang_parse::Ast;
-use miette::IntoDiagnostic;
 
 use crate::{ResolveResult, locate};
 

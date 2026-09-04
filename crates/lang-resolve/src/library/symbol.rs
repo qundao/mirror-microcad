@@ -107,6 +107,24 @@ pub struct Symbol {
     pub ver: VersionAnnotation,
 }
 
+impl Symbol {
+    pub(crate) fn loaded_source_file(
+        item: &ir::Item,
+        path: std::path::PathBuf,
+        source: Source,
+    ) -> Self {
+        Self {
+            meta: item.meta.clone(),
+            def: SymbolDef::SourceFile(SourceFile::Loaded {
+                path,
+                source: source,
+            }),
+            doc: item.doc.clone(),
+            ver: item.ver.clone(),
+        }
+    }
+}
+
 impl From<ir::Def> for SymbolDef {
     fn from(def: ir::Def) -> Self {
         match def {

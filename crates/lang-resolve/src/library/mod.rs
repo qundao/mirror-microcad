@@ -14,6 +14,7 @@ use microcad_lang_base::{
     Diagnostic, PushDiag,
     tree::{self, NodeRef, adopt_tree_to_arena},
 };
+use microcad_lang_lower::ir;
 use serde::{Deserialize, Serialize};
 
 pub use symbol::*;
@@ -93,49 +94,41 @@ impl Library {
         context: &mut ResolveContext,
     ) -> ResolveResult<SymbolNodeId> {
         let source_unit = SourceUnit::load(&path)?;
+        let path = path.as_ref().to_path_buf();
 
         match source_unit.ir.fetch_artifact() {
+            // We have a successfully compiled IR, add it to the tree and load file recursively, if necessary.
             Some(ir) => {
-                let id = {
-                    let source_arena = ir.tree.arena();
-                    let source_node = ir.tree.root();
+                let source_arena = ir.tree.arena();
+                let source_node = ir.tree.root();
 
-                    // Create matching node in target arena
-                    let symbol = match &source_node.def {
-                        microcad_lang_lower::ir::Def::Source(source) => Symbol {
-                            meta: source_node.meta.clone(),
-                            def: SymbolDef::SourceFile(SourceFile::Loaded {
-                                path: path.as_ref().to_path_buf(),
-                                source: source.clone(),
-                            }),
-                            doc: source_node.doc.clone(),
-                            ver: source_node.ver.clone(),
-                        },
-                        _ => source_node.get().clone().into(),
-                    };
-                    let new_id = self.arena.new_node(symbol);
-
-                    // Traverse children recursively
-                    for child in source_node.children() {
-                        let item = child.get();
-                        let child_id = match child.get().def {
-                            microcad_lang_lower::ir::Def::FileModule(_) => self._load_source(
-                                locate::file_module_path(&path, item.name())?,
-                                new_id,
-                                context,
-                            )?,
-                            _ => tree::adopt_tree_to_arena(&mut self.arena, child.id, source_arena),
-                        };
-                        new_id.append(child_id, &mut self.arena);
+                // Create matching node in target arena
+                let symbol = match &source_node.def {
+                    ir::Def::Source(source) => {
+                        Symbol::loaded_source_file(source_node.get(), path.clone(), source.clone())
                     }
-
-                    new_id
+                    _ => source_node.get().clone().into(),
                 };
+                let id = self.arena.new_node(symbol);
 
+                // Traverse children recursively
+                for child in source_node.children() {
+                    let item = child.get();
+                    let child_id = match child.get().def {
+                        ir::Def::FileModule(_) => self._load_source(
+                            locate::file_module_path(&path, item.name())?,
+                            id,
+                            context,
+                        )?,
+                        _ => tree::adopt_tree_to_arena(&mut self.arena, child.id, source_arena),
+                    };
+                    id.append(child_id, &mut self.arena);
+                }
                 parent_id.append(id, &mut self.arena);
+
                 Ok(id)
             }
-            None => todo!("Error handling"),
+            None => Err(Box::new(ResolveError::CompileError { path })),
         }
     }
 
