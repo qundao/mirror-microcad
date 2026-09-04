@@ -84,10 +84,16 @@ impl SourceKind {
         let path = self
             .relative_path()
             .unwrap_or_else(|| std::path::PathBuf::from(self.url().path()));
-
-        path.file_stem()
-            .and_then(|s| s.to_str())
-            .map(|s| Name::from(s.to_string()))
+        let stem = match path.file_stem().and_then(|s| s.to_str()) {
+            // If we have a `mod.mu` file, we need to take the parent as file module name.
+            Some("mod") => path
+                .parent()
+                .and_then(|path| path.file_stem())
+                .and_then(|s| s.to_str()),
+            Some(s) => Some(s),
+            None => None,
+        };
+        stem.map(|s| Name::from(s.to_string()))
     }
 }
 
