@@ -267,7 +267,7 @@ pub trait VisitorMut:
         })
     }
 
-    fn visit_item<'a>(&mut self, _node: ir::NodeRef<'a>, item: &mut ir::IrItem) {
+    fn visit_item<'a>(&mut self, _node: ir::NodeRef<'a>, item: &mut ir::Item) {
         self.visit_meta(&mut item.meta);
         self.visit_def(&mut item.def);
     }

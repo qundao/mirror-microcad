@@ -76,13 +76,13 @@ impl<'source> LowerContext<'source> {
         self.node_id_stack.last().unwrap()
     }
 
-    pub fn scaffold_item(&mut self, node: impl Into<ir::IrItem>) -> ir::NodeId {
+    pub fn scaffold_item(&mut self, node: impl Into<ir::Item>) -> ir::NodeId {
         self.arena.new_node(node.into())
     }
 
     pub fn scaffold_item_with_children(
         &mut self,
-        node: impl Into<ir::IrItem>,
+        node: impl Into<ir::Item>,
         children: impl Scaffold,
     ) -> ir::NodeId {
         let node_id = self.scaffold_item(node);

@@ -32,7 +32,7 @@ impl Scaffold for ir::desugared::FileModule {
     fn scaffold(self, context: &mut LowerContext) -> ir::NodeId {
         let ver = self.attr.fetch_ver(context);
 
-        context.scaffold_item(ir::IrItem {
+        context.scaffold_item(ir::Item {
             meta: self.meta,
             def: ir::FileModule {}.into(),
             doc: self.attr.doc,
@@ -45,7 +45,7 @@ impl Scaffold for ir::desugared::Alias {
     fn scaffold(self, context: &mut LowerContext) -> ir::NodeId {
         let ver = self.attr.fetch_ver(context);
 
-        context.scaffold_item(ir::IrItem {
+        context.scaffold_item(ir::Item {
             meta: self.meta,
             def: ir::Alias { path: self.path }.into(),
             doc: self.attr.doc,
@@ -58,7 +58,7 @@ impl Scaffold for ir::desugared::Wildcard {
     fn scaffold(self, context: &mut LowerContext) -> ir::NodeId {
         let ver = self.attr.fetch_ver(context);
 
-        context.scaffold_item(ir::IrItem {
+        context.scaffold_item(ir::Item {
             meta: self.meta,
             def: ir::Wildcard { path: self.path }.into(),
             doc: self.attr.doc,
@@ -71,7 +71,7 @@ impl Scaffold for ir::desugared::Constant {
     fn scaffold(self, context: &mut LowerContext) -> ir::NodeId {
         let ver = self.attr.fetch_ver(context);
 
-        context.scaffold_item(ir::IrItem {
+        context.scaffold_item(ir::Item {
             meta: self.meta,
             def: ir::Constant {
                 ty: self.ty,
@@ -89,7 +89,7 @@ impl Scaffold for ir::desugared::InlineModule {
         let ver = self.attr.fetch_ver(context);
 
         context.scaffold_item_with_children(
-            ir::IrItem {
+            ir::Item {
                 meta: self.meta,
                 def: ir::InlineModule {}.into(),
                 doc: self.attr.doc,
@@ -105,7 +105,7 @@ impl Scaffold for ir::desugared::Function {
         let ver = self.attr.fetch_ver(context);
 
         context.scaffold_item_with_children(
-            ir::IrItem {
+            ir::Item {
                 meta: self.meta,
                 def: ir::Function {
                     statements: self.statements,
@@ -125,7 +125,7 @@ impl Scaffold for ir::desugared::Workbench {
         let ver = self.attr.fetch_ver(context);
 
         context.scaffold_item_with_children(
-            ir::IrItem {
+            ir::Item {
                 meta: self.meta,
                 def: ir::Workbench {
                     statements: self.statements,
@@ -282,7 +282,7 @@ impl Scaffold for ir::desugared::Source {
         let ver = self.attr.fetch_ver(context);
 
         context.scaffold_item_with_children(
-            ir::IrItem {
+            ir::Item {
                 meta: self.meta,
                 def: ir::Source {
                     statements: self.statements,

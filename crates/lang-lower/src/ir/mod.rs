@@ -127,7 +127,7 @@ pub enum Def {
 
 /// An Ir Item holds a definition and meta data
 #[derive(Debug, Clone, Hash, From, PartialEq, Serialize, Deserialize)]
-pub struct IrItem {
+pub struct Item {
     /// Item metadata
     pub meta: Meta,
     /// Item definition
@@ -160,7 +160,7 @@ impl std::hash::Hash for Tree {
 }
 
 impl Tree {
-    pub fn new(root: IrItem) -> Self {
+    pub fn new(root: Item) -> Self {
         let mut arena = Arena::default();
         let root = arena.new_node(root);
         Self { root, arena }
@@ -172,10 +172,18 @@ impl Tree {
     pub fn root_mut<'a>(&'a mut self) -> NodeMut<'a> {
         NodeMut::new(self.root, &mut self.arena)
     }
+
+    pub fn arena(&self) -> &Arena {
+        &self.arena
+    }
+
+    pub fn root_id(&self) -> NodeId {
+        self.root
+    }
 }
 
-pub type Arena = microcad_lang_base::tree::Arena<IrItem>;
-pub type Node = microcad_lang_base::tree::Node<IrItem>;
-pub type NodeRef<'a> = microcad_lang_base::tree::NodeRef<'a, IrItem>;
-pub type NodeMut<'a> = microcad_lang_base::tree::NodeMut<'a, IrItem>;
+pub type Arena = microcad_lang_base::tree::Arena<Item>;
+pub type Node = microcad_lang_base::tree::Node<Item>;
+pub type NodeRef<'a> = microcad_lang_base::tree::NodeRef<'a, Item>;
+pub type NodeMut<'a> = microcad_lang_base::tree::NodeMut<'a, Item>;
 pub type NodeId = microcad_lang_base::tree::NodeId;

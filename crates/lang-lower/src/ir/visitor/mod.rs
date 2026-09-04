@@ -272,7 +272,7 @@ pub trait Visitor: SourceVisitor + FnVisitor + WorkbenchVisitor + ConstantVisito
         self.visit_item(node.get());
     }
 
-    fn visit_item(&mut self, item: &ir::IrItem) {
+    fn visit_item(&mut self, item: &ir::Item) {
         self.visit_meta(&item.meta);
         self.visit_def(&item.def);
     }

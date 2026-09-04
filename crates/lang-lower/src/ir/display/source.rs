@@ -20,3 +20,9 @@ impl std::fmt::Display for ir::Source {
         super::fmt_statements(&self.statements, f)
     }
 }
+
+impl DisplayOneLine for ir::Source {
+    fn to_string_one_line(&self) -> String {
+        String::new()
+    }
+}

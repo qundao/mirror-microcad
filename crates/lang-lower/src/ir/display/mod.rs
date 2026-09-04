@@ -110,7 +110,7 @@ impl std::fmt::Display for ir::Def {
     }
 }
 
-impl std::fmt::Display for ir::IrItem {
+impl std::fmt::Display for ir::Item {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let doc = self.doc.to_string_one_line();
         if !doc.is_empty() {
