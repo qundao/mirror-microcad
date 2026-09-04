@@ -5,8 +5,8 @@ expression: library
 ---
 Root [pub]
 ├── mu: InlineModule [pub]
-└── file_module: Source [pub]
-    ├── mod: Source [pub]
-    └── foo: Source [pub]
-        ├── bar: Source [pub]
+└── file_module: SourceFile Loaded(tests/test_cases/file_module.µcad) [pub]
+    ├── mod: SourceFile Loaded(tests/test_cases/file_module/sub/mod.µcad) [pub]
+    └── foo: SourceFile Loaded(tests/test_cases/file_module/foo.µcad) [pub]
+        ├── bar: SourceFile Loaded(tests/test_cases/file_module/foo/bar.µcad) [pub]
         └── FOO: Constant Any: Value(42mm) [pub]

@@ -63,7 +63,7 @@ pub use ir::{
 use crate::library::{LibraryRoot, symbol_path::SymbolAbsPath};
 
 #[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
-pub enum FileModule {
+pub enum SourceFile {
     NotLoaded,
     Loaded {
         /// Relative path from project root of loaded file module
@@ -77,13 +77,10 @@ pub enum FileModule {
 #[derive(Debug, Clone, From, IntoStaticStr, Hash, PartialEq, Serialize, Deserialize)]
 pub enum SymbolDef {
     Root(LibraryRoot),
-
-    /// Source symbol.
-    Source(Source),
     /// Inline Module symbol: `mod foo {}`
     InlineModule(InlineModule),
 
-    FileModule(FileModule),
+    SourceFile(SourceFile),
 
     /// Workbench symbol.
     Workbench(Workbench),
@@ -113,9 +110,11 @@ pub struct Symbol {
 impl From<ir::Def> for SymbolDef {
     fn from(def: ir::Def) -> Self {
         match def {
-            ir::Def::Source(source) => SymbolDef::Source(source),
             ir::Def::InlineModule(inline_module) => SymbolDef::InlineModule(inline_module),
-            ir::Def::FileModule(_) => SymbolDef::FileModule(FileModule::NotLoaded),
+            ir::Def::FileModule(_) | ir::Def::Source(_) => {
+                // Source files are loaded in `Library::load_source`
+                SymbolDef::SourceFile(SourceFile::NotLoaded)
+            }
             ir::Def::Workbench(workbench) => SymbolDef::Workbench(workbench),
             ir::Def::Function(function) => SymbolDef::Function(function),
             ir::Def::Constant(constant) => SymbolDef::Constant(constant),

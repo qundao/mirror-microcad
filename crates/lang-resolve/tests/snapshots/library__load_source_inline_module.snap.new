@@ -1,0 +1,15 @@
+---
+source: crates/lang-resolve/tests/library.rs
+assertion_line: 17
+expression: library
+---
+Root [pub]
+├── mu: InlineModule [pub]
+└── inline_module: SourceFile Loaded(tests/test_cases/inline_module.µcad) [pub]
+    ├── b: InlineModule [pub] /// This inline module has documentation
+    │   ├── d: InlineModule [pub]
+    │   │   └── E: Constant Any: Value(42mm)
+    │   ├── f: InlineModule
+    │   │   └── G: Constant Any: Value(42)
+    │   └── C: Constant Any: Value(42) [pub]
+    └── A: Constant Any: Value(Foo) [pub] /// A constant

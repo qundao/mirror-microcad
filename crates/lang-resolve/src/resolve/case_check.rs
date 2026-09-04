@@ -34,7 +34,7 @@ impl CaseCheck for symbol::SymbolDef {
     fn expected_case(&self) -> Option<Case> {
         use symbol::SymbolDef::*;
         match &self {
-            Source(_) | InlineModule(_) | FileModule(_) | Function(_) => Some(Case::LowerSnake),
+            InlineModule(_) | SourceFile(_) | Function(_) => Some(Case::LowerSnake),
             Workbench(_) => Some(Case::Pascal),
             Constant(_) => Some(Case::UpperSnake),
             Alias(_) | Wildcard(_) | Root(_) => None,

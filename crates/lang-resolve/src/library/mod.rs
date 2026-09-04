@@ -101,18 +101,29 @@ impl Library {
                     let source_node = ir.tree.root();
 
                     // Create matching node in target arena
-                    let new_id = self.arena.new_node(source_node.get().clone().into());
+                    let symbol = match &source_node.def {
+                        microcad_lang_lower::ir::Def::Source(source) => Symbol {
+                            meta: source_node.meta.clone(),
+                            def: SymbolDef::SourceFile(SourceFile::Loaded {
+                                path: path.as_ref().to_path_buf(),
+                                source: source.clone(),
+                            }),
+                            doc: source_node.doc.clone(),
+                            ver: source_node.ver.clone(),
+                        },
+                        _ => source_node.get().clone().into(),
+                    };
+                    let new_id = self.arena.new_node(symbol);
 
                     // Traverse children recursively
                     for child in source_node.children() {
                         let item = child.get();
                         let child_id = match child.get().def {
-                            microcad_lang_lower::ir::Def::FileModule(_) => {
-                                let mut path_no_ext = path.as_ref().to_path_buf();
-                                path_no_ext.set_extension("");
-                                let path = locate::resolved_path(path_no_ext.join(item.name()))?;
-                                self._load_source(path, new_id, context)?
-                            }
+                            microcad_lang_lower::ir::Def::FileModule(_) => self._load_source(
+                                locate::file_module_path(&path, item.name())?,
+                                new_id,
+                                context,
+                            )?,
                             _ => tree::adopt_tree_to_arena(&mut self.arena, child.id, source_arena),
                         };
                         new_id.append(child_id, &mut self.arena);

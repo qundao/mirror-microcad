@@ -37,10 +37,10 @@ pub trait Visitor: SourceVisitor + FnVisitor + WorkbenchVisitor + ConstantVisito
 
     fn visit_meta(&mut self, _meta: &Meta) {}
     fn visit_inline_module(&mut self, _inline_module: &symbol::InlineModule) {}
-    fn visit_file_module(&mut self, file_module: &symbol::FileModule) {
+    fn visit_file_module(&mut self, file_module: &symbol::SourceFile) {
         match file_module {
-            symbol::FileModule::NotLoaded => {}
-            symbol::FileModule::Loaded { path, source } => {
+            symbol::SourceFile::NotLoaded => {}
+            symbol::SourceFile::Loaded { path, source } => {
                 self.visit_file_path(path);
                 self.visit_source(source);
             }
@@ -61,11 +61,8 @@ pub trait Visitor: SourceVisitor + FnVisitor + WorkbenchVisitor + ConstantVisito
                 Some(entry) => self.visit_source(entry),
                 None => {}
             },
-            Source(source) => {
-                self.visit_source(source);
-            }
             InlineModule(inline_module) => self.visit_inline_module(inline_module),
-            FileModule(file_module) => self.visit_file_module(file_module),
+            SourceFile(file_module) => self.visit_file_module(file_module),
             Workbench(workbench) => self.visit_workbench(workbench),
             Function(function) => self.visit_fn(function),
             Constant(constant) => self.visit_constant(constant),

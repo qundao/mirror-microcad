@@ -6,7 +6,7 @@ use microcad_lang_lower::ir::Visibility;
 
 use crate::{
     Library, Manifest, SymbolDef,
-    library::{FileModule, LibraryRoot, Symbol},
+    library::{LibraryRoot, SourceFile, Symbol},
 };
 
 impl std::fmt::Display for Manifest {
@@ -86,17 +86,17 @@ impl DisplayOneLine for Symbol {
     }
 }
 
-impl std::fmt::Display for FileModule {
+impl std::fmt::Display for SourceFile {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.to_string_one_line())
     }
 }
 
-impl DisplayOneLine for FileModule {
+impl DisplayOneLine for SourceFile {
     fn to_string_one_line(&self) -> String {
         match self {
-            FileModule::NotLoaded => format!("NotLoaded"),
-            FileModule::Loaded { path, .. } => format!("Loaded({})", path.display()),
+            SourceFile::NotLoaded => format!("NotLoaded"),
+            SourceFile::Loaded { path, .. } => format!("Loaded({})", path.display()),
         }
     }
 }
@@ -108,13 +108,13 @@ impl std::fmt::Display for SymbolDef {
 
         let def = match self {
             SymbolDef::Root(library_root) => library_root.to_string_one_line(),
-            SymbolDef::FileModule(file_module) => file_module.to_string_one_line(),
+            SymbolDef::SourceFile(file_module) => file_module.to_string_one_line(),
             SymbolDef::Workbench(workbench) => workbench.to_string_one_line(),
             SymbolDef::Function(function) => function.to_string_one_line(),
             SymbolDef::Constant(constant) => constant.to_string_one_line(),
             SymbolDef::Alias(alias) => alias.to_string_one_line(),
             SymbolDef::Wildcard(wildcard) => wildcard.to_string_one_line(),
-            SymbolDef::Source(_) | SymbolDef::InlineModule(_) => String::new(),
+            SymbolDef::InlineModule(_) => String::new(),
         };
 
         if def.is_empty() {

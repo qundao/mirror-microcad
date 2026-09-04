@@ -91,6 +91,15 @@ pub fn resolved_path(path: impl AsRef<std::path::Path>) -> Result<std::path::Pat
     })
 }
 
+pub fn file_module_path(
+    path: impl AsRef<std::path::Path>,
+    module_name: impl AsRef<str>,
+) -> Result<std::path::PathBuf, LocateError> {
+    let mut path_no_ext = path.as_ref().to_path_buf();
+    path_no_ext.set_extension("");
+    resolved_path(path_no_ext.join(module_name.as_ref()))
+}
+
 /// Convert an input (e.g. from command line) into a valid and unique URL to be used for any source.
 pub fn to_url(input: impl AsRef<str>) -> Result<Url, LocateError> {
     let input = input.as_ref();
