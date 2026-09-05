@@ -20,7 +20,7 @@ mod case_check;
 mod resolver;
 mod type_check;
 
-use microcad_lang_base::{CompilationResult, PushDiag};
+use microcad_lang_base::{CompilationResult, GetSourceByHash, PushDiag};
 
 pub use resolver::Resolver;
 
@@ -29,12 +29,22 @@ use crate::{Library, error::ResolveError};
 /// Resolve Context
 pub struct ResolveContext {
     // pub resolver: Box<dyn Resolver>,
-    pub diag: Vec<Box<ResolveError>>,
+    pub diag: Vec<ResolveError>,
 }
 
-impl PushDiag<Box<ResolveError>> for ResolveContext {
-    fn push_diag(&mut self, err: impl Into<Box<ResolveError>>) {
+impl PushDiag<ResolveError> for ResolveContext {
+    fn push_diag(&mut self, err: impl Into<ResolveError>) {
         self.diag.push(err.into());
+    }
+}
+
+impl GetSourceByHash for ResolveContext {
+    fn get_source_by_hash(
+        &'_ self,
+        hash: microcad_lang_base::HashId,
+    ) -> Option<&microcad_lang_base::Source> {
+        // TODO implement source cache
+        None
     }
 }
 

@@ -1,0 +1,8 @@
+[library]
+name = "std"
+description = "The µcad standard library"
+version = "0.6.0"
+documentation = "https://docs.microcad.xyz/std"
+authors = ["Michael Winkelmann"]
+license = "GPLv3"
+no_std = true # Do not load standard library

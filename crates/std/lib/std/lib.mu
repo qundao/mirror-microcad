@@ -5,6 +5,7 @@ pub mod geo2d;
 pub mod geo3d;
 pub mod ops;
 
+/*
 pub use __mu::math;
 pub use __mu::print;
 pub use __mu::type_of;
@@ -15,3 +16,4 @@ pub use __mu::color;
 pub use __mu::to_string;
 pub use __mu::list;
 pub use __mu::string;
+*/

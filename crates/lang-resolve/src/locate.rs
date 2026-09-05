@@ -3,9 +3,11 @@
 
 //! Function to locate microcad documents.
 
-use microcad_lang_base::{MICROCAD_EXTENSIONS, Url};
+use microcad_lang_base::{MICROCAD_EXTENSION, MICROCAD_EXTENSIONS, Url};
 use miette::Diagnostic;
 use thiserror::Error;
+
+use crate::Manifest;
 
 #[derive(Error, Diagnostic, Debug)]
 pub enum LocateError {
@@ -96,18 +98,41 @@ pub fn file_module_path(
     module_name: impl AsRef<str>,
 ) -> Result<std::path::PathBuf, LocateError> {
     let mut path_no_ext = path.as_ref().to_path_buf();
+
     path_no_ext.set_extension("");
+    if path_no_ext.file_name().unwrap().to_str().unwrap() == "lib" {
+        path_no_ext = path_no_ext.parent().unwrap().to_path_buf();
+    }
+
     resolved_path(path_no_ext.join(module_name.as_ref()))
 }
 
+/// The entry point library path from a directory, usually `lib.mu`.
+pub fn lib_mu_path(path: impl AsRef<std::path::Path>) -> Result<std::path::PathBuf, LocateError> {
+    let path = path.as_ref().to_path_buf();
+    for ext in MICROCAD_EXTENSIONS {
+        let path = path.join(format!("lib.{ext}"));
+        if path.exists() {
+            return Ok(path);
+        }
+    }
+
+    println!("{:?}", std::env::current_dir().unwrap());
+
+    Err(LocateError::FileNotFound { path })
+}
+
+/// mu.toml path
+pub fn mu_toml_path(path: impl AsRef<std::path::Path>) -> std::path::PathBuf {
+    let path = path.as_ref();
+    path.join(Manifest::MU_TOML)
+}
+
 /// Convert an input (e.g. from command line) into a valid and unique URL to be used for any source.
+///
+/// TODO: Move this to `driver`
 pub fn to_url(input: impl AsRef<str>) -> Result<Url, LocateError> {
     let input = input.as_ref();
-
-    // 1. Handle the special __builtin case
-    if input == "__builtin" {
-        return Ok(Url::parse("builtin:///builtin").expect("static builtin URL is valid"));
-    }
 
     // Try to parse as a formal URL (e.g., https://, file://, mcad://)
     match Url::parse(input) {

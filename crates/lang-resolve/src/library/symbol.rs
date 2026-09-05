@@ -60,7 +60,7 @@ pub use ir::{
     SourceStatement, Visibility, Wildcard,
 };
 
-use crate::library::{LibraryRoot, symbol_path::SymbolAbsPath};
+use crate::library::symbol_path::SymbolAbsPath;
 
 #[derive(Debug, Clone, From, Hash, PartialEq, Serialize, Deserialize)]
 pub enum SourceFile {
@@ -76,12 +76,11 @@ pub enum SourceFile {
 /// Symbol definition
 #[derive(Debug, Clone, From, IntoStaticStr, Hash, PartialEq, Serialize, Deserialize)]
 pub enum SymbolDef {
-    Root(LibraryRoot),
+    Root(Option<SourceFile>),
     /// Inline Module symbol: `mod foo {}`
     InlineModule(InlineModule),
-
+    /// Source File
     SourceFile(SourceFile),
-
     /// Workbench symbol.
     Workbench(Workbench),
     /// Function symbol.
@@ -151,28 +150,15 @@ impl From<ir::Item> for Symbol {
 }
 
 impl Symbol {
-    pub fn root(root: LibraryRoot) -> Self {
+    pub fn root(lib_mu: Option<SourceFile>) -> Self {
         Self {
             meta: Meta {
                 vis: Visibility::Public,
                 ..Default::default()
             },
-            def: SymbolDef::Root(root),
+            def: SymbolDef::Root(lib_mu),
             doc: Default::default(),
             ver: Default::default(),
-        }
-    }
-
-    pub fn mu() -> Self {
-        Self {
-            meta: Meta {
-                name: Some("mu".into()),
-                vis: Visibility::Public,
-                ..Default::default()
-            },
-            doc: DocBlock::default(),
-            ver: VersionAnnotation::default(),
-            def: SymbolDef::InlineModule(InlineModule {}),
         }
     }
 }

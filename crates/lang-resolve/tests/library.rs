@@ -3,28 +3,33 @@
 
 //! Library tests
 
-use microcad_lang_resolve::{Library, ResolveContext, library::LibraryRoot};
+use microcad_lang_base::{DiagRenderOptions, Diagnostics};
+use microcad_lang_resolve::{Library, ResolveContext};
 
 #[test]
 fn load_source_inline_module() {
-    let mut library = Library::new(LibraryRoot::default());
     let mut context = ResolveContext::new();
 
-    library
-        .load_source("tests/test_cases/inline_module.µcad", &mut context)
-        .expect("No error");
+    match Library::load_file("tests/test_cases/inline_module.µcad", &mut context) {
+        Ok(library) => insta::assert_snapshot!("load_source_inline_module", library),
+        Err(err) => {
+            let diagnostics = Diagnostics::from(context.diag);
 
-    insta::assert_snapshot!("load_source_inline_module", library)
+            panic!(
+                "{diagnostics}\n{err:?}",
+                diagnostics = diagnostics
+                    .render_to_string(&ResolveContext::new(), &DiagRenderOptions::default())
+                    .unwrap()
+            )
+        }
+    }
 }
 
 #[test]
 fn load_source_file_module() {
-    let mut library = Library::new(LibraryRoot::default());
     let mut context = ResolveContext::new();
-
-    library
-        .load_source("tests/test_cases/file_module.µcad", &mut context)
-        .expect("No error");
+    let library =
+        Library::load_file("tests/test_cases/file_module.µcad", &mut context).expect("No error");
 
     insta::assert_snapshot!("load_source_file_module", library)
 }

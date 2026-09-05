@@ -57,8 +57,8 @@ pub trait Visitor: SourceVisitor + FnVisitor + WorkbenchVisitor + ConstantVisito
     fn visit_def(&mut self, def: &SymbolDef) {
         use SymbolDef::*;
         match def {
-            Root(library_root) => match &library_root.entry {
-                Some(entry) => self.visit_source(entry),
+            Root(library_root) => match library_root {
+                Some(lib_mu) => self.visit_source_file(lib_mu),
                 None => {}
             },
             InlineModule(inline_module) => self.visit_inline_module(inline_module),

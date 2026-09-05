@@ -31,7 +31,7 @@ pub enum ManifestError {
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub struct Manifest {
     pub library: LibrarySection,
-    pub dependencies: std::collections::BTreeMap<String, Dependency>,
+    pub dependencies: Option<std::collections::BTreeMap<String, Dependency>>,
 }
 
 /// `package` descriptor.
@@ -60,11 +60,12 @@ pub struct Dependency {
 
 #[cfg(feature = "io")]
 impl Manifest {
-    pub const MANIFEST_FILE_NAME: &str = "mu.toml";
+    pub const MU_TOML: &str = "mu.toml";
 
-    // Load a `manifest.toml` inside a path.
+    // Load a `mu.toml` inside a path.
     pub fn load(path: impl AsRef<std::path::Path>) -> Result<Self, ManifestError> {
-        let manifest_path = Self::manifest_path(&path);
+        let manifest_path = path.as_ref();
+        println!("{manifest_path:?}");
         if !manifest_path.exists() || !manifest_path.is_file() {
             return Err(ManifestError::NotFound {
                 path: std::path::PathBuf::from(path.as_ref()),
@@ -75,21 +76,12 @@ impl Manifest {
         Ok(toml::from_str(&buf)?)
     }
 
-    /// Save a `manifest.toml` inside a path.
+    /// Save a `mu.toml` inside a path.
     pub fn save(&self, path: impl AsRef<std::path::Path>) -> Result<(), ManifestError> {
         use std::io::Write;
         let s = toml::to_string(&self)?;
-        let mut file = std::fs::File::create(Self::manifest_path(path))?;
+        let mut file = std::fs::File::create(path.as_ref())?;
         file.write_all(s.as_bytes())?;
         Ok(())
-    }
-
-    /// Return `mu.toml` file path.
-    pub fn manifest_path(path: impl AsRef<std::path::Path>) -> std::path::PathBuf {
-        let path = path.as_ref();
-        match path.file_name() {
-            Some(filename) if filename == Self::MANIFEST_FILE_NAME => path.to_path_buf(),
-            _ => path.join(Self::MANIFEST_FILE_NAME),
-        }
     }
 }

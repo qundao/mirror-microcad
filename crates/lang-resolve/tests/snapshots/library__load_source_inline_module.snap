@@ -3,7 +3,6 @@ source: crates/lang-resolve/tests/library.rs
 expression: library
 ---
 Root [pub]
-├── mu: InlineModule [pub]
 └── inline_module: SourceFile Loaded(tests/test_cases/inline_module.µcad) [pub]
     ├── b: InlineModule [pub] /// This inline module has documentation
     │   ├── d: InlineModule [pub]
