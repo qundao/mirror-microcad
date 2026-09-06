@@ -17,6 +17,7 @@ impl Parse for BuiltinType {
 impl quote::ToTokens for BuiltinType {
     fn to_tokens(&self, tokens: &mut TokenStream2) {
         let ty = &self.0;
+
         let expanded = match ty.to_string().as_str() {
             "Scalar" => quote! { microcad_lang_types::Type::scalar() },
             "Angle" => quote! { microcad_lang_types::Type::angle() },
@@ -27,7 +28,13 @@ impl quote::ToTokens for BuiltinType {
             }
             "Mat3" => quote! { microcad_lang_types::Type::matrix(3,3) },
             "Model" => {
-                quote! { microcad_lang_types::Type::Model(microcad_lang_type::model::ModelOutputType::Any) }
+                quote! { microcad_lang_types::Type::model() }
+            }
+            "Model2D" => {
+                quote! { microcad_lang_types::Type::model_2d() }
+            }
+            "Model3D" => {
+                quote! { microcad_lang_types::Type::model_3d() }
             }
             _ => quote! { microcad_lang_types::Type::#ty },
         };

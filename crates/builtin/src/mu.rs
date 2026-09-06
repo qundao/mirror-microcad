@@ -588,7 +588,7 @@ pub mod color {
 pub mod geo2d {
     use microcad_lang_types::{Length, Model, ModelType, Type, function_type};
 
-    use crate::{BuiltinConstruct, BuiltinPrimitiveCall};
+    use crate::{BuiltinConstruct, BuiltinPrimitiveCall, construct_from_model};
 
     use super::*;
 
@@ -617,6 +617,44 @@ pub mod geo2d {
     }
 
     impl BuiltinPrimitiveCall for Circle {}
+
+    pub static RECT: &BuiltinItem = Rect::ITEM;
+
+    /// A rectangle.
+    #[derive(Serialize, Deserialize, Debug)]
+    pub struct Rect {
+        /// Width of the rectangle.
+        width: Length,
+        /// Height of the rectangle.
+        height: Length,
+        /// X position (left side) of the rectangle.
+        x: Length,
+        /// Y position (bottom side) of the rectangle.
+        y: Length,
+    }
+
+    impl BuiltinConstruct for Rect {
+        const ITEM: &'static BuiltinItem = &builtin_item!(
+            Primitive
+            "A rectangle."
+            geo2d::Rect(function_type!((width: Type::length(), height: Type::length(), x: Type::length(), y: Type::length()) -> Type::Model(ModelType::Geometry2D)))
+        );
+
+        fn from_model(model: &Model) -> Result<Self, BuiltinError> {
+            Self::check_element(model)?;
+            construct_from_model!(
+                model,
+                Rect {
+                    x,
+                    y,
+                    width,
+                    height
+                }
+            )
+        }
+    }
+
+    impl BuiltinPrimitiveCall for Rect {}
 }
 
 /// Built-in Operations

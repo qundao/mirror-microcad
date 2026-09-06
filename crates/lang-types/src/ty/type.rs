@@ -5,11 +5,14 @@
 
 use derive_more::From;
 use serde::{Deserialize, Serialize};
+use strum::IntoStaticStr;
 
 use crate::{model::ModelType, ty::*};
 
 /// µcad Basic Types
-#[derive(Clone, Debug, Default, PartialEq, From, Eq, Hash, Serialize, Deserialize)]
+#[derive(
+    Clone, Debug, Default, PartialEq, IntoStaticStr, From, Eq, Hash, Serialize, Deserialize,
+)]
 pub enum Type {
     /// Any type allowed.
     #[default]
@@ -70,6 +73,21 @@ impl Type {
         })
     }
 
+    /// Any model
+    pub fn model() -> Self {
+        Self::Model(ModelType::Any)
+    }
+
+    /// A model containing a 2D geometry
+    pub fn model_2d() -> Self {
+        Self::Model(ModelType::Geometry2D)
+    }
+
+    /// A model containing a 3D geometry
+    pub fn model_3d() -> Self {
+        Self::Model(ModelType::Geometry3D)
+    }
+
     /// Short-cut for a matrix type.
     pub fn matrix(rows: usize, columns: usize) -> Self {
         Self::Matrix(MatrixType::new(rows, columns))
@@ -119,33 +137,33 @@ impl std::str::FromStr for Type {
             return Ok(Type::Matrix(MatrixType::new(x, y)));
         }
 
-        match ty {
-            "Color" => Ok(Type::color()),
-            "Vec2" => Ok(Type::Tuple(Box::new(TupleType::vec2()))),
-            "Vec3" => Ok(Type::Tuple(Box::new(TupleType::vec3()))),
-            "Mat3" => Ok(Type::matrix(3, 3)),
-            "Size2" => Ok(Type::Tuple(Box::new(TupleType::size2()))),
-            "Any" => Ok(Type::Any),
-            "Integer" => Ok(Type::Integer),
-            "Bool" => Ok(Type::Bool),
-            "String" => Ok(Type::String),
-            "Scalar" => Ok(Type::Quantity(QuantityType::Scalar)),
-            "Length" => Ok(Type::Quantity(QuantityType::Length)),
-            "Area" => Ok(Type::Quantity(QuantityType::Area)),
-            "Angle" => Ok(Type::Quantity(QuantityType::Angle)),
-            "Volume" => Ok(Type::Quantity(QuantityType::Volume)),
-            "Weight" => Ok(Type::Quantity(QuantityType::Weight)),
-            "Density" => Ok(Type::Quantity(QuantityType::Density)),
-            "Model" => Ok(Type::Model(ModelType::Any)),
-            _ => Err(TypeError::UnknownType(ty.to_string())),
-        }
+        Ok(match ty {
+            "Color" => Type::color(),
+            "Vec2" => Type::Tuple(Box::new(TupleType::vec2())),
+            "Vec3" => Type::Tuple(Box::new(TupleType::vec3())),
+            "Mat3" => Type::matrix(3, 3),
+            "Size2" => Type::Tuple(Box::new(TupleType::size2())),
+            "Any" => Type::Any,
+            "Integer" => Type::Integer,
+            "Bool" => Type::Bool,
+            "String" => Type::String,
+            "Scalar" => Type::Quantity(QuantityType::Scalar),
+            "Length" => Type::Quantity(QuantityType::Length),
+            "Area" => Type::Quantity(QuantityType::Area),
+            "Angle" => Type::Quantity(QuantityType::Angle),
+            "Volume" => Type::Quantity(QuantityType::Volume),
+            "Weight" => Type::Quantity(QuantityType::Weight),
+            "Density" => Type::Quantity(QuantityType::Density),
+            "Model" => Type::Model(ModelType::Any),
+            _ => return Err(TypeError::UnknownType(ty.to_string())),
+        })
     }
 }
 
 impl std::fmt::Display for Type {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            Self::Invalid => write!(f, "<NO TYPE>"),
+            Self::Invalid => write!(f, "(<NO TYPE>)"),
             Self::Any => write!(f, "Any"),
             Self::Integer => write!(f, "Integer"),
             Self::Quantity(quantity) => write!(f, "{quantity}"),
@@ -156,6 +174,10 @@ impl std::fmt::Display for Type {
             Self::Matrix(t) => write!(f, "{t}"),
             Self::Function(t) => write!(f, "{t}"),
             Self::Model(output_type) => write!(f, "Model({output_type})"),
+            _ => {
+                let name: &'static str = self.into();
+                write!(f, "{name}")
+            }
         }
     }
 }
