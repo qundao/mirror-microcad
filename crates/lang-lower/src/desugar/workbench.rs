@@ -84,30 +84,42 @@ impl ir::Init {
         // Convert existing boxed slice to Vec once to mutate in-place without reallocating
         let mut statements = std::mem::take(&mut self.statements).into_vec();
 
-        // Helper closure to check parameters, emit missing errors, and append default statements
-        let mut apply_defaults = |params: &ir::ParameterList, check_missing: bool| {
-            params.iter().for_each(|param| {
-                let found = statements.iter().any(|stmt| stmt.name == param.id);
-                match (found, &param.default_value) {
-                    (false, Some(default_value)) => {
-                        let expr: ir::WorkbenchExpression = default_value.clone().cast_into();
-                        statements.push(ir::InitStatement::new(&param.id, expr));
-                    }
-                    (false, None) if check_missing => {
+        let init_parameters = &self.parameters;
+
+        inputs.iter().for_each(|param| {
+            let found = statements.iter().any(|stmt| stmt.name == param.id);
+            if found {
+                return;
+            }
+
+            match &param.default_value {
+                Some(default_value) => {
+                    let expr: ir::WorkbenchExpression = default_value.clone().cast_into();
+                    statements.push(ir::InitStatement::new(&param.id, expr));
+                }
+                None => {
+                    if let Some(init_param) = init_parameters.get_by_name(&param.id) {
+                        match &init_param.default_value {
+                            Some(default_value) => {
+                                let expr: ir::WorkbenchExpression =
+                                    default_value.clone().cast_into();
+                                statements.push(ir::InitStatement::new(&param.id, expr));
+                            }
+                            None => statements.push(ir::InitStatement::new(
+                                &param.id,
+                                ir::WorkbenchExpression::local(param.id.as_str()),
+                            )),
+                        }
+                    } else {
                         context.push_diag(LowerError::InputNotInitialized {
                             name: param.id.clone(),
                             src_ref: self.src_ref,
                             param_src_ref: param.src_ref,
                         });
                     }
-                    _ => {}
                 }
-            })
-        };
-
-        // Fill defaults from self.parameters, then inputs (emitting missing-init errors for inputs)
-        apply_defaults(&self.parameters, false);
-        apply_defaults(inputs, true);
+            }
+        });
 
         self.statements = statements.into_boxed_slice();
     }

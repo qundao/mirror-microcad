@@ -226,6 +226,14 @@ pub enum WorkbenchExpression {
     Marker(Marker),
 }
 
+impl WorkbenchExpression {
+    pub(crate) fn local(id: &str) -> Self {
+        Self::Path(ir::Path::Resolved(microcad_lang_base::SymbolId::Local(
+            id.into(),
+        )))
+    }
+}
+
 impl From<Value> for WorkbenchExpression {
     fn from(value: Value) -> Self {
         ir::ConstantValue::new(value).into()

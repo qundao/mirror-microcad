@@ -133,6 +133,7 @@ snapshot_test!(builtin => ok);
 test_diagnostic!(unexpected_statements);
 test_diagnostic!(init);
 test_diagnostic!(init_statement);
+test_diagnostic!(rect);
 
 /// Test serialization
 #[test_that::test]
