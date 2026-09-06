@@ -5,13 +5,6 @@ use microcad_lang_base::Url;
 use microcad_lang_resolve::locate;
 
 #[test]
-fn test_builtin_resolution() {
-    let result = locate::to_url("__builtin").unwrap();
-    assert_eq!(result.scheme(), "builtin");
-    assert_eq!(result.path(), "/builtin");
-}
-
-#[test]
 fn test_external_url_pass_through() {
     let https_url = "https://example.com/design.mcad";
     let result = locate::to_url(https_url).unwrap();

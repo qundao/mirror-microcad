@@ -214,7 +214,10 @@ impl Library {
                             let path = locate::file_module_path(&path, item.name())?;
                             match self._load_source(path, Some(id), context) {
                                 Ok(id) => id,
-                                Err(err) => self.arena.new_node(Symbol::root(None)),
+                                Err(err) => {
+                                    context.push_diag(err);
+                                    self.arena.new_node(Symbol::root(None))
+                                }
                             }
                         }
                         _ => tree::adopt_tree_to_arena(&mut self.arena, child.id, source_arena),

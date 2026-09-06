@@ -43,11 +43,13 @@ Manifest {
             true,
         ),
     },
-    dependencies: {
-        "a": Dependency {
-            path: Some(
-                "../std",
-            ),
+    dependencies: Some(
+        {
+            "a": Dependency {
+                path: Some(
+                    "../std",
+                ),
+            },
         },
-    },
+    ),
 }
