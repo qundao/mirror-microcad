@@ -164,11 +164,7 @@ impl std::fmt::Display for Type {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
             Self::Invalid => write!(f, "(<NO TYPE>)"),
-            Self::Any => write!(f, "Any"),
-            Self::Integer => write!(f, "Integer"),
             Self::Quantity(quantity) => write!(f, "{quantity}"),
-            Self::String => write!(f, "String"),
-            Self::Bool => write!(f, "Bool"),
             Self::List(t) => write!(f, "[{t}]"),
             Self::Tuple(t) => write!(f, "{t}"),
             Self::Matrix(t) => write!(f, "{t}"),
