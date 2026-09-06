@@ -92,10 +92,15 @@ macro_rules! test_diagnostic {
             let expected = ast::visitor::collect_expected_diagnostics(&parse_context, &ast);
 
             match ir {
-                Ok(_) => {
+                Ok((mut ir, _)) => {
                     if !expected.is_empty() {
                         panic!("Test '{}' was expected to fail, but succeeded.", filename);
                     }
+                    use microcad_lang_lower::ir::visitor::VisitorMut;
+                    microcad_lang_lower::ir::visitor::MakeHumanReadable::new(&context)
+                        .visit(&mut ir);
+
+                    insta::assert_snapshot!(stringify!($name), ir);
                 }
                 Err(errors) => {
                     let diags = microcad_lang_base::Diagnostics::from(errors);

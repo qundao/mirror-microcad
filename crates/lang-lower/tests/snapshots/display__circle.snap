@@ -4,7 +4,7 @@ expression: ir
 ---
 pub circle: Source
 └── /// Circle definition with an offset.
-    pub Circle: Workbench = sketch radius: Length, center: Any = Value((x = 0mm, y = 0mm))
+    pub Circle: Workbench = sketch(radius: Length, center: Any = Value((x = 0mm, y = 0mm)))
         inits:
         - init(diameter: Length, center: Any = Value((x = 0mm, y = 0mm)))
         - init(radius: Length, center: Any = Value((x = 0mm, y = 0mm)))

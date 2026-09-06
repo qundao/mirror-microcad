@@ -15,7 +15,7 @@ impl std::fmt::Display for ir::WorkbenchSignature {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(
             f,
-            "{kind} {parameters}",
+            "{kind}({parameters})",
             kind = self.kind,
             parameters = self.parameters.to_string_one_line()
         )?;
