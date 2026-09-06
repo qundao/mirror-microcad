@@ -3,7 +3,7 @@
 
 //! Function to locate microcad documents.
 
-use microcad_lang_base::{MICROCAD_EXTENSION, MICROCAD_EXTENSIONS, Url};
+use microcad_lang_base::{MICROCAD_EXTENSIONS, Url};
 use miette::Diagnostic;
 use thiserror::Error;
 

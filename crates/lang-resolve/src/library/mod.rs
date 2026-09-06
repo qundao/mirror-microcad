@@ -66,7 +66,7 @@ impl Library {
         let root = arena.new_node(Symbol::root(None));
 
         let mut lib = Self::new(None, Symbol::root(None));
-        context.load_std()?;
+        context.try_load_std()?;
         lib._load_source(&file_mu, Some(root), context)?;
 
         Ok(lib)
@@ -89,7 +89,7 @@ impl Library {
                 let mut lib = Self::new(Some(manifest), Symbol::root(None));
                 let manifest = lib.manifest.clone().unwrap();
                 if !lib.no_std() {
-                    context.load_std()?;
+                    context.try_load_std()?;
                 }
 
                 if let Some(deps) = &manifest.dependencies {
@@ -103,7 +103,7 @@ impl Library {
             Err(err) => {
                 println!("No manifest:\n{err:?}");
                 context.push_diag(ResolveError::new(err));
-                context.load_std()?;
+                context.try_load_std()?;
                 Self::new(None, Symbol::root(None))
             }
         };

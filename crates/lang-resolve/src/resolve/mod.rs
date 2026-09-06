@@ -24,13 +24,13 @@ use microcad_lang_base::{CompilationResult, GetSourceByHash, PushDiag};
 
 pub use resolver::Resolver;
 
-use crate::{Library, ResolveResult, error::ResolveError, library};
+use crate::{Library, ResolveResult, error::ResolveError};
 
 /// Resolve Context
 pub struct ResolveContext {
     // pub resolver: Box<dyn Resolver>,
     pub diag: Vec<ResolveError>,
-
+    pub lib_search_paths: Vec<std::path::PathBuf>,
     pub std_lib: Option<Library>,
 }
 
@@ -75,14 +75,28 @@ impl ResolveContext {
         Self {
             diag: Default::default(),
             std_lib: None,
+            lib_search_paths: vec![microcad_std::global_library_search_path()],
         }
     }
 
-    /// Create a new standard library instance from a path.
+    /// Add a new search paths.
+    pub fn with_search_path(mut self, path: impl AsRef<std::path::Path>) -> Self {
+        self.lib_search_paths.push(path.as_ref().to_path_buf());
+        self
+    }
+
+    /// Load a custom version of the standard library from a path.
+    pub fn with_std(mut self, path: impl AsRef<std::path::Path>) -> Self {
+        let lib = Library::load(path, &mut self);
+        self.std_lib = lib.ok();
+        self
+    }
+
+    /// Load standard library from path.
     ///
     /// Installs the standard library, if it is not installed.
-    pub fn load_std(&mut self) -> ResolveResult<()> {
-        let path = std::path::Path::new("../..").join(microcad_std::StdLib::default_path());
+    fn _load_std(&mut self, path: impl AsRef<std::path::Path>) -> ResolveResult<Library> {
+        let path = path.as_ref();
 
         let std_lib = match Library::load(&path, self) {
             Ok(std_lib) => {
@@ -110,7 +124,28 @@ impl ResolveContext {
             }
         };
 
-        self.std_lib = Some(std_lib);
+        Ok(std_lib)
+    }
+
+    pub fn try_load_std(&mut self) -> ResolveResult<()> {
+        // A standard library is already loaded, we can stop here.
+        if self.std_lib.is_some() {
+            return Ok(());
+        }
+
+        let paths = self.lib_search_paths.clone();
+        self.std_lib = paths.iter().find_map(|search_path| {
+            let std_lib_path =
+                search_path.join(format!("std-{ver}", ver = microcad_std::version()));
+
+            match self._load_std(std_lib_path) {
+                Ok(std_lib) => Some(std_lib),
+                Err(err) => {
+                    self.push_diag(err);
+                    None
+                }
+            }
+        });
         Ok(())
     }
 }
