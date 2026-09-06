@@ -58,9 +58,8 @@ pub part Cylinder(radius_bottom: Length, radius_top: Length, height: Length, off
 
     /// Initialize by `diameter` and `height`. Cylinder will be centered.
     init(diameter: Length, height: Length) {
-        r = diameter / 2.0;
-        radius_bottom = r;
-        radius_top = r;
+        radius_bottom = diameter / 2.0;
+        radius_top = diameter / 2.0;
         offset = -height / 2;
     }
 
