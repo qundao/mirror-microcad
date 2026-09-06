@@ -637,7 +637,7 @@ pub mod geo2d {
         const ITEM: &'static BuiltinItem = &builtin_item!(
             Primitive
             "A rectangle."
-            geo2d::Rect(function_type!((width: Type::length(), height: Type::length(), x: Type::length(), y: Type::length()) -> Type::Model(ModelType::Geometry2D)))
+            geo2d::Rect(function_type!((width: Type::length(), height: Type::length(), x: Type::length(), y: Type::length()) -> Type::model_2d()))
         );
 
         fn from_model(model: &Model) -> Result<Self, BuiltinError> {
