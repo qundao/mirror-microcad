@@ -8,17 +8,9 @@ use std::path::PathBuf;
 use rust_embed::RustEmbed;
 use thiserror::Error;
 
-use crate::manifest::{Manifest, ManifestError};
-
-mod manifest;
-
 /// Standard library error.
 #[derive(Debug, Error)]
 pub enum StdLibError {
-    /// An error while processing the `manifest.toml` file.
-    #[error("An error while processing manifest file: {0}")]
-    ManifestError(#[from] manifest::ManifestError),
-
     /// Error during install or uninstall.
     #[error("An error during installation: {0}")]
     InstallError(#[from] std::io::Error),
@@ -33,42 +25,11 @@ pub struct StdLibEmbedded;
 pub struct StdLib {
     /// Path of the library which `manifest.toml`.
     pub path: std::path::PathBuf,
-    /// The parsed manifest.
-    pub manifest: manifest::Manifest,
 }
 
 impl StdLib {
-    /// Create a new standard library instance from a path.
-    ///
-    /// Installs the standard library, if it is not installed.
-    pub fn new(path: impl AsRef<std::path::Path>) -> Result<Self, StdLibError> {
-        let path = PathBuf::from(path.as_ref());
-
-        let manifest = match manifest::Manifest::load(&path) {
-            Ok(manifest) => manifest,
-            // Try to install the standard library, in case the `manifold.toml`` has not been found.
-            Err(ManifestError::NotFound { path }) => Self::install(&path)?,
-            Err(err) => return Err(err.into()),
-        };
-
-        let manifest = if manifest.library.version != crate::version() {
-            eprintln!(
-                "µcad standard library version mismatch: {} != {}",
-                manifest.library.version,
-                crate::version()
-            );
-
-            // Handle version mismatch, force re-install
-            Self::reinstall(true)?
-        } else {
-            manifest
-        };
-
-        Ok(Self { path, manifest })
-    }
-
     /// Try to reinstall into default path.
-    pub fn reinstall(force: bool) -> Result<Manifest, StdLibError> {
+    pub fn reinstall(force: bool) -> Result<(), StdLibError> {
         let path = Self::default_path();
         if force {
             Self::uninstall(&path)?;
@@ -78,7 +39,7 @@ impl StdLib {
     }
 
     /// Install the standard library into the standard library path and return its manifest.
-    fn install(path: impl AsRef<std::path::Path>) -> Result<manifest::Manifest, StdLibError> {
+    pub fn install(path: impl AsRef<std::path::Path>) -> Result<(), StdLibError> {
         let path = path.as_ref();
         eprintln!(
             "Installing µcad standard library {} into {:?}...",
@@ -102,12 +63,8 @@ impl StdLib {
             )
         })?;
 
-        // Write manifest file.
-        Manifest::default().save(path)?;
-
         eprintln!("Successfully installed µcad standard library.");
-
-        Ok(manifest::Manifest::load(path)?)
+        Ok(())
     }
 
     /// Uninstall the standard library from the standard library path.
@@ -129,8 +86,6 @@ impl StdLib {
             let file_path = path.join(file.as_ref());
             std::fs::remove_file(file_path)
         })?;
-
-        std::fs::remove_file(Manifest::manifest_path(path))?;
 
         // All standard library files should been remove now.
         std::fs::remove_dir(path)?;

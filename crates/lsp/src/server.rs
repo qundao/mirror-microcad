@@ -31,7 +31,6 @@ async fn main() {
     } else {
         env_logger::try_init_from_env("MICROCAD_LSP_LOG").ok();
     }
-    mu::install_std().expect("Could not install standard library!");
 
     let config = mu_lsp::Config::default();
 

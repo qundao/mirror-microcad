@@ -9,6 +9,7 @@ use microcad_lang_base::{CompileError, HashId, SrcRef, SrcReferrer, element::Cas
 
 use microcad_lang_lower::LowerError;
 use microcad_lang_types::Type;
+use microcad_std::StdLibError;
 use miette::Diagnostic;
 use thiserror::Error;
 
@@ -30,6 +31,9 @@ pub enum ResolveErrorKind {
 
     #[error("{0}")]
     Manifest(#[from] ManifestError),
+
+    #[error("{0}")]
+    StdLib(#[from] StdLibError),
 
     #[error("Wrong case")]
     #[diagnostic(severity = "warning")]
@@ -64,6 +68,10 @@ pub struct ResolveError(pub Box<ResolveErrorKind>);
 impl ResolveError {
     pub fn new(err: impl Into<ResolveErrorKind>) -> Self {
         Self(Box::new(err.into()))
+    }
+
+    pub fn kind(&self) -> &ResolveErrorKind {
+        &self.0
     }
 }
 

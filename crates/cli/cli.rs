@@ -38,9 +38,6 @@ impl Cli {
     pub fn new() -> miette::Result<Self> {
         let mut cli = Self::parse();
 
-        #[cfg(not(debug_assertions))]
-        mu::install_std()?;
-
         if let Some(config_path) = &cli.config_path {
             cli.config = std::rc::Rc::new(mu::DriverConfig::load(config_path)?);
         }

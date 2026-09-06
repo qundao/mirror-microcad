@@ -24,12 +24,14 @@ use microcad_lang_base::{CompilationResult, GetSourceByHash, PushDiag};
 
 pub use resolver::Resolver;
 
-use crate::{Library, error::ResolveError};
+use crate::{Library, ResolveResult, error::ResolveError, library};
 
 /// Resolve Context
 pub struct ResolveContext {
     // pub resolver: Box<dyn Resolver>,
     pub diag: Vec<ResolveError>,
+
+    pub std_lib: Option<Library>,
 }
 
 impl PushDiag<ResolveError> for ResolveContext {
@@ -72,71 +74,44 @@ impl ResolveContext {
     pub fn new() -> Self {
         Self {
             diag: Default::default(),
+            std_lib: None,
         }
     }
 
-    pub fn scaffold(&mut self) {
-        // Try to load on optional `mu.toml` manifest file.
-        //let manifest: Option<Manifest> = self.resolver.load_manifest()?;
+    /// Create a new standard library instance from a path.
+    ///
+    /// Installs the standard library, if it is not installed.
+    pub fn load_std(&mut self) -> ResolveResult<()> {
+        let path = std::path::Path::new("../..").join(microcad_std::StdLib::default_path());
 
-        todo!()
+        let std_lib = match Library::load(&path, self) {
+            Ok(std_lib) => {
+                let loaded_version = std_lib.version().expect("A version");
+                let expected_version = microcad_std::version();
+                if loaded_version != &expected_version {
+                    eprintln!(
+                        "µcad standard library version mismatch: {loaded_version} != {expected_version}",
+                    );
 
-        //let mut builder = TreeBuilder::new(mir::Workspace::from(manifest));
-
-        // Handle loading externals
-        /*
-        // Add externals to the tree (the mu node)
-        builder.enter(UnresolvedSymbolDef::Externals);
-
-        // Add the built-in library
-        builder.add(builtin());
-
-        match manifest { // Try load mu.toml
-            // A `mu.toml` exists within the workspace directory
-            Some(manifest) => {
-                if !manifest.no_std {
-                    builder.add(resolver.load_std());
+                    // Handle version mismatch, force re-install
+                    microcad_std::StdLib::reinstall(true).map_err(ResolveError::new)?;
+                    Library::load(&path, self)?
+                } else {
+                    std_lib
                 }
-
-                manifest.dependencies().iter().try_for_each(|dep| builder.add(resolver.load_external(dep)));
-            },
-            // No `mu.toml` in the workspace root, we simply add the standard library
-            None => {
-                builder.add(resolver.load_std());
             }
-        };
-        // builder.exit();
-        */
-
-        // Load all sources as MIRs in the project tree
-        /*
-        let source_mirs = match self.resolver.mode() {
-            // Load the lib.mu file
-            ResolveMode::Lib => {
-                self.resolver.load_workspace_files_from_lib_mu()
-            }
-            // Load some source file in the workspace.
-            ResolveMode::SourceFile(source_path) => {
-                self.resolver.load_workspace_files(source_path)
+            Err(err) => {
+                self.push_diag(err);
+                // Install the library and try to load it.
+                match microcad_std::StdLib::install(&path) {
+                    Ok(_) => Library::load(path, self)?,
+                    Err(err) => return Err(ResolveError::new(err)),
+                }
             }
         };
 
-        source_mirs.iter().for_each(|mir| builder.add(source_mir));
-        */
-
-        // The final tree should now look like this:
-        // Workspace # The workspace root node
-        // ├── mu # The `mu` node containing all external dependencies (already resolved)
-        // |   ├── std
-        // |   └── ... # Any other external dependency
-        // ├── use ::mu::* #   wildcard to include everything from mu by default.
-        // ├── use std::geo2d::Circle; # Optional default alias
-        // ├── foo # Loaded from `foo.mu`
-        // |   └── bar # Loaded from `foo/bar.mu`
-        // ├── baz # Loaded from `baz.mu`
-        // ├── ... # Any file in the workspace directory tree
-
-        // Ok(builder.build())
+        self.std_lib = Some(std_lib);
+        Ok(())
     }
 }
 

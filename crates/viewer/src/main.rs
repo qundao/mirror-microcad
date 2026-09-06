@@ -28,7 +28,7 @@ pub struct Args {
     /// Examples:
     /// * `my_file.µcad` Display contents in file.
     /// * `my_file.µcad?symbol=MyPart#L11`: Display some symbol `MyPart` at line 11.
-    /// * `stdin://`: Read from stdin.  
+    /// * `stdin://`: Read from stdin.
     input: Option<String>,
 
     /// Windows stays on top.
@@ -78,9 +78,6 @@ use url::Url;
 fn main() {
     // Parse the command-line args before starting the app
     let args = Args::parse();
-
-    #[cfg(not(debug_assertions))]
-    mu::install_std().ok();
 
     // Initialize env_logger with a default filter level
     env_logger::Builder::from_default_env()

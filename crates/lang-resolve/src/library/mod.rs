@@ -12,7 +12,7 @@ pub mod visitor;
 use std::collections::BTreeMap;
 
 pub use manifest::{Dependency, LibrarySection, Manifest, ManifestError};
-use microcad_lang_base::{MICROCAD_EXTENSION, Name, PushDiag, ToCompactString, tree};
+use microcad_lang_base::{Name, PushDiag, ToCompactString, Version, tree};
 
 use microcad_lang_lower::ir;
 use serde::{Deserialize, Serialize};
@@ -66,7 +66,7 @@ impl Library {
         let root = arena.new_node(Symbol::root(None));
 
         let mut lib = Self::new(None, Symbol::root(None));
-        lib.load_std(context)?;
+        context.load_std()?;
         lib._load_source(&file_mu, Some(root), context)?;
 
         Ok(lib)
@@ -88,9 +88,8 @@ impl Library {
 
                 let mut lib = Self::new(Some(manifest), Symbol::root(None));
                 let manifest = lib.manifest.clone().unwrap();
-
                 if !lib.no_std() {
-                    lib.load_std(context)?;
+                    context.load_std()?;
                 }
 
                 if let Some(deps) = &manifest.dependencies {
@@ -103,12 +102,9 @@ impl Library {
             // Error loading manifest or manifest not found, fallback to defaults.
             Err(err) => {
                 println!("No manifest:\n{err:?}");
-
                 context.push_diag(ResolveError::new(err));
-                let mut lib = Self::new(None, Symbol::root(None));
-
-                lib.load_std(context)?;
-                lib
+                context.load_std()?;
+                Self::new(None, Symbol::root(None))
             }
         };
 
@@ -137,14 +133,6 @@ impl Library {
         }
     }
 
-    pub fn load_std(&mut self, context: &mut ResolveContext) -> ResolveResult<&Library> {
-        self.add_dependency(
-            "std",
-            std::path::Path::new("../..").join(microcad_std::StdLib::default_path()),
-            context,
-        )
-    }
-
     pub fn no_std(&self) -> bool {
         match &self.manifest {
             Some(manifest) => manifest.library.no_std.unwrap_or(false),
@@ -156,6 +144,12 @@ impl Library {
         self.manifest
             .as_ref()
             .map(|manifest| &manifest.library.name)
+    }
+
+    pub fn version(&self) -> Option<&Version> {
+        self.manifest
+            .as_ref()
+            .map(|manifest| &manifest.library.version)
     }
 
     pub fn root<'a>(&'a self) -> SymbolNodeRef<'a> {
