@@ -3,7 +3,10 @@
 
 //! Resolve locals.
 
-use crate::library::{SymbolNodeId, symbol};
+use crate::{
+    library::{SymbolNodeId, symbol},
+    resolve::stack::{self, ResolveStack, ResolveStackFrame},
+};
 use derive_more::From;
 use microcad_lang_base::{
     Identifier, SingleIdentifier, SrcRef, SrcReferrer, SymbolId, ToCompactString,
@@ -67,190 +70,14 @@ impl Locals for LocalTable {
 }
 
 #[derive(Debug, Default)]
-struct FunctionFrame {
-    //symbol: mir::SymbolHandle,
-    locals: LocalTable,
-}
-
-impl Locals for FunctionFrame {
-    fn local_table(&self) -> Option<&LocalTable> {
-        self.locals.local_table()
-    }
-
-    fn local_table_mut(&mut self) -> Option<&mut LocalTable> {
-        self.locals.local_table_mut()
-    }
-}
-
-#[derive(Debug, Default)]
-struct FunctionScopeFrame(LocalTable);
-
-impl Locals for FunctionScopeFrame {
-    fn local_table(&self) -> Option<&LocalTable> {
-        self.0.local_table()
-    }
-
-    fn local_table_mut(&mut self) -> Option<&mut LocalTable> {
-        self.0.local_table_mut()
-    }
-}
-
-#[derive(Debug, Default)]
-struct WorkbenchFrame {
-    //symbol: mir::SymbolHandle,
-    locals: LocalTable,
-}
-
-impl Locals for WorkbenchFrame {
-    fn local_table(&self) -> Option<&LocalTable> {
-        self.locals.local_table()
-    }
-
-    fn local_table_mut(&mut self) -> Option<&mut LocalTable> {
-        self.locals.local_table_mut()
-    }
-}
-
-#[derive(Debug, Default)]
-struct WorkbenchGroupFrame(LocalTable);
-
-impl Locals for WorkbenchGroupFrame {
-    fn local_table(&self) -> Option<&LocalTable> {
-        self.0.local_table()
-    }
-
-    fn local_table_mut(&mut self) -> Option<&mut LocalTable> {
-        self.0.local_table_mut()
-    }
-}
-
-#[derive(Debug, Default)]
-struct SourceFrame {
-    //symbol: mir::SymbolHandle,
-    locals: LocalTable,
-}
-
-impl Locals for SourceFrame {
-    fn local_table(&self) -> Option<&LocalTable> {
-        self.locals.local_table()
-    }
-
-    fn local_table_mut(&mut self) -> Option<&mut LocalTable> {
-        self.locals.local_table_mut()
-    }
-}
-
-#[derive(Debug, From)]
-enum LocalsStackFrame {
-    SourceFile(SourceFrame),
-    Function(FunctionFrame),
-    FunctionScope(FunctionScopeFrame),
-    Workbench(WorkbenchFrame),
-    WorkbenchGroup(WorkbenchGroupFrame),
-    Symbol(SymbolNodeId),
-}
-
-impl Locals for LocalsStackFrame {
-    fn local_table(&self) -> Option<&LocalTable> {
-        match &self {
-            LocalsStackFrame::SourceFile(source_file_frame) => source_file_frame.local_table(),
-            LocalsStackFrame::Function(function_frame) => function_frame.local_table(),
-            LocalsStackFrame::FunctionScope(function_scope) => function_scope.local_table(),
-            LocalsStackFrame::Workbench(workbench) => workbench.local_table(),
-            LocalsStackFrame::WorkbenchGroup(workbench_group) => workbench_group.local_table(),
-            _ => None,
-        }
-    }
-
-    fn local_table_mut(&mut self) -> Option<&mut LocalTable> {
-        match self {
-            LocalsStackFrame::SourceFile(source_file_frame) => source_file_frame.local_table_mut(),
-            LocalsStackFrame::Function(function_frame) => function_frame.local_table_mut(),
-            LocalsStackFrame::FunctionScope(function_scope) => function_scope.local_table_mut(),
-            LocalsStackFrame::Workbench(workbench) => workbench.local_table_mut(),
-            LocalsStackFrame::WorkbenchGroup(workbench_group) => workbench_group.local_table_mut(),
-            _ => None,
-        }
-    }
-}
-
-/// A generic stack.
-pub struct LocalsStack(Vec<LocalsStackFrame>);
-
-impl LocalsStack {
-    pub fn new() -> Self {
-        Self::default()
-    }
-
-    fn push(&mut self, frame: impl Into<LocalsStackFrame>) {
-        self.0.push(frame.into());
-    }
-
-    fn pop(&mut self) -> LocalsStackFrame {
-        self.0.pop().expect("A stack frame")
-    }
-
-    fn top(&self) -> &LocalsStackFrame {
-        self.0.last().expect("A stack frame") // Intentionally no error handling here
-    }
-
-    pub fn top_mut(&mut self) -> &mut LocalsStackFrame {
-        self.0.last_mut().expect("A stack frame")
-    }
-
-    /// Traverses the stack from top (innermost) to bottom (outermost) immutably.
-    /// Halts early if the closure returns `ControlFlow::Break`.
-    pub fn traversal<T>(
-        &self,
-        mut f: impl FnMut(&LocalsStackFrame) -> std::ops::ControlFlow<T>,
-    ) -> Option<T> {
-        for frame in self.0.iter().rev() {
-            if let std::ops::ControlFlow::Break(value) = f(frame) {
-                return Some(value);
-            }
-        }
-        None
-    }
-
-    pub fn traversal_mut<T>(
-        &mut self,
-        mut f: impl FnMut(&mut LocalsStackFrame) -> std::ops::ControlFlow<T>,
-    ) -> Option<T> {
-        for frame in self.0.iter_mut().rev() {
-            if let std::ops::ControlFlow::Break(value) = f(frame) {
-                return Some(value);
-            }
-        }
-        None
-    }
-
-    pub fn scope<T, Ctx>(
-        &mut self,
-        ctx: &mut Ctx,
-        frame: impl Into<LocalsStackFrame>,
-        f: impl FnOnce(&mut Self, &mut Ctx) -> T,
-    ) -> T {
-        self.push(frame);
-        let result = f(self, ctx);
-        self.pop();
-        result
-    }
-}
-
-impl Default for LocalsStack {
-    fn default() -> Self {
-        Self(vec![])
-    }
-}
-
 pub struct LocalsVisitor {
-    stack: LocalsStack,
+    stack: ResolveStack,
 }
 
 impl LocalsVisitor {
     pub fn scope<T>(
         &mut self,
-        frame: impl Into<LocalsStackFrame>,
+        frame: impl Into<ResolveStackFrame>,
         f: impl FnOnce(&mut Self) -> T,
     ) -> T {
         // 1. Temporarily swap out the stack to avoid self-borrow issues
@@ -309,11 +136,7 @@ impl Locals for LocalsVisitor {
     }
 
     fn unused_locals(&self) -> impl Iterator<Item = &Identifier> {
-        self.stack
-            .0
-            .iter()
-            .rev()
-            .flat_map(|frame| frame.unused_locals())
+        self.stack.top().unused_locals()
     }
 }
 
@@ -396,7 +219,7 @@ impl WorkbenchExpressionVisitorMut for LocalsVisitor {
 
     fn visit_workbench_group(&mut self, group: &mut microcad_lang_lower::ir::workbench::Group) {
         self.visit_model_attributes(&mut group.attr);
-        self.scope(WorkbenchGroupFrame::default(), |visitor| {
+        self.scope(stack::WorkbenchGroupFrame::default(), |visitor| {
             group
                 .statements
                 .iter_mut()
@@ -407,7 +230,7 @@ impl WorkbenchExpressionVisitorMut for LocalsVisitor {
 
 impl SourceVisitorMut for LocalsVisitor {
     fn visit_source(&mut self, source: &mut microcad_lang_lower::ir::Source) {
-        self.scope(SourceFrame::default(), |visitor| {
+        self.scope(stack::SourceFrame::default(), |visitor| {
             source
                 .statements
                 .iter_mut()
@@ -430,7 +253,7 @@ impl SourceVisitorMut for LocalsVisitor {
 
 impl FnVisitorMut for LocalsVisitor {
     fn visit_fn(&mut self, function: &mut symbol::Function) {
-        self.scope(FunctionFrame::default(), |visitor| {
+        self.scope(stack::FunctionFrame::default(), |visitor| {
             visitor.visit_fn_signature(&mut function.signature);
             function
                 .statements
@@ -453,7 +276,7 @@ impl FnVisitorMut for LocalsVisitor {
     }
 
     fn visit_fn_scope(&mut self, scope: &mut microcad_lang_lower::ir::function::Scope) {
-        self.scope(FunctionScopeFrame::default(), |ctx| {
+        self.scope(stack::FunctionScopeFrame::default(), |ctx| {
             scope
                 .statements
                 .iter_mut()

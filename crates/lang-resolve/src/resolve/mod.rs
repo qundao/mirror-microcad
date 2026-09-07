@@ -17,8 +17,9 @@
 
 mod bind;
 mod case_check;
-mod locals;
+pub mod locals;
 mod resolver;
+pub mod stack;
 mod type_check;
 
 use microcad_lang_base::{CompilationResult, GetSourceByHash, PushDiag};
