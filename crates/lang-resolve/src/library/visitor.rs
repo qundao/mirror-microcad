@@ -71,3 +71,57 @@ pub trait Visitor: SourceVisitor + FnVisitor + WorkbenchVisitor + ConstantVisito
         }
     }
 }
+
+/// Mutable Visitor for a Library tree.
+pub trait VisitorMut:
+    SourceVisitorMut + FnVisitorMut + WorkbenchVisitorMut + ConstantVisitorMut
+{
+    fn visit(&mut self, library: &mut Library) {
+        library
+            .root_mut()
+            .transform(|node, symbol| self.visit_symbol(node, symbol));
+    }
+
+    fn visit_symbol<'a>(&mut self, _node: SymbolNodeRef<'a>, symbol: &mut Symbol) {
+        self.visit_meta(&mut symbol.meta);
+        self.visit_def(&mut symbol.def);
+    }
+
+    fn visit_file_path(&mut self, _path: &mut std::path::Path) {}
+    fn visit_meta(&mut self, _meta: &mut Meta) {}
+
+    fn visit_inline_module(&mut self, _inline_module: &mut symbol::InlineModule) {}
+    fn visit_source_file(&mut self, source_file: &mut symbol::SourceFile) {
+        match source_file {
+            symbol::SourceFile::NotLoaded => {}
+            symbol::SourceFile::Loaded { path, source } => {
+                self.visit_file_path(path);
+                self.visit_source(source);
+            }
+        }
+    }
+
+    fn visit_alias(&mut self, alias: &mut symbol::Alias) {
+        self.visit_path(&mut alias.path);
+    }
+    fn visit_wildcard(&mut self, wildcard: &mut symbol::Wildcard) {
+        self.visit_path(&mut wildcard.path);
+    }
+
+    fn visit_def(&mut self, def: &mut SymbolDef) {
+        use SymbolDef::*;
+        match def {
+            Root(library_root) => match library_root {
+                Some(lib_mu) => self.visit_source_file(lib_mu),
+                None => {}
+            },
+            InlineModule(inline_module) => self.visit_inline_module(inline_module),
+            SourceFile(file_module) => self.visit_source_file(file_module),
+            Workbench(workbench) => self.visit_workbench(workbench),
+            Function(function) => self.visit_fn(function),
+            Constant(constant) => self.visit_constant(constant),
+            Alias(alias) => self.visit_alias(alias),
+            Wildcard(wildcard) => self.visit_wildcard(wildcard),
+        }
+    }
+}

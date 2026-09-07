@@ -17,6 +17,7 @@
 
 mod bind;
 mod case_check;
+mod locals;
 mod resolver;
 mod type_check;
 
