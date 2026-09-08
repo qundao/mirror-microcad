@@ -90,7 +90,8 @@ impl Library {
                 let mut lib = Self::new(Some(manifest), Symbol::root(None));
                 let manifest = lib.manifest.clone().unwrap();
                 if !lib.no_std() {
-                    context.try_load_std()?;
+                    let info = microcad_std::StdLib::info();
+                    lib.dependencies.insert(info.name, info.id);
                 }
 
                 if let Some(deps) = &manifest.dependencies {

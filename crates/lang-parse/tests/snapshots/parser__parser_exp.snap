@@ -9,7 +9,7 @@ expression: output
         kind: Ast,
     ),
     payload: (
-        input_hash: "0x7a5216afeaea7643",
+        input_hash: "0x3281a4efc7ece2ba",
         output_hash: "0xd6d4855323ff9bd8",
         tree: (
             span: (

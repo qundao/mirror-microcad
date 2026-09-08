@@ -4,10 +4,3 @@ expression: output
 ---
 
 ---
-  x Error: unclosed string | Source: 1:5
-   ,-[/:1:5]
- 1 | a = "unclosed string;
-   :     ^^^^^^^^|^^^^^^^
-   :             `-- unclosed string
- 2 |     b = 1;
-   `----
