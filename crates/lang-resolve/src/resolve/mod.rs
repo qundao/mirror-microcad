@@ -12,24 +12,24 @@
 //! 6) `case_check`: Validate identifier casing rules.
 //! 7) `type_check`: Verify expression types.
 
-//!
 //! Each sub-step is implemented in a separate module.
 
 mod bind;
 mod cache;
 mod case_check;
+mod loader;
 pub mod locals;
 mod resolver;
 pub mod stack;
 mod type_check;
 
-use microcad_lang_base::{CompilationResult, GetSourceByHash, HashId, LibraryId, PushDiag, Source};
+use microcad_lang_base::{CompilationResult, GetSourceByHash, HashId, LibraryId, PushDiag};
 
 use microcad_lang_lower::Ir;
 pub use resolver::Resolver;
 
 use crate::{
-    Library, ResolveResult, SourceUnit,
+    Library, ResolveResult,
     error::ResolveError,
     resolve::cache::{LibraryCache, SourceCache},
 };
@@ -95,103 +95,18 @@ impl ResolveContext {
         self
     }
 
-    pub fn load_library(&mut self, path: impl AsRef<std::path::Path>) -> ResolveResult<LibraryId> {
-        let lib = Library::load(path, self)?;
-        self.lib_cache.insert(lib)
-    }
-
-    pub fn load_source(&mut self, path: impl AsRef<std::path::Path>) -> ResolveResult<HashId> {
-        let source = Source::load(path)?;
-        let id = self.src_cache.insert(source);
-        let errors = self
-            .src_cache
-            .get(id)
-            .iter()
-            .flat_map(|source_unit| source_unit.errors())
-            .collect::<Vec<_>>();
-
-        self.append_diags(errors);
-
-        Ok(id)
-    }
-
     /// Get intermediate representation by hash id.
     pub fn get_ir(&self, id: HashId) -> Option<&Ir> {
         self.src_cache
             .get(id)
             .and_then(|source_unit| source_unit.ir())
     }
-
-    /// Load standard library from path.
-    ///
-    /// Installs the standard library, if it is not installed.
-    fn _load_and_install_std(
-        &mut self,
-        path: impl AsRef<std::path::Path>,
-    ) -> ResolveResult<Library> {
-        let path = path.as_ref();
-
-        let std_lib = match Library::load(&path, self) {
-            Ok(std_lib) => {
-                let loaded_version = std_lib.version().expect("A version");
-                let expected_version = microcad_std::version();
-                if loaded_version != &expected_version {
-                    eprintln!(
-                        "µcad standard library version mismatch: {loaded_version} != {expected_version}",
-                    );
-
-                    // Handle version mismatch, force re-install
-                    microcad_std::StdLib::reinstall(true).map_err(ResolveError::new)?;
-                    Library::load(&path, self)?
-                } else {
-                    std_lib
-                }
-            }
-            Err(err) => {
-                self.push_diag(err);
-                // Install the library and try to load it.
-                match microcad_std::StdLib::install(&path) {
-                    Ok(_) => Library::load(path, self)?,
-                    Err(err) => return Err(ResolveError::new(err)),
-                }
-            }
-        };
-
-        Ok(std_lib)
-    }
-
-    pub fn try_load_std(&mut self) -> ResolveResult<LibraryId> {
-        let info = microcad_std::StdLib::info();
-        let id = info.id();
-
-        // A standard library is already loaded, we can stop here.
-        if let Some(_) = self.lib_cache.get(&id) {
-            log::debug!("Standard library is already loaded.");
-            return Ok(id);
-        }
-
-        let paths = self.lib_search_paths.clone();
-        let std_lib = paths.iter().find_map(|search_path| {
-            let std_lib_path = search_path.join(info.path());
-            match self._load_and_install_std(std_lib_path) {
-                Ok(std_lib) => Some(std_lib),
-                Err(err) => {
-                    self.push_diag(err);
-                    None
-                }
-            }
-        });
-
-        match std_lib {
-            Some(std_lib) => self.lib_cache.insert(std_lib),
-            None => {
-                todo!("Could not load standard library")
-            }
-        }
-    }
 }
 
-pub fn resolve(_resolver: Box<dyn Resolver>) -> CompilationResult<Library, ResolveError> {
+pub fn resolve(
+    path: impl AsRef<std::path::Path>,
+    ctx: &mut ResolveContext,
+) -> CompilationResult<Library, ResolveError> {
     /*
     let mut context = ResolveContext::new(resolver);
 

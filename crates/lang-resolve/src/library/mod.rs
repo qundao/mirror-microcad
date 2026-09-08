@@ -57,64 +57,7 @@ impl Library {
         }
     }
 
-    /// Load a single file as library with `mu.toml` file.
-    pub fn load_file(
-        file_mu: impl AsRef<std::path::Path>,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Self> {
-        let mut arena = SymbolArena::default();
-        let root = arena.new_node(Symbol::root(None));
-
-        let mut lib = Self::new(None, Symbol::root(None));
-        if !lib.no_std() {
-            lib.add_std();
-        }
-
-        lib._load_source(&file_mu, Some(root), context)?;
-
-        Ok(lib)
-    }
-
-    /// Load lib with a path of directory containing a `mu.toml` file
-    pub fn load(
-        lib_path: impl AsRef<std::path::Path>,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<Self> {
-        // Locate `lib.mu` in directory
-        let lib_mu = locate::lib_mu_path(&lib_path)?;
-        log::debug!("Loading library from {lib_mu:?}");
-
-        // Load manifest and load library
-        let mut lib = match Manifest::load(mu_toml_path(lib_path)) {
-            Ok(manifest) => {
-                log::debug!("Loaded manifest:\n{manifest}");
-
-                let mut lib = Self::new(Some(manifest), Symbol::root(None));
-                let manifest = lib.manifest.clone().unwrap();
-                if !lib.no_std() {
-                    lib.add_std();
-                }
-
-                if let Some(deps) = &manifest.dependencies {
-                    for (name, dep) in deps.iter() {
-                        let lib_id = context.load_library(dep.path.as_ref().unwrap())?;
-                        lib.dependencies.insert(name.to_compact_string(), lib_id);
-                    }
-                }
-                lib
-            }
-            // Error loading manifest or manifest not found, fallback to defaults.
-            Err(err) => {
-                println!("No manifest:\n{err:?}");
-                context.push_diag(ResolveError::new(err));
-                Self::new(None, Symbol::root(None))
-            }
-        };
-
-        lib._load_source(&lib_mu, None, context)?;
-        Ok(lib)
-    }
-
+    /// Returns true if this library does not have standard library as dependency.
     pub fn no_std(&self) -> bool {
         match &self.manifest {
             Some(manifest) => manifest.library.no_std.unwrap_or(false),
@@ -122,7 +65,7 @@ impl Library {
         }
     }
 
-    fn add_std(&mut self) {
+    pub fn add_std(&mut self) {
         let info = microcad_std::StdLib::info();
         let id = info.id();
         self.dependencies.insert(info.name, id);
@@ -163,71 +106,5 @@ impl Library {
 
     pub fn append_symbol(&mut self, symbol: impl Into<Symbol>) -> SymbolNodeId {
         self.root.append_value(symbol.into(), &mut self.arena)
-    }
-
-    pub fn _load_source(
-        &mut self,
-        path: impl AsRef<std::path::Path>,
-        parent_id: Option<SymbolNodeId>,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<SymbolNodeId> {
-        let path = path.as_ref().to_path_buf();
-        let id = context.load_source(&path)?;
-        println!("Load source file  {path:?}");
-
-        let ir = context.get_ir(id).cloned();
-        match ir {
-            // We have a successfully compiled IR, add it to the tree and load file recursively, if necessary.
-            Some(ir) => {
-                let source_arena = ir.tree.arena();
-                let source_node = ir.tree.root();
-
-                // Create matching node in target arena
-                let symbol = match &source_node.def {
-                    ir::Def::Source(source) => {
-                        Symbol::loaded_source_file(source_node.get(), path.clone(), source.clone())
-                    }
-                    _ => source_node.get().clone().into(),
-                };
-                let id = if let Some(parent_id) = parent_id {
-                    let id = self.arena.new_node(symbol);
-                    parent_id.append(id, &mut self.arena);
-                    id
-                } else {
-                    *self.root_mut().get_mut() = symbol;
-                    self.root.clone()
-                };
-
-                // Traverse children recursively
-                for child in source_node.children() {
-                    let item = child.get();
-                    let child_id = match child.get().def {
-                        ir::Def::FileModule(_) => {
-                            let path = locate::file_module_path(&path, item.name())?;
-                            match self._load_source(path, Some(id), context) {
-                                Ok(id) => id,
-                                Err(err) => {
-                                    context.push_diag(err);
-                                    self.arena.new_node(Symbol::root(None))
-                                }
-                            }
-                        }
-                        _ => tree::adopt_tree_to_arena(&mut self.arena, child.id, source_arena),
-                    };
-                    id.append(child_id, &mut self.arena);
-                }
-
-                Ok(id)
-            }
-            None => Err(ResolveErrorKind::CompileError { path }.into()),
-        }
-    }
-
-    pub fn load_source(
-        &mut self,
-        path: impl AsRef<std::path::Path>,
-        context: &mut ResolveContext,
-    ) -> ResolveResult<SymbolNodeId> {
-        self._load_source(path, Some(self.root), context)
     }
 }
