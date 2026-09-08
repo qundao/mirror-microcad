@@ -43,6 +43,27 @@ impl SingleIdentifier for UnresolvedPath {
     }
 }
 
+impl std::str::FromStr for UnresolvedPath {
+    type Err = std::convert::Infallible;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let is_absolute = s.starts_with("::");
+        let path_str = if is_absolute { &s[2..] } else { s };
+
+        let parts = path_str
+            .split("::")
+            .filter(|part| !part.is_empty())
+            .map(|part| Identifier::from(part))
+            .collect::<Vec<_>>()
+            .into_boxed_slice();
+
+        Ok(Self {
+            is_absolute,
+            parts,
+            src_ref: SrcRef::none(),
+        })
+    }
+}
 impl std::fmt::Display for UnresolvedPath {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         if self.is_absolute {
