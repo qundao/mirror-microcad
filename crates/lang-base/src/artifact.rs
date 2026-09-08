@@ -193,7 +193,7 @@ impl<T: Artifact, E: CompileError> StageResult<T, E> {
     }
 
     /// Fetch this artifact
-    pub fn fetch_artifact(self) -> Option<T> {
+    pub fn into_artifact(self) -> Option<T> {
         self.0?.ok().map(|(val, _)| val)
     }
 
@@ -205,7 +205,7 @@ impl<T: Artifact, E: CompileError> StageResult<T, E> {
         }
     }
 
-    pub fn fetch_errors(self) -> Vec<E> {
+    pub fn into_errors(self) -> Vec<E> {
         match self.0 {
             Some(Ok((_, errors))) | Some(Err(errors)) => errors,
             None => Vec::new(),
@@ -215,7 +215,7 @@ impl<T: Artifact, E: CompileError> StageResult<T, E> {
     /// Return the diagnostics.
     pub fn diagnostics(self) -> Diagnostics {
         let mut diags = Diagnostics::default();
-        self.fetch_errors()
+        self.into_errors()
             .into_iter()
             .for_each(|err| diags.push(err));
         diags

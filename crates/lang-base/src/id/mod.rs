@@ -1,15 +1,17 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Module to handle and demangle IDs use in µcad language.
+//! Module to handle IDs for any item used in µcad language.
 
 mod builtin;
+mod library;
 
 use derive_more::{Display, From};
 use indextree::NodeId;
 pub use microcad_hash::{HashId, hash_id};
 
 pub use builtin::{BuiltinId, BuiltinInfo};
+pub use library::{LibraryId, LibraryInfo};
 
 use serde::{Deserialize, Serialize};
 
@@ -29,7 +31,7 @@ pub enum SymbolId {
     Item(NodeId),
     // /// A symbol in an external package (e.g. `std`)
     //    #[display("{package_name}@{id}")]
-    //  External { package_name: Name, id: NodeId },
+    //  External { lib_id: LibraryId, id: NodeId },
 }
 
 /// Trait to look up a human-readable name for a `SymbolId`.

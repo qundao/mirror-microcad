@@ -33,6 +33,17 @@ impl SrcReferrer for Source {
     }
 }
 
+impl std::fmt::Display for Source {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(
+            f,
+            "{loc}[{hash}]",
+            loc = self.location,
+            hash = self.hash_id()
+        )
+    }
+}
+
 /// A text edit, the result of comparing two sources
 #[derive(Debug, PartialEq)]
 pub struct TextEdit {

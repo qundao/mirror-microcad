@@ -42,7 +42,7 @@ pub use element::{Identifier, IdentifierList};
 pub use fs::{FileSystem, VirtualFileSystem};
 pub use id::{
     BuiltinId, BuiltinInfo, DefaultContext, DisplayWithCtx, DisplayWithCtxHelper, HashId,
-    LookUpName, Name, SymbolId, hash_id,
+    LibraryId, LibraryInfo, LookUpName, Name, SymbolId, hash_id,
 };
 pub use output::{Capture, Output, Stdout};
 pub use rc::{Rc, RcMut};
