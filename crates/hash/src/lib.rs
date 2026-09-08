@@ -14,7 +14,7 @@ use std::fmt;
 pub struct HashId(u64);
 
 impl HashId {
-    pub fn new(val: u64) -> Self {
+    pub const fn new(val: u64) -> Self {
         Self(val)
     }
 
