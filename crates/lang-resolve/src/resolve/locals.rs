@@ -66,11 +66,11 @@ impl Locals for LocalTable {
 }
 
 #[derive(Debug, Default)]
-pub struct LocalsVisitor {
+pub struct ResolveVisitor {
     stack: ResolveStack,
 }
 
-impl LocalsVisitor {
+impl ResolveVisitor {
     pub fn new() -> Self {
         Self {
             stack: ResolveStack::default(),
@@ -88,7 +88,7 @@ impl LocalsVisitor {
         self.stack = stack;
 
         // 2. Define a guard that pops the frame on Drop
-        struct PopGuard<'a>(&'a mut LocalsVisitor);
+        struct PopGuard<'a>(&'a mut ResolveVisitor);
 
         impl<'a> Drop for PopGuard<'a> {
             fn drop(&mut self) {
@@ -105,7 +105,7 @@ impl LocalsVisitor {
     }
 }
 
-impl Locals for LocalsVisitor {
+impl Locals for ResolveVisitor {
     fn local_table(&self) -> Option<&LocalTable> {
         self.stack.top().local_table()
     }
@@ -142,9 +142,9 @@ impl Locals for LocalsVisitor {
     }
 }
 
-impl visitor::VisitorMut for LocalsVisitor {}
+impl visitor::VisitorMut for ResolveVisitor {}
 
-impl visitor::LeafVisitorMut for LocalsVisitor {
+impl visitor::LeafVisitorMut for ResolveVisitor {
     fn visit_path(&mut self, path: &mut microcad_lang_lower::ir::Path) {
         if let symbol::Path::Unresolved(unresolved_path) = path {
             if let Some(id) = unresolved_path.single_identifier() {
@@ -158,8 +158,8 @@ impl visitor::LeafVisitorMut for LocalsVisitor {
     }
 }
 
-impl visitor::ConstantVisitorMut for LocalsVisitor {}
-impl visitor::WorkbenchVisitorMut for LocalsVisitor {
+impl visitor::ConstantVisitorMut for ResolveVisitor {}
+impl visitor::WorkbenchVisitorMut for ResolveVisitor {
     fn visit_workbench(&mut self, workbench: &mut microcad_lang_lower::ir::workbench::Workbench) {
         use microcad_lang_lower::ir::visitor::WorkbenchExpressionVisitorMut;
         self.visit_workbench_signature(&mut workbench.signature);
@@ -211,7 +211,7 @@ impl visitor::WorkbenchVisitorMut for LocalsVisitor {
     ) {
     }
 }
-impl visitor::WorkbenchExpressionVisitorMut for LocalsVisitor {
+impl visitor::WorkbenchExpressionVisitorMut for ResolveVisitor {
     fn visit_workbench_statement(
         &mut self,
         statement: &mut microcad_lang_lower::ir::workbench::WorkbenchStatement,
@@ -239,7 +239,7 @@ impl visitor::WorkbenchExpressionVisitorMut for LocalsVisitor {
     }
 }
 
-impl visitor::SourceVisitorMut for LocalsVisitor {
+impl visitor::SourceVisitorMut for ResolveVisitor {
     fn visit_source(&mut self, source: &mut microcad_lang_lower::ir::Source) {
         self.scope(stack::SourceFrame::default(), |visitor| {
             source
@@ -263,7 +263,7 @@ impl visitor::SourceVisitorMut for LocalsVisitor {
     }
 }
 
-impl visitor::FnVisitorMut for LocalsVisitor {
+impl visitor::FnVisitorMut for ResolveVisitor {
     fn visit_fn(&mut self, function: &mut symbol::Function) {
         self.scope(stack::FunctionFrame::default(), |visitor| {
             visitor.visit_fn_signature(&mut function.signature);

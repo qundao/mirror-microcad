@@ -11,7 +11,7 @@ use crate::{
     error::ResolveErrorKind,
     library::{Symbol, SymbolArena, SymbolNodeId},
     locate,
-    resolve::locals::LocalsVisitor,
+    resolve::locals::ResolveVisitor,
 };
 
 impl ResolveContext {
@@ -66,7 +66,7 @@ impl ResolveContext {
         };
         self._load_source(&mut lib, &lib_mu, None)?;
 
-        let mut locals = LocalsVisitor::new();
+        let mut locals = ResolveVisitor::new();
         use crate::library::visitor::VisitorMut;
         locals.visit(&mut lib);
 
