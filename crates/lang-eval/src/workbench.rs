@@ -105,6 +105,7 @@ impl Eval for symbol::SymbolId {
                 }
             },
             SymbolId::Item(node_id) => context.eval_constant_symbol(*node_id),
+            SymbolId::External { .. } => todo!(),
         }
     }
 }

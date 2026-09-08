@@ -30,8 +30,8 @@ pub enum SymbolId {
     /// A definition within the current package/module (e.g. a workbench or function).
     Item(NodeId),
     // /// A symbol in an external package (e.g. `std`)
-    //    #[display("{package_name}@{id}")]
-    //  External { lib_id: LibraryId, id: NodeId },
+    #[display("{lib_id}@{id}")]
+    External { lib_id: LibraryId, id: NodeId },
 }
 
 /// Trait to look up a human-readable name for a `SymbolId`.
@@ -44,11 +44,16 @@ pub trait LookUpName {
         None
     }
 
+    fn look_up_external_item_name(&self, _lib_id: &LibraryId, _item_id: &NodeId) -> Option<Name> {
+        None
+    }
+
     fn look_up_symbol_name(&self, symbol_id: &SymbolId) -> Option<Name> {
         match symbol_id {
             SymbolId::Builtin(builtin_id) => self.look_up_built_in_name(builtin_id),
             SymbolId::Local(name) => Some(name.clone()),
             SymbolId::Item(node_id) => self.look_up_item_name(node_id),
+            SymbolId::External { lib_id, id } => self.look_up_external_item_name(lib_id, id),
         }
     }
 
@@ -122,6 +127,7 @@ impl<Ctx: LookUpName> DisplayWithCtx<Ctx> for SymbolId {
             SymbolId::Builtin(builtin_id) => builtin_id.fmt_with_ctx(f, ctx),
             SymbolId::Local(name) => write!(f, "@Local({name})"),
             SymbolId::Item(node_id) => node_id.fmt_with_ctx(f, ctx),
+            SymbolId::External { lib_id, id } => todo!(),
         }
     }
 }

@@ -183,6 +183,8 @@ pub trait SymbolNodeExt {
     /// Get documentation string for this symbol.
     /// The string only contains
     fn doc(&self) -> Option<&String>;
+
+    fn find_child(&self, name: impl AsRef<str>) -> Option<SymbolNodeId>;
 }
 
 impl<'a> SymbolNodeExt for SymbolNodeRef<'a> {
@@ -212,5 +214,13 @@ impl<'a> SymbolNodeExt for SymbolNodeRef<'a> {
 
     fn doc(&self) -> Option<&String> {
         Some(&self.get().doc.content)
+    }
+
+    fn find_child(&self, name: impl AsRef<str>) -> Option<SymbolNodeId> {
+        let name = Identifier::from(name.as_ref());
+        self.children().find_map(|child| match child.name() {
+            Some(child_name) if child_name == &name => Some(child.id),
+            _ => None,
+        })
     }
 }

@@ -66,7 +66,7 @@ impl ResolveContext {
         };
         self._load_source(&mut lib, &lib_mu, None)?;
 
-        let mut locals = ResolveVisitor::new();
+        let mut locals = ResolveVisitor::new(self);
         use crate::library::visitor::VisitorMut;
         locals.visit(&mut lib);
 
