@@ -12,9 +12,7 @@ pub mod visitor;
 use std::collections::BTreeMap;
 
 pub use manifest::{Dependency, LibrarySection, Manifest, ManifestError};
-use microcad_lang_base::{
-    LibraryId, LibraryInfo, Name, PushDiag, ToCompactString, Version, hash_id, tree,
-};
+use microcad_lang_base::{LibraryId, LibraryInfo, Name, PushDiag, ToCompactString, Version, tree};
 
 use microcad_lang_lower::ir;
 use serde::{Deserialize, Serialize};
@@ -22,7 +20,7 @@ use serde::{Deserialize, Serialize};
 pub use symbol::*;
 
 use crate::{
-    ResolveContext, ResolveError, ResolveResult, SourceUnit,
+    ResolveContext, ResolveError, ResolveResult,
     error::ResolveErrorKind,
     locate::{self, mu_toml_path},
 };
@@ -91,14 +89,14 @@ impl Library {
                 let manifest = lib.manifest.clone().unwrap();
                 if !lib.no_std() {
                     let info = microcad_std::StdLib::info();
-                    lib.dependencies.insert(info.name, info.id);
+                    let id = info.id();
+                    lib.dependencies.insert(info.name, id);
                 }
 
                 if let Some(deps) = &manifest.dependencies {
                     for (name, dep) in deps.iter() {
                         let lib_id = context.load_library(dep.path.as_ref().unwrap())?;
-                        lib.dependencies
-                            .insert(name.to_compact_string(), lib_id.into());
+                        lib.dependencies.insert(name.to_compact_string(), lib_id);
                     }
                 }
                 lib
@@ -107,7 +105,6 @@ impl Library {
             Err(err) => {
                 println!("No manifest:\n{err:?}");
                 context.push_diag(ResolveError::new(err));
-                context.try_load_std()?;
                 Self::new(None, Symbol::root(None))
             }
         };
@@ -166,11 +163,12 @@ impl Library {
         parent_id: Option<SymbolNodeId>,
         context: &mut ResolveContext,
     ) -> ResolveResult<SymbolNodeId> {
-        let source_unit = SourceUnit::load(&path)?;
         let path = path.as_ref().to_path_buf();
+        let id = context.load_source(&path)?;
         println!("Load source file  {path:?}");
 
-        match source_unit.into_ir() {
+        let ir = context.get_ir(id).cloned();
+        match ir {
             // We have a successfully compiled IR, add it to the tree and load file recursively, if necessary.
             Some(ir) => {
                 let source_arena = ir.tree.arena();

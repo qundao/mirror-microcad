@@ -3,11 +3,10 @@
 
 //! A resolve error
 
-use std::string::ParseError;
-
 use microcad_lang_base::{CompileError, HashId, SrcRef, SrcReferrer, element::Case};
 
 use microcad_lang_lower::LowerError;
+use microcad_lang_parse::ParseError;
 use microcad_lang_types::Type;
 use microcad_std::StdLibError;
 use miette::Diagnostic;
@@ -81,6 +80,18 @@ impl ResolveError {
 impl From<ResolveErrorKind> for ResolveError {
     fn from(kind: ResolveErrorKind) -> Self {
         Self(Box::new(kind))
+    }
+}
+
+impl From<ParseError> for ResolveError {
+    fn from(err: ParseError) -> Self {
+        ResolveErrorKind::from(err).into()
+    }
+}
+
+impl From<LowerError> for ResolveError {
+    fn from(err: LowerError) -> Self {
+        ResolveErrorKind::from(err).into()
     }
 }
 

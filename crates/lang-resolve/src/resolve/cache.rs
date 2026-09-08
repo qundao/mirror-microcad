@@ -3,7 +3,9 @@
 
 use microcad_lang_base::{GetSourceByHash, HashId, HashMap, LibraryId, Source};
 
-use crate::{Library, ResolveError, ResolveResult, SourceUnit, error::ResolveErrorKind};
+use crate::{
+    Library, ResolveError, ResolveResult, SourceUnit, error::ResolveErrorKind, source_unit,
+};
 
 #[derive(Debug, Default)]
 pub struct LibraryCache {
@@ -33,42 +35,43 @@ impl LibraryCache {
 #[derive(Debug, Default)]
 pub struct SourceCache {
     // Source by hash
-    by_hash: HashMap<HashId, SourceUnit>,
+    by_hash_id: HashMap<HashId, SourceUnit>,
     // Source by paths
     by_path: HashMap<std::path::PathBuf, HashId>,
 }
 
 impl GetSourceByHash for SourceCache {
     fn get_source_by_hash(&'_ self, hash: HashId) -> Option<&Source> {
-        self.by_hash
-            .get(&hash)
-            .map(|source_unit| source_unit.source())
+        self.get(hash).map(|source_unit| source_unit.source())
     }
 }
 
 impl SourceCache {
-    pub fn insert(&mut self, source: impl Into<Source>) -> ResolveResult<HashId> {
+    pub fn insert(&mut self, source: impl Into<Source>) -> HashId {
         let source = source.into();
-
-        if let Some(source_unit) = self.get(source.hash_id()) {
-            log::debug!("Source unit '{source_unit}' is already loaded");
-            return Ok(source.hash_id());
+        let id = source.hash_id();
+        if let Some(source) = self.get(id) {
+            log::debug!("Source unit '{source}' is already loaded");
+            return source.id();
         }
 
-        let hash_id = source.hash_id();
-        match source.path() {
-            Some(path) => {
-                self.by_hash.insert(hash_id, SourceUnit::load(&path)?);
-                self.by_path.insert(path, hash_id);
-                Ok(hash_id)
-            }
-            None => Err(ResolveError::new(ResolveErrorKind::SourceHasNoPath(
-                source.to_string(),
-            ))),
+        let source_unit = SourceUnit::new(source).parse().lower();
+        if let Some(path) = source_unit.source().path() {
+            self.by_path.insert(path, id);
         }
+        self.by_hash_id.insert(id, source_unit);
+        id
     }
 
+    /// Get a source unit by hash.
     pub fn get(&self, id: HashId) -> Option<&SourceUnit> {
-        self.by_hash.get(&id.into())
+        self.by_hash_id.get(&id.into())
+    }
+
+    /// Get a source unit by path.
+    pub fn get_by_path(&self, path: impl AsRef<std::path::Path>) -> Option<&SourceUnit> {
+        self.by_path
+            .get(path.as_ref())
+            .and_then(|hash_id| self.get(*hash_id))
     }
 }

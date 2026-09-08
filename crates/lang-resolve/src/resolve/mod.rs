@@ -23,17 +23,15 @@ mod resolver;
 pub mod stack;
 mod type_check;
 
-use microcad_lang_base::{CompilationResult, GetSourceByHash, LibraryId, PushDiag};
+use microcad_lang_base::{CompilationResult, GetSourceByHash, HashId, LibraryId, PushDiag, Source};
 
+use microcad_lang_lower::Ir;
 pub use resolver::Resolver;
 
 use crate::{
-    Library, ResolveResult,
+    Library, ResolveResult, SourceUnit,
     error::ResolveError,
-    resolve::{
-        self,
-        cache::{LibraryCache, SourceCache},
-    },
+    resolve::cache::{LibraryCache, SourceCache},
 };
 
 /// Resolve Context
@@ -99,7 +97,29 @@ impl ResolveContext {
 
     pub fn load_library(&mut self, path: impl AsRef<std::path::Path>) -> ResolveResult<LibraryId> {
         let lib = Library::load(path, self)?;
-        Ok(lib.id())
+        self.lib_cache.insert(lib)
+    }
+
+    pub fn load_source(&mut self, path: impl AsRef<std::path::Path>) -> ResolveResult<HashId> {
+        let source = Source::load(path)?;
+        let id = self.src_cache.insert(source);
+        let errors = self
+            .src_cache
+            .get(id)
+            .iter()
+            .flat_map(|source_unit| source_unit.errors())
+            .collect::<Vec<_>>();
+
+        self.append_diags(errors);
+
+        Ok(id)
+    }
+
+    /// Get intermediate representation by hash id.
+    pub fn get_ir(&self, id: HashId) -> Option<&Ir> {
+        self.src_cache
+            .get(id)
+            .and_then(|source_unit| source_unit.ir())
     }
 
     /// Load standard library from path.

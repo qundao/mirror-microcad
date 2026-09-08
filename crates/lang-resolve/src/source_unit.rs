@@ -3,11 +3,13 @@
 
 //! A source unit that can be compiled into an IR.
 
-use microcad_lang_base::{Source, StageResult};
+use microcad_lang_base::{HashId, Source, StageResult};
 use microcad_lang_lower::{Ir, LowerContext, LowerError};
 use microcad_lang_parse::{Ast, ParseError};
+use miette::Diagnostic;
+use thiserror::Error;
 
-use crate::{ResolveResult, locate};
+use crate::{ResolveError, ResolveResult, locate};
 /// A µcad source file document progressing through compiler pipeline stages.
 #[derive(Debug)]
 pub enum SourceUnit {
@@ -21,6 +23,24 @@ pub enum SourceUnit {
         ast: StageResult<Ast, ParseError>,
         ir: StageResult<Ir, LowerError>,
     },
+}
+
+/// An enum representing a reference to any stage error.
+#[derive(Debug, Error, Clone, Diagnostic)]
+pub enum SourceUnitError {
+    #[error("{0}")]
+    Parse(#[from] ParseError),
+    #[error("{0}")]
+    Lower(#[from] LowerError),
+}
+
+impl From<SourceUnitError> for ResolveError {
+    fn from(err: SourceUnitError) -> Self {
+        match err {
+            SourceUnitError::Parse(parse_error) => parse_error.into(),
+            SourceUnitError::Lower(lower_error) => lower_error.into(),
+        }
+    }
 }
 
 impl SourceUnit {
@@ -76,12 +96,46 @@ impl SourceUnit {
         }
     }
 
+    /// Get ID of source.
+    pub fn id(&self) -> HashId {
+        self.source().hash_id()
+    }
+
+    /// Returns an iterator yielding references to all errors collected across pipeline stages.
+    pub fn errors(&self) -> impl Iterator<Item = SourceUnitError> {
+        let (ast_errors, ir_errors) = match self {
+            Self::Loaded(_) => (None, None),
+            Self::Parsed { ast, .. } => (Some(ast.errors()), None),
+            Self::Lowered { ast, ir, .. } => (Some(ast.errors()), Some(ir.errors())),
+        };
+
+        ast_errors
+            .into_iter()
+            .flatten()
+            .cloned()
+            .map(SourceUnitError::from)
+            .chain(
+                ir_errors
+                    .into_iter()
+                    .flatten()
+                    .cloned()
+                    .map(SourceUnitError::from),
+            )
+    }
+
     /// Returns `true` if all executed stages succeeded without fatal errors.
     pub fn is_ok(&self) -> bool {
         match self {
             Self::Loaded(_) => true,
             Self::Parsed { ast, .. } => ast.is_ok(),
             Self::Lowered { ast, ir, .. } => ast.is_ok() && ir.is_ok(),
+        }
+    }
+
+    pub fn ir(&self) -> Option<&Ir> {
+        match self {
+            Self::Lowered { ir, .. } => ir.artifact(),
+            _ => None,
         }
     }
 
