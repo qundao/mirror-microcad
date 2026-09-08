@@ -66,6 +66,10 @@ impl Library {
         let root = arena.new_node(Symbol::root(None));
 
         let mut lib = Self::new(None, Symbol::root(None));
+        if !lib.no_std() {
+            lib.add_std();
+        }
+
         lib._load_source(&file_mu, Some(root), context)?;
 
         Ok(lib)
@@ -78,19 +82,17 @@ impl Library {
     ) -> ResolveResult<Self> {
         // Locate `lib.mu` in directory
         let lib_mu = locate::lib_mu_path(&lib_path)?;
-        println!("Loading library from {lib_mu:?}");
+        log::debug!("Loading library from {lib_mu:?}");
 
         // Load manifest and load library
         let mut lib = match Manifest::load(mu_toml_path(lib_path)) {
             Ok(manifest) => {
-                println!("Loaded manifest:\n{manifest}");
+                log::debug!("Loaded manifest:\n{manifest}");
 
                 let mut lib = Self::new(Some(manifest), Symbol::root(None));
                 let manifest = lib.manifest.clone().unwrap();
                 if !lib.no_std() {
-                    let info = microcad_std::StdLib::info();
-                    let id = info.id();
-                    lib.dependencies.insert(info.name, id);
+                    lib.add_std();
                 }
 
                 if let Some(deps) = &manifest.dependencies {
@@ -118,6 +120,12 @@ impl Library {
             Some(manifest) => manifest.library.no_std.unwrap_or(false),
             None => false, // Load std by default
         }
+    }
+
+    fn add_std(&mut self) {
+        let info = microcad_std::StdLib::info();
+        let id = info.id();
+        self.dependencies.insert(info.name, id);
     }
 
     pub fn name(&self) -> Option<&Name> {
