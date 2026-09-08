@@ -60,6 +60,9 @@ pub enum ResolveErrorKind {
 
     #[error("Library entry point found at {}", lib_mu.display())]
     NoLibraryEntryPoint { lib_mu: std::path::PathBuf },
+
+    #[error("Source '{0}' has no path.")]
+    SourceHasNoPath(String),
 }
 
 #[derive(Debug)]

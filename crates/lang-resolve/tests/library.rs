@@ -7,7 +7,9 @@ use microcad_lang_base::{DiagRenderOptions, Diagnostics};
 use microcad_lang_resolve::{Library, ResolveContext};
 
 fn ctx() -> ResolveContext {
-    ResolveContext::new().with_std("../../crates/std/lib/std")
+    let mut ctx = ResolveContext::new();
+    ctx.load_library("../../crates/std/lib/std");
+    ctx
 }
 
 #[test]

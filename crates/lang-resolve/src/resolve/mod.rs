@@ -16,24 +16,34 @@
 //! Each sub-step is implemented in a separate module.
 
 mod bind;
+mod cache;
 mod case_check;
 pub mod locals;
 mod resolver;
 pub mod stack;
 mod type_check;
 
-use microcad_lang_base::{CompilationResult, GetSourceByHash, PushDiag};
+use microcad_lang_base::{CompilationResult, GetSourceByHash, LibraryId, PushDiag};
 
 pub use resolver::Resolver;
 
-use crate::{Library, ResolveResult, error::ResolveError};
+use crate::{
+    Library, ResolveResult,
+    error::ResolveError,
+    resolve::{
+        self,
+        cache::{LibraryCache, SourceCache},
+    },
+};
 
 /// Resolve Context
 pub struct ResolveContext {
     // pub resolver: Box<dyn Resolver>,
     pub diag: Vec<ResolveError>,
     pub lib_search_paths: Vec<std::path::PathBuf>,
-    pub std_lib: Option<Library>,
+
+    pub lib_cache: LibraryCache,
+    pub src_cache: SourceCache,
 }
 
 impl PushDiag<ResolveError> for ResolveContext {
@@ -47,8 +57,7 @@ impl GetSourceByHash for ResolveContext {
         &'_ self,
         hash: microcad_lang_base::HashId,
     ) -> Option<&microcad_lang_base::Source> {
-        // TODO implement source cache
-        None
+        self.src_cache.get_source_by_hash(hash)
     }
 }
 
@@ -76,8 +85,9 @@ impl ResolveContext {
     pub fn new() -> Self {
         Self {
             diag: Default::default(),
-            std_lib: None,
             lib_search_paths: vec![microcad_std::global_library_search_path()],
+            lib_cache: LibraryCache::default(),
+            src_cache: SourceCache::default(),
         }
     }
 
@@ -87,17 +97,18 @@ impl ResolveContext {
         self
     }
 
-    /// Load a custom version of the standard library from a path.
-    pub fn with_std(mut self, path: impl AsRef<std::path::Path>) -> Self {
-        let lib = Library::load(path, &mut self);
-        self.std_lib = lib.ok();
-        self
+    pub fn load_library(&mut self, path: impl AsRef<std::path::Path>) -> ResolveResult<LibraryId> {
+        let lib = Library::load(path, self)?;
+        Ok(lib.id())
     }
 
     /// Load standard library from path.
     ///
     /// Installs the standard library, if it is not installed.
-    fn _load_std(&mut self, path: impl AsRef<std::path::Path>) -> ResolveResult<Library> {
+    fn _load_and_install_std(
+        &mut self,
+        path: impl AsRef<std::path::Path>,
+    ) -> ResolveResult<Library> {
         let path = path.as_ref();
 
         let std_lib = match Library::load(&path, self) {
@@ -129,18 +140,20 @@ impl ResolveContext {
         Ok(std_lib)
     }
 
-    pub fn try_load_std(&mut self) -> ResolveResult<()> {
+    pub fn try_load_std(&mut self) -> ResolveResult<LibraryId> {
+        let info = microcad_std::StdLib::info();
+        let id = info.id();
+
         // A standard library is already loaded, we can stop here.
-        if self.std_lib.is_some() {
-            return Ok(());
+        if let Some(_) = self.lib_cache.get(&id) {
+            log::debug!("Standard library is already loaded.");
+            return Ok(id);
         }
 
         let paths = self.lib_search_paths.clone();
-        self.std_lib = paths.iter().find_map(|search_path| {
-            let std_lib_path =
-                search_path.join(format!("std-{ver}", ver = microcad_std::version()));
-
-            match self._load_std(std_lib_path) {
+        let std_lib = paths.iter().find_map(|search_path| {
+            let std_lib_path = search_path.join(info.path());
+            match self._load_and_install_std(std_lib_path) {
                 Ok(std_lib) => Some(std_lib),
                 Err(err) => {
                     self.push_diag(err);
@@ -148,7 +161,13 @@ impl ResolveContext {
                 }
             }
         });
-        Ok(())
+
+        match std_lib {
+            Some(std_lib) => self.lib_cache.insert(std_lib),
+            None => {
+                todo!("Could not load standard library")
+            }
+        }
     }
 }
 

@@ -3,7 +3,7 @@
 
 //! Data structure for the package manifest, saved as `mu.toml`.
 
-use microcad_lang_base::Url;
+use microcad_lang_base::{Name, Url};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
@@ -38,7 +38,7 @@ pub struct Manifest {
 #[derive(Debug, Clone, PartialEq, Hash, Serialize, Deserialize)]
 pub struct LibrarySection {
     /// Mandatory library name.
-    pub name: String,
+    pub name: Name,
     /// A short description of the library.
     pub description: Option<String>,
     /// Mandatory library version.
