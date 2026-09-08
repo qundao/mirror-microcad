@@ -68,7 +68,6 @@ impl Library {
         let root = arena.new_node(Symbol::root(None));
 
         let mut lib = Self::new(None, Symbol::root(None));
-        context.try_load_std()?;
         lib._load_source(&file_mu, Some(root), context)?;
 
         Ok(lib)
