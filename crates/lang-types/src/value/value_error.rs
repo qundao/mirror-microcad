@@ -11,7 +11,7 @@ use microcad_lang_base::Identifier;
 use crate::{Type, TypeError};
 
 /// Value error
-#[derive(Debug, Error, Diagnostic)]
+#[derive(Debug, Error, Clone, Diagnostic)]
 pub enum ValueError {
     /// Type error
     #[error("Type error: {0}")]

@@ -11,7 +11,7 @@ use thiserror::Error;
 use crate::ir;
 
 /// Errors and warnings during lowering
-#[derive(Debug, Error, Diagnostic)]
+#[derive(Debug, Clone, Error, Diagnostic)]
 #[allow(missing_docs)]
 pub enum LowerError {
     #[error("Error parsing integer literal: {0}")]
@@ -79,11 +79,6 @@ pub enum LowerError {
     /// A glob import is given an alias
     #[error("Glob imports can't be given an alias")]
     UseGlobAlias(SrcRef),
-
-    /// A parser from the AST builder
-    #[error(transparent)]
-    #[diagnostic(transparent)]
-    AstParser(Refer<microcad_lang_parse::ParseError>),
 
     /// An invalid literal was encountered
     #[error("Invalid literal: {error}")]
@@ -242,7 +237,6 @@ impl SrcReferrer for LowerError {
             UnknownUnit(unit) => unit.src_ref(),
             UnknownType(ty) => ty.src_ref(),
             TypeError(ty) => ty.src_ref(),
-            AstParser(err) => err.src_ref(),
             Unreachable { src_ref, .. } => *src_ref,
             InvalidConstantExpression { src_ref } => *src_ref,
             InnerDocAfterInnerAttribute { src_ref } => *src_ref,

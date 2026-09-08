@@ -32,6 +32,7 @@ impl From<LibraryInfo> for LibraryId {
 }
 
 /// A struct that holds metadata of library so the library can have a unique ID.
+#[derive(Clone, Serialize, Deserialize, PartialEq)]
 pub struct LibraryInfo {
     /// Name of the library.
     pub name: Name,

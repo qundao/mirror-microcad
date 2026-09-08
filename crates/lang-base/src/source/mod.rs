@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{GetSourceByHash, LineCol, LineIndex, Name, SpanToSrcRef, SrcRef, SrcReferrer};
-use microcad_hash::{HashId, Hashed, ToHash};
+use microcad_hash::{HashId, Hashed, ToHash, hash_id};
 use serde::Serialize;
 
 mod location;
@@ -67,7 +67,7 @@ impl Source {
     }
 
     pub fn hash_id(&self) -> HashId {
-        self.code.to_hash()
+        hash_id!(self.location.to_hash(), self.code.to_hash())
     }
 
     pub fn code(&self) -> &str {

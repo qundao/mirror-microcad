@@ -9,7 +9,7 @@ use miette::Diagnostic;
 use thiserror::Error;
 
 #[non_exhaustive]
-#[derive(Debug, Error, Diagnostic)]
+#[derive(Debug, Error, Clone, Diagnostic)]
 pub enum BuiltinError {
     #[error(transparent)]
     ValueError(#[from] ValueError),

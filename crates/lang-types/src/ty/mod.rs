@@ -26,7 +26,7 @@ use crate::{BinaryOperator, UnaryOperator};
 
 use thiserror::Error;
 
-#[derive(Error, Debug, Diagnostic)]
+#[derive(Error, Debug, Clone, Diagnostic)]
 pub enum TypeError {
     #[error("Unknown unit: {0}")]
     UnknownUnit(String),

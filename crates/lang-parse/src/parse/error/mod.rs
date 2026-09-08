@@ -19,7 +19,7 @@ use thiserror::Error;
 pub type RichError<'tokens> = Rich<'tokens, Token<'tokens>, Span, ParseErrorKind>;
 
 /// An error from building the abstract syntax tree
-#[derive(Debug, SrcReferrer)]
+#[derive(Debug, SrcReferrer, Clone)]
 pub struct ParseError {
     /// The span of the source that caused the error
     pub error: RichError<'static>,
