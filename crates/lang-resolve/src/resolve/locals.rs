@@ -4,16 +4,12 @@
 //! Resolve locals.
 
 use crate::{
-    library::{SymbolNodeId, symbol},
+    library::symbol,
+    library::visitor,
     resolve::stack::{self, ResolveStack, ResolveStackFrame},
 };
-use derive_more::From;
 use microcad_lang_base::{
     Identifier, SingleIdentifier, SrcRef, SrcReferrer, SymbolId, ToCompactString,
-};
-use microcad_lang_lower::ir::visitor::{
-    ConstantVisitorMut, FnVisitorMut, LeafVisitorMut, SourceVisitorMut, VisitorMut,
-    WorkbenchExpressionVisitorMut, WorkbenchVisitorMut,
 };
 
 /// A map of locals.
@@ -75,6 +71,12 @@ pub struct LocalsVisitor {
 }
 
 impl LocalsVisitor {
+    pub fn new() -> Self {
+        Self {
+            stack: ResolveStack::default(),
+        }
+    }
+
     pub fn scope<T>(
         &mut self,
         frame: impl Into<ResolveStackFrame>,
@@ -140,9 +142,9 @@ impl Locals for LocalsVisitor {
     }
 }
 
-impl VisitorMut for LocalsVisitor {}
+impl visitor::VisitorMut for LocalsVisitor {}
 
-impl LeafVisitorMut for LocalsVisitor {
+impl visitor::LeafVisitorMut for LocalsVisitor {
     fn visit_path(&mut self, path: &mut microcad_lang_lower::ir::Path) {
         if let symbol::Path::Unresolved(unresolved_path) = path {
             if let Some(id) = unresolved_path.single_identifier() {
@@ -156,9 +158,10 @@ impl LeafVisitorMut for LocalsVisitor {
     }
 }
 
-impl ConstantVisitorMut for LocalsVisitor {}
-impl WorkbenchVisitorMut for LocalsVisitor {
+impl visitor::ConstantVisitorMut for LocalsVisitor {}
+impl visitor::WorkbenchVisitorMut for LocalsVisitor {
     fn visit_workbench(&mut self, workbench: &mut microcad_lang_lower::ir::workbench::Workbench) {
+        use microcad_lang_lower::ir::visitor::WorkbenchExpressionVisitorMut;
         self.visit_workbench_signature(&mut workbench.signature);
 
         workbench
@@ -171,6 +174,8 @@ impl WorkbenchVisitorMut for LocalsVisitor {
         &mut self,
         signature: &mut microcad_lang_lower::ir::workbench::WorkbenchSignature,
     ) {
+        use microcad_lang_lower::ir::visitor::ConstantVisitorMut;
+
         self.visit_parameter_list(&mut signature.parameters);
         signature
             .parameters
@@ -184,6 +189,10 @@ impl WorkbenchVisitorMut for LocalsVisitor {
     }
 
     fn visit_workbench_init(&mut self, init: &mut microcad_lang_lower::ir::workbench::Init) {
+        use microcad_lang_lower::ir::visitor::{
+            ConstantVisitorMut, LeafVisitorMut, WorkbenchExpressionVisitorMut,
+        };
+
         self.visit_workbench_init_attr(&mut init.attr);
         self.visit_parameter_list(&mut init.parameters);
         init.parameters
@@ -202,11 +211,13 @@ impl WorkbenchVisitorMut for LocalsVisitor {
     ) {
     }
 }
-impl WorkbenchExpressionVisitorMut for LocalsVisitor {
+impl visitor::WorkbenchExpressionVisitorMut for LocalsVisitor {
     fn visit_workbench_statement(
         &mut self,
         statement: &mut microcad_lang_lower::ir::workbench::WorkbenchStatement,
     ) {
+        use microcad_lang_lower::ir::visitor::LeafVisitorMut;
+
         self.visit_model_attributes(&mut statement.attr);
         if let Some(name) = &mut statement.name {
             self.visit_name(name);
@@ -228,7 +239,7 @@ impl WorkbenchExpressionVisitorMut for LocalsVisitor {
     }
 }
 
-impl SourceVisitorMut for LocalsVisitor {
+impl visitor::SourceVisitorMut for LocalsVisitor {
     fn visit_source(&mut self, source: &mut microcad_lang_lower::ir::Source) {
         self.scope(stack::SourceFrame::default(), |visitor| {
             source
@@ -240,6 +251,7 @@ impl SourceVisitorMut for LocalsVisitor {
     }
 
     fn visit_source_statement(&mut self, statement: &mut symbol::SourceStatement) {
+        use microcad_lang_lower::ir::visitor::{LeafVisitorMut, WorkbenchExpressionVisitorMut};
         if let Some(name) = &mut statement.name {
             self.visit_name(name);
         }
@@ -251,7 +263,7 @@ impl SourceVisitorMut for LocalsVisitor {
     }
 }
 
-impl FnVisitorMut for LocalsVisitor {
+impl visitor::FnVisitorMut for LocalsVisitor {
     fn visit_fn(&mut self, function: &mut symbol::Function) {
         self.scope(stack::FunctionFrame::default(), |visitor| {
             visitor.visit_fn_signature(&mut function.signature);
@@ -268,6 +280,7 @@ impl FnVisitorMut for LocalsVisitor {
         &mut self,
         signature: &mut microcad_lang_lower::ir::function::FunctionSignature,
     ) {
+        use microcad_lang_lower::ir::visitor::ConstantVisitorMut;
         self.visit_parameter_list(&mut signature.parameters);
         signature
             .parameters
@@ -290,6 +303,8 @@ impl FnVisitorMut for LocalsVisitor {
         &mut self,
         local_assignment: &mut microcad_lang_lower::ir::function::FunctionLocalAssignment,
     ) {
+        use microcad_lang_lower::ir::visitor::LeafVisitorMut;
+
         self.visit_name(&mut local_assignment.id);
         self.visit_fn_expr(&mut local_assignment.expression);
         self.declare_local(local_assignment.id.clone());

@@ -4,11 +4,12 @@
 //! Library tests
 
 use microcad_lang_base::{DiagRenderOptions, Diagnostics};
-use microcad_lang_resolve::{Library, ResolveContext};
+use microcad_lang_resolve::ResolveContext;
 
 fn ctx() -> ResolveContext {
     let mut ctx = ResolveContext::new();
-    ctx.load_external_library("../../crates/std/lib/std");
+    ctx.load_external_library("../../crates/std/lib/std")
+        .expect("No error");
     ctx
 }
 
