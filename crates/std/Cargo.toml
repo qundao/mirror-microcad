@@ -23,3 +23,5 @@ toml = "1.1.4"
 semver = { version = "1.0", features = ["serde"] }
 serde = { version = "1.0", features = ["derive"] }
 thiserror = "2.0"
+
+microcad-lang-base = { workspace = true }

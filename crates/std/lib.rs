@@ -3,10 +3,10 @@
 
 //! µcad CLI install command.
 
-use std::path::PathBuf;
-
 use rust_embed::RustEmbed;
 use thiserror::Error;
+
+use microcad_lang_base::{LibraryId, LibraryInfo};
 
 /// Standard library error.
 #[derive(Debug, Error)]
@@ -36,6 +36,16 @@ impl StdLib {
         }
 
         Self::install(path)
+    }
+
+    /// Get info for standard library
+    pub fn info() -> LibraryInfo {
+        LibraryInfo::new("std", crate::version())
+    }
+
+    /// Get standard library id.
+    pub fn id() -> LibraryId {
+        Self::info().id()
     }
 
     /// Install the standard library into the standard library path and return its manifest.
@@ -97,7 +107,7 @@ impl StdLib {
 
     /// Global library search path + `./std`.
     pub fn default_path() -> std::path::PathBuf {
-        global_library_search_path().join("std")
+        global_library_search_path().join(Self::info().path())
     }
 }
 
