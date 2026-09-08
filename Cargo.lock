@@ -5994,6 +5994,7 @@ name = "microcad-std"
 version = "0.6.0"
 dependencies = [
  "dirs",
+ "microcad-lang-base",
  "rust-embed",
  "semver",
  "serde",
