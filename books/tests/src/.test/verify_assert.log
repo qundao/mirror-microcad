@@ -1,0 +1,14 @@
+﻿
+-- Test --
+        Test name: verify_assert
+  Expected result: ok
+      Source file: ../books/tests/src/debug.md:16
+        Test path: ../books/tests/src/.test
+
+-- Code --
+
+  16:   std::debug::assert(true, "You won't see this message");
+
+-- No Model --
+-- Test Result --
+OK
