@@ -16,7 +16,7 @@ steps:
     environment:
       CARGO_TERM_COLOR: always
     commands:
-      - apt-get update && apt-get install -y ninja-build cmake
+      - apt-get update
       - rustup default $RUST
       - rustup component add rustfmt
       - SKIP_BUILD_RS=1 cargo check -j $(nproc)

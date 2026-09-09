@@ -3,7 +3,7 @@
 
 //! Boolean operations
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 /// Boolean operations
 pub enum BooleanOp {
     /// Computes the union R = P ∪ Q

@@ -244,7 +244,7 @@ impl ToBevyMesh for mu::core::Geometry3D {
         match self {
             Geometry3D::Mesh(triangle_mesh) => triangle_mesh.to_bevy_mesh(threshold_angle),
             Geometry3D::Manifold(manifold) => {
-                mu::core::TriangleMesh::from(manifold.to_mesh()).to_bevy_mesh(threshold_angle)
+                mu::core::TriangleMesh::from(manifold.get_mesh_gl(0)).to_bevy_mesh(threshold_angle)
             }
             Geometry3D::Collection(collection) => {
                 let mesh: mu::core::TriangleMesh = collection.into();
