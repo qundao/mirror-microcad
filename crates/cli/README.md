@@ -19,27 +19,6 @@ This will export the 3D geometry description in `./examples/bricks/brick.µcad` 
 
 ## Installation
 
-First, install [CMake](https://cmake.org/) and [Ninja](https://github.com/ninja-build/ninja) which are needed to compile
-the [manifold geometry library](https://github.com/elalish/manifold).
-
-### *Debian* based *Linux* distributions
-
-Use the following line to install Ninja and CMake:
-
-```sh
-sudo apt install ninja-build cmake
-```
-
-Pre-built debian packages which are attached to our release logs:
-
-### MacOS
-
-If you are on using MacOS, you have to install `cmake` and `ninja` using `brew`:
-
-```sh
-brew install cmake ninja
-```
-
 ### Install µcad via cargo
 
 To install the latest release of *µcad* via *cargo*, type:
