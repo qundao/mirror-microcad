@@ -37,7 +37,7 @@ impl Geometry2D {
     pub fn boolean_op(self, other: Self, op: BooleanOp) -> geo2d::MultiPolygon {
         use geo::BooleanOps;
         self.to_multi_polygon()
-            .boolean_op(&other.to_multi_polygon(), op)
+            .boolean_op(&other.to_multi_polygon(), op.into())
     }
 
     /// Convert geometry to a multi_polygon.

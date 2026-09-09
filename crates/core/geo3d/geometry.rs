@@ -40,19 +40,19 @@ impl Geometry3D {
     pub fn boolean_op(&self, other: &Geometry3D, op: BooleanOp) -> Option<Self> {
         let a: Rc<Manifold> = self.clone().into();
         let b: Rc<Manifold> = other.clone().into();
-        Some(Geometry3D::Manifold(Rc::new(
-            a.boolean_op(&b, crate::boolean_op(op)),
-        )))
+
+        Some(Geometry3D::Manifold(Rc::new(a.boolean(&b, op.into()))))
     }
 
     /// Calculate contex hull.
     pub fn hull(&self) -> Self {
         match &self {
-            Geometry3D::Mesh(triangle_mesh) => triangle_mesh.to_manifold().hull().into(),
-            Geometry3D::Manifold(manifold) => manifold.hull().into(),
-            Geometry3D::Collection(collection) => {
-                TriangleMesh::from(collection).to_manifold().hull().into()
-            }
+            Geometry3D::Mesh(triangle_mesh) => triangle_mesh.to_manifold().convex_hull().into(),
+            Geometry3D::Manifold(manifold) => manifold.convex_hull().into(),
+            Geometry3D::Collection(collection) => TriangleMesh::from(collection)
+                .to_manifold()
+                .convex_hull()
+                .into(),
         }
     }
 
@@ -71,7 +71,7 @@ impl CalcBounds3D for Geometry3D {
         match self {
             Geometry3D::Mesh(triangle_mesh) => triangle_mesh.calc_bounds_3d(),
             Geometry3D::Manifold(manifold) => {
-                TriangleMesh::from(manifold.to_mesh()).calc_bounds_3d()
+                TriangleMesh::from(manifold.get_mesh_gl(0)).calc_bounds_3d()
             }
             Geometry3D::Collection(collection) => collection.calc_bounds_3d(),
         }

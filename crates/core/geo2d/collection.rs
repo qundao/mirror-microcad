@@ -52,7 +52,7 @@ impl Geometries2D {
             .iter()
             .fold(multi_polygon_list[0].clone(), |acc, geo| {
                 use geo::BooleanOps;
-                acc.boolean_op(geo, op)
+                acc.boolean_op(geo, op.into())
             })
     }
 

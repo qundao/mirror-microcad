@@ -48,18 +48,11 @@ impl Geometries3D {
             return Rc::new(Manifold::empty());
         }
 
+        let op = op.into();
         manifold_list[1..]
             .iter()
             .fold(manifold_list[0].clone(), |acc, other| {
-                Rc::new(acc.boolean_op(
-                    other,
-                    match op {
-                        BooleanOp::Intersection => manifold_rs::BooleanOp::Intersection,
-                        BooleanOp::Union => manifold_rs::BooleanOp::Union,
-                        BooleanOp::Difference => manifold_rs::BooleanOp::Difference,
-                        BooleanOp::Xor => unimplemented!(),
-                    },
-                ))
+                Rc::new(acc.boolean(other, op))
             })
     }
 }
