@@ -17,7 +17,7 @@ impl WriteStl for TriangleMesh {
 
 impl WriteStl for Manifold {
     fn write_stl(&self, writer: &mut StlWriter) -> std::io::Result<()> {
-        let triangle_mesh: TriangleMesh = self.to_mesh().into();
+        let triangle_mesh: TriangleMesh = self.get_mesh_gl(0).into();
         triangle_mesh.write_stl(writer)
     }
 }

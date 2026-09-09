@@ -14,7 +14,11 @@ pub struct Sphere {
 
 impl Render<Geometry3D> for Sphere {
     fn render(&self, resolution: &RenderResolution) -> Geometry3D {
-        Manifold::sphere(*self.radius, resolution.circular_segments(*self.radius)).into()
+        Manifold::sphere(
+            *self.radius,
+            resolution.circular_segments(*self.radius) as i32,
+        )
+        .into()
     }
 }
 

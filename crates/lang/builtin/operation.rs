@@ -15,7 +15,7 @@ impl Operation for BooleanOp {
             let model_ = model.borrow();
             let geometries: Geometries2D = model_.children.render_with_context(context)?;
 
-            Ok(Geometry2D::MultiPolygon(geometries.boolean_op(self)))
+            Ok(Geometry2D::MultiPolygon(geometries.boolean_op(*self)))
         })
     }
 
@@ -25,7 +25,7 @@ impl Operation for BooleanOp {
             let model_ = model.borrow();
             let geometries: Geometries3D = model_.children.render_with_context(context)?;
 
-            Ok(Geometry3D::Manifold(geometries.boolean_op(self)))
+            Ok(Geometry3D::Manifold(geometries.boolean_op(*self)))
         })
     }
 }
