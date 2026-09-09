@@ -44,12 +44,7 @@
                     "test",
                     "--no-run",
                     "--lib",
-                    "--package=manifold-rs"
                 ],
-                "filter": {
-                    "name": "manifold_rs",
-                    "kind": "lib"
-                }
             },
             "args": [],
             "cwd": "${workspaceFolder}"
