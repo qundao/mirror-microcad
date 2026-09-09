@@ -19,7 +19,7 @@ pub use bounds::*;
 pub use collection::*;
 pub use extrude::*;
 pub use geometry::*;
-pub use manifold_rs::Manifold;
+pub use manifold_rust::manifold::Manifold;
 pub use mesh::TriangleMesh;
 pub use plane::Plane;
 pub use reflect::*;
@@ -27,12 +27,12 @@ pub use vertex::Vertex;
 
 use crate::BooleanOp;
 
-impl From<&BooleanOp> for manifold_rs::BooleanOp {
-    fn from(op: &BooleanOp) -> Self {
+impl From<BooleanOp> for manifold_rust::types::OpType {
+    fn from(op: BooleanOp) -> Self {
         match op {
-            BooleanOp::Union => manifold_rs::BooleanOp::Union,
-            BooleanOp::Intersect => manifold_rs::BooleanOp::Intersection,
-            BooleanOp::Subtract => manifold_rs::BooleanOp::Difference,
+            BooleanOp::Union => manifold_rust::types::OpType::Add,
+            BooleanOp::Intersect => manifold_rust::types::OpType::Intersect,
+            BooleanOp::Subtract => manifold_rust::types::OpType::Subtract,
             _ => unimplemented!(),
         }
     }
@@ -41,7 +41,7 @@ impl From<&BooleanOp> for manifold_rs::BooleanOp {
 #[test]
 fn test_mesh_volume() {
     let manifold = Manifold::sphere(1.0, 512);
-    let mesh = TriangleMesh::from(manifold.to_mesh());
+    let mesh = TriangleMesh::from(manifold.get_mesh_gl(0));
 
     let volume = mesh.volume();
     assert!((volume - 4.0 / 3.0 * std::f64::consts::PI).abs() < 1e-3);

@@ -6,7 +6,7 @@ use crate::{
     *,
 };
 use cgmath::{ElementWise, Vector3};
-use manifold_rs::{Manifold, Mesh};
+use manifold_rust::{manifold::Manifold, types::MeshGL};
 
 use crate::hash::HashMap;
 
@@ -107,7 +107,9 @@ impl TriangleMesh {
         assert_eq!(vertices.len(), self.positions.len() * 3);
         assert_eq!(triangle_indices.len(), self.triangle_indices.len() * 3);
 
-        Manifold::from_mesh(Mesh::new(&vertices, &triangle_indices))
+        let mesh = MeshGL::from(self.clone());
+
+        Manifold::from_mesh_gl(&mesh)
     }
 
     /// Calculate volume of mesh.
@@ -205,10 +207,10 @@ impl CalcBounds3D for TriangleMesh {
     }
 }
 
-impl From<Mesh> for TriangleMesh {
-    fn from(mesh: Mesh) -> Self {
-        let vertices = mesh.vertices();
-        let indices = mesh.indices();
+impl From<MeshGL> for TriangleMesh {
+    fn from(mesh: MeshGL) -> Self {
+        let vertices = mesh.vert_properties;
+        let indices = mesh.tri_verts;
 
         // TODO: We could use unsafe std::ptr::copy and cast::transmute to avoid deep copy
         // of vertices and indices
@@ -227,26 +229,35 @@ impl From<Mesh> for TriangleMesh {
     }
 }
 
-impl From<TriangleMesh> for Mesh {
+impl From<TriangleMesh> for MeshGL {
     fn from(mesh: TriangleMesh) -> Self {
-        Mesh::new(
-            &mesh
-                .positions
-                .iter()
-                .flat_map(|v| [v.x, v.y, v.z])
-                .collect::<Vec<_>>(),
-            &mesh
-                .triangle_indices
-                .iter()
-                .flat_map(|t| [t.0, t.1, t.2])
-                .collect::<Vec<_>>(),
-        )
+        let vert_properties = mesh
+            .positions
+            .iter()
+            .flat_map(|v| [v.x, v.y, v.z])
+            .collect::<Vec<_>>();
+
+        let tri_verts = mesh
+            .triangle_indices
+            .iter()
+            .flat_map(|t| [t.0, t.1, t.2])
+            .collect::<Vec<_>>();
+
+        assert_eq!(vert_properties.len(), mesh.positions.len() * 3);
+        assert_eq!(tri_verts.len(), mesh.triangle_indices.len() * 3);
+
+        Self {
+            num_prop: 3,
+            vert_properties,
+            tri_verts,
+            ..Default::default()
+        }
     }
 }
 
 impl From<Manifold> for TriangleMesh {
     fn from(manifold: Manifold) -> Self {
-        TriangleMesh::from(manifold.to_mesh())
+        TriangleMesh::from(manifold.get_mesh_gl(0))
     }
 }
 
@@ -307,7 +318,7 @@ impl From<Geometry3D> for TriangleMesh {
     fn from(geo: Geometry3D) -> Self {
         match geo {
             Geometry3D::Mesh(triangle_mesh) => triangle_mesh,
-            Geometry3D::Manifold(manifold) => manifold.to_mesh().into(),
+            Geometry3D::Manifold(manifold) => manifold.get_mesh_gl(0).into(),
             Geometry3D::Collection(ref collection) => collection.into(),
         }
     }
@@ -317,7 +328,7 @@ impl From<&Geometry3D> for TriangleMesh {
     fn from(geo: &Geometry3D) -> Self {
         match geo {
             Geometry3D::Mesh(triangle_mesh) => triangle_mesh.clone(),
-            Geometry3D::Manifold(manifold) => manifold.to_mesh().into(),
+            Geometry3D::Manifold(manifold) => manifold.get_mesh_gl(0).into(),
             Geometry3D::Collection(collection) => collection.into(),
         }
     }
@@ -325,7 +336,7 @@ impl From<&Geometry3D> for TriangleMesh {
 
 impl From<&Geometries3D> for TriangleMesh {
     fn from(geo: &Geometries3D) -> Self {
-        geo.boolean_op(&BooleanOp::Union).to_mesh().into()
+        geo.boolean_op(BooleanOp::Union).get_mesh_gl(0).into()
     }
 }
 

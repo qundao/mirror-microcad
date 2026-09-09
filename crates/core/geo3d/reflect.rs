@@ -39,7 +39,7 @@ impl Reflect3D for cgmath::Vector3<f32> {
         let p: cgmath::Vector3<f32> = plane.p.cast().expect("Valid cast");
         let v = *self - p; // Vector from plane point to the point
         let dist = v.dot(n); // Signed distance from plane
-        *self - 2.0 * dist * n // Reflect across the plane        
+        *self - 2.0 * dist * n // Reflect across the plane
     }
 }
 
@@ -78,7 +78,7 @@ impl Reflect3D for Geometry3D {
     fn reflect_3d(&self, plane: &Plane) -> Self {
         match &self {
             Geometry3D::Mesh(triangle_mesh) => triangle_mesh.reflect_3d(plane).into(),
-            Geometry3D::Manifold(manifold) => TriangleMesh::from(manifold.to_mesh())
+            Geometry3D::Manifold(manifold) => TriangleMesh::from(manifold.get_mesh_gl(0))
                 .reflect_3d(plane)
                 .into(),
             Geometry3D::Collection(collection) => collection.reflect_3d(plane).into(),

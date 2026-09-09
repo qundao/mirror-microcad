@@ -29,7 +29,7 @@ impl Geometries3D {
     }
 
     /// Apply boolean operation on collection and render to manifold.
-    pub fn boolean_op(&self, op: &BooleanOp) -> Rc<Manifold> {
+    pub fn boolean_op(&self, op: BooleanOp) -> Rc<Manifold> {
         let manifold_list: Vec<_> = self
             .0
             .iter()
@@ -48,10 +48,11 @@ impl Geometries3D {
             return Rc::new(Manifold::empty());
         }
 
+        let op = op.into();
         manifold_list[1..]
             .iter()
             .fold(manifold_list[0].clone(), |acc, other| {
-                Rc::new(acc.boolean_op(other, op.into()))
+                Rc::new(acc.boolean(other, op))
             })
     }
 }
