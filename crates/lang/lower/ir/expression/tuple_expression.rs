@@ -28,7 +28,7 @@ where
             self.args
                 .iter()
                 .map(|arg| if let Some(name) = &arg.id {
-                    format!("{} = {}", &name, arg.expression)
+                    format!("{name} = {}", arg.expression)
                 } else {
                     arg.to_string()
                 })

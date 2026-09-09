@@ -118,8 +118,7 @@ impl EvalContext {
             self.warning(&src_ref, EvalError::UnusedGlobalSymbol(id))
         })?;
 
-       
-       Ok(model)
+        Ok(model)
     }
 
     /// Run the closure `f` within the given `stack_frame`.
@@ -217,16 +216,12 @@ impl EvalContext {
 
         if self.stack.current_call_name().is_some() {
             if let Some(id) = name.single_identifier() {
-                match self.get_property(id) {
-                    Ok(value) => {
-                        log::trace!(
-                            "{found} property '{name:?}'",
-                            found = microcad_lang_base::mark!(FOUND)
-                        );
-                        return Ok(Symbol::new(SymbolDef::Value(id.clone(), value), None));
-                    }
-                    Err(err) => return Err(err),
-                }
+                let value = self.get_property(id)?;
+                log::trace!(
+                    "{found} property '{name:?}'",
+                    found = microcad_lang_base::mark!(FOUND)
+                );
+                return Ok(Symbol::new(SymbolDef::Value(id.clone(), value), None));
             }
         }
         log::trace!(
@@ -345,7 +340,7 @@ impl Lookup<Box<EvalError>> for EvalContext {
                     Err(err) => match *err {
                         EvalError::AmbiguousSymbol(ambiguous, others) => {
                             ambiguities.push((origin, EvalError::AmbiguousSymbol ( ambiguous, others )));
-                        }                
+                        }
                         // ignore all kinds of "not found" errors
                         EvalError::SymbolNotFound(_)
                         // for locals
@@ -485,7 +480,7 @@ impl std::fmt::Debug for EvalContext {
         self.stack.pretty_print_call_trace(f, &self.sources)?;
 
         writeln!(f, "\nSources:\n")?;
-        write!(f, "{:?}", &self.sources)?;
+        write!(f, "{:?}", self.sources)?;
 
         write!(f, "\nSymbol Table:\n")?;
         self.root.tree_print(f, TreeState::new_debug(0))?;

@@ -148,10 +148,7 @@ impl Iterator for Ancestors {
     type Item = Model;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let model = match &self.model {
-            Some(model) => model.clone(),
-            None => return None,
-        };
+        let model = &self.model.clone()?;
 
         self.model = model.borrow().parent.clone();
         Some(model.clone())

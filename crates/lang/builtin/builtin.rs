@@ -111,7 +111,7 @@ impl Identifiable for Builtin {
 
 impl std::fmt::Debug for Builtin {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "__builtin::{}", &self.id())
+        write!(f, "__builtin::{}", self.id())
     }
 }
 

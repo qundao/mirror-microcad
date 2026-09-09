@@ -253,7 +253,7 @@ impl LanguageServer for Backend {
                     }) {
                         Ok(uri) => uri,
                         Err(err) => {
-                            return Ok(Some(serde_json::json! ({"error": format!("{err}")})));
+                            return Ok(Some(serde_json::json!({"error": err.to_string()})));
                         }
                     };
 
