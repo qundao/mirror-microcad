@@ -105,6 +105,10 @@ impl<'lib> ResolveContext<'lib> {
             .get(id)
             .and_then(|source_unit| source_unit.ir())
     }
+
+    pub fn lib(&'lib self) -> &'lib Library {
+        self.lib
+    }
 }
 
 pub fn resolve(

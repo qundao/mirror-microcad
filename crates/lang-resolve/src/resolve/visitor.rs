@@ -169,14 +169,16 @@ impl<'lib> visitor::LeafVisitorMut for ResolveVisitor<'lib> {
 
             if let Some(id) = unresolved_path.single_identifier() {
                 if self.local_table().unwrap().exists(id) {
-                    *path = symbol::Path::Resolved(SymbolId::Local(id.to_compact_string()));
+                    paths.push(symbol::Path::Resolved(SymbolId::Local(
+                        id.to_compact_string(),
+                    )));
                 } else {
                     todo!("Error handling: Local not in scope {id}")
                 }
             }
 
             match paths.len() {
-                0 => todo!("Could not resolve path"),
+                0 => todo!("Could not resolve path {unresolved_path}"),
                 1 => {
                     *path = paths.first().cloned().unwrap();
                 }

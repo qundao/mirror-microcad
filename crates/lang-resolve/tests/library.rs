@@ -7,7 +7,7 @@ use std::str::FromStr;
 
 use microcad_lang_base::{DiagRenderOptions, Diagnostics};
 use microcad_lang_lower::ir::UnresolvedPath;
-use microcad_lang_resolve::{Library, ResolveContext, SymbolNodeExt};
+use microcad_lang_resolve::{Library, ResolveContext, SymbolNodeExt, SymbolNodeRef};
 
 fn ctx<'lib>(lib: &'lib mut Library) -> ResolveContext<'lib> {
     let mut ctx = ResolveContext::new(lib);
@@ -26,11 +26,11 @@ fn load_source_inline_module() {
     let mut context = ctx(&mut library);
 
     match context.load_file("tests/test_cases/inline_module.µcad") {
-        Ok(_) => {
+        Ok(context) => {
+            let library = context.lib();
             for child in library.root().children() {
                 println!("{child}");
             }
-
             let inline_module = library.root().find_child("inline_module").expect("A child");
 
             let b = library
@@ -53,7 +53,7 @@ fn load_source_inline_module() {
                 .look_up(d, &path("b"))
                 .expect("An inline module 'b'");
 
-            insta::assert_snapshot!("load_source_inline_module", library)
+            insta::assert_snapshot!("load_source_inline_module", library);
         }
         Err(err) => {
             let diagnostics = Diagnostics::from(context.diag);
@@ -82,4 +82,19 @@ fn load_source_file_module() {
 }
 
 #[test]
-fn load() {}
+fn resolve() {
+    let mut library = Library::new();
+    let mut context = ctx(&mut library);
+
+    context
+        .load_file("tests/test_cases/resolve.µcad")
+        .expect("No error")
+        .resolve();
+
+    let symbol = library
+        .look_up(library.root, &path("::resolve"))
+        .map(|id| SymbolNodeRef::new(id, &library.arena))
+        .expect("A node");
+
+    insta::assert_snapshot!("resolve", &symbol)
+}
