@@ -4,7 +4,7 @@
 //! Resolve locals.
 
 use crate::{
-    ResolveContext, SymbolNodeRef,
+    Library, ResolveContext, SymbolNodeRef,
     library::{Symbol, SymbolArena, SymbolNodeId, symbol, visitor},
     resolve::stack::{self, LocalTable, ResolveStack, ResolveStackFrame, ScopeAccess, SymbolFrame},
 };
@@ -21,6 +21,10 @@ impl<'lib> ResolveVisitor<'lib> {
             stack: ResolveStack::default(),
             context,
         }
+    }
+
+    pub fn lib(&'lib self) -> &'lib Library {
+        self.context.lib
     }
 
     pub fn transform<F>(&mut self, mut f: F)
@@ -130,27 +134,54 @@ impl<'lib> visitor::VisitorMut for ResolveVisitor<'lib> {
 impl<'lib> visitor::LeafVisitorMut for ResolveVisitor<'lib> {
     fn visit_path(&mut self, path: &mut symbol::Path) {
         if let symbol::Path::Unresolved(unresolved_path) = path {
-            // Try to look up symbols
-            /*match self.context.look_up(unresolved_path) {
-                Some(symbol_id) => {
-                    *path = symbol::Path::Resolved(symbol_id);
-                }
-                None => {
-                    if let Some(id) = unresolved_path.single_identifier() {
-                        if self.local_table().unwrap().exists(id) {
-                            *path = symbol::Path::Resolved(SymbolId::Local(id.to_compact_string()));
-                        } else {
-                            todo!("Error handling: Local not in scope {id}")
-                        }
+            let mut paths = Vec::new();
+
+            // Look up in current library being resolved.
+            if let Some(symbol_node_id) = self.stack.symbol_node_id() {
+                match self.context.lib.look_up(symbol_node_id, unresolved_path) {
+                    Some(node_id) => {
+                        paths.push(symbol::Path::Resolved(SymbolId::Item(node_id)));
                     }
+                    None => {}
                 }
-            }*/
+            }
+
+            // Look up external libraries.
+            if !unresolved_path.is_absolute
+                && let Some(external_name) = unresolved_path.external_name()
+                && let Some(dep) = self.context.lib.dependencies.get(&external_name)
+            {
+                let lib = self
+                    .context
+                    .lib_cache
+                    .get(dep)
+                    .expect("Library not loaded.");
+
+                let resolved = lib.look_up(lib.root, unresolved_path).map(|id| {
+                    symbol::Path::Resolved(SymbolId::External {
+                        lib_id: lib.id(),
+                        id,
+                    })
+                });
+
+                paths.extend(resolved);
+            }
 
             if let Some(id) = unresolved_path.single_identifier() {
                 if self.local_table().unwrap().exists(id) {
                     *path = symbol::Path::Resolved(SymbolId::Local(id.to_compact_string()));
                 } else {
                     todo!("Error handling: Local not in scope {id}")
+                }
+            }
+
+            match paths.len() {
+                0 => todo!("Could not resolve path"),
+                1 => {
+                    *path = paths.first().cloned().unwrap();
+                }
+                n => {
+                    todo!("Ambiguous symbols, found {n} paths");
                 }
             }
         }

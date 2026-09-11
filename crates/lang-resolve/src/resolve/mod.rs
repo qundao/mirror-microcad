@@ -23,14 +23,17 @@ pub mod stack;
 mod type_check;
 pub mod visitor;
 
-use microcad_lang_base::{CompilationResult, GetSourceByHash, HashId, LibraryId, PushDiag};
+use microcad_lang_base::{
+    CompilationResult, GetSourceByHash, HashId, LibraryId, PushDiag, SymbolId,
+};
 
-use microcad_lang_lower::Ir;
+use microcad_lang_lower::{Ir, ir::UnresolvedPath};
 pub use resolver::Resolver;
 
 use crate::{
     Library, ResolveResult,
     error::ResolveError,
+    library::SymbolNodeId,
     resolve::cache::{LibraryCache, SourceCache},
 };
 
