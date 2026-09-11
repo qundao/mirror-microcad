@@ -228,7 +228,7 @@ fn svg_sample_sketch() -> std::io::Result<()> {
         Geometry2D::Polygon(
             Circle::circle_polygon(circle.radius, 32).translate(circle.offset.x, circle.offset.y),
         ),
-        BooleanOp::Intersection,
+        BooleanOp::Intersect,
     );
 
     intersection.write_svg_mapped(
