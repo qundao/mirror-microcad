@@ -89,6 +89,12 @@ pub(crate) struct SymbolFrame {
     pub node_id: SymbolNodeId,
 }
 
+impl SymbolFrame {
+    pub fn new(node_id: SymbolNodeId) -> Self {
+        Self { node_id }
+    }
+}
+
 #[derive(Debug, From)]
 pub(crate) enum ResolveStackFrame {
     Source(SourceFrame),

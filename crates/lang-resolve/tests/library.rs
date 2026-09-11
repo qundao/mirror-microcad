@@ -42,12 +42,12 @@ fn load_source_inline_module() {
                 .look_up(b, &path("::inline_module::b::d"))
                 .expect("An inline module 'd'");
 
-            let c = library
+            let _c = library
                 .look_up(b, &path("::inline_module::b::C"))
                 .expect("A constant 'C'");
 
             // Search `b` in `d`
-            let b = library
+            let _b = library
                 .look_up(d, &path("b"))
                 .expect("An inline module 'b'");
 
@@ -73,4 +73,9 @@ fn load_source_file_module() {
         .expect("No error");
 
     insta::assert_snapshot!("load_source_file_module", library)
+}
+
+#[test]
+fn load() {
+
 }

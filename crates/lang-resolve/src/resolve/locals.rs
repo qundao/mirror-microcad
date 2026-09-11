@@ -8,7 +8,7 @@ use crate::{
     library::{Symbol, symbol, visitor},
     resolve::{
         self,
-        stack::{self, ResolveStack, ResolveStackFrame},
+        stack::{self, ResolveStack, ResolveStackFrame, SymbolFrame},
     },
 };
 use microcad_lang_base::{
@@ -147,9 +147,11 @@ impl<'ctx> Locals for ResolveVisitor<'ctx> {
 }
 
 impl<'ctx> visitor::VisitorMut for ResolveVisitor<'ctx> {
-    fn visit_symbol<'a>(&mut self, _node: SymbolNodeRef<'a>, symbol: &mut Symbol) {
-        self.visit_meta(&mut symbol.meta);
-        self.visit_def(&mut symbol.def);
+    fn visit_symbol<'a>(&mut self, node: SymbolNodeRef<'a>, symbol: &mut Symbol) {
+        self.scope(SymbolFrame::new(node.id), |visitor| {
+            visitor.visit_meta(&mut symbol.meta);
+            visitor.visit_def(&mut symbol.def);
+        })
     }
 }
 
