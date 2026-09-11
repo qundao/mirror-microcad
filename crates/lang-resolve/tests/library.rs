@@ -7,10 +7,10 @@ use std::str::FromStr;
 
 use microcad_lang_base::{DiagRenderOptions, Diagnostics};
 use microcad_lang_lower::ir::UnresolvedPath;
-use microcad_lang_resolve::{ResolveContext, SymbolNodeExt};
+use microcad_lang_resolve::{Library, ResolveContext, SymbolNodeExt};
 
-fn ctx() -> ResolveContext {
-    let mut ctx = ResolveContext::new();
+fn ctx<'lib>(lib: &'lib mut Library) -> ResolveContext<'lib> {
+    let mut ctx = ResolveContext::new(lib);
     ctx.load_external_library("../../crates/std/lib/std")
         .expect("No error");
     ctx
@@ -22,9 +22,11 @@ fn path(name: &str) -> UnresolvedPath {
 
 #[test]
 fn load_source_inline_module() {
-    let context = ctx();
-    match ctx().load_file("tests/test_cases/inline_module.µcad") {
-        Ok(library) => {
+    let mut library = Library::new();
+    let mut context = ctx(&mut library);
+
+    match context.load_file("tests/test_cases/inline_module.µcad") {
+        Ok(_) => {
             for child in library.root().children() {
                 println!("{child}");
             }
@@ -55,11 +57,12 @@ fn load_source_inline_module() {
         }
         Err(err) => {
             let diagnostics = Diagnostics::from(context.diag);
+            let source_cache = context.src_cache;
 
             panic!(
                 "{diagnostics}\n{err:?}",
                 diagnostics = diagnostics
-                    .render_to_string(&ResolveContext::new(), &DiagRenderOptions::default())
+                    .render_to_string(&source_cache, &DiagRenderOptions::default())
                     .unwrap()
             )
         }
@@ -68,7 +71,10 @@ fn load_source_inline_module() {
 
 #[test]
 fn load_source_file_module() {
-    let library = ctx()
+    let mut library = Library::new();
+    let mut context = ctx(&mut library);
+
+    context
         .load_file("tests/test_cases/file_module.µcad")
         .expect("No error");
 
@@ -76,6 +82,4 @@ fn load_source_file_module() {
 }
 
 #[test]
-fn load() {
-
-}
+fn load() {}

@@ -19,12 +19,6 @@ use serde::{Deserialize, Serialize};
 
 pub use symbol::*;
 
-use crate::{
-    ResolveContext, ResolveError, ResolveResult,
-    error::ResolveErrorKind,
-    locate::{self, mu_toml_path},
-};
-
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Library {
     pub manifest: Option<Manifest>,
@@ -46,15 +40,20 @@ impl std::hash::Hash for Library {
 
 impl Library {
     /// An empty lib without dependencies or source file.
-    pub fn new(manifest: Option<Manifest>, root: impl Into<Symbol>) -> Self {
+    pub fn new() -> Self {
         let mut arena = SymbolArena::default();
-        let root = arena.new_node(root.into());
+        let root = arena.new_node(Symbol::root(None));
         Self {
-            manifest,
+            manifest: None,
             dependencies: Default::default(),
             root,
             arena,
         }
+    }
+
+    pub fn with_manifest(&mut self, manifest: Manifest) -> &mut Self {
+        self.manifest = Some(manifest);
+        self
     }
 
     /// Returns true if this library does not have standard library as dependency.

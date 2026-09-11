@@ -5,10 +5,10 @@
 
 use derive_more::From;
 
-use crate::{
-    library::SymbolNodeId,
-    resolve::locals::{LocalTable, Locals},
-};
+use crate::library::SymbolNodeId;
+
+mod stackframe;
+pub use stackframe::{LocalTable, StackFrame};
 
 #[derive(Debug, Default)]
 pub(crate) struct FunctionFrame {
@@ -16,7 +16,7 @@ pub(crate) struct FunctionFrame {
     locals: LocalTable,
 }
 
-impl Locals for FunctionFrame {
+impl StackFrame for FunctionFrame {
     fn local_table(&self) -> Option<&LocalTable> {
         self.locals.local_table()
     }
@@ -29,7 +29,7 @@ impl Locals for FunctionFrame {
 #[derive(Debug, Default)]
 pub(crate) struct FunctionScopeFrame(LocalTable);
 
-impl Locals for FunctionScopeFrame {
+impl StackFrame for FunctionScopeFrame {
     fn local_table(&self) -> Option<&LocalTable> {
         self.0.local_table()
     }
@@ -45,7 +45,7 @@ pub(crate) struct WorkbenchFrame {
     locals: LocalTable,
 }
 
-impl Locals for WorkbenchFrame {
+impl StackFrame for WorkbenchFrame {
     fn local_table(&self) -> Option<&LocalTable> {
         self.locals.local_table()
     }
@@ -58,7 +58,7 @@ impl Locals for WorkbenchFrame {
 #[derive(Debug, Default)]
 pub(crate) struct WorkbenchGroupFrame(LocalTable);
 
-impl Locals for WorkbenchGroupFrame {
+impl StackFrame for WorkbenchGroupFrame {
     fn local_table(&self) -> Option<&LocalTable> {
         self.0.local_table()
     }
@@ -74,7 +74,7 @@ pub(crate) struct SourceFrame {
     locals: LocalTable,
 }
 
-impl Locals for SourceFrame {
+impl StackFrame for SourceFrame {
     fn local_table(&self) -> Option<&LocalTable> {
         self.locals.local_table()
     }
@@ -105,7 +105,7 @@ pub(crate) enum ResolveStackFrame {
     Symbol(SymbolFrame),
 }
 
-impl Locals for ResolveStackFrame {
+impl StackFrame for ResolveStackFrame {
     fn local_table(&self) -> Option<&LocalTable> {
         match &self {
             ResolveStackFrame::Source(source_file_frame) => source_file_frame.local_table(),
@@ -127,9 +127,16 @@ impl Locals for ResolveStackFrame {
             _ => None,
         }
     }
+
+    fn symbol_node_id(&self) -> Option<SymbolNodeId> {
+        match self {
+            ResolveStackFrame::Symbol(SymbolFrame { node_id }) => Some(*node_id),
+            _ => None,
+        }
+    }
 }
 
-/// A generic stack.
+/// A stack for resolving.
 #[derive(Debug)]
 pub struct ResolveStack(Vec<ResolveStackFrame>);
 
@@ -198,3 +205,5 @@ impl Default for ResolveStack {
         Self(vec![])
     }
 }
+
+

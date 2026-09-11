@@ -18,10 +18,10 @@ mod bind;
 mod cache;
 mod case_check;
 mod loader;
-pub mod locals;
 mod resolver;
 pub mod stack;
 mod type_check;
+pub mod visitor;
 
 use microcad_lang_base::{CompilationResult, GetSourceByHash, HashId, LibraryId, PushDiag};
 
@@ -34,23 +34,23 @@ use crate::{
     resolve::cache::{LibraryCache, SourceCache},
 };
 
-/// Resolve Context
-pub struct ResolveContext {
+/// A Resolve Context to resolve exactly one library at a time.
+pub struct ResolveContext<'lib> {
     // pub resolver: Box<dyn Resolver>,
     pub diag: Vec<ResolveError>,
     pub lib_search_paths: Vec<std::path::PathBuf>,
-
+    pub lib: &'lib mut Library,
     pub lib_cache: LibraryCache,
     pub src_cache: SourceCache,
 }
 
-impl PushDiag<ResolveError> for ResolveContext {
+impl<'lib> PushDiag<ResolveError> for ResolveContext<'lib> {
     fn push_diag(&mut self, err: impl Into<ResolveError>) {
         self.diag.push(err.into());
     }
 }
 
-impl GetSourceByHash for ResolveContext {
+impl<'lib> GetSourceByHash for ResolveContext<'lib> {
     fn get_source_by_hash(
         &'_ self,
         hash: microcad_lang_base::HashId,
@@ -79,11 +79,12 @@ impl GetSourceByHash for ResolveContext {
 /// |   ├── bar.mu
 /// |   ... # More files
 /// ├── baz.mu
-impl ResolveContext {
-    pub fn new() -> Self {
+impl<'lib> ResolveContext<'lib> {
+    pub fn new(lib: &'lib mut Library) -> Self {
         Self {
             diag: Default::default(),
             lib_search_paths: vec![microcad_std::global_library_search_path()],
+            lib,
             lib_cache: LibraryCache::default(),
             src_cache: SourceCache::default(),
         }

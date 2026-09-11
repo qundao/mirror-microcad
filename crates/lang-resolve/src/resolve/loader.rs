@@ -9,68 +9,65 @@ use microcad_lang_lower::ir;
 use crate::{
     Library, Manifest, ResolveContext, ResolveError, ResolveResult,
     error::ResolveErrorKind,
-    library::{Symbol, SymbolArena, SymbolNodeId},
+    library::{Symbol, SymbolNodeId},
     locate,
-    resolve::locals::ResolveVisitor,
+    resolve::visitor::ResolveVisitor,
 };
 
-impl ResolveContext {
+impl<'lib> ResolveContext<'lib> {
     /// Load a single file as library.
-    pub fn load_file(&mut self, file_mu: impl AsRef<std::path::Path>) -> ResolveResult<Library> {
-        let mut arena = SymbolArena::default();
-        let root = arena.new_node(Symbol::root(None));
-
-        let mut lib = Library::new(None, Symbol::root(None));
-        if !lib.no_std() {
-            lib.add_std();
+    pub fn load_file(&mut self, file_mu: impl AsRef<std::path::Path>) -> ResolveResult<&mut Self> {
+        if !self.lib.no_std() {
+            self.lib.add_std();
         }
 
-        self._load_source(&mut lib, &file_mu, Some(root))?;
-        Ok(lib)
+        let root = self.lib.root;
+        self._load_source(&file_mu, Some(root))?;
+        Ok(self)
+    }
+
+    pub fn resolve(&self, library: &mut Library) {
+        let mut locals = ResolveVisitor::new(self);
+        use crate::library::visitor::VisitorMut;
+        locals.visit(library);
     }
 
     /// Load a library from a directory containing a `mu.toml` file.
     pub fn load_library(
         &mut self,
         lib_path: impl AsRef<std::path::Path>,
-    ) -> ResolveResult<Library> {
+    ) -> ResolveResult<&mut Self> {
         // Locate `lib.mu` in directory
         let lib_mu = locate::lib_mu_path(&lib_path)?;
         log::debug!("Loading library from {lib_mu:?}");
 
         // Load manifest and load library
-        let mut lib = match Manifest::load(locate::mu_toml_path(lib_path)) {
+        match Manifest::load(locate::mu_toml_path(lib_path)) {
             Ok(manifest) => {
                 log::debug!("Loaded manifest:\n{manifest}");
-
-                let mut lib = Library::new(Some(manifest), Symbol::root(None));
-                let manifest = lib.manifest.clone().unwrap();
-                if !lib.no_std() {
-                    lib.add_std();
+                if !self.lib.no_std() {
+                    self.lib.add_std();
                 }
 
                 if let Some(deps) = &manifest.dependencies {
                     for (name, dep) in deps.iter() {
                         let lib_id = self.load_external_library(dep.path.as_ref().unwrap())?;
-                        lib.dependencies.insert(name.to_compact_string(), lib_id);
+                        self.lib
+                            .dependencies
+                            .insert(name.to_compact_string(), lib_id);
                     }
                 }
-                lib
+
+                self.lib.with_manifest(manifest);
             }
             // Error loading manifest or manifest not found, fallback to defaults.
             Err(err) => {
                 log::warn!("No manifest:\n{err:?}");
                 self.push_diag(ResolveError::new(err));
-                Library::new(None, Symbol::root(None))
             }
         };
-        self._load_source(&mut lib, &lib_mu, None)?;
-
-        let mut locals = ResolveVisitor::new(self);
-        use crate::library::visitor::VisitorMut;
-        locals.visit(&mut lib);
-
-        Ok(lib)
+        self._load_source(&lib_mu, None)?;
+        Ok(self)
     }
 
     fn load_source(&mut self, path: impl AsRef<std::path::Path>) -> ResolveResult<HashId> {
@@ -93,13 +90,14 @@ impl ResolveContext {
         &mut self,
         lib_path: impl AsRef<std::path::Path>,
     ) -> ResolveResult<LibraryId> {
-        let lib = self.load_library(lib_path)?;
+        let mut lib = Library::new();
+        let mut context = ResolveContext::new(&mut lib);
+        context.load_library(lib_path)?;
         self.lib_cache.insert(lib)
     }
 
     pub fn _load_source(
         &mut self,
-        library: &mut Library,
         path: impl AsRef<std::path::Path>,
         parent_id: Option<SymbolNodeId>,
     ) -> ResolveResult<SymbolNodeId> {
@@ -122,12 +120,12 @@ impl ResolveContext {
                     _ => source_node.get().clone().into(),
                 };
                 let id = if let Some(parent_id) = parent_id {
-                    let id = library.arena.new_node(symbol);
-                    parent_id.append(id, &mut library.arena);
+                    let id = self.lib.arena.new_node(symbol);
+                    parent_id.append(id, &mut self.lib.arena);
                     id
                 } else {
-                    *library.root_mut().get_mut() = symbol;
-                    library.root.clone()
+                    *self.lib.root_mut().get_mut() = symbol;
+                    self.lib.root.clone()
                 };
 
                 // Traverse children recursively
@@ -136,17 +134,17 @@ impl ResolveContext {
                     let child_id = match child.get().def {
                         ir::Def::FileModule(_) => {
                             let path = locate::file_module_path(&path, item.name())?;
-                            match self._load_source(library, path, Some(id)) {
+                            match self._load_source(path, Some(id)) {
                                 Ok(id) => id,
                                 Err(err) => {
                                     self.push_diag(err);
-                                    library.arena.new_node(Symbol::root(None))
+                                    self.lib.arena.new_node(Symbol::root(None))
                                 }
                             }
                         }
-                        _ => tree::adopt_tree_to_arena(&mut library.arena, child.id, source_arena),
+                        _ => tree::adopt_tree_to_arena(&mut self.lib.arena, child.id, source_arena),
                     };
-                    id.append(child_id, &mut library.arena);
+                    id.append(child_id, &mut self.lib.arena);
                 }
 
                 Ok(id)
