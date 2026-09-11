@@ -8,7 +8,7 @@ use derive_more::From;
 use crate::library::SymbolNodeId;
 
 mod stackframe;
-pub use stackframe::{LocalTable, StackFrame};
+pub use stackframe::{LocalTable, ScopeAccess};
 
 #[derive(Debug, Default)]
 pub(crate) struct FunctionFrame {
@@ -16,7 +16,7 @@ pub(crate) struct FunctionFrame {
     locals: LocalTable,
 }
 
-impl StackFrame for FunctionFrame {
+impl ScopeAccess for FunctionFrame {
     fn local_table(&self) -> Option<&LocalTable> {
         self.locals.local_table()
     }
@@ -29,7 +29,7 @@ impl StackFrame for FunctionFrame {
 #[derive(Debug, Default)]
 pub(crate) struct FunctionScopeFrame(LocalTable);
 
-impl StackFrame for FunctionScopeFrame {
+impl ScopeAccess for FunctionScopeFrame {
     fn local_table(&self) -> Option<&LocalTable> {
         self.0.local_table()
     }
@@ -45,7 +45,7 @@ pub(crate) struct WorkbenchFrame {
     locals: LocalTable,
 }
 
-impl StackFrame for WorkbenchFrame {
+impl ScopeAccess for WorkbenchFrame {
     fn local_table(&self) -> Option<&LocalTable> {
         self.locals.local_table()
     }
@@ -58,7 +58,7 @@ impl StackFrame for WorkbenchFrame {
 #[derive(Debug, Default)]
 pub(crate) struct WorkbenchGroupFrame(LocalTable);
 
-impl StackFrame for WorkbenchGroupFrame {
+impl ScopeAccess for WorkbenchGroupFrame {
     fn local_table(&self) -> Option<&LocalTable> {
         self.0.local_table()
     }
@@ -74,7 +74,7 @@ pub(crate) struct SourceFrame {
     locals: LocalTable,
 }
 
-impl StackFrame for SourceFrame {
+impl ScopeAccess for SourceFrame {
     fn local_table(&self) -> Option<&LocalTable> {
         self.locals.local_table()
     }
@@ -105,7 +105,7 @@ pub(crate) enum ResolveStackFrame {
     Symbol(SymbolFrame),
 }
 
-impl StackFrame for ResolveStackFrame {
+impl ScopeAccess for ResolveStackFrame {
     fn local_table(&self) -> Option<&LocalTable> {
         match &self {
             ResolveStackFrame::Source(source_file_frame) => source_file_frame.local_table(),
@@ -161,6 +161,18 @@ impl ResolveStack {
         self.0.last_mut().expect("A stack frame")
     }
 
+    pub fn current_symbol_scope(&self) -> impl Iterator<Item = &ResolveStackFrame> {
+        self.0.iter().rev().scan(false, |hit_symbol_frame, frame| {
+            if *hit_symbol_frame {
+                return None;
+            }
+            if matches!(frame, ResolveStackFrame::Symbol(_)) {
+                *hit_symbol_frame = true;
+            }
+            Some(frame)
+        })
+    }
+
     /// Traverses the stack from top (innermost) to bottom (outermost) immutably.
     /// Halts early if the closure returns `ControlFlow::Break`.
     pub fn traversal<T>(
@@ -206,4 +218,19 @@ impl Default for ResolveStack {
     }
 }
 
+impl ScopeAccess for ResolveStack {
+    fn local_table(&self) -> Option<&LocalTable> {
+        self.top().local_table()
+    }
 
+    fn local_table_mut(&mut self) -> Option<&mut LocalTable> {
+        self.top_mut().local_table_mut()
+    }
+
+    fn symbol_node_id(&self) -> Option<SymbolNodeId> {
+        self.current_symbol_scope().find_map(|frame| match frame {
+            ResolveStackFrame::Symbol(SymbolFrame { node_id }) => Some(*node_id),
+            _ => None,
+        })
+    }
+}

@@ -17,7 +17,7 @@ impl LocalTable {
     }
 }
 
-pub trait StackFrame {
+pub trait ScopeAccess {
     /// Get current local table, if any.
     fn local_table(&self) -> Option<&LocalTable>;
     fn local_table_mut(&mut self) -> Option<&mut LocalTable>;
@@ -53,7 +53,7 @@ pub trait StackFrame {
     }
 }
 
-impl StackFrame for LocalTable {
+impl ScopeAccess for LocalTable {
     fn local_table(&self) -> Option<&LocalTable> {
         Some(&self)
     }

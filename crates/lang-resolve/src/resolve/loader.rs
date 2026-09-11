@@ -26,10 +26,8 @@ impl<'lib> ResolveContext<'lib> {
         Ok(self)
     }
 
-    pub fn resolve(&self, library: &mut Library) {
-        let mut locals = ResolveVisitor::new(self);
-        use crate::library::visitor::VisitorMut;
-        locals.visit(library);
+    pub fn resolve(&'lib mut self) {
+        ResolveVisitor::new(self).visit()
     }
 
     /// Load a library from a directory containing a `mu.toml` file.

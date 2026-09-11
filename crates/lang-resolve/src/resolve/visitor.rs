@@ -5,27 +5,48 @@
 
 use crate::{
     ResolveContext, SymbolNodeRef,
-    library::{Symbol, SymbolNodeId, symbol, visitor},
-    resolve::{
-        self,
-        stack::{self, LocalTable, ResolveStack, ResolveStackFrame, StackFrame, SymbolFrame},
-    },
+    library::{Symbol, SymbolArena, SymbolNodeId, symbol, visitor},
+    resolve::stack::{self, LocalTable, ResolveStack, ResolveStackFrame, ScopeAccess, SymbolFrame},
 };
-use microcad_lang_base::{
-    Identifier, SingleIdentifier, SrcRef, SrcReferrer, SymbolId, ToCompactString,
-};
+use microcad_lang_base::{Identifier, SingleIdentifier, SymbolId, ToCompactString};
 
 pub struct ResolveVisitor<'lib> {
     stack: ResolveStack,
-    context: &'lib ResolveContext<'lib>,
+    context: &'lib mut ResolveContext<'lib>,
 }
 
 impl<'lib> ResolveVisitor<'lib> {
-    pub fn new(context: &'lib ResolveContext) -> Self {
+    pub fn new(context: &'lib mut ResolveContext<'lib>) -> Self {
         Self {
             stack: ResolveStack::default(),
             context,
         }
+    }
+
+    pub fn transform<F>(&mut self, mut f: F)
+    where
+        F: FnMut(&mut ResolveVisitor<'lib>, SymbolNodeId, &mut Symbol),
+    {
+        let lib = &mut *self.context.lib;
+        let node_ids: Vec<SymbolNodeId> = lib.root.descendants(&lib.arena).collect();
+        let arena_ptr = &mut lib.arena as *mut SymbolArena;
+        node_ids.into_iter().for_each(|id| {
+            // 1. Mutable reference to payload
+            let payload = unsafe { (&mut *arena_ptr)[id].get_mut() };
+
+            // 2. Both are passed together safely
+            f(self, id, payload);
+        });
+    }
+
+    pub fn visit(&mut self) {
+        use crate::library::visitor::VisitorMut;
+        self.transform(|visitor, id, symbol| {
+            visitor.scope(SymbolFrame::new(id), |visitor| {
+                visitor.visit_meta(&mut symbol.meta);
+                visitor.visit_def(&mut symbol.def);
+            })
+        });
     }
 
     pub fn scope<T>(
@@ -56,13 +77,13 @@ impl<'lib> ResolveVisitor<'lib> {
     }
 }
 
-impl<'lib> StackFrame for ResolveVisitor<'lib> {
+impl<'lib> ScopeAccess for ResolveVisitor<'lib> {
     fn local_table(&self) -> Option<&LocalTable> {
-        self.stack.top().local_table()
+        self.stack.local_table()
     }
 
     fn local_table_mut(&mut self) -> Option<&mut LocalTable> {
-        self.stack.top_mut().local_table_mut()
+        self.stack.local_table_mut()
     }
 
     fn declare_local(&mut self, id: Identifier) {
@@ -89,7 +110,11 @@ impl<'lib> StackFrame for ResolveVisitor<'lib> {
     }
 
     fn unused_locals(&self) -> impl Iterator<Item = &Identifier> {
-        self.stack.top().unused_locals()
+        self.stack.unused_locals()
+    }
+
+    fn symbol_node_id(&self) -> Option<SymbolNodeId> {
+        self.stack.symbol_node_id()
     }
 }
 
