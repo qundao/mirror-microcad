@@ -3,11 +3,12 @@
 
 use derive_more::{Display, From};
 use microcad_lang_base::{
-    BuiltinId, Identifier, Name, SingleIdentifier, SrcRef, SrcReferrer, SymbolId,
+    BuiltinId, Identifier, Name, SingleIdentifier, SrcRef, SrcReferrer, SymbolId, ToCompactString,
 };
 use miette::SourceSpan;
 use serde::{Deserialize, Serialize};
 
+/// A path that needs to be resolved.
 #[derive(Clone, Debug, From, Hash, PartialEq, Eq, Serialize, Deserialize)]
 pub struct UnresolvedPath {
     pub is_absolute: bool,
@@ -23,6 +24,25 @@ impl UnresolvedPath {
             && prefix.as_str() == "__mu"
         {
             Some(BuiltinId::from(self.to_string().as_str()))
+        } else {
+            None
+        }
+    }
+
+    /// Returns the name of an external library, presumably the first part of this path.
+    ///
+    /// The path must:
+    /// * Be relative and not absolute
+    /// * If path starts with `mu`, the second path is returned.
+    pub fn external_name(&self) -> Option<Name> {
+        if !self.is_absolute
+            && let Some(part) = self.parts.first()
+        {
+            if part.as_str() == "mu" {
+                self.parts.get(1).map(|part| part.to_compact_string())
+            } else {
+                Some(part.to_compact_string())
+            }
         } else {
             None
         }
