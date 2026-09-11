@@ -41,7 +41,7 @@ pub mod consts {
     pub use std::f64::consts::TAU;
 }
 
-use boolean_op::BooleanOp;
+pub use boolean_op::BooleanOp;
 
 pub use bounds::*;
 pub use color::*;
