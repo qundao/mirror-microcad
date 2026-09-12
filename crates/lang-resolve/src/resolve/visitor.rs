@@ -4,34 +4,41 @@
 //! Resolve locals.
 
 use crate::{
-    Library, ResolveContext, SymbolNodeRef,
+    Library, ResolveLibraryContext, SymbolNodeRef,
     library::{Symbol, SymbolArena, SymbolNodeId, symbol, visitor},
-    resolve::stack::{self, LocalTable, ResolveStack, ResolveStackFrame, ScopeAccess, SymbolFrame},
+    resolve::{
+        ResolveContext,
+        stack::{self, LocalTable, ResolveStack, ResolveStackFrame, ScopeAccess, SymbolFrame},
+    },
 };
 use microcad_lang_base::{Identifier, SingleIdentifier, SymbolId, ToCompactString};
 
-pub struct ResolveVisitor<'lib> {
+pub struct ResolveVisitor<'a, 'lib, 'ctx> {
     stack: ResolveStack,
-    context: &'lib mut ResolveContext<'lib>,
+    lib_ctx: &'a mut ResolveLibraryContext<'lib, 'ctx>,
 }
 
-impl<'lib> ResolveVisitor<'lib> {
-    pub fn new(context: &'lib mut ResolveContext<'lib>) -> Self {
+impl<'a, 'lib, 'ctx> ResolveVisitor<'a, 'lib, 'ctx> {
+    pub fn new(lib_ctx: &'a mut ResolveLibraryContext<'lib, 'ctx>) -> Self {
         Self {
             stack: ResolveStack::default(),
-            context,
+            lib_ctx,
         }
     }
 
     pub fn lib(&'lib self) -> &'lib Library {
-        self.context.lib
+        self.lib_ctx.lib
+    }
+
+    pub fn ctx(&'ctx self) -> &'ctx ResolveContext {
+        &self.lib_ctx.ctx()
     }
 
     pub fn transform<F>(&mut self, mut f: F)
     where
-        F: FnMut(&mut ResolveVisitor<'lib>, SymbolNodeId, &mut Symbol),
+        F: FnMut(&mut ResolveVisitor<'a, 'lib, 'ctx>, SymbolNodeId, &mut Symbol),
     {
-        let lib = &mut *self.context.lib;
+        let lib = &mut *self.lib_ctx.lib;
         let node_ids: Vec<SymbolNodeId> = lib.root.descendants(&lib.arena).collect();
         let arena_ptr = &mut lib.arena as *mut SymbolArena;
         node_ids.into_iter().for_each(|id| {
@@ -64,9 +71,9 @@ impl<'lib> ResolveVisitor<'lib> {
         self.stack = stack;
 
         // 2. Define a guard that pops the frame on Drop
-        struct PopGuard<'a, 'lib>(&'a mut ResolveVisitor<'lib>);
+        struct PopGuard<'b, 'a, 'ctx, 'lib>(&'b mut ResolveVisitor<'a, 'lib, 'ctx>);
 
-        impl<'a, 'lib> Drop for PopGuard<'a, 'lib> {
+        impl<'b, 'a, 'ctx, 'lib> Drop for PopGuard<'b, 'a, 'ctx, 'lib> {
             fn drop(&mut self) {
                 self.0.stack.pop();
             }
@@ -81,7 +88,7 @@ impl<'lib> ResolveVisitor<'lib> {
     }
 }
 
-impl<'lib> ScopeAccess for ResolveVisitor<'lib> {
+impl<'a, 'lib, 'ctx> ScopeAccess for ResolveVisitor<'a, 'lib, 'ctx> {
     fn local_table(&self) -> Option<&LocalTable> {
         self.stack.local_table()
     }
@@ -122,8 +129,8 @@ impl<'lib> ScopeAccess for ResolveVisitor<'lib> {
     }
 }
 
-impl<'lib> visitor::VisitorMut for ResolveVisitor<'lib> {
-    fn visit_symbol<'a>(&mut self, node: SymbolNodeRef<'a>, symbol: &mut Symbol) {
+impl<'a, 'lib, 'ctx> visitor::VisitorMut for ResolveVisitor<'a, 'lib, 'ctx> {
+    fn visit_symbol<'b>(&mut self, node: SymbolNodeRef<'b>, symbol: &mut Symbol) {
         self.scope(SymbolFrame::new(node.id), |visitor| {
             visitor.visit_meta(&mut symbol.meta);
             visitor.visit_def(&mut symbol.def);
@@ -131,14 +138,14 @@ impl<'lib> visitor::VisitorMut for ResolveVisitor<'lib> {
     }
 }
 
-impl<'lib> visitor::LeafVisitorMut for ResolveVisitor<'lib> {
+impl<'a, 'lib, 'ctx> visitor::LeafVisitorMut for ResolveVisitor<'a, 'lib, 'ctx> {
     fn visit_path(&mut self, path: &mut symbol::Path) {
         if let symbol::Path::Unresolved(unresolved_path) = path {
             let mut paths = Vec::new();
 
             // Look up in current library being resolved.
             if let Some(symbol_node_id) = self.stack.symbol_node_id() {
-                match self.context.lib.look_up(symbol_node_id, unresolved_path) {
+                match self.lib_ctx.lib.look_up(symbol_node_id, unresolved_path) {
                     Some(node_id) => {
                         paths.push(symbol::Path::Resolved(SymbolId::Item(node_id)));
                     }
@@ -149,13 +156,16 @@ impl<'lib> visitor::LeafVisitorMut for ResolveVisitor<'lib> {
             // Look up external libraries.
             if !unresolved_path.is_absolute
                 && let Some(external_name) = unresolved_path.external_name()
-                && let Some(dep) = self.context.lib.dependencies.get(&external_name)
+                && let Some(dep) = self.lib_ctx.lib.dependencies.get(&external_name)
             {
                 let lib = self
-                    .context
+                    .lib_ctx
+                    .ctx()
                     .lib_cache
+                    .read_unwrap()
                     .get(dep)
                     .expect("Library not loaded.");
+                let lib = lib.read_unwrap();
 
                 let resolved = lib.look_up(lib.root, unresolved_path).map(|id| {
                     symbol::Path::Resolved(SymbolId::External {
@@ -190,8 +200,8 @@ impl<'lib> visitor::LeafVisitorMut for ResolveVisitor<'lib> {
     }
 }
 
-impl<'lib> visitor::ConstantVisitorMut for ResolveVisitor<'lib> {}
-impl<'lib> visitor::WorkbenchVisitorMut for ResolveVisitor<'lib> {
+impl<'a, 'lib, 'ctx> visitor::ConstantVisitorMut for ResolveVisitor<'a, 'lib, 'ctx> {}
+impl<'a, 'lib, 'ctx> visitor::WorkbenchVisitorMut for ResolveVisitor<'a, 'lib, 'ctx> {
     fn visit_workbench(&mut self, workbench: &mut microcad_lang_lower::ir::workbench::Workbench) {
         use microcad_lang_lower::ir::visitor::WorkbenchExpressionVisitorMut;
         self.visit_workbench_signature(&mut workbench.signature);
@@ -243,7 +253,7 @@ impl<'lib> visitor::WorkbenchVisitorMut for ResolveVisitor<'lib> {
     ) {
     }
 }
-impl<'ctx> visitor::WorkbenchExpressionVisitorMut for ResolveVisitor<'ctx> {
+impl<'a, 'lib, 'ctx> visitor::WorkbenchExpressionVisitorMut for ResolveVisitor<'a, 'lib, 'ctx> {
     fn visit_workbench_statement(
         &mut self,
         statement: &mut microcad_lang_lower::ir::workbench::WorkbenchStatement,
@@ -271,7 +281,7 @@ impl<'ctx> visitor::WorkbenchExpressionVisitorMut for ResolveVisitor<'ctx> {
     }
 }
 
-impl<'ctx> visitor::SourceVisitorMut for ResolveVisitor<'ctx> {
+impl<'a, 'lib, 'ctx> visitor::SourceVisitorMut for ResolveVisitor<'a, 'lib, 'ctx> {
     fn visit_source(&mut self, source: &mut microcad_lang_lower::ir::Source) {
         self.scope(stack::SourceFrame::default(), |visitor| {
             source
@@ -295,7 +305,7 @@ impl<'ctx> visitor::SourceVisitorMut for ResolveVisitor<'ctx> {
     }
 }
 
-impl<'ctx> visitor::FnVisitorMut for ResolveVisitor<'ctx> {
+impl<'a, 'lib, 'ctx> visitor::FnVisitorMut for ResolveVisitor<'a, 'lib, 'ctx> {
     fn visit_fn(&mut self, function: &mut symbol::Function) {
         self.scope(stack::FunctionFrame::default(), |visitor| {
             visitor.visit_fn_signature(&mut function.signature);

@@ -7,34 +7,40 @@ use microcad_lang_base::{HashId, LibraryId, PushDiag, Source, ToCompactString, t
 use microcad_lang_lower::ir;
 
 use crate::{
-    Library, Manifest, ResolveContext, ResolveError, ResolveResult,
+    Library, Manifest, ResolveError, ResolveLibraryContext, ResolveResult,
     error::ResolveErrorKind,
     library::{Symbol, SymbolNodeId},
     locate,
     resolve::visitor::ResolveVisitor,
 };
 
-impl<'lib> ResolveContext<'lib> {
+impl<'lib, 'ctx> ResolveLibraryContext<'lib, 'ctx> {
+    /// Load a single file or a library
+    pub fn load(&mut self, path: impl AsRef<std::path::Path>) -> ResolveResult<()> {
+        let path = path.as_ref();
+        if path.is_file() {
+            self.load_file(path)?;
+        } else {
+            self.load_library(path)?;
+        };
+
+        ResolveVisitor::new(self).visit();
+        Ok(())
+    }
+
     /// Load a single file as library.
-    pub fn load_file(&mut self, file_mu: impl AsRef<std::path::Path>) -> ResolveResult<&mut Self> {
+    pub fn load_file(&mut self, file_mu: impl AsRef<std::path::Path>) -> ResolveResult<()> {
         if !self.lib.no_std() {
             self.lib.add_std();
         }
 
         let root = self.lib.root;
         self._load_source(&file_mu, Some(root))?;
-        Ok(self)
-    }
-
-    pub fn resolve(&'lib mut self) {
-        ResolveVisitor::new(self).visit()
+        Ok(())
     }
 
     /// Load a library from a directory containing a `mu.toml` file.
-    pub fn load_library(
-        &mut self,
-        lib_path: impl AsRef<std::path::Path>,
-    ) -> ResolveResult<&mut Self> {
+    pub fn load_library(&mut self, lib_path: impl AsRef<std::path::Path>) -> ResolveResult<()> {
         // Locate `lib.mu` in directory
         let lib_mu = locate::lib_mu_path(&lib_path)?;
         log::debug!("Loading library from {lib_mu:?}");
@@ -65,14 +71,16 @@ impl<'lib> ResolveContext<'lib> {
             }
         };
         self._load_source(&lib_mu, None)?;
-        Ok(self)
+        Ok(())
     }
 
     fn load_source(&mut self, path: impl AsRef<std::path::Path>) -> ResolveResult<HashId> {
         let source = Source::load(path)?;
-        let id = self.src_cache.insert(source);
+        let id = self.ctx.src_cache.write_unwrap().insert(source);
         let errors = self
+            .ctx
             .src_cache
+            .read_unwrap()
             .get(id)
             .iter()
             .flat_map(|source_unit| source_unit.errors())
@@ -83,15 +91,17 @@ impl<'lib> ResolveContext<'lib> {
         Ok(id)
     }
 
-    /// Load lib with a path of directory containing a `mu.toml` file
+    /// Load lib with a path of directory containing a `mu.toml` file.
+    ///
+    /// TODO: Move this to ResolveContext.
     pub fn load_external_library(
         &mut self,
         lib_path: impl AsRef<std::path::Path>,
     ) -> ResolveResult<LibraryId> {
         let mut lib = Library::new();
-        let mut context = ResolveContext::new(&mut lib);
+        let mut context = ResolveLibraryContext::new(&mut lib, self.ctx);
         context.load_library(lib_path)?;
-        self.lib_cache.insert(lib)
+        self.ctx.lib_cache.write_unwrap().insert(lib)
     }
 
     pub fn _load_source(
@@ -103,8 +113,7 @@ impl<'lib> ResolveContext<'lib> {
         let id = self.load_source(&path)?;
         println!("Load source file  {path:?}");
 
-        let ir = self.get_ir(id).cloned();
-        match ir {
+        match self.ctx.get_ir(id) {
             // We have a successfully compiled IR, add it to the tree and load file recursively, if necessary.
             Some(ir) => {
                 let source_arena = ir.tree.arena();

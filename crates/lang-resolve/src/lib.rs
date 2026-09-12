@@ -15,7 +15,7 @@ pub use source_unit::SourceUnit;
 
 pub use error::{ResolveError, ResolveResult};
 
-pub use resolve::ResolveContext;
+pub use resolve::{LibraryCache, ResolveContext, ResolveLibraryContext, SourceCache, resolve};
 
 pub mod library;
 

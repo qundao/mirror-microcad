@@ -1,7 +1,7 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{GetSourceByHash, HashId, HashMap, LibraryId, Source};
+use microcad_lang_base::{GetSourceByHash, HashId, HashMap, LibraryId, Shared, Source};
 
 use crate::{
     Library, ResolveError, ResolveResult, SourceUnit, error::ResolveErrorKind, source_unit,
@@ -10,25 +10,18 @@ use crate::{
 #[derive(Debug, Default)]
 pub struct LibraryCache {
     /// Global lookup for all loaded/compiled libraries
-    libraries: HashMap<LibraryId, Library>,
+    libraries: HashMap<LibraryId, Shared<Library>>,
 }
 
 impl LibraryCache {
     pub fn insert(&mut self, library: Library) -> ResolveResult<LibraryId> {
         let id = library.id();
-        match id.is_root() {
-            false => {
-                self.libraries.insert(id, library);
-                Ok(id)
-            }
-            true => {
-                todo!("Cannot insert root library with ID")
-            }
-        }
+        self.libraries.insert(id, Shared::from(library));
+        Ok(id)
     }
 
-    pub fn get(&self, id: &LibraryId) -> Option<&Library> {
-        self.libraries.get(&id)
+    pub fn get(&self, id: &LibraryId) -> Option<Shared<Library>> {
+        self.libraries.get(&id).cloned()
     }
 }
 

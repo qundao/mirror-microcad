@@ -23,43 +23,50 @@ pub mod stack;
 mod type_check;
 pub mod visitor;
 
-use microcad_lang_base::{
-    CompilationResult, GetSourceByHash, HashId, LibraryId, PushDiag, SymbolId,
-};
+use core::error;
 
-use microcad_lang_lower::{Ir, ir::UnresolvedPath};
-pub use resolver::Resolver;
+use microcad_lang_base::{CompilationResult, HashId, PushDiag, Shared};
 
-use crate::{
-    Library, ResolveResult,
-    error::ResolveError,
-    library::SymbolNodeId,
-    resolve::cache::{LibraryCache, SourceCache},
-};
+use microcad_lang_lower::Ir;
+
+use crate::{Library, error::ResolveError};
+
+pub use crate::resolve::cache::{LibraryCache, SourceCache};
+
+#[derive(Debug, Default)]
+pub struct ResolveContext {
+    pub lib_search_paths: Vec<std::path::PathBuf>,
+    pub lib_cache: Shared<LibraryCache>,
+    pub src_cache: Shared<SourceCache>,
+}
+
+impl ResolveContext {
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
+impl ResolveContext {
+    /// Add a new search paths.
+    pub fn with_search_path(mut self, path: impl AsRef<std::path::Path>) -> Self {
+        self.lib_search_paths.push(path.as_ref().to_path_buf());
+        self
+    }
+
+    /// Get intermediate representation by hash id.
+    pub fn get_ir(&self, id: HashId) -> Option<Ir> {
+        self.src_cache
+            .read_unwrap()
+            .get(id)
+            .and_then(|source_unit| source_unit.ir().cloned())
+    }
+}
 
 /// A Resolve Context to resolve exactly one library at a time.
-pub struct ResolveContext<'lib> {
-    // pub resolver: Box<dyn Resolver>,
+pub struct ResolveLibraryContext<'ctx, 'lib> {
     pub diag: Vec<ResolveError>,
-    pub lib_search_paths: Vec<std::path::PathBuf>,
     pub lib: &'lib mut Library,
-    pub lib_cache: LibraryCache,
-    pub src_cache: SourceCache,
-}
-
-impl<'lib> PushDiag<ResolveError> for ResolveContext<'lib> {
-    fn push_diag(&mut self, err: impl Into<ResolveError>) {
-        self.diag.push(err.into());
-    }
-}
-
-impl<'lib> GetSourceByHash for ResolveContext<'lib> {
-    fn get_source_by_hash(
-        &'_ self,
-        hash: microcad_lang_base::HashId,
-    ) -> Option<&microcad_lang_base::Source> {
-        self.src_cache.get_source_by_hash(hash)
-    }
+    pub ctx: &'ctx mut ResolveContext,
 }
 
 /// The scaffolding step builds the unresolved tree from a workspace directory.
@@ -82,32 +89,31 @@ impl<'lib> GetSourceByHash for ResolveContext<'lib> {
 /// |   ├── bar.mu
 /// |   ... # More files
 /// ├── baz.mu
-impl<'lib> ResolveContext<'lib> {
-    pub fn new(lib: &'lib mut Library) -> Self {
+impl<'ctx, 'lib> ResolveLibraryContext<'ctx, 'lib> {
+    pub fn new(lib: &'lib mut Library, ctx: &'ctx mut ResolveContext) -> Self {
         Self {
-            diag: Default::default(),
-            lib_search_paths: vec![microcad_std::global_library_search_path()],
             lib,
-            lib_cache: LibraryCache::default(),
-            src_cache: SourceCache::default(),
+            ctx,
+            diag: vec![],
         }
-    }
-
-    /// Add a new search paths.
-    pub fn with_search_path(mut self, path: impl AsRef<std::path::Path>) -> Self {
-        self.lib_search_paths.push(path.as_ref().to_path_buf());
-        self
-    }
-
-    /// Get intermediate representation by hash id.
-    pub fn get_ir(&self, id: HashId) -> Option<&Ir> {
-        self.src_cache
-            .get(id)
-            .and_then(|source_unit| source_unit.ir())
     }
 
     pub fn lib(&'lib self) -> &'lib Library {
         self.lib
+    }
+
+    pub fn ctx(&'ctx self) -> &'ctx ResolveContext {
+        self.ctx
+    }
+
+    pub fn diags(self) -> Vec<ResolveError> {
+        self.diag
+    }
+}
+
+impl<'ctx, 'lib> PushDiag<ResolveError> for ResolveLibraryContext<'ctx, 'lib> {
+    fn push_diag(&mut self, err: impl Into<ResolveError>) {
+        self.diag.push(err.into());
     }
 }
 
@@ -115,27 +121,18 @@ pub fn resolve(
     path: impl AsRef<std::path::Path>,
     ctx: &mut ResolveContext,
 ) -> CompilationResult<Library, ResolveError> {
-    /*
-    let mut context = ResolveContext::new(resolver);
+    let mut lib = Library::new();
+    let mut lib_ctx = ResolveLibraryContext::new(&mut lib, ctx);
 
-    // Step 1: Scaffold symbol hierarchy
-    let scaffolded = context.scaffold()?;
-
-    // Step 2: Name resolution (SymbolPath -> SymbolId/LocalId)
-        let bound = self.bind(scaffolded)?;
-
-        // Step 3: Naming style & identifier checks
-        self.case_check(&bound)?;
-
-        // Step 4: Type checking & inference
-        let typed = self.type_check(bound)?;
-
-        // Step 5: Canonicalize/normalize expressions (if enabled)
-        let normalized = self.normalize(typed)?;
-
-        // Step 6: Lower to RST and resolve remaining attributes
-        let rst = self.reduce(normalized)?;
-    Ok((rst, context.diagnostics))
-    */
-    todo!()
+    match lib_ctx.load(path) {
+        Ok(()) => {
+            let diags = lib_ctx.diags();
+            Ok((lib, diags))
+        }
+        Err(err) => {
+            let mut diags = lib_ctx.diags();
+            diags.push(err);
+            Err(diags)
+        }
+    }
 }
