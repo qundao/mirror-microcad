@@ -51,3 +51,12 @@ impl Eval for symbol::Source {
         })
     }
 }
+
+impl Eval for symbol::SourceFile {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+        match self {
+            symbol::SourceFile::NotLoaded => todo!(),
+            symbol::SourceFile::Loaded { source, .. } => source.eval(context),
+        }
+    }
+}

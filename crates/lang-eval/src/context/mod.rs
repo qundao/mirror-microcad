@@ -69,20 +69,6 @@ impl EvalContext {
     pub fn top_mut(&mut self) -> &mut StackFrame {
         self.stack.top_mut()
     }
-
-    pub(crate) fn eval_constant_symbol(&mut self, node_id: symbol::SymbolNodeId) -> EvalResult {
-        /// Local up a symbol by its node id in the current package
-        fn look_up_symbol(_node_id: symbol::SymbolNodeId) -> Option<symbol::SymbolDef> {
-            todo!()
-        }
-
-        let symbol = match look_up_symbol(node_id) {
-            Some(symbol) => symbol,
-            None => todo!("Error handling: Symbol {node_id} not found"),
-        };
-        use crate::Eval;
-        symbol.eval(self)
-    }
 }
 
 impl ContextScope for EvalContext {

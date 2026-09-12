@@ -10,6 +10,7 @@ mod context;
 mod eval_error;
 mod function;
 mod source;
+mod symbol;
 mod workbench;
 
 pub use argument_match::*;
@@ -17,7 +18,6 @@ pub use eval_error::*;
 
 pub use context::EvalContext;
 
-pub use microcad_lang_resolve::library::symbol;
 use microcad_lang_types::{ArgumentValueList, ModelTree, Value};
 
 /// Evaluation trait.
@@ -42,4 +42,14 @@ where
 pub trait CallTrait<T = Value> {
     /// Evaluate call into value (if possible).
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<T>;
+}
+
+impl<T> CallTrait<ModelTree> for T
+where
+    T: CallTrait,
+{
+    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<ModelTree> {
+        let value: Value = self.call(args, context)?;
+        Ok(value.into())
+    }
 }

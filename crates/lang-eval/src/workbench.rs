@@ -72,44 +72,6 @@ impl Eval for BuiltinItem {
     }
 }
 
-impl Eval for symbol::SymbolDef {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult {
-        match self {
-            symbol::SymbolDef::Constant(constant) => match constant.value() {
-                Some(value) => Ok(value.clone()),
-                None => context.catch(EvalError::ConstantExpressionExpected {
-                    src_ref: constant.expr.src_ref(),
-                }),
-            },
-            _ => todo!("Error handling: Constant symbol expected"),
-        }
-    }
-}
-
-impl Eval for symbol::SymbolId {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult {
-        use crate::context::ContextScope;
-
-        match &self {
-            SymbolId::Builtin(builtin_id) => match context.builtins.get(*builtin_id) {
-                Some(builtin) => Ok(builtin.eval(context)?),
-                None => {
-                    //context.diag(BuiltinError::NoBuiltin { full_name: (), id: *builtin_id })
-                    Ok(Value::None)
-                }
-            },
-            SymbolId::Local(local_id) => match context.look_up_local(local_id) {
-                Some(value) => Ok(value.clone()),
-                None => {
-                    todo!("Error handling: Local '{local_id}' not found")
-                }
-            },
-            SymbolId::Item(node_id) => context.eval_constant_symbol(*node_id),
-            SymbolId::External { .. } => todo!(),
-        }
-    }
-}
-
 impl Eval for symbol::Path {
     fn eval(&self, context: &mut EvalContext) -> EvalResult {
         match self {
@@ -239,8 +201,8 @@ impl Eval<Property> for symbol::workbench::InitStatement {
     }
 }
 
-impl CallTrait<ModelTree> for symbol::Workbench {
-    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<ModelTree> {
+impl CallTrait for symbol::Workbench {
+    fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult {
         fn eval_to_model(
             workbench: &symbol::Workbench,
             input_properties: Properties,
@@ -310,7 +272,7 @@ impl CallTrait<ModelTree> for symbol::Workbench {
                     Err(_) => todo!(),
                 }
 
-                Ok(ModelTree::to_multiplicity(models))
+                Ok(ModelTree::to_multiplicity(models).into())
             }
             _n => Err(Box::new(EvalError::AmbiguousInitialization {
                 src_ref: self.signature.parameters.src_ref,
