@@ -11,7 +11,7 @@ use crate::{
         stack::{self, LocalTable, ResolveStack, ResolveStackFrame, ScopeAccess, SymbolFrame},
     },
 };
-use microcad_lang_base::{Identifier, SingleIdentifier, SymbolId, ToCompactString};
+use microcad_lang_base::{ExternalId, Identifier, SingleIdentifier, SymbolId, ToCompactString};
 
 pub struct ResolveVisitor<'a, 'lib, 'ctx> {
     stack: ResolveStack,
@@ -168,10 +168,10 @@ impl<'a, 'lib, 'ctx> visitor::LeafVisitorMut for ResolveVisitor<'a, 'lib, 'ctx> 
                 let lib = lib.read_unwrap();
 
                 let resolved = lib.look_up(lib.root, unresolved_path).map(|id| {
-                    symbol::Path::Resolved(SymbolId::External {
+                    symbol::Path::Resolved(SymbolId::External(ExternalId {
                         lib_id: lib.id(),
                         id,
-                    })
+                    }))
                 });
 
                 paths.extend(resolved);

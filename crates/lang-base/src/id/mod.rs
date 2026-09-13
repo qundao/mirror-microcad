@@ -1,9 +1,10 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-//! Module to handle IDs for any item used in µcad language.
+//! Module to handle IDs to reference items in the µcad language.
 
 mod builtin;
+mod external;
 mod library;
 
 use derive_more::{Display, From};
@@ -11,6 +12,7 @@ use indextree::NodeId;
 pub use microcad_hash::{HashId, hash_id};
 
 pub use builtin::{BuiltinId, BuiltinInfo};
+pub use external::ExternalId;
 pub use library::{LibraryId, LibraryInfo};
 
 use serde::{Deserialize, Serialize};
@@ -29,9 +31,8 @@ pub enum SymbolId {
     Local(Name),
     /// A definition within the current package/module (e.g. a workbench or function).
     Item(NodeId),
-    // /// A symbol in an external package (e.g. `std`)
-    #[display("{lib_id}@{id}")]
-    External { lib_id: LibraryId, id: NodeId },
+    /// A symbol in an external package (e.g. `std`)
+    External(ExternalId),
 }
 
 /// Trait to look up a human-readable name for a `SymbolId`.
@@ -44,7 +45,7 @@ pub trait LookUpName {
         None
     }
 
-    fn look_up_external_item_name(&self, _lib_id: &LibraryId, _item_id: &NodeId) -> Option<Name> {
+    fn look_up_external_item_name(&self, _exteral_id: &ExternalId) -> Option<Name> {
         None
     }
 
@@ -53,7 +54,7 @@ pub trait LookUpName {
             SymbolId::Builtin(builtin_id) => self.look_up_built_in_name(builtin_id),
             SymbolId::Local(name) => Some(name.clone()),
             SymbolId::Item(node_id) => self.look_up_item_name(node_id),
-            SymbolId::External { lib_id, id } => self.look_up_external_item_name(lib_id, id),
+            SymbolId::External(external_id) => self.look_up_external_item_name(external_id),
         }
     }
 
@@ -127,7 +128,7 @@ impl<Ctx: LookUpName> DisplayWithCtx<Ctx> for SymbolId {
             SymbolId::Builtin(builtin_id) => builtin_id.fmt_with_ctx(f, ctx),
             SymbolId::Local(name) => write!(f, "@Local({name})"),
             SymbolId::Item(node_id) => node_id.fmt_with_ctx(f, ctx),
-            SymbolId::External { lib_id, id } => todo!(),
+            SymbolId::External(_) => todo!(),
         }
     }
 }
