@@ -41,10 +41,11 @@ fn load_source_inline_module() {
             for child in library.root().children() {
                 println!("{child}");
             }
-            let inline_module = library.root().find_child("inline_module").expect("A child");
+            let root = library.root();
+            let inline_module = root.find_symbol_node("inline_module").expect("A child");
 
             let b = library
-                .look_up(inline_module, &path("b"))
+                .look_up(inline_module.id, &path("b"))
                 .expect("Add node");
             library
                 .look_up(b, &path("::inline_module"))

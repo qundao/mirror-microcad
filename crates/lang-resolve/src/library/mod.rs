@@ -171,9 +171,9 @@ impl Library {
     ) -> Option<SymbolNodeId> {
         // Step A: Check direct named child
         let scope = SymbolNodeRef::new(scope_id, &self.arena);
-        if let Some(child_id) = scope.find_child(name) {
-            if self.is_visible(child_id, from_scope) {
-                return Some(child_id);
+        if let Some(child) = scope.find_symbol_node(name) {
+            if self.is_visible(child.id, from_scope) {
+                return Some(child.id);
             }
         }
 
@@ -196,9 +196,9 @@ impl Library {
                             let target_ref = SymbolNodeRef::new(target_module_id, &self.arena);
 
                             // Search for `name` directly inside the target module
-                            if let Some(imported_node) = target_ref.find_child(name) {
-                                if self.is_visible(imported_node, from_scope) {
-                                    return Some(imported_node);
+                            if let Some(imported_node) = target_ref.find_symbol_node(name) {
+                                if self.is_visible(imported_node.id, from_scope) {
+                                    return Some(imported_node.id);
                                 }
                             }
                         }
