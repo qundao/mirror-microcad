@@ -7,16 +7,16 @@ use microcad_lang_resolve::{Library, LibraryCache};
 pub use stack::*;
 
 use microcad_builtin::BuiltinRegistry;
-use microcad_lang_base::{LookUpName, Name, PushDiag, Shared};
+use microcad_lang_base::{IssueList, LookUpName, Name, PushIssue, Shared};
 use microcad_lang_types::{Value, model::ModelTreeBuilderMut};
 
-use crate::EvalError;
+use crate::{EvalError, EvalInfo, EvalIssue, EvalWarn};
 
 #[derive(Debug, Default)]
 pub struct EvalContext {
     stack: Stack,
 
-    diag: Vec<EvalError>,
+    issues: IssueList<EvalIssue>,
 
     pub builtins: BuiltinRegistry,
 
@@ -82,8 +82,8 @@ impl EvalContext {
         self.stack.top_mut()
     }
 
-    pub fn diag(self) -> Vec<EvalError> {
-        self.diag
+    pub fn issues(self) -> IssueList<EvalIssue> {
+        self.issues
     }
 }
 
@@ -135,8 +135,16 @@ impl ModelTreeBuilderMut for EvalContext {
     }
 }
 
-impl PushDiag<EvalError> for EvalContext {
-    fn push_diag(&mut self, err: impl Into<EvalError>) {
-        self.diag.push(err.into())
+impl PushIssue<EvalIssue> for EvalContext {
+    fn push_err(&mut self, err: impl Into<EvalError>) {
+        self.issues.push_err(err)
+    }
+
+    fn push_warn(&mut self, warn: impl Into<EvalWarn>) {
+        self.issues.push_warn(warn)
+    }
+
+    fn push_info(&mut self, info: impl Into<EvalInfo>) {
+        self.issues.push_info(info)
     }
 }

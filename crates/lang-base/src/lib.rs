@@ -13,6 +13,7 @@ pub mod display;
 pub mod element;
 mod fs;
 mod id;
+mod issue;
 mod output;
 mod rc;
 mod source;
@@ -44,6 +45,7 @@ pub use id::{
     BuiltinId, BuiltinInfo, DefaultContext, DisplayWithCtx, DisplayWithCtxHelper, ExternalId,
     HashId, LibraryId, LibraryInfo, LookUpName, Name, SymbolId, hash_id,
 };
+pub use issue::{Issue, IssueList, PushIssue};
 pub use output::{Capture, Output, Stdout};
 pub use rc::{Rc, RcMut, Shared};
 pub use source::{Source, SourceKind, SourceLocation, SourceMap, TextEdit};

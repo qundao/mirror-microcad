@@ -4,12 +4,12 @@
 //! Evaluate function
 
 use microcad_builtin::BuiltinItem;
-use microcad_lang_base::{PushDiag, SrcRef, SrcReferrer, ToCompactString};
+use microcad_lang_base::{PushIssue, SrcRef, SrcReferrer, ToCompactString};
 use microcad_lang_resolve::library::symbol;
 use microcad_lang_types::{ArgumentValue, ArgumentValueList, Value};
 
 use crate::{
-    Callable, Eval, EvalContext, EvalError, EvalResult,
+    Callable, Eval, EvalContext, EvalError, EvalErrorKind, EvalResult,
     context::{FunctionFrame, FunctionScopeFrame},
 };
 
@@ -37,7 +37,7 @@ impl FlowSignal {
     pub fn expect_value(self, src_ref: SrcRef) -> EvalResult {
         match self {
             FlowSignal::Yield(val) | FlowSignal::Return(val) => Ok(val),
-            FlowSignal::Continue => Err(EvalError::ExpectedExpression { src_ref }.into()),
+            FlowSignal::Continue => Err(EvalErrorKind::ExpectedExpression { src_ref }.into()),
         }
     }
 }
@@ -121,10 +121,10 @@ impl Eval<FlowSignal> for symbol::function::FunctionCall {
                     _ => todo!(),
                 }
             }
-            path => context.catch(EvalError::SymbolCannotBeCalled {
+            path => context.catch(EvalError::new(EvalErrorKind::SymbolCannotBeCalled {
                 path: path.to_string(),
                 src_ref: self.src_ref,
-            }),
+            })),
         }
     }
 }
@@ -136,7 +136,7 @@ impl Eval<FlowSignal> for symbol::Path {
                 use crate::context::StackRead;
                 match context.get_local(identifier) {
                     Some(local) => Ok(FlowSignal::Yield(local.clone())),
-                    None => context.catch(EvalError::LocalNotFound(identifier.clone())),
+                    None => context.catch(EvalErrorKind::LocalNotFound(identifier.clone())),
                 }
             }
             symbol::Path::Resolved(symbol::SymbolId::Builtin(builtin)) => {
@@ -173,7 +173,7 @@ impl Eval<FlowSignal> for symbol::FunctionStatement {
             Stmt::Call(call) => {
                 let value = call.eval(context)?.expect_value(call.src_ref)?;
                 if !value.is_none() {
-                    context.push_diag(EvalError::CallReturnValueIgnored(call.src_ref))
+                    context.push_err(EvalErrorKind::CallReturnValueIgnored(call.src_ref))
                 }
 
                 Ok(FlowSignal::Continue)
@@ -189,7 +189,7 @@ impl Eval<FlowSignal> for symbol::FunctionStatement {
             Stmt::Local(l) => {
                 match l.expression.eval(context)? {
                     FlowSignal::Continue => {
-                        context.catch(EvalError::LocalExpressionDidNotProduceAValue {
+                        context.catch(EvalErrorKind::LocalExpressionDidNotProduceAValue {
                             id: l.id.clone(),
                             src_ref: l.src_ref,
                             expr_src_ref: l.expression.src_ref(),

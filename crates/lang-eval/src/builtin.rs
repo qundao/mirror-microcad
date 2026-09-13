@@ -4,10 +4,13 @@
 use microcad_builtin::{
     BuiltinEvalContext, BuiltinFunction, BuiltinItem, BuiltinOperation, BuiltinPrimitive,
 };
-use microcad_lang_base::PushDiag;
+use microcad_lang_base::PushIssue;
 use microcad_lang_types::{ArgumentValueList, ModelTree};
 
-use crate::{ArgumentMatch, Callable, EvalContext, EvalError, EvalResult, context::ContextScope};
+use crate::{
+    ArgumentMatch, Callable, EvalContext, EvalError, EvalErrorKind, EvalResult,
+    context::ContextScope,
+};
 
 impl Callable for BuiltinPrimitive {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult {
@@ -63,7 +66,7 @@ impl Callable for BuiltinItem {
             BuiltinItem::Primitive(p) => p.call(args, context),
             BuiltinItem::Operation(op) => op.call(args, context),
             BuiltinItem::Constant(_) | BuiltinItem::Module(_) => {
-                context.catch(EvalError::SymbolCannotBeCalled {
+                context.catch(EvalErrorKind::SymbolCannotBeCalled {
                     path: context.current_symbol_name().unwrap_or_default(),
                     src_ref: context.current_symbol_src_ref(),
                 })

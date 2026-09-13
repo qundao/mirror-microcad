@@ -1,11 +1,11 @@
 // Copyright © 2024-2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use microcad_lang_base::{PushDiag, SrcReferrer};
+use microcad_lang_base::{PushIssue, SrcReferrer};
 use microcad_lang_resolve::library::symbol;
 use microcad_lang_types::{ArgumentValueList, Value};
 
-use crate::{Callable, Eval, EvalContext, EvalError, EvalResult};
+use crate::{Callable, Eval, EvalContext, EvalErrorKind, EvalResult};
 
 impl Callable for symbol::SymbolDef {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult {
@@ -30,7 +30,7 @@ impl Eval for symbol::SymbolDef {
 
             Constant(constant) => match constant.value() {
                 Some(value) => Ok(value.clone()),
-                None => context.catch(EvalError::ConstantExpressionExpected {
+                None => context.catch(EvalErrorKind::ConstantExpressionExpected {
                     src_ref: constant.expr.src_ref(),
                 }),
             },

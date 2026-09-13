@@ -4,15 +4,15 @@
 //! Workbench evaluation
 
 use crate::{
-    Callable, Eval, EvalContext, EvalError, EvalResult,
+    Callable, Eval, EvalContext, EvalError, EvalErrorKind, EvalResult,
     context::{
         BuiltinItemFrame, ContextScope, WorkbenchGroupFrame, WorkbenchInitFrame, WorkpieceFrame,
     },
 };
 
 use microcad_builtin::BuiltinItem;
-use microcad_lang_base::{DisplayWithCtx, PushDiag, SrcReferrer, element::Visibility};
-use microcad_lang_resolve::{SymbolId, library::symbol};
+use microcad_lang_base::{DisplayWithCtx, PushIssue, SrcReferrer, element::Visibility};
+use microcad_lang_resolve::library::symbol;
 
 use microcad_lang_types::{
     ArgumentValue, ArgumentValueList, ModelTree, Value,
@@ -36,7 +36,7 @@ impl Eval for symbol::workbench::WorkbenchIf {
         let cond: bool = match cond.try_into() {
             Ok(cond) => cond,
             Err(err) => {
-                return context.catch(EvalError::IfConditionIsNotBool {
+                return context.catch(EvalErrorKind::IfConditionIsNotBool {
                     condition_src_ref: self.cond.src_ref(),
                     src_ref: self.src_ref,
                     err,
@@ -77,10 +77,12 @@ impl Eval for symbol::Path {
         match self {
             symbol::Path::Resolved(symbol_id)
             | symbol::Path::HumanReadable { id: symbol_id, .. } => symbol_id.eval(context),
-            symbol::Path::Unresolved(unresolved_path) => context.catch(EvalError::UnresolvedPath {
-                path: unresolved_path.to_string(),
-                src_ref: unresolved_path.src_ref,
-            }),
+            symbol::Path::Unresolved(unresolved_path) => {
+                context.catch(EvalErrorKind::UnresolvedPath {
+                    path: unresolved_path.to_string(),
+                    src_ref: unresolved_path.src_ref,
+                })
+            }
         }
     }
 }
@@ -127,13 +129,13 @@ impl Eval for symbol::workbench::WorkbenchCall {
                     Some(item) => context.scope(BuiltinItemFrame::new(src_ref, item), |ctx| {
                         item.call(&args, ctx)
                     }),
-                    None => context.catch(EvalError::BuiltinNotFound {
+                    None => context.catch(EvalErrorKind::BuiltinNotFound {
                         name: builtin_id.to_string_with_ctx(context),
                         src_ref: context.current_symbol_src_ref(),
                     }),
                 }
             }
-            path => context.catch(EvalError::SymbolCannotBeCalled {
+            path => context.catch(EvalErrorKind::SymbolCannotBeCalled {
                 path: path.to_string(),
                 src_ref: self.src_ref,
             }),
@@ -233,7 +235,7 @@ impl Callable for symbol::Workbench {
             .collect();
 
         match matching_inits.len() {
-            0 => Err(Box::new(EvalError::NoInitializationFound {
+            0 => Err(EvalErrorKind::NoInitializationFound {
                 src_ref: self.signature.parameters.src_ref,
                 path: context.current_symbol_name().unwrap_or_default(),
                 arguments: args.to_string(),
@@ -243,7 +245,8 @@ impl Callable for symbol::Workbench {
                     .iter()
                     .map(|init| init.to_string())
                     .collect(),
-            })),
+            }
+            .into()),
             1 => {
                 let init = matching_inits.first().unwrap();
                 let mut models = Vec::new();
@@ -274,12 +277,13 @@ impl Callable for symbol::Workbench {
 
                 Ok(ModelTree::to_multiplicity(models).into())
             }
-            _n => Err(Box::new(EvalError::AmbiguousInitialization {
+            _n => Err(EvalErrorKind::AmbiguousInitialization {
                 src_ref: self.signature.parameters.src_ref,
                 path: context.current_symbol_name().unwrap_or_default(),
                 arguments: args.to_string(),
                 inits: matching_inits.iter().map(|init| init.to_string()).collect(),
-            })),
+            }
+            .into()),
         }
     }
 }

@@ -3,21 +3,25 @@
 
 //! Evaluation error
 
+use derive_more::From;
 use microcad_builtin::BuiltinError;
 use microcad_lang_base::{
-    Identifier, IdentifierList, Name, SrcRef, SrcReferrer, ToCompactString, element::WorkbenchKind,
+    Identifier, IdentifierList, Issue, Name, SrcRef, SrcReferrer, ToCompactString,
+    element::WorkbenchKind,
 };
 use microcad_lang_types::{Type, Value, ValueError, model::ModelType};
-use miette::Diagnostic;
+use miette::{Diagnostic, Severity};
 
 use thiserror::Error;
 
-use crate::ArgumentMatchError;
+use crate::{ArgumentMatchError, Eval};
 
 /// Evaluation error.
+///
+/// Any occuring error may not lead to stop evaluation, but will mark the evaluation as failed.
 #[derive(Debug, Error, Diagnostic)]
 #[allow(missing_docs)]
-pub enum EvalError {
+pub enum EvalErrorKind {
     /// An error occurred during handling values.
     #[error("Value error: {0}")]
     ValueError(#[from] ValueError),
@@ -181,13 +185,36 @@ pub enum EvalError {
     },
 }
 
+impl From<BuiltinError> for Box<EvalErrorKind> {
+    fn from(err: BuiltinError) -> Self {
+        Box::new(err.into())
+    }
+}
+
+impl From<ValueError> for Box<EvalErrorKind> {
+    fn from(err: ValueError) -> Self {
+        Box::new(err.into())
+    }
+}
+
+#[derive(Debug)]
+pub struct EvalError(pub Box<EvalErrorKind>);
+
 impl EvalError {
+    pub fn new(err: impl Into<EvalErrorKind>) -> Self {
+        Self(Box::new(err.into()))
+    }
+
+    pub fn kind(&self) -> &EvalErrorKind {
+        &self.0
+    }
+
     pub fn argument_match(
         src_ref: impl SrcReferrer,
         symbol_name: impl AsRef<str>,
         err: ArgumentMatchError,
-    ) -> Box<Self> {
-        Box::new(Self::ArgumentMatch {
+    ) -> Self {
+        Self::new(EvalErrorKind::ArgumentMatch {
             symbol_name: symbol_name.as_ref().to_compact_string(),
             context_src_ref: src_ref.src_ref(),
             err,
@@ -195,23 +222,56 @@ impl EvalError {
     }
 }
 
-impl From<BuiltinError> for Box<EvalError> {
-    fn from(err: BuiltinError) -> Self {
-        Box::new(err.into())
+impl From<EvalErrorKind> for EvalError {
+    fn from(kind: EvalErrorKind) -> Self {
+        Self(Box::new(kind))
     }
 }
 
-impl From<ValueError> for Box<EvalError> {
+impl From<BuiltinError> for EvalError {
+    fn from(err: BuiltinError) -> Self {
+        EvalErrorKind::from(err).into()
+    }
+}
+
+impl From<ValueError> for EvalError {
     fn from(err: ValueError) -> Self {
-        Box::new(err.into())
+        EvalErrorKind::from(err).into()
     }
 }
 
 /// Result type of any evaluation.
-pub type EvalResult<T = Value> = std::result::Result<T, Box<EvalError>>;
+pub type EvalResult<T = Value> = std::result::Result<T, EvalError>;
 
-impl From<Box<EvalError>> for miette::Report {
-    fn from(value: Box<EvalError>) -> Self {
-        miette::Report::new(*value)
+impl From<EvalError> for miette::Report {
+    fn from(value: EvalError) -> Self {
+        miette::Report::new(*value.0)
+    }
+}
+
+#[derive(Debug, Error, Diagnostic)]
+pub enum EvalWarn {}
+
+#[derive(Debug, Error, Diagnostic)]
+pub enum EvalInfo {}
+
+#[derive(Debug, From)]
+pub enum EvalIssue {
+    Err(EvalError),
+    Warn(EvalWarn),
+    Info(EvalInfo),
+}
+
+impl Issue for EvalIssue {
+    type Err = EvalError;
+    type Warn = EvalWarn;
+    type Info = EvalInfo;
+
+    fn severity(&self) -> Severity {
+        match self {
+            EvalIssue::Err(_) => Severity::Error,
+            EvalIssue::Warn(_) => Severity::Warning,
+            EvalIssue::Info(_) => Severity::Advice,
+        }
     }
 }
