@@ -40,24 +40,14 @@ pub enum BuiltinError {
     #[error("Expected {0}")]
     Expected(String),
 
-    /// A custom error message.
-    #[error("{0}")]
-    #[diagnostic(severity(Error))]
-    Error(String),
-
-    /// A custom warning message.
-    #[error("{0}")]
-    #[diagnostic(severity(Warning))]
-    Warning(String),
-
-    /// A custom info message.
-    #[error("{0}")]
-    #[diagnostic(severity(Advice))]
-    Info(String),
-
     #[error("Property not found: {name}")]
     PropertyNotFound { name: String },
 
     #[error("Element mismatch: {expected} != {actual}")]
     ElementMismatch { expected: String, actual: String },
+
+    /// A custom error message.
+    #[error("{0}")]
+    #[diagnostic(severity(Error))]
+    Custom(String),
 }

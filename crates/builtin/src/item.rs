@@ -8,7 +8,7 @@ use derive_more::{Debug, From};
 use microcad_lang_base::{BuiltinId, BuiltinInfo};
 use microcad_lang_types::{Arguments, FunctionType, Model, ModelTree, Value};
 
-use crate::{BuiltinError, BuiltinEvalContext, BuiltinEvalFn, BuiltinFn};
+use crate::{BuiltinEvalContext, BuiltinEvalFn, BuiltinFn, BuiltinResult};
 
 #[derive(Debug, Clone)]
 #[debug("{}", info)]
@@ -47,14 +47,8 @@ impl BuiltinFunction {
     }
 
     /// Call the function with a default context.
-    pub fn call_isolated(&self, args: Arguments) -> Result<Value, BuiltinError> {
-        (self.f)(
-            args,
-            &mut BuiltinEvalContext {
-                current_fn: Some(self),
-                diags: vec![],
-            },
-        )
+    pub fn call_isolated(&self, args: Arguments) -> BuiltinResult<Value> {
+        (self.f)(args, &mut BuiltinEvalContext::default())
     }
 }
 
@@ -188,11 +182,7 @@ impl BuiltinItem {
         }
     }
 
-    pub fn call_fn(
-        &self,
-        args: Arguments,
-        ctx: &mut BuiltinEvalContext,
-    ) -> Result<Value, BuiltinError> {
+    pub fn call_fn(&self, args: Arguments, ctx: &mut BuiltinEvalContext) -> BuiltinResult<Value> {
         match self {
             BuiltinItem::Function(f) => (f.f)(args, ctx),
             _ => unreachable!("Only functions can be called."),
@@ -203,7 +193,7 @@ impl BuiltinItem {
         &self,
         args: Arguments,
         ctx: &mut BuiltinEvalContext,
-    ) -> Result<Model, BuiltinError> {
+    ) -> BuiltinResult<Model> {
         match self {
             BuiltinItem::Primitive(p) => (p.f)(args, ctx),
             _ => unreachable!("Only functions can be called."),
@@ -214,7 +204,7 @@ impl BuiltinItem {
         &self,
         args: Arguments,
         ctx: &mut BuiltinEvalContext,
-    ) -> Result<ModelTree, BuiltinError> {
+    ) -> BuiltinResult<ModelTree> {
         match self {
             BuiltinItem::Operation(o) => (o.f)(args, ctx),
             _ => unreachable!("Only functions can be called."),

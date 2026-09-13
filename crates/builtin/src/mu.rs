@@ -19,8 +19,6 @@ use serde::{Deserialize, Serialize};
 /// The built-in core functions.
 #[builtin_mod]
 pub mod core {
-    use microcad_lang_base::PushDiag;
-
     use super::*;
 
     /// Calculate the sum of two values
@@ -158,7 +156,7 @@ pub mod core {
 
     #[builtin_fn(core::list_access(lhs: List, index: Integer) -> Any)]
     pub fn list_access(args: Arguments, _ctx: &mut BuiltinEvalContext) -> BuiltinResult {
-        let lhs: std::rc::Rc<List> = _ctx.capture(args.try_get("lhs"));
+        let lhs: std::rc::Rc<List> = args.try_get("lhs")?;
         let index: Integer = args.try_get("index")?;
         let index = index.to_num::<usize>();
 
@@ -311,6 +309,10 @@ pub mod core {
 
 #[builtin_mod]
 pub mod debug {
+    use microcad_lang_base::PushIssue;
+
+    use crate::{BuiltinAdvice, diag::BuiltinWarning};
+
     use super::*;
 
     #[builtin_fn(debug::assert(cond: Bool, message: String))]
@@ -332,7 +334,7 @@ pub mod debug {
         let cond = args.get_cond()?;
         let message: String = args.try_get("message")?;
         if !cond {
-            ctx.diag(BuiltinError::Expected(message));
+            ctx.push_err(BuiltinError::Expected(message));
         }
         Ok(Value::None)
     }
@@ -346,21 +348,21 @@ pub mod debug {
     #[builtin_fn(debug::error(message: String))]
     pub fn error(args: Arguments, ctx: &mut BuiltinEvalContext) -> BuiltinResult {
         let message: String = args.try_get("message")?;
-        ctx.diag(BuiltinError::Error(message));
+        ctx.push_err(BuiltinError::Custom(message));
         Ok(Value::None)
     }
 
     #[builtin_fn(debug::warning(message: String))]
     pub fn warning(args: Arguments, ctx: &mut BuiltinEvalContext) -> BuiltinResult {
         let message: String = args.try_get("message")?;
-        ctx.diag(BuiltinError::Warning(message));
+        ctx.push_warn(BuiltinWarning::Custom(message));
         Ok(Value::None)
     }
 
     #[builtin_fn(debug::info(message: String))]
     pub fn info(args: Arguments, ctx: &mut BuiltinEvalContext) -> BuiltinResult {
         let message: String = args.try_get("message")?;
-        ctx.diag(BuiltinError::Info(message));
+        ctx.push_info(BuiltinAdvice::Custom(message));
         Ok(Value::None)
     }
 

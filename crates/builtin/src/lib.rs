@@ -3,9 +3,9 @@
 
 //! µcad built-in crate.
 
-mod error;
+mod diag;
 mod item;
-pub use error::BuiltinError;
+pub use diag::{BuiltinAdvice, BuiltinError, BuiltinIssue, BuiltinResult};
 
 pub use item::{
     BuiltinConstant, BuiltinFunction, BuiltinItem, BuiltinModule, BuiltinOperation,
@@ -14,7 +14,7 @@ pub use item::{
 
 pub mod mu;
 mod registry;
-use microcad_lang_base::{DisplayWithCtx, PushDiag};
+use microcad_lang_base::{DisplayWithCtx, IssueList, PushIssue};
 pub use registry::BuiltinRegistry;
 
 use derive_more::Debug;
@@ -29,18 +29,24 @@ pub struct BuiltinEvalContext<'a> {
     pub current_fn: Option<&'a BuiltinFunction>,
 
     /// Diagnostics.
-    pub diags: Vec<BuiltinError>,
+    pub issues: IssueList<BuiltinIssue>,
 }
 
-impl<'a> PushDiag<BuiltinError> for BuiltinEvalContext<'a> {
-    fn push_diag(&mut self, err: impl Into<BuiltinError>) {
-        self.diags.push(err.into());
+impl<'a> PushIssue<BuiltinIssue> for BuiltinEvalContext<'a> {
+    fn push_issue(&mut self, issue: impl Into<BuiltinIssue>) {
+        self.issues.push_issue(issue);
     }
-}
 
-impl<'a> BuiltinEvalContext<'a> {
-    pub fn diag(&mut self, err: impl Into<BuiltinError>) {
-        self.diags.push(err.into())
+    fn push_err(&mut self, err: impl Into<<BuiltinIssue as microcad_lang_base::Issue>::Err>) {
+        self.issues.push_err(err);
+    }
+
+    fn push_warn(&mut self, warn: impl Into<<BuiltinIssue as microcad_lang_base::Issue>::Warn>) {
+        self.issues.push_warn(warn);
+    }
+
+    fn push_info(&mut self, info: impl Into<<BuiltinIssue as microcad_lang_base::Issue>::Info>) {
+        self.issues.push_info(info);
     }
 }
 
@@ -50,8 +56,6 @@ pub type BuiltinEvalFn<T = Value> =
 
 /// A type of a function returning a T as builtin.
 pub type BuiltinFn<T> = fn() -> T;
-
-pub type BuiltinResult<T = Value> = Result<T, BuiltinError>;
 
 pub trait BuiltinConstruct: Sized {
     const ITEM: &'static BuiltinItem;
