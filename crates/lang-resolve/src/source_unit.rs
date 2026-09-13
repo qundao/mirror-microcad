@@ -3,42 +3,42 @@
 
 //! A source unit that can be compiled into an IR.
 
-use microcad_lang_base::{HashId, Source, StageResult};
-use microcad_lang_lower::{Ir, LowerContext, LowerError};
-use microcad_lang_parse::{Ast, ParseError};
+use microcad_lang_base::{HashId, IssueList, Source, StageResult};
+use microcad_lang_lower::{Ir, LowerContext, LowerIssue};
+use microcad_lang_parse::{Ast, ParseIssue};
 use miette::Diagnostic;
 use thiserror::Error;
 
-use crate::{ResolveError, ResolveResult, locate};
+use crate::{ResolveIssue, ResolveResult, locate};
 /// A µcad source file document progressing through compiler pipeline stages.
 #[derive(Debug)]
 pub enum SourceUnit {
     Loaded(Source),
     Parsed {
         source: Source,
-        ast: StageResult<Ast, ParseError>,
+        ast: StageResult<Ast, ParseIssue>,
     },
     Lowered {
         source: Source,
-        ast: StageResult<Ast, ParseError>,
-        ir: StageResult<Ir, LowerError>,
+        ast: StageResult<Ast, ParseIssue>,
+        ir: StageResult<Ir, LowerIssue>,
     },
 }
 
 /// An enum representing a reference to any stage error.
 #[derive(Debug, Error, Clone, Diagnostic)]
-pub enum SourceUnitError {
-    #[error("{0}")]
-    Parse(#[from] ParseError),
-    #[error("{0}")]
-    Lower(#[from] LowerError),
+pub enum SourceUnitIssue {
+    #[error(transparent)]
+    Parse(#[from] ParseIssue),
+    #[error(transparent)]
+    Lower(#[from] LowerIssue),
 }
 
-impl From<SourceUnitError> for ResolveError {
-    fn from(err: SourceUnitError) -> Self {
+impl From<SourceUnitIssue> for ResolveIssue {
+    fn from(err: SourceUnitIssue) -> Self {
         match err {
-            SourceUnitError::Parse(parse_error) => parse_error.into(),
-            SourceUnitError::Lower(lower_error) => lower_error.into(),
+            SourceUnitIssue::Parse(parse_issue) => parse_issue.into(),
+            SourceUnitIssue::Lower(lower_issue) => lower_issue.into(),
         }
     }
 }
@@ -102,24 +102,27 @@ impl SourceUnit {
     }
 
     /// Returns an iterator yielding references to all errors collected across pipeline stages.
-    pub fn errors(&self) -> impl Iterator<Item = SourceUnitError> {
-        let (ast_errors, ir_errors) = match self {
+    pub fn issues(&self) -> impl Iterator<Item = SourceUnitIssue> {
+        let (ast_issues, ir_issues) = match self {
             Self::Loaded(_) => (None, None),
-            Self::Parsed { ast, .. } => (Some(ast.errors()), None),
-            Self::Lowered { ast, ir, .. } => (Some(ast.errors()), Some(ir.errors())),
+            Self::Parsed { ast, .. } => (ast.issues().map(IssueList::iter), None),
+            Self::Lowered { ast, ir, .. } => (
+                ast.issues().map(IssueList::iter),
+                ir.issues().map(IssueList::iter),
+            ),
         };
 
-        ast_errors
+        ast_issues
             .into_iter()
             .flatten()
             .cloned()
-            .map(SourceUnitError::from)
+            .map(SourceUnitIssue::from)
             .chain(
-                ir_errors
+                ir_issues
                     .into_iter()
                     .flatten()
                     .cloned()
-                    .map(SourceUnitError::from),
+                    .map(SourceUnitIssue::from),
             )
     }
 

@@ -3,7 +3,6 @@
 
 //! Evaluation error
 
-use derive_more::From;
 use microcad_builtin::BuiltinError;
 use microcad_lang_base::{
     Identifier, IdentifierList, Issue, Name, SrcRef, SrcReferrer, ToCompactString,
@@ -14,7 +13,7 @@ use miette::{Diagnostic, Severity};
 
 use thiserror::Error;
 
-use crate::{ArgumentMatchError, Eval};
+use crate::ArgumentMatchError;
 
 /// Evaluation error.
 ///
@@ -185,15 +184,30 @@ pub enum EvalErrorKind {
     },
 }
 
-impl From<BuiltinError> for Box<EvalErrorKind> {
-    fn from(err: BuiltinError) -> Self {
-        Box::new(err.into())
-    }
-}
-
-impl From<ValueError> for Box<EvalErrorKind> {
-    fn from(err: ValueError) -> Self {
-        Box::new(err.into())
+impl SrcReferrer for EvalErrorKind {
+    fn src_ref(&self) -> SrcRef {
+        match self {
+            EvalErrorKind::ArgumentMatch {
+                context_src_ref, ..
+            } => *context_src_ref,
+            EvalErrorKind::MultiplicityNotAllowed(identifier_list) => identifier_list.src_ref,
+            EvalErrorKind::IfConditionIsNotBool { src_ref, .. } => *src_ref,
+            EvalErrorKind::NoInitializationFound { src_ref, .. } => *src_ref,
+            EvalErrorKind::AmbiguousInitialization { src_ref, .. } => *src_ref,
+            EvalErrorKind::UnusedLocal(identifier) => identifier.src_ref(),
+            EvalErrorKind::AmbiguousType { src_ref, .. } => *src_ref,
+            EvalErrorKind::InvalidRangeBoundaryType { src_ref } => *src_ref,
+            EvalErrorKind::ExpectedExpression { src_ref } => *src_ref,
+            EvalErrorKind::CallReturnValueIgnored(src_ref) => *src_ref,
+            EvalErrorKind::SymbolCannotBeCalled { src_ref, .. } => *src_ref,
+            EvalErrorKind::LocalExpressionDidNotProduceAValue { src_ref, .. } => *src_ref,
+            EvalErrorKind::DuplicateArgument { id } => id.src_ref(),
+            EvalErrorKind::MissingRequiredArgument { id } => id.src_ref(),
+            EvalErrorKind::ConstantExpressionExpected { src_ref } => *src_ref,
+            EvalErrorKind::UnresolvedPath { src_ref, .. } => *src_ref,
+            EvalErrorKind::BuiltinNotFound { src_ref, .. } => *src_ref,
+            _ => SrcRef::none(),
+        }
     }
 }
 
@@ -240,6 +254,18 @@ impl From<ValueError> for EvalError {
     }
 }
 
+impl std::fmt::Display for EvalError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        std::fmt::Display::fmt(&self.0, f)
+    }
+}
+
+impl std::error::Error for EvalError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        self.0.source()
+    }
+}
+
 /// Result type of any evaluation.
 pub type EvalResult<T = Value> = std::result::Result<T, EvalError>;
 
@@ -249,22 +275,41 @@ impl From<EvalError> for miette::Report {
     }
 }
 
-#[derive(Debug, Error, Diagnostic)]
-pub enum EvalWarn {}
+impl SrcReferrer for EvalError {
+    fn src_ref(&self) -> SrcRef {
+        self.0.src_ref()
+    }
+}
 
 #[derive(Debug, Error, Diagnostic)]
+#[non_exhaustive]
+pub enum EvalWarning {}
+
+#[derive(Debug, Error, Diagnostic)]
+#[non_exhaustive]
 pub enum EvalInfo {}
 
-#[derive(Debug, From)]
+#[derive(Debug, Error, Diagnostic)]
 pub enum EvalIssue {
-    Err(EvalError),
-    Warn(EvalWarn),
-    Info(EvalInfo),
+    /// A eval error.
+    #[error(transparent)]
+    #[diagnostic(severity(Error), code(eval::error))]
+    Err(#[from] EvalError),
+
+    /// A warning from the eval.
+    #[error(transparent)]
+    #[diagnostic(severity(Warning), code(eval::warning))]
+    Warn(#[from] EvalWarning),
+
+    /// An info from the eval.
+    #[error(transparent)]
+    #[diagnostic(severity(Advice), code(eval::info))]
+    Info(#[from] EvalInfo),
 }
 
 impl Issue for EvalIssue {
     type Err = EvalError;
-    type Warn = EvalWarn;
+    type Warn = EvalWarning;
     type Info = EvalInfo;
 
     fn severity(&self) -> Severity {

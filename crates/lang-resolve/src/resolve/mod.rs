@@ -22,11 +22,11 @@ pub mod stack;
 mod type_check;
 pub mod visitor;
 
-use microcad_lang_base::{CompilationResult, HashId, PushDiag, Shared};
+use microcad_lang_base::{CompilationResult, HashId, IssueList, PushIssue, Shared};
 
 use microcad_lang_lower::Ir;
 
-use crate::{Library, error::ResolveError};
+use crate::{Library, ResolveError, ResolveInfo, ResolveIssue, ResolveWarning};
 
 pub use crate::resolve::cache::{LibraryCache, SourceCache};
 
@@ -61,7 +61,7 @@ impl ResolveContext {
 
 /// A Resolve Context to resolve exactly one library at a time.
 pub struct ResolveLibraryContext<'ctx, 'lib> {
-    pub diag: Vec<ResolveError>,
+    pub issues: IssueList<ResolveIssue>,
     pub lib: &'lib mut Library,
     pub ctx: &'ctx mut ResolveContext,
 }
@@ -91,7 +91,7 @@ impl<'ctx, 'lib> ResolveLibraryContext<'ctx, 'lib> {
         Self {
             lib,
             ctx,
-            diag: vec![],
+            issues: Default::default(),
         }
     }
 
@@ -103,33 +103,45 @@ impl<'ctx, 'lib> ResolveLibraryContext<'ctx, 'lib> {
         self.ctx
     }
 
-    pub fn diags(self) -> Vec<ResolveError> {
-        self.diag
+    pub fn issues(self) -> IssueList<ResolveIssue> {
+        self.issues
     }
 }
 
-impl<'ctx, 'lib> PushDiag<ResolveError> for ResolveLibraryContext<'ctx, 'lib> {
-    fn push_diag(&mut self, err: impl Into<ResolveError>) {
-        self.diag.push(err.into());
+impl<'ctx, 'lib> PushIssue<ResolveIssue> for ResolveLibraryContext<'ctx, 'lib> {
+    fn push_issue(&mut self, issue: impl Into<ResolveIssue>) {
+        self.issues.push_issue(issue);
+    }
+
+    fn push_err(&mut self, err: impl Into<ResolveError>) {
+        self.issues.push_err(err);
+    }
+
+    fn push_warn(&mut self, warn: impl Into<ResolveWarning>) {
+        self.issues.push_warn(warn);
+    }
+
+    fn push_info(&mut self, info: impl Into<ResolveInfo>) {
+        self.issues.push_info(info);
     }
 }
 
 pub fn resolve(
     path: impl AsRef<std::path::Path>,
     ctx: &mut ResolveContext,
-) -> CompilationResult<Library, ResolveError> {
+) -> CompilationResult<Library, ResolveIssue> {
     let mut lib = Library::new();
     let mut lib_ctx = ResolveLibraryContext::new(&mut lib, ctx);
 
     match lib_ctx.load(path) {
         Ok(()) => {
-            let diags = lib_ctx.diags();
-            Ok((lib, diags))
+            let issues = lib_ctx.issues();
+            Ok((lib, issues))
         }
         Err(err) => {
-            let mut diags = lib_ctx.diags();
-            diags.push(err);
-            Err(diags)
+            let mut issues = lib_ctx.issues();
+            issues.push_err(err);
+            Err(issues)
         }
     }
 }

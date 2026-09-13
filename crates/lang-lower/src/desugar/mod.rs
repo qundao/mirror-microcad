@@ -17,7 +17,7 @@ mod workbench;
 mod tests;
 
 use microcad_builtin::BuiltinError;
-use microcad_lang_base::{Identifiable, PushDiag, Refer, SpanToSrcRef, Spanned, SrcReferrer};
+use microcad_lang_base::{Identifiable, PushIssue, Refer, SpanToSrcRef, Spanned, SrcReferrer};
 use microcad_lang_parse::ast;
 
 use crate::{Desugar, LowerContext, LowerError, LowerResult, ir};
@@ -114,7 +114,7 @@ where
             }
         })
         .try_for_each(|(prev_arg, arg)| -> LowerResult<()> {
-            context.push_diag(LowerError::DuplicateArgument {
+            context.push_err(LowerError::DuplicateArgument {
                 id: arg.id().clone(),
                 previous: prev_arg.id().clone(),
             });
@@ -176,7 +176,7 @@ impl Desugar<ast::def::UseName> for ir::Path {
 
         if let Some(id) = path.builtin_id() {
             if context.builtins.get(id).is_none() {
-                context.push_diag(BuiltinError::NoBuiltin {
+                context.push_err(BuiltinError::NoBuiltin {
                     full_name: path.to_string(),
                     id,
                 });

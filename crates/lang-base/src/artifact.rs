@@ -9,7 +9,9 @@ use miette::Diagnostic as MietteDiagnostic;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use crate::{CompilationResult, Diagnostics, LanguageVersion, SrcReferrer};
+use crate::{
+    CompilationResult, Diagnostics, IntoDiagnostics, Issue, IssueList, LanguageVersion, SrcReferrer,
+};
 
 #[derive(Debug, Error, MietteDiagnostic)]
 pub enum ArtifactError {
@@ -176,10 +178,10 @@ pub trait CompileError: Into<miette::Report> + SrcReferrer {}
 
 /// The result of a compilation stage.
 #[derive(Debug)]
-pub struct StageResult<T: Artifact, E: CompileError>(Option<CompilationResult<T, E>>);
+pub struct StageResult<T: Artifact, I: Issue>(Option<CompilationResult<T, I>>);
 
-impl<T: Artifact, E: CompileError> StageResult<T, E> {
-    pub fn new(result: CompilationResult<T, E>) -> Self {
+impl<T: Artifact, I: Issue> StageResult<T, I> {
+    pub fn new(result: CompilationResult<T, I>) -> Self {
         Self(Some(result))
     }
 
@@ -197,28 +199,11 @@ impl<T: Artifact, E: CompileError> StageResult<T, E> {
         self.0?.ok().map(|(val, _)| val)
     }
 
-    /// Return a slice of errors.
-    pub fn errors(&self) -> &[E] {
-        match self.0.as_ref() {
-            Some(Ok((_, errors))) | Some(Err(errors)) => errors,
-            None => &[],
+    pub fn issues(&self) -> Option<&IssueList<I>> {
+        match &self.0 {
+            Some(Ok((_, issues))) | Some(Err(issues)) => Some(issues),
+            None => None,
         }
-    }
-
-    pub fn into_errors(self) -> Vec<E> {
-        match self.0 {
-            Some(Ok((_, errors))) | Some(Err(errors)) => errors,
-            None => Vec::new(),
-        }
-    }
-
-    /// Return the diagnostics.
-    pub fn diagnostics(self) -> Diagnostics {
-        let mut diags = Diagnostics::default();
-        self.into_errors()
-            .into_iter()
-            .for_each(|err| diags.push(err));
-        diags
     }
 
     /// Returns true if this compilation stage has been successful.
@@ -227,14 +212,23 @@ impl<T: Artifact, E: CompileError> StageResult<T, E> {
     }
 }
 
-impl<T: Artifact, E: CompileError> Default for StageResult<T, E> {
+impl<T: Artifact, I: Issue + Clone + Into<miette::Report>> IntoDiagnostics for StageResult<T, I> {
+    fn into_diagnostics(&self) -> Diagnostics {
+        match self.issues() {
+            Some(issues) => issues.into_diagnostics(),
+            None => Diagnostics::new(),
+        }
+    }
+}
+
+impl<T: Artifact, I: Issue> Default for StageResult<T, I> {
     fn default() -> Self {
         Self(None)
     }
 }
 
-impl<T: Artifact, E: CompileError> From<CompilationResult<T, E>> for StageResult<T, E> {
-    fn from(result: CompilationResult<T, E>) -> Self {
+impl<T: Artifact, I: Issue> From<CompilationResult<T, I>> for StageResult<T, I> {
+    fn from(result: CompilationResult<T, I>) -> Self {
         Self::new(result)
     }
 }

@@ -3,9 +3,8 @@
 
 use microcad_lang_base::{SrcReferrer, element::Case};
 
-use crate::ResolveResult;
-use crate::error::ResolveErrorKind;
 use crate::library::symbol;
+use crate::{ResolveErrorKind, ResolveResult};
 
 /// Check case
 pub trait CaseCheck {

@@ -7,9 +7,7 @@ use std::str::FromStr;
 
 use microcad_lang_base::{DiagRenderOptions, Diagnostics};
 use microcad_lang_lower::ir::UnresolvedPath;
-use microcad_lang_resolve::{
-    Library, ResolveContext, ResolveLibraryContext, SourceCache, SymbolNodeExt, SymbolNodeRef,
-};
+use microcad_lang_resolve::{Library, ResolveContext, ResolveLibraryContext, SymbolNodeExt};
 
 fn lib_ctx<'lib, 'ctx>(
     lib: &'lib mut Library,
@@ -68,7 +66,7 @@ fn load_source_inline_module() {
             insta::assert_snapshot!("load_source_inline_module", library);
         }
         Err(err) => {
-            let diagnostics = Diagnostics::from(lib_ctx.diag);
+            let diagnostics = Diagnostics::from(lib_ctx.issues);
 
             ctx.src_cache.with_read(|source_cache| {
                 panic!(

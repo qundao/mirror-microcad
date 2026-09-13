@@ -8,7 +8,7 @@ use crate::{
 };
 
 use microcad_builtin::__mu;
-use microcad_lang_base::{PushDiag, SpanToSrcRef, SrcRef};
+use microcad_lang_base::{PushIssue, SpanToSrcRef, SrcRef};
 use microcad_lang_parse::ast;
 
 impl Desugar<ast::Statement> for Option<ir::InitStatement> {
@@ -18,7 +18,7 @@ impl Desugar<ast::Statement> for Option<ir::InitStatement> {
                 Some(ir::InitStatement::desugar(local_assignment, context)?)
             }
             _ => {
-                context.push_diag(LowerError::StatementNotAllowed {
+                context.push_err(LowerError::StatementNotAllowed {
                     src_ref: context.span_to_src_ref(&node.span()),
                 });
 
@@ -30,7 +30,7 @@ impl Desugar<ast::Statement> for Option<ir::InitStatement> {
 
 impl Desugar<ast::ExpressionStatement> for Option<ir::InitStatement> {
     fn desugar(node: &ast::ExpressionStatement, context: &mut LowerContext) -> LowerResult<Self> {
-        context.push_diag(LowerError::StatementNotAllowed {
+        context.push_err(LowerError::StatementNotAllowed {
             src_ref: context.span_to_src_ref(&node.span),
         });
         Ok(None)
@@ -46,7 +46,7 @@ impl Desugar<ast::LocalAssignment> for ir::InitStatement {
         };
 
         if let Some(ty) = &node.ty {
-            context.push_diag(LowerError::InvalidInitStatement {
+            context.push_err(LowerError::InvalidInitStatement {
                 src_ref: context.span_to_src_ref(&ty.span()),
                 stmt_src_ref: stmt.src_ref,
             });
@@ -65,7 +65,7 @@ impl ir::Init {
     ) {
         // Check if an initializer is equal to default initializer
         if inputs == &self.parameters {
-            context.push_diag(LowerError::DuplicatedDefaultInitializer {
+            context.push_err(LowerError::DuplicatedDefaultInitializer {
                 src_ref: self.src_ref,
             });
             return;
@@ -74,7 +74,7 @@ impl ir::Init {
         // Check for statements that
         self.statements.iter().for_each(|stmt| {
             if inputs.get_by_name(&stmt.name).is_none() {
-                context.push_diag(LowerError::NotAnInputProperty {
+                context.push_err(LowerError::NotAnInputProperty {
                     name: stmt.name.clone(),
                     possible_inputs: inputs.names().cloned().collect(),
                 })
@@ -111,7 +111,7 @@ impl ir::Init {
                             )),
                         }
                     } else {
-                        context.push_diag(LowerError::InputNotInitialized {
+                        context.push_err(LowerError::InputNotInitialized {
                             name: param.id.clone(),
                             src_ref: self.src_ref,
                             param_src_ref: param.src_ref,
@@ -145,7 +145,7 @@ impl Desugar<ast::Init> for ir::Init {
             match stmt {
                 FileModule(_) | InlineModule(_) | Function(_) | Workbench(_) | Return(_)
                 | Use(_) | Const(_) | InnerDocComment(_) | InnerAttribute(_) | Error(_) => {
-                    context.push_diag(LowerError::StatementNotAllowed { src_ref })
+                    context.push_err(LowerError::StatementNotAllowed { src_ref })
                 }
                 _ => {}
             }
@@ -173,7 +173,7 @@ impl Desugar<ast::Body> for ir::Group {
             match stmt {
                 FileModule(_) | Const(_) | Use(_) | InlineModule(_) | Init(_) | Workbench(_)
                 | Function(_) | Return(_) | InnerAttribute(_) | InnerDocComment(_) | Error(_) => {
-                    context.push_diag(LowerError::StatementNotAllowed { src_ref })
+                    context.push_err(LowerError::StatementNotAllowed { src_ref })
                 }
                 _ => {}
             }
@@ -299,7 +299,7 @@ impl Desugar<ast::StatementList> for Vec<ir::Init> {
 
                     if src_ref.is_some() {
                         let src_ref = context.span_to_src_ref(&stmt.span());
-                        context.push_diag(LowerError::StatementNotAllowed { src_ref });
+                        context.push_err(LowerError::StatementNotAllowed { src_ref });
                     }
                     Ok(())
                 })?;
@@ -310,7 +310,7 @@ impl Desugar<ast::StatementList> for Vec<ir::Init> {
                 .try_for_each(|(stmt, _)| -> LowerResult<()> {
                     if !is_init(stmt) {
                         let src_ref = context.span_to_src_ref(&stmt.span());
-                        context.push_diag(LowerError::StatementNotAllowed { src_ref });
+                        context.push_err(LowerError::StatementNotAllowed { src_ref });
                     }
                     Ok(())
                 })?;
@@ -426,7 +426,7 @@ impl Desugar<ast::StatementList> for ir::desugared::WorkbenchItems {
                 | ast::Statement::Workbench(_)
                 | ast::Statement::Return(_)
                 | ast::Statement::Error(_) => {
-                    context.push_diag(LowerError::StatementNotAllowed { src_ref })
+                    context.push_err(LowerError::StatementNotAllowed { src_ref })
                 }
                 _ => {}
             }

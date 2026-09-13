@@ -6,32 +6,16 @@ use crate::prelude as mu;
 
 use microcad_lang_base::ArtifactKind;
 use microcad_lang_base::Diagnostics;
+use microcad_lang_base::IntoDiagnostics;
 use microcad_lang_base::{Artifact, DiagRenderOptions};
 
-use miette::Diagnostic;
 use miette::IntoDiagnostic;
-use thiserror::Error;
-
-#[derive(Error, Debug, Diagnostic)]
-pub enum SourceError {
-    /// An IO error
-    #[error("I/O Error: {0}")]
-    IoError(#[from] std::io::Error),
-
-    /// An that occured during lowering
-    #[error("Lower error: {0}")]
-    LowerError(#[from] mu::lower::LowerError),
-
-    /// Invalid compilation state.
-    #[error("Invalid state")]
-    InvalidState,
-}
 
 /// A µcad source file document.
 pub struct SourceFile {
     pub source: mu::Source,
-    pub ast: mu::StageResult<mu::Ast, mu::parse::ParseError>,
-    pub ir: mu::StageResult<mu::Ir, mu::lower::LowerError>,
+    pub ast: mu::StageResult<mu::Ast, mu::parse::ParseIssue>,
+    pub ir: mu::StageResult<mu::Ir, mu::lower::LowerIssue>,
     //pub model: Option<mu::CompilationResult<mu::Model>>,
 }
 
@@ -63,13 +47,6 @@ impl SourceFile {
         Ok(())
     }
 
-    /// Return iterator over diagnostics
-    pub fn diagnostics(self) -> Diagnostics {
-        let mut diags = self.ast.diagnostics();
-        diags.append(self.ir.diagnostics());
-        diags
-    }
-
     /// Loads the code from the file specified in the `url`.
     ///
     /// # Errors
@@ -94,6 +71,14 @@ impl SourceFile {
         Self::load_from_file(mu::locate::to_url(
             path.as_ref().as_os_str().to_str().unwrap(),
         )?)
+    }
+}
+
+impl IntoDiagnostics for SourceFile {
+    fn into_diagnostics(&self) -> Diagnostics {
+        let mut diags = self.ast.into_diagnostics();
+        diags.append(self.ir.into_diagnostics());
+        diags
     }
 }
 
@@ -156,7 +141,7 @@ impl mu::commands::compile::Lower for SourceFile {
                 self.ir = mu::lower(&mut lower_context, ast).into();
                 Ok(())
             }
-            _ => Err(SourceError::InvalidState.into()),
+            _ => Err(miette::miette!("No AST.")),
         }
     }
 }

@@ -1,7 +1,7 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use crate::{GetSourceByHash, artifact::CompileError, diag::*};
+use crate::{GetSourceByHash, SrcReferrer, artifact::CompileError, diag::*};
 
 use miette::Severity;
 use std::io::IsTerminal;
@@ -48,6 +48,10 @@ pub struct Diagnostics {
 }
 
 impl Diagnostics {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
     pub fn has_errors(&self) -> bool {
         self.error_count > 0
     }
@@ -118,9 +122,9 @@ impl Diagnostics {
         lines
     }
 
-    pub fn push<E: CompileError>(&mut self, err: E) {
-        let src_ref = err.src_ref(); // Extract the metadata
-        let report = err.into(); // Convert to miette::Report
+    pub fn push<I: Issue + SrcReferrer + Into<miette::Report>>(&mut self, issue: I) {
+        let src_ref = issue.src_ref(); // Extract the metadata
+        let report = issue.into(); // Convert to miette::Report
 
         match report.severity() {
             Some(Severity::Error) | None => self.error_count += 1,
@@ -153,24 +157,10 @@ impl Diagnostics {
     }
 }
 
-impl<E> From<Vec<E>> for Diagnostics
-where
-    E: CompileError,
-{
-    fn from(errors: Vec<E>) -> Self {
-        let mut diags = Self::default();
-        errors.into_iter().for_each(|err| diags.push(err));
-        diags
-    }
-}
-
-impl<E> FromIterator<E> for Diagnostics
-where
-    E: CompileError,
-{
-    fn from_iter<T: IntoIterator<Item = E>>(iter: T) -> Self {
-        let mut diags = Self::default();
-        iter.into_iter().for_each(|err| diags.push(err));
-        diags
+impl<I: Issue> From<IssueList<I>> for Diagnostics {
+    fn from(issues: IssueList<I>) -> Self {
+        let mut diagnostics = Diagnostics::new();
+        issues.into_iter().for_each(|issue| diagnostics.push(issue));
+        diagnostics
     }
 }

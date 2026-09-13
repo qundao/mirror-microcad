@@ -256,6 +256,3 @@ impl SrcReferrer for LowerError {
         }
     }
 }
-
-/// Result with lower error
-pub type LowerResult<T> = Result<T, LowerError>;

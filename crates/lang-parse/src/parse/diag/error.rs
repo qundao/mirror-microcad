@@ -1,22 +1,16 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-mod rich;
-
 use crate::ParseContext;
-use crate::parse::error::rich::RichPattern;
+use crate::parse::diag::{RichError, RichPattern, RichReason};
 use crate::token::Token;
-use microcad_lang_base::{CompileError, Span, SpanToSrcRef, SrcRef};
+use microcad_lang_base::{Span, SpanToSrcRef, SrcRef};
 use microcad_macros::SrcReferrer;
 use miette::{Diagnostic, LabeledSpan};
-pub use rich::{Rich, RichReason};
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 use std::iter::once;
 use thiserror::Error;
-
-/// Type alias for RichError
-pub type RichError<'tokens> = Rich<'tokens, Token<'tokens>, Span, ParseErrorKind>;
 
 /// An error from building the abstract syntax tree
 #[derive(Debug, SrcReferrer, Clone)]
@@ -35,8 +29,6 @@ impl ParseError {
         }
     }
 }
-
-impl CompileError for ParseError {}
 
 #[derive(Debug, Error, Clone, Diagnostic)]
 pub enum ParseErrorKind {

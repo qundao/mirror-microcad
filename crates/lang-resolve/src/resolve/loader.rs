@@ -3,12 +3,11 @@
 
 //! Load a library
 
-use microcad_lang_base::{HashId, LibraryId, PushDiag, Source, ToCompactString, tree};
+use microcad_lang_base::{HashId, LibraryId, PushIssue, Source, ToCompactString, tree};
 use microcad_lang_lower::ir;
 
 use crate::{
-    Library, Manifest, ResolveError, ResolveLibraryContext, ResolveResult,
-    error::ResolveErrorKind,
+    Library, Manifest, ResolveError, ResolveErrorKind, ResolveLibraryContext, ResolveResult,
     library::{Symbol, SymbolNodeId},
     locate,
     resolve::visitor::ResolveVisitor,
@@ -67,7 +66,7 @@ impl<'lib, 'ctx> ResolveLibraryContext<'lib, 'ctx> {
             // Error loading manifest or manifest not found, fallback to defaults.
             Err(err) => {
                 log::warn!("No manifest:\n{err:?}");
-                self.push_diag(ResolveError::new(err));
+                self.push_err(ResolveError::new(err));
             }
         };
         self._load_source(&lib_mu, None)?;
@@ -77,16 +76,16 @@ impl<'lib, 'ctx> ResolveLibraryContext<'lib, 'ctx> {
     fn load_source(&mut self, path: impl AsRef<std::path::Path>) -> ResolveResult<HashId> {
         let source = Source::load(path)?;
         let id = self.ctx.src_cache.write_unwrap().insert(source);
-        let errors = self
+        let issues = self
             .ctx
             .src_cache
             .read_unwrap()
             .get(id)
             .iter()
-            .flat_map(|source_unit| source_unit.errors())
+            .flat_map(|source_unit| source_unit.issues())
             .collect::<Vec<_>>();
 
-        self.append_diags(errors);
+        self.append_issues(issues);
 
         Ok(id)
     }
@@ -144,7 +143,7 @@ impl<'lib, 'ctx> ResolveLibraryContext<'lib, 'ctx> {
                             match self._load_source(path, Some(id)) {
                                 Ok(id) => id,
                                 Err(err) => {
-                                    self.push_diag(err);
+                                    self.push_err(err);
                                     self.lib.arena.new_node(Symbol::root(None))
                                 }
                             }

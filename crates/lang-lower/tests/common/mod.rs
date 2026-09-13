@@ -1,18 +1,18 @@
 use microcad_lang_base::{CompilationResult, MICROCAD_EXTENSION, Source};
-use microcad_lang_lower::{self as lower, LowerContext, LowerError, ir};
+use microcad_lang_lower::{self as lower, Ir, LowerContext, LowerIssue, ir};
 use microcad_lang_parse as parse;
 
 /// Get intermediate representation and diagnostics.
 #[allow(unused)]
-pub fn ir_from_source(source: &Source) -> CompilationResult<lower::Ir, LowerError> {
+pub fn ir_from_source(source: &Source) -> CompilationResult<Ir, LowerIssue> {
     let ast = parse::parse(source).expect("No parse errors").0;
     let mut context = LowerContext::from(source);
-    let (mut ir, errors) = lower::lower(&mut context, &ast)?;
+    let (mut ir, issues) = lower::lower(&mut context, &ast)?;
 
     use microcad_lang_lower::ir::visitor::VisitorMut;
     ir::visitor::MakeHumanReadable::new(&context).visit(&mut ir);
 
-    Ok((ir, errors))
+    Ok((ir, issues))
 }
 
 #[allow(unused)]

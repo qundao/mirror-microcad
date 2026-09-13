@@ -5,8 +5,8 @@
 
 pub mod ir;
 
-mod error;
-pub use error::{LowerError, LowerResult};
+mod diag;
+pub use diag::{LowerError, LowerInfo, LowerIssue, LowerResult, LowerWarning};
 
 mod desugar;
 mod fold;
@@ -14,8 +14,8 @@ mod scaffold;
 
 use microcad_builtin::BuiltinRegistry;
 use microcad_lang_base::{
-    CompilationResult, HashId, LookUpName, PushDiag, Source, Span, SpanToSrcRef, SrcRef, SymbolId,
-    hash_id,
+    CompilationResult, HashId, IssueList, LookUpName, PushIssue, Source, Span, SpanToSrcRef,
+    SrcRef, SymbolId, hash_id,
 };
 
 pub use ir::CastInto;
@@ -49,7 +49,7 @@ pub struct LowerContext<'source> {
     pub arena: ir::Arena,
     pub node_id_stack: Vec<ir::NodeId>,
     pub builtins: BuiltinRegistry,
-    pub errors: Vec<LowerError>,
+    pub issues: IssueList<LowerIssue>,
 }
 
 impl<'source> LookUpName for LowerContext<'source> {
@@ -68,7 +68,7 @@ impl<'source> LowerContext<'source> {
             arena: Arena::default(),
             node_id_stack: vec![],
             builtins: BuiltinRegistry::new(),
-            errors: vec![],
+            issues: Default::default(),
         }
     }
 
@@ -93,9 +93,21 @@ impl<'source> LowerContext<'source> {
     }
 }
 
-impl<'source> PushDiag<LowerError> for LowerContext<'source> {
-    fn push_diag(&mut self, err: impl Into<LowerError>) {
-        self.errors.push(err.into());
+impl<'source> PushIssue<LowerIssue> for LowerContext<'source> {
+    fn push_issue(&mut self, issue: impl Into<LowerIssue>) {
+        self.issues.push_issue(issue);
+    }
+
+    fn push_err(&mut self, err: impl Into<LowerError>) {
+        self.issues.push_err(err);
+    }
+
+    fn push_warn(&mut self, warn: impl Into<LowerWarning>) {
+        self.issues.push_warn(warn);
+    }
+
+    fn push_info(&mut self, info: impl Into<LowerInfo>) {
+        self.issues.push_info(info);
     }
 }
 
@@ -134,15 +146,15 @@ impl Unresolver for BuiltinRegistry {
 pub fn lower<'source>(
     context: &mut LowerContext<'source>,
     ast: &Ast,
-) -> CompilationResult<Ir, LowerError> {
+) -> CompilationResult<Ir, LowerIssue> {
     // Short-circuit on fatal errors
     let ir = match ir::desugared::Source::desugar(ast.tree(), context) {
         Ok(ir) => ir,
         Err(fatal_error) => {
             // Ensure the fatal error is logged in the diagnostics
-            context.push_diag(fatal_error);
-            let errors = std::mem::take(&mut context.errors);
-            return Err(errors);
+            context.push_err(fatal_error);
+            let issues = std::mem::take(&mut context.issues);
+            return Err(issues);
         }
     };
 
@@ -161,11 +173,11 @@ pub fn lower<'source>(
         tree,
     };
 
-    let errors = std::mem::take(&mut context.errors);
+    let issues = std::mem::take(&mut context.issues);
 
-    if !errors.is_empty() {
-        Err(errors)
+    if issues.has_errors() {
+        Err(issues)
     } else {
-        Ok((ir, errors))
+        Ok((ir, issues))
     }
 }

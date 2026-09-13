@@ -15,9 +15,9 @@ pub mod ast;
 pub mod token;
 
 #[cfg(feature = "parser")]
-use microcad_lang_base::ToHash;
+use microcad_lang_base::{IssueList, ToHash};
 #[cfg(feature = "parser")]
-pub use parse::{ParseContext, ParseError, parsers};
+pub use parse::{ParseContext, ParseError, ParseInfo, ParseIssue, ParseWarning, parsers};
 
 /// Contains the parser.
 #[cfg(feature = "parser")]
@@ -91,10 +91,10 @@ impl Parse for Ast {
 #[cfg(feature = "parser")]
 pub fn parse<'source>(
     context: impl Into<ParseContext<'source>>,
-) -> CompilationResult<Ast, ParseError> {
+) -> CompilationResult<Ast, ParseIssue> {
     let context = context.into();
     match Ast::parse(&context) {
-        Ok(ast) => Ok((ast, vec![])), // FIXME: Right now, the parser can only return errors and no warnings
-        Err(errors) => Err(errors),
+        Ok(ast) => Ok((ast, IssueList::default())), // FIXME: Right now, the parser can only return errors and no warnings
+        Err(errors) => Err(errors.into()),
     }
 }

@@ -13,7 +13,6 @@ pub mod display;
 pub mod element;
 mod fs;
 mod id;
-mod issue;
 mod output;
 mod rc;
 mod source;
@@ -37,7 +36,10 @@ pub const MICROCAD_EXTENSION: &'static str = "µcad";
 pub use artifact::{
     Artifact, ArtifactError, ArtifactHeader, ArtifactKind, CompileError, StageResult,
 };
-pub use diag::{DiagRenderOptions, Diagnostic, Diagnostics, PushDiag};
+pub use diag::{
+    DiagRenderOptions, Diagnostic, Diagnostics, IntoDiagnostics, Issue, IssueList, PushDiag,
+    PushIssue,
+};
 pub use display::DisplayOneLine;
 pub use element::{Identifier, IdentifierList};
 pub use fs::{FileSystem, VirtualFileSystem};
@@ -45,7 +47,6 @@ pub use id::{
     BuiltinId, BuiltinInfo, DefaultContext, DisplayWithCtx, DisplayWithCtxHelper, ExternalId,
     HashId, LibraryId, LibraryInfo, LookUpName, Name, SymbolId, hash_id,
 };
-pub use issue::{Issue, IssueList, PushIssue};
 pub use output::{Capture, Output, Stdout};
 pub use rc::{Rc, RcMut, Shared};
 pub use source::{Source, SourceKind, SourceLocation, SourceMap, TextEdit};
@@ -109,8 +110,8 @@ pub trait Identifiable {
     }
 }
 
-/// A result that contains the compilation artifact bundled with diagnostics.
-pub type CompilationResult<T, E> = Result<(T, Vec<E>), Vec<E>>;
+/// A result that contains the compilation artifact bundled with issues occured during compilation.
+pub type CompilationResult<T, I> = Result<(T, IssueList<I>), IssueList<I>>;
 
 /// Write the display output of type to file.
 #[cfg(feature = "io")]

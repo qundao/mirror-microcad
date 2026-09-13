@@ -3,7 +3,7 @@
 
 use crate::{Desugar, LowerContext, LowerError, LowerResult, desugar::check_for_duplicates, ir};
 
-use microcad_lang_base::{PushDiag, SpanToSrcRef};
+use microcad_lang_base::{PushIssue, SpanToSrcRef};
 use microcad_lang_parse::ast;
 
 /// Trait to lower generic attributes into item specific attributes.
@@ -14,19 +14,19 @@ pub trait LowerAttributes: Sized + Default {
 impl LowerAttributes for ir::ParameterAttributes {
     fn lower_attributes(attr: ir::Attributes, context: &mut LowerContext) -> LowerResult<Self> {
         attr.commands.iter().for_each(|attr| {
-            context.push_diag(LowerError::UnsupportedCommandAttribute {
+            context.push_err(LowerError::UnsupportedCommandAttribute {
                 path: attr.path.clone(),
                 src_ref: attr.src_ref,
             })
         });
         attr.kv_exprs.iter().for_each(|attr| {
-            context.push_diag(LowerError::UnsupportedKeyValueAttribute {
+            context.push_err(LowerError::UnsupportedKeyValueAttribute {
                 key: attr.name.clone(),
                 src_ref: attr.src_ref,
             })
         });
         attr.tags.iter().for_each(|attr| {
-            context.push_diag(LowerError::UnsupportedTagAttribute {
+            context.push_err(LowerError::UnsupportedTagAttribute {
                 tag: attr.name.clone(),
             })
         });

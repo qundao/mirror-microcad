@@ -15,6 +15,9 @@ use chumsky::{DefaultExpected, text};
 use microcad_lang_base::Span;
 use std::borrow::Cow;
 
+use crate::parse::ParseErrorKind;
+use crate::token::Token;
+
 /// An expected pattern for a [`Rich`] error.
 #[derive(Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
 #[non_exhaustive]
@@ -576,3 +579,6 @@ fn write_token<T>(
         None => write!(f, "end of input"),
     }
 }
+
+/// Type alias for RichError
+pub type RichError<'tokens> = Rich<'tokens, Token<'tokens>, Span, ParseErrorKind>;

@@ -4,7 +4,7 @@
 //! Scaffolding builds the tree from desugared IR items.
 
 use microcad_lang_base::{
-    PushDiag, SingleIdentifier, SrcReferrer, Stability, Version, VersionAnnotation,
+    PushDiag, PushIssue, SingleIdentifier, SrcReferrer, Stability, Version, VersionAnnotation,
 };
 use microcad_lang_types::Value;
 
@@ -165,7 +165,7 @@ impl ir::Attributes {
             ctx: &mut LowerContext,
         ) {
             if slot.is_some() {
-                ctx.push_diag(LowerError::ConflictingStability {
+                ctx.push_err(LowerError::ConflictingStability {
                     src_ref: src_ref.src_ref(),
                 });
             } else {
@@ -217,7 +217,7 @@ impl ir::Attributes {
                         match ver_str.parse::<Version>() {
                             Ok(ver) => {
                                 if introduced.is_some() {
-                                    ctx.push_diag(LowerError::DuplicateAttribute {
+                                    ctx.push_err(LowerError::DuplicateAttribute {
                                         attr: "introduced".to_string(),
                                         src_ref: cmd.src_ref,
                                     });
@@ -226,14 +226,14 @@ impl ir::Attributes {
                                 }
                             }
                             Err(_) => {
-                                ctx.push_diag(LowerError::InvalidVersionString {
+                                ctx.push_err(LowerError::InvalidVersionString {
                                     value: ver_str,
                                     src_ref: cmd.src_ref,
                                 });
                             }
                         }
                     } else {
-                        ctx.push_diag(LowerError::MissingAttributeArgument {
+                        ctx.push_err(LowerError::MissingAttributeArgument {
                             attr: "introduced".to_string(),
                             arg: "version".to_string(),
                             src_ref: cmd.src_ref,

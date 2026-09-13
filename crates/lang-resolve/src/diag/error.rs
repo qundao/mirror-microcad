@@ -95,7 +95,6 @@ impl From<LowerError> for ResolveError {
     }
 }
 
-// 1. ResolveError must implement std::error::Error (which requires Display)
 impl std::fmt::Display for ResolveError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         std::fmt::Display::fmt(&self.0, f)
@@ -142,8 +141,6 @@ impl Diagnostic for ResolveError {
         self.0.diagnostic_source()
     }
 }
-
-pub type ResolveResult<T> = Result<T, ResolveError>;
 
 impl SrcReferrer for ResolveError {
     fn src_ref(&self) -> SrcRef {

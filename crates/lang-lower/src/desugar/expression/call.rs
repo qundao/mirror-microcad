@@ -4,7 +4,7 @@
 use crate::{Desugar, LowerContext, LowerError, LowerResult, desugar::DesugarExpr, ir};
 
 use microcad_builtin::__mu;
-use microcad_lang_base::{Identifier, PushDiag, SpanToSrcRef, SrcRef};
+use microcad_lang_base::{Identifier, PushIssue, SpanToSrcRef, SrcRef};
 use microcad_lang_parse::ast;
 
 impl<Expr: DesugarExpr> Desugar<ast::Call> for ir::Call<Expr> {
@@ -38,7 +38,7 @@ impl<Expr: DesugarExpr> Desugar<Vec<ast::TupleItem>> for ir::ArgumentList<Expr> 
 
             if let Some(name) = arg.name() {
                 if names.contains(name) {
-                    context.push_diag(LowerError::DuplicateArgument {
+                    context.push_err(LowerError::DuplicateArgument {
                         id: name.clone(),
                         previous: names.get(name).unwrap().clone(),
                     });

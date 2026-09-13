@@ -5,7 +5,7 @@ use crate::desugar::{extract_statements, for_each_statement};
 use crate::ir::source::ExportAttribute;
 use crate::{Desugar, LowerContext, LowerError, LowerResult, ir};
 
-use microcad_lang_base::{PushDiag, SingleIdentifier, SpanToSrcRef};
+use microcad_lang_base::{PushIssue, SingleIdentifier, SpanToSrcRef};
 use microcad_lang_parse::ast;
 
 /// Helper function to get outer attributes
@@ -227,12 +227,12 @@ impl Desugar<ast::StatementList> for ir::Attributes {
             match stmt {
                 ast::Statement::InnerDocComment(_) => {
                     if state != State::InitDoc {
-                        context.push_diag(LowerError::InnerDocAfterInnerAttribute { src_ref });
+                        context.push_err(LowerError::InnerDocAfterInnerAttribute { src_ref });
                     }
                 }
                 ast::Statement::InnerAttribute(_) => {
                     if state == State::Statements {
-                        context.push_diag(LowerError::InnerAttributeAfterStatement { src_ref });
+                        context.push_err(LowerError::InnerAttributeAfterStatement { src_ref });
                     } else {
                         state = State::Attributes;
                     }

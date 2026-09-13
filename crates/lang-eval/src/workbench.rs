@@ -4,7 +4,7 @@
 //! Workbench evaluation
 
 use crate::{
-    Callable, Eval, EvalContext, EvalError, EvalErrorKind, EvalResult,
+    Callable, Eval, EvalContext, EvalErrorKind, EvalResult,
     context::{
         BuiltinItemFrame, ContextScope, WorkbenchGroupFrame, WorkbenchInitFrame, WorkpieceFrame,
     },

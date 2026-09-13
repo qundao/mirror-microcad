@@ -10,7 +10,8 @@ pub mod prelude;
 //mod session;
 mod watcher;
 
-use microcad_lang_base::{DiagRenderOptions, Diagnostics};
+use microcad_lang_base::{DiagRenderOptions, IntoDiagnostics, IssueList};
+use microcad_lang_parse::ParseIssue;
 use microcad_lang_types::Value;
 
 /// We use [`miette::Result`] throught-out this crate.
@@ -44,8 +45,10 @@ pub fn value_from_str(s: &str) -> Result<Value> {
     let source = mu::Source::from(s);
     let parse_context = mu::parse::ParseContext::from(&source);
     let node = mu::ast::Literal::parse(&parse_context).map_err(|errors| {
+        let issues: IssueList<ParseIssue> = IssueList::from(errors);
         miette::miette!(
-            Diagnostics::from(errors)
+            issues
+                .into_diagnostics()
                 .render_to_string(&source, &DiagRenderOptions::default())
                 .unwrap()
         )

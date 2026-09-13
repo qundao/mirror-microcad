@@ -3,7 +3,7 @@
 
 use crate::{Desugar, LowerContext, LowerError, LowerResult, desugar::for_each_statement, ir};
 
-use microcad_lang_base::{Identifier, PushDiag, SpanToSrcRef, SrcRef, element::Visibility};
+use microcad_lang_base::{Identifier, PushIssue, SpanToSrcRef, SrcRef, element::Visibility};
 use microcad_lang_parse::ast;
 
 impl Desugar<ast::StatementList> for ir::desugared::SourceItems {
@@ -15,7 +15,7 @@ impl Desugar<ast::StatementList> for ir::desugared::SourceItems {
                 | ast::Statement::Return(_)
                 | ast::Statement::Property(_)
                 | ast::Statement::Error(_) => {
-                    context.push_diag(LowerError::StatementNotAllowed { src_ref })
+                    context.push_err(LowerError::StatementNotAllowed { src_ref })
                 }
                 _ => {}
             }

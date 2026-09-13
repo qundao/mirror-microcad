@@ -1,17 +1,20 @@
 // Copyright © 2026 The µcad authors <info@microcad.xyz>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-mod error;
+mod diag;
 mod helpers;
 mod parse_context;
 pub mod parsers;
 
-pub use error::{ParseError, ParseErrorKind, RichError};
+pub use diag::{ParseError, ParseErrorKind, ParseInfo, ParseIssue, ParseWarning};
 pub use parse_context::ParseContext;
 
 use crate::{
     ast, lex,
-    parse::{error::Rich, helpers::*},
+    parse::{
+        diag::{Rich, RichError},
+        helpers::*,
+    },
     token::Token,
 };
 

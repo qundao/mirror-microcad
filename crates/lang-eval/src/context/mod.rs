@@ -7,10 +7,10 @@ use microcad_lang_resolve::{Library, LibraryCache};
 pub use stack::*;
 
 use microcad_builtin::BuiltinRegistry;
-use microcad_lang_base::{IssueList, LookUpName, Name, PushIssue, Shared};
+use microcad_lang_base::{IssueList, LookUpName, Name, PushIssue, Shared, SrcRef, SrcReferrer};
 use microcad_lang_types::{Value, model::ModelTreeBuilderMut};
 
-use crate::{EvalError, EvalInfo, EvalIssue, EvalWarn};
+use crate::{EvalError, EvalInfo, EvalIssue, EvalWarning};
 
 #[derive(Debug, Default)]
 pub struct EvalContext {
@@ -136,15 +136,28 @@ impl ModelTreeBuilderMut for EvalContext {
 }
 
 impl PushIssue<EvalIssue> for EvalContext {
+    fn push_issue(&mut self, issue: impl Into<EvalIssue>) {
+        self.issues.push_issue(issue);
+    }
+
     fn push_err(&mut self, err: impl Into<EvalError>) {
         self.issues.push_err(err)
     }
 
-    fn push_warn(&mut self, warn: impl Into<EvalWarn>) {
+    fn push_warn(&mut self, warn: impl Into<EvalWarning>) {
         self.issues.push_warn(warn)
     }
 
     fn push_info(&mut self, info: impl Into<EvalInfo>) {
         self.issues.push_info(info)
+    }
+}
+
+impl SrcReferrer for EvalIssue {
+    fn src_ref(&self) -> SrcRef {
+        match self {
+            Self::Err(err) => err.src_ref(),
+            _ => SrcRef::none(),
+        }
     }
 }

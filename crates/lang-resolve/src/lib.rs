@@ -5,7 +5,7 @@
 
 mod resolve;
 
-mod error;
+mod diag;
 
 mod source_unit;
 
@@ -13,7 +13,9 @@ pub mod locate;
 
 pub use source_unit::SourceUnit;
 
-pub use error::{ResolveError, ResolveResult};
+pub use diag::{
+    ResolveError, ResolveErrorKind, ResolveInfo, ResolveIssue, ResolveResult, ResolveWarning,
+};
 
 pub use resolve::{LibraryCache, ResolveContext, ResolveLibraryContext, SourceCache, resolve};
 

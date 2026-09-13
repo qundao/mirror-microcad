@@ -65,7 +65,7 @@ impl Eval for symbol::SymbolId {
 }
 
 impl Eval for symbol::Symbol {
-    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+    fn eval(&self, _context: &mut EvalContext) -> EvalResult<Value> {
         todo!()
     }
 }
