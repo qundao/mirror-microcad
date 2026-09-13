@@ -3,9 +3,7 @@
 
 use microcad_lang_base::{GetSourceByHash, HashId, HashMap, LibraryId, Shared, Source};
 
-use crate::{
-    Library, ResolveError, ResolveResult, SourceUnit, error::ResolveErrorKind, source_unit,
-};
+use crate::{Library, ResolveResult, SourceUnit};
 
 #[derive(Debug, Default)]
 pub struct LibraryCache {

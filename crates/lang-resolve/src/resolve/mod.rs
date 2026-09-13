@@ -18,12 +18,9 @@ mod bind;
 mod cache;
 mod case_check;
 mod loader;
-mod resolver;
 pub mod stack;
 mod type_check;
 pub mod visitor;
-
-use core::error;
 
 use microcad_lang_base::{CompilationResult, HashId, PushDiag, Shared};
 
