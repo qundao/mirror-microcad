@@ -5,7 +5,7 @@
 
 use microcad_builtin::__mu;
 use microcad_lang_base::{DisplayWithCtx, boxed};
-use microcad_lang_eval::{CallTrait, Eval, EvalContext};
+use microcad_lang_eval::{Callable, Eval, EvalContext};
 use microcad_lang_resolve::{
     SymbolId, call_builtin, expr,
     library::symbol::{
@@ -69,7 +69,7 @@ pub fn eval_to_model_test<T: Eval>(name: &str, t: T) -> ModelTree {
 }
 
 /// Call a workbench with arguments to produce a model tree and test snapshot
-pub fn call_workbench<T: CallTrait<ModelTree>>(
+pub fn call_workbench<T: Callable<ModelTree>>(
     name: &str,
     workbench: &T,
     arg_iter: impl IntoIterator<Item = ArgumentValue>,

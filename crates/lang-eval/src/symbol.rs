@@ -5,20 +5,15 @@ use microcad_lang_base::{PushDiag, SrcReferrer};
 use microcad_lang_resolve::library::symbol;
 use microcad_lang_types::{ArgumentValueList, Value};
 
-use crate::{CallTrait, Eval, EvalContext, EvalError, EvalResult, context::SymbolCallFrame};
+use crate::{Callable, Eval, EvalContext, EvalError, EvalResult};
 
-impl CallTrait for symbol::SymbolDef {
+impl Callable for symbol::SymbolDef {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult {
         use symbol::SymbolDef::*;
         match self {
-            Root(source_file) => todo!(),
-            InlineModule(inline_module) => todo!(),
-            SourceFile(source_file) => todo!(),
-            Constant(constant) => todo!(),
-            Alias(alias) => todo!(),
-            Wildcard(wildcard) => todo!(),
             Workbench(workbench) => workbench.call(args, context),
             Function(function) => function.call(args, context),
+            _ => todo!("This symbol cannot be called"),
         }
     }
 }
@@ -66,5 +61,11 @@ impl Eval for symbol::SymbolId {
             symbol::SymbolId::Item(_) => todo!(),
             symbol::SymbolId::External { .. } => todo!(),
         }
+    }
+}
+
+impl Eval for symbol::Symbol {
+    fn eval(&self, context: &mut EvalContext) -> EvalResult<Value> {
+        todo!()
     }
 }

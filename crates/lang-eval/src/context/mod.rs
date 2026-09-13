@@ -3,14 +3,14 @@
 
 mod stack;
 
+use microcad_lang_resolve::{Library, LibraryCache};
 pub use stack::*;
 
 use microcad_builtin::BuiltinRegistry;
-use microcad_lang_base::{LookUpName, Name, PushDiag};
-use microcad_lang_resolve::library::symbol;
+use microcad_lang_base::{LookUpName, Name, PushDiag, Shared};
 use microcad_lang_types::{Value, model::ModelTreeBuilderMut};
 
-use crate::{EvalError, EvalResult};
+use crate::EvalError;
 
 #[derive(Debug, Default)]
 pub struct EvalContext {
@@ -20,15 +20,11 @@ pub struct EvalContext {
 
     pub builtins: BuiltinRegistry,
 
-    pub arena: microcad_lang_types::model::Arena,
+    pub lib: Option<Shared<Library>>,
+    pub lib_cache: Option<Shared<LibraryCache>>,
 }
 
-impl LookUpName for EvalContext {
-    fn look_up_built_in_name(&self, builtin_id: &microcad_builtin::BuiltinId) -> Option<Name> {
-        self.builtins.look_up_built_in_name(builtin_id)
-    }
-}
-
+/// Builder functions
 impl EvalContext {
     pub fn new() -> Self {
         let builtins = BuiltinRegistry::new();
@@ -39,6 +35,22 @@ impl EvalContext {
         }
     }
 
+    /// Add a library to the context.
+    ///
+    /// This is needed when you want to evaluate other symbols too.
+    pub fn with_lib(mut self, lib: Shared<Library>) -> Self {
+        self.lib = Some(lib);
+        self
+    }
+
+    pub fn with_lib_cache(mut self, lib_cache: Shared<LibraryCache>) -> Self {
+        self.lib_cache = Some(lib_cache);
+        self
+    }
+}
+
+/// Scope access functions
+impl EvalContext {
     pub fn scope<T>(&mut self, frame: impl Into<StackFrame>, f: impl FnOnce(&mut Self) -> T) -> T {
         // 1. Temporarily swap out the stack to avoid self-borrow issues
         let mut stack = std::mem::take(&mut self.stack);
@@ -68,6 +80,16 @@ impl EvalContext {
 
     pub fn top_mut(&mut self) -> &mut StackFrame {
         self.stack.top_mut()
+    }
+
+    pub fn diag(self) -> Vec<EvalError> {
+        self.diag
+    }
+}
+
+impl LookUpName for EvalContext {
+    fn look_up_built_in_name(&self, builtin_id: &microcad_builtin::BuiltinId) -> Option<Name> {
+        self.builtins.look_up_built_in_name(builtin_id)
     }
 }
 

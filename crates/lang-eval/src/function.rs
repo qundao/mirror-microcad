@@ -9,7 +9,7 @@ use microcad_lang_resolve::library::symbol;
 use microcad_lang_types::{ArgumentValue, ArgumentValueList, Value};
 
 use crate::{
-    CallTrait, Eval, EvalContext, EvalError, EvalResult,
+    Callable, Eval, EvalContext, EvalError, EvalResult,
     context::{FunctionFrame, FunctionScopeFrame},
 };
 
@@ -227,7 +227,7 @@ impl Eval<FlowSignal> for Box<[symbol::FunctionStatement]> {
     }
 }
 
-impl CallTrait for symbol::Function {
+impl Callable for symbol::Function {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult {
         use crate::ArgumentMatch;
         match self.argument_match(args) {

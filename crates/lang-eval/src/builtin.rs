@@ -7,9 +7,9 @@ use microcad_builtin::{
 use microcad_lang_base::PushDiag;
 use microcad_lang_types::{ArgumentValueList, ModelTree};
 
-use crate::{ArgumentMatch, CallTrait, EvalContext, EvalError, EvalResult, context::ContextScope};
+use crate::{ArgumentMatch, Callable, EvalContext, EvalError, EvalResult, context::ContextScope};
 
-impl CallTrait for BuiltinPrimitive {
+impl Callable for BuiltinPrimitive {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult {
         use crate::ArgumentMatch;
 
@@ -28,7 +28,7 @@ impl CallTrait for BuiltinPrimitive {
     }
 }
 
-impl CallTrait for BuiltinFunction {
+impl Callable for BuiltinFunction {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult {
         let src_ref = context.current_symbol_src_ref();
         let name = context.current_symbol_name().unwrap_or_default();
@@ -40,7 +40,7 @@ impl CallTrait for BuiltinFunction {
     }
 }
 
-impl CallTrait for BuiltinOperation {
+impl Callable for BuiltinOperation {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult {
         let src_ref = context.current_symbol_src_ref();
         let name = context.current_symbol_name().unwrap_or_default();
@@ -56,7 +56,7 @@ impl CallTrait for BuiltinOperation {
     }
 }
 
-impl CallTrait for BuiltinItem {
+impl Callable for BuiltinItem {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult {
         match self {
             BuiltinItem::Function(f) => f.call(args, context),

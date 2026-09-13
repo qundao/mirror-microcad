@@ -4,7 +4,7 @@
 //! Workbench evaluation
 
 use crate::{
-    CallTrait, Eval, EvalContext, EvalError, EvalResult,
+    Callable, Eval, EvalContext, EvalError, EvalResult,
     context::{
         BuiltinItemFrame, ContextScope, WorkbenchGroupFrame, WorkbenchInitFrame, WorkpieceFrame,
     },
@@ -201,7 +201,7 @@ impl Eval<Property> for symbol::workbench::InitStatement {
     }
 }
 
-impl CallTrait for symbol::Workbench {
+impl Callable for symbol::Workbench {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult {
         fn eval_to_model(
             workbench: &symbol::Workbench,

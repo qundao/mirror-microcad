@@ -18,6 +18,8 @@ pub use eval_error::*;
 
 pub use context::EvalContext;
 
+use microcad_lang_base::CompilationResult;
+use microcad_lang_resolve::library::Symbol;
 use microcad_lang_types::{ArgumentValueList, ModelTree, Value};
 
 /// Evaluation trait.
@@ -39,14 +41,14 @@ where
 }
 
 /// Trait for calls with argument list.
-pub trait CallTrait<T = Value> {
+pub trait Callable<T = Value> {
     /// Evaluate call into value (if possible).
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<T>;
 }
 
-impl<T> CallTrait<ModelTree> for T
+impl<T> Callable<ModelTree> for T
 where
-    T: CallTrait,
+    T: Callable,
 {
     fn call(&self, args: &ArgumentValueList, context: &mut EvalContext) -> EvalResult<ModelTree> {
         let value: Value = self.call(args, context)?;

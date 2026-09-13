@@ -5,7 +5,7 @@
 
 use microcad_builtin::__mu;
 use microcad_lang_base::{SrcRef, SymbolId, boxed};
-use microcad_lang_eval::{CallTrait, EvalContext};
+use microcad_lang_eval::{Callable, EvalContext};
 use microcad_lang_resolve::{
     call_builtin, expr,
     library::symbol::{
@@ -23,7 +23,7 @@ fn scope(a: impl Iterator<Item = FunctionStatement>) -> function::Scope {
 }
 
 fn assert_eval(
-    f: &impl CallTrait,
+    f: &impl Callable,
     args: impl IntoIterator<Item = microcad_lang_types::ArgumentValue>,
     expected: impl Into<Value>,
 ) {
