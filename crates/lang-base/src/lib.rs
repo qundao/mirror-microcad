@@ -33,12 +33,9 @@ pub const MICROCAD_EXTENSIONS: &[&str] = &["mu", "µcad", "mcad", "ucad"];
 /// Default extension for µcad files.
 pub const MICROCAD_EXTENSION: &'static str = "µcad";
 
-pub use artifact::{
-    Artifact, ArtifactError, ArtifactHeader, ArtifactKind, CompileError, StageResult,
-};
+pub use artifact::{Artifact, ArtifactError, ArtifactHeader, ArtifactKind, StageResult};
 pub use diag::{
-    DiagRenderOptions, Diagnostic, Diagnostics, IntoDiagnostics, Issue, IssueList, PushDiag,
-    PushIssue,
+    DiagRenderOptions, Diagnostic, Diagnostics, IntoDiagnostics, Issue, IssueList, PushIssue,
 };
 pub use display::DisplayOneLine;
 pub use element::{Identifier, IdentifierList};

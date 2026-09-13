@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_builtin::BuiltinError;
-use microcad_lang_base::{CompileError, Identifier, IdentifierList, Refer, SrcRef, SrcReferrer};
+use microcad_lang_base::{Identifier, IdentifierList, Refer, SrcRef, SrcReferrer};
 use microcad_lang_parse::ast;
 use microcad_lang_types::{TypeError, ValueError};
 use miette::Diagnostic;
@@ -216,8 +216,6 @@ pub enum LowerError {
         src_ref: SrcRef,
     },
 }
-
-impl CompileError for LowerError {}
 
 impl SrcReferrer for LowerError {
     fn src_ref(&self) -> SrcRef {

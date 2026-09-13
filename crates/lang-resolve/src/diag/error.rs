@@ -3,7 +3,7 @@
 
 //! A resolve error
 
-use microcad_lang_base::{CompileError, HashId, SrcRef, SrcReferrer, element::Case};
+use microcad_lang_base::{HashId, SrcRef, SrcReferrer, element::Case};
 
 use microcad_lang_lower::LowerError;
 use microcad_lang_parse::ParseError;
@@ -166,5 +166,3 @@ impl From<LocateError> for ResolveError {
         Self(Box::new(value.into()))
     }
 }
-
-impl CompileError for ResolveError {}

@@ -174,8 +174,6 @@ pub trait Artifact: Sized {
     }
 }
 
-pub trait CompileError: Into<miette::Report> + SrcReferrer {}
-
 /// The result of a compilation stage.
 #[derive(Debug)]
 pub struct StageResult<T: Artifact, I: Issue>(Option<CompilationResult<T, I>>);

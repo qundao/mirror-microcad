@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use microcad_lang_base::{CompilationResult, Diagnostics, Source};
-use microcad_lang_parse::{Ast, ParseError, ParseIssue, ast, parse};
+use microcad_lang_parse::{Ast, ParseIssue, ast, parse};
 
 mod expression;
 mod extras;

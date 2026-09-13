@@ -7,7 +7,6 @@ mod statement;
 use microcad_driver::prelude as mu;
 use microcad_driver::prelude::Diagnostics;
 use microcad_driver::prelude::base::LineCol;
-use microcad_driver::prelude::base::PushDiag;
 
 use mu::ast;
 use mu::traits::*;
