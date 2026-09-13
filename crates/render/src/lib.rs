@@ -84,7 +84,7 @@ impl Render for mu::ops::Difference {
         /*context.update(|context, node| {
             let outputs = Vec::new();
             node.into_group().children().try_for_each(|node| {
-                outputs.push(node.render_with_context(context)?);
+                outputs.push(node.render(context)?);
                 Ok(())
             });
 
@@ -99,7 +99,7 @@ impl Render for mu::ops::Extrude {
         /*context.update(|context, node| {
             let outputs = Vec::new();
             node.children().try_for_each(|node| {
-                outputs.push(node.render_with_context(context)?);
+                outputs.push(node.render(context)?);
                 Ok(())
             });
 
@@ -109,7 +109,7 @@ impl Render for mu::ops::Extrude {
 }
 
 /// A result from rendering a model.
-pub type RenderResult<T> = Result<T, RenderError>;
+pub type RenderResult<T = GeometryOutput> = Result<T, RenderError>;
 
 /// The render trait.
 pub trait Render<T = GeometryOutput> {
@@ -118,23 +118,6 @@ pub trait Render<T = GeometryOutput> {
 }
 
 /*
-impl Element {
-    /// Fetch the local matrix
-    pub fn get_affine_transform(&self) -> RenderResult<Option<AffineTransform>> {
-        match &self {
-            Element::BuiltinWorkpiece(builtin_workpiece) => match builtin_workpiece.kind {
-                BuiltinWorkbenchKind::Transform => match builtin_workpiece.call()? {
-                    BuiltinWorkpieceOutput::Transform(affine_transform) => {
-                        Ok(Some(affine_transform))
-                    }
-                    _ => unreachable!(),
-                },
-                _ => Ok(None),
-            },
-            _ => Ok(None),
-        }
-    }
-}
 
 
 /// This implementation renders a [`Geometry2D`] out of a [`Model`].
@@ -167,49 +150,5 @@ impl RenderWithContext<GeometryOutput> for Model {
 }
 
 
-impl RenderWithContext<Geometries2D> for Models {
-    fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Geometries2D> {
-        let mut geometries = Vec::new();
-        for model in self.iter() {
-            let geo: Geometry2DOutput = model.render_with_context(context)?;
-            geometries.push(Rc::new(geo.inner.clone()));
-        }
-        Ok(geometries.into_iter().collect())
-    }
-}
 
-impl RenderWithContext<Geometry2DOutput> for Models {
-    fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Geometry2DOutput> {
-        match self.len() {
-            0 => Err(RenderError::NothingToRender),
-            1 => self.first().expect("One item").render_with_context(context),
-            _ => Ok(Rc::new(
-                Geometry2D::Collection(self.render_with_context(context)?).into(),
-            )),
-        }
-    }
-}
-
-impl RenderWithContext<Geometries3D> for Models {
-    fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Geometries3D> {
-        let mut geometries = Vec::new();
-        for model in self.iter() {
-            let geo: Geometry3DOutput = model.render_with_context(context)?;
-            geometries.push(Rc::new(geo.inner.clone()));
-        }
-        Ok(geometries.into_iter().collect())
-    }
-}
-
-impl RenderWithContext<Geometry3DOutput> for Models {
-    fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Geometry3DOutput> {
-        match self.len() {
-            0 => Err(RenderError::NothingToRender),
-            1 => self.first().expect("One item").render_with_context(context),
-            _ => Ok(Rc::new(
-                Geometry3D::Collection(self.render_with_context(context)?).into(),
-            )),
-        }
-    }
-}
 */

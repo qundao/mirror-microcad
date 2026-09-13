@@ -6,6 +6,7 @@
 use std::sync::{Arc, RwLock, mpsc};
 
 use microcad_hash::ToHash;
+use microcad_lang_base::Shared;
 use microcad_lang_types::ModelNodeRef;
 
 use crate::{GeometryOutput, RenderCache, RenderResolution, RenderResult};
@@ -19,10 +20,7 @@ pub type ProgressTx = mpsc::Sender<f32>;
 #[derive(Default)]
 pub struct RenderContext<'tree> {
     /// Model stack.
-    pub model_stack: Vec<ModelNodeRef<'tree>>,
-
-    /// Optional render cache.
-    pub cache: Option<Arc<RwLock<RenderCache>>>,
+    model_stack: Vec<ModelNodeRef<'tree>>,
 
     /// The number of models to be rendered.
     models_to_render: usize,
@@ -32,22 +30,21 @@ pub struct RenderContext<'tree> {
 
     /// Progress is given as a percentage between 0.0 and 100.0.
     pub progress_tx: Option<ProgressTx>,
+
+    /// Optional render cache.
+    pub cache: Option<Shared<RenderCache>>,
 }
 
 impl<'tree> RenderContext<'tree> {
     /// Initialize context with current model and prerender model.
-    pub fn new(
-        _model: &ModelNodeRef<'tree>,
-        _resolution: RenderResolution,
-        _progress_tx: Option<ProgressTx>,
-    ) -> RenderResult<Self> {
-        todo!() /*  Ok(Self {
-        model_stack: vec![model.clone()],
-        cache,
-        models_rendered: 0,
-        progress_tx,
-        models_to_render: // model.prerender(resolution)?,
-        }) */
+    pub fn new(model: &ModelNodeRef<'tree>, _resolution: RenderResolution) -> Self {
+        Self {
+            model_stack: vec![model.clone()],
+            models_rendered: 0,
+            models_to_render: 0,
+            progress_tx: None,
+            cache: None,
+        }
     }
 
     /// The current model (panics if it is none).

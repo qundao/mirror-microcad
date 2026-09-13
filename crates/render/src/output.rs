@@ -13,7 +13,7 @@ use microcad_hash::{HashId, ToHash, hash_id};
 use microcad_lang_types::{
     ModelNodeRef, ModelTree,
     math::IntoFloat,
-    model::{ModelType, ModelNodeId},
+    model::{ModelNodeId, ModelType},
 };
 
 use crate::{RenderAttributes, RenderResolution};
