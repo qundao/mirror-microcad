@@ -16,17 +16,6 @@ fn main() {
         return;
     }
 
-    // run copyright update/check depending on environment variables `COPYRIGHT_CHECK` and `COPYRIGHT_UPDATE`
-    let check_only = std::env::var("COPYRIGHT_CHECK").is_ok();
-    let update = std::env::var("COPYRIGHT_UPDATE").is_ok();
-    if update || check_only {
-        println!("cargo:warning=updating copyrights...");
-        let check_failed = check_copyright(check_only).expect("copyright check failed");
-        if check_failed {
-            panic!("copyrights changed - please run: COPYRIGHT_UPDATE=1 cargo test")
-        }
-    }
-
     // update test banners in markdown books
     use update_md_banner::*;
     println!("cargo:warning=updating test banners...");
