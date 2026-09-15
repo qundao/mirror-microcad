@@ -33,33 +33,16 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
 
     writeln!(log, "-- Test --\n{env:?}")?;
 
-    writeln!(
-        log,
-        "-- Code --\n\n{}\n",
-        env.code()
-            .lines()
-            .enumerate()
-            .map(|(n, line)| format!("{n:4}:   {line}", n = n as u32 + env.source.line_offset + 1))
-            .collect::<Vec<_>>()
-            .join("\n")
-    )?;
-
     let diag_render_options = mu::base::DiagRenderOptions {
         color: false,
         ..Default::default()
     };
 
-    let mut source = mu::document::SourceFile::new(mu::Cached::new(env.source.clone()));
-
     use microcad_driver::commands::Compile;
 
-    let model = source.compile(mu::CompileParameters {
-        resolve: mu::ResolveParameters {
-            search_paths: vec!["../crates/std/lib".into(), "../assets".into()],
-            no_builtin: false,
-        },
-    });
-    let diag = source.diags();
+    let mut driver = mu::Driver::new().with_std();
+    let (model, diag) = driver.compile_source(env.source)?;
+
     let error_lines = diag.error_lines();
     let warning_lines = diag.warning_lines();
 
@@ -94,10 +77,8 @@ pub fn run_test(env: TestEnv) -> std::io::Result<()> {
                     && let Some(msg) = env.report_wrong_errors(&error_lines, &warning_lines)
                 {
                     writeln!(log, "{msg}")?;
-                    TestResult::OkWarn
-                } else {
-                    TestResult::OkWarn
                 }
+                TestResult::OkWarn
             } else if diag.has_errors() {
                 writeln!(log, "-- Errors --")?;
                 writeln!(log, "{}", source.diagnostics_string(&diag_render_options))?;

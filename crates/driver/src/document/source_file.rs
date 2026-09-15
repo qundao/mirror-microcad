@@ -125,27 +125,6 @@ impl mu::commands::Sync for SourceFile {
     }
 }
 
-impl mu::commands::compile::Parse for SourceFile {
-    fn parse(&mut self) -> Result {
-        self.ir.reset();
-        self.ast = mu::parse(&self.source).into();
-        Ok(())
-    }
-}
-
-impl mu::commands::compile::Lower for SourceFile {
-    fn lower(&mut self) -> Result {
-        match &self.ast.artifact() {
-            Some(ast) => {
-                let mut lower_context = mu::lower::LowerContext::new(&self.source);
-                self.ir = mu::lower(&mut lower_context, ast).into();
-                Ok(())
-            }
-            _ => Err(miette::miette!("No AST.")),
-        }
-    }
-}
-
 impl mu::commands::Compile for SourceFile {}
 
 impl mu::commands::PrintDiagnostics for SourceFile {

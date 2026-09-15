@@ -27,14 +27,6 @@ impl MarkdownDocument {
             diagnostics: Default::default(),
         })
     }
-
-    pub fn sources(&self) -> Vec<mu::Cached<mu::Source>> {
-        let url = self.location.url();
-        self.markdown
-            .code_blocks()
-            .map(|code_block| mu::Cached::new(code_block.source(url.clone())))
-            .collect()
-    }
 }
 
 impl mu::commands::Format for mu::document::Markdown {
