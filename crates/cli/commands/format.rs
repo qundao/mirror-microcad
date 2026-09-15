@@ -21,6 +21,7 @@ impl RunCommand<()> for Format {
             Some(input) => {
                 let mut document = mu::Document::open(input)?;
 
+                /*
                 match document.parse().and(document.format(&params)) {
                     Ok(true) => {
                         document.sync()?;
@@ -33,6 +34,8 @@ impl RunCommand<()> for Format {
                         cli.print_diagnostics(&document);
                     }
                 }
+                */
+                todo!();
 
                 Ok(())
             }

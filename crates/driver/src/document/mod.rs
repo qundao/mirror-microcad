@@ -76,24 +76,6 @@ impl mu::commands::SetCode for Document {
     }
 }
 
-impl mu::commands::compile::Parse for Document {
-    fn parse(&mut self) -> mu::Result {
-        match self {
-            Document::SourceFile(source) => source.parse(),
-            _ => unimplemented!(),
-        }
-    }
-}
-
-impl mu::commands::compile::Lower for Document {
-    fn lower(&mut self) -> mu::Result {
-        match self {
-            Document::SourceFile(source) => source.lower(),
-            _ => unimplemented!(),
-        }
-    }
-}
-
 impl mu::commands::Compile for Document {}
 
 impl mu::commands::Format for Document {
