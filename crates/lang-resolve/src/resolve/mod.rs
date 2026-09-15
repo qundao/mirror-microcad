@@ -37,19 +37,30 @@ pub struct ResolveContext {
     pub src_cache: Shared<SourceCache>,
 }
 
+/// Builder methods.
 impl ResolveContext {
     pub fn new() -> Self {
         Self::default()
     }
-}
 
-impl ResolveContext {
-    /// Add a new search paths.
+    /// Add a new search path.
     pub fn with_search_path(mut self, path: impl AsRef<std::path::Path>) -> Self {
         self.lib_search_paths.push(path.as_ref().to_path_buf());
         self
     }
 
+    pub fn with_lib_cache(mut self, lib_cache: Shared<LibraryCache>) -> Self {
+        self.lib_cache = lib_cache;
+        self
+    }
+
+    pub fn with_src_cache(mut self, src_cache: Shared<SourceCache>) -> Self {
+        self.src_cache = src_cache;
+        self
+    }
+}
+
+impl ResolveContext {
     /// Get intermediate representation by hash id.
     pub fn get_ir(&self, id: HashId) -> Option<Ir> {
         self.src_cache
