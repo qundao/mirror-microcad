@@ -29,9 +29,7 @@ members = [
 
     "editors/zed",
 
-    "tests",
-    "tests/update-copyright",
-    "tests/update-md-banner",
+    "xtask",
 ]
 
 default-members = [

@@ -5,49 +5,6 @@
 
 use miette::{IntoDiagnostic, miette};
 
-/// markdown test main
-fn main() {
-    // ignore pre-build steps in rust-analyzer or clippy
-    if std::env::var("RUST_ANALYZER_INTERNALS_DO_NOT_USE").is_ok()
-        || std::env::var("CLIPPY_ARGS").is_ok()
-        || std::env::var("SKIP_BUILD_RS").is_ok()
-    {
-        println!("cargo:warning=skipping build.rs because of environment var!");
-        return;
-    }
-
-    // update test banners in markdown books
-    use update_md_banner::*;
-    println!("cargo:warning=updating test banners...");
-    update_md_banner("../books").expect("banner update failed");
-
-    // generate rust tests from µcad code in markdown books
-    println!("cargo:warning=generating mdbooks...");
-    update_book("builtin").expect("test generation failed");
-    update_book("std").expect("test generation failed");
-    update_book("tests").expect("test generation failed");
-    update_book("language").expect("test generation failed");
-    update_book("tutorials").expect("test generation failed");
-    update_book("examples").expect("test generation failed");
-}
-
-fn check_copyright(check_only: bool) -> miette::Result<bool> {
-    update_copyright::update_copyrights(
-        "../",
-        &[
-            ("#", &["toml"]),
-            ("//", &["rs", "pest", "slint", "wgsl", "µcad"]),
-        ],
-        &[
-            "../target/*",
-            "../tests/*.µcad",
-            "../crates/cli/examples/*.µcad",
-        ],
-        check_only,
-    )
-    .into_diagnostic()
-}
-
 fn update_book(name: &str) -> miette::Result<()> {
     match microcad_markdown_test::generate(
         format!("../books/{name}"),

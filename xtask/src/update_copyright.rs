@@ -113,3 +113,20 @@ pub fn update_copyrights(
 
     Ok(check_failed)
 }
+
+fn update_copyright() {
+    update_copyright::update_copyrights(
+        "../",
+        &[
+            ("#", &["toml"]),
+            ("//", &["rs", "pest", "slint", "wgsl", "µcad"]),
+        ],
+        &[
+            "../target/*",
+            "../tests/*.µcad",
+            "../crates/cli/examples/*.µcad",
+        ],
+        check_only,
+    )
+    .into_diagnostic()
+}
