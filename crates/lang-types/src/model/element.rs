@@ -57,7 +57,7 @@ pub enum BuiltinWorkpiece {
     AffineTransform(Box<AffineTransform>),
     /// Boolean operation
     BooleanOp(BooleanOp),
-    /// Extrude
+    /// A built-in operation, e.g. `extrude`.
     Operation(BuiltinId),
 }
 
@@ -69,6 +69,15 @@ impl BuiltinWorkpiece {
                 ModelType::NotDetermined
             }
             _ => todo!(),
+        }
+    }
+
+    pub fn builtin_id(&self) -> Option<BuiltinId> {
+        match self {
+            BuiltinWorkpiece::Primitive(builtin_id) | BuiltinWorkpiece::Operation(builtin_id) => {
+                Some(*builtin_id)
+            }
+            _ => None,
         }
     }
 }

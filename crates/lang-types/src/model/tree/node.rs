@@ -3,7 +3,7 @@
 
 //! Model node.
 
-use microcad_lang_base::Identifier;
+use microcad_lang_base::{BuiltinId, Identifier};
 
 use crate::{Model, ModelType, model};
 
@@ -21,6 +21,8 @@ pub trait NodeExt<'a> {
     fn into_group_child(self) -> Option<NodeRef<'a>>;
 
     fn multiplicity_descendants(&self) -> model::iter::MultiplicityDescendants<'a>;
+
+    fn builtin_id(&self) -> Option<BuiltinId>;
 }
 
 impl<'a> NodeExt<'a> for NodeRef<'a> {
@@ -63,5 +65,12 @@ impl<'a> NodeExt<'a> for NodeRef<'a> {
     /// An iterator that descends to multiplicity nodes.
     fn multiplicity_descendants(&self) -> model::iter::MultiplicityDescendants<'a> {
         model::iter::MultiplicityDescendants::new(*self)
+    }
+
+    fn builtin_id(&self) -> Option<BuiltinId> {
+        match &self.element {
+            model::Element::BuiltinWorkpiece(builtin_workpiece) => builtin_workpiece.builtin_id(),
+            _ => None,
+        }
     }
 }
