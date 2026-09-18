@@ -93,6 +93,12 @@ impl Geometry2D {
     }
 }
 
+impl std::fmt::Display for Geometry2D {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name())
+    }
+}
+
 impl CalcBounds2D for MultiPolygon {
     fn calc_bounds_2d(&self) -> Bounds2D {
         use geo::BoundingRect;

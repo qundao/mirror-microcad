@@ -66,6 +66,12 @@ impl Geometry3D {
     }
 }
 
+impl std::fmt::Display for Geometry3D {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name())
+    }
+}
+
 impl CalcBounds3D for Geometry3D {
     fn calc_bounds_3d(&self) -> Bounds3D {
         match self {

@@ -48,6 +48,7 @@ pub use color::*;
 pub use core_error::*;
 pub use geo2d::*;
 pub use geo3d::*;
+use strum::IntoStaticStr;
 pub use triangle::*;
 
 /// Convert a Matrix4 to Matrix3.
@@ -66,12 +67,26 @@ pub fn mat3_to_mat4(m: &Mat3) -> Mat4 {
 }
 
 /// A µcad core geometry.
-#[derive(Debug, Clone, From)]
+#[derive(Debug, Clone, IntoStaticStr, From)]
 pub enum Geometry {
     /// Geometry 2D
     Geometry2D(Geometry2D),
     /// Geometry 3D
     Geometry3D(Geometry3D),
+}
+
+impl std::fmt::Display for Geometry {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let name: &'static str = self.into();
+        write!(
+            f,
+            "{name}({geo})",
+            geo = match self {
+                Self::Geometry2D(geo2d) => format!("{geo2d}"),
+                Self::Geometry3D(geo3d) => format!("{geo3d}"),
+            }
+        )
+    }
 }
 
 impl CalcBounds3D for Geometry {
