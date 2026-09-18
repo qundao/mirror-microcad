@@ -20,8 +20,8 @@ pub use tree::*;
 
 use microcad_core::{Geometries2D, Geometry, Geometry2D, Scalar};
 use microcad_lang_types::{
-    ModelNodeRef, ModelTree,
-    model::{self, ModelType, NodeExt},
+    ModelTree,
+    model::{ModelType, NodeExt},
 };
 pub use output::*;
 pub use render::{RenderPrimitive, RenderResolution};
@@ -90,7 +90,11 @@ impl<T: RenderPrimitive> Render for T {
         tree: &GeometryTree,
         context: &mut RenderContext,
     ) -> RenderResult<GeometryOutput> {
-        context.update(|_, context| Ok(self.render_primitive(&context.current_resolution()).into()))
+        context.update(|_, context| {
+            Ok(self
+                .render_primitive(&context.current_resolution(tree))
+                .into())
+        })
     }
 }
 
@@ -100,7 +104,7 @@ impl Render for mu::ops::Difference {
         tree: &GeometryTree,
         context: &mut RenderContext,
     ) -> RenderResult<GeometryOutput> {
-        context.update(|node, context| {
+        context.update(|_node, context| {
             let outputs = context.collect_outputs(tree);
 
             let geometries = Geometries2D::new(
@@ -167,7 +171,10 @@ impl Render<Vec<GeometryOutput>> for GeometryNodeData {
 }
 
 pub fn render(model_tree: &ModelTree, context: &mut RenderContext) -> RenderResult<GeometryTree> {
-    let mut tree = GeometryTree::new(model_tree, context.current_resolution());
+    let mut tree = GeometryTree::new(
+        model_tree,
+        context.resolution.as_ref().cloned().unwrap_or_default(),
+    );
 
     // Recursively process the tree starting from the root
     render_node_dfs(tree.root, &mut tree, model_tree, context)?;
@@ -192,6 +199,7 @@ fn render_node_dfs(
     // 2. Render current node after all children have completed
     let render_output = tree.arena[node_id].get();
     let outputs = render_output.render(tree, context)?;
+    context.step();
 
     let render_output = tree.arena[node_id].get_mut();
     render_output.outputs = outputs;

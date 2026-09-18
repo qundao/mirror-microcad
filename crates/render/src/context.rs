@@ -10,8 +10,8 @@ use microcad_lang_base::Shared;
 use microcad_lang_types::{ModelNodeRef, ModelTree};
 
 use crate::{
-    GeometryNode, GeometryNodeId, GeometryNodeRef, GeometryOutput, GeometryOutputInner,
-    GeometryTree, RenderCache, RenderHooks, RenderResolution, RenderResult,
+    GeometryNodeId, GeometryNodeRef, GeometryOutput, GeometryTree, RenderCache, RenderHooks,
+    RenderResolution, RenderResult,
 };
 
 /// Our progress sender.
@@ -21,12 +21,12 @@ pub type ProgressTx = mpsc::Sender<f32>;
 ///
 /// Keeps a stack of model nodes and the render cache.
 pub struct RenderContext<'tree> {
+    pub model_tree: &'tree ModelTree,
+
     /// Model stack.
     pub stack: Vec<GeometryNodeId>,
 
     pub hooks: RenderHooks,
-
-    pub model_tree: &'tree ModelTree,
 
     /// The number of models to be rendered.
     models_to_render: usize,
@@ -34,33 +34,54 @@ pub struct RenderContext<'tree> {
     /// The number of model that been been rendered.
     models_rendered: usize,
 
-    /// Progress is given as a percentage between 0.0 and 100.0.
-    pub progress_tx: Option<ProgressTx>,
+    /// Optional render resolution. If none, we will use the `RenderResolution::default()`.
+    pub resolution: Option<RenderResolution>,
 
     /// Optional render cache.
     pub cache: Option<Shared<RenderCache>>,
 
-    /// Optional render resolution. If none, we will use the `RenderResolution::default()`.
-    pub resolution: Option<RenderResolution>,
+    /// Progress is given as a percentage between 0.0 and 100.0.
+    pub progress_tx: Option<ProgressTx>,
 }
 
+/// Builder methods
 impl<'tree> RenderContext<'tree> {
-    /// Initialize context with current model and prerender model.
+    /// Initialize context with a model tree.
     pub fn new(model_tree: &'tree ModelTree) -> Self {
         Self {
+            model_tree,
             stack: vec![],
             hooks: RenderHooks::new(),
-            model_tree,
             models_rendered: 0,
-            models_to_render: 0,
+            models_to_render: model_tree.root().descendants().count(),
             progress_tx: None,
             cache: None,
             resolution: None,
         }
     }
 
+    /// Override the default render resolution.
+    pub fn with_resolution(mut self, resolution: RenderResolution) -> Self {
+        self.resolution = Some(resolution);
+        self
+    }
+
+    /// Render cache.
+    pub fn with_cache(mut self, cache: Shared<RenderCache>) -> Self {
+        self.cache = Some(cache);
+        self
+    }
+
+    /// With progress tracker.
+    pub fn with_progress(mut self, progress: ProgressTx) -> Self {
+        self.progress_tx = Some(progress);
+        self
+    }
+}
+
+impl<'tree> RenderContext<'tree> {
     /// Make a single progress step. A progress signal is sent with each new percentage.
-    fn step(&mut self) {
+    pub(crate) fn step(&mut self) {
         let old_percent = self.progress_in_percent();
         self.models_rendered += 1;
         let new_percent = self.progress_in_percent();
@@ -129,8 +150,12 @@ impl<'tree> RenderContext<'tree> {
     }
 
     /// Return current render resolution.
-    pub fn current_resolution(&self) -> RenderResolution {
-        self.resolution.as_ref().cloned().unwrap_or_default()
+    pub fn current_resolution(&self, tree: &GeometryTree) -> RenderResolution {
+        self.current_node(tree)
+            .resolution
+            .as_ref()
+            .cloned()
+            .unwrap_or_default()
     }
 
     // Return the generated item and the number of milliseconds.

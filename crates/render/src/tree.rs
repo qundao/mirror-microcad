@@ -64,7 +64,7 @@ impl GeometryTree {
         });
     }
 
-    /// Helper method to recursively transform ModelNodeRef into RenderNodeId
+    /// Helper method to recursively transform ModelNodeRef into GeometryNodeId
     fn build_node(model_node: ModelNodeRef<'_>, arena: &mut GeometryArena) -> GeometryNodeId {
         // 1. Transform the ModelOutput / Model data into a RenderOutput
         let render_output = GeometryNodeData::new(model_node);
