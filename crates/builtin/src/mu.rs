@@ -668,7 +668,7 @@ pub mod ops {
     use microcad_lang_types::{
         Length, Mat3, Model, ModelTree, ModelType, Type, function_type,
         math::AffineTransform,
-        model::{BooleanOp, Element, element::BuiltinWorkpiece},
+        model::{self, BooleanOp, Element, element::BuiltinWorkpiece},
         parse_args,
     };
     use microcad_macros::__mu;
@@ -766,9 +766,13 @@ pub mod ops {
             difference,
         ));
 
+        /// Returns the primitive element descriptor.
+        fn element() -> model::Element {
+            model::BuiltinWorkpiece::Operation(Self::ITEM.id()).into()
+        }
+
         fn from_model(model: &Model) -> Result<Self, BuiltinError> {
-            Self::check_element(model)?;
-            Ok(Difference)
+            construct_from_model!(model, Difference {})
         }
     }
 
@@ -780,15 +784,12 @@ pub mod ops {
     ) -> Result<ModelTree, BuiltinError> {
         parse_args!(args, self_: Rc<ModelTree> => "self");
 
-        // Create a tree for the groups first.
-        let mut group_tree = ModelTree::new(Model::new(Element::Group));
-        group_tree.append(Rc::unwrap_or_clone(self_));
-
         // Create the actual operation node
-        let mut tree = ModelTree::new(Model::new(BuiltinWorkpiece::BooleanOp(
-            BooleanOp::Difference,
-        )));
-        tree.append(group_tree);
+        let mut tree = ModelTree::new(
+            Model::new(BuiltinWorkpiece::Operation(__mu!(ops::difference)))
+                .with_op_properties(args),
+        );
+        tree.append(Rc::unwrap_or_clone(self_));
 
         Ok(tree)
     }
