@@ -5,7 +5,7 @@
 
 use microcad_builtin::{BuiltinEvalContext, BuiltinPrimitiveCall, mu};
 use microcad_lang_types::{Model, ModelTree, Value, arguments, model::Element};
-use microcad_render::{Render, RenderContext, render};
+use microcad_render::{RenderContext, render};
 
 fn circle(r: f64) -> Model {
     let mut ctx = BuiltinEvalContext::default();
@@ -42,4 +42,21 @@ fn render_difference() {
     let geometry = render(&diff, &mut ctx).expect("No render errors");
 
     insta::assert_snapshot!("render_difference", geometry);
+}
+
+/// Circle(42mm).extrude(23mm);
+#[test]
+fn render_extrude() {
+    let mut ctx = BuiltinEvalContext::default();
+
+    let extrude = mu::ops::extrude(
+        arguments!(self = circle(42.0), height = Value::mm(23.0)),
+        &mut ctx,
+    )
+    .expect("No error");
+
+    let mut ctx = RenderContext::new(&extrude);
+    let geometry = render(&extrude, &mut ctx).expect("No render errors");
+
+    insta::assert_snapshot!("render_extrude", geometry);
 }

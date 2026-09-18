@@ -668,7 +668,7 @@ pub mod ops {
     use microcad_lang_types::{
         Length, Mat3, Model, ModelTree, ModelType, Type, function_type,
         math::AffineTransform,
-        model::{self, BooleanOp, Element, element::BuiltinWorkpiece},
+        model::{self, element::BuiltinWorkpiece},
         parse_args,
     };
     use microcad_macros::__mu;
@@ -804,6 +804,11 @@ pub mod ops {
             || function_type!((self: Type::Model(ModelType::Geometry2D), height: Type::length()) -> Type::Model(ModelType::Geometry3D)),
             extrude,
         ));
+
+        /// Returns the primitive element descriptor.
+        fn element() -> model::Element {
+            model::BuiltinWorkpiece::Operation(Self::ITEM.id()).into()
+        }
 
         fn from_model(model: &Model) -> Result<Self, BuiltinError> {
             construct_from_model!(model, Extrude { height })

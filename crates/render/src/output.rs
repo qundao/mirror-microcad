@@ -7,7 +7,7 @@ use std::sync::Arc;
 
 use cgmath::SquareMatrix;
 
-use microcad_core::{self as core, CalcBounds3D, Mat4};
+use microcad_core::{self as core, CalcBounds3D, Geometry3D, Mat4, Transformed3D};
 
 use microcad_hash::{HashId, ToHash, hash_id};
 use microcad_lang_types::{
@@ -44,6 +44,19 @@ pub struct GeometryOutput(pub(crate) Arc<GeometryOutputInner>);
 impl From<core::Geometry> for GeometryOutput {
     fn from(geo: core::Geometry) -> Self {
         Self(Arc::new(GeometryOutputInner::from(geo)))
+    }
+}
+
+impl<T> From<core::WithBounds3D<T>> for GeometryOutput
+where
+    T: Into<Geometry3D> + CalcBounds3D + Transformed3D,
+{
+    fn from(with_bounds: core::WithBounds3D<T>) -> Self {
+        Self(Arc::new(GeometryOutputInner {
+            geometry: core::Geometry::from(with_bounds.inner.into()),
+            bounds: with_bounds.bounds,
+            attributes: Default::default(),
+        }))
     }
 }
 

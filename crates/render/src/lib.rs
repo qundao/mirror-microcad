@@ -18,9 +18,10 @@ pub use cache::*;
 pub use context::*;
 pub use tree::*;
 
-use microcad_core::{Geometries2D, Geometry, Geometry2D, Scalar};
+use microcad_core::{Extrude, Geometries2D, Geometry, Geometry2D, Geometry3D, Scalar};
 use microcad_lang_types::{
     ModelTree,
+    math::IntoFloat,
     model::{ModelType, NodeExt},
 };
 pub use output::*;
@@ -60,6 +61,7 @@ impl RenderHooks {
         let mut hooks = RenderHooks::default();
         hooks.insert::<mu::geo2d::Circle>();
         hooks.insert::<mu::ops::Difference>();
+        hooks.insert::<mu::ops::Extrude>();
         hooks
     }
 }
@@ -128,18 +130,29 @@ impl Render for mu::ops::Extrude {
     fn render(
         &self,
         tree: &GeometryTree,
-        _context: &mut RenderContext,
+        context: &mut RenderContext,
     ) -> RenderResult<GeometryOutput> {
-        todo!()
-        /*context.update(|context, node| {
-            let outputs = Vec::new();
-            node.children().try_for_each(|node| {
-                outputs.push(node.render(context)?);
-                Ok(())
-            });
+        context.update(|_node, context| {
+            let outputs = context.collect_outputs(tree);
 
-            Ok(node.union().extrude(self.height.to_num()))
-        })*/
+            let multi_polygon = Geometries2D::new(
+                outputs
+                    .into_iter()
+                    .filter_map(|output| match &output.0.geometry {
+                        Geometry::Geometry2D(geo2d) => Some(geo2d.clone()),
+                        Geometry::Geometry3D(_geo3d) => todo!(),
+                    })
+                    .collect(),
+            )
+            .boolean_op(microcad_core::BooleanOp::Union);
+
+            Ok(GeometryOutput::from(multi_polygon.linear_extrude(
+                microcad_core::Length::mm(self.height.to_num()),
+                1.0,
+                1.0,
+                cgmath::Rad(0.0),
+            )))
+        })
     }
 }
 
