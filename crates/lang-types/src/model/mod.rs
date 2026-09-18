@@ -19,7 +19,7 @@ pub use tree::{
     Node, NodeExt, NodeMut, NodeRef,
 };
 
-use microcad_lang_base::{DisplayWithCtx, HashId, Identifier, LookUpName};
+use microcad_lang_base::{BuiltinId, DisplayWithCtx, HashId, Identifier, LookUpName};
 use serde::{Deserialize, Serialize};
 
 pub use attribute::{Attribute, AttributeAccess, Attributes};
@@ -86,6 +86,13 @@ impl Model {
 
 /// Accessor functions
 impl Model {
+    pub fn builtin_id(&self) -> Option<BuiltinId> {
+        match &self.element {
+            Element::BuiltinWorkpiece(builtin_workpiece) => builtin_workpiece.builtin_id(),
+            _ => None,
+        }
+    }
+
     pub fn output_type(&self) -> ModelType {
         self.element.output_type()
     }

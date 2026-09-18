@@ -65,10 +65,9 @@ impl BuiltinWorkpiece {
     fn output_type(&self) -> ModelType {
         match self {
             BuiltinWorkpiece::Primitive(_) => ModelType::Geometry2D,
-            BuiltinWorkpiece::AffineTransform(_) | BuiltinWorkpiece::BooleanOp(_) => {
-                ModelType::NotDetermined
-            }
-            _ => todo!(),
+            BuiltinWorkpiece::AffineTransform(_)
+            | BuiltinWorkpiece::BooleanOp(_)
+            | BuiltinWorkpiece::Operation(_) => ModelType::NotDetermined,
         }
     }
 
