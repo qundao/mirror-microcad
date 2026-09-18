@@ -47,7 +47,7 @@ pub enum RenderError {
 use microcad_builtin::{BuiltinConstruct, BuiltinError, BuiltinId, mu};
 
 /// Built-in execution function signature
-pub type RenderFn = fn(&mut RenderContext) -> Result<GeometryOutput, RenderError>;
+pub type RenderFn = fn(&GeometryTree, &mut RenderContext) -> Result<GeometryOutput, RenderError>;
 
 #[derive(Debug, Default)]
 pub struct RenderHooks {
@@ -66,8 +66,8 @@ impl RenderHooks {
 
 impl RenderHooks {
     pub fn insert<C: BuiltinConstruct + Render>(&mut self) {
-        self.hooks.insert(C::ITEM.id(), |ctx| {
-            C::from_model(ctx.model().get())?.render(ctx)
+        self.hooks.insert(C::ITEM.id(), |tree, ctx| {
+            C::from_model(ctx.model(tree).get())?.render(tree, ctx)
         });
     }
 
@@ -85,52 +85,29 @@ impl RenderPrimitive for mu::geo2d::Circle {
 }
 
 impl<T: RenderPrimitive> Render for T {
-    fn render(&self, context: &mut RenderContext) -> RenderResult<GeometryOutput> {
+    fn render(
+        &self,
+        tree: &GeometryTree,
+        context: &mut RenderContext,
+    ) -> RenderResult<GeometryOutput> {
         context.update(|_, context| Ok(self.render_primitive(&context.current_resolution()).into()))
     }
 }
 
 impl Render for mu::ops::Difference {
-    fn render(&self, context: &mut RenderContext) -> RenderResult<GeometryOutput> {
+    fn render(
+        &self,
+        tree: &GeometryTree,
+        context: &mut RenderContext,
+    ) -> RenderResult<GeometryOutput> {
         context.update(|node, context| {
-            let mut nodes = Vec::new();
-            for child in node
-                .first_child(&context.tree.arena)
-                .unwrap()
-                .children(&context.tree.arena)
-            {
-                nodes.push(child);
-            }
-
-            let mut outputs = Vec::new();
-
-            for node in nodes {
-                let output = context.tree.arena.get(node).unwrap();
-                let model = context
-                    .model_tree
-                    .arena
-                    .get(output.get().model_node_id)
-                    .unwrap()
-                    .get();
-
-                context.stack.push(node);
-                match model
-                    .builtin_id()
-                    .and_then(|builtin_id| context.hooks.get(builtin_id))
-                {
-                    Some(hook) => outputs.push(hook(context)?),
-                    None => {
-                        todo!()
-                    }
-                }
-                context.stack.pop();
-            }
+            let outputs = context.collect_outputs(tree);
 
             let geometries = Geometries2D::new(
                 outputs
                     .into_iter()
-                    .filter_map(|output| match output.geometry {
-                        Geometry::Geometry2D(geo2d) => Some(geo2d),
+                    .filter_map(|output| match &output.0.geometry {
+                        Geometry::Geometry2D(geo2d) => Some(geo2d.clone()),
                         Geometry::Geometry3D(_geo3d) => todo!(),
                     })
                     .collect(),
@@ -144,7 +121,11 @@ impl Render for mu::ops::Difference {
 }
 
 impl Render for mu::ops::Extrude {
-    fn render(&self, _context: &mut RenderContext) -> RenderResult<GeometryOutput> {
+    fn render(
+        &self,
+        tree: &GeometryTree,
+        _context: &mut RenderContext,
+    ) -> RenderResult<GeometryOutput> {
         todo!()
         /*context.update(|context, node| {
             let outputs = Vec::new();
@@ -164,44 +145,58 @@ pub type RenderResult<T = GeometryOutput> = Result<T, RenderError>;
 /// The render trait.
 pub trait Render<T = GeometryOutput> {
     /// Render method.
-    fn render(&self, context: &mut RenderContext) -> RenderResult<T>;
+    fn render(&self, tree: &GeometryTree, context: &mut RenderContext) -> RenderResult<T>;
 }
 
-impl Render<Option<GeometryOutput>> for GeometryNodeData {
-    fn render(&self, context: &mut RenderContext) -> RenderResult<Option<GeometryOutput>> {
-        let model = context.model();
+impl Render<Vec<GeometryOutput>> for GeometryNodeData {
+    fn render(
+        &self,
+        tree: &GeometryTree,
+        context: &mut RenderContext,
+    ) -> RenderResult<Vec<GeometryOutput>> {
+        let model = context.model(tree);
 
         match model
             .builtin_id()
             .and_then(|builtin_id| context.hooks.get(builtin_id))
         {
-            Some(hook) => Ok(Some(hook(context)?)),
-            None => Ok(None),
+            Some(hook) => Ok(vec![hook(tree, context)?]),
+            None => Ok(context.collect_outputs(tree)),
         }
     }
 }
 
-impl Render<GeometryTree> for ModelTree {
-    fn render(&self, context: &mut RenderContext) -> RenderResult<GeometryTree> {
-        let mut tree = GeometryTree::new(&self, context.current_resolution());
+pub fn render(model_tree: &ModelTree, context: &mut RenderContext) -> RenderResult<GeometryTree> {
+    let mut tree = GeometryTree::new(model_tree, context.current_resolution());
 
-        context.stack.push(tree.root);
+    // Recursively process the tree starting from the root
+    render_node_dfs(tree.root, &mut tree, model_tree, context)?;
 
-        while let Some(node_id) = context.stack.last().cloned() {
-            // 1. Compute geometry for the current node
-            let render_output = tree.arena[node_id].get_mut();
+    Ok(tree)
+}
 
-            render_output.geometry = render_output.render(context)?;
-
-            context.stack.pop();
-
-            // 2. Push children onto the stack in reverse order for left-to-right DFS traversal
-            let children: Vec<_> = node_id.children(&tree.arena).collect();
-            for child_id in children.into_iter().rev() {
-                context.stack.push(child_id);
-            }
-        }
-
-        Ok(tree)
+/// Recursive DFS helper: processes children first, then renders the current node.
+fn render_node_dfs(
+    node_id: GeometryNodeId,
+    tree: &mut GeometryTree,
+    model_tree: &ModelTree,
+    context: &mut RenderContext,
+) -> RenderResult<()> {
+    // 1. Recurse down into all children first (Leaves are reached first)
+    let children: Vec<_> = node_id.children(&tree.arena).collect();
+    for child_id in children {
+        render_node_dfs(child_id, tree, model_tree, context)?;
     }
+
+    context.stack.push(node_id);
+    // 2. Render current node after all children have completed
+    let render_output = tree.arena[node_id].get();
+    let outputs = render_output.render(tree, context)?;
+
+    let render_output = tree.arena[node_id].get_mut();
+    render_output.outputs = outputs;
+
+    context.stack.pop();
+
+    Ok(())
 }

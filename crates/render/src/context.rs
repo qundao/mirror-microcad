@@ -10,8 +10,8 @@ use microcad_lang_base::Shared;
 use microcad_lang_types::{ModelNodeRef, ModelTree};
 
 use crate::{
-    GeometryNode, GeometryNodeId, GeometryNodeRef, GeometryOutput, GeometryTree, RenderCache,
-    RenderHooks, RenderResolution, RenderResult,
+    GeometryNode, GeometryNodeId, GeometryNodeRef, GeometryOutput, GeometryOutputInner,
+    GeometryTree, RenderCache, RenderHooks, RenderResolution, RenderResult,
 };
 
 /// Our progress sender.
@@ -34,8 +34,6 @@ pub struct RenderContext<'tree> {
     /// The number of model that been been rendered.
     models_rendered: usize,
 
-    pub tree: GeometryTree,
-
     /// Progress is given as a percentage between 0.0 and 100.0.
     pub progress_tx: Option<ProgressTx>,
 
@@ -49,14 +47,12 @@ pub struct RenderContext<'tree> {
 impl<'tree> RenderContext<'tree> {
     /// Initialize context with current model and prerender model.
     pub fn new(model_tree: &'tree ModelTree) -> Self {
-        let tree = GeometryTree::new(model_tree, RenderResolution::default());
         Self {
             stack: vec![],
             hooks: RenderHooks::new(),
             model_tree,
             models_rendered: 0,
             models_to_render: 0,
-            tree,
             progress_tx: None,
             cache: None,
             resolution: None,
@@ -82,6 +78,14 @@ impl<'tree> RenderContext<'tree> {
         (self.models_rendered as f32 / self.models_to_render as f32) * 100.0
     }
 
+    /// Collect outputs from children of current node
+    pub fn collect_outputs(&self, tree: &GeometryTree) -> Vec<GeometryOutput> {
+        self.current_node(tree)
+            .children()
+            .flat_map(|child| child.get().outputs.iter().cloned())
+            .collect()
+    }
+
     /// Update a geometry if it is not in cache.
     pub fn update(
         &mut self,
@@ -89,8 +93,9 @@ impl<'tree> RenderContext<'tree> {
     ) -> RenderResult<GeometryOutput> {
         let geo = self.geo_node();
         let hash = geo.to_hash();
+        self.stack.push(geo);
 
-        match self.cache.clone() {
+        let result = match self.cache.clone() {
             Some(cache) => {
                 // 1. Concurrent Read Check (Shared Lock)
                 {
@@ -117,7 +122,10 @@ impl<'tree> RenderContext<'tree> {
                 Ok(geo)
             }
             None => Ok(f(geo, self)?),
-        }
+        };
+
+        self.stack.pop();
+        result
     }
 
     /// Return current render resolution.
@@ -144,15 +152,12 @@ impl<'tree> RenderContext<'tree> {
         self.stack.last().copied().unwrap()
     }
 
-    fn current_node(&self) -> &GeometryNode {
-        let geo_node = self.geo_node();
-        let node = self.tree.arena.get(geo_node).unwrap();
-        node
+    pub fn current_node<'a>(&self, tree: &'a GeometryTree) -> GeometryNodeRef<'a> {
+        GeometryNodeRef::new(self.geo_node(), &tree.arena)
     }
 
-    pub fn model(&self) -> ModelNodeRef<'tree> {
-        let geo_node = self.geo_node();
-        let node = self.tree.arena.get(geo_node).unwrap();
+    pub fn model(&self, tree: &GeometryTree) -> ModelNodeRef<'tree> {
+        let node = self.current_node(tree);
         node.get().model(self.model_tree)
     }
 }

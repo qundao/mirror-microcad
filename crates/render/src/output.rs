@@ -16,20 +16,34 @@ use microcad_lang_types::{
     model::{ModelNodeId, ModelType},
 };
 
-use crate::{RenderAttributes, RenderContext, RenderResolution};
+use crate::{RenderAttributes, RenderResolution};
 
 /// Geometry output to be stored in the render cache.
 #[non_exhaustive]
-#[derive(Debug, Clone, derive_more::From)]
-pub struct GeometryOutput {
+#[derive(Debug, Clone)]
+pub struct GeometryOutputInner {
     pub geometry: core::Geometry,
     pub bounds: core::Bounds3D,
+    pub attributes: RenderAttributes,
 }
 
-impl From<core::Geometry> for GeometryOutput {
+impl From<core::Geometry> for GeometryOutputInner {
     fn from(geometry: core::Geometry) -> Self {
         let bounds = geometry.calc_bounds_3d();
-        Self { geometry, bounds }
+        Self {
+            geometry,
+            bounds,
+            attributes: Default::default(),
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct GeometryOutput(pub(crate) Arc<GeometryOutputInner>);
+
+impl From<core::Geometry> for GeometryOutput {
+    fn from(geo: core::Geometry) -> Self {
+        Self(Arc::new(GeometryOutputInner::from(geo)))
     }
 }
 
@@ -51,7 +65,7 @@ impl GeometryOutput {
 
     /// The radius of a centered sphere, that wrap the geometries bounds.
     pub fn scene_radius(&self) -> core::Length {
-        let mut bounds = self.bounds.clone();
+        let mut bounds = self.0.bounds.clone();
         bounds.extend_by_point(core::Vec3::new(0.0, 0.0, 0.0));
         core::Length::mm(bounds.radius())
     }
@@ -68,9 +82,7 @@ pub struct GeometryNodeData {
     /// The render resolution, calculated from transformation matrix.
     pub resolution: Option<RenderResolution>,
     /// The output geometry.
-    pub geometry: Option<GeometryOutput>,
-    /// Render attributes.
-    pub attributes: RenderAttributes,
+    pub outputs: Vec<GeometryOutput>,
     /// Computed model hash.
     hash: HashId,
 
@@ -89,8 +101,7 @@ impl GeometryNodeData {
             local_matrix,
             world_matrix: Mat4::identity(),
             resolution: None,
-            geometry: None,
-            attributes: RenderAttributes::default(), // TODO: Get render attributes from model.into(),
+            outputs: Default::default(),
             hash,
             model_node_id: model.id,
         }
@@ -100,23 +111,9 @@ impl GeometryNodeData {
         ModelNodeRef::new(self.model_node_id, &tree.arena)
     }
 
-    /// Set the 2D geometry as render output.
-    pub fn set_geometry(&mut self, geo: GeometryOutput) {
-        self.geometry = Some(geo)
-    }
-
     /// Get render resolution.
     pub fn resolution(&self) -> &Option<RenderResolution> {
         &self.resolution
-    }
-
-    /// Set render resolution.
-    pub fn set_resolution(&mut self, render_resolution: RenderResolution) {
-        self.resolution = Some(render_resolution);
-    }
-
-    pub fn output_type(&self) -> ModelType {
-        self.output_type
     }
 }
 
