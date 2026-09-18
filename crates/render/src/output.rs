@@ -57,9 +57,8 @@ impl GeometryOutput {
     }
 }
 
-/// The model output when a model has been processed.
 #[derive(Debug, Clone)]
-pub struct RenderOutput {
+pub struct GeometryNodeData {
     /// The output (2D/3D) this render output is expected to produce.
     pub output_type: ModelType,
     /// Local transformation matrix.
@@ -78,14 +77,14 @@ pub struct RenderOutput {
     pub model_node_id: ModelNodeId,
 }
 
-impl RenderOutput {
+impl GeometryNodeData {
     /// Create new render output for model.
     pub fn new<'tree>(model: ModelNodeRef<'tree>) -> Self {
         let output_type = model.output_type();
         let hash = hash_id!(model);
         let local_matrix = model.local_matrix().into_float();
 
-        RenderOutput {
+        GeometryNodeData {
             output_type,
             local_matrix,
             world_matrix: Mat4::identity(),
@@ -121,7 +120,7 @@ impl RenderOutput {
     }
 }
 
-impl ToHash for RenderOutput {
+impl ToHash for GeometryNodeData {
     fn to_hash(&self) -> HashId {
         self.hash
     }

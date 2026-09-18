@@ -6,7 +6,7 @@
 use microcad_hash::ToHash;
 use microcad_lang_types::ModelType;
 
-use crate::{GeometryOutput, GeometryTree, RenderOutput};
+use crate::{GeometryNodeData, GeometryOutput, GeometryTree};
 
 impl std::fmt::Display for GeometryOutput {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -14,7 +14,7 @@ impl std::fmt::Display for GeometryOutput {
     }
 }
 
-impl std::fmt::Display for RenderOutput {
+impl std::fmt::Display for GeometryNodeData {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,

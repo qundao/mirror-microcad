@@ -167,7 +167,7 @@ pub trait Render<T = GeometryOutput> {
     fn render(&self, context: &mut RenderContext) -> RenderResult<T>;
 }
 
-impl Render<Option<GeometryOutput>> for RenderOutput {
+impl Render<Option<GeometryOutput>> for GeometryNodeData {
     fn render(&self, context: &mut RenderContext) -> RenderResult<Option<GeometryOutput>> {
         let model = context.model();
 

@@ -5,7 +5,7 @@ use cgmath::SquareMatrix;
 use microcad_core::Mat4;
 use microcad_lang_types::{ModelNodeRef, ModelTree, math::ScalarF};
 
-use crate::{RenderOutput, RenderResolution};
+use crate::{GeometryNodeData, RenderResolution};
 
 /// A model tree with a root node.
 #[derive(Debug, Clone)]
@@ -67,7 +67,7 @@ impl GeometryTree {
     /// Helper method to recursively transform ModelNodeRef into RenderNodeId
     fn build_node(model_node: ModelNodeRef<'_>, arena: &mut GeometryArena) -> GeometryNodeId {
         // 1. Transform the ModelOutput / Model data into a RenderOutput
-        let render_output = RenderOutput::new(model_node);
+        let render_output = GeometryNodeData::new(model_node);
 
         // 2. Insert the new node into the RenderArena
         let current_node_id = arena.new_node(render_output);
@@ -90,8 +90,8 @@ impl GeometryTree {
     }
 }
 
-pub type GeometryArena = microcad_lang_base::tree::Arena<RenderOutput>;
-pub type GeometryNode = microcad_lang_base::tree::Node<RenderOutput>;
-pub type GeometryNodeRef<'a> = microcad_lang_base::tree::NodeRef<'a, RenderOutput>;
-pub type GeometryNodeMut<'a> = microcad_lang_base::tree::NodeMut<'a, RenderOutput>;
+pub type GeometryArena = microcad_lang_base::tree::Arena<GeometryNodeData>;
+pub type GeometryNode = microcad_lang_base::tree::Node<GeometryNodeData>;
+pub type GeometryNodeRef<'a> = microcad_lang_base::tree::NodeRef<'a, GeometryNodeData>;
+pub type GeometryNodeMut<'a> = microcad_lang_base::tree::NodeMut<'a, GeometryNodeData>;
 pub type GeometryNodeId = microcad_lang_base::tree::NodeId;
