@@ -11,8 +11,6 @@ pub use diagnostic::Diagnostic;
 pub use diagnostics::{DiagRenderOptions, Diagnostics};
 pub use issue::{Issue, IssueList, PushIssue};
 
-pub use miette::Report;
-
 /// Trait to implement `.into_diagnostics()`.
 pub trait IntoDiagnostics {
     fn into_diagnostics(&self) -> Diagnostics;
