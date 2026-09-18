@@ -3,13 +3,16 @@
 
 //! Render context
 
-use std::sync::{Arc, RwLock, mpsc};
+use std::sync::mpsc;
 
 use microcad_hash::ToHash;
 use microcad_lang_base::Shared;
-use microcad_lang_types::ModelNodeRef;
+use microcad_lang_types::{ModelNodeRef, ModelTree};
 
-use crate::{GeometryOutput, RenderCache, RenderResolution, RenderResult};
+use crate::{
+    GeometryNodeId, GeometryNodeRef, GeometryOutput, GeometryTree, RenderCache, RenderHooks,
+    RenderResolution, RenderResult,
+};
 
 /// Our progress sender.
 pub type ProgressTx = mpsc::Sender<f32>;
@@ -17,10 +20,13 @@ pub type ProgressTx = mpsc::Sender<f32>;
 /// The render context.
 ///
 /// Keeps a stack of model nodes and the render cache.
-#[derive(Default)]
 pub struct RenderContext<'tree> {
     /// Model stack.
-    model_stack: Vec<ModelNodeRef<'tree>>,
+    pub stack: Vec<GeometryNodeId>,
+
+    pub hooks: RenderHooks,
+
+    pub model_tree: &'tree ModelTree,
 
     /// The number of models to be rendered.
     models_to_render: usize,
@@ -28,43 +34,33 @@ pub struct RenderContext<'tree> {
     /// The number of model that been been rendered.
     models_rendered: usize,
 
+    pub tree: GeometryTree,
+
     /// Progress is given as a percentage between 0.0 and 100.0.
     pub progress_tx: Option<ProgressTx>,
 
     /// Optional render cache.
     pub cache: Option<Shared<RenderCache>>,
+
+    /// Optional render resolution. If none, we will use the `RenderResolution::default()`.
+    pub resolution: Option<RenderResolution>,
 }
 
 impl<'tree> RenderContext<'tree> {
     /// Initialize context with current model and prerender model.
-    pub fn new(model: &ModelNodeRef<'tree>, _resolution: RenderResolution) -> Self {
+    pub fn new(model_tree: &'tree ModelTree) -> Self {
+        let tree = GeometryTree::new(model_tree, RenderResolution::default());
         Self {
-            model_stack: vec![model.clone()],
+            stack: vec![],
+            hooks: RenderHooks::new(),
+            model_tree,
             models_rendered: 0,
             models_to_render: 0,
+            tree,
             progress_tx: None,
             cache: None,
+            resolution: None,
         }
-    }
-
-    /// The current model (panics if it is none).
-    pub fn model(&self) -> ModelNodeRef<'tree> {
-        *self.model_stack.last().expect("A model")
-    }
-
-    /// Run the closure `f` within the given `model`.
-    pub fn with_model<T>(
-        &mut self,
-        model: ModelNodeRef<'tree>,
-        f: impl FnOnce(&mut RenderContext) -> T,
-    ) -> T {
-        self.model_stack.push(model);
-        let result = f(self);
-        self.model_stack.pop();
-
-        self.step();
-
-        result
     }
 
     /// Make a single progress step. A progress signal is sent with each new percentage.
@@ -89,10 +85,10 @@ impl<'tree> RenderContext<'tree> {
     /// Update a geometry if it is not in cache.
     pub fn update(
         &mut self,
-        f: impl FnOnce(&mut RenderContext, ModelNodeRef<'tree>) -> RenderResult<GeometryOutput>,
+        f: impl FnOnce(GeometryNodeId, &mut RenderContext) -> RenderResult<GeometryOutput>,
     ) -> RenderResult<GeometryOutput> {
-        let model = self.model();
-        let hash = model.to_hash();
+        let geo = self.geo_node();
+        let hash = geo.to_hash();
 
         match self.cache.clone() {
             Some(cache) => {
@@ -105,7 +101,7 @@ impl<'tree> RenderContext<'tree> {
                 } // Read lock is automatically dropped here so other threads aren't blocked during expensive geometry computation
 
                 // 2. Compute Geometry Outside the Lock
-                let (geo, cost) = self.call_with_cost(model, f)?;
+                let (geo, cost) = self.call_with_cost(geo, f)?;
 
                 // 3. Insert Result into Cache (Exclusive Write Lock)
                 {
@@ -120,28 +116,37 @@ impl<'tree> RenderContext<'tree> {
 
                 Ok(geo)
             }
-            None => Ok(f(self, model)?),
+            None => Ok(f(geo, self)?),
         }
     }
 
     /// Return current render resolution.
     pub fn current_resolution(&self) -> RenderResolution {
-        todo!()
-        //        self.model().resolution()
+        self.resolution.as_ref().cloned().unwrap_or_default()
     }
 
     // Return the generated item and the number of milliseconds.
     fn call_with_cost(
         &mut self,
-        model: ModelNodeRef<'tree>,
-        f: impl FnOnce(&mut RenderContext, ModelNodeRef<'tree>) -> RenderResult<GeometryOutput>,
+        geo_node: GeometryNodeId,
+        f: impl FnOnce(GeometryNodeId, &mut RenderContext) -> RenderResult<GeometryOutput>,
     ) -> RenderResult<(GeometryOutput, f64)> {
         use std::time::Instant;
         let start = Instant::now();
 
-        let r = f(self, model)?;
+        let r = f(geo_node, self)?;
 
         let duration = start.elapsed();
         Ok((r, (duration.as_nanos() as f64) / 1_000_000.0))
+    }
+
+    fn geo_node(&self) -> GeometryNodeId {
+        self.stack.last().copied().unwrap()
+    }
+
+    pub fn model(&self) -> ModelNodeRef<'tree> {
+        let geo_node = self.geo_node();
+        let node = self.tree.arena.get(geo_node).unwrap();
+        node.get().model(self.model_tree)
     }
 }

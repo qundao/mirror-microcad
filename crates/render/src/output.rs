@@ -16,31 +16,24 @@ use microcad_lang_types::{
     model::{ModelNodeId, ModelType},
 };
 
-use crate::{RenderAttributes, RenderResolution};
+use crate::{RenderAttributes, RenderContext, RenderResolution};
 
 /// Geometry output to be stored in the render cache.
 #[non_exhaustive]
 #[derive(Debug, Clone, derive_more::From)]
-pub struct GeometryOutputInner {
+pub struct GeometryOutput {
     pub geometry: core::Geometry,
     pub bounds: core::Bounds3D,
 }
 
-#[derive(Debug, Clone)]
-pub struct GeometryOutput(Arc<GeometryOutputInner>);
-
 impl From<core::Geometry> for GeometryOutput {
     fn from(geometry: core::Geometry) -> Self {
         let bounds = geometry.calc_bounds_3d();
-        Self(Arc::new(GeometryOutputInner { geometry, bounds }))
+        Self { geometry, bounds }
     }
 }
 
 impl GeometryOutput {
-    pub fn name(&self) -> &'static str {
-        todo!()
-    }
-
     /// The radius of a centered circle that wraps the output geometries bounds on the ground.
     pub fn ground_radius(&self) -> core::Length {
         todo!()
@@ -58,7 +51,7 @@ impl GeometryOutput {
 
     /// The radius of a centered sphere, that wrap the geometries bounds.
     pub fn scene_radius(&self) -> core::Length {
-        let mut bounds = self.0.bounds.clone();
+        let mut bounds = self.bounds.clone();
         bounds.extend_by_point(core::Vec3::new(0.0, 0.0, 0.0));
         core::Length::mm(bounds.radius())
     }
@@ -125,31 +118,6 @@ impl RenderOutput {
 
     pub fn output_type(&self) -> ModelType {
         self.output_type
-    }
-}
-
-impl std::fmt::Display for RenderOutput {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{output_type} ({hash}): {geo} {resolution}",
-            output_type = match self.output_type {
-                ModelType::Geometry2D => "2D",
-                ModelType::Geometry3D => "3D",
-                ModelType::Any => "Any",
-                ModelType::NotDetermined => "?",
-            },
-            hash = self.to_hash(),
-            geo = match &self.geometry {
-                Some(geo) => geo.name(),
-                None => "",
-            },
-            resolution = match &self.resolution {
-                Some(resolution) => resolution.to_string(),
-                None => "".to_string(),
-            },
-        )?;
-        Ok(())
     }
 }
 

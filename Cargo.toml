@@ -29,7 +29,7 @@ members = [
 
     "editors/zed",
 
-    "xtask",
+    # "xtask",
 ]
 
 default-members = [
@@ -52,10 +52,6 @@ default-members = [
     "crates/macros",
     "crates/render",
     "crates/std",
-
-#    "tests",
-#    "tests/update-copyright",
-#    "tests/update-md-banner",
 ]
 
 resolver = "2"

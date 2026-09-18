@@ -9,16 +9,16 @@ use crate::{RenderOutput, RenderResolution};
 
 /// A model tree with a root node.
 #[derive(Debug, Clone)]
-pub struct RenderTree {
-    pub root: RenderNodeId,
-    pub arena: RenderArena,
+pub struct GeometryTree {
+    pub root: GeometryNodeId,
+    pub arena: GeometryArena,
 }
 
-impl RenderTree {
+impl GeometryTree {
     pub fn new(model_tree: &ModelTree, render_resolution: RenderResolution) -> Self {
-        let mut arena = RenderArena::new();
+        let mut arena = GeometryArena::new();
 
-        let mut tree = RenderTree {
+        let mut tree = GeometryTree {
             root: Self::build_node(model_tree.root(), &mut arena),
             arena,
         };
@@ -65,7 +65,7 @@ impl RenderTree {
     }
 
     /// Helper method to recursively transform ModelNodeRef into RenderNodeId
-    fn build_node(model_node: ModelNodeRef<'_>, arena: &mut RenderArena) -> RenderNodeId {
+    fn build_node(model_node: ModelNodeRef<'_>, arena: &mut GeometryArena) -> GeometryNodeId {
         // 1. Transform the ModelOutput / Model data into a RenderOutput
         let render_output = RenderOutput::new(model_node);
 
@@ -81,17 +81,17 @@ impl RenderTree {
         current_node_id
     }
 
-    pub fn root<'a>(&'a self) -> RenderNodeRef<'a> {
-        RenderNodeRef::new(self.root, &self.arena)
+    pub fn root<'a>(&'a self) -> GeometryNodeRef<'a> {
+        GeometryNodeRef::new(self.root, &self.arena)
     }
 
-    pub fn root_mut<'a>(&'a mut self) -> RenderNodeMut<'a> {
-        RenderNodeMut::new(self.root, &mut self.arena)
+    pub fn root_mut<'a>(&'a mut self) -> GeometryNodeMut<'a> {
+        GeometryNodeMut::new(self.root, &mut self.arena)
     }
 }
 
-pub type RenderArena = microcad_lang_base::tree::Arena<RenderOutput>;
-pub type RenderNode = microcad_lang_base::tree::Node<RenderOutput>;
-pub type RenderNodeRef<'a> = microcad_lang_base::tree::NodeRef<'a, RenderOutput>;
-pub type RenderNodeMut<'a> = microcad_lang_base::tree::NodeMut<'a, RenderOutput>;
-pub type RenderNodeId = microcad_lang_base::tree::NodeId;
+pub type GeometryArena = microcad_lang_base::tree::Arena<RenderOutput>;
+pub type GeometryNode = microcad_lang_base::tree::Node<RenderOutput>;
+pub type GeometryNodeRef<'a> = microcad_lang_base::tree::NodeRef<'a, RenderOutput>;
+pub type GeometryNodeMut<'a> = microcad_lang_base::tree::NodeMut<'a, RenderOutput>;
+pub type GeometryNodeId = microcad_lang_base::tree::NodeId;

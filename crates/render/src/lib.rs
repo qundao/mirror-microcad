@@ -6,6 +6,7 @@
 mod attribute;
 mod cache;
 mod context;
+mod display;
 mod output;
 mod render;
 mod tree;
@@ -18,7 +19,10 @@ pub use context::*;
 pub use tree::*;
 
 use microcad_core::{Geometry, Geometry2D, Scalar};
-use microcad_lang_types::model::ModelType;
+use microcad_lang_types::{
+    ModelTree,
+    model::{ModelType, NodeExt},
+};
 pub use output::*;
 pub use render::{RenderPrimitive, RenderResolution};
 
@@ -50,17 +54,24 @@ pub struct RenderHooks {
     hooks: HashMap<BuiltinId, RenderFn>,
 }
 
+/// Builder methods.
 impl RenderHooks {
     pub fn new() -> Self {
         let mut hooks = RenderHooks::default();
         hooks.insert::<mu::geo2d::Circle>();
         hooks
     }
+}
 
+impl RenderHooks {
     pub fn insert<C: BuiltinConstruct + Render>(&mut self) {
         self.hooks.insert(C::ITEM.id(), |ctx| {
             C::from_model(ctx.model().get())?.render(ctx)
         });
+    }
+
+    pub fn get(&self, id: BuiltinId) -> Option<RenderFn> {
+        self.hooks.get(&id).cloned()
     }
 }
 
@@ -74,7 +85,7 @@ impl RenderPrimitive for mu::geo2d::Circle {
 
 impl<T: RenderPrimitive> Render for T {
     fn render(&self, context: &mut RenderContext) -> RenderResult<GeometryOutput> {
-        context.update(|context, _| Ok(self.render_primitive(&context.current_resolution()).into()))
+        context.update(|_, context| Ok(self.render_primitive(&context.current_resolution()).into()))
     }
 }
 
@@ -115,6 +126,45 @@ pub type RenderResult<T = GeometryOutput> = Result<T, RenderError>;
 pub trait Render<T = GeometryOutput> {
     /// Render method.
     fn render(&self, context: &mut RenderContext) -> RenderResult<T>;
+}
+
+impl Render<GeometryOutput> for RenderOutput {
+    fn render(&self, context: &mut RenderContext) -> RenderResult<GeometryOutput> {
+        let model = context.model();
+
+        match model
+            .builtin_id()
+            .and_then(|builtin_id| context.hooks.get(builtin_id))
+        {
+            Some(hook) => hook(context),
+            None => todo!("Error handling"),
+        }
+    }
+}
+
+impl Render<GeometryTree> for ModelTree {
+    fn render(&self, context: &mut RenderContext) -> RenderResult<GeometryTree> {
+        let mut tree = GeometryTree::new(&self, context.current_resolution());
+
+        context.stack.push(tree.root);
+
+        while let Some(node_id) = context.stack.last().cloned() {
+            // 1. Compute geometry for the current node
+            let render_output = tree.arena[node_id].get_mut();
+
+            render_output.geometry = Some(render_output.render(context)?);
+
+            context.stack.pop();
+
+            // 2. Push children onto the stack in reverse order for left-to-right DFS traversal
+            let children: Vec<_> = node_id.children(&tree.arena).collect();
+            for child_id in children.into_iter().rev() {
+                context.stack.push(child_id);
+            }
+        }
+
+        Ok(tree)
+    }
 }
 
 /*
