@@ -1,0 +1,8 @@
+---
+source: crates/render/tests/render.rs
+expression: geometry
+---
+Geometry2D(MultiPolygon)[0x7f0f2901f821cf8e] @ @0.25mm => ?
+└── [0x0] @ @0.25mm => ?
+    ├── Geometry2D(Polygon)[0xfad406f32bdcbb47] @ @0.25mm => 2D
+    └── Geometry2D(Polygon)[0xaee441ed41b0271a] @ @0.25mm => 2D

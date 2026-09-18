@@ -18,10 +18,10 @@ pub use cache::*;
 pub use context::*;
 pub use tree::*;
 
-use microcad_core::{Geometry, Geometry2D, Scalar};
+use microcad_core::{Geometries2D, Geometry, Geometry2D, Scalar};
 use microcad_lang_types::{
-    ModelTree,
-    model::{ModelType, NodeExt},
+    ModelNodeRef, ModelTree,
+    model::{self, ModelType, NodeExt},
 };
 pub use output::*;
 pub use render::{RenderPrimitive, RenderResolution};
@@ -59,6 +59,7 @@ impl RenderHooks {
     pub fn new() -> Self {
         let mut hooks = RenderHooks::default();
         hooks.insert::<mu::geo2d::Circle>();
+        hooks.insert::<mu::ops::Difference>();
         hooks
     }
 }
@@ -90,17 +91,55 @@ impl<T: RenderPrimitive> Render for T {
 }
 
 impl Render for mu::ops::Difference {
-    fn render(&self, _context: &mut RenderContext) -> RenderResult<GeometryOutput> {
-        todo!()
-        /*context.update(|context, node| {
-            let outputs = Vec::new();
-            node.into_group().children().try_for_each(|node| {
-                outputs.push(node.render(context)?);
-                Ok(())
-            });
+    fn render(&self, context: &mut RenderContext) -> RenderResult<GeometryOutput> {
+        context.update(|node, context| {
+            let mut nodes = Vec::new();
+            for child in node
+                .first_child(&context.tree.arena)
+                .unwrap()
+                .children(&context.tree.arena)
+            {
+                nodes.push(child);
+            }
 
-            Ok(outputs.difference())
-        })*/
+            let mut outputs = Vec::new();
+
+            for node in nodes {
+                let output = context.tree.arena.get(node).unwrap();
+                let model = context
+                    .model_tree
+                    .arena
+                    .get(output.get().model_node_id)
+                    .unwrap()
+                    .get();
+
+                context.stack.push(node);
+                match model
+                    .builtin_id()
+                    .and_then(|builtin_id| context.hooks.get(builtin_id))
+                {
+                    Some(hook) => outputs.push(hook(context)?),
+                    None => {
+                        todo!()
+                    }
+                }
+                context.stack.pop();
+            }
+
+            let geometries = Geometries2D::new(
+                outputs
+                    .into_iter()
+                    .filter_map(|output| match output.geometry {
+                        Geometry::Geometry2D(geo2d) => Some(geo2d),
+                        Geometry::Geometry3D(_geo3d) => todo!(),
+                    })
+                    .collect(),
+            );
+
+            Ok(GeometryOutput::from(Geometry::from(Geometry2D::from(
+                geometries.boolean_op(microcad_core::BooleanOp::Subtract),
+            ))))
+        })
     }
 }
 
@@ -128,16 +167,16 @@ pub trait Render<T = GeometryOutput> {
     fn render(&self, context: &mut RenderContext) -> RenderResult<T>;
 }
 
-impl Render<GeometryOutput> for RenderOutput {
-    fn render(&self, context: &mut RenderContext) -> RenderResult<GeometryOutput> {
+impl Render<Option<GeometryOutput>> for RenderOutput {
+    fn render(&self, context: &mut RenderContext) -> RenderResult<Option<GeometryOutput>> {
         let model = context.model();
 
         match model
             .builtin_id()
             .and_then(|builtin_id| context.hooks.get(builtin_id))
         {
-            Some(hook) => hook(context),
-            None => todo!("Error handling"),
+            Some(hook) => Ok(Some(hook(context)?)),
+            None => Ok(None),
         }
     }
 }
@@ -152,7 +191,7 @@ impl Render<GeometryTree> for ModelTree {
             // 1. Compute geometry for the current node
             let render_output = tree.arena[node_id].get_mut();
 
-            render_output.geometry = Some(render_output.render(context)?);
+            render_output.geometry = render_output.render(context)?;
 
             context.stack.pop();
 
@@ -166,39 +205,3 @@ impl Render<GeometryTree> for ModelTree {
         Ok(tree)
     }
 }
-
-/*
-
-
-/// This implementation renders a [`Geometry2D`] out of a [`Model`].
-///
-/// Notes:
-/// * The impl attaches the output geometry to the model's render output.
-/// * It is assumed the model has been pre-rendered.
-impl RenderWithContext<GeometryOutput> for Model {
-    fn render_with_context(&self, context: &mut RenderContext) -> RenderResult<Geometry2DOutput> {
-        context.with_model(self.clone(), |context| {
-            let model = context.model();
-            let geometry: GeometryOutput = {
-                let model_ = model.borrow();
-                        match model_.element() {
-                            // A group geometry will render the child geometry
-                            Element::BuiltinWorkpiece(builtin_workpiece) => {
-                                Ok(builtin_workpiece.render_with_context(context)?)
-                            }
-                            _ => Ok(model_.children.render_with_context(context)?),
-                        }
-                }
-            }?;
-
-            self.borrow_mut()
-                .output_mut()
-                .set_geometry(GeometryOutput::Geometry2D(geometry.clone()));
-            Ok(geometry)
-        })
-    }
-}
-
-
-
-*/

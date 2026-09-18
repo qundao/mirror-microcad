@@ -75,7 +75,7 @@ pub struct RenderOutput {
     /// Computed model hash.
     hash: HashId,
 
-    model_node_id: ModelNodeId,
+    pub model_node_id: ModelNodeId,
 }
 
 impl RenderOutput {

@@ -10,8 +10,8 @@ use microcad_lang_base::Shared;
 use microcad_lang_types::{ModelNodeRef, ModelTree};
 
 use crate::{
-    GeometryNodeId, GeometryNodeRef, GeometryOutput, GeometryTree, RenderCache, RenderHooks,
-    RenderResolution, RenderResult,
+    GeometryNode, GeometryNodeId, GeometryNodeRef, GeometryOutput, GeometryTree, RenderCache,
+    RenderHooks, RenderResolution, RenderResult,
 };
 
 /// Our progress sender.
@@ -140,8 +140,14 @@ impl<'tree> RenderContext<'tree> {
         Ok((r, (duration.as_nanos() as f64) / 1_000_000.0))
     }
 
-    fn geo_node(&self) -> GeometryNodeId {
+    pub fn geo_node(&self) -> GeometryNodeId {
         self.stack.last().copied().unwrap()
+    }
+
+    fn current_node(&self) -> &GeometryNode {
+        let geo_node = self.geo_node();
+        let node = self.tree.arena.get(geo_node).unwrap();
+        node
     }
 
     pub fn model(&self) -> ModelNodeRef<'tree> {
