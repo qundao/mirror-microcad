@@ -18,10 +18,9 @@ pub use cache::*;
 pub use context::*;
 pub use tree::*;
 
-use microcad_core::{Extrude, Geometries2D, Geometry, Geometry2D, Geometry3D, Scalar};
+use microcad_core::{Extrude, Geometries2D, Geometry, Geometry2D, Scalar};
 use microcad_lang_types::{
     ModelTree,
-    math::IntoFloat,
     model::{ModelType, NodeExt},
 };
 pub use output::*;
@@ -190,7 +189,7 @@ pub fn render(model_tree: &ModelTree, context: &mut RenderContext) -> RenderResu
     );
 
     // Recursively process the tree starting from the root
-    render_node_dfs(tree.root, &mut tree, model_tree, context)?;
+    render_node_dfs(tree.root, &mut tree, context)?;
 
     Ok(tree)
 }
@@ -199,13 +198,12 @@ pub fn render(model_tree: &ModelTree, context: &mut RenderContext) -> RenderResu
 fn render_node_dfs(
     node_id: GeometryNodeId,
     tree: &mut GeometryTree,
-    model_tree: &ModelTree,
     context: &mut RenderContext,
 ) -> RenderResult<()> {
     // 1. Recurse down into all children first (Leaves are reached first)
     let children: Vec<_> = node_id.children(&tree.arena).collect();
     for child_id in children {
-        render_node_dfs(child_id, tree, model_tree, context)?;
+        render_node_dfs(child_id, tree, context)?;
     }
 
     context.stack.push(node_id);

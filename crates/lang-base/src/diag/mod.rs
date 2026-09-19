@@ -12,12 +12,12 @@ pub use diagnostics::{DiagRenderOptions, Diagnostics};
 pub use issue::{Issue, IssueList, PushIssue};
 
 /// Trait to implement `.into_diagnostics()`.
-pub trait IntoDiagnostics {
-    fn into_diagnostics(&self) -> Diagnostics;
+pub trait ToDiagnostics {
+    fn to_diagnostics(&self) -> Diagnostics;
 }
 
-impl<I: Issue + Clone + Into<miette::Report>> IntoDiagnostics for IssueList<I> {
-    fn into_diagnostics(&self) -> Diagnostics {
+impl<I: Issue + Clone + Into<miette::Report>> ToDiagnostics for IssueList<I> {
+    fn to_diagnostics(&self) -> Diagnostics {
         let mut diags = Diagnostics::new();
         self.iter().for_each(|issue| {
             diags.push(issue.clone());

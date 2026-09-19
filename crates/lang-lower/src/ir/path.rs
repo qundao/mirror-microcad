@@ -73,7 +73,7 @@ impl std::str::FromStr for UnresolvedPath {
         let parts = path_str
             .split("::")
             .filter(|part| !part.is_empty())
-            .map(|part| Identifier::from(part))
+            .map(Identifier::from)
             .collect::<Vec<_>>()
             .into_boxed_slice();
 

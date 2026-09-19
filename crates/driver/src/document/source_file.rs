@@ -6,7 +6,7 @@ use crate::prelude as mu;
 
 use microcad_lang_base::ArtifactKind;
 use microcad_lang_base::Diagnostics;
-use microcad_lang_base::IntoDiagnostics;
+use microcad_lang_base::ToDiagnostics;
 use microcad_lang_base::{Artifact, DiagRenderOptions};
 
 use miette::IntoDiagnostic;
@@ -74,10 +74,10 @@ impl SourceFile {
     }
 }
 
-impl IntoDiagnostics for SourceFile {
-    fn into_diagnostics(&self) -> Diagnostics {
-        let mut diags = self.ast.into_diagnostics();
-        diags.append(self.ir.into_diagnostics());
+impl ToDiagnostics for SourceFile {
+    fn to_diagnostics(&self) -> Diagnostics {
+        let mut diags = self.ast.to_diagnostics();
+        diags.append(self.ir.to_diagnostics());
         diags
     }
 }

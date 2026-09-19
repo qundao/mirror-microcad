@@ -31,11 +31,11 @@ pub use microcad_hash::{HashMap, HashSet, Hashed, Hasher, ToHash};
 pub const MICROCAD_EXTENSIONS: &[&str] = &["mu", "µcad", "mcad", "ucad"];
 
 /// Default extension for µcad files.
-pub const MICROCAD_EXTENSION: &'static str = "µcad";
+pub const MICROCAD_EXTENSION: &str = "µcad";
 
 pub use artifact::{Artifact, ArtifactError, ArtifactHeader, ArtifactKind, StageResult};
 pub use diag::{
-    DiagRenderOptions, Diagnostic, Diagnostics, IntoDiagnostics, Issue, IssueList, PushIssue,
+    DiagRenderOptions, Diagnostic, Diagnostics, Issue, IssueList, PushIssue, ToDiagnostics,
 };
 pub use display::DisplayOneLine;
 pub use element::{Identifier, IdentifierList};
@@ -48,7 +48,7 @@ pub use output::{Capture, Output, Stdout};
 pub use rc::{Rc, RcMut, Shared};
 pub use source::{Source, SourceKind, SourceLocation, SourceMap, TextEdit};
 pub use src_ref::{LineCol, LineIndex, Refer, Span, SpanToSrcRef, Spanned, SrcRef, SrcReferrer};
-pub use tree::{FormatTree, TreeDisplay, TreeState};
+pub use tree::{TreeDisplay, TreeState};
 pub use version::{LanguageVersion, MICROCAD_VERSION, Stability, Version, VersionAnnotation};
 
 impl SourceCode for Source {

@@ -10,7 +10,7 @@ pub mod prelude;
 //mod session;
 mod watcher;
 
-use microcad_lang_base::{DiagRenderOptions, IntoDiagnostics, IssueList};
+use microcad_lang_base::{DiagRenderOptions, IssueList, ToDiagnostics};
 use microcad_lang_parse::ParseIssue;
 use microcad_lang_types::Value;
 
@@ -48,7 +48,7 @@ pub fn value_from_str(s: &str) -> Result<Value> {
         let issues: IssueList<ParseIssue> = IssueList::from(errors);
         miette::miette!(
             issues
-                .into_diagnostics()
+                .to_diagnostics()
                 .render_to_string(&source, &DiagRenderOptions::default())
                 .unwrap()
         )

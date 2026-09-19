@@ -13,7 +13,7 @@ pub struct LocalTable(microcad_lang_base::HashMap<Identifier, Vec<SrcRef>>);
 
 impl LocalTable {
     pub fn exists(&self, id: &Identifier) -> bool {
-        self.0.get(id).is_some()
+        self.0.contains_key(id)
     }
 }
 
@@ -55,7 +55,7 @@ pub trait ScopeAccess {
 
 impl ScopeAccess for LocalTable {
     fn local_table(&self) -> Option<&LocalTable> {
-        Some(&self)
+        Some(self)
     }
 
     fn local_table_mut(&mut self) -> Option<&mut LocalTable> {

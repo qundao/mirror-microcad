@@ -19,7 +19,7 @@ impl LibraryCache {
     }
 
     pub fn get(&self, id: &LibraryId) -> Option<Shared<Library>> {
-        self.libraries.get(&id).cloned()
+        self.libraries.get(id).cloned()
     }
 }
 
@@ -56,7 +56,7 @@ impl SourceCache {
 
     /// Get a source unit by hash.
     pub fn get(&self, id: HashId) -> Option<&SourceUnit> {
-        self.by_hash_id.get(&id.into())
+        self.by_hash_id.get(&id)
     }
 
     /// Get a source unit by path.

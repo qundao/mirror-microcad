@@ -9,9 +9,7 @@ use miette::Diagnostic as MietteDiagnostic;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use crate::{
-    CompilationResult, Diagnostics, IntoDiagnostics, Issue, IssueList, LanguageVersion, SrcReferrer,
-};
+use crate::{CompilationResult, Diagnostics, Issue, IssueList, LanguageVersion, ToDiagnostics};
 
 #[derive(Debug, Error, MietteDiagnostic)]
 pub enum ArtifactError {
@@ -210,10 +208,10 @@ impl<T: Artifact, I: Issue> StageResult<T, I> {
     }
 }
 
-impl<T: Artifact, I: Issue + Clone + Into<miette::Report>> IntoDiagnostics for StageResult<T, I> {
-    fn into_diagnostics(&self) -> Diagnostics {
+impl<T: Artifact, I: Issue + Clone + Into<miette::Report>> ToDiagnostics for StageResult<T, I> {
+    fn to_diagnostics(&self) -> Diagnostics {
         match self.issues() {
-            Some(issues) => issues.into_diagnostics(),
+            Some(issues) => issues.to_diagnostics(),
             None => Diagnostics::new(),
         }
     }

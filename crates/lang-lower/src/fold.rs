@@ -75,15 +75,13 @@ impl<Expr: ir::ExprSpec> ir::ArgumentList<Expr> {
         let mut args = Vec::new();
 
         for arg in &self.args {
-            match arg.expr().value() {
-                Some(value) => args.push(match arg {
-                    ir::Argument::Named { name, .. } | ir::Argument::AutoNamed { name, .. } => {
-                        (name.clone(), value.clone())
-                    }
-                    _ => return None,
-                }),
-                None => return None,
-            }
+            let value = arg.expr().value()?;
+            args.push(match arg {
+                ir::Argument::Named { name, .. } | ir::Argument::AutoNamed { name, .. } => {
+                    (name.clone(), value.clone())
+                }
+                _ => return None,
+            })
         }
 
         Some(Arguments::from_iter(args))

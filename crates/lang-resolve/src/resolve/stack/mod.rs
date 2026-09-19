@@ -137,7 +137,7 @@ impl ScopeAccess for ResolveStackFrame {
 }
 
 /// A stack for resolving.
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct ResolveStack(Vec<ResolveStackFrame>);
 
 impl ResolveStack {
@@ -209,12 +209,6 @@ impl ResolveStack {
         let result = f(self, ctx);
         self.pop();
         result
-    }
-}
-
-impl Default for ResolveStack {
-    fn default() -> Self {
-        Self(vec![])
     }
 }
 

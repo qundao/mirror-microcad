@@ -274,7 +274,9 @@ impl Extrude for Polygon {
             triangle_indices: raw_triangulation
                 .triangle_indices
                 .as_slice()
-                .chunks_exact(3)
+                .as_chunks::<3>()
+                .0
+                .iter()
                 .map(|chunk| match flip {
                     true => Triangle(chunk[2] as u32, chunk[1] as u32, chunk[0] as u32),
                     false => Triangle(chunk[0] as u32, chunk[1] as u32, chunk[2] as u32),

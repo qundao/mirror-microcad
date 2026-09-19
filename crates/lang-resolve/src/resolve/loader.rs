@@ -131,7 +131,7 @@ impl<'lib, 'ctx> ResolveLibraryContext<'lib, 'ctx> {
                     id
                 } else {
                     *self.lib.root_mut().get_mut() = symbol;
-                    self.lib.root.clone()
+                    self.lib.root
                 };
 
                 // Traverse children recursively

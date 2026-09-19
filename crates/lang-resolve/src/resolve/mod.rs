@@ -3,16 +3,7 @@
 
 //! The resolve compiler stage.
 //!
-//! It consists of the following steps:
-//! 1) Load the (optional) manifest file
-//! 2) Prepare built-in library.
-//! 3) Load all external dependencies, including `std`.
-//! 4) Load source files inside the workspace.
-//! 5) `bind`: Resolve [`mir::Path`] to [`SymbolId`]s/[`LocalId`]s.
-//! 6) `case_check`: Validate identifier casing rules.
-//! 7) `type_check`: Verify expression types.
-
-//! Each sub-step is implemented in a separate module.
+//! TODO Doc
 
 mod bind;
 mod cache;

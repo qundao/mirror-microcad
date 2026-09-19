@@ -31,7 +31,7 @@ impl<'a, 'lib, 'ctx> ResolveVisitor<'a, 'lib, 'ctx> {
     }
 
     pub fn ctx(&'ctx self) -> &'ctx ResolveContext {
-        &self.lib_ctx.ctx()
+        self.lib_ctx.ctx()
     }
 
     pub fn transform<F>(&mut self, mut f: F)
@@ -98,19 +98,18 @@ impl<'a, 'lib, 'ctx> ScopeAccess for ResolveVisitor<'a, 'lib, 'ctx> {
     }
 
     fn declare_local(&mut self, id: Identifier) {
-        match self.stack.top_mut().local_table_mut() {
-            Some(locals) => locals.declare_local(id),
-            None => {}
+        if let Some(locals) = self.stack.top_mut().local_table_mut() {
+            locals.declare_local(id);
         }
     }
 
     fn use_local(&mut self, id: &Identifier) -> bool {
         let found = self.stack.traversal_mut(|frame| {
-            if let Some(locals) = frame.local_table_mut() {
-                if locals.use_local(id) {
-                    // We found and recorded the usage, stop traversing!
-                    return std::ops::ControlFlow::Break(());
-                }
+            if let Some(locals) = frame.local_table_mut()
+                && locals.use_local(id)
+            {
+                // We found and recorded the usage, stop traversing!
+                return std::ops::ControlFlow::Break(());
             }
             // Not in this frame, keep looking downwards
             std::ops::ControlFlow::Continue(())
@@ -144,13 +143,10 @@ impl<'a, 'lib, 'ctx> visitor::LeafVisitorMut for ResolveVisitor<'a, 'lib, 'ctx> 
             let mut paths = Vec::new();
 
             // Look up in current library being resolved.
-            if let Some(symbol_node_id) = self.stack.symbol_node_id() {
-                match self.lib_ctx.lib.look_up(symbol_node_id, unresolved_path) {
-                    Some(node_id) => {
-                        paths.push(symbol::Path::Resolved(SymbolId::Item(node_id)));
-                    }
-                    None => {}
-                }
+            if let Some(symbol_node_id) = self.stack.symbol_node_id()
+                && let Some(node_id) = self.lib_ctx.lib.look_up(symbol_node_id, unresolved_path)
+            {
+                paths.push(symbol::Path::Resolved(SymbolId::Item(node_id)));
             }
 
             // Look up external libraries.
