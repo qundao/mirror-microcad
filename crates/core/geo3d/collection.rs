@@ -15,12 +15,12 @@ use crate::{
 
 /// 3D geometry collection.
 #[derive(Debug, Clone, Default, Deref, DerefMut)]
-pub struct Geometries3D(Vec<Rc<Geometry3D>>);
+pub struct Geometries3D(Vec<Geometry3D>);
 
 impl Geometries3D {
     /// New geometry collection.
     pub fn new(geometries: Vec<Geometry3D>) -> Self {
-        Self(geometries.into_iter().map(Rc::new).collect())
+        Self(geometries.into_iter().collect())
     }
 
     /// Append another geometry collection.
@@ -35,7 +35,7 @@ impl Geometries3D {
             .iter()
             // Render each geometry into a multipolygon and filter out empty ones
             .filter_map(|geo| {
-                let manifold: Manifold = geo.as_ref().clone().into();
+                let manifold: Manifold = geo.clone().into();
                 if manifold.is_empty() {
                     None
                 } else {
@@ -57,8 +57,8 @@ impl Geometries3D {
     }
 }
 
-impl FromIterator<Rc<Geometry3D>> for Geometries3D {
-    fn from_iter<T: IntoIterator<Item = Rc<Geometry3D>>>(iter: T) -> Self {
+impl FromIterator<Geometry3D> for Geometries3D {
+    fn from_iter<T: IntoIterator<Item = Geometry3D>>(iter: T) -> Self {
         Geometries3D(iter.into_iter().collect())
     }
 }
@@ -75,7 +75,7 @@ impl Transformed3D for Geometries3D {
     fn transformed_3d(&self, mat: &Mat4) -> Self {
         Self(
             self.iter()
-                .map(|geometry| Rc::new(geometry.transformed_3d(mat)))
+                .map(|geometry| geometry.transformed_3d(mat))
                 .collect::<Vec<_>>(),
         )
     }
@@ -91,7 +91,7 @@ impl DistributeGrid for Geometries3D {
                     let center = bounds.center();
                     let cell_center: Vec2 = cell.center().x_y().into();
                     let d = center - cell_center.extend(bounds.min.z + center.z);
-                    Rc::new(geo.transformed_3d(&Mat4::from_translation(d)))
+                    geo.transformed_3d(&Mat4::from_translation(d))
                 })
                 .collect(),
         )

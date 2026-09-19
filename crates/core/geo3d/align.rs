@@ -30,9 +30,7 @@ impl Align3D for Geometries3D {
             let d = (*pos + dist) * dir - dir.mul_element_wise(c);
             *pos += 2.0 * dist + *spacing;
 
-            Some(std::rc::Rc::new(
-                geo3d.transformed_3d(&Mat4::from_translation(d)),
-            ))
+            Some(geo3d.transformed_3d(&Mat4::from_translation(d)))
         }))
     }
 }

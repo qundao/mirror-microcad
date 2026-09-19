@@ -27,9 +27,7 @@ impl Align2D for Geometries2D {
                 - Vec2::new(dir.x * bounds.center().x, dir.y * bounds.center().y);
             *pos += 2.0 * dist + *spacing;
 
-            Some(std::rc::Rc::new(
-                geo2d.transformed_2d(&Mat3::from_translation(d)),
-            ))
+            Some(geo2d.transformed_2d(&Mat3::from_translation(d)))
         }))
     }
 }

@@ -5,7 +5,6 @@
 
 use derive_more::{Deref, DerefMut};
 use geo::{CoordsIter, HasDimensions, MultiPolygon};
-use std::rc::Rc;
 
 use crate::{
     geo2d::{CalcBounds2D, bounds::Bounds2D},
@@ -15,12 +14,12 @@ use crate::{
 
 /// 2D geometry collection.
 #[derive(Debug, Clone, Default, Deref, DerefMut)]
-pub struct Geometries2D(Vec<Rc<Geometry2D>>);
+pub struct Geometries2D(Vec<Geometry2D>);
 
 impl Geometries2D {
     /// New geometry collection.
     pub fn new(geometries: Vec<Geometry2D>) -> Self {
-        Self(geometries.into_iter().map(Rc::new).collect())
+        Self(geometries.into_iter().collect())
     }
 
     /// Append another geometry collection.
@@ -35,7 +34,7 @@ impl Geometries2D {
             .iter()
             // Render each geometry into a multipolygon and filter out empty ones
             .filter_map(|geo| {
-                let multi_polygon = geo.to_multi_polygon();
+                let multi_polygon: MultiPolygon = geo.clone().into();
                 if multi_polygon.is_empty() {
                     None
                 } else {
@@ -56,21 +55,11 @@ impl Geometries2D {
             })
     }
 
-    /// Generate multipolygon.
-    pub fn to_multi_polygon(&self) -> MultiPolygon {
-        let mut polygons = Vec::new();
-        self.iter().for_each(|geo| {
-            polygons.append(&mut (**geo).clone().to_multi_polygon().0);
-        });
-
-        MultiPolygon::new(polygons)
-    }
-
     /// Apply contex hull operation to geometries.
     pub fn hull(&self) -> geo2d::Polygon {
         let mut coords: Vec<_> = self
             .iter()
-            .flat_map(|geo| match geo.as_ref() {
+            .flat_map(|geo| match geo {
                 Geometry2D::LineString(line_string) => {
                     line_string.coords_iter().collect::<Vec<_>>()
                 }
@@ -105,15 +94,15 @@ impl geo::Buffer for Geometries2D {
     ) -> MultiPolygon<Self::Scalar> {
         let mut polygons = Vec::new();
         self.iter().for_each(|geo| {
-            polygons.append(&mut (**geo).clone().buffer_with_style(style.clone()).0);
+            polygons.append(&mut geo.buffer_with_style(style.clone()).0);
         });
 
         MultiPolygon::new(polygons)
     }
 }
 
-impl FromIterator<Rc<Geometry2D>> for Geometries2D {
-    fn from_iter<T: IntoIterator<Item = Rc<Geometry2D>>>(iter: T) -> Self {
+impl FromIterator<Geometry2D> for Geometries2D {
+    fn from_iter<T: IntoIterator<Item = Geometry2D>>(iter: T) -> Self {
         Geometries2D(iter.into_iter().collect())
     }
 }
@@ -130,7 +119,7 @@ impl Transformed2D for Geometries2D {
     fn transformed_2d(&self, mat: &Mat3) -> Self {
         Self(
             self.iter()
-                .map(|geometry| Rc::new(geometry.transformed_2d(mat)))
+                .map(|geometry| geometry.transformed_2d(mat))
                 .collect::<Vec<_>>(),
         )
     }
@@ -142,7 +131,7 @@ impl From<Geometries2D> for MultiPolygon {
             geometries
                 .iter()
                 .flat_map(|geo| {
-                    let multi_polygon: MultiPolygon = geo.as_ref().clone().into();
+                    let multi_polygon: MultiPolygon = geo.clone().into();
                     multi_polygon.0
                 })
                 .collect(),
@@ -159,7 +148,7 @@ impl DistributeGrid for Geometries2D {
                     let center = geo.calc_bounds_2d().center();
                     let cell_center: Vec2 = cell.center().x_y().into();
                     let d = center - cell_center;
-                    Rc::new(geo.transformed_2d(&Mat3::from_translation(d)))
+                    geo.transformed_2d(&Mat3::from_translation(d))
                 })
                 .collect(),
         )

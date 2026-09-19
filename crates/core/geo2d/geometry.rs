@@ -36,21 +36,9 @@ impl Geometry2D {
     /// Apply boolean operation.
     pub fn boolean_op(self, other: Self, op: BooleanOp) -> geo2d::MultiPolygon {
         use geo::BooleanOps;
-        self.to_multi_polygon()
-            .boolean_op(&other.to_multi_polygon(), op.into())
-    }
-
-    /// Convert geometry to a multi_polygon.
-    pub fn to_multi_polygon(&self) -> MultiPolygon {
-        match self {
-            Geometry2D::Line(_) | Geometry2D::LineString(_) | Geometry2D::MultiLineString(_) => {
-                MultiPolygon::empty()
-            }
-            Geometry2D::Polygon(polygon) => MultiPolygon(vec![polygon.clone()]),
-            Geometry2D::MultiPolygon(multi_polygon) => multi_polygon.clone(),
-            Geometry2D::Rect(rect) => MultiPolygon(vec![rect.to_polygon()]),
-            Geometry2D::Collection(collection) => collection.to_multi_polygon(),
-        }
+        let lhs: MultiPolygon = self.into();
+        let rhs: MultiPolygon = other.into();
+        lhs.boolean_op(&rhs, op.into())
     }
 
     /// Apply hull operation.

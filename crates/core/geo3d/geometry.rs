@@ -7,7 +7,6 @@ use crate::{
 };
 
 use derive_more::From;
-use std::rc::Rc;
 use strum::IntoStaticStr;
 
 use crate::geo3d::*;

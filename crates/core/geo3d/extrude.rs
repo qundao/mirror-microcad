@@ -7,7 +7,7 @@ use std::f64::consts::PI;
 
 use cgmath::{Matrix, Point3, SquareMatrix, Transform, Vector3};
 
-use geo::TriangulateEarcut;
+use geo::{MultiPolygon, TriangulateEarcut};
 
 use crate::*;
 
@@ -306,10 +306,12 @@ impl Extrude for MultiPolygon {
 
 impl Extrude for Geometries2D {
     fn extrude_slice(&self, m_a: &Mat4, m_b: &Mat4) -> TriangleMesh {
-        self.to_multi_polygon().extrude_slice(m_a, m_b)
+        let multi_polygon: MultiPolygon = self.clone().into();
+        multi_polygon.extrude_slice(m_a, m_b)
     }
 
     fn cap(&self, m: &Mat4, flip: bool) -> TriangleMesh {
-        self.to_multi_polygon().cap(m, flip)
+        let multi_polygon: MultiPolygon = self.clone().into();
+        multi_polygon.cap(m, flip)
     }
 }

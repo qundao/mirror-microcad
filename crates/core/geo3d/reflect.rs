@@ -65,10 +65,7 @@ impl Mirror3D for TriangleMesh {}
 
 impl Reflect3D for Geometries3D {
     fn reflect_3d(&self, plane: &Plane) -> Self {
-        Self::from_iter(
-            self.iter()
-                .map(|geometry| std::rc::Rc::new(geometry.as_ref().reflect_3d(plane))),
-        )
+        Self::from_iter(self.iter().map(|geometry| geometry.reflect_3d(plane)))
     }
 }
 

@@ -100,10 +100,7 @@ impl Mirror2D for Line {}
 
 impl Reflect2D for Geometries2D {
     fn reflect_2d(&self, l: &Line) -> Self {
-        Self::from_iter(
-            self.iter()
-                .map(|geometry| std::rc::Rc::new(geometry.as_ref().reflect_2d(l))),
-        )
+        Self::from_iter(self.iter().map(|geometry| geometry.reflect_2d(l)))
     }
 }
 
