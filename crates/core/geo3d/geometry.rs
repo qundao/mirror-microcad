@@ -18,7 +18,7 @@ pub enum Geometry3D {
     /// Triangle mesh.
     Mesh(TriangleMesh),
     /// Manifold.
-    Manifold(Rc<Manifold>),
+    Manifold(Manifold),
     /// Collection.
     Collection(Geometries3D),
 }
@@ -38,10 +38,9 @@ impl Geometry3D {
 
     /// Execute boolean operation.
     pub fn boolean_op(&self, other: &Geometry3D, op: BooleanOp) -> Option<Self> {
-        let a: Rc<Manifold> = self.clone().into();
-        let b: Rc<Manifold> = other.clone().into();
-
-        Some(Geometry3D::Manifold(Rc::new(a.boolean(&b, op.into()))))
+        let a: Manifold = self.clone().into();
+        let b: Manifold = other.clone().into();
+        Some(Geometry3D::Manifold(a.boolean(&b, op.into())))
     }
 
     /// Calculate contex hull.
@@ -97,25 +96,17 @@ impl Center for Geometry3D {
     }
 }
 
-impl From<Manifold> for Geometry3D {
-    fn from(manifold: Manifold) -> Self {
-        Geometry3D::Manifold(Rc::new(manifold))
-    }
-}
-
-impl From<Geometry3D> for Rc<Manifold> {
+impl From<Geometry3D> for Manifold {
     fn from(geo: Geometry3D) -> Self {
         match geo {
-            Geometry3D::Mesh(triangle_mesh) => Rc::new(triangle_mesh.to_manifold()),
+            Geometry3D::Mesh(triangle_mesh) => triangle_mesh.to_manifold(),
             Geometry3D::Manifold(manifold) => manifold,
-            Geometry3D::Collection(ref collection) => {
-                Rc::new(TriangleMesh::from(collection).to_manifold())
-            }
+            Geometry3D::Collection(ref collection) => TriangleMesh::from(collection).to_manifold(),
         }
     }
 }
 
-impl TotalMemory for Rc<Manifold> {} // TODO: Get estimation of total memory of Manifold via C++ API.
+impl TotalMemory for Manifold {}
 
 impl TotalMemory for Geometry3D {
     fn heap_memory(&self) -> usize {
@@ -127,7 +118,7 @@ impl TotalMemory for Geometry3D {
     }
 }
 
-impl VertexCount for Rc<Manifold> {
+impl VertexCount for Manifold {
     fn vertex_count(&self) -> usize {
         0 // TODO: Get number of vertices for Manifold via C++ API
     }

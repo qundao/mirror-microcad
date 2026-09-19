@@ -29,13 +29,13 @@ impl Geometries3D {
     }
 
     /// Apply boolean operation on collection and render to manifold.
-    pub fn boolean_op(&self, op: BooleanOp) -> Rc<Manifold> {
+    pub fn boolean_op(&self, op: BooleanOp) -> Manifold {
         let manifold_list: Vec<_> = self
             .0
             .iter()
             // Render each geometry into a multipolygon and filter out empty ones
             .filter_map(|geo| {
-                let manifold: Rc<Manifold> = geo.as_ref().clone().into();
+                let manifold: Manifold = geo.as_ref().clone().into();
                 if manifold.is_empty() {
                     None
                 } else {
@@ -45,14 +45,14 @@ impl Geometries3D {
             .collect();
 
         if manifold_list.is_empty() {
-            return Rc::new(Manifold::empty());
+            return Manifold::empty();
         }
 
         let op = op.into();
         manifold_list[1..]
             .iter()
             .fold(manifold_list[0].clone(), |acc, other| {
-                Rc::new(acc.boolean(other, op))
+                acc.boolean(other, op)
             })
     }
 }
