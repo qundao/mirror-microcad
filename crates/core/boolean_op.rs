@@ -40,3 +40,27 @@ impl From<BooleanOp> for OpType3D {
         }
     }
 }
+
+/// A trait for a unary boolean operation, used in geometry collections.
+pub trait UnaryBooleanOp {
+    /// The expected output type.
+    type Output;
+
+    /// Perform a boolean operation.
+    fn boolean_op(&self, op: BooleanOp) -> Self::Output;
+
+    /// Calculate the union.
+    fn union(&self) -> Self::Output {
+        self.boolean_op(BooleanOp::Union)
+    }
+
+    /// Calculate the difference.
+    fn difference(&self) -> Self::Output {
+        self.boolean_op(BooleanOp::Subtract)
+    }
+
+    /// Calculate the intersection.
+    fn intersection(&self) -> Self::Output {
+        self.boolean_op(BooleanOp::Intersect)
+    }
+}

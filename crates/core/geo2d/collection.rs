@@ -27,34 +27,6 @@ impl Geometries2D {
         self.0.append(&mut geometries.0)
     }
 
-    /// Apply boolean operation to render into MultiPolygon.
-    pub fn boolean_op(&self, op: BooleanOp) -> geo2d::MultiPolygon {
-        let multi_polygon_list: Vec<_> = self
-            .0
-            .iter()
-            // Render each geometry into a multipolygon and filter out empty ones
-            .filter_map(|geo| {
-                let multi_polygon: MultiPolygon = geo.clone().into();
-                if multi_polygon.is_empty() {
-                    None
-                } else {
-                    Some(multi_polygon)
-                }
-            })
-            .collect();
-
-        if multi_polygon_list.is_empty() {
-            return geo2d::MultiPolygon::empty();
-        }
-
-        multi_polygon_list[1..]
-            .iter()
-            .fold(multi_polygon_list[0].clone(), |acc, geo| {
-                use geo::BooleanOps;
-                acc.boolean_op(geo, op.into())
-            })
-    }
-
     /// Apply contex hull operation to geometries.
     pub fn hull(&self) -> geo2d::Polygon {
         let mut coords: Vec<_> = self
@@ -82,6 +54,37 @@ impl Geometries2D {
             geo::algorithm::convex_hull::qhull::quick_hull(&mut coords),
             vec![],
         )
+    }
+}
+
+impl UnaryBooleanOp for Geometries2D {
+    type Output = geo2d::MultiPolygon;
+
+    fn boolean_op(&self, op: BooleanOp) -> geo2d::MultiPolygon {
+        let multi_polygon_list: Vec<_> = self
+            .0
+            .iter()
+            // Render each geometry into a multipolygon and filter out empty ones
+            .filter_map(|geo| {
+                let multi_polygon: MultiPolygon = geo.clone().into();
+                if multi_polygon.is_empty() {
+                    None
+                } else {
+                    Some(multi_polygon)
+                }
+            })
+            .collect();
+
+        if multi_polygon_list.is_empty() {
+            return geo2d::MultiPolygon::empty();
+        }
+
+        multi_polygon_list[1..]
+            .iter()
+            .fold(multi_polygon_list[0].clone(), |acc, geo| {
+                use geo::BooleanOps;
+                acc.boolean_op(geo, op.into())
+            })
     }
 }
 

@@ -18,7 +18,7 @@ pub use cache::*;
 pub use context::*;
 pub use tree::*;
 
-use microcad_core::{Extrude, Geometries2D, Geometry, Geometry2D, Scalar};
+use microcad_core::{Extrude, Geometries2D, Geometry, Geometry2D, Scalar, UnaryBooleanOp};
 use microcad_lang_types::{
     ModelTree,
     model::{ModelType, NodeExt},
@@ -143,7 +143,7 @@ impl Render for mu::ops::Extrude {
                     })
                     .collect(),
             )
-            .boolean_op(microcad_core::BooleanOp::Union);
+            .union();
 
             Ok(GeometryOutput::from(multi_polygon.linear_extrude(
                 microcad_core::Length::mm(self.height.as_mm()),

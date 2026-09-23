@@ -25,9 +25,12 @@ impl Geometries3D {
     pub fn append(&mut self, mut geometries: Geometries3D) {
         self.0.append(&mut geometries.0)
     }
+}
 
-    /// Apply boolean operation on collection and render to manifold.
-    pub fn boolean_op(&self, op: BooleanOp) -> Manifold {
+impl UnaryBooleanOp for Geometries3D {
+    type Output = Manifold;
+
+    fn boolean_op(&self, op: BooleanOp) -> Self::Output {
         let manifold_list: Vec<_> = self
             .0
             .iter()
