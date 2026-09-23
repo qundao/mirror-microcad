@@ -3,8 +3,6 @@
 
 //! 3D Geometry collection
 
-use std::rc::Rc;
-
 use derive_more::{Deref, DerefMut};
 
 use crate::{

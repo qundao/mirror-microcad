@@ -57,10 +57,11 @@ pub trait Visitor: SourceVisitor + FnVisitor + WorkbenchVisitor + ConstantVisito
     fn visit_def(&mut self, def: &SymbolDef) {
         use SymbolDef::*;
         match def {
-            Root(library_root) => match library_root {
-                Some(lib_mu) => self.visit_source_file(lib_mu),
-                None => {}
-            },
+            Root(library_root) => {
+                if let Some(lib_mu) = library_root {
+                    self.visit_source_file(lib_mu)
+                }
+            }
             InlineModule(inline_module) => self.visit_inline_module(inline_module),
             SourceFile(file_module) => self.visit_source_file(file_module),
             Workbench(workbench) => self.visit_workbench(workbench),
@@ -111,10 +112,11 @@ pub trait VisitorMut:
     fn visit_def(&mut self, def: &mut SymbolDef) {
         use SymbolDef::*;
         match def {
-            Root(library_root) => match library_root {
-                Some(lib_mu) => self.visit_source_file(lib_mu),
-                None => {}
-            },
+            Root(library_root) => {
+                if let Some(lib_mu) = library_root {
+                    self.visit_source_file(lib_mu)
+                }
+            }
             InlineModule(inline_module) => self.visit_inline_module(inline_module),
             SourceFile(file_module) => self.visit_source_file(file_module),
             Workbench(workbench) => self.visit_workbench(workbench),

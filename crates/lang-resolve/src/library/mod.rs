@@ -171,10 +171,10 @@ impl Library {
     ) -> Option<SymbolNodeId> {
         // Step A: Check direct named child
         let scope = SymbolNodeRef::new(scope_id, &self.arena);
-        if let Some(child) = scope.find_symbol_node(name) {
-            if self.is_visible(child.id, from_scope) {
-                return Some(child.id);
-            }
+        if let Some(child) = scope.find_symbol_node(name)
+            && self.is_visible(child.id, from_scope)
+        {
+            return Some(child.id);
         }
 
         // Step B: Search inside wildcard imports declared in `scope_id`
@@ -187,23 +187,20 @@ impl Library {
                     continue;
                 }
 
-                match &wildcard.path {
-                    Path::Unresolved(unresolved_path) => {
-                        // Look up the target path of the wildcard `a::path`
-                        if let Some(target_module_id) =
-                            self.look_up_internal(scope_id, &unresolved_path, visited_wildcards)
-                        {
-                            let target_ref = SymbolNodeRef::new(target_module_id, &self.arena);
+                if let Path::Unresolved(unresolved_path) = &wildcard.path {
+                    // Look up the target path of the wildcard `a::path`
+                    if let Some(target_module_id) =
+                        self.look_up_internal(scope_id, &unresolved_path, visited_wildcards)
+                    {
+                        let target_ref = SymbolNodeRef::new(target_module_id, &self.arena);
 
-                            // Search for `name` directly inside the target module
-                            if let Some(imported_node) = target_ref.find_symbol_node(name) {
-                                if self.is_visible(imported_node.id, from_scope) {
-                                    return Some(imported_node.id);
-                                }
-                            }
+                        // Search for `name` directly inside the target module
+                        if let Some(imported_node) = target_ref.find_symbol_node(name)
+                            && self.is_visible(imported_node.id, from_scope)
+                        {
+                            return Some(imported_node.id);
                         }
                     }
-                    _ => {}
                 }
             }
         }
@@ -260,5 +257,11 @@ impl Library {
                 None => return false,
             }
         }
+    }
+}
+
+impl Default for Library {
+    fn default() -> Self {
+        Self::new()
     }
 }

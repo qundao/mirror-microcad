@@ -48,7 +48,7 @@ impl GeometryTree {
                 let resolution = match node.model(model_tree).resolution() {
                     Some(resolution_attribute) => RenderResolution {
                         linear: match resolution_attribute {
-                            ResolutionAttribute::Absolute(linear) => linear.to_num(),
+                            ResolutionAttribute::Absolute(linear) => linear.0.to_num(),
                             ResolutionAttribute::Relative(factor) =>
                             // Example: A relative resolution of 200% scales an absolution resolution from 0.1mm to 0.5mm.
                             {

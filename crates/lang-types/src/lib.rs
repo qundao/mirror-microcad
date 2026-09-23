@@ -14,7 +14,7 @@ pub use color::Color;
 mod arguments;
 pub use arguments::{ArgumentValue, ArgumentValueList, Arguments};
 
-use derive_more::{Deref, DerefMut, Display};
+use derive_more::Display;
 use serde::{Deserialize, Serialize};
 pub use ty::{
     CallParameter, CallParameters, CallSignature, FunctionType, MatrixType, QuantityType,
@@ -33,6 +33,8 @@ pub use microcad_lang_base::{
     Identifier,
     element::{BinaryOperator, UnaryOperator},
 };
+
+use crate::math::ScalarF;
 
 pub type Integer = fixed::FixedI64<fixed::types::extra::U0>;
 
@@ -60,8 +62,6 @@ pub type Angle = cgmath::Rad<Scalar>;
     Eq,
     PartialOrd,
     Ord,
-    Deref,
-    DerefMut,
     Serialize,
     Deserialize,
 )]
@@ -70,8 +70,13 @@ pub struct Length(pub Scalar);
 
 impl Length {
     /// Return a new length from millimeters.
-    pub fn mm(mm: f64) -> Self {
+    pub fn mm(mm: ScalarF) -> Self {
         Self(Scalar::from_num(mm))
+    }
+
+    /// Return the length in millimeters as an f64.
+    pub fn as_mm(&self) -> ScalarF {
+        self.0.to_num()
     }
 }
 

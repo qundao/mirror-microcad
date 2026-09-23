@@ -79,7 +79,7 @@ impl RenderHooks {
 
 impl RenderPrimitive for mu::geo2d::Circle {
     fn render_primitive(&self, resolution: &RenderResolution) -> Geometry {
-        let radius: Scalar = self.radius.to_num();
+        let radius: Scalar = self.radius.as_mm();
         let n = resolution.circular_segments(radius);
         Geometry2D::Polygon(microcad_core::Circle::circle_polygon(radius, n)).into()
     }
@@ -146,7 +146,7 @@ impl Render for mu::ops::Extrude {
             .boolean_op(microcad_core::BooleanOp::Union);
 
             Ok(GeometryOutput::from(multi_polygon.linear_extrude(
-                microcad_core::Length::mm(self.height.to_num()),
+                microcad_core::Length::mm(self.height.as_mm()),
                 1.0,
                 1.0,
                 cgmath::Rad(0.0),
