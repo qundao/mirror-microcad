@@ -3,15 +3,15 @@
 
 //! Render context
 
-use std::sync::mpsc;
+use std::sync::{Arc, mpsc};
 
 use microcad_hash::ToHash;
 use microcad_lang_base::Shared;
 use microcad_lang_types::{ModelNodeRef, ModelTree};
 
 use crate::{
-    GeometryNodeId, GeometryNodeRef, GeometryOutput, GeometryTree, RenderCache, RenderHooks,
-    RenderResolution, RenderResult,
+    GeometryNodeId, GeometryNodeRef, GeometryOutput, GeometryOutputs, GeometryTree, RenderCache,
+    RenderHooks, RenderResolution, RenderResult,
 };
 
 /// Our progress sender.
@@ -100,18 +100,19 @@ impl<'tree> RenderContext<'tree> {
     }
 
     /// Collect outputs from children of current node
-    pub fn collect_outputs(&self, tree: &GeometryTree) -> Vec<GeometryOutput> {
-        self.current_node(tree)
-            .children()
-            .flat_map(|child| child.get().outputs.iter().cloned())
-            .collect()
+    pub fn collect_outputs(&self, tree: &GeometryTree) -> GeometryOutputs {
+        GeometryOutputs::from_iter(
+            self.current_node(tree)
+                .children()
+                .flat_map(|child| child.get().outputs.iter().cloned()),
+        )
     }
 
     /// Update a geometry if it is not in cache.
     pub fn update(
         &mut self,
-        f: impl FnOnce(GeometryNodeId, &mut RenderContext) -> RenderResult<GeometryOutput>,
-    ) -> RenderResult<GeometryOutput> {
+        f: impl FnOnce(GeometryNodeId, &mut RenderContext) -> RenderResult<Arc<GeometryOutput>>,
+    ) -> RenderResult<Arc<GeometryOutput>> {
         let geo = self.geo_node();
         let hash = geo.to_hash();
         self.stack.push(geo);
@@ -162,8 +163,8 @@ impl<'tree> RenderContext<'tree> {
     fn call_with_cost(
         &mut self,
         geo_node: GeometryNodeId,
-        f: impl FnOnce(GeometryNodeId, &mut RenderContext) -> RenderResult<GeometryOutput>,
-    ) -> RenderResult<(GeometryOutput, f64)> {
+        f: impl FnOnce(GeometryNodeId, &mut RenderContext) -> RenderResult<Arc<GeometryOutput>>,
+    ) -> RenderResult<(Arc<GeometryOutput>, f64)> {
         use std::time::Instant;
         let start = Instant::now();
 

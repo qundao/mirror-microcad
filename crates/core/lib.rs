@@ -75,6 +75,57 @@ pub enum Geometry {
     Geometry3D(Geometry3D),
 }
 
+impl Geometry {
+    /// Return geometry type.
+    pub fn ty(&self) -> GeometryType {
+        match self {
+            Geometry::Geometry2D(_) => GeometryType::Geometry2D,
+            Geometry::Geometry3D(_) => GeometryType::Geometry3D,
+        }
+    }
+}
+
+/// Type of a
+#[derive(Debug, Default, Copy, Clone)]
+pub enum GeometryType {
+    /// An empty geometry.
+    #[default]
+    Empty,
+    /// A 2D geometry.
+    Geometry2D,
+    /// A 3D geometry
+    Geometry3D,
+    /// A mixed geometry.
+    Mixed,
+}
+
+impl std::fmt::Display for GeometryType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                GeometryType::Empty => "<EMPTY>",
+                GeometryType::Geometry2D => "2D",
+                GeometryType::Geometry3D => "3D",
+                GeometryType::Mixed => "2D/3D",
+            }
+        )
+    }
+}
+
+impl GeometryType {
+    /// Merges two geometry types into a combined type.
+    pub fn merge(self, other: Self) -> Self {
+        match (self, other) {
+            (Self::Empty, x) | (x, Self::Empty) => x,
+            (Self::Geometry2D, Self::Geometry2D) => Self::Geometry2D,
+            (Self::Geometry3D, Self::Geometry3D) => Self::Geometry3D,
+            _ => Self::Mixed,
+        }
+    }
+}
+
 impl std::fmt::Display for Geometry {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let name: &'static str = self.into();

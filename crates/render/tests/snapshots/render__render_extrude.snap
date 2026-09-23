@@ -2,5 +2,5 @@
 source: crates/render/tests/render.rs
 expression: geometry
 ---
-Geometry3D(Mesh)[0xb213cc3cfd766364] @0.25mm => ?
-└── Geometry2D(Polygon)[0xfad406f32bdcbb47] @0.25mm => 2D
+3D[1][0xb213cc3cfd766364] @0.25mm => ?
+└── 2D[1][0xfad406f32bdcbb47] @0.25mm => 2D

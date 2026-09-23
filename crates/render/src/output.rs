@@ -7,7 +7,7 @@ use std::sync::Arc;
 
 use cgmath::SquareMatrix;
 
-use microcad_core::{self as core, CalcBounds3D, Geometry3D, Mat4, Transformed3D};
+use microcad_core::{self as core, CalcBounds3D, Geometry3D, GeometryType, Mat4, Transformed3D};
 
 use microcad_hash::{HashId, ToHash, hash_id};
 use microcad_lang_types::{
@@ -21,29 +21,125 @@ use crate::{RenderAttributes, RenderResolution};
 /// Geometry output to be stored in the render cache.
 #[non_exhaustive]
 #[derive(Debug, Clone)]
-pub struct GeometryOutputInner {
+pub struct GeometryOutput {
+    pub id: Option<String>,
+    pub attr: RenderAttributes,
     pub geometry: core::Geometry,
     pub bounds: core::Bounds3D,
-    pub attributes: RenderAttributes,
 }
 
-impl From<core::Geometry> for GeometryOutputInner {
+/// Builder methods.
+impl GeometryOutput {
+    pub fn new(geometry: impl Into<core::Geometry>) -> Self {
+        let geometry = geometry.into();
+        let bounds = geometry.calc_bounds_3d();
+        Self {
+            id: None,
+            attr: Default::default(),
+            geometry,
+            bounds,
+        }
+    }
+
+    pub fn with_id(mut self, id: String) -> Self {
+        self.id = Some(id);
+        self
+    }
+
+    pub fn with_attr(mut self, attr: RenderAttributes) -> Self {
+        self.attr = attr;
+        self
+    }
+}
+
+/// Accessors.
+impl GeometryOutput {
+    /// Return GeometryType.
+    pub fn ty(&self) -> GeometryType {
+        self.geometry.ty()
+    }
+}
+
+impl From<core::Geometry> for GeometryOutput {
     fn from(geometry: core::Geometry) -> Self {
         let bounds = geometry.calc_bounds_3d();
         Self {
+            id: None,
+            attr: Default::default(),
             geometry,
             bounds,
-            attributes: Default::default(),
         }
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct GeometryOutput(pub(crate) Arc<GeometryOutputInner>);
+impl GeometryOutputs {
+    /// Returns the number of geometry outputs.
+    #[inline]
+    pub fn len(&self) -> usize {
+        self.outputs.len()
+    }
 
-impl From<core::Geometry> for GeometryOutput {
-    fn from(geo: core::Geometry) -> Self {
-        Self(Arc::new(GeometryOutputInner::from(geo)))
+    /// Returns `true` if there are no geometry outputs.
+    #[inline]
+    pub fn is_empty(&self) -> bool {
+        self.outputs.is_empty()
+    }
+}
+
+impl From<Arc<GeometryOutput>> for GeometryOutputs {
+    fn from(geometry: Arc<GeometryOutput>) -> Self {
+        let geometry_type = geometry.ty();
+        Self {
+            outputs: vec![geometry],
+            geometry_type,
+        }
+    }
+}
+
+impl std::fmt::Display for GeometryOutputs {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if matches!(self.geometry_type, GeometryType::Empty) {
+            write!(f, "[]")
+        } else {
+            write!(f, "{type}[{len}]", type = self.geometry_type, len = self.len())
+        }
+    }
+}
+
+#[derive(Debug, Default, Clone)]
+pub struct GeometryOutputs {
+    outputs: Vec<Arc<GeometryOutput>>,
+    geometry_type: GeometryType,
+}
+
+impl GeometryOutputs {
+    /// Returns an iterator over references to the output items.
+    pub fn iter(&self) -> std::slice::Iter<'_, Arc<GeometryOutput>> {
+        self.outputs.iter()
+    }
+}
+
+// Implement IntoIterator for &GeometryOutputs so callers can write `for output in &outputs`
+impl<'a> IntoIterator for &'a GeometryOutputs {
+    type Item = &'a Arc<GeometryOutput>;
+    type IntoIter = std::slice::Iter<'a, Arc<GeometryOutput>>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.iter()
+    }
+}
+
+impl FromIterator<Arc<GeometryOutput>> for GeometryOutputs {
+    fn from_iter<T: IntoIterator<Item = Arc<GeometryOutput>>>(iter: T) -> Self {
+        let outputs: Vec<_> = iter.into_iter().collect();
+        let geometry_type = outputs
+            .iter()
+            .fold(GeometryType::Empty, |acc, item| acc.merge(item.ty()));
+
+        Self {
+            outputs,
+            geometry_type,
+        }
     }
 }
 
@@ -52,11 +148,12 @@ where
     T: Into<Geometry3D> + CalcBounds3D + Transformed3D,
 {
     fn from(with_bounds: core::WithBounds3D<T>) -> Self {
-        Self(Arc::new(GeometryOutputInner {
+        GeometryOutput {
+            id: None,
             geometry: core::Geometry::from(with_bounds.inner.into()),
             bounds: with_bounds.bounds,
-            attributes: Default::default(),
-        }))
+            attr: Default::default(),
+        }
     }
 }
 
@@ -78,7 +175,7 @@ impl GeometryOutput {
 
     /// The radius of a centered sphere, that wrap the geometries bounds.
     pub fn scene_radius(&self) -> core::Length {
-        let mut bounds = self.0.bounds.clone();
+        let mut bounds = self.bounds.clone();
         bounds.extend_by_point(core::Vec3::new(0.0, 0.0, 0.0));
         core::Length::mm(bounds.radius())
     }
@@ -95,7 +192,7 @@ pub struct GeometryNodeData {
     /// The render resolution, calculated from transformation matrix.
     pub resolution: Option<RenderResolution>,
     /// The output geometry.
-    pub outputs: Vec<GeometryOutput>,
+    pub outputs: GeometryOutputs,
     /// Computed model hash.
     hash: HashId,
 

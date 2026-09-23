@@ -11,6 +11,8 @@ mod output;
 mod render;
 mod tree;
 
+use std::sync::Arc;
+
 use microcad_hash::HashMap;
 
 pub use attribute::*;
@@ -47,7 +49,8 @@ pub enum RenderError {
 use microcad_builtin::{BuiltinConstruct, BuiltinError, BuiltinId, mu};
 
 /// Built-in execution function signature
-pub type RenderFn = fn(&GeometryTree, &mut RenderContext) -> Result<GeometryOutput, RenderError>;
+pub type RenderFn =
+    fn(&GeometryTree, &mut RenderContext) -> Result<Arc<GeometryOutput>, RenderError>;
 
 #[derive(Debug, Default)]
 pub struct RenderHooks {
@@ -90,11 +93,12 @@ impl<T: RenderPrimitive> Render for T {
         &self,
         tree: &GeometryTree,
         context: &mut RenderContext,
-    ) -> RenderResult<GeometryOutput> {
+    ) -> RenderResult<Arc<GeometryOutput>> {
         context.update(|_, context| {
-            Ok(self
-                .render_primitive(&context.current_resolution(tree))
-                .into())
+            Ok(Arc::new(
+                self.render_primitive(&context.current_resolution(tree))
+                    .into(),
+            ))
         })
     }
 }
@@ -104,21 +108,21 @@ impl Render for mu::ops::Difference {
         &self,
         tree: &GeometryTree,
         context: &mut RenderContext,
-    ) -> RenderResult<GeometryOutput> {
+    ) -> RenderResult<Arc<GeometryOutput>> {
         context.update(|_node, context| {
             let outputs = context.collect_outputs(tree);
 
             let geometries = Geometries2D::new(
                 outputs
                     .into_iter()
-                    .filter_map(|output| match &output.0.geometry {
+                    .filter_map(|output| match &output.geometry {
                         Geometry::Geometry2D(geo2d) => Some(geo2d.clone()),
                         Geometry::Geometry3D(_geo3d) => todo!(),
                     })
                     .collect(),
             );
 
-            Ok(GeometryOutput::from(Geometry::from(Geometry2D::from(
+            Ok(Arc::new(GeometryOutput::new(Geometry2D::from(
                 geometries.boolean_op(microcad_core::BooleanOp::Subtract),
             ))))
         })
@@ -130,14 +134,14 @@ impl Render for mu::ops::Extrude {
         &self,
         tree: &GeometryTree,
         context: &mut RenderContext,
-    ) -> RenderResult<GeometryOutput> {
+    ) -> RenderResult<Arc<GeometryOutput>> {
         context.update(|_node, context| {
             let outputs = context.collect_outputs(tree);
 
             let multi_polygon = Geometries2D::new(
                 outputs
                     .into_iter()
-                    .filter_map(|output| match &output.0.geometry {
+                    .filter_map(|output| match &output.geometry {
                         Geometry::Geometry2D(geo2d) => Some(geo2d.clone()),
                         Geometry::Geometry3D(_geo3d) => todo!(),
                     })
@@ -145,38 +149,40 @@ impl Render for mu::ops::Extrude {
             )
             .union();
 
-            Ok(GeometryOutput::from(multi_polygon.linear_extrude(
-                microcad_core::Length::mm(self.height.as_mm()),
-                1.0,
-                1.0,
-                cgmath::Rad(0.0),
+            Ok(Arc::new(GeometryOutput::from(
+                multi_polygon.linear_extrude(
+                    microcad_core::Length::mm(self.height.as_mm()),
+                    1.0,
+                    1.0,
+                    cgmath::Rad(0.0),
+                ),
             )))
         })
     }
 }
 
 /// A result from rendering a model.
-pub type RenderResult<T = GeometryOutput> = Result<T, RenderError>;
+pub type RenderResult<T = Arc<GeometryOutput>> = Result<T, RenderError>;
 
 /// The render trait.
-pub trait Render<T = GeometryOutput> {
+pub trait Render<T = Arc<GeometryOutput>> {
     /// Render method.
     fn render(&self, tree: &GeometryTree, context: &mut RenderContext) -> RenderResult<T>;
 }
 
-impl Render<Vec<GeometryOutput>> for GeometryNodeData {
+impl Render<GeometryOutputs> for GeometryNodeData {
     fn render(
         &self,
         tree: &GeometryTree,
         context: &mut RenderContext,
-    ) -> RenderResult<Vec<GeometryOutput>> {
+    ) -> RenderResult<GeometryOutputs> {
         let model = context.model(tree);
 
         match model
             .builtin_id()
             .and_then(|builtin_id| context.hooks.get(builtin_id))
         {
-            Some(hook) => Ok(vec![hook(tree, context)?]),
+            Some(hook) => Ok(GeometryOutputs::from(hook(tree, context)?)),
             None => Ok(context.collect_outputs(tree)),
         }
     }

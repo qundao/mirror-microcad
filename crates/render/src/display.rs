@@ -6,17 +6,11 @@
 use microcad_hash::ToHash;
 use microcad_lang_types::ModelType;
 
-use crate::{GeometryNodeData, GeometryOutput, GeometryOutputInner, GeometryTree};
-
-impl std::fmt::Display for GeometryOutputInner {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.geometry)
-    }
-}
+use crate::{GeometryNodeData, GeometryOutput, GeometryTree};
 
 impl std::fmt::Display for GeometryOutput {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)
+        write!(f, "{}", self.geometry)
     }
 }
 
@@ -32,11 +26,7 @@ impl std::fmt::Display for GeometryNodeData {
                 ModelType::NotDetermined => "?",
             },
             hash = self.to_hash(),
-            geo = match &self.outputs.len() {
-                0 => String::from("()"),
-                1 => format!("{}", self.outputs.first().unwrap()),
-                n => format!("[{n} Outputs]"),
-            },
+            geo = self.outputs,
             resolution = match &self.resolution {
                 Some(resolution) => resolution.to_string(),
                 None => "".to_string(),
