@@ -76,6 +76,16 @@ pub enum Geometry {
 }
 
 impl Geometry {
+    /// Create a new 2D geometry.
+    pub fn geo2d(geo2d: impl Into<Geometry2D>) -> Self {
+        Self::Geometry2D(geo2d.into())
+    }
+
+    /// Create a new 3D geometry.
+    pub fn geo3d(geo3d: impl Into<Geometry3D>) -> Self {
+        Self::Geometry3D(geo3d.into())
+    }
+
     /// Return geometry type.
     pub fn ty(&self) -> GeometryType {
         match self {
