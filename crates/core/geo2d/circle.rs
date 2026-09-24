@@ -3,6 +3,8 @@
 
 //! 2D Geometry
 
+use geo::Translate;
+
 use crate::*;
 
 /// Circle with offset.
@@ -43,5 +45,11 @@ impl Circle {
     pub fn circle_polygon(radius: Scalar, n: u32) -> Polygon {
         let points = NgonIterator::new(n).map(|p| p * radius).collect();
         Polygon::new(LineString::new(points), vec![])
+    }
+
+    /// Convert the circle to polygon.
+    pub fn to_polygon(&self, n: u32) -> Polygon {
+        let polygon = Self::circle_polygon(self.radius, n);
+        polygon.translate(self.offset.x, self.offset.y)
     }
 }

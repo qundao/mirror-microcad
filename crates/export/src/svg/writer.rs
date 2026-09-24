@@ -8,68 +8,65 @@ use microcad_core::*;
 use crate::svg::{SvgTagAttributes, canvas::Canvas};
 
 /// SVG writer.
-pub struct SvgWriter {
+pub struct SvgWriter<W: std::io::Write> {
     /// The writer (e.g. a file).
-    writer: Box<dyn std::io::Write>,
+    writer: W,
     /// Indentation level.
     level: usize,
     /// The canvas.
     canvas: Canvas,
+    /// Tracks if the closing `</svg>` tag was explicitly written.
+    finished: bool,
 }
 
-impl SvgWriter {
+impl<W: std::io::Write> SvgWriter<W> {
     /// Create new SvgWriter
     /// # Arguments
     /// - `w`: Output writer
     /// - `size`: Size of the canvas.
     /// - `scale`: Scale of the output
     pub fn new_canvas(
-        mut writer: Box<dyn std::io::Write>,
+        mut writer: W,
         size: Option<Size2>,
         content_rect: Rect,
         scale: Option<Scalar>,
     ) -> std::io::Result<Self> {
-        let size = match size {
-            Some(size) => size,
-            None => Size2 {
-                width: content_rect.width(),
-                height: content_rect.height(),
-            },
-        };
-        let x = 0;
-        let y = 0;
-        let w = size.width;
-        let h = size.height;
+        let size = size.unwrap_or_else(|| Size2 {
+            width: content_rect.width(),
+            height: content_rect.height(),
+        });
+
+        let (x, y) = (0, 0);
+        let (w, h) = (size.width, size.height);
         let canvas = Canvas::new_centered_content(size, content_rect, scale);
 
-        writeln!(&mut writer, "<?xml version='1.0' encoding='UTF-8'?>")?;
+        writeln!(writer, "<?xml version='1.0' encoding='UTF-8'?>")?;
         writeln!(
-            &mut writer,
-            "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' viewBox='{x} {y} {w} {h}' width='{w}mm' height='{h}mm'>",
+            writer,
+            "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' viewBox='{x} {y} {w} {h}' width='{w}mm' height='{h}mm'>"
         )?;
         writeln!(
-            &mut writer,
-            r#"
-  <defs>
-    <!-- A marker to be used as an arrowhead -->
-    <marker
-      id="arrow"
-      viewBox="0 0 16 16"
-      refX="8"
-      refY="8"
-      markerWidth="9"
-      markerHeight="9"
-      orient="auto-start-reverse">
-      <path d="M 0 0 L 16 8 L 0 16 z" stroke="none" fill="context-fill" />
-    </marker>
-  </defs>
-            "#
+            writer,
+            r#"  <defs>
+        <!-- A marker to be used as an arrowhead -->
+        <marker
+          id="arrow"
+          viewBox="0 0 16 16"
+          refX="8"
+          refY="8"
+          markerWidth="9"
+          markerHeight="9"
+          orient="auto-start-reverse">
+          <path d="M 0 0 L 16 8 L 0 16 z" stroke="none" fill="context-fill" />
+        </marker>
+      </defs>"#
         )?;
 
         Ok(Self {
-            writer: Box::new(writer),
+            writer,
             level: 1,
             canvas,
+            finished: false,
         })
     }
 
@@ -144,13 +141,11 @@ impl SvgWriter {
     }
 
     /// Finish this SVG. This method is also called in the Drop trait implementation.
-    pub fn finish(&mut self) -> std::io::Result<()> {
-        writeln!(self.writer, "</svg>")
-    }
-}
-
-impl Drop for SvgWriter {
-    fn drop(&mut self) {
-        self.finish().expect("No error")
+    ///
+    /// Writes trailing closing tags (e.g. `</svg>`) and returns the underlying writer.
+    pub fn finish(mut self) -> std::io::Result<W> {
+        writeln!(self.writer, "</svg>")?;
+        self.writer.flush()?;
+        Ok(self.writer)
     }
 }

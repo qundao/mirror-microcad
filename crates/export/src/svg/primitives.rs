@@ -3,6 +3,8 @@
 
 //! Scalable Vector Graphics (SVG) primitives ([`WriteSvg`] trait implementations).
 
+use std::io::Write;
+
 use cgmath::{Deg, InnerSpace};
 use geo::{CoordsIter as _, Point, Rect, Translate};
 use microcad_core::*;
@@ -10,7 +12,11 @@ use microcad_core::*;
 use crate::svg::{attributes::SvgTagAttribute, *};
 
 impl WriteSvg for Line {
-    fn write_svg(&self, writer: &mut SvgWriter, attr: &SvgTagAttributes) -> std::io::Result<()> {
+    fn write_svg<W: Write>(
+        &self,
+        writer: &mut SvgWriter<W>,
+        attr: &SvgTagAttributes,
+    ) -> std::io::Result<()> {
         let ((x1, y1), (x2, y2)) = (self.0.x_y(), self.1.x_y());
         writer.tag(
             &format!("line x1=\"{x1}\" y1=\"{y1}\" x2=\"{x2}\" y2=\"{y2}\"",),
@@ -19,10 +25,12 @@ impl WriteSvg for Line {
     }
 }
 
-impl WriteSvgMapped for Line {}
-
 impl WriteSvg for Rect {
-    fn write_svg(&self, writer: &mut SvgWriter, attr: &SvgTagAttributes) -> std::io::Result<()> {
+    fn write_svg<W: Write>(
+        &self,
+        writer: &mut SvgWriter<W>,
+        attr: &SvgTagAttributes,
+    ) -> std::io::Result<()> {
         let x = self.min().x;
         let y = self.min().y;
         let width = self.width();
@@ -35,10 +43,12 @@ impl WriteSvg for Rect {
     }
 }
 
-impl WriteSvgMapped for Rect {}
-
 impl WriteSvg for Bounds2D {
-    fn write_svg(&self, writer: &mut SvgWriter, attr: &SvgTagAttributes) -> std::io::Result<()> {
+    fn write_svg<W: Write>(
+        &self,
+        writer: &mut SvgWriter<W>,
+        attr: &SvgTagAttributes,
+    ) -> std::io::Result<()> {
         if let Some(rect) = self.rect() {
             rect.write_svg(writer, attr)
         } else {
@@ -47,20 +57,24 @@ impl WriteSvg for Bounds2D {
     }
 }
 
-impl WriteSvgMapped for Bounds2D {}
-
 impl WriteSvg for Circle {
-    fn write_svg(&self, writer: &mut SvgWriter, attr: &SvgTagAttributes) -> std::io::Result<()> {
+    fn write_svg<W: Write>(
+        &self,
+        writer: &mut SvgWriter<W>,
+        attr: &SvgTagAttributes,
+    ) -> std::io::Result<()> {
         let r = self.radius;
         let (cx, cy) = (self.offset.x, self.offset.y);
         writer.tag(&format!("circle cx=\"{cx}\" cy=\"{cy}\" r=\"{r}\""), attr)
     }
 }
 
-impl WriteSvgMapped for Circle {}
-
 impl WriteSvg for LineString {
-    fn write_svg(&self, writer: &mut SvgWriter, attr: &SvgTagAttributes) -> std::io::Result<()> {
+    fn write_svg<W: Write>(
+        &self,
+        writer: &mut SvgWriter<W>,
+        attr: &SvgTagAttributes,
+    ) -> std::io::Result<()> {
         let points = self.coords().fold(String::new(), |acc, p| {
             acc + &format!("{x},{y} ", x = p.x, y = p.y)
         });
@@ -68,19 +82,23 @@ impl WriteSvg for LineString {
     }
 }
 
-impl WriteSvgMapped for LineString {}
-
 impl WriteSvg for MultiLineString {
-    fn write_svg(&self, writer: &mut SvgWriter, attr: &SvgTagAttributes) -> std::io::Result<()> {
+    fn write_svg<W: Write>(
+        &self,
+        writer: &mut SvgWriter<W>,
+        attr: &SvgTagAttributes,
+    ) -> std::io::Result<()> {
         self.iter()
             .try_for_each(|line_string| line_string.write_svg(writer, attr))
     }
 }
 
-impl WriteSvgMapped for MultiLineString {}
-
 impl WriteSvg for Polygon {
-    fn write_svg(&self, writer: &mut SvgWriter, attr: &SvgTagAttributes) -> std::io::Result<()> {
+    fn write_svg<W: Write>(
+        &self,
+        writer: &mut SvgWriter<W>,
+        attr: &SvgTagAttributes,
+    ) -> std::io::Result<()> {
         fn line_string_path(l: &geo2d::LineString) -> String {
             l.points()
                 .enumerate()
@@ -107,27 +125,33 @@ impl WriteSvg for Polygon {
     }
 }
 
-impl WriteSvgMapped for Polygon {}
-
 impl WriteSvg for MultiPolygon {
-    fn write_svg(&self, writer: &mut SvgWriter, attr: &SvgTagAttributes) -> std::io::Result<()> {
+    fn write_svg<W: Write>(
+        &self,
+        writer: &mut SvgWriter<W>,
+        attr: &SvgTagAttributes,
+    ) -> std::io::Result<()> {
         self.iter()
             .try_for_each(|polygon| polygon.write_svg(writer, attr))
     }
 }
 
-impl WriteSvgMapped for MultiPolygon {}
-
 impl WriteSvg for Geometries2D {
-    fn write_svg(&self, writer: &mut SvgWriter, attr: &SvgTagAttributes) -> std::io::Result<()> {
+    fn write_svg<W: Write>(
+        &self,
+        writer: &mut SvgWriter<W>,
+        attr: &SvgTagAttributes,
+    ) -> std::io::Result<()> {
         self.iter().try_for_each(|geo| geo.write_svg(writer, attr))
     }
 }
 
-impl WriteSvgMapped for Geometries2D {}
-
 impl WriteSvg for Geometry2D {
-    fn write_svg(&self, writer: &mut SvgWriter, attr: &SvgTagAttributes) -> std::io::Result<()> {
+    fn write_svg<W: Write>(
+        &self,
+        writer: &mut SvgWriter<W>,
+        attr: &SvgTagAttributes,
+    ) -> std::io::Result<()> {
         match self {
             Geometry2D::LineString(line_string) => line_string.write_svg(writer, attr),
             Geometry2D::MultiLineString(multi_line_string) => {
@@ -141,8 +165,6 @@ impl WriteSvg for Geometry2D {
         }
     }
 }
-
-impl WriteSvgMapped for Geometry2D {}
 
 /*
 impl WriteSvg for Model {
@@ -187,7 +209,11 @@ pub struct CenteredText {
 }
 
 impl WriteSvg for CenteredText {
-    fn write_svg(&self, writer: &mut SvgWriter, attr: &SvgTagAttributes) -> std::io::Result<()> {
+    fn write_svg<W: Write>(
+        &self,
+        writer: &mut SvgWriter<W>,
+        attr: &SvgTagAttributes,
+    ) -> std::io::Result<()> {
         let (x, y) = self.rect.center().x_y();
         writer.open_tag(
             format!(r#"text x="{x}" y="{y}" dominant-baseline="middle" text-anchor="middle""#,)
@@ -198,8 +224,6 @@ impl WriteSvg for CenteredText {
         writer.close_tag("text")
     }
 }
-
-impl WriteSvgMapped for CenteredText {}
 
 /// A struct for drawing a grid.
 pub struct Grid {
@@ -223,7 +247,11 @@ impl Default for Grid {
 }
 
 impl WriteSvg for Grid {
-    fn write_svg(&self, writer: &mut SvgWriter, attr: &SvgTagAttributes) -> std::io::Result<()> {
+    fn write_svg<W: Write>(
+        &self,
+        writer: &mut SvgWriter<W>,
+        attr: &SvgTagAttributes,
+    ) -> std::io::Result<()> {
         let rect = self.bounds.rect().unwrap_or(writer.canvas().rect);
         writer.begin_group(&attr.clone().insert(SvgTagAttribute::class("grid-stroke")))?;
 
@@ -261,7 +289,11 @@ impl WriteSvg for Grid {
 pub struct Background;
 
 impl WriteSvg for Background {
-    fn write_svg(&self, writer: &mut SvgWriter, attr: &SvgTagAttributes) -> std::io::Result<()> {
+    fn write_svg<W: Write>(
+        &self,
+        writer: &mut SvgWriter<W>,
+        attr: &SvgTagAttributes,
+    ) -> std::io::Result<()> {
         let x = 0;
         let y = 0;
         let width = writer.canvas().size.width;
@@ -329,7 +361,11 @@ impl MapToCanvas for EdgeLengthMeasure {
 }
 
 impl WriteSvg for EdgeLengthMeasure {
-    fn write_svg(&self, writer: &mut SvgWriter, attr: &SvgTagAttributes) -> std::io::Result<()> {
+    fn write_svg<W: Write>(
+        &self,
+        writer: &mut SvgWriter<W>,
+        attr: &SvgTagAttributes,
+    ) -> std::io::Result<()> {
         let edge_length = self.edge.vec().magnitude();
 
         use attributes::SvgTagAttribute::*;
@@ -372,8 +408,6 @@ impl WriteSvg for EdgeLengthMeasure {
     }
 }
 
-impl WriteSvgMapped for EdgeLengthMeasure {}
-
 /// A radius measure with an offset.
 pub struct RadiusMeasure {
     /// Circle to measure.
@@ -410,7 +444,11 @@ impl MapToCanvas for RadiusMeasure {
 }
 
 impl WriteSvg for RadiusMeasure {
-    fn write_svg(&self, writer: &mut SvgWriter, attr: &SvgTagAttributes) -> std::io::Result<()> {
+    fn write_svg<W: Write>(
+        &self,
+        writer: &mut SvgWriter<W>,
+        attr: &SvgTagAttributes,
+    ) -> std::io::Result<()> {
         writer.begin_group(attr)?;
 
         let edge = Line::radius_edge(&self.circle, &self.angle.into());
@@ -442,8 +480,6 @@ impl WriteSvg for RadiusMeasure {
         Ok(())
     }
 }
-
-impl WriteSvgMapped for RadiusMeasure {}
 
 /// Size measure of a bounds.
 pub struct SizeMeasure {
@@ -489,7 +525,11 @@ impl MapToCanvas for SizeMeasure {
 }
 
 impl WriteSvg for SizeMeasure {
-    fn write_svg(&self, writer: &mut SvgWriter, attr: &SvgTagAttributes) -> std::io::Result<()> {
+    fn write_svg<W: Write>(
+        &self,
+        writer: &mut SvgWriter<W>,
+        attr: &SvgTagAttributes,
+    ) -> std::io::Result<()> {
         if let Some(width) = &self.width {
             width.write_svg(writer, attr)?;
         }
@@ -499,5 +539,3 @@ impl WriteSvg for SizeMeasure {
         Ok(())
     }
 }
-
-impl WriteSvgMapped for SizeMeasure {}

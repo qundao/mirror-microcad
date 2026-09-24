@@ -5688,6 +5688,7 @@ dependencies = [
  "derive_more",
  "env_logger",
  "geo",
+ "insta",
  "log",
  "microcad-core",
  "microcad-lang-base",
