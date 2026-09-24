@@ -81,24 +81,12 @@ impl MapToCanvas for Scalar {
 
 impl MapToCanvas for (Scalar, Scalar) {
     fn map_to_canvas(&mut self, canvas: &Canvas) {
-        /*
-        * let scale = canvas.scale();
-
-                // Translate relative to content rect, scale, flip Y, and translate to destination canvas offset
-                let x = (self.0 - canvas.content_rect.min().x) * scale + canvas.rect.min().x;
-                let y = (canvas.content_rect.max().y - self.1) * scale + canvas.rect.min().y;
-
-                *self = (x, y);
-        *
-        */
         let scale = canvas.scale();
-        let new_width = canvas.rect.width() / scale;
-        let new_height = canvas.rect.height() / scale;
 
-        let x = self.0 - canvas.content_rect.min().x;
-        let y = canvas.content_rect.max().y - self.1; // Flip Y
-        let x = x / new_width * canvas.rect.width() + canvas.rect.min().x;
-        let y = y / new_height * canvas.rect.height() + canvas.rect.min().y;
+        // Translate relative to content rect, scale, flip Y, and translate to destination canvas offset
+        let x = (self.0 - canvas.content_rect.min().x) * scale + canvas.rect.min().x;
+        let y = (canvas.content_rect.max().y - self.1) * scale + canvas.rect.min().y;
+
         *self = (x, y);
     }
 }
@@ -228,6 +216,7 @@ impl MapToCanvas for Geometry2D {
 impl MapToCanvas for CenteredText {
     fn map_to_canvas(&mut self, canvas: &Canvas) {
         self.rect.map_to_canvas(canvas);
+        self.font_size.map_to_canvas(canvas);
     }
 }
 

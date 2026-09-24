@@ -8,8 +8,8 @@ use std::str::FromStr as _;
 use geo::{Translate, coord};
 use microcad_core::*;
 use microcad_export::svg::{
-    CenteredText, MapToCanvas, SvgTagAttribute, SvgTagAttributes, SvgWriter, WriteSvg,
-    WriteSvgMapped,
+    Background, CenteredText, EdgeLengthMeasure, Grid, MapToCanvas, RadiusMeasure, SizeMeasure,
+    SvgExporter, SvgTagAttribute, SvgTagAttributes, SvgWriter, Theme, WriteSvg, WriteSvgMapped,
 };
 
 use crate::common::assert_svg_snapshot;
@@ -119,141 +119,93 @@ fn svg_canvas() -> std::io::Result<()> {
     )
 }
 
-/*
 #[test]
 fn svg_sample_sketch() -> std::io::Result<()> {
-
     assert_svg_snapshot(
-        "svg_canvas",
+        "svg_sample_sketch",
         SvgWriter::new(
             vec![],
             Size2::A4.transposed().into(),
             Rect::new(coord! {x: 0.0, y: 0.0}, coord! {x: 50.0, y: 50.0}),
             Some(2.0),
         ),
-        |writer| {#
-}
+        |writer| {
+            writer.style(&SvgExporter::theme_to_svg_style(&Theme::default()))?;
+            let radius = 10.0;
+            let width = 30.0;
+            let height = 20.0;
 
+            let circle = Circle {
+                radius,
+                offset: Vec2::new(width, height),
+            };
+            let rect = Rect::new(coord! {x: 0.0, y: 0.0}, coord! {x: width, y: height});
 
-    let content_rect = ;
-    let mut svg = SvgWriter::new(
-        Box::new(file),
-        Size2::A4.transposed().into(),
-        content_rect,
-        Some(3.0),
+            Background.write_svg(writer)?;
+            Grid::default().write_svg(writer)?;
+
+            writer.with_attr(SvgTagAttribute::class("entity-stroke inactive"), |writer| {
+                let mut rect = rect.clone();
+                rect.write_svg_mapped(writer)
+            })?;
+
+            writer.with_attr(SvgTagAttribute::class("entity-fill inactive"), |writer| {
+                CenteredText {
+                    text: "r".into(),
+                    rect,
+                    font_size: 4.0,
+                }
+                .write_svg_mapped(writer)
+            })?;
+
+            // Draw rectangle measures
+
+            // Height measure for rect.
+            writer.with_attr(SvgTagAttribute::class("measure inactive"), |writer| {
+                EdgeLengthMeasure::height(&rect, 10.0, Some("height")).write_svg_mapped(writer)?;
+                EdgeLengthMeasure::width(&rect, 10.0, Some("width")).write_svg_mapped(writer)
+            })?;
+
+            // Draw circle `c`.
+
+            writer.with_attr(SvgTagAttribute::class("entity-stroke inactive"), |writer| {
+                let mut circle = circle.clone();
+                circle.write_svg_mapped(writer)
+            })?;
+
+            writer.with_attr(SvgTagAttribute::class("entity-fill inactive"), |writer| {
+                CenteredText {
+                    text: "c".into(),
+                    rect: circle.calc_bounds_2d().rect().expect("Rect"),
+                    font_size: 4.0,
+                }
+                .write_svg_mapped(writer)
+            })?;
+
+            writer.with_attr(SvgTagAttribute::class("measure inactive"), |writer| {
+                RadiusMeasure::new(circle.clone(), Some("radius".into()), None)
+                    .write_svg_mapped(writer)
+            })?;
+
+            // Draw intersection.
+            let intersection = Geometry2D::Rect(rect).boolean_op(
+                Geometry2D::Polygon(
+                    Circle::circle_polygon(circle.radius, 32)
+                        .translate(circle.offset.x, circle.offset.y),
+                ),
+                BooleanOp::Intersect,
+            );
+
+            writer.with_attr(SvgTagAttribute::class("entity-stroke active"), |writer| {
+                let mut intersection = intersection.clone();
+                intersection.write_svg_mapped(writer)
+                // FIXME: Translation and orientation is wrong
+            })?;
+
+            writer.with_attr(SvgTagAttribute::class("measure active"), |writer| {
+                let intersection = intersection.clone();
+                SizeMeasure::bounds(&intersection).write_svg_mapped(writer)
+            })
+        },
     )
-    .expect("test error");
-
-    svg.style(&SvgExporter::theme_to_svg_style(&Theme::default()))?;
-
-    let radius = 10.0;
-    let width = 30.0;
-    let height = 20.0;
-
-    let rect = Rect::new(coord! {x: 0.0, y: 0.0}, coord! {x: width, y: height});
-    let circle = Circle {
-        radius,
-        offset: Vec2::new(width, height),
-    };
-
-    Background.write_svg(&mut svg, &Default::default())?;
-    Grid::default().write_svg(&mut svg, &Default::default())?;
-
-    rect.write_svg_mapped(
-        &mut svg,
-        &SvgTagAttribute::class("entity-stroke inactive").into(),
-    )?;
-
-    CenteredText {
-        text: "r".into(),
-        rect,
-        font_size: 4.0,
-    }
-    .write_svg_mapped(
-        &mut svg,
-        &SvgTagAttribute::class("entity-fill inactive").into(),
-    )?;
-
-    // Draw rectangle measures
-
-    // Height measure for rect.
-    EdgeLengthMeasure::height(&rect, 10.0, Some("height")).write_svg_mapped(
-        &mut svg,
-        &[
-            SvgTagAttribute::class("measure"),
-            SvgTagAttribute::class("inactive"),
-        ]
-        .into_iter()
-        .collect(),
-    )?;
-    // Width measure for rect.
-    EdgeLengthMeasure::width(&rect, 10.0, Some("width")).write_svg_mapped(
-        &mut svg,
-        &[
-            SvgTagAttribute::class("measure"),
-            SvgTagAttribute::class("inactive"),
-        ]
-        .into_iter()
-        .collect(),
-    )?;
-
-    // Draw circle `c`.
-    circle.write_svg_mapped(
-        &mut svg,
-        &[SvgTagAttribute::class("entity-stroke inactive")]
-            .into_iter()
-            .collect(),
-    )?;
-    CenteredText {
-        text: "c".into(),
-        rect: circle.calc_bounds_2d().rect().expect("Rect"),
-        font_size: 4.0,
-    }
-    .write_svg_mapped(
-        &mut svg,
-        &[
-            SvgTagAttribute::class("entity-fill"),
-            SvgTagAttribute::class("inactive"),
-        ]
-        .into_iter()
-        .collect(),
-    )?;
-
-    RadiusMeasure::new(circle.clone(), Some("radius".into()), None).write_svg_mapped(
-        &mut svg,
-        &[
-            SvgTagAttribute::class("measure"),
-            SvgTagAttribute::class("inactive"),
-        ]
-        .into_iter()
-        .collect(),
-    )?;
-
-    // Draw intersection.
-    let intersection = Geometry2D::Rect(rect).boolean_op(
-        Geometry2D::Polygon(
-            Circle::circle_polygon(circle.radius, 32).translate(circle.offset.x, circle.offset.y),
-        ),
-        BooleanOp::Intersect,
-    );
-
-    intersection.write_svg_mapped(
-        &mut svg,
-        &[SvgTagAttribute::class("entity-stroke active")]
-            .into_iter()
-            .collect(),
-    )?;
-
-    SizeMeasure::bounds(&intersection).write_svg_mapped(
-        &mut svg,
-        &[
-            SvgTagAttribute::class("measure"),
-            SvgTagAttribute::class("active"),
-        ]
-        .into_iter()
-        .collect(),
-    )?;
-
-    Ok(())
 }
-*/

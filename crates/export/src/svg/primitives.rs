@@ -192,8 +192,9 @@ pub struct CenteredText {
 impl WriteSvg for CenteredText {
     fn write_svg<W: Write>(&self, writer: &mut SvgWriter<W>) -> std::io::Result<()> {
         let (x, y) = self.rect.center().x_y();
+        let font_size = self.font_size;
         writer.open_tag(
-            format!(r#"text x="{x}" y="{y}" dominant-baseline="middle" text-anchor="middle""#,)
+            format!(r#"text x="{x}" y="{y}" font-size="{font_size}mm" dominant-baseline="middle" text-anchor="middle""#,)
                 .as_str(),
         )?;
         writer.with_indent(&self.text)?;

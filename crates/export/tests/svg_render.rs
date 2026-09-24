@@ -58,9 +58,20 @@ fn difference() -> std::io::Result<()> {
             group.append(circle(42.0));
             group.append(circle(23.0));
             let diff = mu::ops::difference(arguments!(self = group), &mut ctx).expect("No error");
+            let translate = mu::ops::translate(
+                arguments!(
+                    self = diff,
+                    x = Value::mm(50.0),
+                    y = Value::mm(50.0),
+                    z = Value::mm(0.0)
+                ),
+                &mut ctx,
+            )
+            .expect("No error");
 
-            let mut ctx = RenderContext::new(&diff);
-            let mut geometry = microcad_render::render(&diff, &mut ctx).expect("No render errors");
+            let mut geometry = RenderContext::new(&translate)
+                .render()
+                .expect("No render errors");
 
             geometry.write_svg_mapped(writer)
         },

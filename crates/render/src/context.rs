@@ -10,8 +10,8 @@ use microcad_lang_base::Shared;
 use microcad_lang_types::{ModelNodeRef, ModelTree};
 
 use crate::{
-    GeometryNodeId, GeometryNodeRef, GeometryOutputs, GeometryTree, RenderCache, RenderHooks,
-    RenderResolution, RenderResult,
+    GeometryNodeId, GeometryNodeRef, GeometryOutputs, GeometryTree, Render, RenderCache,
+    RenderHooks, RenderResolution, RenderResult,
 };
 
 /// Our progress sender.
@@ -76,6 +76,41 @@ impl<'tree> RenderContext<'tree> {
     pub fn with_progress(mut self, progress: ProgressTx) -> Self {
         self.progress_tx = Some(progress);
         self
+    }
+
+    pub fn render(&mut self) -> RenderResult<GeometryTree> {
+        let mut tree = GeometryTree::new(
+            self.model_tree,
+            self.resolution.as_ref().cloned().unwrap_or_default(),
+        );
+        /// Recursive DFS helper: processes children first, then renders the current node.
+        fn recurse(
+            node_id: GeometryNodeId,
+            tree: &mut GeometryTree,
+            context: &mut RenderContext,
+        ) -> RenderResult<()> {
+            // 1. Recurse down into all children first (Leaves are reached first)
+            let children: Vec<_> = node_id.children(&tree.arena).collect();
+            for child_id in children {
+                recurse(child_id, tree, context)?;
+            }
+
+            context.stack.push(node_id);
+            // 2. Render current node after all children have completed
+            let render_output = tree.arena[node_id].get();
+            let outputs = render_output.render(tree, context)?;
+            context.step();
+
+            let render_output = tree.arena[node_id].get_mut();
+            render_output.outputs = outputs;
+
+            context.stack.pop();
+
+            Ok(())
+        }
+        recurse(tree.root, &mut tree, self)?;
+
+        Ok(tree)
     }
 }
 
