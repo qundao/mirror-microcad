@@ -239,7 +239,7 @@ pub struct GeometryNodeData {
     /// The output geometry.
     pub outputs: GeometryOutputs,
     /// Computed model hash.
-    hash: HashId,
+    pub hash: HashId,
 
     pub model_node_id: ModelNodeId,
 }

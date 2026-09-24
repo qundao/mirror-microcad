@@ -9,8 +9,7 @@ use cgmath::{Deg, InnerSpace, SquareMatrix};
 use geo::{CoordsIter as _, Point, Rect, Translate};
 use microcad_core::*;
 use microcad_render::{
-    GeometryArena, GeometryNode, GeometryNodeData, GeometryNodeId, GeometryNodeRef, GeometryOutput,
-    GeometryOutputs, GeometryTree,
+    GeometryNodeData, GeometryNodeRef, GeometryOutput, GeometryOutputs, GeometryTree,
 };
 
 use crate::svg::{attributes::SvgTagAttribute, *};
@@ -238,7 +237,9 @@ impl WriteSvg for Grid {
                 geo::Point::new(left, rect.max().y),
             )
             .write_svg(writer)?;
-            left += self.cell_size.width.map_to_canvas(writer.canvas());
+            let mut w = self.cell_size.width;
+            w.map_to_canvas(writer.canvas());
+            left += w;
         }
 
         let mut bottom = rect.min().y;
@@ -249,7 +250,9 @@ impl WriteSvg for Grid {
                 geo::Point::new(rect.max().x, bottom),
             )
             .write_svg(writer)?;
-            bottom += self.cell_size.height.map_to_canvas(writer.canvas());
+            let mut h = self.cell_size.height;
+            h.map_to_canvas(writer.canvas());
+            bottom += h;
         }
 
         writer.end_group()?;
@@ -318,13 +321,9 @@ impl EdgeLengthMeasure {
 }
 
 impl MapToCanvas for EdgeLengthMeasure {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
-        Self {
-            name: self.name.clone(),
-            length: self.length,
-            edge: self.edge.map_to_canvas(canvas),
-            offset: self.offset.map_to_canvas(canvas),
-        }
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        self.edge.map_to_canvas(canvas);
+        self.offset.map_to_canvas(canvas);
     }
 }
 
@@ -399,13 +398,8 @@ impl RadiusMeasure {
 }
 
 impl MapToCanvas for RadiusMeasure {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
-        Self {
-            radius: self.radius,
-            circle: self.circle.map_to_canvas(canvas),
-            name: self.name.clone(),
-            angle: self.angle,
-        }
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        self.circle.map_to_canvas(canvas);
     }
 }
 
@@ -473,15 +467,12 @@ impl SizeMeasure {
 }
 
 impl MapToCanvas for SizeMeasure {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
-        Self {
-            bounds: self.bounds.map_to_canvas(canvas),
-            width: self.width.as_ref().map(|width| width.map_to_canvas(canvas)),
-            height: self
-                .height
-                .as_ref()
-                .map(|height| height.map_to_canvas(canvas)),
-        }
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        self.bounds.map_to_canvas(canvas);
+        self.width.as_mut().map(|width| width.map_to_canvas(canvas));
+        self.height
+            .as_mut()
+            .map(|height| height.map_to_canvas(canvas));
     }
 }
 

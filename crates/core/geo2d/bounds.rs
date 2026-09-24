@@ -4,7 +4,6 @@
 //! 2D Geometry bounds.
 
 use derive_more::Deref;
-use geo::coord;
 
 use crate::*;
 
@@ -39,14 +38,10 @@ impl Bounds2D {
 
     /// Return rect.
     pub fn rect(&self) -> Option<Rect> {
-        if self.is_valid() {
-            Some(Rect::new(
-                coord! {x: self.min.x, y: self.min.y },
-                coord! {x: self.max.x, y: self.max.y },
-            ))
-        } else {
-            None
-        }
+        self.is_valid().then_some(Rect::new(
+            (self.min.x, self.min.y),
+            (self.max.x, self.max.y),
+        ))
     }
 
     /// Enlarge bounds by a factor and return new bounds.
@@ -115,13 +110,13 @@ impl Default for Bounds2D {
         // Bounds are invalid by default.
         let min = Scalar::MAX;
         let max = Scalar::MIN;
-        Self::new((min, min).into(), (max, max).into())
+        Self::new((min, min), (max, max))
     }
 }
 
 impl From<Rect> for Bounds2D {
     fn from(rect: Rect) -> Self {
-        Self::new(rect.min().x_y().into(), rect.max().x_y().into())
+        Self::new(rect.min().x_y(), rect.max().x_y())
     }
 }
 

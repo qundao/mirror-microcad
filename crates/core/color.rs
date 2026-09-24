@@ -3,8 +3,8 @@
 
 //! µcad color syntax element
 
-use std::str::FromStr;
 use miette::Diagnostic;
+use std::str::FromStr;
 
 /// A color with RGBA channels
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -154,7 +154,7 @@ impl FromStr for Color {
             "lime" => Ok(Self::LIME),
             "teal" => Ok(Self::TEAL),
             "navy" => Ok(Self::NAVY),
-            "transparent" => Ok(Self::TRANSPARENT),
+            "transparent" | "none" => Ok(Self::TRANSPARENT),
             s => {
                 if s.starts_with("#") {
                     Self::from_hex_str(s)

@@ -14,8 +14,11 @@ pub struct Bounds<T> {
 
 impl<T> Bounds<T> {
     /// Create new bounds (unvalidated).
-    pub fn new(min: T, max: T) -> Self {
-        Self { min, max }
+    pub fn new<U: Into<T>>(min: U, max: U) -> Self {
+        Self {
+            min: min.into(),
+            max: max.into(),
+        }
     }
 
     /// Minimum and maximum corner.

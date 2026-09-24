@@ -5,9 +5,12 @@
 
 use std::str::FromStr as _;
 
-use geo::coord;
+use geo::{Translate, coord};
 use microcad_core::*;
-use microcad_export::svg::{CenteredText, SvgTagAttribute, SvgWriter, WriteSvg, WriteSvgMapped};
+use microcad_export::svg::{
+    CenteredText, MapToCanvas, SvgTagAttribute, SvgTagAttributes, SvgWriter, WriteSvg,
+    WriteSvgMapped,
+};
 
 use crate::common::assert_svg_snapshot;
 
@@ -52,7 +55,7 @@ fn svg_writer() -> std::io::Result<()> {
 
 #[test]
 fn svg_canvas() -> std::io::Result<()> {
-    let content_rect = Rect::new(coord! {x: 0.0, y: 0.0}, coord! {x: 100.0, y: 100.0});
+    let mut content_rect = Rect::new(coord! {x: 0.0, y: 0.0}, coord! {x: 100.0, y: 100.0});
 
     assert_svg_snapshot(
         "svg_canvas",
@@ -65,7 +68,7 @@ fn svg_canvas() -> std::io::Result<()> {
         |writer| {
             writer.with_attr(
                 SvgTagAttribute::style(
-                    None,
+                    Some(Color::from_str("none").expect("transparent")),
                     Some(Color::from_str("black").expect("Black color")),
                     Some(1.0),
                 ),
@@ -85,20 +88,21 @@ fn svg_canvas() -> std::io::Result<()> {
                 offset: Vec2::new(p.0, p.1),
             })
             .try_for_each(|c| {
+                let mut orig_c = c.clone();
                 writer.with_attr(
                     SvgTagAttribute::style(
                         Some(Color::from_str("blue").expect("Color")),
                         None,
                         None,
                     ),
-                    |writer| c.write_svg_mapped(writer),
+                    |writer| orig_c.write_svg_mapped(writer),
                 )?;
 
                 let p = Point::new(c.offset.x, c.offset.y);
                 writer.with_attr(
                     SvgTagAttribute::style(
                         Some(Color::from_str("gray").expect("Color")),
-                        None,
+                        Some(Color::from_str("none").expect("Color")),
                         None,
                     ),
                     |writer| {
@@ -115,7 +119,8 @@ fn svg_canvas() -> std::io::Result<()> {
     )
 }
 
-/*#[test]
+/*
+#[test]
 fn svg_sample_sketch() -> std::io::Result<()> {
 
     assert_svg_snapshot(
@@ -124,13 +129,20 @@ fn svg_sample_sketch() -> std::io::Result<()> {
             vec![],
             Size2::A4.transposed().into(),
             Rect::new(coord! {x: 0.0, y: 0.0}, coord! {x: 50.0, y: 50.0}),
-            Some(3.0),
+            Some(2.0),
         ),
-        |writer| {
+        |writer| {#
+}
 
-        }
+
+    let content_rect = ;
+    let mut svg = SvgWriter::new(
+        Box::new(file),
+        Size2::A4.transposed().into(),
+        content_rect,
+        Some(3.0),
     )
-
+    .expect("test error");
 
     svg.style(&SvgExporter::theme_to_svg_style(&Theme::default()))?;
 
@@ -244,5 +256,4 @@ fn svg_sample_sketch() -> std::io::Result<()> {
 
     Ok(())
 }
-
 */

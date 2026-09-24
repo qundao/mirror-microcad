@@ -3,10 +3,13 @@
 
 //! Canvas to draw geometry.
 
-use geo::MultiPolygon;
+use geo::{Coord, MultiPolygon};
 use microcad_core::{
-    Bounds2D, Circle, Geometries2D, Geometry2D, Line, LineString, MultiLineString, Point, Polygon,
-    Rect, Scalar, Size2, Vec2, geo2d,
+    Bounds2D, Circle, Geometries2D, Geometry, Geometry2D, Line, LineString, MultiLineString, Point,
+    Polygon, Rect, Scalar, Size2, Vec2, geo2d,
+};
+use microcad_render::{
+    GeometryNodeData, GeometryNodeMut, GeometryOutput, GeometryOutputs, GeometryTree,
 };
 
 use crate::svg::CenteredText;
@@ -66,18 +69,28 @@ impl Canvas {
 /// Map something into a canvas coordinates.
 pub trait MapToCanvas: Sized {
     /// Return mapped version.
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self;
+    fn map_to_canvas(&mut self, canvas: &Canvas);
 }
 
 /// Scale scalar value.
 impl MapToCanvas for Scalar {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
-        self * canvas.scale()
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        *self *= canvas.scale()
     }
 }
 
 impl MapToCanvas for (Scalar, Scalar) {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        /*
+        * let scale = canvas.scale();
+
+                // Translate relative to content rect, scale, flip Y, and translate to destination canvas offset
+                let x = (self.0 - canvas.content_rect.min().x) * scale + canvas.rect.min().x;
+                let y = (canvas.content_rect.max().y - self.1) * scale + canvas.rect.min().y;
+
+                *self = (x, y);
+        *
+        */
         let scale = canvas.scale();
         let new_width = canvas.rect.width() / scale;
         let new_height = canvas.rect.height() / scale;
@@ -86,132 +99,175 @@ impl MapToCanvas for (Scalar, Scalar) {
         let y = canvas.content_rect.max().y - self.1; // Flip Y
         let x = x / new_width * canvas.rect.width() + canvas.rect.min().x;
         let y = y / new_height * canvas.rect.height() + canvas.rect.min().y;
-        (x, y)
+        *self = (x, y);
     }
 }
 
 impl MapToCanvas for Point {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
-        Point::from(self.x_y().map_to_canvas(canvas))
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        let mut xy = self.x_y();
+        xy.map_to_canvas(canvas);
+        *self = xy.into();
     }
 }
 
 impl MapToCanvas for Vec2 {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
-        Vec2::from((self.x, self.y).map_to_canvas(canvas))
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        let mut xy = (self.x, self.y);
+        xy.map_to_canvas(canvas);
+        *self = xy.into();
     }
 }
 
 impl MapToCanvas for Line {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
-        Self(self.0.map_to_canvas(canvas), self.1.map_to_canvas(canvas))
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        self.0.map_to_canvas(canvas);
+        self.1.map_to_canvas(canvas);
     }
 }
 
 impl MapToCanvas for Rect {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
-        Self::new(
-            Point::from(self.min()).map_to_canvas(canvas),
-            Point::from(self.max()).map_to_canvas(canvas),
-        )
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        *self = Self::new(
+            {
+                let mut min = self.min().x_y();
+                min.map_to_canvas(canvas);
+                min
+            },
+            {
+                let mut max = self.max().x_y();
+                max.map_to_canvas(canvas);
+                max
+            },
+        );
     }
 }
 
 impl MapToCanvas for Bounds2D {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
-        match self.rect() {
-            Some(rect) => Self::new(
-                rect.min().x_y().map_to_canvas(canvas).into(),
-                rect.max().x_y().map_to_canvas(canvas).into(),
-            ),
-            None => Self::default(),
-        }
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        *self = self
+            .rect()
+            .map(|mut rect| {
+                rect.map_to_canvas(canvas);
+                rect.into()
+            })
+            .unwrap_or_default();
     }
 }
 
 impl MapToCanvas for Circle {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
-        Self {
-            radius: self.radius.map_to_canvas(canvas),
-            offset: self.offset.map_to_canvas(canvas),
-        }
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        self.radius.map_to_canvas(canvas);
+        self.offset.map_to_canvas(canvas);
+    }
+}
+
+impl MapToCanvas for Coord {
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        self.x.map_to_canvas(canvas);
+        self.y.map_to_canvas(canvas);
     }
 }
 
 impl MapToCanvas for LineString {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
-        Self(
-            self.0
-                .iter()
-                .map(|p| p.x_y().map_to_canvas(canvas).into())
-                .collect(),
-        )
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        self.0.iter_mut().for_each(|c| c.map_to_canvas(canvas))
     }
 }
 
 impl MapToCanvas for MultiLineString {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
-        self.iter()
-            .map(|line_string| line_string.map_to_canvas(canvas))
-            .collect()
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        self.iter_mut()
+            .for_each(|line_string| line_string.map_to_canvas(canvas))
     }
 }
 
 impl MapToCanvas for Polygon {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
-        Self::new(
-            self.exterior().map_to_canvas(canvas),
-            self.interiors()
-                .iter()
-                .map(|line_string| line_string.map_to_canvas(canvas))
-                .collect(),
-        )
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        self.exterior_mut(|ext| ext.map_to_canvas(canvas));
+        self.interiors_mut(|int| int.iter_mut().for_each(|int| int.map_to_canvas(canvas)));
     }
 }
 
 impl MapToCanvas for MultiPolygon {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
         self.0
-            .iter()
-            .map(|polygon| polygon.map_to_canvas(canvas))
-            .collect()
+            .iter_mut()
+            .for_each(|polygon| polygon.map_to_canvas(canvas));
     }
 }
 
 impl MapToCanvas for Geometries2D {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
-        Geometries2D::new(self.iter().map(|geo| geo.map_to_canvas(canvas)).collect())
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        self.iter_mut().for_each(|geo| geo.map_to_canvas(canvas));
     }
 }
 
 impl MapToCanvas for Geometry2D {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
         match self {
             Geometry2D::LineString(line_string) => {
-                Geometry2D::LineString(line_string.map_to_canvas(canvas))
+                line_string.map_to_canvas(canvas);
             }
             Geometry2D::MultiLineString(multi_line_string) => {
-                Geometry2D::MultiLineString(multi_line_string.map_to_canvas(canvas))
+                multi_line_string.map_to_canvas(canvas);
             }
-            Geometry2D::Polygon(polygon) => Geometry2D::Polygon(polygon.map_to_canvas(canvas)),
+            Geometry2D::Polygon(polygon) => polygon.map_to_canvas(canvas),
             Geometry2D::MultiPolygon(multi_polygon) => {
-                Geometry2D::MultiPolygon(multi_polygon.map_to_canvas(canvas))
+                multi_polygon.map_to_canvas(canvas);
             }
-            Geometry2D::Rect(rect) => Geometry2D::Rect(rect.map_to_canvas(canvas)),
-            Geometry2D::Line(edge) => Geometry2D::Line(edge.map_to_canvas(canvas)),
+            Geometry2D::Rect(rect) => rect.map_to_canvas(canvas),
+            Geometry2D::Line(edge) => edge.map_to_canvas(canvas),
             Geometry2D::Collection(collection) => {
-                Geometry2D::Collection(collection.map_to_canvas(canvas))
+                collection.map_to_canvas(canvas);
             }
         }
     }
 }
 
 impl MapToCanvas for CenteredText {
-    fn map_to_canvas(&self, canvas: &Canvas) -> Self {
-        CenteredText {
-            text: self.text.clone(),
-            rect: self.rect.map_to_canvas(canvas),
-            font_size: self.font_size,
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        self.rect.map_to_canvas(canvas);
+    }
+}
+
+impl MapToCanvas for Geometry {
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        match self {
+            Geometry::Geometry2D(geo2d) => geo2d.map_to_canvas(canvas),
+            Geometry::Geometry3D(_) => todo!("Error handling"),
         }
+    }
+}
+
+impl MapToCanvas for GeometryOutput {
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        self.geometry.map_to_canvas(canvas)
+    }
+}
+
+impl MapToCanvas for GeometryOutputs {
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        *self = Self::from_iter(self.iter().map(|output| {
+            let mut geo = output.geometry.clone();
+            geo.map_to_canvas(canvas);
+            std::sync::Arc::new(geo.into())
+        }));
+    }
+}
+
+impl MapToCanvas for GeometryNodeData {
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        self.outputs.map_to_canvas(canvas);
+    }
+}
+
+impl MapToCanvas for GeometryTree {
+    fn map_to_canvas(&mut self, canvas: &Canvas) {
+        fn recurse(mut node: GeometryNodeMut, canvas: &Canvas) {
+            node.get_mut().map_to_canvas(canvas);
+        }
+
+        recurse(self.root_mut(), canvas)
     }
 }

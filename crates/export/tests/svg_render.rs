@@ -6,7 +6,7 @@ use cgmath::Vector2;
 use geo::coord;
 use microcad_builtin::{BuiltinEvalContext, BuiltinPrimitiveCall, mu};
 use microcad_core::{Circle, Rect};
-use microcad_export::svg::{SvgWriter, WriteSvg};
+use microcad_export::svg::{SvgWriter, WriteSvg, WriteSvgMapped};
 use microcad_lang_types::{Model, ModelTree, Value, arguments, model::Element};
 use microcad_render::RenderContext;
 
@@ -60,9 +60,9 @@ fn difference() -> std::io::Result<()> {
             let diff = mu::ops::difference(arguments!(self = group), &mut ctx).expect("No error");
 
             let mut ctx = RenderContext::new(&diff);
-            let geometry = microcad_render::render(&diff, &mut ctx).expect("No render errors");
+            let mut geometry = microcad_render::render(&diff, &mut ctx).expect("No render errors");
 
-            geometry.write_svg(writer)
+            geometry.write_svg_mapped(writer)
         },
     )
 }

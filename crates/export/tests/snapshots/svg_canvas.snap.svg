@@ -5,25 +5,25 @@
           <path d="M 0 0 L 16 8 L 0 16 z" stroke="none" fill="context-fill" />
         </marker>
       </defs>
-  <rect x="48.5" y="5" width="200" height="200" style="fill: none; stroke: #000000; stroke-width: 1"/>
-  <circle cx="48.5" cy="205" r="4" style="fill: #0000FF; stroke: none; "/>
-  <text x="48.5" y="205" dominant-baseline="middle" text-anchor="middle" style="fill: #7F7F7F; stroke: none; ">
+  <rect x="48.5" y="5" width="200" height="200" style="fill: rgba(0, 0, 0, 0.00); stroke: #000000; stroke-width: 1"/>
+  <circle cx="48.5" cy="205" r="4" style="fill: #0000FF; "/>
+  <text x="48.5" y="205" dominant-baseline="middle" text-anchor="middle" style="fill: #7F7F7F; stroke: rgba(0, 0, 0, 0.00); ">
     (0mm,0mm)
   </text>
-  <circle cx="48.5" cy="5" r="4" style="fill: #0000FF; stroke: none; "/>
-  <text x="48.5" y="5" dominant-baseline="middle" text-anchor="middle" style="fill: #7F7F7F; stroke: none; ">
+  <circle cx="48.5" cy="5" r="4" style="fill: #0000FF; "/>
+  <text x="48.5" y="5" dominant-baseline="middle" text-anchor="middle" style="fill: #7F7F7F; stroke: rgba(0, 0, 0, 0.00); ">
     (0mm,100mm)
   </text>
-  <circle cx="248.5" cy="205" r="4" style="fill: #0000FF; stroke: none; "/>
-  <text x="248.5" y="205" dominant-baseline="middle" text-anchor="middle" style="fill: #7F7F7F; stroke: none; ">
+  <circle cx="248.5" cy="205" r="4" style="fill: #0000FF; "/>
+  <text x="248.5" y="205" dominant-baseline="middle" text-anchor="middle" style="fill: #7F7F7F; stroke: rgba(0, 0, 0, 0.00); ">
     (100mm,0mm)
   </text>
-  <circle cx="248.5" cy="5" r="4" style="fill: #0000FF; stroke: none; "/>
-  <text x="248.5" y="5" dominant-baseline="middle" text-anchor="middle" style="fill: #7F7F7F; stroke: none; ">
+  <circle cx="248.5" cy="5" r="4" style="fill: #0000FF; "/>
+  <text x="248.5" y="5" dominant-baseline="middle" text-anchor="middle" style="fill: #7F7F7F; stroke: rgba(0, 0, 0, 0.00); ">
     (100mm,100mm)
   </text>
-  <circle cx="148.5" cy="105" r="4" style="fill: #0000FF; stroke: none; "/>
-  <text x="148.5" y="105" dominant-baseline="middle" text-anchor="middle" style="fill: #7F7F7F; stroke: none; ">
+  <circle cx="148.5" cy="105" r="4" style="fill: #0000FF; "/>
+  <text x="148.5" y="105" dominant-baseline="middle" text-anchor="middle" style="fill: #7F7F7F; stroke: rgba(0, 0, 0, 0.00); ">
     (50mm,50mm)
   </text>
 </svg>

@@ -26,19 +26,19 @@ pub trait WriteSvg {
 /// Trait to write something into an SVG while mapping it to canvas coordinates.
 pub trait WriteSvgMapped: WriteSvg + MapToCanvas {
     /// Map coordinates using the writer's canvas and emit SVG tags.
-    fn write_svg_mapped<W: Write>(&self, writer: &mut SvgWriter<W>) -> std::io::Result<()>;
+    fn write_svg_mapped<W: Write>(&mut self, writer: &mut SvgWriter<W>) -> std::io::Result<()>;
 }
 
 // Blanket implementation for any type that can be mapped and rendered as SVG
 impl<T> WriteSvgMapped for T
 where
-    T: WriteSvg + MapToCanvas,
+    T: MapToCanvas + WriteSvg,
 {
     fn write_svg_mapped<W: std::io::Write>(
-        &self,
+        &mut self,
         writer: &mut SvgWriter<W>,
     ) -> std::io::Result<()> {
-        let mapped = self.map_to_canvas(writer.canvas());
-        mapped.write_svg(writer)
+        self.map_to_canvas(writer.canvas());
+        self.write_svg(writer)
     }
 }

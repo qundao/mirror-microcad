@@ -64,7 +64,7 @@ impl Line {
 
 impl CalcBounds2D for Line {
     fn calc_bounds_2d(&self) -> geo2d::Bounds2D {
-        geo2d::Bounds2D::new(self.0.x_y().into(), self.1.x_y().into())
+        geo2d::Bounds2D::new(self.0.x_y(), self.1.x_y())
     }
 }
 
