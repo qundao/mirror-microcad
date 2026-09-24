@@ -3,15 +3,13 @@
 
 //! Render cache.
 
-use std::sync::Arc;
-
-use crate::GeometryOutput;
+use crate::GeometryOutputs;
 use microcad_hash::{HashId, HashMap};
 
 /// An item in the [`RenderCache`].
 pub struct RenderCacheItem<T> {
     /// The actual item content.
-    content: Arc<T>,
+    content: T,
     /// Number of times this cache item has been accessed successfully.
     hits: u64,
     /// Number of milliseconds this item took to create.
@@ -22,7 +20,7 @@ pub struct RenderCacheItem<T> {
 
 impl<T> RenderCacheItem<T> {
     /// Create new cache item.
-    pub fn new(content: impl Into<Arc<T>>, millis: f64, last_access: u64) -> Self {
+    pub fn new(content: impl Into<T>, millis: f64, last_access: u64) -> Self {
         Self {
             content: content.into(),
             hits: 1,
@@ -53,7 +51,7 @@ impl<T> RenderCacheItem<T> {
 }
 
 /// The [`RenderCache`] owns all geometry created during the render process.
-pub struct RenderCache<T = GeometryOutput> {
+pub struct RenderCache<T = GeometryOutputs> {
     /// Current render cache item stamp.
     current_time_stamp: u64,
     /// Number of cache hits in this cycle.
@@ -107,7 +105,7 @@ impl<T> RenderCache<T> {
     }
 
     /// Get geometry output from the cache.
-    pub fn get(&mut self, hash: &HashId) -> Option<&Arc<T>> {
+    pub fn get(&mut self, hash: &HashId) -> Option<&T> {
         match self.items.get_mut(hash) {
             Some(item) => {
                 item.hits += 1;
@@ -127,7 +125,7 @@ impl<T> RenderCache<T> {
     pub fn insert_with_cost(
         &mut self,
         hash: impl Into<HashId>,
-        geo: impl Into<Arc<T>>,
+        geo: impl Into<T>,
         cost: f64,
     ) -> &T {
         let hash: HashId = hash.into();

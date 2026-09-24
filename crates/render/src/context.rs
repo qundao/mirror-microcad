@@ -3,15 +3,15 @@
 
 //! Render context
 
-use std::sync::{Arc, mpsc};
+use std::sync::mpsc;
 
 use microcad_hash::ToHash;
 use microcad_lang_base::Shared;
 use microcad_lang_types::{ModelNodeRef, ModelTree};
 
 use crate::{
-    GeometryNodeId, GeometryNodeRef, GeometryOutput, GeometryOutputs, GeometryTree, RenderCache,
-    RenderHooks, RenderResolution, RenderResult,
+    GeometryNodeId, GeometryNodeRef, GeometryOutputs, GeometryTree, RenderCache, RenderHooks,
+    RenderResolution, RenderResult,
 };
 
 /// Our progress sender.
@@ -111,8 +111,8 @@ impl<'tree> RenderContext<'tree> {
     /// Update a geometry if it is not in cache.
     pub fn update(
         &mut self,
-        f: impl FnOnce(GeometryNodeId, &mut RenderContext) -> RenderResult<Arc<GeometryOutput>>,
-    ) -> RenderResult<Arc<GeometryOutput>> {
+        f: impl FnOnce(GeometryNodeId, &mut RenderContext) -> RenderResult<GeometryOutputs>,
+    ) -> RenderResult<GeometryOutputs> {
         let geo = self.geo_node();
         let hash = geo.to_hash();
         self.stack.push(geo);
@@ -163,8 +163,8 @@ impl<'tree> RenderContext<'tree> {
     fn call_with_cost(
         &mut self,
         geo_node: GeometryNodeId,
-        f: impl FnOnce(GeometryNodeId, &mut RenderContext) -> RenderResult<Arc<GeometryOutput>>,
-    ) -> RenderResult<(Arc<GeometryOutput>, f64)> {
+        f: impl FnOnce(GeometryNodeId, &mut RenderContext) -> RenderResult<GeometryOutputs>,
+    ) -> RenderResult<(GeometryOutputs, f64)> {
         use std::time::Instant;
         let start = Instant::now();
 

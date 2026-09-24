@@ -72,7 +72,18 @@ impl From<core::Geometry> for GeometryOutput {
     }
 }
 
+#[derive(Debug, Default, Clone)]
+pub struct GeometryOutputs {
+    outputs: Vec<Arc<GeometryOutput>>,
+    geometry_type: GeometryType,
+}
+
 impl GeometryOutputs {
+    /// Returns an iterator over references to the output items.
+    pub fn iter(&self) -> std::slice::Iter<'_, Arc<GeometryOutput>> {
+        self.outputs.iter()
+    }
+
     /// Returns the number of geometry outputs.
     #[inline]
     pub fn len(&self) -> usize {
@@ -84,15 +95,62 @@ impl GeometryOutputs {
     pub fn is_empty(&self) -> bool {
         self.outputs.is_empty()
     }
+
+    /// Return all outputs with no name.
+    pub fn primary(self) -> Self {
+        Self::from_iter(self.into_iter().filter(|geo| geo.id.is_none()))
+    }
+
+    /// Extract 2D geometries from outputs
+    pub fn to_2d(&self) -> core::Geometries2D {
+        // TODO geometry type check
+
+        core::Geometries2D::new(
+            self.outputs
+                .iter()
+                .filter_map(|output| match &output.geometry {
+                    core::Geometry::Geometry2D(geo2d) => Some(geo2d.clone()),
+                    core::Geometry::Geometry3D(_) => None,
+                })
+                .collect(),
+        )
+    }
+
+    /// Extract 3D geometries from outputs
+    pub fn to_3d(&self) -> core::Geometries3D {
+        // TODO geometry type check
+
+        core::Geometries3D::new(
+            self.outputs
+                .iter()
+                .filter_map(|output| match &output.geometry {
+                    core::Geometry::Geometry2D(_) => None,
+                    core::Geometry::Geometry3D(geo3d) => Some(geo3d.clone()),
+                })
+                .collect(),
+        )
+    }
+
+    /// Return geometry type.
+    pub fn ty(&self) -> core::GeometryType {
+        self.geometry_type
+    }
 }
 
-impl From<Arc<GeometryOutput>> for GeometryOutputs {
-    fn from(geometry: Arc<GeometryOutput>) -> Self {
+impl From<GeometryOutput> for GeometryOutputs {
+    fn from(geometry: GeometryOutput) -> Self {
         let geometry_type = geometry.ty();
         Self {
-            outputs: vec![geometry],
+            outputs: vec![Arc::new(geometry)],
             geometry_type,
         }
+    }
+}
+
+impl From<core::Geometry> for GeometryOutputs {
+    fn from(geo: core::Geometry) -> Self {
+        let output = GeometryOutput::from(geo);
+        Self::from(output)
     }
 }
 
@@ -106,26 +164,13 @@ impl std::fmt::Display for GeometryOutputs {
     }
 }
 
-#[derive(Debug, Default, Clone)]
-pub struct GeometryOutputs {
-    outputs: Vec<Arc<GeometryOutput>>,
-    geometry_type: GeometryType,
-}
-
-impl GeometryOutputs {
-    /// Returns an iterator over references to the output items.
-    pub fn iter(&self) -> std::slice::Iter<'_, Arc<GeometryOutput>> {
-        self.outputs.iter()
-    }
-}
-
 // Implement IntoIterator for &GeometryOutputs so callers can write `for output in &outputs`
-impl<'a> IntoIterator for &'a GeometryOutputs {
-    type Item = &'a Arc<GeometryOutput>;
-    type IntoIter = std::slice::Iter<'a, Arc<GeometryOutput>>;
+impl IntoIterator for GeometryOutputs {
+    type Item = Arc<GeometryOutput>;
+    type IntoIter = std::vec::IntoIter<Arc<GeometryOutput>>;
 
     fn into_iter(self) -> Self::IntoIter {
-        self.iter()
+        self.outputs.into_iter()
     }
 }
 

@@ -12,5 +12,5 @@ use microcad_core::Color;
 #[derive(Clone, Default, Debug)]
 pub struct RenderAttributes {
     /// Color attribute.
-    color: Color,
+    pub color: Color,
 }

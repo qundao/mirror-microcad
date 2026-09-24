@@ -11,8 +11,6 @@ mod output;
 mod render;
 mod tree;
 
-use std::sync::Arc;
-
 use microcad_hash::HashMap;
 
 pub use attribute::*;
@@ -49,8 +47,7 @@ pub enum RenderError {
 use microcad_builtin::{BuiltinConstruct, BuiltinError, BuiltinId, mu};
 
 /// Built-in execution function signature
-pub type RenderFn =
-    fn(&GeometryTree, &mut RenderContext) -> Result<Arc<GeometryOutput>, RenderError>;
+pub type RenderFn = fn(&GeometryTree, &mut RenderContext) -> Result<GeometryOutputs, RenderError>;
 
 #[derive(Debug, Default)]
 pub struct RenderHooks {
@@ -93,12 +90,11 @@ impl<T: RenderPrimitive> Render for T {
         &self,
         tree: &GeometryTree,
         context: &mut RenderContext,
-    ) -> RenderResult<Arc<GeometryOutput>> {
+    ) -> RenderResult<GeometryOutputs> {
         context.update(|_, context| {
-            Ok(Arc::new(
-                self.render_primitive(&context.current_resolution(tree))
-                    .into(),
-            ))
+            Ok(self
+                .render_primitive(&context.current_resolution(tree))
+                .into())
         })
     }
 }
@@ -108,23 +104,23 @@ impl Render for mu::ops::Difference {
         &self,
         tree: &GeometryTree,
         context: &mut RenderContext,
-    ) -> RenderResult<Arc<GeometryOutput>> {
+    ) -> RenderResult<GeometryOutputs> {
         context.update(|_node, context| {
-            let outputs = context.collect_outputs(tree);
+            let outputs = context.collect_outputs(tree).primary();
+            let outputs = match outputs.ty() {
+                microcad_core::GeometryType::Geometry2D => {
+                    GeometryOutputs::from(Geometry::geo2d(outputs.to_2d().difference()))
+                }
+                microcad_core::GeometryType::Geometry3D => {
+                    GeometryOutputs::from(Geometry::geo3d(outputs.to_3d().difference()))
+                }
+                microcad_core::GeometryType::Empty => GeometryOutputs::default(),
+                microcad_core::GeometryType::Mixed => {
+                    todo!("Error handling: Mixed geometry")
+                }
+            };
 
-            let geometries = Geometries2D::new(
-                outputs
-                    .into_iter()
-                    .filter_map(|output| match &output.geometry {
-                        Geometry::Geometry2D(geo2d) => Some(geo2d.clone()),
-                        Geometry::Geometry3D(_geo3d) => todo!(),
-                    })
-                    .collect(),
-            );
-
-            Ok(Arc::new(GeometryOutput::new(Geometry2D::from(
-                geometries.boolean_op(microcad_core::BooleanOp::Subtract),
-            ))))
+            Ok(outputs)
         })
     }
 }
@@ -134,7 +130,7 @@ impl Render for mu::ops::Extrude {
         &self,
         tree: &GeometryTree,
         context: &mut RenderContext,
-    ) -> RenderResult<Arc<GeometryOutput>> {
+    ) -> RenderResult<GeometryOutputs> {
         context.update(|_node, context| {
             let outputs = context.collect_outputs(tree);
 
@@ -149,28 +145,27 @@ impl Render for mu::ops::Extrude {
             )
             .union();
 
-            Ok(Arc::new(GeometryOutput::from(
-                multi_polygon.linear_extrude(
-                    microcad_core::Length::mm(self.height.as_mm()),
-                    1.0,
-                    1.0,
-                    cgmath::Rad(0.0),
-                ),
-            )))
+            Ok(GeometryOutput::from(multi_polygon.linear_extrude(
+                microcad_core::Length::mm(self.height.as_mm()),
+                1.0,
+                1.0,
+                cgmath::Rad(0.0),
+            ))
+            .into())
         })
     }
 }
 
 /// A result from rendering a model.
-pub type RenderResult<T = Arc<GeometryOutput>> = Result<T, RenderError>;
+pub type RenderResult<T = GeometryOutputs> = Result<T, RenderError>;
 
 /// The render trait.
-pub trait Render<T = Arc<GeometryOutput>> {
+pub trait Render<T = GeometryOutputs> {
     /// Render method.
     fn render(&self, tree: &GeometryTree, context: &mut RenderContext) -> RenderResult<T>;
 }
 
-impl Render<GeometryOutputs> for GeometryNodeData {
+impl Render for GeometryNodeData {
     fn render(
         &self,
         tree: &GeometryTree,
