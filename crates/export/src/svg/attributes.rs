@@ -5,6 +5,7 @@
 
 use derive_more::Deref;
 use microcad_core::{Color, Mat3, Scalar};
+use microcad_render::RenderAttributes;
 
 #[derive(Debug, Clone)]
 pub enum SvgTagAttribute {
@@ -112,8 +113,13 @@ impl SvgTagAttributes {
     }
 }
 
-/// Methods for inserting specific tag attributes.
+/// Builder methods.
 impl SvgTagAttributes {
+    /// Create new attributes
+    pub fn new() -> Self {
+        Self::default()
+    }
+
     /// Insert new tag attribute.
     pub fn insert(mut self, attr: SvgTagAttribute) -> Self {
         match self.0.get_mut(attr.id()) {
@@ -130,34 +136,16 @@ impl SvgTagAttributes {
 
         self
     }
+}
 
-    /*/// Apply SVG attributes from model attributes
-    pub fn apply_from_model(mut self, model: &Model) -> Self {
-        if let Some(color) = model.get_color() {
-            self = self.insert(SvgTagAttribute::Style {
-                fill: Some(color),
-                stroke: None,
-                stroke_width: None,
-            });
-        }
-
-        model
-            .get_custom_attributes(&Identifier::no_ref("svg"))
-            .iter()
-            .for_each(|tuple| {
-                if let Some(Value::String(style)) = tuple.by_id(&Identifier::no_ref("style")) {
-                    self = self
-                        .clone()
-                        .insert(SvgTagAttribute::Custom("style".into(), style.clone()));
-                }
-                if let Some(Value::String(fill)) = tuple.by_id(&Identifier::no_ref("fill")) {
-                    self = self
-                        .clone()
-                        .insert(SvgTagAttribute::Custom("fill".into(), fill.clone()));
-                }
-            });
-        self
-    }*/
+impl From<RenderAttributes> for SvgTagAttributes {
+    fn from(attr: RenderAttributes) -> Self {
+        SvgTagAttributes::new().insert(SvgTagAttribute::Style {
+            fill: attr.fill_color,
+            stroke: attr.stroke_color,
+            stroke_width: attr.stroke_width,
+        })
+    }
 }
 
 impl std::fmt::Display for SvgTagAttributes {
@@ -198,5 +186,11 @@ impl<'a> FromIterator<(&'a str, &'a str)> for SvgTagAttributes {
             s.0.insert(key.clone(), SvgTagAttribute::Custom(key, value.to_string()));
         });
         s
+    }
+}
+
+impl<'a, const N: usize> From<[(&'a str, &'a str); N]> for SvgTagAttributes {
+    fn from(arr: [(&'a str, &'a str); N]) -> Self {
+        arr.into_iter().collect()
     }
 }

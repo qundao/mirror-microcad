@@ -3,7 +3,7 @@
 
 //! Render attributes.
 
-use microcad_core::Color;
+use microcad_core::{Color, Scalar};
 
 /// An attribute that can be used by any renderer.
 ///
@@ -11,6 +11,19 @@ use microcad_core::Color;
 #[non_exhaustive]
 #[derive(Clone, Default, Debug)]
 pub struct RenderAttributes {
-    /// Color attribute.
-    pub color: Color,
+    /// Fill color,  e.g. used when rendering SVGs.
+    pub fill_color: Option<Color>,
+    /// Stroke color, e.g. used when rendering SVGs.
+    pub stroke_color: Option<Color>,
+    /// Stroke with, e.g. used when rendering SVGs.
+    pub stroke_width: Option<Scalar>,
+}
+
+impl RenderAttributes {
+    /// Helper to set both fill and stroke to the same color.
+    pub fn with_color(mut self, color: Color) -> Self {
+        self.fill_color = Some(color);
+        self.stroke_color = Some(color);
+        self
+    }
 }
