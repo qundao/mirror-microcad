@@ -7,6 +7,7 @@ use derive_more::Deref;
 use microcad_core::{Color, Mat3, Scalar};
 use microcad_render::RenderAttributes;
 
+/// An attribute for an SVG tag, e.g. `"style=fill:none"`.
 #[derive(Debug, Clone)]
 pub enum SvgTagAttribute {
     /// `marker-start` attribute, e.g. for arrow heads.
@@ -17,8 +18,11 @@ pub enum SvgTagAttribute {
 
     /// Style attribute: `style = "fill: skyblue; stroke: cadetblue; stroke-width: 2;"`.
     Style {
+        /// Fill color
         fill: Option<Color>,
+        /// Stroke color
         stroke: Option<Color>,
+        /// Stroke width px.
         stroke_width: Option<Scalar>,
     },
 
@@ -51,11 +55,7 @@ impl SvgTagAttribute {
         match &self {
             SvgTagAttribute::MarkerStart(_) => "marker-start",
             SvgTagAttribute::MarkerEnd(_) => "marker-end",
-            SvgTagAttribute::Style {
-                fill: _,
-                stroke: _,
-                stroke_width: _,
-            } => "style",
+            SvgTagAttribute::Style { .. } => "style",
             SvgTagAttribute::Transform(_) => "transform",
             SvgTagAttribute::Class(_) => "class",
             SvgTagAttribute::Custom(id, _) => id,
@@ -77,11 +77,11 @@ impl std::fmt::Display for SvgTagAttribute {
                 "{fill}{stroke}{stroke_width}",
                 fill = match fill {
                     Some(fill) => format!("fill: {}; ", fill.to_svg_color()),
-                    None => "fill: none; ".into(),
+                    None => "".into(),
                 },
                 stroke = match stroke {
                     Some(stroke) => format!("stroke: {}; ", stroke.to_svg_color()),
-                    None => "stroke: none; ".into(),
+                    None => "".into(),
                 },
                 stroke_width = match stroke_width {
                     Some(stroke_width) => format!("stroke-width: {stroke_width}"),
