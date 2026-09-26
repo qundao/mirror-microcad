@@ -3,13 +3,39 @@
 
 //! Export models to files
 
-use microcad_lang_types::{ModelNodeRef, ModelType, Value};
+use microcad_lang_types::{ModelNodeRef, ModelTree, ModelType, Value};
 use thiserror::Error;
 
 pub mod ply;
 pub mod stl;
 pub mod svg;
 pub mod wkt;
+
+/// A lifecycle-aware writer trait for exporters.
+pub trait Writer {
+    /// The underlying stream/output type returned by `finish()`.
+    type Output;
+
+    /// Optional initialization/header writer (e.g., XML headers, doc preambles).
+    /// Called automatically before writing body content if not called explicitly.
+    fn begin(&mut self) -> std::io::Result<()>;
+
+    /// Writes remaining structural elements (e.g., closing tags, footers) and flushes,
+    /// without consuming `self`. Must be idempotent.
+    fn finalize(&mut self) -> std::io::Result<()>;
+
+    /// Extract the inner stream/writer.
+    fn into_inner(self) -> std::io::Result<Self::Output>;
+
+    /// Default blanket implementation of finish for any Writer.
+    fn finish(mut self) -> std::io::Result<Self::Output>
+    where
+        Self: Sized,
+    {
+        self.finalize()?;
+        self.into_inner()
+    }
+}
 
 /// An export error
 #[derive(Debug, Error)]
@@ -44,9 +70,9 @@ pub struct ExporterParameters {
 /// The exporter trait.
 pub trait Exporter {
     /// The export function.
-    fn export<'tree>(
+    fn export(
         &self,
-        model: &ModelNodeRef<'tree>,
+        model: &ModelTree,
         parameters: &ExporterParameters,
     ) -> Result<Value, ExportError>;
 

@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg version='1.1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 297 210' width='297mm' height='210mm'>
+  <defs>
+        <marker id="arrow" viewBox="0 0 16 16" refX="8" refY="8" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+          <path d="M 0 0 L 16 8 L 0 16 z" stroke="none" fill="context-fill" />
+        </marker>
+      </defs>
+  <style>
+    
+        .background-fill {
+            fill: #FFFFFF;
+            stroke: none;
+        }
+        
+        .grid {
+            fill: #D8D8D8;
+            stroke: #D8D8D8;
+            stroke-width: 0.2;
+        }
+        
+        .grid-stroke {
+            fill: none;
+            stroke: #D8D8D8;
+            stroke-width: 0.2;
+        }
+        
+        .grid-fill {
+            fill: #D8D8D8;
+            stroke: none;
+        }
+        
+        .measure {
+            fill: #00CCCC;
+            stroke: #00CCCC;
+            stroke-width: 0.2;
+        }
+        
+        .measure-stroke {
+            fill: none;
+            stroke: #00CCCC;
+            stroke-width: 0.2;
+        }
+        
+        .measure-fill {
+            fill: #00CCCC;
+            stroke: none;
+        }
+        
+        .highlight {
+            fill: #FF9900;
+            stroke: #FF9900;
+            stroke-width: 0.2;
+        }
+        
+        .highlight-stroke {
+            fill: none;
+            stroke: #FF9900;
+            stroke-width: 0.2;
+        }
+        
+        .highlight-fill {
+            fill: #FF9900;
+            stroke: none;
+        }
+        
+        .entity {
+            fill: rgba(178, 178, 178, 0.70);
+            stroke: #191919;
+            stroke-width: 0.4;
+        }
+        
+            .active { fill-opacity: 1.0; stroke-opacity: 1.0; }
+            .inactive { fill-opacity: 0.3; stroke-opacity: 0.3; }
+        
+  </style>
+  <rect class="background-fill" x="0" y="0" width="297" height="210"/>
+  <g class="grid-stroke">
+    <rect x="98.5" y="55" width="100" height="100" class="grid-stroke"/>
+    <line x1="98.5" y1="55" x2="98.5" y2="155" class="grid-stroke"/>
+    <line x1="118.5" y1="55" x2="118.5" y2="155" class="grid-stroke"/>
+    <line x1="138.5" y1="55" x2="138.5" y2="155" class="grid-stroke"/>
+    <line x1="158.5" y1="55" x2="158.5" y2="155" class="grid-stroke"/>
+    <line x1="178.5" y1="55" x2="178.5" y2="155" class="grid-stroke"/>
+    <line x1="198.5" y1="55" x2="198.5" y2="155" class="grid-stroke"/>
+    <line x1="98.5" y1="55" x2="198.5" y2="55" class="grid-stroke"/>
+    <line x1="98.5" y1="75" x2="198.5" y2="75" class="grid-stroke"/>
+    <line x1="98.5" y1="95" x2="198.5" y2="95" class="grid-stroke"/>
+    <line x1="98.5" y1="115" x2="198.5" y2="115" class="grid-stroke"/>
+    <line x1="98.5" y1="135" x2="198.5" y2="135" class="grid-stroke"/>
+    <line x1="98.5" y1="155" x2="198.5" y2="155" class="grid-stroke"/>
+  </g>
+  <rect x="98.5" y="115" width="60" height="40" class="entity-stroke inactive"/>
+  <text x="128.5" y="135" font-size="8mm" dominant-baseline="middle" text-anchor="middle" class="entity-fill inactive">
+    r
+  </text>
+  <g transform="matrix(0.00000000000000006123233995736766 -1 1 0.00000000000000006123233995736766 98.5 155)">
+    <g class="measure">
+      <line x1="0" y1="0" x2="0" y2="-15" class="measure"/>
+      <line x1="40" y1="0" x2="40" y2="-15" class="measure"/>
+      <line x1="0.75" y1="-10" x2="39.25" y2="-10" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+    </g>
+    <text x="20" y="-15" font-size="2mm" dominant-baseline="middle" text-anchor="middle" class="measure-fill">
+      height = 20.00mm
+    </text>
+  </g>
+  <g transform="matrix(1 0 -0 1 98.5 155)">
+    <g class="measure">
+      <line x1="0" y1="0" x2="0" y2="15" class="measure"/>
+      <line x1="60" y1="0" x2="60" y2="15" class="measure"/>
+      <line x1="0.75" y1="10" x2="59.25" y2="10" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+    </g>
+    <text x="30" y="15" font-size="2mm" dominant-baseline="middle" text-anchor="middle" class="measure-fill">
+      width = 30.00mm
+    </text>
+  </g>
+  <circle cx="158.5" cy="115" r="20" class="entity-stroke inactive"/>
+  <text x="158.5" y="115" font-size="8mm" dominant-baseline="middle" text-anchor="middle" class="entity-fill inactive">
+    c
+  </text>
+  <g>
+    <line x1="159.03033008588991" y1="114.46966991411009" x2="172.11180553784104" y2="101.38819446215896" class="measure" marker-end="url(#arrow)"/>
+    <text x="165.57106781186548" y="107.92893218813452" font-size="2mm" dominant-baseline="middle" text-anchor="middle" class="measure-fill">
+      radius = 10.00mm
+    </text>
+  </g>
+  <path d="M60,40L40,40L40.384294390678406,36.09819358587265L41.52240937948227,32.34633135795593L43.3706077337265,28.88859534263611L45.85786437988281,25.857864379882813L48.88859534263611,23.3706077337265L52.34633135795593,21.52240937948227L56.09819358587265,20.384294390678406L60,20L60,40 Z  " class="entity-stroke active"/>
+  <g transform="matrix(1 0 -0 1 138.5 135)">
+    <g class="measure">
+      <line x1="0" y1="0" x2="0" y2="10.5" class="measure"/>
+      <line x1="20" y1="0" x2="20" y2="10.5" class="measure"/>
+      <line x1="0.75" y1="7" x2="19.25" y2="7" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+    </g>
+    <text x="10" y="10.5" font-size="2mm" dominant-baseline="middle" text-anchor="middle" class="measure-fill">
+      10.00mm
+    </text>
+  </g>
+  <g transform="matrix(0.00000000000000006123233995736766 -1 1 0.00000000000000006123233995736766 138.5 135)">
+    <g class="measure">
+      <line x1="0" y1="0" x2="0" y2="-10.5" class="measure"/>
+      <line x1="20" y1="0" x2="20" y2="-10.5" class="measure"/>
+      <line x1="0.75" y1="-7" x2="19.25" y2="-7" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+    </g>
+    <text x="10" y="-10.5" font-size="2mm" dominant-baseline="middle" text-anchor="middle" class="measure-fill">
+      10.00mm
+    </text>
+  </g>
+</svg>

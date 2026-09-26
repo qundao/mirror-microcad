@@ -6,46 +6,85 @@
 use std::str::FromStr as _;
 
 use geo::{Translate, coord};
+use microcad_builtin::{BuiltinEvalContext, BuiltinPrimitiveCall, mu};
 use microcad_core::*;
-use microcad_export::svg::{
-    Background, CenteredText, EdgeLengthMeasure, Grid, MapToCanvas, RadiusMeasure, SizeMeasure,
-    SvgExporter, SvgTagAttribute, SvgTagAttributes, SvgWriter, Theme, WriteSvg, WriteSvgMapped,
+use microcad_export::{
+    Exporter, Writer,
+    svg::{
+        Background, Canvas, CenteredText, EdgeLengthMeasure, Grid, RadiusMeasure, SizeMeasure,
+        SvgExporter, SvgTagAttribute, SvgWriter, Theme, WriteSvg, WriteSvgMapped,
+    },
 };
+use microcad_lang_types::{Model, ModelTree, Value, arguments, model::Element};
+use microcad_render::RenderContext;
 
-use crate::common::assert_svg_snapshot;
+/// Renders SVG content using a draw closure, performs snapshot testing via `insta`,
+/// and writes the output SVG to disk under `target/svg_outputs/<snapshot_name>.svg`.
+fn assert_svg_snapshot<F>(snapshot_name: &str, canvas: Canvas, draw: F) -> std::io::Result<()>
+where
+    F: FnOnce(&mut SvgWriter<Vec<u8>>) -> std::io::Result<()>,
+{
+    let mut writer = SvgWriter::new(vec![], canvas);
+    draw(&mut writer)?;
 
-mod common;
+    let buffer = writer.finish()?;
+
+    Ok(insta::with_settings!(
+        {
+            prepend_module_to_snapshot => false,
+            snapshot_path => "../snapshots",
+        },
+        {
+            insta::assert_binary_snapshot!(format!("{snapshot_name}.svg").as_str(), buffer);
+        }
+    ))
+}
+
+fn circle(r: f64) -> Model {
+    let mut ctx = BuiltinEvalContext::default();
+    mu::geo2d::Circle::call(arguments!(radius = Value::mm(r)), &mut ctx).expect("No error")
+}
+
+fn rect(rect: Rect) -> Model {
+    let mut ctx = BuiltinEvalContext::default();
+    let (width, height) = (rect.width(), rect.height());
+    let (x, y) = rect.min().x_y();
+    mu::geo2d::Rect::call(
+        arguments!(
+            x = Value::mm(x),
+            y = Value::mm(y),
+            width = Value::mm(width),
+            height = Value::mm(height)
+        ),
+        &mut ctx,
+    )
+    .expect("No error")
+}
 
 #[test]
 fn svg_writer() -> std::io::Result<()> {
     assert_svg_snapshot(
         "svg_writer",
-        SvgWriter::new(
-            vec![],
-            None,
-            Rect::new(coord! {x: 0.0, y: 0.0}, coord! {x: 100.0, y: 100.0}),
-            None,
-        ),
+        Canvas::new(Rect::new((0.0, 0.0), (100.0, 100.0))),
         |writer| {
             writer.with_attr([("style", "fill:blue")], |writer| {
-                geo::Rect::new(geo::Point::new(10.0, 10.0), geo::Point::new(20.0, 20.0))
-                    .write_svg(writer)
+                geo::Rect::new((10.0, 10.0), (20.0, 20.0)).write_svg(writer)
             })?;
 
             writer.with_attr([("style", "fill:red")], |writer| {
                 geo2d::Circle {
                     radius: 10.0,
-                    offset: Vec2::new(50.0, 50.0),
+                    offset: (50.0, 50.0).into(),
                 }
                 .write_svg(writer)
             })?;
 
             writer.with_attr([("style", "stroke:black;")], |writer| {
-                Line(geo::Point::new(0.0, 0.0), geo::Point::new(100.0, 100.0)).write_svg(writer)
+                Line::new((0.0, 0.0), (100.0, 100.0)).write_svg(writer)
             })?;
 
             writer.with_attr([("style", "stroke:black;")], |writer| {
-                Line(geo::Point::new(100.0, 0.0), geo::Point::new(0.0, 100.0))
+                Line::new((100.0, 0.0), (0.0, 100.0))
                     .shorter(6.0)
                     .write_svg(writer)
             })
@@ -53,16 +92,33 @@ fn svg_writer() -> std::io::Result<()> {
     )
 }
 
+/// Render a polygon with holes
+#[test]
+fn svg_polygon() -> std::io::Result<()> {
+    assert_svg_snapshot(
+        "svg_polygon",
+        Canvas::new(Rect::new((0.0, 0.0), (100.0, 100.0))),
+        |writer| {
+            let circle = Circle {
+                radius: 10.0,
+                offset: (25.0, 25.0).into(),
+            }
+            .to_polygon(32);
+
+            circle.write_svg(writer)
+        },
+    )
+}
+
 #[test]
 fn svg_canvas() -> std::io::Result<()> {
-    let mut content_rect = Rect::new(coord! {x: 0.0, y: 0.0}, coord! {x: 100.0, y: 100.0});
+    let mut content_rect = Rect::new((0.0, 0.0), (100.0, 100.0));
 
     assert_svg_snapshot(
         "svg_canvas",
-        SvgWriter::new(
-            vec![],
-            Size2::A4.transposed().into(),
+        Canvas::new_centered(
             content_rect.clone(),
+            Size2::A4.transposed().into(),
             Some(2.0),
         ),
         |writer| {
@@ -123,10 +179,9 @@ fn svg_canvas() -> std::io::Result<()> {
 fn svg_sample_sketch() -> std::io::Result<()> {
     assert_svg_snapshot(
         "svg_sample_sketch",
-        SvgWriter::new(
-            vec![],
+        Canvas::new_centered(
+            Rect::new((0.0, 0.0), (50.0, 50.0)),
             Size2::A4.transposed().into(),
-            Rect::new(coord! {x: 0.0, y: 0.0}, coord! {x: 50.0, y: 50.0}),
             Some(2.0),
         ),
         |writer| {
@@ -208,4 +263,46 @@ fn svg_sample_sketch() -> std::io::Result<()> {
             })
         },
     )
+}
+
+// Circle(42mm) - Circle(23mm);
+#[test]
+fn difference() -> std::io::Result<()> {
+    let bounds = Rect::new(coord! { x: 0., y: 0. }, coord! { x: 100., y: 100. });
+
+    assert_svg_snapshot("svg_difference", Canvas::new(bounds), |writer| {
+        let mut ctx = BuiltinEvalContext::default();
+
+        // {
+        //     Circle(42mm);
+        //     Circle(23mm);
+        // }
+        let mut group = ModelTree::new(Element::Group);
+        group.append(circle(42.0));
+        group.append(circle(23.0));
+        let diff = mu::ops::difference(arguments!(self = group), &mut ctx).expect("No error");
+        let translate = mu::ops::translate(
+            arguments!(
+                self = diff,
+                x = Value::mm(50.0),
+                y = Value::mm(50.0),
+                z = Value::mm(0.0)
+            ),
+            &mut ctx,
+        )
+        .expect("No error");
+
+        let mut geometry = RenderContext::new(&translate)
+            .render()
+            .expect("No render errors");
+
+        geometry.write_svg_mapped(writer)
+    })
+}
+
+#[test]
+fn svg_export() {
+
+    //todo!()
+    //    let exporter = SvgExporter.export(model, parameters).unwrap();
 }

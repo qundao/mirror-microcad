@@ -26,12 +26,48 @@ pub struct Canvas {
 }
 
 impl Canvas {
+    /// Create a new canvas with a content rect.
+    pub fn new(content_rect: geo2d::Rect) -> Self {
+        let size = Size2 {
+            width: content_rect.width(),
+            height: content_rect.height(),
+        };
+
+        // Compute scale to fit content inside canvas (preserving aspect ratio)
+        let scale = {
+            let scale_x = size.width / content_rect.width();
+            let scale_y = size.height / content_rect.height();
+            scale_x.min(scale_y)
+        };
+
+        // New content size after scaling
+        let width = content_rect.width() * scale;
+        let height = content_rect.height() * scale;
+
+        // Center the content within the canvas
+        let min = Point::new((size.width - width) / 2.0, (size.height - height) / 2.0);
+
+        // Build the new canvas rect centered with content
+        let rect = geo2d::Rect::new(min, min + geo2d::Point::new(width, height));
+
+        Canvas {
+            rect,
+            content_rect,
+            size,
+        }
+    }
+
     /// Create a new canvas with a size and center the content.
-    pub fn new_centered_content(
-        size: Size2,
+    pub fn new_centered(
         content_rect: geo2d::Rect,
+        size: Option<Size2>,
         scale: Option<Scalar>,
     ) -> Self {
+        let size = size.unwrap_or_else(|| Size2 {
+            width: content_rect.width(),
+            height: content_rect.height(),
+        });
+
         // Compute scale to fit content inside canvas (preserving aspect ratio)
         let scale = match scale {
             Some(scale) => scale,

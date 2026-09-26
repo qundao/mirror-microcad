@@ -3,10 +3,11 @@
 
 //! Scalable Vector Graphics (SVG) export
 
-use microcad_core::{Color, Scalar};
-use microcad_lang_types::{ModelNodeRef, ModelType, Value};
+use microcad_core::{Bounds2D, Color, Scalar};
+use microcad_lang_types::{ModelTree, ModelType, Value};
+use microcad_render::RenderContext;
 
-use crate::{ExportError, Exporter, ExporterParameters};
+use crate::{ExportError, Exporter, ExporterParameters, Writer};
 
 /// SVG Exporter.
 pub struct SvgExporter;
@@ -59,13 +60,13 @@ impl Default for Theme {
 /// Settings for this exporter.
 pub struct SvgExporterSettings {
     /// Relative padding (e.g. 0.05 = 5% = padding on each side).
-    _padding_factor: Scalar,
+    padding_factor: Scalar,
 }
 
 impl Default for SvgExporterSettings {
     fn default() -> Self {
         Self {
-            _padding_factor: 0.05, // 5% padding on each side.
+            padding_factor: 0.05, // 5% padding on each side.
         }
     }
 }
@@ -145,38 +146,33 @@ impl SvgExporter {
 }
 
 impl Exporter for SvgExporter {
-    fn export<'tree>(
+    fn export(
         &self,
-        _model: &ModelNodeRef<'tree>,
-        _parameters: &ExporterParameters,
+        model: &ModelTree,
+        parameters: &ExporterParameters,
     ) -> Result<Value, ExportError> {
-        todo!()
-        /*use crate::svg::*;
-        use microcad_core::CalcBounds2D;
+        use crate::svg::*;
         let settings = SvgExporterSettings::default();
-        let bounds = model.calc_bounds_2d();
 
-        if bounds.is_valid() {
-            let content_rect = bounds
-                .enlarge(2.0 * settings.padding_factor)
-                .rect()
-                .expect("Rect");
-            let path = parameters.path.as_path();
-            log::debug!("Exporting into SVG file {path:?}");
-            let f = std::fs::File::create(path)?;
-            let mut writer = SvgWriter::new_canvas(
-                Box::new(std::io::BufWriter::new(f)),
-                model.get_size(),
-                content_rect,
-                None,
-            )?;
-            writer.style(&SvgExporter::theme_to_svg_style(&Theme::default()))?;
+        let path = parameters.path.as_path();
+        let geometry = RenderContext::new(model).render()?;
 
-            model.write_svg(&mut writer, &SvgTagAttributes::default())?;
-            Ok(Value::None)
-        } else {
-            Err(ExportError::RenderError(RenderError::NothingToRender))
-        }*/
+        let bounds = Bounds2D::from(geometry.bounds());
+        let content_rect = bounds
+            .enlarge(2.0 * settings.padding_factor)
+            .rect()
+            .expect("Rect");
+
+        log::debug!("Exporting into SVG file {path:?}");
+        let f = std::fs::File::create(path)?;
+        let canvas = Canvas::new_centered(content_rect, bounds.size(), None);
+        let mut writer = SvgWriter::new(f, canvas);
+        writer.style(&SvgExporter::theme_to_svg_style(&Theme::default()))?;
+
+        geometry.write_svg(&mut writer)?;
+        let _ = writer.finish()?;
+
+        Ok(Value::None)
     }
 
     fn model_type(&self) -> ModelType {

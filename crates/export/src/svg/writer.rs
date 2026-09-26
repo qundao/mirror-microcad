@@ -5,7 +5,10 @@
 
 use microcad_core::*;
 
-use crate::svg::{SvgTagAttributes, canvas::Canvas};
+use crate::{
+    Writer,
+    svg::{SvgTagAttributes, canvas::Canvas},
+};
 
 use std::io::Write;
 
@@ -33,19 +36,7 @@ impl<W: Write> SvgWriter<W> {
     /// - `w`: Output writer
     /// - `size`: Size of the canvas.
     /// - `scale`: Scale of the output
-    pub fn new(
-        mut writer: W,
-        size: Option<Size2>,
-        content_rect: Rect,
-        scale: Option<Scalar>,
-    ) -> Self {
-        let size = size.unwrap_or_else(|| Size2 {
-            width: content_rect.width(),
-            height: content_rect.height(),
-        });
-
-        let canvas = Canvas::new_centered_content(size, content_rect, scale);
-
+    pub fn new(writer: W, canvas: Canvas) -> Self {
         Self {
             writer,
             level: 1,
@@ -54,35 +45,6 @@ impl<W: Write> SvgWriter<W> {
             finished: false,
             header_written: false,
         }
-    }
-
-    /// Ensures the XML preamble and `<svg>` header are emitted exactly once before writing body elements.
-    fn ensure_header(&mut self) -> std::io::Result<()> {
-        if self.header_written {
-            return Ok(());
-        }
-
-        let size = &self.canvas.size;
-        let (x, y) = (0, 0);
-        let (w, h) = (size.width, size.height);
-
-        writeln!(self.writer, "<?xml version='1.0' encoding='UTF-8'?>")?;
-        writeln!(
-            self.writer,
-            r#"<svg version='1.1' xmlns='http://www.w3.org/2000/svg' viewBox='{x} {y} {w} {h}' width='{w}mm' height='{h}mm'>"#
-        )?;
-        writeln!(
-            self.writer,
-            r#"  <defs>
-        <marker id="arrow" viewBox="0 0 16 16" refX="8" refY="8" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
-          <path d="M 0 0 L 16 8 L 0 16 z" stroke="none" fill="context-fill" />
-        </marker>
-      </defs>"#
-        )?;
-
-        self.level = 1;
-        self.header_written = true;
-        Ok(())
     }
 
     /// Add attributes to the write
@@ -133,7 +95,7 @@ impl<W: Write> SvgWriter<W> {
 
     /// Write something into the SVG and consider indentation.
     pub fn with_indent(&mut self, s: &str) -> std::io::Result<()> {
-        self.ensure_header()?;
+        self.begin()?;
         writeln!(self.writer, "{:indent$}{s}", "", indent = 2 * self.level)
     }
 
@@ -188,15 +150,54 @@ impl<W: Write> SvgWriter<W> {
         self.with_indent(inner)?;
         self.close_tag("style")
     }
+}
 
-    /// Finish this SVG. This method is also called in the Drop trait implementation.
-    ///
-    /// Writes trailing closing tags (e.g. `</svg>`) and returns the underlying writer.
-    pub fn finish(mut self) -> std::io::Result<W> {
-        self.ensure_header()?;
+impl<W: Write> Writer for SvgWriter<W> {
+    type Output = W;
 
+    /// Ensures the XML preamble and `<svg>` header are emitted exactly once before writing body elements.
+    fn begin(&mut self) -> std::io::Result<()> {
+        if self.header_written {
+            return Ok(());
+        }
+
+        let size = &self.canvas.size;
+        let (x, y) = (0, 0);
+        let (w, h) = (size.width, size.height);
+
+        writeln!(self.writer, "<?xml version='1.0' encoding='UTF-8'?>")?;
+        writeln!(
+            self.writer,
+            r#"<svg version='1.1' xmlns='http://www.w3.org/2000/svg' viewBox='{x} {y} {w} {h}' width='{w}mm' height='{h}mm'>"#
+        )?;
+        writeln!(
+            self.writer,
+            r#"  <defs>
+        <marker id="arrow" viewBox="0 0 16 16" refX="8" refY="8" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+          <path d="M 0 0 L 16 8 L 0 16 z" stroke="none" fill="context-fill" />
+        </marker>
+      </defs>"#
+        )?;
+
+        self.level = 1;
+        self.header_written = true;
+        Ok(())
+    }
+
+    /// Flushes remaining content and writes final closing tags.
+    fn finalize(&mut self) -> std::io::Result<()> {
+        if self.finished {
+            return Ok(());
+        }
+
+        self.begin()?;
         writeln!(self.writer, "</svg>")?;
         self.writer.flush()?;
+        self.finished = true;
+        Ok(())
+    }
+
+    fn into_inner(self) -> std::io::Result<Self::Output> {
         Ok(self.writer)
     }
 }

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use cgmath::SquareMatrix;
-use microcad_core::Mat4;
+use microcad_core::{Bounds3D, Mat4};
 use microcad_lang_types::{ModelNodeRef, ModelTree, math::ScalarF};
 
 use crate::{GeometryNodeData, RenderResolution};
@@ -17,7 +17,6 @@ pub struct GeometryTree {
 impl GeometryTree {
     pub fn new(model_tree: &ModelTree, render_resolution: RenderResolution) -> Self {
         let mut arena = GeometryArena::new();
-
         let mut tree = GeometryTree {
             root: Self::build_node(model_tree.root(), &mut arena),
             arena,
@@ -87,6 +86,10 @@ impl GeometryTree {
 
     pub fn root_mut<'a>(&'a mut self) -> GeometryNodeMut<'a> {
         GeometryNodeMut::new(self.root, &mut self.arena)
+    }
+
+    pub fn bounds(&self) -> Bounds3D {
+        self.root().outputs.bounds().clone()
     }
 }
 

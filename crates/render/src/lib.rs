@@ -18,7 +18,9 @@ pub use cache::*;
 pub use context::*;
 pub use tree::*;
 
-use microcad_core::{Extrude, Geometries2D, Geometry, Geometry2D, Scalar, UnaryBooleanOp};
+use microcad_core::{
+    Extrude, Geometries2D, Geometry, Geometry2D, Scalar, Transformed2D, UnaryBooleanOp,
+};
 use microcad_lang_types::{
     ModelTree,
     model::{ModelType, NodeExt},
@@ -125,6 +127,18 @@ impl Render for mu::ops::Difference {
     }
 }
 
+impl Render for mu::ops::Translate {
+    fn render(
+        &self,
+        tree: &GeometryTree,
+        context: &mut RenderContext,
+    ) -> RenderResult<GeometryOutputs> {
+        let m = context.current_node(tree).local_matrix;
+        let outputs = context.collect_outputs(tree);
+        todo!()
+    }
+}
+
 impl Render for mu::ops::Extrude {
     fn render(
         &self,
@@ -132,18 +146,7 @@ impl Render for mu::ops::Extrude {
         context: &mut RenderContext,
     ) -> RenderResult<GeometryOutputs> {
         context.update(|_node, context| {
-            let outputs = context.collect_outputs(tree);
-
-            let multi_polygon = Geometries2D::new(
-                outputs
-                    .into_iter()
-                    .filter_map(|output| match &output.geometry {
-                        Geometry::Geometry2D(geo2d) => Some(geo2d.clone()),
-                        Geometry::Geometry3D(_geo3d) => todo!(),
-                    })
-                    .collect(),
-            )
-            .union();
+            let multi_polygon = context.collect_outputs(tree).primary().to_2d().union();
 
             Ok(GeometryOutput::from(multi_polygon.linear_extrude(
                 microcad_core::Length::mm(self.height.as_mm()),

@@ -3,12 +3,15 @@
 
 //! Export 2D models to Well-Known Text (WKT).
 
-use std::fmt::Write;
+use std::io::Write;
 
 use geo::line_string;
-use microcad_core::{Geometries2D, Geometry2D};
-use microcad_lang_types::{Model, ModelNodeRef, ModelType, Value};
+use microcad_core::{Geometries2D, Geometry, Geometry2D};
+use microcad_lang_types::{ModelTree, ModelType, Value};
 
+use microcad_render::{
+    GeometryNodeData, GeometryNodeRef, GeometryOutput, GeometryOutputs, GeometryTree, RenderContext,
+};
 use wkt::ToWkt;
 
 use crate::{ExportError, Exporter, ExporterParameters};
@@ -17,11 +20,11 @@ use crate::{ExportError, Exporter, ExporterParameters};
 pub struct WktExporter;
 
 trait WriteWkt {
-    fn write_wkt(&self, writer: &mut impl Write) -> std::fmt::Result;
+    fn write_wkt(&self, writer: &mut impl Write) -> std::io::Result<()>;
 }
 
 impl WriteWkt for Geometries2D {
-    fn write_wkt(&self, writer: &mut impl Write) -> std::fmt::Result {
+    fn write_wkt(&self, writer: &mut impl Write) -> std::io::Result<()> {
         writeln!(writer, "GEOMETRYCOLLECTION(")?;
         self.iter().try_for_each(|geo| geo.write_wkt(writer))?;
         writeln!(writer, ")")
@@ -29,7 +32,7 @@ impl WriteWkt for Geometries2D {
 }
 
 impl WriteWkt for Geometry2D {
-    fn write_wkt(&self, writer: &mut impl Write) -> std::fmt::Result {
+    fn write_wkt(&self, writer: &mut impl Write) -> std::io::Result<()> {
         match &self {
             Geometry2D::LineString(line_string) => {
                 writeln!(writer, "{}", line_string.wkt_string())
@@ -58,37 +61,57 @@ impl WriteWkt for Geometry2D {
     }
 }
 
-impl WriteWkt for Model {
-    fn write_wkt(&self, _writer: &mut impl Write) -> std::fmt::Result {
-        todo!()
-        /*
-        let self_ = self.borrow();
-        let output = self_.output();
-        match &output.geometry {
-            Some(microcad_render::GeometryOutput::Geometry2D(geometry)) => {
-                let mat = output.world_matrix.expect("Some matrix");
-                (*geometry.transformed_2d(&mat4_to_mat3(&mat))).write_wkt(writer)
+impl WriteWkt for Geometry {
+    fn write_wkt(&self, writer: &mut impl Write) -> std::io::Result<()> {
+        match self {
+            Geometry::Geometry2D(geo2d) => geo2d.write_wkt(writer),
+            Geometry::Geometry3D(_) => todo!(),
+        }
+    }
+}
+
+impl WriteWkt for GeometryOutput {
+    fn write_wkt(&self, writer: &mut impl Write) -> std::io::Result<()> {
+        self.geometry.write_wkt(writer)
+    }
+}
+
+impl WriteWkt for GeometryOutputs {
+    fn write_wkt(&self, writer: &mut impl Write) -> std::io::Result<()> {
+        self.iter().try_for_each(|geo| geo.write_wkt(writer))
+    }
+}
+
+impl WriteWkt for GeometryNodeData {
+    fn write_wkt(&self, writer: &mut impl Write) -> std::io::Result<()> {
+        self.outputs.write_wkt(writer)
+    }
+}
+
+impl WriteWkt for GeometryTree {
+    fn write_wkt(&self, writer: &mut impl Write) -> std::io::Result<()> {
+        fn recurse(node: GeometryNodeRef, writer: &mut impl Write) -> std::io::Result<()> {
+            if node.outputs.is_empty() {
+                node.children().try_for_each(|child| recurse(child, writer))
+            } else {
+                node.outputs.write_wkt(writer)
             }
-            None => self_
-                .children()
-                .try_for_each(|model| model.write_wkt(writer)),
-            _ => Ok(()),
-        }*/
+        }
+
+        recurse(self.root(), writer)
     }
 }
 
 impl Exporter for WktExporter {
-    fn export<'tree>(
+    fn export(
         &self,
-        model: &ModelNodeRef<'tree>,
+        model: &ModelTree,
         parameters: &ExporterParameters,
     ) -> Result<Value, ExportError> {
-        use std::io::Write;
-
+        let geometry = RenderContext::new(model).render()?;
         let mut f = std::fs::File::create(&parameters.path)?;
-        let mut buffer = String::new();
-        model.write_wkt(&mut buffer)?;
-        f.write_all(buffer.as_bytes())?;
+        geometry.write_wkt(&mut f)?;
+
         Ok(Value::None)
     }
 

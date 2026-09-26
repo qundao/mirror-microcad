@@ -626,13 +626,13 @@ pub mod geo2d {
     #[derive(Serialize, Deserialize, Debug)]
     pub struct Rect {
         /// Width of the rectangle.
-        width: Length,
+        pub width: Length,
         /// Height of the rectangle.
-        height: Length,
+        pub height: Length,
         /// X position (left side) of the rectangle.
-        x: Length,
+        pub x: Length,
         /// Y position (bottom side) of the rectangle.
-        y: Length,
+        pub y: Length,
     }
 
     impl BuiltinConstruct for Rect {

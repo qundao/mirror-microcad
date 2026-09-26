@@ -7,7 +7,9 @@ use std::sync::Arc;
 
 use cgmath::SquareMatrix;
 
-use microcad_core::{self as core, CalcBounds3D, Geometry3D, GeometryType, Mat4, Transformed3D};
+use microcad_core::{
+    self as core, Bounds3D, CalcBounds3D, Geometry3D, GeometryType, Mat4, Transformed3D,
+};
 
 use microcad_hash::{HashId, ToHash, hash_id};
 use microcad_lang_types::{
@@ -76,6 +78,7 @@ impl From<core::Geometry> for GeometryOutput {
 pub struct GeometryOutputs {
     outputs: Vec<Arc<GeometryOutput>>,
     geometry_type: GeometryType,
+    bounds: Bounds3D,
 }
 
 impl GeometryOutputs {
@@ -135,14 +138,21 @@ impl GeometryOutputs {
     pub fn ty(&self) -> core::GeometryType {
         self.geometry_type
     }
+
+    /// Bounds
+    pub fn bounds(&self) -> &Bounds3D {
+        &self.bounds
+    }
 }
 
 impl From<GeometryOutput> for GeometryOutputs {
     fn from(geometry: GeometryOutput) -> Self {
         let geometry_type = geometry.ty();
+        let bounds = geometry.bounds.clone();
         Self {
             outputs: vec![Arc::new(geometry)],
             geometry_type,
+            bounds,
         }
     }
 }
@@ -180,10 +190,16 @@ impl FromIterator<Arc<GeometryOutput>> for GeometryOutputs {
         let geometry_type = outputs
             .iter()
             .fold(GeometryType::Empty, |acc, item| acc.merge(item.ty()));
+        let bounds = outputs
+            .iter()
+            .fold(Bounds3D::default(), |bounds, geometry| {
+                bounds.extend(geometry.bounds.clone())
+            });
 
         Self {
             outputs,
             geometry_type,
+            bounds,
         }
     }
 }

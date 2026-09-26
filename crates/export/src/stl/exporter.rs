@@ -3,27 +3,37 @@
 
 //! STL exporter.
 
-use microcad_lang_types::{ModelNodeRef, ModelType, Value};
+use microcad_lang_types::{ModelTree, ModelType, Value};
+use microcad_render::RenderContext;
 
-use crate::{ExportError, Exporter, ExporterParameters};
+use crate::{
+    ExportError, Exporter, ExporterParameters,
+    stl::ascii::{AsciiStlWriter, WriteAsciiStl},
+};
 
 /// STL Exporter.
-pub struct StlExporter;
+#[derive(Debug, Default)]
+pub struct StlExporter {
+    binary: bool,
+}
 
 impl Exporter for StlExporter {
-    fn export<'tree>(
+    fn export(
         &self,
-        _model: &ModelNodeRef<'tree>,
-        _parameters: &ExporterParameters,
+        model: &ModelTree,
+        parameters: &ExporterParameters,
     ) -> Result<Value, ExportError> {
-        todo!()
-        /*
-        use crate stl::{StlWriter, WriteStl};
-        let mut f = std::fs::File::create(parameters.path)?;
-        let mut writer = StlWriter::new(&mut f)?;
+        let geometry = RenderContext::new(model).render()?;
+        let f = std::fs::File::create(&parameters.path)?;
 
-        model.write_stl(&mut writer)?;
-        Ok(Value::None)*/
+        if self.binary {
+            todo!("Impl binary STL")
+        } else {
+            let mut writer = AsciiStlWriter::new(f);
+            geometry.write_ascii_stl(&mut writer)?;
+        }
+
+        Ok(Value::None)
     }
 
     fn model_type(&self) -> ModelType {
