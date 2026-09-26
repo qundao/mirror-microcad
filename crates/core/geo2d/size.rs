@@ -3,7 +3,7 @@
 
 use crate::Scalar;
 
-/// 2D size in millimeters.  
+/// 2D size in millimeters.
 #[derive(Clone, Default, Debug)]
 pub struct Size2 {
     /// Width in mm.
@@ -19,12 +19,14 @@ impl Size2 {
         height: 297.0,
     };
 
+    /// Create a new 2D size.
+    pub fn new(width: Scalar, height: Scalar) -> Self {
+        Self { width, height }
+    }
+
     /// Calculate transposed version of this size.
     pub fn transposed(self) -> Self {
-        Self {
-            width: self.height,
-            height: self.width,
-        }
+        Self::new(self.height, self.width)
     }
 }
 

@@ -26,6 +26,12 @@ impl Bounds2D {
         (self.max.y - self.min.y).max(0.0)
     }
 
+    /// Return the size of this bounds.
+    pub fn size(&self) -> Option<Size2> {
+        self.is_valid()
+            .then_some(Size2::new(self.width(), self.height()))
+    }
+
     /// Maximum of width and height.
     pub fn max_extent(&self) -> Scalar {
         self.width().max(self.height())
@@ -126,6 +132,12 @@ impl From<Option<Rect>> for Bounds2D {
             Some(rect) => rect.into(),
             None => Bounds2D::default(),
         }
+    }
+}
+
+impl From<Bounds3D> for Bounds2D {
+    fn from(bounds3d: Bounds3D) -> Self {
+        Bounds2D::new(bounds3d.min.truncate(), bounds3d.max.truncate())
     }
 }
 

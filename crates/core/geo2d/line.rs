@@ -13,6 +13,11 @@ use crate::*;
 pub struct Line(pub geo2d::Point, pub geo2d::Point);
 
 impl Line {
+    /// Write a new line
+    pub fn new<T: Into<geo2d::Point>>(p0: T, p1: T) -> Self {
+        Self(p0.into(), p1.into())
+    }
+
     /// Shorten edge on both ends by a certain amount.
     pub fn shorter(&self, amount: Scalar) -> Self {
         let d = self.vec();
