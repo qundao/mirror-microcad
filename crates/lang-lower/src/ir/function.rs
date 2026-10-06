@@ -63,11 +63,17 @@ pub struct Scope {
 #[non_exhaustive]
 #[derive(Debug, Clone, Hash, From, IntoStaticStr, PartialEq, Serialize, Deserialize)]
 pub enum FunctionExpression {
+    /// Invalid expression (an error occurred)
     Invalid,
+    /// A constant value
     Value(ir::ConstantValue),
+    /// A path to a constant
     Path(ir::Path),
+    /// A `{}`
     Scope(Scope),
+    /// An `if` expression
     If(FunctionIf),
+    /// A call to a function
     Call(FunctionCall),
 }
 
