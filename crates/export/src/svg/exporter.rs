@@ -14,6 +14,8 @@ use crate::{ExportError, Exporter, ExporterParameters, Writer};
 pub struct SvgExporter {
     /// The render resolution.
     pub resolution: microcad_render::RenderResolution,
+    /// The theme
+    pub theme: Theme,
 }
 
 /// A theme for SVG export.
@@ -159,7 +161,7 @@ impl Exporter for SvgExporter {
         let settings = SvgExporterSettings::default();
 
         let path = parameters.path.as_path();
-        let geometry = RenderContext::new(model).render()?;
+        let mut geometry = RenderContext::new(model).render()?;
 
         let bounds = Bounds2D::from(geometry.bounds());
 
@@ -168,9 +170,11 @@ impl Exporter for SvgExporter {
             let f = std::fs::File::create(path)?;
             let canvas = Canvas::new_centered(content_rect, bounds.size(), None);
             let mut writer = SvgWriter::new(f, canvas);
-            writer.style(&SvgExporter::theme_to_svg_style(&Theme::default()))?;
+            writer.style(&SvgExporter::theme_to_svg_style(&self.theme))?;
 
-            geometry.write_svg(&mut writer)?;
+            writer.with_attr(SvgTagAttribute::class("entity"), |writer| {
+                geometry.write_svg_mapped(writer)
+            })?;
             let _ = writer.finish()?;
 
             Ok(Value::None)

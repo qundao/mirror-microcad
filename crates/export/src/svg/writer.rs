@@ -3,8 +3,6 @@
 
 //! Scalable Vector Graphics (SVG) file writer
 
-use microcad_core::*;
-
 use crate::{
     Writer,
     svg::{SvgTagAttributes, canvas::Canvas},
@@ -46,12 +44,6 @@ impl<W: Write> SvgWriter<W> {
             header_written: false,
         }
     }
-
-    /// Add attributes to the write
-    pub fn with_attributes(mut self, attr: SvgTagAttributes) -> Self {
-        self.attr_stack = vec![attr];
-        self
-    }
 }
 
 impl<W: Write> SvgWriter<W> {
@@ -78,6 +70,7 @@ impl<W: Write> SvgWriter<W> {
         &self.canvas
     }
 
+    /// Get current attributes.
     pub fn attr(&self) -> &SvgTagAttributes {
         self.attr_stack.last().unwrap()
     }
@@ -166,21 +159,16 @@ impl<W: Write> Writer for SvgWriter<W> {
         let (w, h) = (size.width, size.height);
 
         writeln!(self.writer, "<?xml version='1.0' encoding='UTF-8'?>")?;
+
         writeln!(
             self.writer,
             r#"<svg version='1.1' xmlns='http://www.w3.org/2000/svg' viewBox='{x} {y} {w} {h}' width='{w}mm' height='{h}mm'>"#
         )?;
-        writeln!(
-            self.writer,
-            r#"  <defs>
-        <marker id="arrow" viewBox="0 0 16 16" refX="8" refY="8" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
-          <path d="M 0 0 L 16 8 L 0 16 z" stroke="none" fill="context-fill" />
-        </marker>
-      </defs>"#
-        )?;
+        self.header_written = true;
+
+        self.defs(r#"<marker id="arrow" viewBox="0 0 16 16" refX="8" refY="8" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M 0 0 L 16 8 L 0 16 z" stroke="none" fill="context-fill" /></marker>"#)?;
 
         self.level = 1;
-        self.header_written = true;
         Ok(())
     }
 

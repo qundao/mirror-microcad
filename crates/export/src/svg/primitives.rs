@@ -135,9 +135,10 @@ impl WriteSvg for Geometry {
 
 impl WriteSvg for GeometryOutput {
     fn write_svg<W: Write>(&self, writer: &mut SvgWriter<W>) -> std::io::Result<()> {
-        writer.with_attr(SvgTagAttributes::from(self.attr.clone()), |writer| {
-            self.geometry.write_svg(writer)
-        })
+        writer.with_attr(
+            SvgTagAttributes::from(self.attr.clone()).insert(SvgTagAttribute::class("entity")),
+            |writer| self.geometry.write_svg(writer),
+        )
     }
 }
 

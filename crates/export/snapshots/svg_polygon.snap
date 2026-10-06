@@ -1,5 +1,5 @@
 ---
-source: crates/export/tests/common/mod.rs
+source: crates/export/tests/svg.rs
 expression: buffer
 extension: svg
 snapshot_kind: binary
