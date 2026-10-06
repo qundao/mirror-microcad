@@ -6,13 +6,13 @@
 use microcad_builtin::{BuiltinEvalContext, mu};
 use microcad_core::Rect;
 use microcad_export::{
-    Writer,
-    stl::{AsciiStlWriter, WriteAsciiStl},
+    Exporter, Writer,
+    stl::{AsciiStlWriter, StlExporter, WriteAsciiStl},
 };
-use microcad_lang_types::{Value, arguments};
+use microcad_lang_types::{ModelTree, Value, arguments, model::Element};
 use microcad_render::RenderContext;
 
-use crate::common::{circle, rect};
+use crate::common::{circle, rect, target_dir};
 mod common;
 
 /// Renders STL content using a canvas closure, performs snapshot testing via `insta`,
@@ -53,4 +53,45 @@ fn test_cube() -> std::io::Result<()> {
         geometry.write_ascii_stl(writer)?;
         Ok(())
     })
+}
+
+/// Export:
+///
+/// (Rect(0mm, 0mm, 100mm, 100mm) - Rect(0mm, 0mm, 100mm, 100mm).translate(50mm, 50mm)).extrude(10mm)
+#[test]
+fn stl_export() -> std::io::Result<()> {
+    let bounds = Rect::new((0., 0.), (100., 100.));
+
+    let mut ctx = BuiltinEvalContext::default();
+    let mut group = ModelTree::new(Element::Group);
+
+    let rect = rect(bounds);
+    group.append(rect.clone());
+    let translate = mu::ops::translate(
+        arguments!(
+            self = rect,
+            x = Value::mm(50.0),
+            y = Value::mm(50.0),
+            z = Value::mm(0.0)
+        ),
+        &mut ctx,
+    )
+    .expect("No error");
+    group.append(translate);
+
+    let diff = mu::ops::difference(arguments!(self = group), &mut ctx).expect("No error");
+    let extrude = mu::ops::extrude(arguments!(self = diff, height = Value::mm(10.0)), &mut ctx)
+        .expect("No error");
+
+    // Test write ASCII STL
+    StlExporter::default()
+        .export_to_path(&extrude, &target_dir().join("rect_diff_ascii.stl"))
+        .expect("No error");
+
+    // Test write Binary STL
+    StlExporter { binary: true }
+        .export_to_path(&extrude, &target_dir().join("rect_diff_binary.stl"))
+        .expect("No error");
+
+    Ok(())
 }

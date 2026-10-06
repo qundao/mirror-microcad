@@ -4,9 +4,11 @@
 //! STL Export
 
 mod ascii;
+mod binary;
 mod exporter;
 mod triangles;
 
 pub use exporter::*;
 
 pub use ascii::{AsciiStlWriter, WriteAsciiStl};
+pub use binary::{BinaryStlWriter, WriteBinaryStl};

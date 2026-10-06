@@ -7,14 +7,18 @@ use microcad_lang_types::{ModelTree, ModelType, Value};
 use microcad_render::RenderContext;
 
 use crate::{
-    ExportError, Exporter, ExporterParameters,
-    stl::ascii::{AsciiStlWriter, WriteAsciiStl},
+    ExportError, Exporter, ExporterParameters, Writer,
+    stl::{
+        BinaryStlWriter, WriteBinaryStl,
+        ascii::{AsciiStlWriter, WriteAsciiStl},
+    },
 };
 
 /// STL Exporter.
 #[derive(Debug, Default)]
 pub struct StlExporter {
-    binary: bool,
+    /// If true, the STL will be written binary format.
+    pub binary: bool,
 }
 
 impl Exporter for StlExporter {
@@ -27,10 +31,13 @@ impl Exporter for StlExporter {
         let f = std::fs::File::create(&parameters.path)?;
 
         if self.binary {
-            todo!("Impl binary STL")
+            let mut writer = BinaryStlWriter::new(f);
+            geometry.write_binary_stl(&mut writer)?;
+            let _ = writer.finalize()?;
         } else {
             let mut writer = AsciiStlWriter::new(f);
             geometry.write_ascii_stl(&mut writer)?;
+            let _ = writer.finalize()?;
         }
 
         Ok(Value::None)

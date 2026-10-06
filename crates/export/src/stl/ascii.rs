@@ -84,7 +84,7 @@ impl<W: Write> Writer for AsciiStlWriter<W> {
     }
 }
 
-/// Trait to write something into an SVG.
+/// Trait to write something into an ascii STL.
 pub trait WriteAsciiStl {
     /// Write SVG tags.
     fn write_ascii_stl<W: Write>(&self, writer: &mut AsciiStlWriter<W>) -> std::io::Result<()>;
