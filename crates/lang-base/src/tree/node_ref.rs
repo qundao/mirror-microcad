@@ -80,7 +80,7 @@ impl<'a, T> NodeRef<'a, T> {
         // 3. Multiline lines use the continuation prefix
         for line in lines {
             if line.is_empty() && count > 0 {
-                writeln!(f, "|")?;
+                writeln!(f, "│")?;
                 break;
             }
 
@@ -94,7 +94,7 @@ impl<'a, T> NodeRef<'a, T> {
             }
 
             if indent_count > 0 && count > 0 {
-                let pipes = "|   ".repeat(indent_count);
+                let pipes = "│   ".repeat(indent_count);
                 writeln!(f, "{continuation_prefix}{pipes}{remainder}")?;
             } else {
                 writeln!(f, "{continuation_prefix}{line}")?;
