@@ -9,4 +9,4 @@ mod triangles;
 
 pub use exporter::*;
 
-pub use ascii::AsciiStlWriter;
+pub use ascii::{AsciiStlWriter, WriteAsciiStl};

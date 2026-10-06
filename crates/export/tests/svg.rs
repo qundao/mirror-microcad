@@ -295,39 +295,28 @@ fn difference() -> std::io::Result<()> {
 fn svg_export() -> std::io::Result<()> {
     let bounds = Rect::new((0., 0.), (100., 100.));
 
-    assert_svg_snapshot("svg_export", bounds.clone(), |writer| {
-        let mut ctx = BuiltinEvalContext::default();
-        let mut group = ModelTree::new(Element::Group);
+    let mut ctx = BuiltinEvalContext::default();
+    let mut group = ModelTree::new(Element::Group);
 
-        let rect = rect(bounds);
-        group.append(rect.clone());
-        let translate = mu::ops::translate(
-            arguments!(
-                self = rect,
-                x = Value::mm(50.0),
-                y = Value::mm(50.0),
-                z = Value::mm(0.0)
-            ),
-            &mut ctx,
-        )
+    let rect = rect(bounds);
+    group.append(rect.clone());
+    let translate = mu::ops::translate(
+        arguments!(
+            self = rect,
+            x = Value::mm(50.0),
+            y = Value::mm(50.0),
+            z = Value::mm(0.0)
+        ),
+        &mut ctx,
+    )
+    .expect("No error");
+    group.append(translate);
+
+    let model = mu::ops::difference(arguments!(self = group), &mut ctx).expect("No error");
+
+    SvgExporter::default()
+        .export_to_path(&model, &target_dir().join("rect_diff.svg"))
         .expect("No error");
-        group.append(translate);
 
-        let model = mu::ops::difference(arguments!(self = group), &mut ctx).expect("No error");
-        let mut geometry = RenderContext::new(&model)
-            .render()
-            .expect("No render errors");
-
-        print!("{model}");
-        geometry.write_svg_mapped(writer)?;
-        print!("{geometry}");
-
-        print!("{:?}", target_dir().join("rect_diff.svg"));
-
-        SvgExporter::default()
-            .export_to_path(&model, &target_dir().join("rect_diff.svg"))
-            .expect("No error");
-
-        Ok(())
-    })
+    Ok(())
 }

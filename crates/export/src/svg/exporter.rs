@@ -168,13 +168,11 @@ impl Exporter for SvgExporter {
         if let Some(content_rect) = bounds.enlarge(2.0 * settings.padding_factor).rect() {
             log::debug!("Exporting into SVG file {path:?}");
             let f = std::fs::File::create(path)?;
-            let canvas = Canvas::new_centered(content_rect, bounds.size(), None);
+            let canvas = Canvas::new_centered(content_rect, bounds.size(), Some(1.0));
             let mut writer = SvgWriter::new(f, canvas);
             writer.style(&SvgExporter::theme_to_svg_style(&self.theme))?;
 
-            writer.with_attr(SvgTagAttribute::class("entity"), |writer| {
-                geometry.write_svg_mapped(writer)
-            })?;
+            geometry.write_svg_mapped(&mut writer)?;
             let _ = writer.finish()?;
 
             Ok(Value::None)

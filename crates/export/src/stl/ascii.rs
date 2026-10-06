@@ -5,7 +5,7 @@
 
 use std::io::Write;
 
-use cgmath::Vector3;
+use cgmath::{InnerSpace, Vector3};
 use microcad_core::Triangle;
 
 use crate::{Writer, stl::triangles::AsTriangleIterator};
@@ -32,7 +32,7 @@ impl<W: Write> AsciiStlWriter<W> {
             self.begin()?;
         }
 
-        let n = tri.normal();
+        let n = tri.normal().normalize();
         writeln!(&mut self.writer, "facet normal {} {} {}", n.x, n.y, n.z)?;
         writeln!(&mut self.writer, "\touter loop")?;
         writeln!(
@@ -60,7 +60,9 @@ impl<W: Write> Writer for AsciiStlWriter<W> {
     type Output = W;
 
     fn begin(&mut self) -> std::io::Result<()> {
-        writeln!(&mut self.writer, "solid")?;
+        if !self.header_written {
+            writeln!(&mut self.writer, "solid")?;
+        }
         self.header_written = true;
         Ok(())
     }

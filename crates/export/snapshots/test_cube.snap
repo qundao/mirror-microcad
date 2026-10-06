@@ -1,0 +1,6 @@
+---
+source: crates/export/tests/stl.rs
+expression: buffer
+extension: stl
+snapshot_kind: binary
+---

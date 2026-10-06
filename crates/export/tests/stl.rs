@@ -3,7 +3,16 @@
 
 //! STL test
 
-use microcad_export::{Writer, stl::AsciiStlWriter};
+use microcad_builtin::{BuiltinEvalContext, mu};
+use microcad_core::Rect;
+use microcad_export::{
+    Writer,
+    stl::{AsciiStlWriter, WriteAsciiStl},
+};
+use microcad_lang_types::{Value, arguments};
+use microcad_render::RenderContext;
+
+use crate::common::{circle, rect};
 mod common;
 
 /// Renders STL content using a canvas closure, performs snapshot testing via `insta`,
@@ -28,6 +37,20 @@ where
     ))
 }
 
-/// Circle(42mm).extrude(10mm);
+/// Rect(0mm,0mm,10mm,10mm).extrude(10mm);
 #[test]
-fn test_cylinder() {}
+fn test_cube() -> std::io::Result<()> {
+    let mut ctx = BuiltinEvalContext::default();
+
+    assert_stl_snapshot("test_cube", |writer| {
+        let rect = rect(Rect::new((0., 0.), (10., 10.0)));
+        let extrude = mu::ops::extrude(arguments!(self = rect, height = Value::mm(10.0)), &mut ctx)
+            .expect("No error");
+        let geometry = RenderContext::new(&extrude)
+            .render()
+            .expect("No render errors");
+
+        geometry.write_ascii_stl(writer)?;
+        Ok(())
+    })
+}
