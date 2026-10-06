@@ -3,9 +3,9 @@ source: crates/lang-lower/tests/display.rs
 expression: ir
 ---
 pub builtin: Source = 
-|   statements:
-|   - a: Any = Value(3)
-|   - b: Any = Value(3)
-|
+│   statements:
+│   - a: Any = Value(3)
+│   - b: Any = Value(3)
+│
 ├── sub: Alias = __mu::core::sub[0xa1730e22ab78d7d8]
 └── multiply: Alias = __mu::core::mul[0x5da4622536ec034]
