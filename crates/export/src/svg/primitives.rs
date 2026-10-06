@@ -118,7 +118,6 @@ impl WriteSvg for Geometry2D {
             Geometry2D::MultiLineString(multi_line_string) => multi_line_string.write_svg(writer),
             Geometry2D::Polygon(polygon) => polygon.write_svg(writer),
             Geometry2D::MultiPolygon(multi_polygon) => multi_polygon.write_svg(writer),
-            Geometry2D::Rect(rect) => rect.write_svg(writer),
             Geometry2D::Line(edge) => edge.write_svg(writer),
             Geometry2D::Collection(collection) => collection.write_svg(writer),
         }

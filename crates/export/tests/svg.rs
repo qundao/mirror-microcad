@@ -229,7 +229,7 @@ fn svg_sample_sketch() -> std::io::Result<()> {
             })?;
 
             // Draw intersection.
-            let intersection = Geometry2D::Rect(rect).boolean_op(
+            let intersection = Geometry2D::Polygon(rect.to_polygon()).boolean_op(
                 Geometry2D::Polygon(
                     Circle::circle_polygon(circle.radius, 32)
                         .translate(circle.offset.x, circle.offset.y),
@@ -321,6 +321,8 @@ fn svg_export() -> std::io::Result<()> {
         print!("{model}");
         geometry.write_svg_mapped(writer)?;
         print!("{geometry}");
+
+        print!("{:?}", target_dir().join("rect_diff.svg"));
 
         SvgExporter::default()
             .export_to_path(&model, &target_dir().join("rect_diff.svg"))

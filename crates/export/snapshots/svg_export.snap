@@ -1,0 +1,6 @@
+---
+source: crates/export/tests/svg.rs
+expression: buffer
+extension: svg
+snapshot_kind: binary
+---

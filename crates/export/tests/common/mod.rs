@@ -3,6 +3,8 @@
 
 //! Common exporter test functions
 
+use std::path::PathBuf;
+
 use microcad_builtin::{BuiltinEvalContext, BuiltinPrimitiveCall, mu};
 use microcad_core::Rect;
 use microcad_lang_types::{Model, Value, arguments};
@@ -28,9 +30,22 @@ pub fn rect(rect: Rect) -> Model {
     .expect("No error")
 }
 
-/// Resolve target directory dynamically (works in workspaces & single crates)
-pub fn target_dir() -> std::path::PathBuf {
-    std::env::var_os("CARGO_TARGET_DIR")
-        .map(std::path::PathBuf::from)
-        .unwrap_or_else(|| std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("target"))
+/// Resolves the root workspace directory using Cargo's metadata.
+pub fn workspace_dir() -> PathBuf {
+    cargo_metadata::MetadataCommand::new()
+        .exec()
+        .map(|metadata| metadata.workspace_root.into_std_path_buf())
+        .unwrap_or_else(|_| PathBuf::from(env!("CARGO_MANIFEST_DIR")))
+}
+
+/// Resolves the target directory using Cargo's metadata.
+pub fn target_dir() -> PathBuf {
+    cargo_metadata::MetadataCommand::new()
+        .exec()
+        .map(|metadata| metadata.target_directory.into_std_path_buf())
+        .unwrap_or_else(|_| {
+            std::env::var_os("CARGO_TARGET_DIR")
+                .map(PathBuf::from)
+                .unwrap_or_else(|| workspace_dir().join("target"))
+        })
 }

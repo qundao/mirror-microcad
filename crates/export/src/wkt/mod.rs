@@ -46,9 +46,6 @@ impl WriteWkt for Geometry2D {
             Geometry2D::MultiPolygon(multi_polygon) => {
                 writeln!(writer, "{}", multi_polygon.wkt_string())
             }
-            Geometry2D::Rect(rect) => {
-                writeln!(writer, "{}", rect.wkt_string())
-            }
             Geometry2D::Line(line) => {
                 writeln!(
                     writer,
