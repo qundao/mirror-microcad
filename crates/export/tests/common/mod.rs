@@ -3,34 +3,34 @@
 
 //! Common exporter test functions
 
-use std::io::Write;
-
+use microcad_builtin::{BuiltinEvalContext, BuiltinPrimitiveCall, mu};
 use microcad_core::Rect;
-use microcad_export::{stl::AsciiStlWriter, svg::SvgWriter};
+use microcad_lang_types::{Model, Value, arguments};
 
+pub fn circle(r: f64) -> Model {
+    let mut ctx = BuiltinEvalContext::default();
+    mu::geo2d::Circle::call(arguments!(radius = Value::mm(r)), &mut ctx).expect("No error")
+}
 
+pub fn rect(rect: Rect) -> Model {
+    let mut ctx = BuiltinEvalContext::default();
+    let (width, height) = (rect.width(), rect.height());
+    let (x, y) = rect.min().x_y();
+    mu::geo2d::Rect::call(
+        arguments!(
+            x = Value::mm(x),
+            y = Value::mm(y),
+            width = Value::mm(width),
+            height = Value::mm(height)
+        ),
+        &mut ctx,
+    )
+    .expect("No error")
+}
 
-/// Renders STL content using a canvas closure, performs snapshot testing via `insta`,
-/// and writes the output STL to disk under `target/svg_outputs/<snapshot_name>.stl`.
-pub fn assert_stl_snapshot<F>(
-    snapshot_name: &str,
-    mut writer: AsciiStlWriter<Vec<u8>>,
-    draw: F,
-) -> std::io::Result<()>
-where
-    F: FnOnce(&mut AsciiStlWriter<Vec<u8>>) -> std::io::Result<()>,
-{
-    draw(&mut writer)?;
-
-    let buffer = writer.finish()?;
-
-    Ok(insta::with_settings!(
-        {
-            prepend_module_to_snapshot => false,
-            snapshot_path => "../snapshots",
-        },
-        {
-            insta::assert_binary_snapshot!(format!("{snapshot_name}.stl").as_str(), buffer);
-        }
-    ))
+/// Resolve target directory dynamically (works in workspaces & single crates)
+pub fn target_dir() -> std::path::PathBuf {
+    std::env::var_os("CARGO_TARGET_DIR")
+        .map(std::path::PathBuf::from)
+        .unwrap_or_else(|| std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("target"))
 }

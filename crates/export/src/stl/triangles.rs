@@ -5,9 +5,7 @@ use cgmath::Vector3;
 use microcad_core::{
     Geometries3D, Geometry, Geometry3D, Manifold, Triangle, TriangleMesh, UnaryBooleanOp,
 };
-use microcad_render::{
-    GeometryNode, GeometryNodeData, GeometryNodeRef, GeometryOutputs, GeometryTree,
-};
+use microcad_render::{GeometryNodeData, GeometryNodeRef, GeometryOutputs, GeometryTree};
 
 pub type TriangleIter = Box<dyn Iterator<Item = Triangle<Vector3<f32>>>>;
 

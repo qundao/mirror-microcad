@@ -6,7 +6,7 @@
 use std::str::FromStr as _;
 
 use geo::{Translate, coord};
-use microcad_builtin::{BuiltinEvalContext, BuiltinPrimitiveCall, mu};
+use microcad_builtin::{BuiltinEvalContext, mu};
 use microcad_core::*;
 use microcad_export::{
     Exporter, Writer,
@@ -15,16 +15,23 @@ use microcad_export::{
         SvgExporter, SvgTagAttribute, SvgWriter, Theme, WriteSvg, WriteSvgMapped,
     },
 };
-use microcad_lang_types::{Model, ModelTree, Value, arguments, model::Element};
+use microcad_lang_types::{ModelTree, Value, arguments, model::Element};
 use microcad_render::RenderContext;
+
+mod common;
+use common::*;
 
 /// Renders SVG content using a draw closure, performs snapshot testing via `insta`,
 /// and writes the output SVG to disk under `target/svg_outputs/<snapshot_name>.svg`.
-fn assert_svg_snapshot<F>(snapshot_name: &str, canvas: Canvas, draw: F) -> std::io::Result<()>
+fn assert_svg_snapshot<F>(
+    snapshot_name: &str,
+    canvas: impl Into<Canvas>,
+    draw: F,
+) -> std::io::Result<()>
 where
     F: FnOnce(&mut SvgWriter<Vec<u8>>) -> std::io::Result<()>,
 {
-    let mut writer = SvgWriter::new(vec![], canvas);
+    let mut writer = SvgWriter::new(vec![], canvas.into());
     draw(&mut writer)?;
 
     let buffer = writer.finish()?;
@@ -40,32 +47,11 @@ where
     ))
 }
 
-fn circle(r: f64) -> Model {
-    let mut ctx = BuiltinEvalContext::default();
-    mu::geo2d::Circle::call(arguments!(radius = Value::mm(r)), &mut ctx).expect("No error")
-}
-
-fn rect(rect: Rect) -> Model {
-    let mut ctx = BuiltinEvalContext::default();
-    let (width, height) = (rect.width(), rect.height());
-    let (x, y) = rect.min().x_y();
-    mu::geo2d::Rect::call(
-        arguments!(
-            x = Value::mm(x),
-            y = Value::mm(y),
-            width = Value::mm(width),
-            height = Value::mm(height)
-        ),
-        &mut ctx,
-    )
-    .expect("No error")
-}
-
 #[test]
 fn svg_writer() -> std::io::Result<()> {
     assert_svg_snapshot(
         "svg_writer",
-        Canvas::new(Rect::new((0.0, 0.0), (100.0, 100.0))),
+        Rect::new((0.0, 0.0), (100.0, 100.0)),
         |writer| {
             writer.with_attr([("style", "fill:blue")], |writer| {
                 geo::Rect::new((10.0, 10.0), (20.0, 20.0)).write_svg(writer)
@@ -97,7 +83,7 @@ fn svg_writer() -> std::io::Result<()> {
 fn svg_polygon() -> std::io::Result<()> {
     assert_svg_snapshot(
         "svg_polygon",
-        Canvas::new(Rect::new((0.0, 0.0), (100.0, 100.0))),
+        Rect::new((0.0, 0.0), (100.0, 100.0)),
         |writer| {
             let circle = Circle {
                 radius: 10.0,
@@ -268,22 +254,56 @@ fn svg_sample_sketch() -> std::io::Result<()> {
 // Circle(42mm) - Circle(23mm);
 #[test]
 fn difference() -> std::io::Result<()> {
-    let bounds = Rect::new(coord! { x: 0., y: 0. }, coord! { x: 100., y: 100. });
+    assert_svg_snapshot(
+        "svg_difference",
+        Rect::new((0., 0.), (100., 100.)),
+        |writer| {
+            let mut ctx = BuiltinEvalContext::default();
 
-    assert_svg_snapshot("svg_difference", Canvas::new(bounds), |writer| {
+            // {
+            //     Circle(42mm);
+            //     Circle(23mm);
+            // }
+            let mut group = ModelTree::new(Element::Group);
+            group.append(circle(42.0));
+            group.append(circle(23.0));
+            let diff = mu::ops::difference(arguments!(self = group), &mut ctx).expect("No error");
+            let translate = mu::ops::translate(
+                arguments!(
+                    self = diff,
+                    x = Value::mm(50.0),
+                    y = Value::mm(50.0),
+                    z = Value::mm(0.0)
+                ),
+                &mut ctx,
+            )
+            .expect("No error");
+
+            let mut geometry = RenderContext::new(&translate)
+                .render()
+                .expect("No render errors");
+
+            geometry.write_svg_mapped(writer)
+        },
+    )
+}
+
+/// Export:
+///
+/// Rect(0mm, 0mm, 100mm, 100mm) - Rect(0mm, 0mm, 100mm, 100mm).translate(50mm, 50mm)
+#[test]
+fn svg_export() -> std::io::Result<()> {
+    let bounds = Rect::new((0., 0.), (100., 100.));
+
+    assert_svg_snapshot("svg_export", bounds.clone(), |writer| {
         let mut ctx = BuiltinEvalContext::default();
-
-        // {
-        //     Circle(42mm);
-        //     Circle(23mm);
-        // }
         let mut group = ModelTree::new(Element::Group);
-        group.append(circle(42.0));
-        group.append(circle(23.0));
-        let diff = mu::ops::difference(arguments!(self = group), &mut ctx).expect("No error");
+
+        let rect = rect(bounds);
+        group.append(rect.clone());
         let translate = mu::ops::translate(
             arguments!(
-                self = diff,
+                self = rect,
                 x = Value::mm(50.0),
                 y = Value::mm(50.0),
                 z = Value::mm(0.0)
@@ -291,18 +311,21 @@ fn difference() -> std::io::Result<()> {
             &mut ctx,
         )
         .expect("No error");
+        group.append(translate);
 
-        let mut geometry = RenderContext::new(&translate)
+        let model = mu::ops::difference(arguments!(self = group), &mut ctx).expect("No error");
+        let mut geometry = RenderContext::new(&model)
             .render()
             .expect("No render errors");
 
-        geometry.write_svg_mapped(writer)
+        print!("{model}");
+        geometry.write_svg_mapped(writer)?;
+        print!("{geometry}");
+
+        SvgExporter::default()
+            .export_to_path(&model, &target_dir().join("rect_diff.svg"))
+            .expect("No error");
+
+        Ok(())
     })
-}
-
-#[test]
-fn svg_export() {
-
-    //todo!()
-    //    let exporter = SvgExporter.export(model, parameters).unwrap();
 }

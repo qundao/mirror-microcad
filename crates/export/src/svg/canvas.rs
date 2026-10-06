@@ -102,6 +102,12 @@ impl Canvas {
     }
 }
 
+impl From<geo2d::Rect> for Canvas {
+    fn from(rect: geo2d::Rect) -> Self {
+        Canvas::new(rect)
+    }
+}
+
 /// Map something into a canvas coordinates.
 pub trait MapToCanvas: Sized {
     /// Return mapped version.

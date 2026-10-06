@@ -59,15 +59,34 @@ pub enum ExportError {
 
 /// Export parameters
 #[non_exhaustive]
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ExporterParameters {
     /// Path into which the file is exported.
     pub path: std::path::PathBuf,
-    /// The render resolution.
-    pub resolution: microcad_render::RenderResolution,
 }
 
-/// The exporter trait.
+impl ExporterParameters {
+    /// New exporter parameters.
+    pub fn new(path: impl Into<std::path::PathBuf>) -> Self {
+        Self { path: path.into() }
+    }
+}
+
+impl From<std::path::PathBuf> for ExporterParameters {
+    fn from(path: std::path::PathBuf) -> Self {
+        Self { path }
+    }
+}
+
+impl From<&std::path::Path> for ExporterParameters {
+    fn from(path: &std::path::Path) -> Self {
+        Self {
+            path: path.to_path_buf(),
+        }
+    }
+}
+
+/// An `Exporter` exports a `ModelTree`.
 pub trait Exporter {
     /// The export function.
     fn export(
@@ -76,6 +95,17 @@ pub trait Exporter {
         parameters: &ExporterParameters,
     ) -> Result<Value, ExportError>;
 
-    /// The model type this export is supposed to access.
-    fn model_type(&self) -> ModelType;
+    /// Export the model tree to a path.
+    fn export_to_path(
+        &self,
+        model: &ModelTree,
+        path: &std::path::Path,
+    ) -> Result<Value, ExportError> {
+        self.export(model, &ExporterParameters::from(path))
+    }
+
+    /// The model type this export is supposed to use.
+    fn model_type(&self) -> ModelType {
+        ModelType::default()
+    }
 }

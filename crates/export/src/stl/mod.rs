@@ -8,3 +8,5 @@ mod exporter;
 mod triangles;
 
 pub use exporter::*;
+
+pub use ascii::AsciiStlWriter;
