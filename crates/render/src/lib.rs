@@ -11,6 +11,7 @@ mod output;
 mod render;
 mod tree;
 
+use cgmath::SquareMatrix;
 use microcad_hash::HashMap;
 
 pub use attribute::*;
@@ -19,13 +20,9 @@ pub use context::*;
 pub use tree::*;
 
 use microcad_core::{
-    self as core, Extrude, Geometries2D, Geometry, Geometry2D, Scalar, Transformed2D,
-    UnaryBooleanOp,
+    self as core, Extrude, Geometry, Geometry2D, Scalar, UnaryBooleanOp, traits::TransformAffine,
 };
-use microcad_lang_types::{
-    ModelTree,
-    model::{ModelType, NodeExt},
-};
+use microcad_lang_types::model::{ModelType, NodeExt};
 pub use output::*;
 pub use render::{RenderPrimitive, RenderResolution};
 
@@ -98,7 +95,7 @@ impl RenderPrimitive for mu::geo2d::Rect {
             self.width.as_mm(),
             self.height.as_mm(),
         );
-        Geometry2D::Rect(core::geo2d::Rect::new((x, y), (x + w, y + h))).into()
+        Geometry2D::Polygon(core::geo2d::Rect::new((x, y), (x + w, y + h)).to_polygon()).into()
     }
 }
 
@@ -191,12 +188,17 @@ impl Render for GeometryNodeData {
     ) -> RenderResult<GeometryOutputs> {
         let model = context.model(tree);
 
-        match model
+        let mut outputs = match model
             .builtin_id()
             .and_then(|builtin_id| context.hooks.get(builtin_id))
         {
-            Some(hook) => Ok(GeometryOutputs::from(hook(tree, context)?)),
-            None => Ok(context.collect_outputs(tree)),
+            Some(hook) => GeometryOutputs::from(hook(tree, context)?),
+            None => context.collect_outputs(tree).primary(),
+        };
+
+        if !self.local_matrix.is_identity() {
+            outputs.transform_affine(&self.local_matrix);
         }
+        Ok(outputs)
     }
 }

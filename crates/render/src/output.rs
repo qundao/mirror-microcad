@@ -8,7 +8,8 @@ use std::sync::Arc;
 use cgmath::SquareMatrix;
 
 use microcad_core::{
-    self as core, Bounds3D, CalcBounds3D, Geometry3D, GeometryType, Mat4, Transformed3D,
+    self as core, Bounds2D, Bounds3D, CalcBounds3D, Geometry3D, GeometryType, Mat4, Transformed3D,
+    traits::TransformAffine,
 };
 
 use microcad_hash::{HashId, ToHash, hash_id};
@@ -60,6 +61,20 @@ impl GeometryOutput {
     pub fn ty(&self) -> GeometryType {
         self.geometry.ty()
     }
+
+    /// The radius of a centered circle that wraps the output geometries bounds on the ground.
+    pub fn ground_radius(&self) -> core::Length {
+        let mut bounds = Bounds2D::new(self.bounds.min.truncate(), self.bounds.max.truncate());
+        bounds.extend_by_point(core::Vec2::new(0.0, 0.0));
+        core::Length::mm(bounds.radius())
+    }
+
+    /// The radius of a centered sphere, that wrap the geometries bounds.
+    pub fn scene_radius(&self) -> core::Length {
+        let mut bounds = self.bounds.clone();
+        bounds.extend_by_point(core::Vec3::new(0.0, 0.0, 0.0));
+        core::Length::mm(bounds.radius())
+    }
 }
 
 impl From<core::Geometry> for GeometryOutput {
@@ -71,6 +86,13 @@ impl From<core::Geometry> for GeometryOutput {
             geometry,
             bounds,
         }
+    }
+}
+
+impl TransformAffine for GeometryOutput {
+    fn transform_affine(&mut self, m: &Mat4) {
+        self.geometry.transform_affine(m);
+        self.bounds = self.geometry.calc_bounds_3d();
     }
 }
 
@@ -218,27 +240,19 @@ where
     }
 }
 
-impl GeometryOutput {
-    /// The radius of a centered circle that wraps the output geometries bounds on the ground.
-    pub fn ground_radius(&self) -> core::Length {
-        todo!()
-        /*
-        let mut bounds = match &self {
-            GeometryOutput::Geometry2D(geo2d) => geo2d.bounds.clone(),
-            GeometryOutput::Geometry3D(geo3d) => {
-            }
-        };
-        let bounds = Bounds2D::new(geo3d.bounds.min.truncate(), geo3d.bounds.max.truncate());
-        bounds.extend_by_point(core::Vec2::new(0.0, 0.0));
-        core::Length::mm(bounds.radius())
-        */
-    }
+impl TransformAffine for GeometryOutputs {
+    fn transform_affine(&mut self, m: &Mat4) {
+        let mut new_bounds = Bounds3D::default();
+        for output_arc in &mut self.outputs {
+            // Arc::make_mut clones the inner GeometryOutput ONLY if shared.
+            // Otherwise, it provides a direct &mut reference.
+            let output = Arc::make_mut(output_arc);
+            output.transform_affine(m);
 
-    /// The radius of a centered sphere, that wrap the geometries bounds.
-    pub fn scene_radius(&self) -> core::Length {
-        let mut bounds = self.bounds.clone();
-        bounds.extend_by_point(core::Vec3::new(0.0, 0.0, 0.0));
-        core::Length::mm(bounds.radius())
+            // Accumulate updated bounds
+            new_bounds = new_bounds.extend(output.bounds.clone());
+        }
+        self.bounds = new_bounds;
     }
 }
 
