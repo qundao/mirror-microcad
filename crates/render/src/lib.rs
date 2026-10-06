@@ -19,7 +19,8 @@ pub use context::*;
 pub use tree::*;
 
 use microcad_core::{
-    Extrude, Geometries2D, Geometry, Geometry2D, Scalar, Transformed2D, UnaryBooleanOp,
+    self as core, Extrude, Geometries2D, Geometry, Geometry2D, Scalar, Transformed2D,
+    UnaryBooleanOp,
 };
 use microcad_lang_types::{
     ModelTree,
@@ -61,7 +62,9 @@ impl RenderHooks {
     pub fn new() -> Self {
         let mut hooks = RenderHooks::default();
         hooks.insert::<mu::geo2d::Circle>();
+        hooks.insert::<mu::geo2d::Rect>();
         hooks.insert::<mu::ops::Difference>();
+        hooks.insert::<mu::ops::Translate>();
         hooks.insert::<mu::ops::Extrude>();
         hooks
     }
@@ -84,6 +87,18 @@ impl RenderPrimitive for mu::geo2d::Circle {
         let radius: Scalar = self.radius.as_mm();
         let n = resolution.circular_segments(radius);
         Geometry2D::Polygon(microcad_core::Circle::circle_polygon(radius, n)).into()
+    }
+}
+
+impl RenderPrimitive for mu::geo2d::Rect {
+    fn render_primitive(&self, _: &RenderResolution) -> Geometry {
+        let (x, y, w, h) = (
+            self.x.as_mm(),
+            self.y.as_mm(),
+            self.width.as_mm(),
+            self.height.as_mm(),
+        );
+        Geometry2D::Rect(core::geo2d::Rect::new((x, y), (x + w, y + h))).into()
     }
 }
 
