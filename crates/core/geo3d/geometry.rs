@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    traits::{Center, TotalMemory, VertexCount},
+    traits::{Center, TotalMemory, TransformAffine, VertexCount},
     *,
 };
 
@@ -78,6 +78,29 @@ impl CalcBounds3D for Geometry3D {
                 TriangleMesh::from(manifold.get_mesh_gl(0)).calc_bounds_3d()
             }
             Geometry3D::Collection(collection) => collection.calc_bounds_3d(),
+        }
+    }
+}
+
+/// Convert a Mat4 into a matrix for manifold.
+pub fn mat4_to_mat3x4(m: &Mat4) -> manifold_rust::linalg::Mat3x4 {
+    use manifold_rust::linalg::Vec3;
+    manifold_rust::linalg::Mat3x4 {
+        x: Vec3::new(m.x.x, m.x.y, m.x.z),
+        y: Vec3::new(m.y.x, m.y.y, m.y.z),
+        z: Vec3::new(m.z.x, m.z.y, m.z.z),
+        w: Vec3::new(m.w.x, m.w.y, m.w.z),
+    }
+}
+
+impl TransformAffine for Geometry3D {
+    fn transform_affine(&mut self, m: &Mat4) {
+        match self {
+            Geometry3D::Mesh(triangle_mesh) => triangle_mesh.transform_affine(m),
+            Geometry3D::Manifold(manifold) => {
+                *self = Geometry3D::Manifold(manifold.transform(&mat4_to_mat3x4(m)))
+            }
+            Geometry3D::Collection(geo3d) => geo3d.transform_affine(m),
         }
     }
 }

@@ -51,6 +51,8 @@ pub use geo3d::*;
 use strum::IntoStaticStr;
 pub use triangle::*;
 
+use crate::traits::TransformAffine;
+
 /// Convert a Matrix4 to Matrix3.
 pub fn mat4_to_mat3(m: &Mat4) -> Mat3 {
     Mat3::from_cols(m.x.truncate_n(2), m.y.truncate_n(2), m.w.truncate_n(2))
@@ -91,6 +93,15 @@ impl Geometry {
         match self {
             Geometry::Geometry2D(_) => GeometryType::Geometry2D,
             Geometry::Geometry3D(_) => GeometryType::Geometry3D,
+        }
+    }
+}
+
+impl TransformAffine for Geometry {
+    fn transform_affine(&mut self, m: &Mat4) {
+        match self {
+            Geometry::Geometry2D(geo2d) => geo2d.transform_affine(m),
+            Geometry::Geometry3D(geo3d) => geo3d.transform_affine(m),
         }
     }
 }

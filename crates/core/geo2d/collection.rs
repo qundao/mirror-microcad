@@ -42,7 +42,6 @@ impl Geometries2D {
                 Geometry2D::MultiPolygon(multi_polygon) => {
                     multi_polygon.exterior_coords_iter().collect::<Vec<_>>()
                 }
-                Geometry2D::Rect(rect) => rect.coords_iter().collect::<Vec<_>>(),
                 Geometry2D::Line(line) => vec![line.0.into(), line.1.into()],
                 Geometry2D::Collection(collection) => {
                     collection.hull().exterior_coords_iter().collect::<Vec<_>>()

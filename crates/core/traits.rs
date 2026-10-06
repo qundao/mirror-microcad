@@ -3,12 +3,30 @@
 
 //! µcad core geometry traits
 
-use crate::{Integer, Rect};
+use crate::{Integer, Mat4, Rect};
 
 /// Trait to align something to center.
 pub trait Center<T = Self> {
     /// Align geometry.
     fn center(&self) -> T;
+}
+
+/// Trait for geometry types that can be transformed by a 4x4 affine matrix.
+pub trait TransformAffine {
+    /// Transforms `self` in place using an affine transformation matrix.
+    fn transform_affine(&mut self, m: &Mat4);
+
+    /// Consumes `self` and returns the transformed value.
+    ///
+    /// Has a default implementation that mutates `self` in place.
+    #[must_use]
+    fn into_affine_transformed(mut self, m: &Mat4) -> Self
+    where
+        Self: Sized,
+    {
+        self.transform_affine(m);
+        self
+    }
 }
 
 /// Trait to distribute geometries in a 2D grid.

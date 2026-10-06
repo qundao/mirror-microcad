@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 use crate::{
-    traits::{TotalMemory, VertexCount},
+    traits::{TotalMemory, TransformAffine, VertexCount},
     *,
 };
 use cgmath::{ElementWise, Vector3};
@@ -311,6 +311,51 @@ impl TotalMemory for TriangleMesh {
 impl VertexCount for TriangleMesh {
     fn vertex_count(&self) -> usize {
         self.positions.len()
+    }
+}
+
+use cgmath::{InnerSpace, Vector4};
+
+impl TransformAffine for TriangleMesh {
+    fn transform_affine(&mut self, m: &Mat4) {
+        // 1. Transform positions (points have w = 1.0)
+        for pos in &mut self.positions {
+            // Convert Vector3<f32> to f64 for matrix multiplication, then back to f32
+            let p4 = Vector4::new(pos.x as f64, pos.y as f64, pos.z as f64, 1.0);
+            let transformed = m * p4;
+
+            // Handle potential perspective divide if matrix is non-affine,
+            // though standard affine matrices will have w == 1.0.
+            let w = if transformed.w != 0.0 {
+                transformed.w
+            } else {
+                1.0
+            };
+            *pos = Vector3::new(
+                (transformed.x / w) as f32,
+                (transformed.y / w) as f32,
+                (transformed.z / w) as f32,
+            );
+        }
+
+        // 2. Transform normals (directional vectors have w = 0.0)
+        if let Some(normals) = &mut self.normals {
+            for norm in normals {
+                let n4 = Vector4::new(norm.x as f64, norm.y as f64, norm.z as f64, 0.0);
+                let transformed = (m * n4).truncate(); // drop w
+
+                let transformed_f32 = Vector3::new(
+                    transformed.x as f32,
+                    transformed.y as f32,
+                    transformed.z as f32,
+                );
+
+                // Renormalize to maintain unit length after scale/rotation
+                *norm = transformed_f32.normalize();
+            }
+        }
+
+        // Triangle indices remain unchanged as topology is invariant under affine transform.
     }
 }
 

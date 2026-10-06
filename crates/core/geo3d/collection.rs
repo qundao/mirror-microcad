@@ -7,7 +7,7 @@ use derive_more::{Deref, DerefMut};
 
 use crate::{
     geo3d::{CalcBounds3D, bounds::Bounds3D},
-    traits::{DistributeGrid, TotalMemory, VertexCount},
+    traits::{DistributeGrid, TotalMemory, TransformAffine, VertexCount},
     *,
 };
 
@@ -69,6 +69,14 @@ impl CalcBounds3D for Geometries3D {
         self.0.iter().fold(Bounds3D::default(), |bounds, geometry| {
             bounds.extend(geometry.calc_bounds_3d())
         })
+    }
+}
+
+impl TransformAffine for Geometries3D {
+    fn transform_affine(&mut self, m: &Mat4) {
+        for geometry in &mut self.0 {
+            geometry.transform_affine(m);
+        }
     }
 }
 

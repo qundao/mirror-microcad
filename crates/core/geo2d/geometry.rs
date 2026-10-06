@@ -9,6 +9,8 @@ use geo::{ConvexHull, MultiPolygon};
 use strum::IntoStaticStr;
 
 /// A 2D Geometry which is independent from resolution.
+///
+/// A 2D Geometry is closed under arbitrary 2D affine transformations.
 #[derive(IntoStaticStr, From, Clone, Debug)]
 pub enum Geometry2D {
     /// Line string.
@@ -19,8 +21,6 @@ pub enum Geometry2D {
     Polygon(Polygon),
     /// Multiple polygons.
     MultiPolygon(MultiPolygon),
-    /// Rectangle.
-    Rect(Rect),
     /// Line.
     Line(Line),
     /// Collection,
@@ -52,7 +52,6 @@ impl Geometry2D {
             Geometry2D::MultiPolygon(multi_polygon) => {
                 Geometry2D::Polygon(multi_polygon.convex_hull())
             }
-            Geometry2D::Rect(rect) => Geometry2D::Rect(*rect),
             Geometry2D::Line(line) => Geometry2D::Polygon(
                 LineString::new(vec![line.0.into(), line.1.into()]).convex_hull(),
             ),
@@ -105,7 +104,6 @@ impl CalcBounds2D for Geometry2D {
             }
             Geometry2D::Polygon(polygon) => polygon.bounding_rect().into(),
             Geometry2D::MultiPolygon(multi_polygon) => multi_polygon.calc_bounds_2d(),
-            Geometry2D::Rect(rect) => Some(*rect).into(),
             Geometry2D::Line(line) => line.calc_bounds_2d(),
             Geometry2D::Collection(collection) => collection.calc_bounds_2d(),
         }
@@ -114,24 +112,20 @@ impl CalcBounds2D for Geometry2D {
 
 impl Transformed2D for Geometry2D {
     fn transformed_2d(&self, mat: &Mat3) -> Self {
-        if self.is_areal() {
-            let multi_polygon: MultiPolygon = self.clone().into();
-            Self::MultiPolygon(multi_polygon.transformed_2d(mat))
-        } else {
-            match self {
-                Geometry2D::LineString(line_string) => {
-                    Self::LineString(line_string.transformed_2d(mat))
-                }
-                Geometry2D::MultiLineString(multi_line_string) => {
-                    Self::MultiLineString(multi_line_string.transformed_2d(mat))
-                }
-                Geometry2D::Line(line) => Self::Line(line.transformed_2d(mat)),
-                Geometry2D::Collection(geometries) => {
-                    Self::Collection(geometries.transformed_2d(mat))
-                }
-                _ => unreachable!("Geometry type not supported"),
-            }
+        match self {
+            Geometry2D::LineString(line_string) => line_string.transformed_2d(mat).into(),
+            Geometry2D::MultiLineString(mls) => mls.transformed_2d(mat).into(),
+            Geometry2D::Polygon(polygon) => polygon.transformed_2d(mat).into(),
+            Geometry2D::MultiPolygon(multi_polygon) => multi_polygon.transformed_2d(mat).into(),
+            Geometry2D::Line(line) => line.transformed_2d(mat).into(),
+            Geometry2D::Collection(geometries) => geometries.transformed_2d(mat).into(),
         }
+    }
+}
+
+impl TransformAffine for Geometry2D {
+    fn transform_affine(&mut self, m: &Mat4) {
+        *self = self.transformed_2d(&mat4_to_mat3(m)); // TODO Optimize this
     }
 }
 
@@ -160,7 +154,6 @@ impl geo::Buffer for Geometry2D {
             }
             Geometry2D::Polygon(polygon) => polygon.buffer_with_style(style),
             Geometry2D::MultiPolygon(multi_polygon) => multi_polygon.buffer_with_style(style),
-            Geometry2D::Rect(rect) => rect.buffer_with_style(style),
             Geometry2D::Line(line) => {
                 LineString::new(vec![line.0.into(), line.1.into()]).buffer_with_style(style)
             }
@@ -174,7 +167,6 @@ impl From<Geometry2D> for MultiPolygon {
         match geo {
             Geometry2D::Polygon(polygon) => polygon.into(),
             Geometry2D::MultiPolygon(multi_polygon) => multi_polygon,
-            Geometry2D::Rect(rect) => MultiPolygon(vec![rect.to_polygon()]),
             Geometry2D::Collection(collection) => collection.into(),
             _ => MultiPolygon::empty(),
         }
@@ -220,7 +212,6 @@ impl TotalMemory for Geometry2D {
             Geometry2D::MultiLineString(multi_line_string) => multi_line_string.heap_memory(),
             Geometry2D::Polygon(polygon) => polygon.heap_memory(),
             Geometry2D::MultiPolygon(multi_polygon) => multi_polygon.heap_memory(),
-            Geometry2D::Rect(rect) => rect.heap_memory(),
             Geometry2D::Line(line) => line.heap_memory(),
             Geometry2D::Collection(collection) => collection.heap_memory(),
         }
@@ -275,7 +266,6 @@ impl VertexCount for Geometry2D {
             Geometry2D::MultiLineString(multi_line_string) => multi_line_string.vertex_count(),
             Geometry2D::Polygon(polygon) => polygon.vertex_count(),
             Geometry2D::MultiPolygon(multi_polygon) => multi_polygon.vertex_count(),
-            Geometry2D::Rect(rect) => rect.vertex_count(),
             Geometry2D::Line(line) => line.vertex_count(),
             Geometry2D::Collection(collection) => collection.vertex_count(),
         }

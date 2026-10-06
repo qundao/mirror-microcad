@@ -88,8 +88,6 @@ impl Reflect2D<Polygon> for Rect {
     }
 }
 
-impl Mirror2D<Polygon> for Rect {}
-
 impl Reflect2D for Line {
     fn reflect_2d(&self, l: &Line) -> Self {
         Self(self.1.reflect_2d(l), self.0.reflect_2d(l))
@@ -115,7 +113,6 @@ impl Reflect2D for Geometry2D {
             }
             Geometry2D::Polygon(polygon) => polygon.reflect_2d(l).into(),
             Geometry2D::MultiPolygon(multi_polygon) => multi_polygon.reflect_2d(l).into(),
-            Geometry2D::Rect(rect) => rect.reflect_2d(l).into(),
             Geometry2D::Line(line) => line.reflect_2d(l).into(),
             Geometry2D::Collection(collection) => collection.reflect_2d(l).into(),
         }
