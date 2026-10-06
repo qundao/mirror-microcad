@@ -5,7 +5,7 @@
 
 use microcad_core::{Bounds2D, Color, Scalar};
 use microcad_lang_types::{ModelTree, ModelType, Value};
-use microcad_render::RenderContext;
+use microcad_render::{RenderContext, Renderer};
 
 use crate::{ExportError, Exporter, ExporterParameters, Writer};
 
@@ -159,10 +159,8 @@ impl Exporter for SvgExporter {
     ) -> Result<Value, ExportError> {
         use crate::svg::*;
         let settings = SvgExporterSettings::default();
-
         let path = parameters.path.as_path();
-        let mut geometry = RenderContext::new(model).render()?;
-
+        let mut geometry = Renderer::new().render(model)?;
         let bounds = Bounds2D::from(geometry.bounds());
 
         if let Some(content_rect) = bounds.enlarge(2.0 * settings.padding_factor).rect() {
@@ -171,10 +169,8 @@ impl Exporter for SvgExporter {
             let canvas = Canvas::new_centered(content_rect, bounds.size(), Some(1.0));
             let mut writer = SvgWriter::new(f, canvas);
             writer.style(&SvgExporter::theme_to_svg_style(&self.theme))?;
-
             geometry.write_svg_mapped(&mut writer)?;
             let _ = writer.finish()?;
-
             Ok(Value::None)
         } else {
             Err(ExportError::Custom("Nothing to be exported".into()))

@@ -10,7 +10,7 @@ use microcad_core::{Geometries2D, Geometry, Geometry2D};
 use microcad_lang_types::{ModelTree, ModelType, Value};
 
 use microcad_render::{
-    GeometryNodeData, GeometryNodeRef, GeometryOutput, GeometryOutputs, GeometryTree, RenderContext,
+    GeometryNodeData, GeometryNodeRef, GeometryOutput, GeometryOutputs, GeometryTree, Renderer,
 };
 use wkt::ToWkt;
 
@@ -105,7 +105,7 @@ impl Exporter for WktExporter {
         model: &ModelTree,
         parameters: &ExporterParameters,
     ) -> Result<Value, ExportError> {
-        let geometry = RenderContext::new(model).render()?;
+        let geometry = Renderer::new().render(model)?;
         let mut f = std::fs::File::create(&parameters.path)?;
         geometry.write_wkt(&mut f)?;
 

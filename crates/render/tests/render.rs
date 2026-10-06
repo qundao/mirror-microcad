@@ -5,7 +5,7 @@
 
 use microcad_builtin::{BuiltinEvalContext, BuiltinPrimitiveCall, mu};
 use microcad_lang_types::{Model, ModelTree, Value, arguments, model::Element};
-use microcad_render::RenderContext;
+use microcad_render::Renderer;
 
 fn circle(r: f64) -> Model {
     let mut ctx = BuiltinEvalContext::default();
@@ -18,8 +18,8 @@ fn render_circle() {
     let circle = circle(42.0);
     let model_tree = ModelTree::new(circle);
 
-    let geometry = RenderContext::new(&model_tree)
-        .render()
+    let geometry = Renderer::new()
+        .render(&model_tree)
         .expect("No render errors");
 
     insta::assert_snapshot!("render_circle", geometry);
@@ -39,9 +39,7 @@ fn render_difference() {
     group.append(circle(23.0));
     let diff = mu::ops::difference(arguments!(self = group), &mut ctx).expect("No error");
 
-    let geometry = RenderContext::new(&diff)
-        .render()
-        .expect("No render errors");
+    let geometry = Renderer::new().render(&diff).expect("No render errors");
 
     insta::assert_snapshot!("render_difference", geometry);
 }
@@ -57,9 +55,7 @@ fn render_extrude() {
     )
     .expect("No error");
 
-    let geometry = RenderContext::new(&extrude)
-        .render()
-        .expect("No render errors");
+    let geometry = Renderer::new().render(&extrude).expect("No render errors");
 
     insta::assert_snapshot!("render_extrude", geometry);
 }

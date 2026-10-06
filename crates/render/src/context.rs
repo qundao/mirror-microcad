@@ -17,52 +17,27 @@ use crate::{
 /// Our progress sender.
 pub type ProgressTx = mpsc::Sender<f32>;
 
-/// The render context.
-///
-/// Keeps a stack of model nodes and the render cache.
-pub struct RenderContext<'tree> {
-    pub model_tree: &'tree ModelTree,
-
-    /// Model stack.
-    pub stack: Vec<GeometryNodeId>,
-
-    pub hooks: RenderHooks,
-
-    /// The number of models to be rendered.
-    models_to_render: usize,
-
-    /// The number of model that been been rendered.
-    models_rendered: usize,
-
-    /// Optional render resolution. If none, we will use the `RenderResolution::default()`.
-    pub resolution: Option<RenderResolution>,
-
-    /// Optional render cache.
+/// The rendering engine setup and shared resources.
+pub struct Renderer {
+    pub resolution: RenderResolution,
     pub cache: Option<Shared<RenderCache>>,
-
-    /// Progress is given as a percentage between 0.0 and 100.0.
+    pub hooks: RenderHooks,
     pub progress_tx: Option<ProgressTx>,
 }
 
-/// Builder methods
-impl<'tree> RenderContext<'tree> {
-    /// Initialize context with a model tree.
-    pub fn new(model_tree: &'tree ModelTree) -> Self {
+impl Renderer {
+    pub fn new() -> Self {
         Self {
-            model_tree,
-            stack: vec![],
-            hooks: RenderHooks::new(),
-            models_rendered: 0,
-            models_to_render: model_tree.root().descendants().count(),
-            progress_tx: None,
+            resolution: RenderResolution::default(),
             cache: None,
-            resolution: None,
+            hooks: RenderHooks::new(),
+            progress_tx: None,
         }
     }
 
     /// Override the default render resolution.
     pub fn with_resolution(mut self, resolution: RenderResolution) -> Self {
-        self.resolution = Some(resolution);
+        self.resolution = resolution;
         self
     }
 
@@ -77,12 +52,49 @@ impl<'tree> RenderContext<'tree> {
         self.progress_tx = Some(progress);
         self
     }
+}
 
-    pub fn render(&mut self) -> RenderResult<GeometryTree> {
-        let mut tree = GeometryTree::new(
-            self.model_tree,
-            self.resolution.as_ref().cloned().unwrap_or_default(),
-        );
+impl Renderer {
+    /// Execute rendering for a given model tree.
+    pub fn render<'tree>(&mut self, model_tree: &'tree ModelTree) -> RenderResult<GeometryTree> {
+        let mut ctx = RenderContext::new(self, model_tree);
+        ctx.execute()
+    }
+}
+
+/// The render context.
+///
+/// Keeps a stack of model nodes and the render cache.
+pub struct RenderContext<'a, 'tree> {
+    pub renderer: &'a mut Renderer,
+
+    pub model_tree: &'tree ModelTree,
+
+    /// Model stack.
+    pub stack: Vec<GeometryNodeId>,
+
+    /// The number of models to be rendered.
+    models_to_render: usize,
+
+    /// The number of model that been been rendered.
+    models_rendered: usize,
+}
+
+/// Builder methods
+impl<'a, 'tree> RenderContext<'a, 'tree> {
+    /// Initialize context with a model tree.
+    pub fn new(renderer: &'a mut Renderer, model_tree: &'tree ModelTree) -> Self {
+        Self {
+            renderer,
+            model_tree,
+            stack: vec![],
+            models_rendered: 0,
+            models_to_render: model_tree.root().descendants().count(),
+        }
+    }
+
+    pub fn execute(&mut self) -> RenderResult<GeometryTree> {
+        let mut tree = GeometryTree::new(self.model_tree, self.renderer.resolution.clone());
         /// Recursive DFS helper: processes children first, then renders the current node.
         fn recurse(
             node_id: GeometryNodeId,
@@ -114,7 +126,7 @@ impl<'tree> RenderContext<'tree> {
     }
 }
 
-impl<'tree> RenderContext<'tree> {
+impl<'a, 'tree> RenderContext<'a, 'tree> {
     /// Make a single progress step. A progress signal is sent with each new percentage.
     pub(crate) fn step(&mut self) {
         let old_percent = self.progress_in_percent();
@@ -123,7 +135,7 @@ impl<'tree> RenderContext<'tree> {
 
         // Check if integer percentage increased
         if (old_percent.floor() as u32) < (new_percent.floor() as u32)
-            && let Some(progress_tx) = &mut self.progress_tx
+            && let Some(progress_tx) = &mut self.renderer.progress_tx
         {
             progress_tx.send(new_percent).expect("No error");
         }
@@ -152,7 +164,7 @@ impl<'tree> RenderContext<'tree> {
         let hash = geo.to_hash();
         self.stack.push(geo);
 
-        let result = match self.cache.clone() {
+        let result = match self.renderer.cache.clone() {
             Some(cache) => {
                 // 1. Concurrent Read Check (Shared Lock)
                 {
@@ -213,7 +225,7 @@ impl<'tree> RenderContext<'tree> {
         self.stack.last().copied().unwrap()
     }
 
-    pub fn current_node<'a>(&self, tree: &'a GeometryTree) -> GeometryNodeRef<'a> {
+    pub fn current_node<'b>(&self, tree: &'b GeometryTree) -> GeometryNodeRef<'b> {
         GeometryNodeRef::new(self.geo_node(), &tree.arena)
     }
 

@@ -16,7 +16,7 @@ use microcad_export::{
     },
 };
 use microcad_lang_types::{ModelTree, Value, arguments, model::Element};
-use microcad_render::RenderContext;
+use microcad_render::Renderer;
 
 mod common;
 use common::*;
@@ -279,8 +279,8 @@ fn difference() -> std::io::Result<()> {
             )
             .expect("No error");
 
-            let mut geometry = RenderContext::new(&translate)
-                .render()
+            let mut geometry = Renderer::new()
+                .render(&translate)
                 .expect("No render errors");
 
             geometry.write_svg_mapped(writer)

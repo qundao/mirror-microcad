@@ -10,9 +10,9 @@ use microcad_export::{
     stl::{AsciiStlWriter, StlExporter, WriteAsciiStl},
 };
 use microcad_lang_types::{ModelTree, Value, arguments, model::Element};
-use microcad_render::RenderContext;
+use microcad_render::Renderer;
 
-use crate::common::{circle, rect, target_dir};
+use crate::common::{rect, target_dir};
 mod common;
 
 /// Renders STL content using a canvas closure, performs snapshot testing via `insta`,
@@ -46,9 +46,7 @@ fn test_cube() -> std::io::Result<()> {
         let rect = rect(Rect::new((0., 0.), (10., 10.0)));
         let extrude = mu::ops::extrude(arguments!(self = rect, height = Value::mm(10.0)), &mut ctx)
             .expect("No error");
-        let geometry = RenderContext::new(&extrude)
-            .render()
-            .expect("No render errors");
+        let geometry = Renderer::new().render(&extrude).expect("No render errors");
 
         geometry.write_ascii_stl(writer)?;
         Ok(())

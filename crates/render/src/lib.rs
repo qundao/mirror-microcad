@@ -61,7 +61,6 @@ impl RenderHooks {
         hooks.insert::<mu::geo2d::Circle>();
         hooks.insert::<mu::geo2d::Rect>();
         hooks.insert::<mu::ops::Difference>();
-        hooks.insert::<mu::ops::Translate>();
         hooks.insert::<mu::ops::Extrude>();
         hooks
     }
@@ -139,18 +138,6 @@ impl Render for mu::ops::Difference {
     }
 }
 
-impl Render for mu::ops::Translate {
-    fn render(
-        &self,
-        tree: &GeometryTree,
-        context: &mut RenderContext,
-    ) -> RenderResult<GeometryOutputs> {
-        let m = context.current_node(tree).local_matrix;
-        let outputs = context.collect_outputs(tree);
-        todo!()
-    }
-}
-
 impl Render for mu::ops::Extrude {
     fn render(
         &self,
@@ -186,19 +173,21 @@ impl Render for GeometryNodeData {
         tree: &GeometryTree,
         context: &mut RenderContext,
     ) -> RenderResult<GeometryOutputs> {
-        let model = context.model(tree);
+        context.update(|_node, context| {
+            let model = context.model(tree);
 
-        let mut outputs = match model
-            .builtin_id()
-            .and_then(|builtin_id| context.hooks.get(builtin_id))
-        {
-            Some(hook) => GeometryOutputs::from(hook(tree, context)?),
-            None => context.collect_outputs(tree).primary(),
-        };
+            let mut outputs = match model
+                .builtin_id()
+                .and_then(|builtin_id| context.renderer.hooks.get(builtin_id))
+            {
+                Some(hook) => GeometryOutputs::from(hook(tree, context)?),
+                None => context.collect_outputs(tree).primary(),
+            };
 
-        if !self.local_matrix.is_identity() {
-            outputs.transform_affine(&self.local_matrix);
-        }
-        Ok(outputs)
+            if !self.local_matrix.is_identity() {
+                outputs.transform_affine(&self.local_matrix);
+            }
+            Ok(outputs)
+        })
     }
 }

@@ -4,7 +4,7 @@
 //! STL exporter.
 
 use microcad_lang_types::{ModelTree, ModelType, Value};
-use microcad_render::RenderContext;
+use microcad_render::{RenderContext, Renderer};
 
 use crate::{
     ExportError, Exporter, ExporterParameters, Writer,
@@ -27,7 +27,7 @@ impl Exporter for StlExporter {
         model: &ModelTree,
         parameters: &ExporterParameters,
     ) -> Result<Value, ExportError> {
-        let geometry = RenderContext::new(model).render()?;
+        let geometry = Renderer::new().render(model)?;
         let f = std::fs::File::create(&parameters.path)?;
 
         if self.binary {
